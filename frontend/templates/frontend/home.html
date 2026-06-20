@@ -1,0 +1,440 @@
+{% extends 'frontend/base.html' %}
+
+{% block page_title %}
+لوحة التحكم
+{% endblock %}
+
+{% block content %}
+
+<!-- ============================================ -->
+<!-- 0. أعلى جهة استخداماً + أكثر طبيب نشاطاً (جديد) -->
+<!-- ============================================ -->
+<div class="row g-4 mb-4">
+
+    <div class="col-md-6">
+        <div class="card border-primary shadow h-100 hover-shadow">
+            <div class="card-body text-center">
+                <div class="icon-circle bg-primary bg-opacity-10 mb-2 mx-auto">
+                    <i class="bi bi-building text-primary"></i>
+                </div>
+                <h6 class="text-muted">أعلى جهة استخداماً</h6>
+                <h3 class="text-primary">
+                    {% if top_entity %}
+                        {{ top_entity.entity__name }}
+                    {% else %}
+                        لا توجد بيانات
+                    {% endif %}
+                </h3>
+                {% if top_entity %}
+                    <span class="badge bg-primary rounded-pill">
+                        {{ top_entity.total }} طلب
+                    </span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card border-success shadow h-100 hover-shadow">
+            <div class="card-body text-center">
+                <div class="icon-circle bg-success bg-opacity-10 mb-2 mx-auto">
+                    <i class="bi bi-person-badge text-success"></i>
+                </div>
+                <h6 class="text-muted">أكثر طبيب نشاطاً</h6>
+                <h3 class="text-success">
+                    {% if top_doctor %}
+                        {{ top_doctor.doctor_name }}
+                    {% else %}
+                        لا توجد بيانات
+                    {% endif %}
+                </h3>
+                {% if top_doctor %}
+                    <span class="badge bg-success rounded-pill">
+                        {{ top_doctor.total }} طلب
+                    </span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- ============================================ -->
+<!-- 1. KPIs الرئيسية -->
+<!-- ============================================ -->
+<div class="row g-4">
+
+    <div class="col-md-3">
+        <div class="card shadow border-0 hover-shadow">
+            <div class="card-body text-center">
+                <div class="icon-circle bg-primary bg-opacity-10 mb-2 mx-auto">
+                    <i class="bi bi-people text-primary"></i>
+                </div>
+                <h6 class="text-muted">إجمالي المرضى</h6>
+                <h2 class="text-primary">{{ patients }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card shadow border-0 hover-shadow">
+            <div class="card-body text-center">
+                <div class="icon-circle bg-info bg-opacity-10 mb-2 mx-auto">
+                    <i class="bi bi-file-medical text-info"></i>
+                </div>
+                <h6 class="text-muted">إجمالي الطلبات</h6>
+                <h2 class="text-info">{{ requests }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card shadow border-0 hover-shadow">
+            <div class="card-body text-center">
+                <div class="icon-circle bg-warning bg-opacity-10 mb-2 mx-auto">
+                    <i class="bi bi-sticky text-warning"></i>
+                </div>
+                <h6 class="text-muted">إجمالي الملاحظات</h6>
+                <h2 class="text-warning">{{ notes }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card shadow border-0 hover-shadow">
+            <div class="card-body text-center">
+                <div class="icon-circle bg-success bg-opacity-10 mb-2 mx-auto">
+                    <i class="bi bi-file-earmark-text text-success"></i>
+                </div>
+                <h6 class="text-muted">إجمالي التعاقدات</h6>
+                <h2 class="text-success">{{ contracts }}</h2>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- ============================================ -->
+<!-- 2. KPIs الحالات -->
+<!-- ============================================ -->
+<hr class="my-4">
+
+<div class="row g-4">
+
+    <div class="col-md-3">
+        <div class="card border-success shadow hover-shadow">
+            <div class="card-body text-center">
+                <div class="icon-circle bg-success bg-opacity-10 mb-2 mx-auto">
+                    <i class="bi bi-check-circle text-success"></i>
+                </div>
+                <h6 class="text-muted">تمت الموافقة</h6>
+                <h2 class="text-success">{{ approved }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card border-warning shadow hover-shadow">
+            <div class="card-body text-center">
+                <div class="icon-circle bg-warning bg-opacity-10 mb-2 mx-auto">
+                    <i class="bi bi-clock text-warning"></i>
+                </div>
+                <h6 class="text-muted">قيد الانتظار</h6>
+                <h2 class="text-warning">{{ pending }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card border-danger shadow hover-shadow">
+            <div class="card-body text-center">
+                <div class="icon-circle bg-danger bg-opacity-10 mb-2 mx-auto">
+                    <i class="bi bi-x-circle text-danger"></i>
+                </div>
+                <h6 class="text-muted">مرفوضة</h6>
+                <h2 class="text-danger">{{ rejected }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card border-primary shadow hover-shadow">
+            <div class="card-body text-center">
+                <div class="icon-circle bg-primary bg-opacity-10 mb-2 mx-auto">
+                    <i class="bi bi-check2-all text-primary"></i>
+                </div>
+                <h6 class="text-muted">تم تنفيذ الخدمة</h6>
+                <h2 class="text-primary">{{ service_done }}</h2>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- ============================================ -->
+<!-- 3. KPIs المالية -->
+<!-- ============================================ -->
+<hr class="my-4">
+
+<div class="row g-4">
+
+    <div class="col-md-4">
+        <div class="card border-success shadow hover-shadow">
+            <div class="card-body text-center">
+                <div class="icon-circle bg-success bg-opacity-10 mb-2 mx-auto">
+                    <i class="bi bi-arrow-up-circle text-success"></i>
+                </div>
+                <h6 class="text-muted">إجمالي التكلفة المطلوبة</h6>
+                <h3 class="text-success">{{ total_requested }} <small>ج.م</small></h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card border-primary shadow hover-shadow">
+            <div class="card-body text-center">
+                <div class="icon-circle bg-primary bg-opacity-10 mb-2 mx-auto">
+                    <i class="bi bi-arrow-down-circle text-primary"></i>
+                </div>
+                <h6 class="text-muted">إجمالي التكلفة المستلمة</h6>
+                <h3 class="text-primary">{{ total_received }} <small>ج.م</small></h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card border-{% if difference >= 0 %}info{% else %}danger{% endif %} shadow hover-shadow">
+            <div class="card-body text-center">
+                <div class="icon-circle bg-{% if difference >= 0 %}info{% else %}danger{% endif %} bg-opacity-10 mb-2 mx-auto">
+                    <i class="bi bi-arrow-left-right text-{% if difference >= 0 %}info{% else %}danger{% endif %}"></i>
+                </div>
+                <h6 class="text-muted">فرق التكاليف</h6>
+                <h3 class="text-{% if difference >= 0 %}info{% else %}danger{% endif %}">
+                    {{ difference }} <small>ج.م</small>
+                </h3>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- ============================================ -->
+<!-- 4. أعلى الجهات المعلقة + أعلى الأطباء بالحالات المعلقة -->
+<!-- ============================================ -->
+<hr class="my-4">
+
+<div class="row g-4">
+
+    <div class="col-md-6">
+
+        <div class="card shadow border-0 h-100 hover-shadow">
+
+            <div class="card-header bg-warning bg-opacity-10 d-flex justify-content-between align-items-center">
+                <span>
+                    <i class="bi bi-building"></i>
+                    أعلى الجهات المعلقة
+                </span>
+                <span class="badge bg-warning text-dark rounded-pill">
+                    {{ top_pending_entities|length }}
+                </span>
+            </div>
+
+            <div class="card-body p-0">
+
+                <div class="list-group list-group-flush">
+
+                    {% for item in top_pending_entities %}
+
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <span>
+                            <span class="badge bg-warning text-dark rounded-circle me-2">
+                                {{ forloop.counter }}
+                            </span>
+                            {{ item.entity__name }}
+                        </span>
+                        <span class="badge bg-warning text-dark rounded-pill">
+                            {{ item.total }}
+                        </span>
+                    </div>
+
+                    {% empty %}
+
+                    <div class="list-group-item text-center text-muted py-4">
+                        <i class="bi bi-inbox"></i>
+                        لا توجد جهات
+                    </div>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-6">
+
+        <div class="card shadow border-0 h-100 hover-shadow">
+
+            <div class="card-header bg-info bg-opacity-10 d-flex justify-content-between align-items-center">
+                <span>
+                    <i class="bi bi-person-badge"></i>
+                    أعلى الأطباء بالحالات المعلقة
+                </span>
+                <span class="badge bg-info rounded-pill">
+                    {{ top_pending_doctors|length }}
+                </span>
+            </div>
+
+            <div class="card-body p-0">
+
+                <div class="list-group list-group-flush">
+
+                    {% for item in top_pending_doctors %}
+
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <span>
+                            <span class="badge bg-info rounded-circle me-2">
+                                {{ forloop.counter }}
+                            </span>
+                            <a href="{% url 'doctor_detail' item.doctor_name %}" class="text-decoration-none text-dark">
+                                {{ item.doctor_name }}
+                            </a>
+                        </span>
+                        <span class="badge bg-info rounded-pill">
+                            {{ item.total }}
+                        </span>
+                    </div>
+
+                    {% empty %}
+
+                    <div class="list-group-item text-center text-muted py-4">
+                        <i class="bi bi-inbox"></i>
+                        لا يوجد أطباء
+                    </div>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ============================================ -->
+<!-- 5. آخر الطلبات -->
+<!-- ============================================ -->
+<hr class="my-5">
+
+<div class="card shadow border-0 hover-shadow">
+
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">
+            <i class="bi bi-clock-history"></i>
+            آخر الطلبات
+        </h5>
+        <span class="badge bg-secondary rounded-pill">
+            {{ latest_requests|length }}
+        </span>
+    </div>
+
+    <div class="card-body">
+
+        <div class="table-responsive">
+
+            <table class="table table-striped table-hover align-middle">
+
+                <thead class="table-light">
+                    <tr>
+                        <th>#</th>
+                        <th>المريض</th>
+                        <th>الجهة</th>
+                        <th>التخصص</th>
+                        <th>الحالة</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for item in latest_requests %}
+
+                    <tr>
+
+                        <td>
+                            <span class="badge bg-secondary rounded-circle">
+                                {{ item.id }}
+                            </span>
+                        </td>
+
+                        <td>
+                            <a href="{% url 'patient_detail' item.patient.id %}" class="text-decoration-none">
+                                {{ item.patient.full_name }}
+                            </a>
+                        </td>
+
+                        <td>
+                            {{ item.entity.name }}
+                        </td>
+
+                        <td>
+                            {{ item.specialty.name }}
+                        </td>
+
+                        <td>
+                            {% if item.status == "approved" %}
+                                <span class="badge rounded-pill bg-success">
+                                    <i class="bi bi-check-circle"></i> تمت الموافقة
+                                </span>
+                            {% elif item.status == "pending" %}
+                                <span class="badge rounded-pill bg-warning text-dark">
+                                    <i class="bi bi-clock"></i> قيد الانتظار
+                                </span>
+                            {% elif item.status == "rejected" %}
+                                <span class="badge rounded-pill bg-danger">
+                                    <i class="bi bi-x-circle"></i> مرفوض
+                                </span>
+                            {% elif item.status == "service_done" %}
+                                <span class="badge rounded-pill bg-primary">
+                                    <i class="bi bi-check2-all"></i> تم تنفيذ الخدمة
+                                </span>
+                            {% elif item.status == "patient_refused" %}
+                                <span class="badge rounded-pill bg-secondary">
+                                    <i class="bi bi-person-x"></i> رفض المريض
+                                </span>
+                            {% else %}
+                                <span class="badge rounded-pill bg-dark">
+                                    {{ item.status }}
+                                </span>
+                            {% endif %}
+                        </td>
+
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+                        <td colspan="5" class="text-center text-muted py-4">
+                            <i class="bi bi-inbox"></i>
+                            لا توجد طلبات حالياً
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

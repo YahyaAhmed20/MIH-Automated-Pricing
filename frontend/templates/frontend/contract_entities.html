@@ -1,0 +1,224 @@
+{% extends 'frontend/base.html' %}
+
+{% block page_title %}
+الجهات المتعاقدة
+{% endblock %}
+
+{% block content %}
+
+<div class="row g-4">
+
+    <div class="col-md-4">
+
+        <div class="card shadow border-0">
+
+            <div class="card-body text-center">
+
+                <h6>
+                    إجمالي الجهات
+                </h6>
+
+                <h3>
+                    {{ total_entities }}
+                </h3>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-4">
+
+        <div class="card shadow border-0">
+
+            <div class="card-body text-center">
+
+                <h6>
+                    إجمالي العقود
+                </h6>
+
+                <h3>
+                    {{ total_contracts }}
+                </h3>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-4">
+
+        <div class="card shadow border-0">
+
+            <div class="card-body text-center">
+
+                <h6>
+                    إجمالي التسعيرات
+                </h6>
+
+                <h3>
+                    {{ total_pricing }}
+                </h3>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="card shadow border-0 mt-4">
+
+    <div class="card-body">
+
+        <form method="get">
+
+            <div class="row">
+
+                <div class="col-md-10">
+
+                    <input
+                        type="text"
+                        class="form-control"
+                        name="search"
+                        placeholder="ابحث باسم الجهة"
+                        value="{{ search }}"
+                    >
+
+                </div>
+
+                <div class="col-md-2">
+
+                    <button
+                        class="btn btn-primary w-100">
+
+                        بحث
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+<div class="card shadow border-0 mt-4">
+
+    <div class="card-body">
+
+        <table class="table table-hover">
+
+            <thead>
+
+                <tr>
+
+                    <th>الجهة</th>
+                    <th>عدد العقود</th>
+                    <th>الحالة</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+            {% for entity in page_obj %}
+
+                <tr>
+
+                    <td>
+    <a href="{% url 'contract_entity_detail' entity.id %}">
+        {{ entity.name }}
+    </a>
+</td>
+
+                    <td>
+                        {{ entity.contracts_count }}
+                    </td>
+
+                    <td>
+
+                        {% if entity.is_active %}
+
+                            <span class="badge bg-success">
+                                فعال
+                            </span>
+
+                        {% else %}
+
+                            <span class="badge bg-danger">
+                                غير فعال
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+                </tr>
+
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+
+        <nav>
+
+            <ul class="pagination">
+
+                {% if page_obj.has_previous %}
+
+                <li class="page-item">
+
+                    <a class="page-link"
+                       href="?page={{ page_obj.previous_page_number }}">
+
+                        السابق
+
+                    </a>
+
+                </li>
+
+                {% endif %}
+
+                <li class="page-item active">
+
+                    <span class="page-link">
+
+                        {{ page_obj.number }}
+
+                    </span>
+
+                </li>
+
+                {% if page_obj.has_next %}
+
+                <li class="page-item">
+
+                    <a class="page-link"
+                       href="?page={{ page_obj.next_page_number }}">
+
+                        التالي
+
+                    </a>
+
+                </li>
+
+                {% endif %}
+
+            </ul>
+
+        </nav>
+
+    </div>
+
+</div>
+
+{% endblock %}

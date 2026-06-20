@@ -1,0 +1,218 @@
+{% extends 'frontend/base.html' %}
+
+{% block page_title %}
+جودة البيانات
+{% endblock %}
+
+{% block content %}
+
+<!-- ============================================ -->
+<!-- كروت الإحصائيات -->
+<!-- ============================================ -->
+<div class="row g-3 mb-4">
+
+    <div class="col-md-4">
+
+        <div class="card border-danger shadow h-100 hover-shadow">
+
+            <div class="card-body text-center">
+
+                <div class="icon-circle bg-danger bg-opacity-10 mb-2 mx-auto">
+                    <i class="bi bi-slash-circle text-danger"></i>
+                </div>
+
+                <h6 class="text-muted">
+                    بدون تخصص
+                </h6>
+
+                <h2 class="text-danger">
+                    {{ missing_specialty }}
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-4">
+
+        <div class="card border-warning shadow h-100 hover-shadow">
+
+            <div class="card-body text-center">
+
+                <div class="icon-circle bg-warning bg-opacity-10 mb-2 mx-auto">
+                    <i class="bi bi-coin text-warning"></i>
+                </div>
+
+                <h6 class="text-muted">
+                    بدون تكلفة
+                </h6>
+
+                <h2 class="text-warning">
+                    {{ missing_requested_cost }}
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-4">
+
+        <div class="card border-info shadow h-100 hover-shadow">
+
+            <div class="card-body text-center">
+
+                <div class="icon-circle bg-info bg-opacity-10 mb-2 mx-auto">
+                    <i class="bi bi-building text-info"></i>
+                </div>
+
+                <h6 class="text-muted">
+                    جهات بدون عقود
+                </h6>
+
+                <h2 class="text-info">
+                    {{ entities_without_contracts }}
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ============================================ -->
+<!-- الجهات المكررة -->
+<!-- ============================================ -->
+<div class="card shadow mb-4 hover-shadow">
+
+    <div class="card-header bg-danger bg-opacity-10 d-flex justify-content-between align-items-center">
+        <span>
+            <i class="bi bi-files"></i>
+            الجهات المكررة
+        </span>
+        <span class="badge bg-danger rounded-pill">
+            {{ duplicate_entities|length }}
+        </span>
+    </div>
+
+    <div class="card-body p-0">
+
+        <div class="list-group list-group-flush">
+
+            {% for item in duplicate_entities %}
+
+            <div class="list-group-item d-flex justify-content-between align-items-center">
+                <span>
+                    <strong>{{ item.name }}</strong>
+                </span>
+                <span class="badge bg-danger rounded-pill">
+                    {{ item.total }}
+                </span>
+            </div>
+
+            {% empty %}
+
+            <div class="list-group-item text-center text-success py-4">
+                <i class="bi bi-check-circle fa-2x d-block mb-2"></i>
+                لا توجد بيانات مكررة
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ============================================ -->
+<!-- طلبات بدون تكلفة (جديد) -->
+<!-- ============================================ -->
+<div class="card shadow hover-shadow">
+
+    <div class="card-header bg-warning bg-opacity-10 d-flex justify-content-between align-items-center">
+        <span>
+            <i class="bi bi-exclamation-triangle"></i>
+            طلبات بدون تكلفة
+        </span>
+        <span class="badge bg-warning text-dark rounded-pill">
+            {{ missing_cost_requests|length }}
+        </span>
+    </div>
+
+    <div class="card-body">
+
+        <div class="table-responsive">
+
+            <table class="table table-hover table-striped align-middle">
+
+                <thead class="table-light">
+
+                    <tr>
+                        <th>#</th>
+                        <th>المريض</th>
+                        <th>الجهة</th>
+                        <th>الطبيب</th>
+                        <th>التاريخ</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% for item in missing_cost_requests %}
+
+                    <tr>
+
+                        <td>
+                            <span class="badge bg-secondary rounded-circle">
+                                {{ forloop.counter }}
+                            </span>
+                        </td>
+
+                       <td>
+    <a href="{% url 'patient_detail' item.patient.id %}">
+        {{ item.patient.full_name }}
+    </a>
+</td>
+                        <td>
+                            {{ item.entity.name }}
+                        </td>
+
+                        <td>
+                            {{ item.doctor_name|default:"-" }}
+                        </td>
+
+                        <td>
+                            <span class="text-muted">{{ item.request_date|date:"Y-m-d" }}</span>
+                        </td>
+
+                    </tr>
+
+                {% empty %}
+
+                    <tr>
+                        <td colspan="5" class="text-center text-success py-4">
+                            <i class="bi bi-check-circle fa-3x d-block mb-3"></i>
+                            لا توجد طلبات بدون تكلفة
+                        </td>
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

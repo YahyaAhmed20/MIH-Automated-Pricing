@@ -1,0 +1,576 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>
+        MIH Automated Pricing
+    </title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css"
+          rel="stylesheet">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+          rel="stylesheet">
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+        }
+
+        body{
+            background:#f4f6f9;
+            font-family:Tahoma,sans-serif;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ===== Sidebar ===== */
+        .sidebar{
+            width:250px;
+            min-height:100vh;
+            height:100%;
+            background:#1e293b;
+            color:white;
+            position:fixed;
+            right:0;
+            top:0;
+            overflow-y:auto;
+            overflow-x:hidden;
+            z-index:1000;
+            padding-bottom:20px;
+        }
+
+        .sidebar::-webkit-scrollbar{
+            width:4px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb{
+            background:rgba(255,255,255,.3);
+            border-radius:10px;
+        }
+
+        .sidebar::-webkit-scrollbar-track{
+            background:rgba(255,255,255,.05);
+        }
+
+        .content{
+            margin-right:250px;
+            padding:20px;
+            flex:1;
+            min-height:100vh;
+        }
+
+        /* ===== Logo ===== */
+        .logo-box{
+            padding:12px 15px;
+            text-align:center;
+            border-bottom:1px solid rgba(255,255,255,.1);
+        }
+
+        .logo-box img{
+            width:65px;
+            height:65px;
+            border-radius:50%;
+            background:white;
+            padding:5px;
+            object-fit:cover;
+        }
+
+        .logo-box h4{
+            margin-top:4px;
+            font-weight:bold;
+            font-size:15px;
+        }
+
+        /* ===== Menu ===== */
+        .menu-list{
+            list-style:none;
+            padding:0;
+            margin:0;
+        }
+
+        .menu-link{
+            color:white;
+            text-decoration:none;
+            display:block;
+            padding:7px 14px;
+            transition:all .3s;
+            cursor:pointer;
+            font-size:13px;
+            border-right:3px solid transparent;
+        }
+
+        .menu-link:hover{
+            background:rgba(255,255,255,.12);
+            padding-right:20px;
+            border-right-color:#0d6efd;
+        }
+
+        .menu-link i{
+            margin-left:8px;
+            font-size:13px;
+            width:20px;
+            text-align:center;
+        }
+
+        .menu-arrow{
+            float:left;
+            transition:transform .3s;
+            font-size:12px;
+        }
+
+        .menu-link[aria-expanded="true"] .menu-arrow{
+            transform:rotate(180deg);
+        }
+
+        /* ===== Submenu ===== */
+        .submenu{
+            background:rgba(0,0,0,.2);
+            list-style:none;
+            padding:0;
+            margin:0;
+        }
+
+        .submenu a{
+            display:block;
+            padding:5px 30px 5px 45px;
+            color:rgba(255,255,255,.75);
+            text-decoration:none;
+            font-size:12.5px;
+            transition:all .3s;
+            border-right:3px solid transparent;
+        }
+
+        .submenu a:hover{
+            background:rgba(255,255,255,.08);
+            color:white;
+            padding-right:38px;
+            border-right-color:#0d6efd;
+        }
+
+        .submenu a i{
+            margin-left:6px;
+            font-size:12px;
+            width:18px;
+            text-align:center;
+        }
+
+        /* ===== Alert Box ===== */
+        .sidebar-alert{
+            margin:6px 10px;
+        }
+
+        .sidebar-alert .alert{
+            font-size:12px;
+            padding:5px !important;
+        }
+
+        /* ===== Topbar ===== */
+        .topbar{
+            background:white;
+            padding:10px 16px;
+            border-radius:12px;
+            margin-bottom:16px;
+            box-shadow:0 2px 10px rgba(0,0,0,.06);
+            position:sticky;
+            top:0;
+            z-index:500;
+        }
+
+        .topbar h4{
+            font-size:18px;
+        }
+
+        .topbar small{
+            font-size:11px;
+            color:#6c757d;
+        }
+
+        /* ===== Cards ===== */
+        .card{
+            border:none;
+            border-radius:12px;
+            box-shadow:0 2px 12px rgba(0,0,0,.05);
+            transition:all .3s;
+        }
+
+        .card:hover{
+            box-shadow:0 6px 20px rgba(0,0,0,.1);
+        }
+
+        /* ===== WhatsApp ===== */
+        .whatsapp-btn{
+            position:fixed;
+            left:20px;
+            bottom:20px;
+            width:50px;
+            height:50px;
+            border-radius:50%;
+            background:#25D366;
+            color:white;
+            font-size:26px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            text-decoration:none;
+            z-index:9999;
+            box-shadow:0 4px 15px rgba(37,211,102,.35);
+            transition:all .3s;
+        }
+
+        .whatsapp-btn:hover{
+            transform:scale(1.1);
+            color:white;
+        }
+
+        /* ===== Footer ===== */
+        .footer{
+            text-align:center;
+            padding:12px 0 5px;
+            color:#6c757d;
+            font-size:12px;
+        }
+
+        .footer hr{
+            margin-bottom:8px;
+        }
+
+        /* ===== Responsive ===== */
+        @media(max-width:768px){
+            .sidebar{
+                width:100%;
+                position:relative;
+                min-height:auto;
+                height:auto;
+                padding-bottom:10px;
+            }
+            .content{
+                margin-right:0;
+                padding:15px;
+            }
+            .topbar{
+                position:relative;
+                top:auto;
+            }
+        }
+
+        /* ===== Small Screens Fix ===== */
+        @media(max-width:480px){
+            .sidebar{
+                width:100%;
+            }
+            .menu-link{
+                font-size:12px;
+                padding:6px 12px;
+            }
+            .submenu a{
+                font-size:11.5px;
+                padding:4px 25px 4px 35px;
+            }
+            .logo-box img{
+                width:50px;
+                height:50px;
+            }
+            .logo-box h4{
+                font-size:13px;
+            }
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<!-- ========== Sidebar ========== -->
+<div class="sidebar">
+
+    <!-- Logo -->
+    <a href="/" class="text-decoration-none">
+        <div class="logo-box">
+
+            <img src="{% static 'images/logo.jpeg' %}"
+                 alt="MIH Logo">
+
+            <h4>
+                MIH
+                <br>
+                Automated Pricing
+            </h4>
+
+        </div>
+    </a>
+
+    <!-- Alert Box -->
+    <div class="sidebar-alert">
+        <div class="alert alert-light text-center py-1 mb-0">
+            <strong>MIH</strong>
+            <br>
+            <small>Automated Pricing</small>
+        </div>
+    </div>
+
+    <!-- Menu -->
+    <ul class="menu-list">
+
+        <!-- لوحة التحكم -->
+        <li>
+            <a class="menu-link" href="{% url 'home' %}">
+                <i class="bi bi-speedometer2"></i>
+                لوحة التحكم
+            </a>
+        </li>
+
+        <!-- 1. الباكدجات -->
+        <li>
+            <a class="menu-link"
+               data-bs-toggle="collapse"
+               href="#packagesMenu"
+               role="button"
+               aria-expanded="false">
+
+                <i class="bi bi-box"></i>
+                الباكدجات
+                <i class="bi bi-chevron-down menu-arrow"></i>
+            </a>
+
+            <div class="collapse submenu" id="packagesMenu">
+                <a href="{% url 'packages' %}">
+                    <i class="bi bi-box-seam"></i> باكدجات الآجل
+                </a>
+                <a href="{% url 'packages' %}">
+                    <i class="bi bi-cash-coin"></i> باكدجات النقدي
+                </a>
+            </div>
+        </li>
+
+        <!-- 2. الجهات المتعاقدة -->
+        <li>
+            <a class="menu-link" href="{% url 'contract_entities' %}">
+                <i class="bi bi-buildings"></i>
+                الجهات المتعاقدة
+            </a>
+        </li>
+
+        <!-- 3. خصومات الشركات -->
+        <li>
+            <a class="menu-link" href="{% url 'company_discounts' %}">
+                <i class="bi bi-percent"></i>
+                خصومات الشركات
+            </a>
+        </li>
+
+        <!-- 4. العروض -->
+        <li>
+            <a class="menu-link" href="#">
+                <i class="bi bi-megaphone"></i>
+                العروض
+            </a>
+        </li>
+
+        <!-- 5. البحث عن خدمة -->
+        <li>
+            <a class="menu-link" href="{% url 'service_search' %}">
+                <i class="bi bi-search"></i>
+                البحث عن خدمة
+            </a>
+        </li>
+
+        <!-- الأطباء -->
+        <li>
+            <a class="menu-link" href="{% url 'doctors_list' %}">
+                <i class="bi bi-person-badge"></i>
+                الأطباء
+            </a>
+        </li>
+
+        <!-- 6. توصيفات العمليات -->
+        <li>
+            <a class="menu-link"
+               data-bs-toggle="collapse"
+               href="#operationsMenu"
+               role="button"
+               aria-expanded="false">
+
+                <i class="bi bi-clipboard2-pulse"></i>
+                توصيفات العمليات
+                <i class="bi bi-chevron-down menu-arrow"></i>
+            </a>
+
+            <div class="collapse submenu" id="operationsMenu">
+                <a href="#">
+                    <i class="bi bi-file-text"></i> توصيف العمليات
+                </a>
+                <a href="#">
+                    <i class="bi bi-calculator"></i> احتساب أتعاب العملية
+                </a>
+            </div>
+        </li>
+
+        <!-- 7. تفاصيل التسعير -->
+        <li>
+            <a class="menu-link" href="{% url 'pricing_details' %}">
+                <i class="bi bi-cash-stack"></i>
+                تفاصيل التسعير
+            </a>
+        </li>
+
+        <!-- 8. فواتير مماثلة -->
+        <li>
+            <a class="menu-link" href="{% url 'similar_invoices' %}">
+                <i class="bi bi-receipt"></i>
+                فواتير مماثلة
+            </a>
+        </li>
+
+        <!-- 9. التقارير والإحصائيات -->
+        <li>
+            <a class="menu-link" href="{% url 'reports' %}">
+                <i class="bi bi-bar-chart"></i>
+                التقارير والإحصائيات
+            </a>
+        </li>
+
+        <!-- 10. جودة البيانات -->
+        <li>
+            <a class="menu-link" href="{% url 'quality_dashboard' %}">
+                <i class="bi bi-shield-check"></i>
+                جودة البيانات
+            </a>
+        </li>
+
+        <!-- 11. متابعة موافقات الخارجي -->
+        <li>
+            <a class="menu-link"
+               data-bs-toggle="collapse"
+               href="#approvalMenu"
+               role="button"
+               aria-expanded="false">
+
+                <i class="bi bi-file-medical"></i>
+                متابعة موافقات الخارجي
+                <i class="bi bi-chevron-down menu-arrow"></i>
+            </a>
+
+            <div class="collapse submenu" id="approvalMenu">
+                <a href="{% url 'external_approvals' %}">
+                    <i class="bi bi-list"></i> لوحة المتابعة
+                </a>
+                <a href="{% url 'external_approvals' %}">
+                    <i class="bi bi-search"></i> بحث عن مريض
+                </a>
+            </div>
+        </li>
+
+        <!-- 12. تحليل الحالات Pending -->
+        <li>
+            <a class="menu-link" href="{% url 'pending_analysis' %}">
+                <i class="bi bi-clock-history"></i>
+                تحليل الحالات Pending
+            </a>
+        </li>
+
+        <!-- 13. قوائم الأسعار -->
+        <li>
+            <a class="menu-link"
+               data-bs-toggle="collapse"
+               href="#priceListMenu"
+               role="button"
+               aria-expanded="false">
+
+                <i class="bi bi-list-ul"></i>
+                قوائم الأسعار
+                <i class="bi bi-chevron-down menu-arrow"></i>
+            </a>
+
+            <div class="collapse submenu" id="priceListMenu">
+                <a href="#">
+                    <i class="bi bi-calendar"></i> أسعار 2023
+                </a>
+                <a href="#">
+                    <i class="bi bi-calendar"></i> أسعار 2024
+                </a>
+                <a href="#">
+                    <i class="bi bi-calendar"></i> أسعار 2025
+                </a>
+            </div>
+        </li>
+
+    </ul>
+
+</div>
+
+<!-- ========== Content ========== -->
+<div class="content">
+
+    <!-- Topbar -->
+    <div class="topbar">
+
+        <div class="d-flex justify-content-between align-items-center">
+
+            <div>
+
+                <h4 class="mb-0">
+                    {% block page_title %}
+                    لوحة التحكم
+                    {% endblock %}
+                </h4>
+
+                <small class="text-muted">
+                    MIH Automated Pricing System
+                </small>
+
+            </div>
+
+            <div>
+
+                <span class="badge bg-primary">
+                    v1.0
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Page Content -->
+    {% block content %}
+    {% endblock %}
+
+    <!-- Footer -->
+    <footer class="footer">
+
+        <hr>
+
+        MIH Automated Pricing System © 2026
+
+    </footer>
+
+</div>
+
+<!-- ========== WhatsApp ========== -->
+<a href="#"
+   class="whatsapp-btn">
+
+    <i class="bi bi-whatsapp"></i>
+
+</a>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+</script>
+
+</body>
+</html>

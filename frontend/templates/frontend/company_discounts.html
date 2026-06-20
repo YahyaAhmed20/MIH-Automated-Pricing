@@ -1,0 +1,207 @@
+{% extends 'frontend/base.html' %}
+
+{% block page_title %}
+خصومات الشركات
+{% endblock %}
+
+{% block content %}
+
+<!-- ============================================ -->
+<!-- العنوان -->
+<!-- ============================================ -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3>
+        <i class="bi bi-percent"></i>
+        خصومات الشركات
+    </h3>
+    <span class="text-muted">
+        <i class="bi bi-calendar"></i>
+        {{ now|date:"Y-m-d" }}
+    </span>
+</div>
+
+<!-- ============================================ -->
+<!-- متوسط الخصومات -->
+<!-- ============================================ -->
+<div class="card mb-4 border-primary shadow-sm hover-shadow">
+    <div class="card-body text-center py-4">
+        <div class="icon-circle bg-primary bg-opacity-10 mb-3 mx-auto">
+            <i class="bi bi-graph-up-arrow text-primary"></i>
+        </div>
+        <h6 class="text-muted">متوسط الخصومات</h6>
+        <h2 class="text-primary">
+            {{ avg_discount|floatformat:2 }}%
+        </h2>
+        <small class="text-muted">بناءً على جميع العقود</small>
+    </div>
+</div>
+
+<!-- ============================================ -->
+<!-- أعلى وأقل الجهات خصماً -->
+<!-- ============================================ -->
+<div class="row g-4">
+
+    <!-- أعلى الجهات خصماً -->
+    <div class="col-md-6">
+
+        <div class="card shadow-sm border-0 h-100 hover-shadow">
+
+            <div class="card-header bg-success bg-opacity-10 d-flex justify-content-between align-items-center">
+                <span>
+                    <i class="bi bi-trophy"></i>
+                    أعلى الجهات خصماً
+                </span>
+                <span class="badge bg-success rounded-pill">
+                    {{ top_discounts|length }}
+                </span>
+            </div>
+
+            <div class="card-body p-0">
+
+                <div class="list-group list-group-flush">
+
+                    {% for item in top_discounts %}
+
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <span>
+                            <span class="badge bg-success rounded-circle me-2">
+                                {{ forloop.counter }}
+                            </span>
+                            <strong>{{ item.contract__entity__name }}</strong>
+                        </span>
+                        <span class="badge bg-success rounded-pill">
+                            {{ item.avg_discount|floatformat:2 }}%
+                        </span>
+                    </div>
+
+                    {% empty %}
+
+                    <div class="list-group-item text-center text-muted py-4">
+                        <i class="bi bi-inbox"></i>
+                        لا توجد بيانات
+                    </div>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- أقل الجهات خصماً -->
+    <div class="col-md-6">
+
+        <div class="card shadow-sm border-0 h-100 hover-shadow">
+
+            <div class="card-header bg-danger bg-opacity-10 d-flex justify-content-between align-items-center">
+                <span>
+                    <i class="bi bi-arrow-down-circle"></i>
+                    أقل الجهات خصماً
+                </span>
+                <span class="badge bg-danger rounded-pill">
+                    {{ low_discounts|length }}
+                </span>
+            </div>
+
+            <div class="card-body p-0">
+
+                <div class="list-group list-group-flush">
+
+                    {% for item in low_discounts %}
+
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <span>
+                            <span class="badge bg-danger rounded-circle me-2">
+                                {{ forloop.counter }}
+                            </span>
+                            <strong>{{ item.contract__entity__name }}</strong>
+                        </span>
+                        <span class="badge bg-danger rounded-pill">
+                            {{ item.avg_discount|floatformat:2 }}%
+                        </span>
+                    </div>
+
+                    {% empty %}
+
+                    <div class="list-group-item text-center text-muted py-4">
+                        <i class="bi bi-inbox"></i>
+                        لا توجد بيانات
+                    </div>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ============================================ -->
+<!-- إحصائيات سريعة -->
+<!-- ============================================ -->
+<hr class="my-4">
+
+<div class="row g-3">
+
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm hover-shadow">
+            <div class="card-body text-center">
+                <h6 class="text-muted">أعلى خصم</h6>
+                <h4 class="text-success">
+                    {% if top_discounts %}
+                        {{ top_discounts.0.avg_discount|floatformat:2 }}%
+                    {% else %}
+                        -
+                    {% endif %}
+                </h4>
+                <small class="text-muted">
+                    {% if top_discounts %}
+                        {{ top_discounts.0.contract__entity__name }}
+                    {% endif %}
+                </small>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm hover-shadow">
+            <div class="card-body text-center">
+                <h6 class="text-muted">أقل خصم</h6>
+                <h4 class="text-danger">
+                    {% if low_discounts %}
+                        {{ low_discounts.0.avg_discount|floatformat:2 }}%
+                    {% else %}
+                        -
+                    {% endif %}
+                </h4>
+                <small class="text-muted">
+                    {% if low_discounts %}
+                        {{ low_discounts.0.contract__entity__name }}
+                    {% endif %}
+                </small>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm hover-shadow">
+            <div class="card-body text-center">
+                <h6 class="text-muted">إجمالي الجهات</h6>
+                <h4 class="text-primary">
+                    {{ top_discounts|length|add:low_discounts|length }}
+                </h4>
+                <small class="text-muted">جهة مختلفة</small>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

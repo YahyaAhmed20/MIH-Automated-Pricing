@@ -1,0 +1,76 @@
+{% extends 'frontend/base.html' %}
+
+{% block page_title %}
+الأطباء
+{% endblock %}
+
+{% block content %}
+
+<div class="card shadow border-0">
+
+    <div class="card-header">
+        <h5 class="mb-0">
+            قائمة الأطباء
+        </h5>
+    </div>
+
+    <div class="card-body">
+
+        <div class="table-responsive">
+
+            <table class="table table-hover">
+
+                <thead>
+
+                    <tr>
+                        <th>#</th>
+                        <th>الطبيب</th>
+                        <th>عدد الطلبات</th>
+                        <th>إجمالي التكلفة</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% for item in doctors %}
+
+                    <tr>
+
+                        <td>
+                            {{ forloop.counter }}
+                        </td>
+
+                        <td>
+
+                            <a href="{% url 'doctor_detail' item.doctor_name %}">
+
+                                {{ item.doctor_name }}
+
+                            </a>
+
+                        </td>
+
+                        <td>
+                            {{ item.total_requests }}
+                        </td>
+
+                        <td>
+                            {{ item.total_cost|floatformat:0 }} ج.م
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends 'frontend/base.html' %}
+
+{% block page_title %}
+إضافة باكدج جديد
+{% endblock %}
+
+{% block content %}
+<div class="card shadow border-0">
+    <div class="card-body">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-success">
+                <i class="fas fa-save"></i> حفظ
+            </button>
+            <a href="{% url 'frontend:packages' %}" class="btn btn-secondary">
+                <i class="fas fa-times"></i> إلغاء
+            </a>
+        </form>
+    </div>
+</div>
+{% endblock %}

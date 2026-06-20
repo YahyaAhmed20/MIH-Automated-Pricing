@@ -1,0 +1,240 @@
+{% extends 'frontend/base.html' %}
+
+{% block page_title %}
+تفاصيل الطلب #{{ approval.id }}
+{% endblock %}
+
+{% block content %}
+
+<!-- ============================================ -->
+<!-- بطاقة التفاصيل -->
+<!-- ============================================ -->
+<div class="card shadow border-0 hover-shadow">
+
+    <div class="card-header d-flex justify-content-between align-items-center">
+
+        <h5 class="mb-0">
+            <i class="bi bi-file-earmark-text"></i>
+            طلب رقم {{ approval.id }}
+        </h5>
+
+        <div>
+
+            <!-- حالة الطلب -->
+            {% if approval.status == "approved" %}
+                <span class="badge bg-success rounded-pill">
+                    <i class="bi bi-check-circle"></i> تمت الموافقة
+                </span>
+            {% elif approval.status == "pending" %}
+                <span class="badge bg-warning text-dark rounded-pill">
+                    <i class="bi bi-clock"></i> قيد الانتظار
+                </span>
+            {% elif approval.status == "rejected" %}
+                <span class="badge bg-danger rounded-pill">
+                    <i class="bi bi-x-circle"></i> مرفوضة
+                </span>
+            {% elif approval.status == "service_done" %}
+                <span class="badge bg-primary rounded-pill">
+                    <i class="bi bi-check2-all"></i> تم تنفيذ الخدمة
+                </span>
+            {% elif approval.status == "patient_refused" %}
+                <span class="badge bg-secondary rounded-pill">
+                    <i class="bi bi-person-x"></i> رفض المريض
+                </span>
+            {% else %}
+                <span class="badge bg-dark rounded-pill">
+                    {{ approval.status }}
+                </span>
+            {% endif %}
+
+            <!-- زر العودة -->
+            <a href="{% url 'external_approvals' %}" class="btn btn-outline-secondary btn-sm ms-2">
+                <i class="bi bi-arrow-right"></i> العودة
+            </a>
+
+        </div>
+
+    </div>
+
+    <div class="card-body">
+
+        <!-- ============================================ -->
+        <!-- بيانات المريض والطلب -->
+        <!-- ============================================ -->
+        <div class="row g-4">
+
+            <div class="col-md-6">
+
+                <div class="card bg-light border-0 h-100">
+                    <div class="card-body">
+
+                        <h5 class="text-primary mb-3">
+                            <i class="bi bi-person"></i>
+                            بيانات المريض
+                        </h5>
+
+                        <div class="row g-2">
+                            <div class="col-4 text-muted">الاسم:</div>
+                            <div class="col-8 fw-bold">{{ approval.patient.full_name }}</div>
+
+                            <div class="col-4 text-muted">رقم الكارت:</div>
+                            <div class="col-8">{{ approval.patient.card_number }}</div>
+
+                            <div class="col-4 text-muted">رقم الملف:</div>
+                            <div class="col-8">{{ approval.patient.medical_number }}</div>
+
+                            <div class="col-4 text-muted">الهاتف:</div>
+                            <div class="col-8">{{ approval.patient.phone }}</div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-md-6">
+
+                <div class="card bg-light border-0 h-100">
+                    <div class="card-body">
+
+                        <h5 class="text-success mb-3">
+                            <i class="bi bi-file-medical"></i>
+                            بيانات الطلب
+                        </h5>
+
+                        <div class="row g-2">
+                            <div class="col-4 text-muted">الجهة:</div>
+                            <div class="col-8 fw-bold">{{ approval.entity.name }}</div>
+
+                            <div class="col-4 text-muted">الطبيب:</div>
+                            <div class="col-8">{{ approval.doctor_name }}</div>
+
+                            <div class="col-4 text-muted">التخصص:</div>
+                            <div class="col-8">{{ approval.specialty.name }}</div>
+
+                            <div class="col-4 text-muted">الإجراء:</div>
+                            <div class="col-8">{{ approval.procedure_name }}</div>
+
+                            <div class="col-4 text-muted">التاريخ:</div>
+                            <div class="col-8">{{ approval.request_date|date:"Y-m-d" }}</div>
+
+                            <div class="col-4 text-muted">الحالة:</div>
+                            <div class="col-8">
+                                {% if approval.status == "approved" %}
+                                    <span class="badge bg-success rounded-pill">
+                                        <i class="bi bi-check-circle"></i> تمت الموافقة
+                                    </span>
+                                {% elif approval.status == "pending" %}
+                                    <span class="badge bg-warning text-dark rounded-pill">
+                                        <i class="bi bi-clock"></i> قيد الانتظار
+                                    </span>
+                                {% elif approval.status == "rejected" %}
+                                    <span class="badge bg-danger rounded-pill">
+                                        <i class="bi bi-x-circle"></i> مرفوضة
+                                    </span>
+                                {% elif approval.status == "service_done" %}
+                                    <span class="badge bg-primary rounded-pill">
+                                        <i class="bi bi-check2-all"></i> تم تنفيذ الخدمة
+                                    </span>
+                                {% elif approval.status == "patient_refused" %}
+                                    <span class="badge bg-secondary rounded-pill">
+                                        <i class="bi bi-person-x"></i> رفض المريض
+                                    </span>
+                                {% else %}
+                                    <span class="badge bg-dark rounded-pill">
+                                        {{ approval.status }}
+                                    </span>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <hr>
+
+        <!-- ============================================ -->
+        <!-- التكاليف -->
+        <!-- ============================================ -->
+        <div class="row g-3">
+
+            <div class="col-md-4">
+
+                <div class="card border-primary shadow-sm text-center hover-shadow">
+                    <div class="card-body">
+                        <div class="icon-circle bg-primary bg-opacity-10 mb-2 mx-auto">
+                            <i class="bi bi-arrow-up-circle text-primary"></i>
+                        </div>
+                        <h6 class="text-muted">التكلفة المطلوبة</h6>
+                        <h4 class="text-primary">
+                            {{ approval.requested_cost|floatformat:0 }} <small>ج.م</small>
+                        </h4>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <div class="card border-success shadow-sm text-center hover-shadow">
+                    <div class="card-body">
+                        <div class="icon-circle bg-success bg-opacity-10 mb-2 mx-auto">
+                            <i class="bi bi-arrow-down-circle text-success"></i>
+                        </div>
+                        <h6 class="text-muted">التكلفة المستلمة</h6>
+                        <h4 class="text-success">
+                            {% if approval.received_cost %}
+                                {{ approval.received_cost|floatformat:0 }} <small>ج.م</small>
+                            {% else %}
+                                <span class="text-muted">-</span>
+                            {% endif %}
+                        </h4>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <div class="card border-info shadow-sm text-center hover-shadow">
+                    <div class="card-body">
+                        <div class="icon-circle bg-info bg-opacity-10 mb-2 mx-auto">
+                            <i class="bi bi-hash text-info"></i>
+                        </div>
+                        <h6 class="text-muted">رقم الموافقة</h6>
+                        <h4 class="text-info">
+                            {{ approval.approval_number|default:"-" }}
+                        </h4>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ============================================ -->
+        <!-- ملاحظات (إن وجدت) -->
+        <!-- ============================================ -->
+        {% if approval.notes %}
+        <hr>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="alert alert-warning">
+                    <i class="bi bi-sticky"></i>
+                    <strong>ملاحظات:</strong>
+                    {{ approval.notes }}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}

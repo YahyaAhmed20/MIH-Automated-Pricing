@@ -1,0 +1,282 @@
+{% extends 'frontend/base.html' %}
+
+{% block page_title %}
+الباكدجات
+{% endblock %}
+
+{% block content %}
+
+<!-- ============================================ -->
+<!-- شريط البحث والفلتر -->
+<!-- ============================================ -->
+<div class="card shadow border-0 hover-shadow">
+
+    <div class="card-body">
+
+        <form method="get">
+
+            <div class="row g-3 align-items-end">
+
+                <div class="col-md-4">
+                    <label class="form-label fw-bold small text-muted">
+                        <i class="fas fa-search"></i> بحث
+                    </label>
+                    <input
+                        type="text"
+                        name="search"
+                        class="form-control form-control-lg"
+                        placeholder="بحث باسم الباكدج أو الكود"
+                        value="{{ search }}"
+                    >
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label fw-bold small text-muted">
+                        <i class="fas fa-filter"></i> نوع الباكدج
+                    </label>
+                    <select
+                        name="type"
+                        class="form-select form-select-lg">
+
+                        <option value="">
+                            كل الباكدجات
+                        </option>
+
+                        <option value="credit" {% if package_type == 'credit' %}selected{% endif %}>
+                            الآجل
+                        </option>
+
+                        <option value="cash" {% if package_type == 'cash' %}selected{% endif %}>
+                            النقدي
+                        </option>
+
+                    </select>
+                </div>
+
+                <div class="col-md-2">
+                    <button class="btn btn-primary btn-lg w-100">
+                        <i class="fas fa-search"></i> بحث
+                    </button>
+                </div>
+
+                <div class="col-md-3 text-end">
+                    <a href="{% url 'packages' %}" class="btn btn-outline-secondary btn-lg">
+                        <i class="fas fa-undo"></i> مسح الكل
+                    </a>
+                </div>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+<!-- ============================================ -->
+<!-- جدول الباكدجات -->
+<!-- ============================================ -->
+<div class="card shadow border-0 mt-4 hover-shadow">
+
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">
+            <i class="fas fa-boxes"></i>
+            الباكدجات
+        </h5>
+        <span class="badge bg-primary rounded-pill">
+            {{ page_obj.paginator.count }}
+        </span>
+    </div>
+
+    <div class="card-body">
+
+        <!-- عرض عدد النتائج -->
+        <div class="alert alert-info d-flex justify-content-between align-items-center">
+            <span>
+                <i class="fas fa-list"></i>
+                عدد الباكدجات
+            </span>
+            <strong class="badge bg-info rounded-pill fs-5">
+                {{ page_obj.paginator.count }}
+            </strong>
+        </div>
+
+        <div class="table-responsive">
+
+            <table class="table table-hover table-striped align-middle">
+
+                <thead class="table-light">
+
+                    <tr>
+
+                        <th>الكود</th>
+
+                        <th>اسم الباكدج</th>
+
+                        <th>التخصص</th>
+
+                        <th>السعر</th>
+
+                        <th>الإقامة</th>
+
+                        <th>النوع</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% for package in page_obj %}
+
+                    <tr>
+
+                        <td>
+                            <span class="badge bg-secondary rounded-pill">
+                                {{ package.code }}
+                            </span>
+                        </td>
+
+                        <td>
+                            <strong>{{ package.name }}</strong>
+                        </td>
+
+                        <td>
+                            {{ package.specialty.name }}
+                        </td>
+
+                        <td>
+                            <span class="text-primary fw-bold">
+                                {{ package.base_price|floatformat:0 }} جنيه
+                            </span>
+                        </td>
+
+                        <td>
+                            {% if package.stay_duration and package.stay_duration != "nan" %}
+                                <span class="badge bg-info rounded-pill">
+                                    {{ package.stay_duration }}
+                                </span>
+                            {% else %}
+                                <span class="text-muted">-</span>
+                            {% endif %}
+                        </td>
+
+                        <td>
+
+                            {% if package.is_cash_package %}
+
+                                <span class="badge bg-success rounded-pill">
+                                    <i class="fas fa-money-bill-wave"></i> نقدي
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge bg-primary rounded-pill">
+                                    <i class="fas fa-calendar-alt"></i> آجل
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+
+                {% empty %}
+
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-4">
+                            <i class="fas fa-inbox fa-3x d-block mb-3"></i>
+                            لا توجد باكدجات تطابق معايير البحث
+                        </td>
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        <!-- ============================================ -->
+        <!-- الترقيم -->
+        <!-- ============================================ -->
+        <nav>
+
+            <ul class="pagination justify-content-center">
+
+                {% if page_obj.has_previous %}
+
+                <li class="page-item">
+
+                    <a class="page-link"
+                       href="?page=1&search={{ search }}&type={{ package_type }}">
+
+                        <i class="fas fa-angle-double-right"></i>
+                        الأولى
+
+                    </a>
+
+                </li>
+
+                <li class="page-item">
+
+                    <a class="page-link"
+                       href="?page={{ page_obj.previous_page_number }}&search={{ search }}&type={{ package_type }}">
+
+                        <i class="fas fa-angle-right"></i>
+                        السابق
+
+                    </a>
+
+                </li>
+
+                {% endif %}
+
+                <li class="page-item active">
+
+                    <span class="page-link">
+
+                        {{ page_obj.number }}
+
+                    </span>
+
+                </li>
+
+                {% if page_obj.has_next %}
+
+                <li class="page-item">
+
+                    <a class="page-link"
+                       href="?page={{ page_obj.next_page_number }}&search={{ search }}&type={{ package_type }}">
+
+                        التالي
+                        <i class="fas fa-angle-left"></i>
+
+                    </a>
+
+                </li>
+
+                <li class="page-item">
+
+                    <a class="page-link"
+                       href="?page={{ page_obj.paginator.num_pages }}&search={{ search }}&type={{ package_type }}">
+
+                        الأخيرة
+                        <i class="fas fa-angle-double-left"></i>
+
+                    </a>
+
+                </li>
+
+                {% endif %}
+
+            </ul>
+
+        </nav>
+
+    </div>
+
+</div>
+
+{% endblock %}
