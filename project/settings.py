@@ -23,23 +23,20 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-mbdn9)+91#j^)w^jk4skrz_h_2nx_j&6l)!-=fdj*2sogl^m=h'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
+DEBUG = False
 
 ALLOWED_HOSTS = [
     "mih-automated-pricing.up.railway.app",
     "127.0.0.1",
     "localhost",
+    ".railway.app",  # يسمح بكل النطاقات الفرعية
 ]
+
 CSRF_TRUSTED_ORIGINS = [
-    # "https://fiber-production-0802.up.railway.app",
     "http://127.0.0.1:8000",
     "http://localhost:8000",
-    "https://mih-automated-pricing.up.railway.app/",
-    
-
+    "https://mih-automated-pricing.up.railway.app",
 ]
-
 
 
 # Application definition
