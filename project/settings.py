@@ -25,24 +25,20 @@ SECRET_KEY = 'django-insecure-mbdn9)+91#j^)w^jk4skrz_h_2nx_j&6l)!-=fdj*2sogl^m=h
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
 
-# ALLOWED_HOSTS = [
-#     "web-production-ffb34.up.railway.app",
-#     "127.0.0.1",
-#     "localhost",
-#     "www.rovanatrade.com",
-#     "rovanatrade.com",
-# ]
-# CSRF_TRUSTED_ORIGINS = [
-#     # "https://fiber-production-0802.up.railway.app",
-#     "http://127.0.0.1:8000",
-#     "http://localhost:8000",
-#     "https://web-production-ffb34.up.railway.app",
-#     "https://www.rovanatrade.com",
-#     "https://rovanatrade.com",
+ALLOWED_HOSTS = [
+    "mih-automated-pricing.up.railway.app",
+    "127.0.0.1",
+    "localhost",
+]
+CSRF_TRUSTED_ORIGINS = [
+    # "https://fiber-production-0802.up.railway.app",
+    "http://127.0.0.1:8000",
+    "http://localhost:8000",
+    "https://mih-automated-pricing.up.railway.app/",
+    
 
-# ]
+]
 
 
 
