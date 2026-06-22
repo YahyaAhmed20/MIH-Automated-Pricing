@@ -458,7 +458,6 @@ class SpecialOffer(models.Model):
     def __str__(self):
         return f"{self.entity} - {self.procedure_name}"
     
-    
 class ContractPackage(models.Model):
 
     contract = models.ForeignKey(
@@ -475,57 +474,91 @@ class ContractPackage(models.Model):
 
     package_price = models.DecimalField(
         max_digits=12,
-        decimal_places=2
+        decimal_places=2,
+        verbose_name="سعر الباكدج"
     )
 
     total_before_discount = models.DecimalField(
         max_digits=12,
         decimal_places=2,
         blank=True,
-        null=True
+        null=True,
+        verbose_name="الإجمالي قبل الخصم"
     )
 
     current_discount_rate = models.DecimalField(
         max_digits=5,
         decimal_places=2,
         blank=True,
-        null=True
+        null=True,
+        verbose_name="نسبة الخصم الحالية"
     )
 
     cash_price = models.DecimalField(
         max_digits=12,
         decimal_places=2,
         blank=True,
-        null=True
+        null=True,
+        verbose_name="السعر النقدي"
     )
 
     special_offer_price = models.DecimalField(
         max_digits=12,
         decimal_places=2,
         blank=True,
-        null=True
+        null=True,
+        verbose_name="سعر العرض الخاص"
+    )
+
+    # ✅ الحقول الجديدة (مضافة)
+    special_offer_company = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name="شركة العرض الخاص"
+    )
+
+    price_list_applied = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name="قائمة الأسعار المطبقة"
     )
 
     effective_from = models.DateField(
+        blank=True,
+        null=True,
+        verbose_name="ساري من"
+    )
+    approval_pdf = models.TextField(
+    blank=True,
+    null=True
+)
+
+    valid_until = models.DateField(
         blank=True,
         null=True
     )
 
     notes = models.TextField(
         blank=True,
-        null=True
+        null=True,
+        verbose_name="ملاحظات"
     )
 
     is_active = models.BooleanField(
-        default=True
+        default=True,
+        verbose_name="نشط"
     )
 
     created_at = models.DateTimeField(
-        auto_now_add=True
+        auto_now_add=True,
+        verbose_name="تاريخ الإنشاء"
     )
 
     updated_at = models.DateTimeField(
-        auto_now=True
+        auto_now=True,
+        verbose_name="تاريخ التحديث"
     )
 
     class Meta:
@@ -542,6 +575,7 @@ class ContractPackage(models.Model):
         indexes = [
             models.Index(fields=["contract"]),
             models.Index(fields=["package"]),
+            models.Index(fields=["contract", "package"]),  # ✅ فهرس مركب للاستعلامات السريعة
         ]
 
     def __str__(self):

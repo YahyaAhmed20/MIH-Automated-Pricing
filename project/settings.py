@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-mbdn9)+91#j^)w^jk4skrz_h_2nx_j&6l)!-=fdj*2sogl^m=h'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
     "mih-automated-pricing.up.railway.app",
@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework_simplejwt",
     "django_filters",
+    'django.contrib.humanize',
     
     # Apps
     'accounts',

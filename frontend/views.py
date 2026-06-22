@@ -1426,3 +1426,65 @@ def doctor_detail(request, doctor_name):
         "frontend/doctor_detail.html",
         context
     )
+
+def credit_package_pricing(request):
+
+    company_id = request.GET.get("company")
+    package_id = request.GET.get("package")
+
+    companies = (
+        ContractEntity.objects
+        .filter(
+            contracts__contract_packages__isnull=False
+        )
+        .distinct()
+        .order_by("name")
+    )
+
+    packages = ContractPackage.objects.none()
+
+    selected_package = None
+
+    if company_id:
+
+        packages = (
+            ContractPackage.objects
+            .filter(
+                contract__entity_id=company_id
+            )
+            .select_related(
+                "package"
+            )
+            .order_by("package__name")
+        )
+
+    if package_id:
+
+        selected_package = get_object_or_404(
+            ContractPackage.objects.select_related(
+                "package",
+                "contract__entity",
+                "package__specialty",
+            ),
+            id=package_id
+        )
+
+        # ✅ تنسيق الأرقام في الـ View (زي ما عملت في home)
+        if selected_package:
+            selected_package.formatted_price = f"{selected_package.package_price:,.2f}"
+            selected_package.formatted_cash = f"{selected_package.cash_price:,.2f}" if selected_package.cash_price else "-"
+            selected_package.formatted_total_before = f"{selected_package.total_before_discount:,.2f}" if selected_package.total_before_discount else "0.00"
+            selected_package.formatted_special_offer = f"{selected_package.special_offer_price:,.2f}" if selected_package.special_offer_price else "-"
+            selected_package.formatted_discount = f"{selected_package.current_discount_rate:,.2f}" if selected_package.current_discount_rate else "0.00"
+            selected_package.formatted_current_price = f"{selected_package.package_price:,.2f}"
+
+    return render(
+        request,
+        "frontend/credit_package_pricing.html",
+        {
+            "companies": companies,
+            "packages": packages,
+            "selected_package": selected_package,
+            "selected_company": company_id,
+        }
+    )

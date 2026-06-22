@@ -146,4 +146,10 @@ path(
     views.doctor_detail,
     name="doctor_detail"
 ),
+
+path(
+    "credit-package-pricing/",
+    views.credit_package_pricing,
+    name="credit_package_pricing"
+),
 ]

@@ -2,14 +2,14 @@ from django.core.management.base import BaseCommand
 
 from imports.utils.excel_reader import ExcelReader
 
-from imports.services.package_pricing_import_service_old import (
-    PackagePricingImportService,
+from imports.services.package_price_metadata_import_service import (
+    PackagePriceMetadataImportService
 )
 
 
 class Command(BaseCommand):
 
-    help = "Import Package Pricing Sheet"
+    help = "Import Package Metadata"
 
     def add_arguments(self, parser):
 
@@ -18,21 +18,15 @@ class Command(BaseCommand):
             type=str
         )
 
-    def handle(
-        self,
-        *args,
-        **options
-    ):
-
-        file_path = options["file_path"]
+    def handle(self, *args, **options):
 
         dataframe = ExcelReader.read_sheet(
-            file_path=file_path,
-            sheet_name="DATA"
+            file_path=options["file_path"],
+            sheet_name="package price"
         )
 
         result = (
-            PackagePricingImportService.import_data(
+            PackagePriceMetadataImportService.import_data(
                 dataframe
             )
         )

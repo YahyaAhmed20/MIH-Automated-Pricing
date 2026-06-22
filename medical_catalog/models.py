@@ -56,9 +56,9 @@ class Procedure(models.Model):
     )
 
     code = models.CharField(
-    max_length=100,
-    unique=True,
-    db_index=True
+        max_length=100,
+        unique=True,
+        db_index=True
     )
 
     name_ar = models.CharField(
@@ -88,14 +88,24 @@ class Procedure(models.Model):
         verbose_name_plural = "الإجراءات"
         ordering = ["code"]
         indexes = [
-        models.Index(fields=["specialty"]),
-    ]
+            models.Index(fields=["specialty"]),
+        ]
 
     def __str__(self):
         return f"{self.code} - {self.name_ar}"
     
     
 class Package(models.Model):
+
+    # ✅ العلاقة مع ContractEntity (جديد)
+    entity = models.ForeignKey(
+        'contracts.ContractEntity',  # ✅ استخدم اسم التطبيق بالكامل
+        on_delete=models.CASCADE,
+        related_name="packages",
+        null=True,
+        blank=True,
+        verbose_name="الجهة المتعاقدة"
+    )
 
     specialty = models.ForeignKey(
         Specialty,
@@ -116,17 +126,17 @@ class Package(models.Model):
     )
 
     code = models.CharField(
-    max_length=100,
-    blank=True,
-    null=True,
-    db_index=True
+        max_length=100,
+        blank=True,
+        null=True,
+        db_index=True
     )
     
     base_price = models.DecimalField(
-    max_digits=12,
-    decimal_places=2,
-    blank=True,
-    null=True
+        max_digits=12,
+        decimal_places=2,
+        blank=True,
+        null=True
     )
 
     stay_duration = models.CharField(
@@ -149,6 +159,68 @@ class Package(models.Model):
         default=False
     )
 
+    # ✅ الحقول الجديدة للتسعير والعقود
+    contract_type = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        verbose_name="نوع العقد"
+    )
+
+    total_without_discount = models.DecimalField(
+        max_digits=12,
+        decimal_places=2,
+        blank=True,
+        null=True,
+        verbose_name="الإجمالي قبل الخصم"
+    )
+
+    total_price = models.DecimalField(
+        max_digits=12,
+        decimal_places=2,
+        blank=True,
+        null=True,
+        verbose_name="السعر الإجمالي"
+    )
+
+    current_discount = models.DecimalField(
+        max_digits=5,
+        decimal_places=2,
+        blank=True,
+        null=True,
+        verbose_name="الخصم الحالي"
+    )
+
+    price_list_applied = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name="قائمة الأسعار المطبقة"
+    )
+
+    special_offer_price = models.DecimalField(
+        max_digits=12,
+        decimal_places=2,
+        blank=True,
+        null=True,
+        verbose_name="سعر العرض الخاص"
+    )
+
+    special_offer_company = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name="شركة العرض الخاص"
+    )
+
+    cash_price = models.DecimalField(
+        max_digits=12,
+        decimal_places=2,
+        blank=True,
+        null=True,
+        verbose_name="السعر النقدي"
+    )
+
     is_active = models.BooleanField(
         default=True
     )
@@ -161,8 +233,9 @@ class Package(models.Model):
         verbose_name_plural = "الباكدجات"
         ordering = ["name"]
         indexes = [
-        models.Index(fields=["specialty"]),
-    ]
+            models.Index(fields=["specialty"]),
+            models.Index(fields=["entity"]),  # ✅ إضافة فهرس للـ entity
+        ]
 
     def __str__(self):
         return self.name
@@ -196,6 +269,3 @@ class PackageAttachment(models.Model):
 
     def __str__(self):
         return self.package.name
-    
-    
-    

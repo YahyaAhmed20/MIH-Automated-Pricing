@@ -644,29 +644,30 @@ body {
             </a>
         </li>
 
-        <!-- 1. الباكدجات -->
-        <li class="menu-item">
-            <a class="menu-link"
-               data-bs-toggle="collapse"
-               href="#packagesMenu"
-               role="button"
-               aria-expanded="false">
+      <!-- 1. الباكدجات -->
+<li class="menu-item">
+    <a class="menu-link"
+       data-bs-toggle="collapse"
+       href="#packagesMenu"
+       role="button"
+       aria-expanded="false">
 
-                <i class="bi bi-box"></i>
-                الباكدجات
-                <i class="bi bi-chevron-down menu-arrow"></i>
-            </a>
+        <i class="bi bi-box"></i>
+        الباكدجات
+        <i class="bi bi-chevron-down menu-arrow"></i>
+    </a>
 
-            <div class="collapse submenu" id="packagesMenu">
-                <a href="{% url 'packages' %}">
-                    <i class="bi bi-box-seam"></i> باكدجات الآجل
-                </a>
-                <a href="{% url 'packages' %}">
-                    <i class="bi bi-cash-coin"></i> باكدجات النقدي
-                </a>
-            </div>
-        </li>
-
+    <div class="collapse submenu" id="packagesMenu">
+        <!-- ✅ باكدجات الآجل -->
+        <a href="{% url 'credit_package_pricing' %}">
+            <i class="bi bi-box-seam"></i> باكدجات الآجل
+        </a>
+        <!-- ✅ باكدجات النقدي -->
+        <a href="{% url 'packages' %}">
+            <i class="bi bi-cash-coin"></i> باكدجات النقدي
+        </a>
+    </div>
+</li>
         <!-- 2. الجهات المتعاقدة -->
         <li class="menu-item">
             <a class="menu-link" href="{% url 'contract_entities' %}">
