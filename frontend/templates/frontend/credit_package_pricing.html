@@ -241,15 +241,16 @@
 
             </div>
 
+            <!-- ✅ تحسين عرض الملاحظات -->
             <div class="col-md-4">
 
                 <label class="text-muted">
                     ملاحظات الباكدج
                 </label>
 
-                <h6>
-                    {% if selected_package.notes %}
-                        {{ selected_package.notes }}
+                <h6 style="white-space: pre-line;">
+                    {% if selected_package.package.package_note %}
+                        {{ selected_package.package.package_note }}
                     {% else %}
                         -
                     {% endif %}
@@ -678,8 +679,7 @@
             result = basePrice * (1 - discount / 100);
         }
 
-        const formattedResult = result.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-;
+        const formattedResult = result.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         const displayResult = formattedResult + " ج.م";
 
         document.getElementById("suggested-price").value = displayResult;
@@ -700,10 +700,10 @@
 
         const savingsInput = document.getElementById("savings-display");
         if (savings > 0) {
-            savingsInput.value = savings.toFixed(2) + " ج.م";
+            savingsInput.value = savings.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " ج.م";
             savingsInput.className = "form-control fw-bold text-success";
         } else if (savings < 0) {
-            savingsInput.value = Math.abs(savings).toFixed(2) + " ج.م (خسارة)";
+            savingsInput.value = Math.abs(savings).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " ج.م (خسارة)";
             savingsInput.className = "form-control fw-bold text-danger";
         } else {
             savingsInput.value = "0.00 ج.م";
@@ -726,7 +726,7 @@
         [5, 10, 15, 20, 25].forEach(function(d) {
             const value = basePrice * (1 - d / 100);
             document.getElementById("price" + d).innerText =
-                value.toFixed(2) + " ج.م";
+                value.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " ج.م";
         });
 
     });

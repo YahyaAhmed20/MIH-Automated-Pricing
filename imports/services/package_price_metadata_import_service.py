@@ -41,6 +41,7 @@ class PackagePriceMetadataImportService:
             cp.notes = row.get("notes")
 
             cp.approval_pdf = row.get("Approvalpdf")
+            cp.effective_from = row.get("Lastupdatedate")
 
             cp.valid_until = row.get("Validuntildate")
 

@@ -154,6 +154,10 @@ class Package(models.Model):
         blank=True,
         null=True
     )
+    package_note = models.TextField(
+    blank=True,
+    null=True
+    )
 
     is_cash_package = models.BooleanField(
         default=False
