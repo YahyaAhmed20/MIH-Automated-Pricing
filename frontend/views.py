@@ -1431,7 +1431,10 @@ def credit_package_pricing(request):
 
     company_id = request.GET.get("company")
     package_id = request.GET.get("package")
+    company_search = request.GET.get("company_search", "")
+    package_search = request.GET.get("package_search", "")
 
+    # ✅ جلب الشركات مع فلتر البحث
     companies = (
         ContractEntity.objects
         .filter(
@@ -1441,8 +1444,11 @@ def credit_package_pricing(request):
         .order_by("name")
     )
 
-    packages = ContractPackage.objects.none()
+    # ✅ تطبيق فلتر البحث على الشركات
+    if company_search:
+        companies = companies.filter(name__icontains=company_search)
 
+    packages = ContractPackage.objects.none()
     selected_package = None
 
     if company_id:
@@ -1452,11 +1458,13 @@ def credit_package_pricing(request):
             .filter(
                 contract__entity_id=company_id
             )
-            .select_related(
-                "package"
-            )
+            .select_related("package")
             .order_by("package__name")
         )
+
+        # ✅ تطبيق فلتر البحث على الباكدجات
+        if package_search:
+            packages = packages.filter(package__name__icontains=package_search)
 
     if package_id:
 
@@ -1469,7 +1477,7 @@ def credit_package_pricing(request):
             id=package_id
         )
 
-        # ✅ تنسيق الأرقام في الـ View (زي ما عملت في home)
+        # ✅ تنسيق الأرقام
         if selected_package:
             selected_package.formatted_price = f"{selected_package.package_price:,.2f}"
             selected_package.formatted_cash = f"{selected_package.cash_price:,.2f}" if selected_package.cash_price else "-"
@@ -1482,9 +1490,11 @@ def credit_package_pricing(request):
         request,
         "frontend/credit_package_pricing.html",
         {
-            "companies": companies,
+            "companies": companies,  # ✅ الشركات المفلترة
             "packages": packages,
             "selected_package": selected_package,
             "selected_company": company_id,
+            "company_search": company_search,  # ✅ للاحتفاظ بقيمة البحث
+            "package_search": package_search,
         }
     )

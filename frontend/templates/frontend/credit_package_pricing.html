@@ -20,93 +20,141 @@
         <!-- ============================================ -->
         <!-- Form البحث والفلتر -->
         <!-- ============================================ -->
-        <form method="get">
+      <!-- ============================================ -->
+<!-- Form البحث والفلتر -->
+<!-- ============================================ -->
+<form method="get">
 
-            <div class="row g-3 align-items-end">
+    <div class="row g-3 align-items-end">
 
-                <div class="col-md-5">
+        <!-- ✅ العمود الأول: الشركة (مع Search) -->
+       <!-- ✅ العمود الأول: الشركة (مع Search) -->
+<div class="col-md-4">
 
-                    <label class="form-label fw-bold text-muted small">
-                        <i class="bi bi-building"></i>
-                        الشركة
-                    </label>
+    <label class="form-label fw-bold text-muted small">
+        <i class="bi bi-building"></i>
+        الشركة
+    </label>
 
-                    <select
-                        name="company"
-                        class="form-select form-select-lg"
-                        onchange="this.form.submit()">
+    <div class="input-group">
+        <input
+            type="text"
+            name="company_search"
+            id="company-search-input"
+            class="form-control form-control-lg"
+            placeholder="ابحث عن شركة..."
+            value="{{ company_search }}"
+            onkeyup="searchDelay()"
+        >
+        <select
+            name="company"
+            class="form-select form-select-lg"
+            onchange="this.form.submit()"
+            style="max-width: 200px;"
+        >
+            <option value="">
+                اختر الشركة
+            </option>
 
-                        <option value="">
-                            اختر الشركة
-                        </option>
+            {% for company in companies %}
 
-                        {% for company in companies %}
+            <option
+                value="{{ company.id }}"
+                {% if selected_company == company.id|stringformat:"s" %}
+                selected
+                {% endif %}
+            >
+                {{ company.name }}
+            </option>
 
-                        <option
-                            value="{{ company.id }}"
-                            {% if selected_company == company.id|stringformat:"s" %}
-                            selected
-                            {% endif %}
-                        >
-                            {{ company.name }}
-                        </option>
+            {% endfor %}
 
-                        {% endfor %}
+        </select>
+    </div>
 
-                    </select>
+</div>
 
-                </div>
+<!-- ✅ العمود الثاني: الباكدج (مع Search) -->
+<div class="col-md-4">
 
-                <div class="col-md-5">
+    <label class="form-label fw-bold text-muted small">
+        <i class="bi bi-box"></i>
+        الباكدج
+    </label>
 
-                    <label class="form-label fw-bold text-muted small">
-                        <i class="bi bi-box"></i>
-                        الباكدج
-                    </label>
+    <div class="input-group">
+        <input
+            type="text"
+            name="package_search"
+            id="package-search-input"
+            class="form-control form-control-lg"
+            placeholder="ابحث عن باكدج..."
+            value="{{ package_search }}"
+            onkeyup="searchDelay()"
+        >
+        <select
+            name="package"
+            class="form-select form-select-lg"
+            onchange="this.form.submit()"
+            style="max-width: 200px;"
+        >
+            <option value="">
+                {% if packages %}
+                    اختر الباكدج
+                {% else %}
+                    اختر الشركة أولاً
+                {% endif %}
+            </option>
 
-                    <select
-                        name="package"
-                        class="form-select form-select-lg"
-                        onchange="this.form.submit()">
+            {% for cp in packages %}
 
-                        <option value="">
-                            {% if packages %}
-                                اختر الباكدج
-                            {% else %}
-                                اختر الشركة أولاً
-                            {% endif %}
-                        </option>
+            <option
+                value="{{ cp.id }}"
+                {% if selected_package and selected_package.id == cp.id %}
+                selected
+                {% endif %}
+            >
+                {{ cp.package.name }}
+            </option>
 
-                        {% for cp in packages %}
+            {% endfor %}
 
-                        <option
-                            value="{{ cp.id }}"
-                            {% if selected_package and selected_package.id == cp.id %}
-                            selected
-                            {% endif %}
-                        >
-                            {{ cp.package.name }}
-                        </option>
+        </select>
+    </div>
 
-                        {% endfor %}
+</div>
 
-                    </select>
+        <!-- ✅ العمود الثالث: زر مسح -->
+        <div class="col-md-2">
 
-                </div>
+            <label class="form-label fw-bold text-muted small">
+                &nbsp;
+            </label>
 
-                <div class="col-md-2">
+            <a href="{% url 'credit_package_pricing' %}" class="btn btn-outline-secondary btn-lg w-100">
+                <i class="bi bi-arrow-counterclockwise"></i>
+                مسح
+            </a>
 
-                    <a href="{% url 'credit_package_pricing' %}" class="btn btn-outline-secondary btn-lg w-100">
-                        <i class="bi bi-arrow-counterclockwise"></i>
-                        مسح
-                    </a>
+        </div>
 
-                </div>
+        <!-- ✅ العمود الرابع: زر بحث منفصل -->
+        <div class="col-md-2">
 
-            </div>
+            <label class="form-label fw-bold text-muted small">
+                &nbsp;
+            </label>
 
-        </form>
+            <button class="btn btn-primary btn-lg w-100" type="submit">
+                <i class="bi bi-search"></i>
+                بحث
+            </button>
 
+        </div>
+
+    </div>
+
+</form>
     </div>
 
 </div>
@@ -231,9 +279,9 @@
 
             <div class="col-md-4">
 
-                <label class="text-muted">
+                {% comment %} <label class="text-muted">
                     صالح حتى
-                </label>
+                </label> {% endcomment %}
 
                 <h6>
                     {{ selected_package.valid_until|date:"Y-m-d"|default:"-" }}
@@ -638,6 +686,23 @@
 
 <!-- ============================================ -->
 <!-- Script تخفيض السعر + جدول المقارنات -->
+<!-- ============================================ -->
+<!-- ============================================ -->
+<!-- ✅ Search Delay Script (بيشتغل طول الوقت) -->
+<!-- ============================================ -->
+<script>
+    let searchTimeout;
+
+    function searchDelay() {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(function() {
+            document.querySelector('form').submit();
+        }, 500); // 500ms = نصف ثانية
+    }
+</script>
+
+<!-- ============================================ -->
+<!-- Script تخفيض السعر (بيشتغل بس لو في باكدج مختار) -->
 <!-- ============================================ -->
 {% if selected_package %}
 <script>
