@@ -1,6 +1,7 @@
 import pandas as pd
 
 from contracts.models import ContractPackage
+from imports.utils.import_helpers import ImportHelpers
 
 
 class PackagePriceMetadataImportService:
@@ -43,7 +44,10 @@ class PackagePriceMetadataImportService:
             cp.approval_pdf = row.get("Approvalpdf")
             cp.effective_from = row.get("Lastupdatedate")
 
-            cp.valid_until = row.get("Validuntildate")
+            cp.valid_until = ImportHelpers.clean_date(
+                row.get("ساري حتي")
+)
+
 
             cp.save()
 

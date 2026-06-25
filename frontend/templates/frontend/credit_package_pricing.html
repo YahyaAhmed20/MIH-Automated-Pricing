@@ -241,27 +241,27 @@
 
             <div class="col-md-4">
 
-                <label class="text-muted">
-                    الخصم الحالي
+                {% comment %} <label class="text-muted">
+                   معدل الخصم الحالي 
                 </label>
 
                 <h6>
                     <span class="badge bg-success">
                         {{ selected_package.formatted_discount }}%
                     </span>
-                </h6>
+                </h6> {% endcomment %}
 
             </div>
 
             <div class="col-md-4">
-
+{% comment %} 
                 <label class="text-muted">
                     السعر النقدي
                 </label>
 
                 <h6 class="text-success">
                     {{ selected_package.formatted_cash }} ج.م
-                </h6>
+                </h6> {% endcomment %}
 
             </div>
 
@@ -279,13 +279,13 @@
 
             <div class="col-md-4">
 
-                {% comment %} <label class="text-muted">
+                <label class="text-muted">
                     صالح حتى
-                </label> {% endcomment %}
+                </label> 
 
-                {% comment %} <h6>
+             <h6>
                     {{ selected_package.valid_until|date:"Y-m-d"|default:"-" }}
-                </h6> {% endcomment %}
+                </h6> 
 
             </div>
 
@@ -366,7 +366,7 @@
             <div class="col-md-4">
 
                 <label class="form-label fw-bold text-muted small">
-                    Special Offer
+           أقل سعر اجل للباكدج
                 </label>
 
                 <input
@@ -380,7 +380,7 @@
             <div class="col-md-4">
 
                 <label class="form-label fw-bold text-muted small">
-                    Cash
+                   السعر النقدي 
                 </label>
 
                 <input
@@ -394,7 +394,7 @@
             <div class="col-md-4">
 
                 <label class="form-label fw-bold text-muted small">
-                    الخصم الحالي
+                     معدل الخصم الحالي 
                 </label>
 
                 <input
@@ -421,11 +421,11 @@
                     <option value="20">20%</option>
                     <option value="25">25%</option>
 
-                    {% if selected_package.special_offer_price %}
+                    {% comment %} {% if selected_package.special_offer_price %}
                         <option value="special">Special Offer</option>
                     {% endif %}
 
-                    <option value="cash">Cash</option>
+                    <option value="cash">Cash</option> {% endcomment %}
 
                 </select>
 
@@ -482,7 +482,7 @@
             <div class="col-md-4">
 
                 <label class="form-label fw-bold text-muted small">
-                    الوفر
+                   قيمه التخفيض
                 </label>
 
                 <input
@@ -509,7 +509,7 @@
 
         <h5 class="mb-0">
             <i class="bi bi-table"></i>
-            مقارنة الخصومات
+           معدلات الخصم المقترحه
         </h5>
 
     </div>
@@ -523,7 +523,7 @@
                 <thead class="table-light">
 
                     <tr>
-                        <th>الخصم</th>
+                        <th>معدل الخصم</th>
                         <th>السعر</th>
                     </tr>
 

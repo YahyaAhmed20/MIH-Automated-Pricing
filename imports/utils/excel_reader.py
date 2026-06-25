@@ -8,7 +8,19 @@ class ExcelReader:
         file_path,
         sheet_name
     ):
-        return pd.read_excel(
+
+        dataframe = pd.read_excel(
             file_path,
             sheet_name=sheet_name
         )
+
+        # ============================================================
+        # ✅ تنظيف أسماء الأعمدة
+        # ============================================================
+        dataframe.columns = (
+            dataframe.columns
+            .astype(str)
+            .str.strip()
+        )
+
+        return dataframe
