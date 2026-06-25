@@ -1,4 +1,5 @@
 from django.db.models.functions import TruncMonth
+from contracts.services.pricing_engine import PricingEngine
 from django.db.models import Count
 from contracts.models import ContractPackage
 from django.db.models import Count
@@ -1426,6 +1427,7 @@ def doctor_detail(request, doctor_name):
         "frontend/doctor_detail.html",
         context
     )
+from django.utils import timezone
 
 def credit_package_pricing(request):
 
@@ -1479,22 +1481,102 @@ def credit_package_pricing(request):
 
         # ✅ تنسيق الأرقام
         if selected_package:
-            selected_package.formatted_price = f"{selected_package.package_price:,.2f}"
-            selected_package.formatted_cash = f"{selected_package.cash_price:,.2f}" if selected_package.cash_price else "-"
-            selected_package.formatted_total_before = f"{selected_package.total_before_discount:,.2f}" if selected_package.total_before_discount else "0.00"
-            selected_package.formatted_special_offer = f"{selected_package.special_offer_price:,.2f}" if selected_package.special_offer_price else "-"
-            selected_package.formatted_discount = f"{selected_package.current_discount_rate:,.2f}" if selected_package.current_discount_rate else "0.00"
-            selected_package.formatted_current_price = f"{selected_package.package_price:,.2f}"
+            # ============================================================
+            # ✅ Helper function لتنسيق الأرقام بدون أصفار زائدة
+            # ============================================================
+            def format_price(value):
+                if value is None:
+                    return "-"
+                # لو الرقم صحيح (زي 12950.00)
+                if value == int(value):
+                    return f"{int(value):,}"
+                # لو في كسور (زي 12950.50)
+                return f"{value:,.2f}"
+
+            def format_percentage(value):
+                if value is None:
+                    return "-"
+                # لو النسبة صحيحة (زي 5.00)
+                if value == int(value):
+                    return f"{int(value)}%"
+                # لو في كسور (زي 5.50)
+                return f"{value:.1f}%"
+
+            # ============================================================
+            # ✅ تنسيق الأسعار (بدون أصفار زائدة)
+            # ============================================================
+            selected_package.formatted_price = format_price(selected_package.package_price)
+            selected_package.formatted_cash = format_price(selected_package.cash_price) if selected_package.cash_price else "-"
+            selected_package.formatted_total_before = format_price(selected_package.total_before_discount) if selected_package.total_before_discount else "0"
+            selected_package.formatted_special_offer = format_price(selected_package.special_offer_price) if selected_package.special_offer_price else "-"
+            selected_package.formatted_current_price = format_price(selected_package.package_price)
+
+            # ============================================================
+            # ✅ تنسيق الخصومات (بدون أصفار زائدة)
+            # ============================================================
+            selected_package.formatted_discount = format_percentage(selected_package.current_discount_rate) if selected_package.current_discount_rate else "0%"
+
+            # ============================================================
+            # ✅ السعر المقترح
+            # ============================================================
+            selected_package.formatted_suggested_price = (
+                format_price(selected_package.suggested_price)
+                if selected_package.suggested_price
+                else "-"
+            )
+
+            # ============================================================
+            # ✅ نسبة الخصم المقترحة
+            # ============================================================
+            selected_package.formatted_suggested_discount = (
+                format_percentage(selected_package.suggested_discount_rate)
+                if selected_package.suggested_discount_rate
+                else "-"
+            )
+
+            # ============================================================
+            # ✅ قيمة التخفيض
+            # ============================================================
+            discount_value = PricingEngine.calculate_savings(
+                selected_package.package_price,
+                selected_package.suggested_price
+            )
+
+            discount_percentage = (
+                PricingEngine.calculate_savings_percentage(
+                    selected_package.package_price,
+                    selected_package.suggested_price
+                )
+            )
+
+            best_price = PricingEngine.get_best_price(
+                selected_package
+            )
+
+            selected_package.formatted_discount_value = format_price(discount_value)
+            selected_package.formatted_discount_percentage = format_percentage(discount_percentage)
+
+            selected_package.best_price = best_price
+
+            # ============================================================
+            # ✅ التحقق من انتهاء الصلاحية
+            # ============================================================
+            today = timezone.localdate()
+            selected_package.is_expired = (
+                selected_package.valid_until
+                and
+                selected_package.valid_until < today
+            )
 
     return render(
         request,
         "frontend/credit_package_pricing.html",
         {
-            "companies": companies,  # ✅ الشركات المفلترة
+            "companies": companies,
             "packages": packages,
             "selected_package": selected_package,
             "selected_company": company_id,
-            "company_search": company_search,  # ✅ للاحتفاظ بقيمة البحث
+            "company_search": company_search,
             "package_search": package_search,
         }
     )

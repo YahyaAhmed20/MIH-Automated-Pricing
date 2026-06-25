@@ -539,6 +539,20 @@ class ContractPackage(models.Model):
         blank=True,
         null=True
     )
+    
+    suggested_price = models.DecimalField(
+    max_digits=12,
+    decimal_places=2,
+    null=True,
+    blank=True,
+)
+
+    suggested_discount_rate = models.DecimalField(
+    max_digits=5,
+    decimal_places=2,
+    null=True,
+    blank=True,
+)
 
     notes = models.TextField(
         blank=True,

@@ -170,7 +170,8 @@
 
         <h5 class="mb-0">
             <i class="bi bi-info-circle"></i>
-            تفاصيل الباكدج
+               معلومات الباكدج
+
         </h5>
 
     </div>
@@ -181,31 +182,44 @@
 
             <div class="col-md-4">
 
-                <label class="text-muted">
+                <label class="text-muted small fw-semibold">
                     الشركة
                 </label>
 
-                <h6>
+                <div class="fs-5 fw-semibold">
                     {{ selected_package.contract.entity.name }}
-                </h6>
+                
+                </div>
+                </div>
 
-            </div>
+            <div class="col-md-8">
+
+    <label class="text-muted small fw-semibold">
+        اسم الباكدج
+    </label>
+
+    <h5 class="fw-bold text-primary">
+        {{ selected_package.package.name }}
+    </h5>
+
+</div>
 
             <div class="col-md-4">
 
-                <label class="text-muted">
+                <label class="text-muted small fw-semibold">
                     التخصص
                 </label>
 
-                <h6>
+                <div class="fs-5 fw-semibold">
                     {{ selected_package.package.specialty.name }}
-                </h6>
+                </div>
+                
 
             </div>
 
             <div class="col-md-4">
 
-                <label class="text-muted">
+                <label class="text-muted small fw-semibold">
                     السعر
                 </label>
 
@@ -217,25 +231,27 @@
 
             <div class="col-md-4">
 
-                <label class="text-muted">
+                <label class="text-muted small fw-semibold">
                     مدة الإقامة
                 </label>
 
-                <h6>
+                <div class="fs-5 fw-semibold">
                     {{ selected_package.package.stay_duration|default:"-" }}
-                </h6>
+                </div>
+                
 
             </div>
 
             <div class="col-md-4">
 
-                <label class="text-muted">
+               <label class="text-muted small fw-semibold">
                     الكود
                 </label>
 
-                <h6>
+                <div class="fs-5 fw-semibold">
                     {{ selected_package.package.code|default:"-" }}
-                </h6>
+                </div>
+                
 
             </div>
 
@@ -267,32 +283,55 @@
 
             <div class="col-md-4">
 
-                <label class="text-muted">
+                <label class="text-muted small fw-semibold">
                     اعتباراً من
                 </label>
 
-                <h6>
+                <div class="fs-5 fw-semibold">
                     {{ selected_package.effective_from|date:"Y-m-d"|default:"-" }}
-                </h6>
+                </div>
 
+                
             </div>
 
             <div class="col-md-4">
 
-                <label class="text-muted">
+               <label class="text-muted small fw-semibold">
                     صالح حتى
                 </label> 
 
-             <h6>
+             <div class="fs-5 fw-semibold">
                     {{ selected_package.valid_until|date:"Y-m-d"|default:"-" }}
-                </h6> 
+                </div>
+                
 
             </div>
+
+            <!-- ✅ الحالة (جديد) -->
+<div class="col-md-4">
+
+    <label class="text-muted small fw-semibold">
+        الحالة
+    </label>
+
+    <div class="fs-5 fw-semibold mt-1">
+        {% if selected_package.is_expired %}
+            <span class="badge bg-danger fs-6">
+                <i class="bi bi-exclamation-circle"></i> منتهي
+            </span>
+        {% else %}
+            <span class="badge bg-success fs-6">
+                <i class="bi bi-check-circle"></i> ساري
+            </span>
+        {% endif %}
+    </div>
+
+</div>
 
             <!-- ✅ تحسين عرض الملاحظات -->
             <div class="col-md-4">
 
-                <label class="text-muted">
+                <label class="text-muted small fw-semibold">
                     ملاحظات الباكدج
                 </label>
 
@@ -311,9 +350,8 @@
     </div>
 
 </div>
-
 <!-- ============================================ -->
-<!-- تخفيض السعر 🔥 -->
+<!-- التسعير والخصومات 🔥 -->
 <!-- ============================================ -->
 
 <div class="card shadow border-0 mt-4">
@@ -321,14 +359,17 @@
     <div class="card-header bg-success text-white">
 
         <h5 class="mb-0">
-            <i class="bi bi-percent"></i>
-            تخفيض السعر
+            <i class="bi bi-cash-stack"></i>
+            التسعير والخصومات
         </h5>
 
     </div>
 
     <div class="card-body">
 
+        <!-- ============================================ -->
+        <!-- ✅ Hidden Fields -->
+        <!-- ============================================ -->
         <input
             type="hidden"
             id="base-price"
@@ -347,12 +388,41 @@
             value="{{ selected_package.cash_price|default:0 }}"
         >
 
+        <input
+            type="hidden"
+            id="current-price-value"
+            value="{{ selected_package.package_price|default:0 }}"
+        >
+
+        <input
+            type="hidden"
+            id="suggested-price-value"
+            value="{{ selected_package.suggested_price|default:0 }}"
+        >
+
+        <!-- ============================================ -->
+        <!-- ✅ الصف الأول: السعر الحالي - الإجمالي - السعر النقدي -->
+        <!-- ============================================ -->
         <div class="row g-4">
 
             <div class="col-md-4">
 
                 <label class="form-label fw-bold text-muted small">
-                    الإجمالي بدون خصم
+                    السعر الحالي
+                </label>
+
+                <input
+                    class="form-control fw-bold text-primary"
+                    value="{{ selected_package.formatted_price }} ج.م"
+                    readonly
+                >
+
+            </div>
+
+            <div class="col-md-4">
+
+                <label class="form-label fw-bold text-muted small">
+                    الإجمالي
                 </label>
 
                 <input
@@ -366,7 +436,28 @@
             <div class="col-md-4">
 
                 <label class="form-label fw-bold text-muted small">
-           أقل سعر اجل للباكدج
+                    السعر النقدي
+                </label>
+
+                <input
+                    class="form-control text-success"
+                    value="{{ selected_package.formatted_cash }}"
+                    readonly
+                >
+
+            </div>
+
+        </div>
+
+        <!-- ============================================ -->
+        <!-- ✅ الصف الثاني: أقل سعر أجل - قائمة الأسعار - الخصم الحالي -->
+        <!-- ============================================ -->
+        <div class="row g-4 mt-3">
+
+            <div class="col-md-4">
+
+                <label class="form-label fw-bold text-muted small">
+                   (Special Offer) أقل سعر أجل
                 </label>
 
                 <input
@@ -375,17 +466,25 @@
                     readonly
                 >
 
+                <small class="text-success">
+
+                    <i class="bi bi-building"></i>
+
+                    {{ selected_package.special_offer_company|default:"-" }}
+
+                </small>
+
             </div>
 
             <div class="col-md-4">
 
                 <label class="form-label fw-bold text-muted small">
-                   السعر النقدي 
+                    قائمة الأسعار
                 </label>
 
                 <input
                     class="form-control"
-                    value="{{ selected_package.formatted_cash }}"
+                    value="{{ selected_package.price_list_applied|default:'-' }}"
                     readonly
                 >
 
@@ -394,16 +493,22 @@
             <div class="col-md-4">
 
                 <label class="form-label fw-bold text-muted small">
-                     معدل الخصم الحالي 
+                    الخصم الحالي
                 </label>
 
-                <input
-                    class="form-control"
-                    value="{{ selected_package.formatted_discount }}%"
-                    readonly
-                >
-
+              <input
+    class="form-control"
+    value="{{ selected_package.formatted_discount }}"
+    readonly
+>
             </div>
+
+        </div>
+
+        <!-- ============================================ -->
+        <!-- ✅ الصف الثالث: معدل الخصم المقترح -->
+        <!-- ============================================ -->
+        <div class="row g-4 mt-3">
 
             <div class="col-md-4">
 
@@ -415,17 +520,25 @@
                     id="discount-select"
                     class="form-select">
 
+                    {% if selected_package.suggested_discount_rate %}
+
+                    <option
+                        value="{{ selected_package.suggested_discount_rate }}"
+                        selected
+                    >
+
+                        العقد الحالي ({{ selected_package.formatted_suggested_discount }})
+
+                    </option>
+
+                    {% endif %}
+
                     <option value="5">5%</option>
                     <option value="10">10%</option>
                     <option value="15">15%</option>
                     <option value="20">20%</option>
                     <option value="25">25%</option>
-
-                    {% comment %} {% if selected_package.special_offer_price %}
-                        <option value="special">Special Offer</option>
-                    {% endif %}
-
-                    <option value="cash">Cash</option> {% endcomment %}
+                    <option value="30">30%</option>
 
                 </select>
 
@@ -434,12 +547,13 @@
             <div class="col-md-4">
 
                 <label class="form-label fw-bold text-muted small">
-                    السعر المقترح
+                    السعر المقترح (العقد)
                 </label>
 
                 <input
                     id="suggested-price"
-                    class="form-control"
+                    class="form-control text-primary fw-bold"
+                    value="{{ selected_package.formatted_suggested_price }}"
                     readonly
                 >
 
@@ -447,23 +561,10 @@
 
         </div>
 
-        <!-- عرض الفرق المالي والوفر -->
-        <div class="row g-4 mt-3">
-
-            <div class="col-md-4">
-
-                <label class="form-label fw-bold text-muted small">
-                    السعر الحالي
-                </label>
-
-                <input
-                    id="current-price"
-                    class="form-control"
-                    value="{{ selected_package.formatted_price }} ج.م"
-                    readonly
-                >
-
-            </div>
+        <!-- ============================================ -->
+        <!-- ✅ الصف الرابع: السعر المقترح - قيمة التخفيض - ملاحظة -->
+        <!-- ============================================ -->
+        <div class="row g-4 mt-4">
 
             <div class="col-md-4">
 
@@ -473,7 +574,8 @@
 
                 <input
                     id="suggested-price-display"
-                    class="form-control"
+                    class="form-control text-success fw-bold"
+                    value="{{ selected_package.formatted_suggested_price }}"
                     readonly
                 >
 
@@ -482,14 +584,37 @@
             <div class="col-md-4">
 
                 <label class="form-label fw-bold text-muted small">
-                   قيمه التخفيض
+                    قيمة التخفيض
                 </label>
 
                 <input
                     id="savings-display"
-                    class="form-control fw-bold"
+                    class="form-control text-danger fw-bold"
+                    value="{{ selected_package.formatted_discount_value }}"
                     readonly
                 >
+
+            </div>
+
+            <div class="col-md-4">
+
+                <div class="alert alert-info mb-0">
+
+                    <strong>
+
+                        <i class="bi bi-info-circle"></i>
+
+                        ملاحظة
+
+                    </strong>
+
+                    <hr>
+
+                    تغيير نسبة الخصم يحسب السعر الجديد فقط،
+
+                    ولا يتم حفظ أي بيانات.
+
+                </div>
 
             </div>
 
@@ -498,7 +623,6 @@
     </div>
 
 </div>
-
 <!-- ============================================ -->
 <!-- جدول مقارنة الخصومات -->
 <!-- ============================================ -->
@@ -509,7 +633,7 @@
 
         <h5 class="mb-0">
             <i class="bi bi-table"></i>
-           معدلات الخصم المقترحه
+            معدلات الخصم المقترحة
         </h5>
 
     </div>
@@ -518,13 +642,28 @@
 
         <div class="table-responsive">
 
-            <table class="table table-bordered table-hover">
+            <table class="table table-bordered table-hover align-middle">
 
                 <thead class="table-light">
 
                     <tr>
-                        <th>معدل الخصم</th>
-                        <th>السعر</th>
+
+                        <th style="width:20%">
+                            معدل الخصم
+                        </th>
+
+                        <th style="width:30%">
+                            السعر المقترح
+                        </th>
+
+                        <th style="width:25%">
+                            قيمة التوفير
+                        </th>
+
+                        <th style="width:25%">
+                            نسبة التوفير
+                        </th>
+
                     </tr>
 
                 </thead>
@@ -534,26 +673,43 @@
                     <tr>
                         <td><strong>5%</strong></td>
                         <td id="price5">-</td>
+                        <td id="saving5">-</td>
+                        <td id="savingPercent5">-</td>
                     </tr>
 
                     <tr>
                         <td><strong>10%</strong></td>
                         <td id="price10">-</td>
+                        <td id="saving10">-</td>
+                        <td id="savingPercent10">-</td>
                     </tr>
 
                     <tr>
                         <td><strong>15%</strong></td>
                         <td id="price15">-</td>
+                        <td id="saving15">-</td>
+                        <td id="savingPercent15">-</td>
                     </tr>
 
                     <tr>
                         <td><strong>20%</strong></td>
                         <td id="price20">-</td>
+                        <td id="saving20">-</td>
+                        <td id="savingPercent20">-</td>
                     </tr>
 
                     <tr>
                         <td><strong>25%</strong></td>
                         <td id="price25">-</td>
+                        <td id="saving25">-</td>
+                        <td id="savingPercent25">-</td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>30%</strong></td>
+                        <td id="price30">-</td>
+                        <td id="saving30">-</td>
+                        <td id="savingPercent30">-</td>
                     </tr>
 
                 </tbody>
@@ -565,7 +721,6 @@
     </div>
 
 </div>
-
 <!-- ============================================ -->
 <!-- Box المرفقات -->
 <!-- ============================================ -->
@@ -700,101 +855,176 @@
         }, 500); // 500ms = نصف ثانية
     }
 </script>
-
 <!-- ============================================ -->
-<!-- Script تخفيض السعر (بيشتغل بس لو في باكدج مختار) -->
+
 <!-- ============================================ -->
 {% if selected_package %}
 <script>
-    function calculatePrice() {
 
-        const basePrice = parseFloat(
-            document.getElementById("base-price").value || 0
-        );
+// ============================================================
+// ✅ formatMoney - بدون أصفار زائدة
+// ============================================================
+function formatMoney(value) {
+    // لو الرقم صحيح (زي 12950.00)
+    if (value % 1 === 0) {
+        return Number(value).toLocaleString("en-US") + " ج.م";
+    }
+    // لو في كسور (زي 12950.50)
+    return Number(value).toLocaleString("en-US", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    }) + " ج.م";
+}
 
-        const discountValue =
-            document.getElementById("discount-select").value;
+// ============================================================
+// ✅ formatPercentage - بدون أصفار زائدة
+// ============================================================
+function formatPercentage(value) {
+    if (value % 1 === 0) {
+        return value + "%";
+    }
+    return value.toFixed(1) + "%";
+}
 
-        let result = basePrice;
+// ============================================================
+// ✅ حساب السعر المقترح
+// ============================================================
+function calculateSuggestedPrice(basePrice, discount) {
+    return basePrice * (1 - discount / 100);
+}
 
-        const specialPrice =
-            parseFloat(
-                document.getElementById("special-price").value || 0
-            );
+// ============================================================
+// ✅ حساب قيمة التوفير
+// ============================================================
+function calculateSavings(currentPrice, suggestedPrice) {
+    return currentPrice - suggestedPrice;
+}
 
-        const cashPrice =
-            parseFloat(
-                document.getElementById("cash-price").value || 0
-            );
+// ============================================================
+// ✅ تحديث السعر المقترح
+// ============================================================
+function updateSuggestedPrice(currentPrice, suggestedPrice) {
 
-        let displayPrice = 0;
-        let savings = 0;
-        const currentPrice = parseFloat(
-            document.getElementById("current-price").value.replace(/[^0-9.]/g, '') || 0
-        );
+    const input = document.getElementById(
+        "suggested-price-display"
+    );
 
-        if (discountValue === "special") {
-            result = specialPrice;
-        }
-        else if (discountValue === "cash") {
-            result = cashPrice;
-        }
-        else {
-            const discount = parseFloat(discountValue);
-            result = basePrice * (1 - discount / 100);
-        }
+    input.value = formatMoney(suggestedPrice);
 
-        const formattedResult = result.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-        const displayResult = formattedResult + " ج.م";
-
-        document.getElementById("suggested-price").value = displayResult;
-        document.getElementById("suggested-price-display").value = displayResult;
-
-        const resultNum = parseFloat(formattedResult);
-        displayPrice = resultNum;
-        savings = currentPrice - resultNum;
-
-        const suggestedInput = document.getElementById("suggested-price-display");
-        if (resultNum < currentPrice) {
-            suggestedInput.className = "form-control text-success fw-bold";
-        } else if (resultNum > currentPrice) {
-            suggestedInput.className = "form-control text-danger fw-bold";
-        } else {
-            suggestedInput.className = "form-control";
-        }
-
-        const savingsInput = document.getElementById("savings-display");
-        if (savings > 0) {
-            savingsInput.value = savings.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " ج.م";
-            savingsInput.className = "form-control fw-bold text-success";
-        } else if (savings < 0) {
-            savingsInput.value = Math.abs(savings).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " ج.م (خسارة)";
-            savingsInput.className = "form-control fw-bold text-danger";
-        } else {
-            savingsInput.value = "0.00 ج.م";
-            savingsInput.className = "form-control";
-        }
-
+    if (suggestedPrice < currentPrice) {
+        input.className = "form-control fw-bold text-success";
+    }
+    else if (suggestedPrice > currentPrice) {
+        input.className = "form-control fw-bold text-danger";
+    }
+    else {
+        input.className = "form-control fw-bold";
     }
 
-    document.addEventListener("DOMContentLoaded", function () {
+}
 
-        calculatePrice();
+// ============================================================
+// ✅ تحديث قيمة التوفير
+// ============================================================
+function updateSavings(savings) {
 
-        document.getElementById("discount-select")
-            .addEventListener("change", calculatePrice);
+    const input = document.getElementById("savings-display");
 
-        const basePrice = parseFloat(
-            document.getElementById("base-price").value || 0
-        );
+    if (savings > 0) {
+        input.value = formatMoney(savings);
+        input.className = "form-control fw-bold text-success";
+    }
+    else if (savings < 0) {
+        input.value = formatMoney(Math.abs(savings)) + " (زيادة)";
+        input.className = "form-control fw-bold text-danger";
+    }
+    else {
+        input.value = formatMoney(0);
+        input.className = "form-control fw-bold";
+    }
 
-        [5, 10, 15, 20, 25].forEach(function(d) {
-            const value = basePrice * (1 - d / 100);
-            document.getElementById("price" + d).innerText =
-                value.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " ج.م";
-        });
+}
+
+// ============================================================
+// ✅ تحديث الـ Preview كامل
+// ============================================================
+function updatePricingPreview() {
+
+    const basePrice = parseFloat(
+        document.getElementById("base-price").value || 0
+    );
+
+    const currentPrice = parseFloat(
+        document.getElementById("current-price-value").value || 0
+    );
+
+    const discount = parseFloat(
+        document.getElementById("discount-select").value || 0
+    );
+
+    const suggestedPrice = calculateSuggestedPrice(basePrice, discount);
+    const savings = calculateSavings(currentPrice, suggestedPrice);
+
+    updateSuggestedPrice(currentPrice, suggestedPrice);
+    updateSavings(savings);
+
+}
+
+// ============================================================
+// ✅ تحديث جدول المقارنة
+// ============================================================
+function updateComparisonTable() {
+
+    const basePrice = parseFloat(
+        document.getElementById("base-price").value || 0
+    );
+
+    const currentPrice = parseFloat(
+        document.getElementById("current-price-value").value || 0
+    );
+
+    [5, 10, 15, 20, 25, 30].forEach(function(discount) {
+
+        const suggestedPrice = calculateSuggestedPrice(basePrice, discount);
+        const saving = calculateSavings(currentPrice, suggestedPrice);
+        const savingPercent = currentPrice > 0 ? (saving / currentPrice) * 100 : 0;
+
+        // ✅ عرض السعر المقترح
+        document.getElementById("price" + discount).innerHTML = formatMoney(suggestedPrice);
+
+        // ✅ عرض قيمة التوفير
+        document.getElementById("saving" + discount).innerHTML = formatMoney(saving);
+
+        // ✅ عرض نسبة التوفير بدون أصفار زائدة
+        let percentDisplay = savingPercent.toFixed(2);
+        if (savingPercent % 1 === 0) {
+            percentDisplay = savingPercent.toFixed(0);
+        }
+        document.getElementById("savingPercent" + discount).innerHTML = percentDisplay + " %";
 
     });
+
+}
+
+// ============================================================
+// ✅ عند تحميل الصفحة
+// ============================================================
+document.addEventListener("DOMContentLoaded", function () {
+
+    // ✅ تحديث السعر المقترح وقيمة التخفيض
+    updatePricingPreview();
+
+    // ✅ تحديث جدول المقارنة
+    updateComparisonTable();
+
+    // ✅ عند تغيير الخصم من الـ Select
+    document.getElementById("discount-select").addEventListener("change", function() {
+        updatePricingPreview();
+        updateComparisonTable();
+    });
+
+});
+
 </script>
 {% endif %}
 
