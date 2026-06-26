@@ -45,6 +45,30 @@ class ImportHelpers:
         except Exception:
             return None
 
+    # ============================================================
+    # ✅ Helper: معالجة النسب المئوية
+    # ============================================================
+    @staticmethod
+    def clean_percentage(value):
+        """
+        يحول نسب Excel إلى نسبة مئوية فعلية.
+
+        أمثلة:
+        0.05 -> 5
+        0.15 -> 15
+        5 -> 5
+        15 -> 15
+        """
+        value = ImportHelpers.clean_decimal(value)
+
+        if value is None:
+            return None
+
+        if 0 < value <= 1:
+            value *= 100
+
+        return value
+
     @staticmethod
     def normalize_package_codes(value):
         """

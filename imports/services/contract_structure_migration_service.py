@@ -51,6 +51,19 @@ class ContractStructureMigrationService:
             return None
 
     # ============================================================
+    # ✅ Helper: معالجة النسب المئوية (جديد)
+    # ============================================================
+    @staticmethod
+    def clean_percentage(value):
+        value = ContractStructureMigrationService.clean_decimal(value)
+        if value is None:
+            return None
+        # لو جاية من Excel كنسبة عشرية (مثل 0.15)
+        if value <= 1:
+            value *= 100
+        return value
+
+    # ============================================================
     # ✅ Helper: تنظيف أكواد الباكدجات (نسخة قوية بـ re)
     # ============================================================
     @staticmethod
@@ -331,7 +344,8 @@ class ContractStructureMigrationService:
             "total_before_discount": ContractStructureMigrationService.clean_decimal(
                 row.get("الاجمالي")
             ),
-            "current_discount_rate": ContractStructureMigrationService.clean_decimal(
+            # ✅ استخدام clean_percentage للخصم الحالي
+            "current_discount_rate": ContractStructureMigrationService.clean_percentage(
                 row.get("معدل الخصم الحالي")
             ),
             "cash_price": ContractStructureMigrationService.clean_decimal(
@@ -356,11 +370,12 @@ class ContractStructureMigrationService:
             "approval_pdf": row.get("الموافقه"),
             "is_active": True,
 
-            # ✅ السعر المقترح ونسبة الخصم المقترحة
+            # ✅ السعر المقترح
             "suggested_price": ContractStructureMigrationService.clean_decimal(
                 row.get("السعر المقترح")
             ),
-            "suggested_discount_rate": ContractStructureMigrationService.clean_decimal(
+            # ✅ استخدام clean_percentage للخصم المقترح
+            "suggested_discount_rate": ContractStructureMigrationService.clean_percentage(
                 row.get("معدل الخصم المقترح")
             ),
         }

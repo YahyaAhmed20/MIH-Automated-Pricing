@@ -538,7 +538,6 @@
                     <option value="15">15%</option>
                     <option value="20">20%</option>
                     <option value="25">25%</option>
-                    <option value="30">30%</option>
 
                 </select>
 
@@ -546,16 +545,16 @@
 
             <div class="col-md-4">
 
-                <label class="form-label fw-bold text-muted small">
+                {% comment %} <label class="form-label fw-bold text-muted small">
                     السعر المقترح (العقد)
-                </label>
+                </label> {% endcomment %}
 
-                <input
+                {% comment %} <input
                     id="suggested-price"
                     class="form-control text-primary fw-bold"
                     value="{{ selected_package.formatted_suggested_price }}"
                     readonly
-                >
+                > {% endcomment %}
 
             </div>
 
@@ -627,6 +626,10 @@
 <!-- جدول مقارنة الخصومات -->
 <!-- ============================================ -->
 
+<!-- ============================================ -->
+<!-- جدول مقارنة الخصومات -->
+<!-- ============================================ -->
+
 <div class="card shadow border-0 mt-4">
 
     <div class="card-header bg-warning">
@@ -652,16 +655,12 @@
                             معدل الخصم
                         </th>
 
-                        <th style="width:30%">
+                        <th style="width:40%">
                             السعر المقترح
                         </th>
 
-                        <th style="width:25%">
-                            قيمة التوفير
-                        </th>
-
-                        <th style="width:25%">
-                            نسبة التوفير
+                        <th style="width:40%">
+                            قيمة التخفيض
                         </th>
 
                     </tr>
@@ -674,42 +673,30 @@
                         <td><strong>5%</strong></td>
                         <td id="price5">-</td>
                         <td id="saving5">-</td>
-                        <td id="savingPercent5">-</td>
                     </tr>
 
                     <tr>
                         <td><strong>10%</strong></td>
                         <td id="price10">-</td>
                         <td id="saving10">-</td>
-                        <td id="savingPercent10">-</td>
                     </tr>
 
                     <tr>
                         <td><strong>15%</strong></td>
                         <td id="price15">-</td>
                         <td id="saving15">-</td>
-                        <td id="savingPercent15">-</td>
                     </tr>
 
                     <tr>
                         <td><strong>20%</strong></td>
                         <td id="price20">-</td>
                         <td id="saving20">-</td>
-                        <td id="savingPercent20">-</td>
                     </tr>
 
                     <tr>
                         <td><strong>25%</strong></td>
                         <td id="price25">-</td>
                         <td id="saving25">-</td>
-                        <td id="savingPercent25">-</td>
-                    </tr>
-
-                    <tr>
-                        <td><strong>30%</strong></td>
-                        <td id="price30">-</td>
-                        <td id="saving30">-</td>
-                        <td id="savingPercent30">-</td>
                     </tr>
 
                 </tbody>
@@ -822,7 +809,13 @@
                                 -
                             {% endif %}
                         </td>
-                        <td>{{ cp.cash_price|floatformat:2|default:"-" }} ج.م</td>
+                        <td>
+    {% if cp.cash_price %}
+        {{ cp.cash_price|floatformat:2 }} ج.م
+    {% else %}
+        -
+    {% endif %}
+</td>
                     </tr>
 
                 {% endfor %}
@@ -856,7 +849,7 @@
     }
 </script>
 <!-- ============================================ -->
-
+<!-- ============================================ -->
 <!-- ============================================ -->
 {% if selected_package %}
 <script>
@@ -865,25 +858,13 @@
 // ✅ formatMoney - بدون أصفار زائدة
 // ============================================================
 function formatMoney(value) {
-    // لو الرقم صحيح (زي 12950.00)
     if (value % 1 === 0) {
         return Number(value).toLocaleString("en-US") + " ج.م";
     }
-    // لو في كسور (زي 12950.50)
     return Number(value).toLocaleString("en-US", {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2
     }) + " ج.م";
-}
-
-// ============================================================
-// ✅ formatPercentage - بدون أصفار زائدة
-// ============================================================
-function formatPercentage(value) {
-    if (value % 1 === 0) {
-        return value + "%";
-    }
-    return value.toFixed(1) + "%";
 }
 
 // ============================================================
@@ -894,7 +875,7 @@ function calculateSuggestedPrice(basePrice, discount) {
 }
 
 // ============================================================
-// ✅ حساب قيمة التوفير
+// ✅ حساب قيمة التخفيض
 // ============================================================
 function calculateSavings(currentPrice, suggestedPrice) {
     return currentPrice - suggestedPrice;
@@ -905,9 +886,7 @@ function calculateSavings(currentPrice, suggestedPrice) {
 // ============================================================
 function updateSuggestedPrice(currentPrice, suggestedPrice) {
 
-    const input = document.getElementById(
-        "suggested-price-display"
-    );
+    const input = document.getElementById("suggested-price-display");
 
     input.value = formatMoney(suggestedPrice);
 
@@ -924,7 +903,7 @@ function updateSuggestedPrice(currentPrice, suggestedPrice) {
 }
 
 // ============================================================
-// ✅ تحديث قيمة التوفير
+// ✅ تحديث قيمة التخفيض
 // ============================================================
 function updateSavings(savings) {
 
@@ -983,24 +962,21 @@ function updateComparisonTable() {
         document.getElementById("current-price-value").value || 0
     );
 
-    [5, 10, 15, 20, 25, 30].forEach(function(discount) {
+    [5, 10, 15, 20, 25].forEach(function(discount) {
 
         const suggestedPrice = calculateSuggestedPrice(basePrice, discount);
         const saving = calculateSavings(currentPrice, suggestedPrice);
-        const savingPercent = currentPrice > 0 ? (saving / currentPrice) * 100 : 0;
 
-        // ✅ عرض السعر المقترح
-        document.getElementById("price" + discount).innerHTML = formatMoney(suggestedPrice);
-
-        // ✅ عرض قيمة التوفير
-        document.getElementById("saving" + discount).innerHTML = formatMoney(saving);
-
-        // ✅ عرض نسبة التوفير بدون أصفار زائدة
-        let percentDisplay = savingPercent.toFixed(2);
-        if (savingPercent % 1 === 0) {
-            percentDisplay = savingPercent.toFixed(0);
+        const priceEl = document.getElementById("price" + discount);
+        if (priceEl) {
+            priceEl.innerHTML = formatMoney(suggestedPrice);
         }
-        document.getElementById("savingPercent" + discount).innerHTML = percentDisplay + " %";
+
+        const savingEl = document.getElementById("saving" + discount);
+        if (savingEl) {
+            savingEl.innerHTML = formatMoney(saving);
+            savingEl.style.color = saving >= 0 ? '#198754' : '#dc3545';
+        }
 
     });
 
@@ -1011,14 +987,11 @@ function updateComparisonTable() {
 // ============================================================
 document.addEventListener("DOMContentLoaded", function () {
 
-    // ✅ تحديث السعر المقترح وقيمة التخفيض
     updatePricingPreview();
-
-    // ✅ تحديث جدول المقارنة
     updateComparisonTable();
 
-    // ✅ عند تغيير الخصم من الـ Select
     document.getElementById("discount-select").addEventListener("change", function() {
+        console.log("✅ Discount changed to:", this.value);
         updatePricingPreview();
         updateComparisonTable();
     });

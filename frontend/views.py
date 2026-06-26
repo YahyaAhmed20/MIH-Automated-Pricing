@@ -1427,7 +1427,7 @@ def doctor_detail(request, doctor_name):
         "frontend/doctor_detail.html",
         context
     )
-from django.utils import timezone
+from django.utils import timezone  # ✅ أضف هذا السطر
 
 def credit_package_pricing(request):
 
