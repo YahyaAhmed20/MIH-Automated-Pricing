@@ -1523,19 +1523,10 @@ def credit_package_pricing(request):
 # ✅ النص المعروض للخصم الحالي
 # ============================================================
 
-            if (
-                selected_package.current_discount_text
-                and
-                selected_package.current_discount_text != "nan"
-            ):
-                selected_package.current_discount_label = (
-                    selected_package.current_discount_text
-                )
-            else:
-                selected_package.current_discount_label = (
-                    selected_package.formatted_discount
-                )
-                
+            selected_package.current_discount_label = (
+                (selected_package.current_discount_text or "").strip()
+                or selected_package.formatted_discount
+            )
             
             
 

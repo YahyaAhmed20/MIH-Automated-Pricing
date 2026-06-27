@@ -62,6 +62,40 @@ class ContractStructureMigrationService:
         if value <= 1:
             value *= 100
         return value
+    
+    @staticmethod
+    def clean_discount_text(value):
+        """
+        تحويل قيمة الخصم إلى نص مناسب للعرض.
+
+        أمثلة:
+        0.05 -> 5%
+        0.10 -> 10%
+        5    -> 5%
+        عرض خاص -> عرض خاص
+        """
+
+        if pd.isna(value):
+            return None
+
+        text = str(value).strip()
+
+        if not text:
+            return None
+
+        try:
+            number = float(text)
+
+            if number <= 1:
+                number *= 100
+
+            if number.is_integer():
+                return f"{int(number)}%"
+
+            return f"{number:.1f}%"
+
+        except ValueError:
+            return text
 
     # ============================================================
     # ✅ Helper: تنظيف أكواد الباكدجات (نسخة قوية بـ re)
@@ -119,6 +153,8 @@ class ContractStructureMigrationService:
         if "(" in company_name:
             return company_name.split("(")[0].strip()
         return company_name
+
+
 
     # ============================================================
     # ✅ get_parent_contract (معدل مع Cache)
@@ -340,10 +376,8 @@ class ContractStructureMigrationService:
             "current_discount_rate": ContractStructureMigrationService.clean_percentage(
                 row.get("معدل الخصم الحالي")
             ),
-            "current_discount_text": (
-                str(row.get("معدل الخصم الحالي")).strip()
-                if row.get("معدل الخصم الحالي") is not None
-                else None
+            "current_discount_text": ContractStructureMigrationService.clean_discount_text(
+                row.get("معدل الخصم الحالي")
             ),
             "cash_price": ContractStructureMigrationService.clean_decimal(
                 row.get("النقدي")
