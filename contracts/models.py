@@ -509,6 +509,12 @@ class ContractPackage(models.Model):
         null=True,
         verbose_name="سعر العرض الخاص"
     )
+    current_discount_text = models.CharField(
+    max_length=100,
+    blank=True,
+    null=True,
+    verbose_name="نص الخصم الحالي"
+)
 
     # ✅ الحقول الجديدة (مضافة)
     special_offer_company = models.CharField(
@@ -534,6 +540,7 @@ class ContractPackage(models.Model):
     blank=True,
     null=True
 )
+
 
     valid_until = models.DateField(
         blank=True,

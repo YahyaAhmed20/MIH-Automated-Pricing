@@ -1519,16 +1519,25 @@ def credit_package_pricing(request):
             # ============================================================
             selected_package.formatted_discount = format_percentage(selected_package.current_discount_rate) if selected_package.current_discount_rate else "0%"
             
+            # ============================================================
+# ✅ النص المعروض للخصم الحالي
+# ============================================================
+
             if (
-                selected_package.special_offer_price
+                selected_package.current_discount_text
                 and
-                selected_package.special_offer_company
+                selected_package.current_discount_text != "nan"
             ):
-                selected_package.current_discount_label = "عرض خاص"
+                selected_package.current_discount_label = (
+                    selected_package.current_discount_text
+                )
             else:
                 selected_package.current_discount_label = (
                     selected_package.formatted_discount
                 )
+                
+            
+            
 
             # ============================================================
             # ✅ السعر المقترح

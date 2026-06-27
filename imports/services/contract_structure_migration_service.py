@@ -340,6 +340,11 @@ class ContractStructureMigrationService:
             "current_discount_rate": ContractStructureMigrationService.clean_percentage(
                 row.get("معدل الخصم الحالي")
             ),
+            "current_discount_text": (
+                str(row.get("معدل الخصم الحالي")).strip()
+                if row.get("معدل الخصم الحالي") is not None
+                else None
+            ),
             "cash_price": ContractStructureMigrationService.clean_decimal(
                 row.get("النقدي")
             ),
