@@ -1438,13 +1438,13 @@ def credit_package_pricing(request):
 
     # ✅ جلب الشركات مع فلتر البحث
     companies = (
-        ContractEntity.objects
-        .filter(
-            contracts__contract_packages__isnull=False
-        )
-        .distinct()
-        .order_by("name")
+    ContractEntity.objects
+    .filter(
+        contracts__contract_packages__is_active=True
     )
+    .distinct()
+    .order_by("name")
+)
 
     # ✅ تطبيق فلتر البحث على الشركات
     if company_search:
@@ -1458,7 +1458,8 @@ def credit_package_pricing(request):
         packages = (
             ContractPackage.objects
             .filter(
-                contract__entity_id=company_id
+                contract__entity_id=company_id,
+                is_active=True,
             )
             .select_related("package")
             .order_by("package__name")
@@ -1470,13 +1471,15 @@ def credit_package_pricing(request):
 
     if package_id:
 
+        # ✅ إضافة is_active=True في get_object_or_404
         selected_package = get_object_or_404(
             ContractPackage.objects.select_related(
                 "package",
                 "contract__entity",
                 "package__specialty",
             ),
-            id=package_id
+            id=package_id,
+            is_active=True,
         )
 
         # ✅ تنسيق الأرقام
@@ -1515,6 +1518,17 @@ def credit_package_pricing(request):
             # ✅ تنسيق الخصومات (بدون أصفار زائدة)
             # ============================================================
             selected_package.formatted_discount = format_percentage(selected_package.current_discount_rate) if selected_package.current_discount_rate else "0%"
+            
+            if (
+                selected_package.special_offer_price
+                and
+                selected_package.special_offer_company
+            ):
+                selected_package.current_discount_label = "عرض خاص"
+            else:
+                selected_package.current_discount_label = (
+                    selected_package.formatted_discount
+                )
 
             # ============================================================
             # ✅ السعر المقترح
