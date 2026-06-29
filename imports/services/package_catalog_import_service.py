@@ -1,7 +1,7 @@
 import pandas as pd
 
 from django.db import transaction
-
+from imports.utils.import_helpers import ImportHelpers
 from medical_catalog.models import (
     Package,
     Specialty,
@@ -10,18 +10,10 @@ from medical_catalog.models import (
 
 class PackageCatalogImportService:
 
-    @staticmethod
-    def normalize_text(value):
-
-        if pd.isna(value):
-            return ""
-
-        return " ".join(
-            str(value)
-            .replace("\r", " ")
-            .replace("\n", " ")
-            .split()
-        )
+    # ❌ 2) حذف الدالة normalize_text بالكامل
+    # @staticmethod
+    # def normalize_text(value):
+    #     ...
 
     # ============================================================
     # ✅ Helper: جلب أو إنشاء التخصص
@@ -34,7 +26,7 @@ class PackageCatalogImportService:
     ):
 
         specialty_name = (
-            PackageCatalogImportService.normalize_text(
+            ImportHelpers.normalize_text(  # ✅ استخدم ImportHelpers
                 specialty_name
             )
         )
@@ -82,9 +74,12 @@ class PackageCatalogImportService:
             for s in Specialty.objects.all()
         }
 
-        # ✅ جيب كل الباكدجات في Cache
+        # ✅ 3) تعديل packages_cache بالمفتاح المركب (code, name)
         packages_cache = {
-            p.code: p
+            (
+                ImportHelpers.normalize_text(p.code),  # ✅ code
+                ImportHelpers.normalize_text(p.name),  # ✅ name
+            ): p
             for p in Package.objects.exclude(
                 code__isnull=True
             )
@@ -92,32 +87,33 @@ class PackageCatalogImportService:
 
         for _, row in dataframe.iterrows():
 
+            # ✅ 4) استخدام ImportHelpers.normalize_text لكل القراءات
             package_code = (
-                PackageCatalogImportService.normalize_text(
+                ImportHelpers.normalize_text(  # ✅
                     row.get("الكود")
                 )
             )
 
             package_name = (
-                PackageCatalogImportService.normalize_text(
+                ImportHelpers.normalize_text(  # ✅
                     row.get("اسم الباكدج")
                 )
             )
 
             specialty_name = (
-                PackageCatalogImportService.normalize_text(
+                ImportHelpers.normalize_text(  # ✅
                     row.get("التخصص")
                 )
             )
 
             stay_duration = (
-                PackageCatalogImportService.normalize_text(
+                ImportHelpers.normalize_text(  # ✅
                     row.get("مدة الاقامه")
                 )
             )
 
             package_note = (
-                PackageCatalogImportService.normalize_text(
+                ImportHelpers.normalize_text(  # ✅
                     row.get("ملاحظات الباكدج")
                 )
             )
@@ -135,7 +131,13 @@ class PackageCatalogImportService:
                 )
             )
 
-            package = packages_cache.get(package_code)
+            # ✅ 5) البحث بالمفتاح المركب (code, name)
+            package_key = (
+                package_code,
+                package_name,
+            )
+
+            package = packages_cache.get(package_key)
 
             if package:
 
@@ -160,7 +162,8 @@ class PackageCatalogImportService:
                     is_active=True
                 )
 
-                packages_cache[package_code] = package
+                # ✅ 6) التخزين في cache بالمفتاح المركب
+                packages_cache[package_key] = package
 
                 result["created"] += 1
 

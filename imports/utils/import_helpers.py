@@ -2,7 +2,6 @@ import re
 
 import pandas as pd
 
-
 class ImportHelpers:
 
     @staticmethod
@@ -106,3 +105,22 @@ class ImportHelpers:
         ]
         
     
+    
+        # ============================================================
+    # ✅ Normalize Company Name
+    # ============================================================
+    @staticmethod
+    def normalize_company_name(value):
+
+        return ImportHelpers.normalize_text(value)
+
+  
+    @staticmethod
+    def package_lookup_key(
+        package_code,
+        package_name,
+    ):
+        return (
+            ImportHelpers.normalize_text(package_code),
+            ImportHelpers.normalize_text(package_name),
+        )

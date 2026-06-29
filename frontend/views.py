@@ -1438,13 +1438,13 @@ def credit_package_pricing(request):
 
     # ✅ جلب الشركات مع فلتر البحث
     companies = (
-    ContractEntity.objects
-    .filter(
-        contracts__contract_packages__is_active=True
+        ContractEntity.objects
+        .filter(
+            contracts__contract_packages__is_active=True
+        )
+        .distinct()
+        .order_by("name")
     )
-    .distinct()
-    .order_by("name")
-)
 
     # ✅ تطبيق فلتر البحث على الشركات
     if company_search:
@@ -1469,6 +1469,33 @@ def credit_package_pricing(request):
         if package_search:
             packages = packages.filter(package__name__icontains=package_search)
 
+        # ============================================================
+        # ✅ الخطوة 1: تنسيق الباكدجات المعروضة في الجدول (جديد)
+        # ============================================================
+        # ============================================================
+        # ✅ Helper functions لتنسيق الأرقام
+        # ============================================================
+        def format_price(value):
+            if value is None:
+                return "-"
+            return f"{int(float(value)):,}"
+
+        def format_percentage(value):
+            if value is None:
+                return "-"
+            if value == int(value):
+                return f"{int(value)}%"
+            return f"{value:.1f}%"
+
+        # ✅ تنسيق كل باكدج في الـ packages
+        for cp in packages:
+            cp.formatted_price = format_price(cp.package_price)
+            cp.formatted_discount = (
+                format_percentage(cp.current_discount_rate)
+                if cp.current_discount_rate
+                else "-"
+            )
+
     if package_id:
 
         # ✅ إضافة is_active=True في get_object_or_404
@@ -1482,27 +1509,22 @@ def credit_package_pricing(request):
             is_active=True,
         )
 
-        # ✅ تنسيق الأرقام
+        # ✅ تنسيق الأرقام للـ selected_package
         if selected_package:
+
             # ============================================================
-            # ✅ Helper function لتنسيق الأرقام بدون أصفار زائدة
+            # ✅ Helper functions (معرفة هنا أيضاً للتأكد)
             # ============================================================
             def format_price(value):
                 if value is None:
                     return "-"
-                # لو الرقم صحيح (زي 12950.00)
-                if value == int(value):
-                    return f"{int(value):,}"
-                # لو في كسور (زي 12950.50)
-                return f"{value:,.2f}"
+                return f"{int(float(value)):,}"
 
             def format_percentage(value):
                 if value is None:
                     return "-"
-                # لو النسبة صحيحة (زي 5.00)
                 if value == int(value):
                     return f"{int(value)}%"
-                # لو في كسور (زي 5.50)
                 return f"{value:.1f}%"
 
             # ============================================================
@@ -1520,15 +1542,12 @@ def credit_package_pricing(request):
             selected_package.formatted_discount = format_percentage(selected_package.current_discount_rate) if selected_package.current_discount_rate else "0%"
             
             # ============================================================
-# ✅ النص المعروض للخصم الحالي
-# ============================================================
-
+            # ✅ النص المعروض للخصم الحالي
+            # ============================================================
             selected_package.current_discount_label = (
                 (selected_package.current_discount_text or "").strip()
                 or selected_package.formatted_discount
             )
-            
-            
 
             # ============================================================
             # ✅ السعر المقترح

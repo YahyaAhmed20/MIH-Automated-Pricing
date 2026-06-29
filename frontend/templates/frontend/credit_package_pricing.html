@@ -401,7 +401,7 @@
         >
 
         <!-- ============================================ -->
-        <!-- ✅ الصف الأول: السعر الحالي - الإجمالي - السعر النقدي -->
+        <!-- ✅ الصف الأول: السعر الحالي - الإجمالي - قائمة الأسعار -->
         <!-- ============================================ -->
         <div class="row g-4">
 
@@ -422,7 +422,7 @@
             <div class="col-md-4">
 
                 <label class="form-label fw-bold text-muted small">
-                    الإجمالي
+                    الإجمالي (بدون خصم)
                 </label>
 
                 <input
@@ -430,49 +430,6 @@
                     value="{{ selected_package.formatted_total_before }} ج.م"
                     readonly
                 >
-
-            </div>
-
-            <div class="col-md-4">
-
-                <label class="form-label fw-bold text-muted small">
-                    السعر النقدي
-                </label>
-
-                <input
-                    class="form-control text-success"
-                    value="{{ selected_package.formatted_cash }}"
-                    readonly
-                >
-
-            </div>
-
-        </div>
-
-        <!-- ============================================ -->
-        <!-- ✅ الصف الثاني: أقل سعر أجل - قائمة الأسعار - الخصم الحالي -->
-        <!-- ============================================ -->
-        <div class="row g-4 mt-3">
-
-            <div class="col-md-4">
-
-                <label class="form-label fw-bold text-muted small">
-                   (Special Offer) أقل سعر أجل
-                </label>
-
-                <input
-                    class="form-control"
-                    value="{{ selected_package.formatted_special_offer }}"
-                    readonly
-                >
-
-                <small class="text-success">
-
-                    <i class="bi bi-building"></i>
-
-                    {{ selected_package.special_offer_company|default:"-" }}
-
-                </small>
 
             </div>
 
@@ -490,25 +447,26 @@
 
             </div>
 
+        </div>
+
+        <!-- ============================================ -->
+        <!-- ✅ الصف الثاني: الخصم الحالي - الخصم المقترح - السعر المقترح -->
+        <!-- ============================================ -->
+        <div class="row g-4 mt-3">
+
             <div class="col-md-4">
 
                 <label class="form-label fw-bold text-muted small">
                     معدل الخصم الحالي
                 </label>
 
-              <input
-    class="form-control"
-    value="{{ selected_package.current_discount_label }}"
-    readonly
->
+                <input
+                    class="form-control"
+                    value="{{ selected_package.current_discount_label }}"
+                    readonly
+                >
+
             </div>
-
-        </div>
-
-        <!-- ============================================ -->
-        <!-- ✅ الصف الثالث: معدل الخصم المقترح -->
-        <!-- ============================================ -->
-        <div class="row g-4 mt-3">
 
             <div class="col-md-4">
 
@@ -526,9 +484,7 @@
                         value="{{ selected_package.suggested_discount_rate }}"
                         selected
                     >
-
                         العقد الحالي ({{ selected_package.formatted_suggested_discount }})
-
                     </option>
 
                     {% endif %}
@@ -545,28 +501,6 @@
 
             <div class="col-md-4">
 
-                {% comment %} <label class="form-label fw-bold text-muted small">
-                    السعر المقترح (العقد)
-                </label> {% endcomment %}
-
-                {% comment %} <input
-                    id="suggested-price"
-                    class="form-control text-primary fw-bold"
-                    value="{{ selected_package.formatted_suggested_price }}"
-                    readonly
-                > {% endcomment %}
-
-            </div>
-
-        </div>
-
-        <!-- ============================================ -->
-        <!-- ✅ الصف الرابع: السعر المقترح - قيمة التخفيض - ملاحظة -->
-        <!-- ============================================ -->
-        <div class="row g-4 mt-4">
-
-            <div class="col-md-4">
-
                 <label class="form-label fw-bold text-muted small">
                     السعر المقترح
                 </label>
@@ -579,6 +513,13 @@
                 >
 
             </div>
+
+        </div>
+
+        <!-- ============================================ -->
+        <!-- ✅ الصف الثالث: قيمة التخفيض - ملاحظات الأسعار -->
+        <!-- ============================================ -->
+        <div class="row g-4 mt-3">
 
             <div class="col-md-4">
 
@@ -595,23 +536,44 @@
 
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-8">
 
                 <div class="alert alert-info mb-0">
 
                     <strong>
-
                         <i class="bi bi-info-circle"></i>
-
-                        ملاحظة
-
+                        ملاحظات الأسعار
                     </strong>
 
                     <hr>
 
-                    تغيير نسبة الخصم يحسب السعر الجديد فقط،
+                    <div class="row">
 
-                    ولا يتم حفظ أي بيانات.
+                        <div class="col-md-6">
+                            <strong>السعر النقدي:</strong>
+                            {{ selected_package.formatted_cash }} ج.م
+                        </div>
+
+                        <div class="col-md-6">
+                            <strong>أقل سعر أجل (Special Offer):</strong>
+                            {{ selected_package.formatted_special_offer }} ج.م
+                            {% if selected_package.special_offer_company %}
+                                <br>
+                                <small class="text-success">
+                                    <i class="bi bi-building"></i>
+                                    {{ selected_package.special_offer_company }}
+                                </small>
+                            {% endif %}
+                        </div>
+
+                    </div>
+
+                    <hr class="my-2">
+
+                    <small class="text-muted">
+                        <i class="bi bi-info-circle"></i>
+                        تغيير نسبة الخصم يحسب السعر الجديد فقط، ولا يتم حفظ أي بيانات.
+                    </small>
 
                 </div>
 
@@ -762,6 +724,9 @@
 <!-- ============================================ -->
 <!-- عرض جميع الباكدجات للشركة المختارة -->
 <!-- ============================================ -->
+<!-- ============================================ -->
+<!-- عرض جميع الباكدجات للشركة المختارة -->
+<!-- ============================================ -->
 {% if packages and not selected_package %}
 
 <div class="card mt-4 shadow">
@@ -786,9 +751,8 @@
                     <tr>
                         <th>#</th>
                         <th>اسم الباكدج</th>
-                        <th>السعر</th>
-                        <th>الخصم</th>
-                        <th>النقدي</th>
+                        <th>صافي السعر</th>
+                        <th>معدل الخصم</th>
                     </tr>
                 </thead>
 
@@ -796,26 +760,17 @@
 
                 {% for cp in packages %}
 
-                    <tr>
+                    <tr 
+                        class="clickable-row" 
+                        style="cursor: pointer;"
+                        onclick="window.location.href='?company={{ selected_company }}&package={{ cp.id }}&company_search={{ company_search }}&package_search={{ package_search }}'"
+                    >
                         <td>{{ forloop.counter }}</td>
                         <td>
                             <strong>{{ cp.package.name }}</strong>
                         </td>
-                        <td>{{ cp.package_price|floatformat:2 }} ج.م</td>
-                        <td>
-                            {% if cp.current_discount_rate %}
-                                {{ cp.current_discount_rate }}%
-                            {% else %}
-                                -
-                            {% endif %}
-                        </td>
-                        <td>
-    {% if cp.cash_price %}
-        {{ cp.cash_price|floatformat:2 }} ج.م
-    {% else %}
-        -
-    {% endif %}
-</td>
+                        <td>{{ cp.formatted_price }} ج.م</td>
+                        <td>{{ cp.formatted_discount }}</td>
                     </tr>
 
                 {% endfor %}
@@ -838,6 +793,19 @@
 <!-- ============================================ -->
 <!-- ✅ Search Delay Script (بيشتغل طول الوقت) -->
 <!-- ============================================ -->
+ 
+    <style>
+    .clickable-row:hover {
+        background-color: #e3f2fd !important;
+        transition: background-color 0.2s ease;
+        cursor: pointer;
+    }
+    
+    .clickable-row:hover td {
+        color: #0d6efd;
+    }
+
+ </style>
 <script>
     let searchTimeout;
 

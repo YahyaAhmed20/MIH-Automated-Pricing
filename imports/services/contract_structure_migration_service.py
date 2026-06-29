@@ -12,6 +12,10 @@ from contracts.models import (
 
 from medical_catalog.models import Package
 
+# ============================================================
+# ✅ استيراد ImportHelpers
+# ============================================================
+from imports.utils.import_helpers import ImportHelpers
 
 class ContractStructureMigrationService:
 
@@ -51,30 +55,19 @@ class ContractStructureMigrationService:
             return None
 
     # ============================================================
-    # ✅ Helper: معالجة النسب المئوية (جديد)
+    # ✅ Helper: معالجة النسب المئوية
     # ============================================================
     @staticmethod
     def clean_percentage(value):
         value = ContractStructureMigrationService.clean_decimal(value)
         if value is None:
             return None
-        # لو جاية من Excel كنسبة عشرية (مثل 0.15)
         if value <= 1:
             value *= 100
         return value
     
     @staticmethod
     def clean_discount_text(value):
-        """
-        تحويل قيمة الخصم إلى نص مناسب للعرض.
-
-        أمثلة:
-        0.05 -> 5%
-        0.10 -> 10%
-        5    -> 5%
-        عرض خاص -> عرض خاص
-        """
-
         if pd.isna(value):
             return None
 
@@ -98,7 +91,7 @@ class ContractStructureMigrationService:
             return text
 
     # ============================================================
-    # ✅ Helper: تنظيف أكواد الباكدجات (نسخة قوية بـ re)
+    # ✅ Helper: تنظيف أكواد الباكدجات
     # ============================================================
     @staticmethod
     def normalize_package_codes(value):
@@ -154,10 +147,8 @@ class ContractStructureMigrationService:
             return company_name.split("(")[0].strip()
         return company_name
 
-
-
     # ============================================================
-    # ✅ get_parent_contract (معدل مع Cache)
+    # ✅ get_parent_contract
     # ============================================================
     @staticmethod
     def get_parent_contract(company_name, contracts_cache):
@@ -169,7 +160,7 @@ class ContractStructureMigrationService:
         return contracts_cache.get(parent_name)
 
     # ============================================================
-    # ✅ get_or_create_contract (معدل مع Cache)
+    # ✅ get_or_create_contract
     # ============================================================
     @staticmethod
     def get_or_create_contract(
@@ -225,17 +216,23 @@ class ContractStructureMigrationService:
             result["existing_contracts"] += 1
         return contract
 
+    # ============================================================
+    # ✅ migrate() - المعدل
+    # ============================================================
     @staticmethod
     @transaction.atomic
     def migrate(dataframe):
 
-        # ✅ Cache للباكدجات (Performance)
+        # ✅ ✅ ✅ Cache للباكدجات - استخدام package_lookup_key
         packages_cache = {
-            p.code: p
-            for p in Package.objects.all()
+            ImportHelpers.package_lookup_key(  # ⬅️ استخدام الدالة
+                p.code,
+                p.name,
+            ): p
+            for p in Package.objects.select_related('entity').all()
         }
 
-        # ✅ Cache للعقود (Performance)
+        # ✅ Cache للعقود
         contracts_cache = {
             c.entity.name: c
             for c in Contract.objects.select_related(
@@ -244,7 +241,7 @@ class ContractStructureMigrationService:
             )
         }
 
-        # ✅ Default Price List (مرة واحدة)
+        # ✅ Default Price List
         default_price_list = PriceList.objects.get(
             name="DATA IMPORT"
         )
@@ -263,14 +260,8 @@ class ContractStructureMigrationService:
             "missing_codes": set(),
         }
 
-        # ============================================================
-        # ✅ طباعة أول 5 صفوف قبل اللوب مباشرة
-        # ============================================================
-       
-
-        # ✅ تشغيل على كل الصفوف مع الـ Caches
+        # ✅ تشغيل على كل الصفوف
         for _, row in dataframe.iterrows():
-
             ContractStructureMigrationService.sync_row(
                 row,
                 packages_cache,
@@ -284,23 +275,32 @@ class ContractStructureMigrationService:
 
         return result
 
+    # ============================================================
+    # ✅ sync_row() - المعدل بالكامل
+    # ============================================================
     @staticmethod
     def sync_row(row, packages_cache, contracts_cache, default_price_list, result):
 
         # ============================================================
-        # ✅ أول جزء في sync_row()
+        # ✅ استخراج البيانات من الصف
         # ============================================================
-
         company_name = (
             ContractStructureMigrationService.normalize_company_name(
                 row.get("الشركه")
             )
         )
 
-        # ✅ استخدام normalize_package_codes بدلاً من normalize_company_name
+        # ✅ أكواد الباكدجات
         package_codes = (
             ContractStructureMigrationService.normalize_package_codes(
                 row.get("الكود")
+            )
+        )
+
+        # ✅ اسم الباكدج من الـ row
+        package_name = (
+            ImportHelpers.normalize_text(
+                row.get("اسم الباكدج")
             )
         )
 
@@ -330,7 +330,7 @@ class ContractStructureMigrationService:
         )
 
         # ============================================================
-        # ✅ Contract (مع الـ Caches)
+        # ✅ Contract
         # ============================================================
         contract = (
             ContractStructureMigrationService.get_or_create_contract(
@@ -344,11 +344,19 @@ class ContractStructureMigrationService:
         )
 
         # ============================================================
-        # ✅ Package Lookup (من Cache) مع دعم الأكواد المتعددة
+        # ✅ Package Lookup - استخدام package_lookup_key
         # ============================================================
         package = None
+
         for code in package_codes:
-            package = packages_cache.get(code)
+            # ✅ استخدام package_lookup_key
+            key = ImportHelpers.package_lookup_key(
+                code,
+                package_name,
+            )
+
+            package = packages_cache.get(key)
+
             if package:
                 break
 
@@ -359,20 +367,16 @@ class ContractStructureMigrationService:
             return
 
         # ============================================================
-        # ✅ آخر جزء: ContractPackage (مع الـ Helpers)
+        # ✅ ContractPackage
         # ============================================================
-
-        # ✅ استخراج السعر مع التحقق من عدم وجود قيمة فارغة
         price = ContractStructureMigrationService.clean_decimal(
             row.get("السعر")
         )
 
-        # ✅ بناء الـ defaults
         defaults = {
             "total_before_discount": ContractStructureMigrationService.clean_decimal(
                 row.get("الاجمالي")
             ),
-            # ✅ استخدام clean_percentage للخصم الحالي
             "current_discount_rate": ContractStructureMigrationService.clean_percentage(
                 row.get("معدل الخصم الحالي")
             ),
@@ -400,20 +404,25 @@ class ContractStructureMigrationService:
             "notes": row.get("ملاحظات الباكدج"),
             "approval_pdf": row.get("الموافقه"),
             "is_active": True,
-
-            # ✅ السعر المقترح
             "suggested_price": ContractStructureMigrationService.clean_decimal(
                 row.get("السعر المقترح")
             ),
-            # ✅ استخدام clean_percentage للخصم المقترح
             "suggested_discount_rate": ContractStructureMigrationService.clean_percentage(
                 row.get("معدل الخصم المقترح")
             ),
         }
 
-        # ✅ إضافة السعر فقط إذا كان موجود (لا نمسح السعر الموجود)
-        if price is not None:
-            defaults["package_price"] = price
+        if price is None:
+            print("=" * 80)
+            print("PRICE IS NONE")
+            print("Company :", company_name)
+            print("Code    :", package_codes)
+            print("Name    :", package_name)
+            print("Raw     :", repr(row.get("السعر")))
+            print("=" * 80)
+            return
+
+        defaults["package_price"] = price
 
         contract_package, created = ContractPackage.objects.update_or_create(
             contract=contract,
