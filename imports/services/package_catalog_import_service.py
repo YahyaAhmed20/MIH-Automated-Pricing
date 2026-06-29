@@ -18,41 +18,7 @@ class PackageCatalogImportService:
     # ============================================================
     # ✅ Helper: جلب أو إنشاء التخصص
     # ============================================================
-    @staticmethod
-    def get_specialty(
-        specialty_name,
-        specialties_cache,
-        result
-    ):
-
-        specialty_name = (
-            ImportHelpers.normalize_text(  # ✅ استخدم ImportHelpers
-                specialty_name
-            )
-        )
-
-        if not specialty_name:
-            result["missing_specialty"] += 1
-            return None
-
-        specialty = specialties_cache.get(
-            specialty_name
-        )
-
-        if specialty:
-            return specialty
-
-        specialty = Specialty.objects.create(
-            name=specialty_name,
-            is_active=True
-        )
-
-        specialties_cache[specialty_name] = specialty
-
-        result["created_specialties"] += 1
-
-        return specialty
-
+    
     # ============================================================
     # ✅ Import Data (مع الـ Result)
     # ============================================================
@@ -124,7 +90,7 @@ class PackageCatalogImportService:
             result["processed"] += 1
 
             specialty = (
-                PackageCatalogImportService.get_specialty(
+                ImportHelpers.get_or_create_specialty(
                     specialty_name,
                     specialties_cache,
                     result

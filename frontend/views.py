@@ -176,14 +176,24 @@ def home(request):
         context
     )
 
+
 def packages(request):
 
     search = request.GET.get("search", "")
-    package_type = request.GET.get("type", "")  # إضافة فلتر النوع
+    package_type = request.GET.get("type", "")
+    specialty = request.GET.get("specialty", "")
 
     packages = Package.objects.select_related(
         "specialty"
-    ).order_by("name")
+    )
+
+    # لو الصفحة النقدي
+    if request.path == "/cash-packages/":
+        packages = packages.filter(
+            is_cash_package=True
+        )
+    else:
+        packages = packages.order_by("name")
 
     # البحث
     if search:
@@ -198,11 +208,21 @@ def packages(request):
     elif package_type == "credit":
         packages = packages.filter(is_cash_package=False)
 
+    # فلتر التخصص
+    if specialty:
+        packages = packages.filter(
+            specialty__id=specialty
+        )
+
     paginator = Paginator(packages, 20)
 
     page_number = request.GET.get("page")
 
     page_obj = paginator.get_page(page_number)
+
+    specialties = Specialty.objects.filter(
+        is_active=True
+    ).order_by("name")
 
     return render(
         request,
@@ -210,10 +230,12 @@ def packages(request):
         {
             "page_obj": page_obj,
             "search": search,
-            "package_type": package_type,  # إرسال الفلتر إلى template
+            "package_type": package_type,
+            "specialties": specialties,
+            "selected_specialty": specialty,
         }
     )
-    
+
 # views.py
 def package_create(request):
     # مجرد عرض رسالة
@@ -1611,5 +1633,46 @@ def credit_package_pricing(request):
             "selected_company": company_id,
             "company_search": company_search,
             "package_search": package_search,
+        }
+    )
+    
+    
+def cash_packages(request):
+
+    search = request.GET.get("search", "")
+    specialty = request.GET.get("specialty", "")
+
+    packages = Package.objects.select_related(
+        "specialty"
+    ).filter(
+        is_cash_package=True
+    ).order_by("name")
+
+    # البحث
+    if search:
+        packages = packages.filter(
+            Q(name__icontains=search) |
+            Q(code__icontains=search)
+        )
+
+    # فلتر التخصص
+    if specialty:
+        packages = packages.filter(
+            specialty_id=specialty
+        )
+
+    specialties = Specialty.objects.filter(
+        packages__is_cash_package=True,
+        is_active=True,
+    ).distinct().order_by("name")
+
+    return render(
+        request,
+        "frontend/cash_packages.html",
+        {
+            "packages": packages,
+            "search": search,
+            "specialties": specialties,
+            "selected_specialty": specialty,
         }
     )

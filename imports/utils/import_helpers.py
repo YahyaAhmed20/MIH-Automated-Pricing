@@ -124,3 +124,46 @@ class ImportHelpers:
             ImportHelpers.normalize_text(package_code),
             ImportHelpers.normalize_text(package_name),
         )
+        
+        
+    # ============================================================
+# ✅ Get Or Create Specialty
+# ============================================================
+    @staticmethod
+    def get_or_create_specialty(
+        specialty_name,
+        specialties_cache,
+        result=None,
+    ):
+
+        from medical_catalog.models import Specialty
+
+        specialty_name = (
+            ImportHelpers.normalize_text(
+                specialty_name
+            )
+        )
+
+        if not specialty_name:
+            if result:
+                result["missing_specialty"] += 1
+            return None
+
+        specialty = specialties_cache.get(
+            specialty_name
+        )
+
+        if specialty:
+            return specialty
+
+        specialty = Specialty.objects.create(
+            name=specialty_name,
+            is_active=True,
+        )
+
+        specialties_cache[specialty_name] = specialty
+
+        if result:
+            result["created_specialties"] += 1
+
+        return specialty
