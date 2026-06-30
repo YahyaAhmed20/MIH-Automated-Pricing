@@ -1492,9 +1492,6 @@ def credit_package_pricing(request):
             packages = packages.filter(package__name__icontains=package_search)
 
         # ============================================================
-        # ✅ الخطوة 1: تنسيق الباكدجات المعروضة في الجدول (جديد)
-        # ============================================================
-        # ============================================================
         # ✅ Helper functions لتنسيق الأرقام
         # ============================================================
         def format_price(value):
@@ -1512,10 +1509,14 @@ def credit_package_pricing(request):
         # ✅ تنسيق كل باكدج في الـ packages
         for cp in packages:
             cp.formatted_price = format_price(cp.package_price)
+            # ✅ استخدام current_discount_text لو موجود، وإلا استخدم النسبة المئوية
             cp.formatted_discount = (
-                format_percentage(cp.current_discount_rate)
-                if cp.current_discount_rate
-                else "-"
+                (cp.current_discount_text or "").strip()
+                or (
+                    format_percentage(cp.current_discount_rate)
+                    if cp.current_discount_rate
+                    else "-"
+                )
             )
 
     if package_id:
@@ -1635,7 +1636,6 @@ def credit_package_pricing(request):
             "package_search": package_search,
         }
     )
-    
     
 def cash_packages(request):
 

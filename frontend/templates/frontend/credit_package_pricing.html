@@ -727,6 +727,9 @@
 <!-- ============================================ -->
 <!-- عرض جميع الباكدجات للشركة المختارة -->
 <!-- ============================================ -->
+<!-- ============================================ -->
+<!-- عرض جميع الباكدجات للشركة المختارة -->
+<!-- ============================================ -->
 {% if packages and not selected_package %}
 
 <div class="card mt-4 shadow">
@@ -770,7 +773,13 @@
                             <strong>{{ cp.package.name }}</strong>
                         </td>
                         <td>{{ cp.formatted_price }} ج.م</td>
-                        <td>{{ cp.formatted_discount }}</td>
+                        <td>
+                            {% if cp.formatted_discount %}
+                                {{ cp.formatted_discount }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
                     </tr>
 
                 {% endfor %}
