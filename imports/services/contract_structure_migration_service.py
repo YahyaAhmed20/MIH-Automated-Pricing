@@ -297,7 +297,7 @@ class ContractStructureMigrationService:
             )
         )
 
-        # ✅ اسم الباكدج من الـ row
+        # ✅ اسم الباكدج
         package_name = (
             ImportHelpers.normalize_text(
                 row.get("اسم الباكدج")
@@ -344,12 +344,12 @@ class ContractStructureMigrationService:
         )
 
         # ============================================================
-        # ✅ Package Lookup - استخدام package_lookup_key
+        # ✅ Package Lookup
         # ============================================================
         package = None
 
         for code in package_codes:
-            # ✅ استخدام package_lookup_key
+
             key = ImportHelpers.package_lookup_key(
                 code,
                 package_name,
@@ -362,18 +362,29 @@ class ContractStructureMigrationService:
 
         if not package:
             result["package_not_found"] += 1
+
             for code in package_codes:
                 result["missing_codes"].add(code)
+
             return
 
         # ============================================================
-        # ✅ ContractPackage
+        # ✅ Price
         # ============================================================
         price = ContractStructureMigrationService.clean_decimal(
             row.get("السعر")
         )
 
+        if price is None:
+            result.setdefault("missing_price", 0)
+            result["missing_price"] += 1
+            return
+
+        # ============================================================
+        # ✅ ContractPackage
+        # ============================================================
         defaults = {
+            "package_price": price,
             "total_before_discount": ContractStructureMigrationService.clean_decimal(
                 row.get("الاجمالي")
             ),
@@ -411,18 +422,6 @@ class ContractStructureMigrationService:
                 row.get("معدل الخصم المقترح")
             ),
         }
-
-        if price is None:
-            print("=" * 80)
-            print("PRICE IS NONE")
-            print("Company :", company_name)
-            print("Code    :", package_codes)
-            print("Name    :", package_name)
-            print("Raw     :", repr(row.get("السعر")))
-            print("=" * 80)
-            return
-
-        defaults["package_price"] = price
 
         contract_package, created = ContractPackage.objects.update_or_create(
             contract=contract,
