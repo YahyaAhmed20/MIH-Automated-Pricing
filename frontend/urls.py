@@ -69,9 +69,8 @@ urlpatterns = [
     path(
     "contract-entities/",
     views.contract_entities,
-    name="contract_entities"
-),
-
+    name="contract_entities",
+    ),
     path(
         "similar-invoices/",
         views.similar_invoices,

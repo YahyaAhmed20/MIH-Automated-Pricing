@@ -380,55 +380,59 @@ def price_lists(request):
 
 
 
-
 def contract_entities(request):
 
     search = request.GET.get("search", "")
 
-    entities = (
-        ContractEntity.objects
-        .annotate(
-            contracts_count=Count(
-                "contracts",
-                distinct=True
-            )
+    contracts = (
+        Contract.objects.select_related(
+            "entity",
+            "financial_category",
+            "price_list",
         )
-        .order_by("name")
+        .filter(
+            is_active=True,
+            medical_service__isnull=False,
+        )
+        .exclude(
+            medical_service=""
+        )
+        .order_by("entity__name")
     )
+
+    # ==========================================
+    # Search
+    # ==========================================
 
     if search:
-        entities = entities.filter(
-            name__icontains=search
+
+        contracts = contracts.filter(
+
+            Q(entity__name__icontains=search)
+
+            |
+
+            Q(financial_category__code__icontains=search)
+
         )
 
-    paginator = Paginator(
-        entities,
-        20
-    )
-
-    page_obj = paginator.get_page(
-        request.GET.get("page")
-    )
-
-    total_entities = ContractEntity.objects.count()
-    total_contracts = Contract.objects.count()
-    total_pricing = ContractPackage.objects.count()
-
     return render(
-        request,
-        "frontend/contract_entities.html",
-        {
-            "page_obj": page_obj,
-            "search": search,
-            "total_entities": total_entities,
-            "total_contracts": total_contracts,
-            "total_pricing": total_pricing,
-        }
-    )
-    
-    
-    
 
+        request,
+
+        "frontend/contract_entities.html",
+
+        {
+
+            "contracts": contracts,
+
+            "search": search,
+
+            "results_count": contracts.count(),
+
+        }
+
+    )
 
 def external_approvals(request):
 
@@ -1676,3 +1680,5 @@ def cash_packages(request):
             "selected_specialty": specialty,
         }
     )
+    
+ 

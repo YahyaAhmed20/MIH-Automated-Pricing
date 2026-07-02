@@ -208,6 +208,18 @@ class Contract(models.Model):
     updated_at = models.DateTimeField(
         auto_now=True
     )
+    medical_service = models.CharField(
+    max_length=255,
+    blank=True,
+    null=True,
+    verbose_name="الخدمة الطبية"
+    )
+
+    operating_instructions = models.TextField(
+    blank=True,
+    null=True,
+    verbose_name="تعليمات التشغيل"
+    )
 
     class Meta:
         verbose_name = "عقد"
