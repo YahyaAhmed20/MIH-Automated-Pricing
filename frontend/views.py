@@ -3,7 +3,16 @@ from contracts.services.pricing_engine import PricingEngine
 from django.db.models import Count
 from contracts.models import ContractPackage
 from django.db.models import Count
+from contracts.models import (
+    CompanyDiscountProfile,
+)
 
+from django.db.models import Q, Prefetch
+
+from contracts.models import (
+    CompanyDiscountProfile,
+    CompanyDiscount,
+)
 from django.shortcuts import get_object_or_404
 from django.db.models import Sum, Count
 from pricing_requests.models import PricingRequest
@@ -838,47 +847,99 @@ def pending_analysis(request):
         "frontend/pending_analysis.html",
         context
     )
+
+
 def company_discounts(request):
 
-    avg_discount = (
-        ContractPackage.objects
-        .exclude(current_discount_rate__isnull=True)
-        .aggregate(avg=Avg("current_discount_rate"))
-    )["avg"] or 0
-
-    top_discounts = (
-        ContractPackage.objects
-        .values("contract__entity__name")
-        .annotate(
-            avg_discount=Avg("current_discount_rate")
-        )
-        .exclude(avg_discount__isnull=True)
-        .order_by("-avg_discount")[:20]
+    search = request.GET.get(
+        "search",
+        ""
     )
 
-    low_discounts = (
-        ContractPackage.objects
-        .values("contract__entity__name")
-        .annotate(
-            avg_discount=Avg("current_discount_rate")
-        )
-        .exclude(avg_discount__isnull=True)
-        .order_by("avg_discount")[:20]
+    section = request.GET.get(
+        "section",
+        ""
     )
 
-    context = {
-        "avg_discount": avg_discount,
-        "top_discounts": top_discounts,
-        "low_discounts": low_discounts,
-    }
+    companies = (
+        CompanyDiscountProfile.objects.prefetch_related(
+            Prefetch(
+                "discounts",
+                queryset=CompanyDiscount.objects.order_by(
+                    "section",
+                    "display_order",
+                ),
+            )
+        ).order_by(
+            "company_name"
+        )
+    )
+
+    if search:
+
+        companies = companies.filter(
+
+            Q(company_name__icontains=search)
+
+            |
+
+            Q(financial_category__icontains=search)
+
+        )
+
+    company_cards = []
+
+    for company in companies:
+
+        internal = []
+
+        external = []
+
+        for discount in company.discounts.all():
+
+            if section == "internal":
+
+                if discount.section != "داخلي":
+                    continue
+
+            elif section == "external":
+
+                if discount.section != "خارجي":
+                    continue
+
+            if discount.section == "داخلي":
+
+                internal.append(discount)
+
+            else:
+
+                external.append(discount)
+
+        company.internal_discounts = internal
+
+        company.external_discounts = external
+
+        company_cards.append(company)
 
     return render(
+
         request,
+
         "frontend/company_discounts.html",
-        context
+
+        {
+
+            "companies": company_cards,
+
+            "search": search,
+
+            "selected_section": section,
+
+            "results_count": len(company_cards),
+
+        }
+
     )
-    
-    
     
 from pricing_requests.models import PricingRequest
 from django.db.models import Q

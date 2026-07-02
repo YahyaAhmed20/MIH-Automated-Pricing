@@ -7,201 +7,541 @@
 {% block content %}
 
 <!-- ============================================ -->
-<!-- العنوان -->
+<!-- ✅ Script للبحث التلقائي -->
 <!-- ============================================ -->
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h3>
-        <i class="bi bi-percent"></i>
-        خصومات الشركات
-    </h3>
-    <span class="text-muted">
-        <i class="bi bi-calendar"></i>
-        {{ now|date:"Y-m-d" }}
+<script>
+    let searchTimeout;
+
+    function searchDelay() {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(function() {
+            document.querySelector('form').submit();
+        }, 300);
+    }
+
+    // ✅ إظهار/إخفاء زر المسح
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.querySelector('input[name="search"]');
+        const clearBtn = document.querySelector('.clear-search-btn');
+
+        if (searchInput && clearBtn) {
+            searchInput.addEventListener('input', function() {
+                if (this.value.length > 0) {
+                    clearBtn.style.display = 'block';
+                } else {
+                    clearBtn.style.display = 'none';
+                }
+            });
+        }
+    });
+</script>
+
+<!-- ============================================ -->
+<!-- ✅ شريط البحث والفلتر المحسن -->
+<!-- ============================================ -->
+<div class="card shadow border-0 hover-shadow mb-4">
+
+    <div class="card-header bg-gradient-primary text-white">
+        <h5 class="mb-0">
+            <i class="fas fa-search"></i>
+            البحث في خصومات الشركات
+        </h5>
+    </div>
+
+    <div class="card-body">
+
+        <form method="get">
+
+            <div class="row g-3 align-items-end">
+
+                <div class="col-md-6">
+
+                    <label class="form-label fw-bold text-muted small">
+                        <i class="fas fa-building"></i>
+                        بحث
+                    </label>
+
+                    <div class="input-group input-group-lg">
+                        <span class="input-group-text bg-light border-0">
+                            <i class="fas fa-search text-primary"></i>
+                        </span>
+                        <input
+                            type="text"
+                            name="search"
+                            value="{{ search }}"
+                            class="form-control border-0 shadow-sm"
+                            placeholder="ابحث باسم الشركة أو الفئة المالية..."
+                            autofocus
+                            onkeyup="searchDelay()"
+                        >
+                        {% if search %}
+                        <a
+                            href="{% url 'company_discounts' %}"
+                            class="btn btn-outline-danger border-0 clear-search-btn"
+                            title="مسح البحث"
+                        >
+                            <i class="fas fa-times"></i>
+                        </a>
+                        {% endif %}
+                    </div>
+
+                </div>
+
+                <div class="col-md-3">
+
+                    <label class="form-label fw-bold text-muted small">
+                        <i class="fas fa-filter"></i>
+                        القسم
+                    </label>
+
+                    <select
+                        name="section"
+                        class="form-select form-select-lg shadow-sm"
+                        onchange="this.form.submit()">
+
+                        <option value="">
+                            <i class="fas fa-asterisk"></i> الكل
+                        </option>
+
+                        <option
+                            value="internal"
+                            {% if selected_section == "internal" %}selected{% endif %}
+                        >
+                            🏥 داخلي
+                        </option>
+
+                        <option
+                            value="external"
+                            {% if selected_section == "external" %}selected{% endif %}
+                        >
+                            🚑 خارجي
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <div class="col-md-3">
+
+                    <button
+                        class="btn btn-primary btn-lg w-100 shadow-sm"
+                        type="submit">
+
+                        <i class="fas fa-search"></i>
+
+                        بحث
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+<!-- ============================================ -->
+<!-- ✅ إحصائيات النتائج -->
+<!-- ============================================ -->
+<div class="alert alert-info d-flex justify-content-between align-items-center shadow-sm">
+
+    <span>
+        <i class="fas fa-list"></i>
+        عدد النتائج
     </span>
+
+    <span class="badge bg-primary rounded-pill fs-5 px-4 py-2">
+
+        {{ results_count }}
+
+    </span>
+
 </div>
 
-<!-- ============================================ -->
-<!-- متوسط الخصومات -->
-<!-- ============================================ -->
-<div class="card mb-4 border-primary shadow-sm hover-shadow">
-    <div class="card-body text-center py-4">
-        <div class="icon-circle bg-primary bg-opacity-10 mb-3 mx-auto">
-            <i class="bi bi-graph-up-arrow text-primary"></i>
-        </div>
-        <h6 class="text-muted">متوسط الخصومات</h6>
-        <h2 class="text-primary">
-            {{ avg_discount|floatformat:2 }}%
-        </h2>
-        <small class="text-muted">بناءً على جميع العقود</small>
-    </div>
-</div>
 
 <!-- ============================================ -->
-<!-- أعلى وأقل الجهات خصماً -->
+<!-- ✅ عرض بيانات الشركات -->
 <!-- ============================================ -->
-<div class="row g-4">
+{% for company in companies %}
 
-    <!-- أعلى الجهات خصماً -->
-    <div class="col-md-6">
+<div class="card shadow border-0 mb-4 hover-shadow">
 
-        <div class="card shadow-sm border-0 h-100 hover-shadow">
+    <div class="card-header bg-gradient-primary text-white">
 
-            <div class="card-header bg-success bg-opacity-10 d-flex justify-content-between align-items-center">
-                <span>
-                    <i class="bi bi-trophy"></i>
-                    أعلى الجهات خصماً
-                </span>
-                <span class="badge bg-success rounded-pill">
-                    {{ top_discounts|length }}
-                </span>
+        <div class="row align-items-center">
+
+            <div class="col-md-7">
+
+                <h5 class="mb-1 fw-bold">
+                    <i class="fas fa-building me-2"></i>
+                    {{ company.company_name }}
+                </h5>
+
+                <small>
+                    <i class="fas fa-handshake me-1"></i>
+                    {{ company.contract_type }}
+                    |
+                    <i class="fas fa-list-ul me-1"></i>
+                    قائمة الأسعار: {{ company.price_list }}
+                </small>
+
             </div>
 
-            <div class="card-body p-0">
+            <div class="col-md-5 text-md-end mt-2 mt-md-0">
 
-                <div class="list-group list-group-flush">
+                <span class="badge bg-light text-dark fs-6 px-4 py-2 shadow-sm">
+                    <i class="fas fa-tag me-1"></i>
+                    {{ company.financial_category }}
+                </span>
 
-                    {% for item in top_discounts %}
+            </div>
 
-                    <div class="list-group-item d-flex justify-content-between align-items-center">
-                        <span>
-                            <span class="badge bg-success rounded-circle me-2">
-                                {{ forloop.counter }}
-                            </span>
-                            <strong>{{ item.contract__entity__name }}</strong>
-                        </span>
-                        <span class="badge bg-success rounded-pill">
-                            {{ item.avg_discount|floatformat:2 }}%
-                        </span>
+        </div>
+
+    </div>
+
+    <div class="card-body">
+
+        <!-- ========================================== -->
+        <!-- ✅ القسم الداخلي -->
+        <!-- ========================================== -->
+        <div class="d-flex align-items-center mb-4">
+
+            <div class="flex-grow-1">
+                <hr class="border-success opacity-50">
+            </div>
+
+            <h5 class="text-success fw-bold mx-3 mb-0">
+                <i class="fas fa-hospital me-2"></i>
+                القسم الداخلي
+            </h5>
+
+            <div class="flex-grow-1">
+                <hr class="border-success opacity-50">
+            </div>
+
+        </div>
+
+        <div class="row g-3">
+
+        {% for item in company.internal_discounts %}
+
+            {% if item.item_name == "الاستثناءات" %}
+
+            <div class="col-12">
+
+                <div class="alert alert-warning shadow-sm border-start border-4 border-warning mt-2">
+
+                    <h6 class="mb-2 fw-bold">
+                        <i class="fas fa-exclamation-triangle text-warning"></i>
+                        الاستثناءات
+                    </h6>
+
+                    <div class="small" style="white-space: pre-line;">
+
+                        {{ item.details|linebreaksbr }}
+
                     </div>
-
-                    {% empty %}
-
-                    <div class="list-group-item text-center text-muted py-4">
-                        <i class="bi bi-inbox"></i>
-                        لا توجد بيانات
-                    </div>
-
-                    {% endfor %}
 
                 </div>
 
             </div>
 
-        </div>
+            {% else %}
 
-    </div>
+            <div class="col-xl-3 col-lg-4 col-md-6">
 
-    <!-- أقل الجهات خصماً -->
-    <div class="col-md-6">
+                <div class="card shadow-sm border-success border-2">
 
-        <div class="card shadow-sm border-0 h-100 hover-shadow">
+                    <div class="card-body">
 
-            <div class="card-header bg-danger bg-opacity-10 d-flex justify-content-between align-items-center">
-                <span>
-                    <i class="bi bi-arrow-down-circle"></i>
-                    أقل الجهات خصماً
-                </span>
-                <span class="badge bg-danger rounded-pill">
-                    {{ low_discounts|length }}
-                </span>
-            </div>
+                        <h6 class="fw-bold text-success">
+                            <i class="fas fa-check-circle me-1"></i>
+                            {{ item.item_name }}
+                        </h6>
 
-            <div class="card-body p-0">
+                        {% if item.discount %}
 
-                <div class="list-group list-group-flush">
+                        <div class="mb-2">
 
-                    {% for item in low_discounts %}
+                            <span class="badge rounded-pill bg-success fs-6 px-3 py-2">
 
-                    <div class="list-group-item d-flex justify-content-between align-items-center">
-                        <span>
-                            <span class="badge bg-danger rounded-circle me-2">
-                                {{ forloop.counter }}
+                                <i class="fas fa-percent me-1"></i>
+                                {{ item.discount }}
+
                             </span>
-                            <strong>{{ item.contract__entity__name }}</strong>
-                        </span>
-                        <span class="badge bg-danger rounded-pill">
-                            {{ item.avg_discount|floatformat:2 }}%
-                        </span>
+
+                        </div>
+
+                        {% endif %}
+
+                        {% if item.details %}
+
+                        <div class="small text-muted mb-2" style="white-space: pre-line;">
+
+                            {{ item.details|linebreaksbr }}
+
+                        </div>
+
+                        {% endif %}
+
+                        {% if item.net_price %}
+
+                        <div class="fw-bold text-primary fs-5 mt-2">
+
+                            <i class="fas fa-money-bill-wave me-1"></i>
+                            {{ item.net_price|floatformat:0 }} جنيه
+
+                        </div>
+
+                        {% endif %}
+
                     </div>
-
-                    {% empty %}
-
-                    <div class="list-group-item text-center text-muted py-4">
-                        <i class="bi bi-inbox"></i>
-                        لا توجد بيانات
-                    </div>
-
-                    {% endfor %}
 
                 </div>
 
             </div>
 
+            {% endif %}
+
+        {% endfor %}
+
         </div>
+
+        <!-- ========================================== -->
+        <!-- ✅ القسم الخارجي -->
+        <!-- ========================================== -->
+        <div class="d-flex align-items-center my-5">
+
+            <div class="flex-grow-1">
+                <hr class="border-primary opacity-50">
+            </div>
+
+            <h5 class="text-primary fw-bold mx-3 mb-0">
+                <i class="fas fa-user-md me-2"></i>
+                القسم الخارجي
+            </h5>
+
+            <div class="flex-grow-1">
+                <hr class="border-primary opacity-50">
+            </div>
+
+        </div>
+
+        <div class="row g-3">
+
+        {% for item in company.external_discounts %}
+
+            {% if item.item_name == "الاستثناءات" %}
+
+            <div class="col-12">
+
+                <div class="alert alert-warning shadow-sm border-start border-4 border-warning mt-2">
+
+                    <h6 class="mb-2 fw-bold">
+                        <i class="fas fa-exclamation-triangle text-warning"></i>
+                        الاستثناءات
+                    </h6>
+
+                    <div class="small" style="white-space: pre-line;">
+
+                        {{ item.details|linebreaksbr }}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% else %}
+
+            <div class="col-xl-3 col-lg-4 col-md-6">
+
+                <div class="card shadow-sm border-primary border-2">
+
+                    <div class="card-body">
+
+                        <h6 class="fw-bold text-primary">
+                            <i class="fas fa-check-circle me-1"></i>
+                            {{ item.item_name }}
+                        </h6>
+
+                        {% if item.discount %}
+
+                        <div class="mb-2">
+
+                            <span class="badge rounded-pill bg-primary fs-6 px-3 py-2">
+
+                                <i class="fas fa-percent me-1"></i>
+                                {{ item.discount }}
+
+                            </span>
+
+                        </div>
+
+                        {% endif %}
+
+                        {% if item.details %}
+
+                        <div class="small text-muted mb-2" style="white-space: pre-line;">
+
+                            {{ item.details|linebreaksbr }}
+
+                        </div>
+
+                        {% endif %}
+
+                        {% if item.net_price %}
+
+                        <div class="fw-bold text-success fs-5 mt-2">
+
+                            <i class="fas fa-money-bill-wave me-1"></i>
+                            {{ item.net_price|floatformat:0 }} جنيه
+
+                        </div>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% endif %}
+
+        {% endfor %}
+
+        </div>
+
+        <!-- ========================================== -->
+        <!-- ✅ المرفقات -->
+        <!-- ========================================== -->
+        {% if company.operating_pdf %}
+
+        <div class="mt-4 p-3 bg-light rounded shadow-sm">
+
+            <div class="d-flex align-items-center justify-content-between">
+
+                <span>
+                    <i class="fas fa-paperclip text-danger me-2"></i>
+                    <strong>تعليمات التشغيل</strong>
+                </span>
+
+                <a
+                    href="{{ company.operating_pdf }}"
+                    target="_blank"
+                    class="btn btn-outline-danger btn-sm">
+
+                    <i class="fas fa-file-pdf me-1"></i>
+                    فتح PDF
+
+                </a>
+
+            </div>
+
+        </div>
+
+        {% endif %}
 
     </div>
 
 </div>
 
-<!-- ============================================ -->
-<!-- إحصائيات سريعة -->
-<!-- ============================================ -->
-<hr class="my-4">
+{% empty %}
 
-<div class="row g-3">
+<div class="alert alert-warning text-center py-5">
 
-    <div class="col-md-4">
-        <div class="card border-0 shadow-sm hover-shadow">
-            <div class="card-body text-center">
-                <h6 class="text-muted">أعلى خصم</h6>
-                <h4 class="text-success">
-                    {% if top_discounts %}
-                        {{ top_discounts.0.avg_discount|floatformat:2 }}%
-                    {% else %}
-                        -
-                    {% endif %}
-                </h4>
-                <small class="text-muted">
-                    {% if top_discounts %}
-                        {{ top_discounts.0.contract__entity__name }}
-                    {% endif %}
-                </small>
-            </div>
-        </div>
-    </div>
+    <i class="fas fa-inbox fa-3x d-block mb-3 text-muted"></i>
 
-    <div class="col-md-4">
-        <div class="card border-0 shadow-sm hover-shadow">
-            <div class="card-body text-center">
-                <h6 class="text-muted">أقل خصم</h6>
-                <h4 class="text-danger">
-                    {% if low_discounts %}
-                        {{ low_discounts.0.avg_discount|floatformat:2 }}%
-                    {% else %}
-                        -
-                    {% endif %}
-                </h4>
-                <small class="text-muted">
-                    {% if low_discounts %}
-                        {{ low_discounts.0.contract__entity__name }}
-                    {% endif %}
-                </small>
-            </div>
-        </div>
-    </div>
+    <h5 class="text-muted">لا توجد بيانات</h5>
 
-    <div class="col-md-4">
-        <div class="card border-0 shadow-sm hover-shadow">
-            <div class="card-body text-center">
-                <h6 class="text-muted">إجمالي الجهات</h6>
-                <h4 class="text-primary">
-                    {{ top_discounts|length|add:low_discounts|length }}
-                </h4>
-                <small class="text-muted">جهة مختلفة</small>
-            </div>
-        </div>
-    </div>
+    <p class="text-muted small">حاول تغيير كلمات البحث</p>
 
 </div>
+
+{% endfor %}
+
+<!-- ============================================ -->
+<!-- ✅ CSS تحسينات -->
+<!-- ============================================ -->
+<style>
+    .bg-gradient-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .hover-shadow {
+        transition: box-shadow 0.3s ease;
+    }
+
+    .hover-shadow:hover {
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+    }
+
+    .card {
+        border-radius: 1rem;
+        overflow: hidden;
+        transition: 0.25s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0.75rem 1.5rem rgba(0, 0, 0, 0.12) !important;
+    }
+
+    .card-header {
+        border-radius: 0 !important;
+    }
+
+    .badge {
+        font-weight: 500;
+    }
+
+    .alert-warning {
+        background: #fff3cd;
+        border-color: #ffc107;
+    }
+
+    .border-success {
+        border-color: #28a745 !important;
+    }
+
+    .border-primary {
+        border-color: #007bff !important;
+    }
+
+    .border-warning {
+        border-color: #ffc107 !important;
+    }
+
+    /* ✅ تخصيص شريط التمرير */
+    ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: #667eea;
+        border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #5a67d8;
+    }
+
+    /* ✅ زر مسح البحث */
+    .clear-search-btn {
+        border-radius: 0 0.5rem 0.5rem 0;
+        border-left: none;
+    }
+</style>
 
 {% endblock %}

@@ -167,3 +167,26 @@ class ImportHelpers:
             result["created_specialties"] += 1
 
         return specialty
+
+    # ============================================================
+    # ✅ Helper: تنظيف قيمة الخصم
+    # ============================================================
+    @staticmethod
+    def clean_discount(value):
+        """
+        تنظيف قيمة الخصم وتحويلها من رقم عشري إلى نسبة مئوية
+
+        أمثلة:
+        0.1 -> "10%"
+        0.15 -> "15%"
+        0.05 -> "5%"
+        "10%" -> "10%"
+        "عرض خاص" -> "عرض خاص"
+        """
+        if pd.isna(value):
+            return ""
+
+        if isinstance(value, (int, float)):
+            return f"{value * 100:.0f}%"
+
+        return ImportHelpers.normalize_text(value)

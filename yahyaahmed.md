@@ -1,5 +1,8 @@
 ثم شغل:
 
+✅ الحل: أضف خاصية onkeyup في الـ HTML
+
+
 python manage.py import_package_catalog APP.xlsx
 
 ثم:

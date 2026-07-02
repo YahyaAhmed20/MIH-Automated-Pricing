@@ -113,8 +113,8 @@ urlpatterns = [
     path(
     "company-discounts/",
     views.company_discounts,
-    name="company_discounts"
-),
+    name="company_discounts",
+    ),
     
     path(
     "similar-invoices/",

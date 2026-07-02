@@ -220,6 +220,10 @@ class Contract(models.Model):
     null=True,
     verbose_name="تعليمات التشغيل"
     )
+    operating_pdf = models.URLField(
+    blank=True,
+    null=True
+)
 
     class Meta:
         verbose_name = "عقد"
@@ -613,3 +617,86 @@ class ContractPackage(models.Model):
 
     def __str__(self):
         return f"{self.contract} - {self.package}"
+    
+    
+    
+    
+class CompanyDiscountProfile(models.Model):
+    
+    
+    company_name = models.CharField(
+    max_length=255
+    )
+
+    contract_type = models.CharField(
+        max_length=100,
+        blank=True
+    )
+
+    financial_category = models.CharField(
+        max_length=100,
+        blank=True
+    )
+
+    price_list = models.CharField(
+        max_length=100,
+        blank=True
+    )
+
+    operating_pdf = models.URLField(
+        blank=True,
+        null=True
+    )
+
+    is_active = models.BooleanField(
+        default=True
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+class CompanyDiscount(models.Model):
+    
+    profile = models.ForeignKey(
+        CompanyDiscountProfile,
+        on_delete=models.CASCADE,
+        related_name="discounts",
+        null=True,  # ✅ مؤقتاً
+        blank=True,  # ✅ مؤقتاً
+    )
+
+    section = models.CharField(
+        max_length=20
+    )
+
+    item_name = models.CharField(
+        max_length=200
+    )
+
+    discount = models.CharField(
+        max_length=100,
+        blank=True
+    )
+
+    details = models.TextField(
+        blank=True
+    )
+
+    net_price = models.DecimalField(
+        max_digits=12,
+        decimal_places=2,
+        null=True,
+        blank=True
+    )
+
+    display_order = models.PositiveIntegerField(
+        default=0
+    )
+
+    is_active = models.BooleanField(
+        default=True
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
