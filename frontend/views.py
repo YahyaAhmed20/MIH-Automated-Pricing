@@ -7,6 +7,10 @@ from contracts.models import (
     CompanyDiscountProfile,
 )
 
+
+from frontend.services.special_offers_service import (
+    SpecialOffersService,
+)
 from django.db.models import Q, Prefetch
 
 from contracts.models import (
@@ -1742,4 +1746,34 @@ def cash_packages(request):
         }
     )
     
- 
+
+def special_offers(request):
+
+    search = request.GET.get(
+        "search",
+        ""
+    ).strip()
+
+    offers = SpecialOffersService.get_special_offers(
+        search=search,
+    )
+
+    context = {
+
+        "offers": offers,
+
+        "search": search,
+
+        "results_count": offers.count(),
+
+    }
+
+    return render(
+
+        request,
+
+        "frontend/special_offers.html",
+
+        context,
+
+    ) 

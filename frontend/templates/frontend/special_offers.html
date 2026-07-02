@@ -1,0 +1,397 @@
+{% extends "frontend/base.html" %}
+{% load humanize %}
+
+{% block title %}
+العروض الخاصة
+{% endblock %}
+
+{% block content %}
+
+<!-- ============================================ -->
+<!-- ✅ Script للبحث التلقائي -->
+<!-- ============================================ -->
+<script>
+    let searchTimeout;
+
+    function searchDelay() {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(function() {
+            document.querySelector('form').submit();
+        }, 700); // ⬅️ 700ms عشان تدي وقت للكتابة
+    }
+
+    // ✅ إظهار/إخفاء زر المسح
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.querySelector('input[name="search"]');
+        const clearBtn = document.querySelector('.clear-search-btn');
+
+        if (searchInput && clearBtn) {
+            searchInput.addEventListener('input', function() {
+                if (this.value.length > 0) {
+                    clearBtn.style.display = 'block';
+                } else {
+                    clearBtn.style.display = 'none';
+                }
+            });
+        }
+    });
+</script>
+
+<div class="container py-4">
+
+    <div class="text-center mb-4">
+
+        <h2 class="fw-bold">
+
+            <i class="fas fa-tags text-danger"></i>
+
+            العروض الخاصة
+
+        </h2>
+
+        <p class="text-muted">
+
+            MIH Automated Pricing System
+
+        </p>
+
+    </div>
+
+    <!-- ============================================ -->
+    <!-- ✅ شريط البحث المحسن (Dynamic) -->
+    <!-- ============================================ -->
+    <form method="get" class="mb-4">
+
+        <div class="input-group input-group-lg">
+
+            <span class="input-group-text bg-light border-0">
+
+                <i class="fas fa-search text-primary"></i>
+
+            </span>
+
+            <input
+
+                type="text"
+
+                class="form-control border-0 shadow-sm"
+
+                name="search"
+
+                placeholder="ابحث باسم الشركة أو الإجراء..."
+
+                value="{{ search }}"
+
+                oninput="searchDelay()" 
+
+                
+
+            >
+
+            {% if search %}
+
+            <a
+
+                href="{% url 'special_offers' %}"
+                class="btn btn-outline-danger border-0 clear-search-btn"
+                title="مسح البحث"
+
+            >
+
+                <i class="fas fa-times"></i>
+
+            </a>
+
+            {% endif %}
+
+        </div>
+
+    </form>
+
+    <!-- ============================================ -->
+    <!-- ✅ إحصائيات النتائج -->
+    <!-- ============================================ -->
+    <div class="mb-4">
+
+        <span class="badge bg-secondary fs-6 px-4 py-2">
+
+            <i class="fas fa-list me-1"></i>
+
+            عدد النتائج
+
+            {{ results_count }}
+
+        </span>
+
+    </div>
+
+    <!-- ============================================ -->
+    <!-- ✅ عرض العروض كـ Cards -->
+    <!-- ============================================ -->
+    <div class="row g-4">
+
+    {% for offer in offers %}
+
+        <div class="col-lg-6">
+
+            <div class="card shadow-sm border-{{ offer.company_color }} border-2 hover-card">
+
+                <div class="card-header company-header-{{ offer.company_color }} text-white">
+
+                    <h4 class="fw-bold mb-2">
+
+                        <i class="fas fa-building"></i>
+
+                        {{ offer.entity.name }}
+
+                    </h4>
+
+                    <span class="badge bg-light text-dark rounded-pill">
+
+                        <i class="fas fa-tag me-1"></i>
+
+                        {{ offer.offer_for }}
+
+                    </span>
+
+                </div>
+
+                <div class="card-body">
+
+                    <div class="mb-3">
+
+                        <h6 class="text-muted">
+
+                            <i class="fas fa-stethoscope"></i>
+
+                            التخصص
+
+                        </h6>
+
+                        <div class="fw-bold">
+
+                            {{ offer.specialty.name }}
+
+                        </div>
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <h6 class="text-muted">
+
+                            <i class="fas fa-notes-medical"></i>
+
+                            الإجراء
+
+                        </h6>
+
+                        <div>
+
+                            {{ offer.procedure_name }}
+
+                        </div>
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <h6 class="text-muted">
+
+                            <i class="fas fa-money-bill-wave"></i>
+
+                            سعر الإجراء
+
+                        </h6>
+
+                        {% if offer.price %}
+
+                            <span class="badge bg-success fs-5 px-3 py-2 rounded-pill">
+
+                                {{ offer.price|floatformat:0|intcomma }} جنيه
+
+                            </span>
+
+                        {% else %}
+
+                            <span class="badge bg-secondary rounded-pill">
+
+                                غير محدد
+
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+                    {% if offer.notes %}
+
+                    <div class="alert alert-warning">
+
+                        <strong>
+
+                            <i class="fas fa-sticky-note"></i>
+
+                            ملاحظات
+
+                        </strong>
+
+                        <hr>
+
+                        {{ offer.notes|linebreaksbr }}
+
+                    </div>
+
+                    {% endif %}
+
+                </div>
+
+                <div class="card-footer bg-light">
+
+                    <small class="text-muted">
+
+                        <i class="fas fa-calendar-alt"></i>
+
+                        من
+
+                        <strong>
+
+                            {{ offer.valid_from }}
+
+                        </strong>
+
+                        إلى
+
+                        <strong>
+
+                            {{ offer.valid_to }}
+
+                        </strong>
+
+                    </small>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    {% empty %}
+
+        <div class="col-12">
+
+            <div class="alert alert-info text-center py-5">
+
+                <i class="fas fa-inbox fa-3x d-block mb-3 text-muted"></i>
+
+                <h5 class="text-muted">لا توجد عروض مطابقة</h5>
+
+                <p class="text-muted small">حاول تغيير كلمات البحث</p>
+
+            </div>
+
+        </div>
+
+    {% endfor %}
+
+    </div>
+
+</div>
+
+<!-- ============================================ -->
+<!-- ✅ CSS تحسينات -->
+<!-- ============================================ -->
+<style>
+    .hover-card {
+        transition: all 0.25s ease;
+        border-radius: 1rem;
+        overflow: hidden;
+    }
+
+    .hover-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0.75rem 1.5rem rgba(0, 0, 0, 0.12) !important;
+    }
+
+    .card {
+        border-radius: 1rem;
+        transition: all .25s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 15px 35px rgba(0,0,0,.12);
+    }
+
+    .card-header {
+        border-radius: 0 !important;
+    }
+
+    .badge {
+        font-weight: 500;
+    }
+
+    .clear-search-btn {
+        border-radius: 0 0.5rem 0.5rem 0;
+        border-left: none;
+    }
+
+    .form-control {
+        border-radius: 0 0.5rem 0.5rem 0;
+    }
+
+    .form-control:focus {
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+    }
+
+    /* ✅ Gradient Headers */
+    .company-header-primary {
+        background: linear-gradient(135deg, #0d6efd, #4dabff);
+    }
+
+    .company-header-success {
+        background: linear-gradient(135deg, #198754, #4caf50);
+    }
+
+    .company-header-danger {
+        background: linear-gradient(135deg, #dc3545, #ff6b6b);
+    }
+
+    .company-header-warning {
+        background: linear-gradient(135deg, #f59f00, #ffd43b);
+    }
+
+    .company-header-info {
+        background: linear-gradient(135deg, #0dcaf0, #74c0fc);
+    }
+
+    .company-header-secondary {
+        background: linear-gradient(135deg, #6c757d, #adb5bd);
+    }
+
+    .company-header-dark {
+        background: linear-gradient(135deg, #212529, #495057);
+    }
+
+    /* ✅ تخصيص شريط التمرير */
+    ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: #667eea;
+        border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #5a67d8;
+    }
+</style>
+
+{% endblock %}
