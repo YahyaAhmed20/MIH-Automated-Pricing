@@ -121,11 +121,15 @@ class ContractStructureMigrationService:
     # ✅ الخطوة 2: get_or_create_financial_category
     # ============================================================
     @staticmethod
-    def get_or_create_financial_category(entity, result):
+    def get_or_create_financial_category(
+        entity,
+        financial_code,
+        result,
+    ):
         financial_category, created = (
             FinancialCategory.objects.get_or_create(
                 entity=entity,
-                code="DEFAULT",
+                code=financial_code,
                 defaults={
                     "description": None,
                     "is_active": True,
@@ -178,7 +182,7 @@ class ContractStructureMigrationService:
             )
         )
         defaults = {
-            "financial_category": financial_category,
+            
             "price_list": (
                 parent_contract.price_list
                 if parent_contract
@@ -207,7 +211,8 @@ class ContractStructureMigrationService:
         }
         contract, created = Contract.objects.get_or_create(
             entity=entity,
-            defaults=defaults
+            financial_category=financial_category,
+            defaults=defaults,
         )
         if created:
             result["created_contracts"] += 1
@@ -304,6 +309,11 @@ class ContractStructureMigrationService:
             )
         )
 
+        # ✅ الفئة المالية
+        financial_code = ImportHelpers.normalize_text(
+            row.get("الفئة المالية")
+        )
+
         if not company_name or not package_codes:
             return
 
@@ -322,9 +332,21 @@ class ContractStructureMigrationService:
         # ============================================================
         # ✅ Financial Category
         # ============================================================
+        # ============================================================
+        # ✅ Financial Category
+        # ============================================================
+
+        financial_code = ImportHelpers.normalize_text(
+            row.get("الفئة المالية")
+        )
+
+        if not financial_code:
+            financial_code = "DEFAULT"
+
         financial_category = (
             ContractStructureMigrationService.get_or_create_financial_category(
                 entity,
+                financial_code,
                 result
             )
         )
