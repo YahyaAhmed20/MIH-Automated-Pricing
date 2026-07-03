@@ -27,7 +27,10 @@ class SpecialOffersService:
         return SpecialOffersService.COLORS[index]
 
     @staticmethod
-    def get_special_offers(search=""):
+    def get_special_offers(
+        search="",
+        company=""
+    ):
 
         offers = SpecialOffer.objects.select_related(
             "entity",
@@ -48,6 +51,12 @@ class SpecialOffersService:
 
             )
 
+        if company:
+
+            offers = offers.filter(
+                entity__name=company
+            )
+
         offers = offers.order_by(
 
             "entity__name",
@@ -65,3 +74,27 @@ class SpecialOffersService:
             )
 
         return offers
+
+    @staticmethod
+    def get_companies():
+
+        return (
+
+            SpecialOffer.objects
+
+            .filter(
+                is_active=True,
+            )
+
+            .values_list(
+                "entity__name",
+                flat=True,
+            )
+
+            .distinct()
+
+            .order_by(
+                "entity__name",
+            )
+
+        )

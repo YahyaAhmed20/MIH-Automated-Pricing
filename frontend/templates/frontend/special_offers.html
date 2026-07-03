@@ -126,6 +126,35 @@
     </div>
 
     <!-- ============================================ -->
+    <!-- ✅ فلتر الشركات -->
+    <!-- ============================================ -->
+    <div class="mb-4">
+
+        <div class="d-flex flex-wrap gap-2">
+
+            <a
+                href="{% url 'special_offers' %}"
+                class="btn {% if not company %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                جميع الشركات
+            </a>
+
+            {% for company_name in companies %}
+
+                <a
+                    href="{% url 'special_offers' %}?company={{ company_name }}"
+                    class="btn {% if company == company_name %}btn-primary{% else %}btn-outline-primary{% endif %}">
+
+                    {{ company_name }}
+
+                </a>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+    <!-- ============================================ -->
     <!-- ✅ عرض العروض كـ Cards -->
     <!-- ============================================ -->
     <div class="row g-4">

@@ -1754,13 +1754,25 @@ def special_offers(request):
         ""
     ).strip()
 
+    company = request.GET.get(
+        "company",
+        ""
+    ).strip()
+
     offers = SpecialOffersService.get_special_offers(
         search=search,
+        company=company,
     )
+
+    companies = SpecialOffersService.get_companies()
 
     context = {
 
         "offers": offers,
+
+        "companies": companies,
+
+        "company": company,
 
         "search": search,
 
@@ -1776,4 +1788,4 @@ def special_offers(request):
 
         context,
 
-    ) 
+    )
