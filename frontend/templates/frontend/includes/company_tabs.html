@@ -1,0 +1,72 @@
+{% if selected_company %}
+
+<div class="card shadow-sm mb-4">
+
+    <div class="card-body">
+
+        
+        <ul class="nav nav-tabs">
+
+            <li class="nav-item">
+
+                <a
+                    class="nav-link {% if active_tab == 'overview' %}active{% endif %}"
+                    href="{% url 'contract_entity_detail' selected_company.id %}">
+
+                    <i class="fas fa-info-circle"></i>
+
+                    نظرة عامة
+
+                </a>
+
+            </li>
+
+            <li class="nav-item">
+
+                <a
+                    class="nav-link {% if active_tab == 'discounts' %}active{% endif %}"
+                    href="{% url 'company_entity_discounts' selected_company.id %}">
+
+                    <i class="fas fa-percent"></i>
+
+                    خصومات الشركات
+
+                </a>
+
+            </li>
+
+            <li class="nav-item">
+
+                <a
+                    class="nav-link {% if active_tab == 'packages' %}active{% endif %}"
+                    href="{% url 'company_entity_packages' selected_company.id %}">
+
+                    <i class="fas fa-box"></i>
+
+                    الباكدجات
+
+                </a>
+
+            </li>
+
+            <li class="nav-item">
+
+                <a
+                    class="nav-link {% if active_tab == 'offers' %}active{% endif %}"
+                    href="{% url 'company_entity_offers' selected_company.id %}">
+
+                    <i class="fas fa-tags"></i>
+
+                    العروض
+
+                </a>
+
+            </li>
+
+        </ul>
+
+    </div>
+
+</div>
+
+{% endif %}
