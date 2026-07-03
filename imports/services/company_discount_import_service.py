@@ -164,7 +164,11 @@ class CompanyDiscountImportService:
             "created_discounts": 0,
         }
 
-        for _, row in dataframe.iterrows():
+        i = 2
+
+        while i < len(dataframe):
+
+            row = dataframe.iloc[i]
 
             company_name = ImportHelpers.normalize_text(
                 row.get("الجهه")
@@ -175,6 +179,7 @@ class CompanyDiscountImportService:
             )
 
             if not company_name:
+                i += 7
                 continue
 
             result["processed"] += 1
@@ -242,17 +247,148 @@ class CompanyDiscountImportService:
 
                 details = ""
 
-                if item["details_col"] is not None:
+                # ==========================================
+                # الإقامة
+                # ==========================================
+
+                if item["name"] == "الاقامه":
+
+                    lines = []
+
+                    for offset in range(7):
+
+                        current_row = dataframe.iloc[i + offset]
+
+                        room_name = ImportHelpers.normalize_text(
+                            current_row.iloc[7]
+                        )
+
+                        price = ImportHelpers.clean_decimal(
+                            current_row.iloc[8]
+                        )
+
+                        room_price = (
+                            f"{price:,.0f}"
+                            if price is not None
+                            else ""
+                        )
+
+                        if room_name:
+
+                            lines.append(
+                                f"{room_name} : {room_price}"
+                            )
+
+                    details = "\n".join(lines)
+
+                # ==========================================
+                # فتح غرفة العمليات
+                # ==========================================
+
+                elif item["name"] == "فتح غرفة العمليات":
+
+                    lines = []
+
+                    for offset in range(6):
+
+                        current_row = dataframe.iloc[i + offset]
+
+                        operation_type = ImportHelpers.normalize_text(
+                            current_row.iloc[22]
+                        )
+
+                        price = ImportHelpers.clean_decimal(
+                            current_row.iloc[23]
+                        )
+
+                        operation_price = (
+                            f"{price:,.0f}"
+                            if price is not None
+                            else ""
+                        )
+
+                        if operation_type:
+
+                            lines.append(
+                                f"{operation_type} : {operation_price}"
+                            )
+
+                    details = "\n".join(lines)
+
+                # ==========================================
+                # اتعاب الاطباء
+                # ==========================================
+
+                elif item["name"] == "اتعاب الاطباء":
+
+                    lines = []
+
+                    for offset in range(6):
+
+                        current_row = dataframe.iloc[i + offset]
+
+                        level = ImportHelpers.normalize_text(
+                            current_row.iloc[14]
+                        )
+
+                        if not level:
+                            continue
+
+                        surgeon = ImportHelpers.clean_decimal(
+                            current_row.iloc[15]
+                        )
+
+                        anesthesia = ImportHelpers.clean_decimal(
+                            current_row.iloc[16]
+                        )
+
+                        assistant = ImportHelpers.clean_decimal(
+                            current_row.iloc[17]
+                        )
+
+                        total = ImportHelpers.clean_decimal(
+                            current_row.iloc[18]
+                        )
+
+                        def fmt(value):
+                            return f"{value:,.0f}" if value is not None else "-"
+
+                        lines.append(
+                            (
+                                f"{level}\n"
+                                f"جراح : {fmt(surgeon)}\n"
+                                f"تخدير : {fmt(anesthesia)}\n"
+                                f"مساعد : {fmt(assistant)}\n"
+                                f"الإجمالي : {fmt(total)}"
+                            )
+                        )
+
+                    details = "\n\n".join(lines)
+
+                # ==========================================
+                # باقي البنود
+                # ==========================================
+
+                elif item["details_col"] is not None:
+
                     raw_details = row.iloc[item["details_col"]]
+
                     if pd.notna(raw_details):
+
                         details = str(raw_details).strip()
+
+                # ==========================================
+                # net_price
+                # ==========================================
 
                 net_price = None
 
-                if item["net_price_col"] is not None:
-                    net_price = ImportHelpers.clean_decimal(
-                        row.iloc[item["net_price_col"]]
-                    )
+                # ✅ لو الإقامة أو فتح غرفة العمليات، نخلي net_price = None عشان منكرر السعر
+                if item["name"] not in ["الاقامه", "فتح غرفة العمليات"]:
+                    if item["net_price_col"] is not None:
+                        net_price = ImportHelpers.clean_decimal(
+                            row.iloc[item["net_price_col"]]
+                        )
 
                 CompanyDiscount.objects.create(
 
@@ -386,5 +522,7 @@ class CompanyDiscountImportService:
             )
 
             result["created_discounts"] += 1
+
+            i += 7
 
         return result

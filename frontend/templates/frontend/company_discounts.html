@@ -280,15 +280,56 @@
 
                         {% if item.details %}
 
-                        <div class="small text-muted mb-2" style="white-space: pre-line;">
+    {% if item.item_name == "اتعاب الاطباء" %}
 
-                            {{ item.details|linebreaksbr }}
+    <div class="accordion mt-2" id="doctorAccordion{{ forloop.counter }}">
 
-                        </div>
+        <div class="accordion-item border-0">
 
-                        {% endif %}
+            <h2 class="accordion-header">
 
-                        {% if item.net_price %}
+                <button
+                    class="accordion-button collapsed py-2"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#doctorCollapse{{ forloop.counter }}">
+
+                    عرض تفاصيل الأتعاب
+                </button>
+
+            </h2>
+
+            <div
+                id="doctorCollapse{{ forloop.counter }}"
+                class="accordion-collapse collapse">
+
+                <div
+                    class="accordion-body small"
+                    style="white-space: pre-line;">
+
+                    {{ item.details|linebreaksbr }}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    {% else %}
+
+    <div class="small text-muted mb-2" style="white-space: pre-line;">
+
+        {{ item.details|linebreaksbr }}
+
+    </div>
+
+    {% endif %}
+
+{% endif %}
+
+                        {% if item.net_price and item.item_name != "الاقامه" %}
 
                         <div class="fw-bold text-primary fs-5 mt-2">
 
