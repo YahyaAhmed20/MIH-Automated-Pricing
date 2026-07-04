@@ -6,7 +6,9 @@
 {% endblock %}
 
 {% block content %}
-
+{% if selected_company %}
+    {% include "frontend/includes/company_tabs.html" %}
+{% endif %}
 <!-- ============================================ -->
 <!-- ✅ Script للبحث التلقائي -->
 <!-- ============================================ -->

@@ -1,72 +1,41 @@
-{% if selected_company %}
+<div class="card shadow-sm border-0 mb-4">
+    <div class="card-body py-2">
 
-<div class="card shadow-sm mb-4">
-
-    <div class="card-body">
-
-        
-        <ul class="nav nav-tabs">
+        <ul class="nav nav-tabs card-header-tabs">
 
             <li class="nav-item">
-
-                <a
-                    class="nav-link {% if active_tab == 'overview' %}active{% endif %}"
-                    href="{% url 'contract_entity_detail' selected_company.id %}">
-
-                    <i class="fas fa-info-circle"></i>
-
+                <a class="nav-link {% if request.resolver_match.url_name == 'contract_entity_detail' %}active{% endif %}"
+                   href="{% url 'contract_entity_detail' selected_company.id %}">
+                    <i class="bi bi-grid"></i>
                     نظرة عامة
-
                 </a>
-
             </li>
 
             <li class="nav-item">
-
-                <a
-                    class="nav-link {% if active_tab == 'discounts' %}active{% endif %}"
-                    href="{% url 'company_entity_discounts' selected_company.id %}">
-
-                    <i class="fas fa-percent"></i>
-
+                <a class="nav-link {% if request.resolver_match.url_name == 'company_discounts' %}active{% endif %}"
+                   href="{% url 'company_discounts' %}?entity={{ selected_company.id }}">
+                    <i class="bi bi-percent"></i>
                     خصومات الشركات
-
                 </a>
-
             </li>
 
             <li class="nav-item">
-
-                <a
-                    class="nav-link {% if active_tab == 'packages' %}active{% endif %}"
-                    href="{% url 'company_entity_packages' selected_company.id %}">
-
-                    <i class="fas fa-box"></i>
-
-                    الباكدجات
-
-                </a>
-
-            </li>
+    <a class="nav-link {% if request.resolver_match.url_name == 'credit_package_pricing' %}active{% endif %}"
+       href="{% url 'credit_package_pricing' %}?entity={{ selected_company.id }}">
+        <i class="bi bi-box"></i>
+        الباكدجات
+    </a>
+</li>
 
             <li class="nav-item">
-
-                <a
-                    class="nav-link {% if active_tab == 'offers' %}active{% endif %}"
-                    href="{% url 'company_entity_offers' selected_company.id %}">
-
-                    <i class="fas fa-tags"></i>
-
-                    العروض
-
-                </a>
-
-            </li>
+    <a class="nav-link {% if request.resolver_match.url_name == 'special_offers' %}active{% endif %}"
+       href="{% url 'special_offers' %}?entity={{ selected_company.id }}">
+        <i class="bi bi-gift"></i>
+        العروض
+    </a>
+</li>
 
         </ul>
 
     </div>
-
 </div>
-
-{% endif %}

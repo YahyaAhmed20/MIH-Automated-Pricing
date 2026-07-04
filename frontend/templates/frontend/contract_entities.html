@@ -314,6 +314,11 @@
                             تعليمات التشغيل
                         </th>
 
+                        <th class="text-center" style="width:120px;">
+                            <i class="fas fa-eye"></i>
+                            الإجراءات
+                        </th>
+
                     </tr>
 
                 </thead>
@@ -326,13 +331,15 @@
 
                     <td>
 
-                        <strong class="text-primary">
+                       <a
+                            href="{% url 'contract_entity_detail' contract.entity.id %}"
+                            class="text-decoration-none fw-bold text-primary">
 
                             <i class="fas fa-building me-1"></i>
 
                             {{ contract.entity.name }}
 
-                        </strong>
+                        </a>
 
                     </td>
 
@@ -492,6 +499,20 @@
 
                     </td>
 
+                    <td class="text-center">
+
+                        <a
+                            href="{% url 'contract_entity_detail' contract.entity.id %}"
+                            class="btn btn-primary btn-sm">
+
+                            <i class="fas fa-eye"></i>
+
+                            لوحة البيانات
+
+                        </a>
+
+                    </td>
+
                 </tr>
 
                 {% empty %}
@@ -499,7 +520,7 @@
                 <tr>
 
                     <td
-                        colspan="7"
+                        colspan="8"
                         class="text-center text-muted py-5">
 
                         <i class="fas fa-inbox fa-4x d-block mb-3 text-muted"></i>

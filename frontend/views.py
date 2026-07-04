@@ -859,11 +859,27 @@ def company_discounts(request):
         "search",
         ""
     )
+    entity_id = request.GET.get(
+        "entity"
+    )
 
     section = request.GET.get(
         "section",
         ""
     )
+    
+    selected_company = None
+
+    if entity_id:
+
+        from contracts.models import ContractEntity
+
+        selected_company = get_object_or_404(
+            ContractEntity,
+            pk=entity_id
+        )
+
+        search = selected_company.name
 
     companies = (
         CompanyDiscountProfile.objects.prefetch_related(
@@ -940,6 +956,8 @@ def company_discounts(request):
             "selected_section": section,
 
             "results_count": len(company_cards),
+            "selected_company": selected_company,
+            "entity_id": entity_id,
 
         }
 
@@ -1213,6 +1231,7 @@ def contract_entity_detail(request, pk):
 
     context = {
         "entity": entity,
+        "selected_company": entity,
         "contracts_count": contracts_count,
         "total_requests": total_requests,
         "total_cost": total_cost,
@@ -1523,6 +1542,19 @@ from django.utils import timezone  # ✅ أضف هذا السطر
 def credit_package_pricing(request):
 
     company_id = request.GET.get("company")
+    entity_id = request.GET.get("entity")
+
+    if entity_id:
+        company_id = entity_id
+        
+        
+    selected_company = None
+
+    if company_id:
+        selected_company = get_object_or_404(
+            ContractEntity,
+            pk=company_id
+        )
     package_id = request.GET.get("package")
     company_search = request.GET.get("company_search", "")
     package_search = request.GET.get("package_search", "")
@@ -1700,7 +1732,8 @@ def credit_package_pricing(request):
             "companies": companies,
             "packages": packages,
             "selected_package": selected_package,
-            "selected_company": company_id,
+            # "selected_company": company_id,
+            "selected_company": selected_company,
             "company_search": company_search,
             "package_search": package_search,
         }
@@ -1746,7 +1779,6 @@ def cash_packages(request):
         }
     )
     
-
 def special_offers(request):
 
     search = request.GET.get(
@@ -1754,10 +1786,20 @@ def special_offers(request):
         ""
     ).strip()
 
+    entity_id = request.GET.get("entity")
+    selected_company = None
+
     company = request.GET.get(
         "company",
         ""
     ).strip()
+
+    if entity_id:
+        selected_company = get_object_or_404(
+            ContractEntity,
+            pk=entity_id
+        )
+        company = selected_company.name
 
     offers = SpecialOffersService.get_special_offers(
         search=search,
@@ -1775,6 +1817,10 @@ def special_offers(request):
         "company": company,
 
         "search": search,
+
+        "selected_company": selected_company,
+        "entity_id": entity_id,
+
 
         "results_count": offers.count(),
 

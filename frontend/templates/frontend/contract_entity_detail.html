@@ -5,7 +5,9 @@
 {% endblock %}
 
 {% block content %}
-
+{% if selected_company %}
+    {% include "frontend/includes/company_tabs.html" %}
+{% endif %}
 
 <style>
     .col-md-2-4 {
