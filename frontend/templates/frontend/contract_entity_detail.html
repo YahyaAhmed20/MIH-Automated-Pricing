@@ -9,6 +9,67 @@
     {% include "frontend/includes/company_tabs.html" %}
 {% endif %}
 
+
+<div class="card shadow-sm border-0 mb-4">
+
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">
+            <i class="fas fa-file-contract me-2"></i>
+            بيانات التعاقد
+        </h5>
+    </div>
+
+    <div class="card-body">
+
+        <div class="row g-4">
+
+            <div class="col-md-6">
+                <label class="text-muted small">الجهة</label>
+                <h5>{{ entity.name }}</h5>
+            </div>
+
+            <div class="col-md-6">
+                <label class="text-muted small">نوع التعاقد</label>
+                <h5>{{ contract.contract_type|default:"-" }}</h5>
+            </div>
+
+            <div class="col-md-6">
+                <label class="text-muted small">الفئة المالية</label>
+                <h5>{{ contract.financial_category.code|default:"-" }}</h5>
+            </div>
+
+            <div class="col-md-6">
+                <label class="text-muted small">قائمة الأسعار</label>
+                <h5>{{ contract.price_list.name|default:"-" }}</h5>
+            </div>
+
+            <div class="col-md-6">
+                <label class="text-muted small">الخدمة الطبية</label>
+                <h5>{{ contract.medical_service|default:"-" }}</h5>
+            </div>
+
+            <div class="col-md-6">
+                <label class="text-muted small">اعتبارًا من</label>
+                <h5>{{ contract.effective_from|date:"Y-m-d"|default:"-" }}</h5>
+            </div>
+
+            <div class="col-12">
+                <label class="text-muted small">تعليمات التشغيل</label>
+
+                {% if contract.operating_instructions %}
+    <h5>{{ contract.operating_instructions }}</h5>
+{% else %}
+    <h5>-</h5>
+{% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
 <style>
     .col-md-2-4 {
     flex: 0 0 20%;
@@ -27,7 +88,7 @@
         <i class="bi bi-arrow-right"></i> العودة للجهات
     </a>
 </div>
-
+{% comment %}
 <!-- ============================================ -->
 <!-- الصف الأول: كروت الإحصائيات الرئيسية (6 كروت) -->
 <!-- ============================================ -->
@@ -742,5 +803,5 @@
     </div>
 
 </div>
-
+{% endcomment %}
 {% endblock %}

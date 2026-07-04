@@ -1014,6 +1014,27 @@ def contract_entity_detail(request, pk):
         ContractEntity,
         pk=pk
     )
+    contract = (
+        entity.contracts
+        .exclude(
+            financial_category__code="DEFAULT"
+        )
+        .select_related(
+            "financial_category",
+            "price_list",
+        )
+        .first()
+    )
+
+    if not contract:
+        contract = (
+            entity.contracts
+            .select_related(
+                "financial_category",
+                "price_list",
+            )
+            .first()
+        )
 
     requests = PricingRequest.objects.filter(
         entity=entity
@@ -1232,6 +1253,7 @@ def contract_entity_detail(request, pk):
     context = {
         "entity": entity,
         "selected_company": entity,
+        "contract": contract,
         "contracts_count": contracts_count,
         "total_requests": total_requests,
         "total_cost": total_cost,
