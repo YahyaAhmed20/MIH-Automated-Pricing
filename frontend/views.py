@@ -1884,6 +1884,43 @@ def service_search(request):
 
     total_amount = services.aggregate(total=Sum("amount"))["total"] or 0
 
+    # ✅ جلب الفلاتر من النتائج المفلترة فقط (مش من كل البيانات)
+    departments = (
+        services
+        .values_list("department_name", flat=True)
+        .distinct()
+        .order_by("department_name")
+    )
+
+    insurance_companies = (
+        services
+        .values_list("insurance_company", flat=True)
+        .distinct()
+        .order_by("insurance_company")
+    )
+
+    # ✅ جلب اقتراحات البحث من النتائج المفلترة فقط
+    service_names = (
+        services
+        .values_list("service_name", flat=True)
+        .distinct()
+        .order_by("service_name")[:100]
+    )
+
+    service_codes = (
+        services
+        .values_list("service_code", flat=True)
+        .distinct()
+        .order_by("service_code")[:100]
+    )
+
+    department_names = (
+        services
+        .values_list("department_name", flat=True)
+        .distinct()
+        .order_by("department_name")
+    )
+
     paginator = Paginator(services, 50)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
@@ -1910,44 +1947,6 @@ def service_search(request):
                 service.duration_of_stay = "-"
 
     formatted_total_amount = f"{total_amount:,.0f}"
-
-    # ✅ جلب قائمة الأقسام الفريدة
-    departments = (
-        ServiceRecord.objects
-        .values_list("department_name", flat=True)
-        .distinct()
-        .order_by("department_name")
-    )
-
-    # ✅ جلب قائمة شركات التأمين الفريدة
-    insurance_companies = (
-        ServiceRecord.objects
-        .values_list("insurance_company", flat=True)
-        .distinct()
-        .order_by("insurance_company")
-    )
-
-    # ✅ جلب اقتراحات البحث (أسماء خدمات + أكواد + أقسام)
-    service_names = (
-        ServiceRecord.objects
-        .values_list("service_name", flat=True)
-        .distinct()
-        .order_by("service_name")[:100]  # أول 100 اسم
-    )
-
-    service_codes = (
-        ServiceRecord.objects
-        .values_list("service_code", flat=True)
-        .distinct()
-        .order_by("service_code")[:100]  # أول 100 كود
-    )
-
-    department_names = (
-        ServiceRecord.objects
-        .values_list("department_name", flat=True)
-        .distinct()
-        .order_by("department_name")
-    )
 
     return render(
         request,

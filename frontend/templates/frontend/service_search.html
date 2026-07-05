@@ -88,24 +88,21 @@
                 </div>
                 
                 <!-- ✅ فلتر القسم مع البحث -->
-                <div class="col-md-2">
-                    <label class="form-label fw-bold small text-muted">
-                        <i class="fas fa-building"></i> القسم
-                    </label>
-                    <input type="text" 
-                           name="department" 
-                           list="department-list" 
-                           class="form-control form-control-lg" 
-                           placeholder="ابحث أو اختر" 
-                           value="{{ department }}"
-                           onchange="document.getElementById('searchForm').submit()">
-                    <datalist id="department-list">
-                        <option value="">الكل</option>
-                        {% for dept in departments %}
-                        <option value="{{ dept }}">{{ dept }}</option>
-                        {% endfor %}
-                    </datalist>
-                </div>
+               <!-- ✅ فلتر القسم - Dropdown List -->
+<div class="col-md-2">
+    <label class="form-label fw-bold">
+        <i class="fas fa-building text-primary me-1"></i>
+        القسم
+    </label>
+    <select name="department" class="form-select form-select-lg" onchange="document.getElementById('searchForm').submit()">
+        <option value="">الكل</option>
+        {% for dept in departments %}
+        <option value="{{ dept }}" {% if department == dept %}selected{% endif %}>
+            {{ dept }}
+        </option>
+        {% endfor %}
+    </select>
+</div>
                 
                 <!-- ✅ فلتر الشركة مع البحث -->
                 <div class="col-md-2">
