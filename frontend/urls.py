@@ -40,7 +40,7 @@ urlpatterns = [
     path(
         "service-search/",
         views.service_search,
-        name="service_search"
+        name="service_search",
     ),
     
     path(

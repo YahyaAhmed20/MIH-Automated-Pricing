@@ -6,7 +6,14 @@ from django.db.models import Count
 from contracts.models import (
     CompanyDiscountProfile,
 )
+from django.db.models import Q, Sum
+from django.core.paginator import Paginator
 
+
+
+from pricing_requests.models import ServiceRecord
+from django.db.models import Sum
+from django.core.paginator import Paginator
 
 from frontend.services.special_offers_service import (
     SpecialOffersService,
@@ -276,50 +283,6 @@ def offers(request):
     )
 
 
-from contracts.models import ContractPackage
-from django.db.models import Q
-from django.core.paginator import Paginator
-
-
-def service_search(request):
-
-    query = request.GET.get("q", "")
-
-    services = (
-        ContractPackage.objects
-        .select_related(
-            "package",
-            "contract__entity"
-        )
-        .order_by(
-            "package__name"
-        )
-    )
-
-    if query:
-        services = services.filter(
-            Q(package__name__icontains=query)
-            |
-            Q(package__code__icontains=query)
-        )
-
-    paginator = Paginator(
-        services,
-        25
-    )
-
-    page_obj = paginator.get_page(
-        request.GET.get("page")
-    )
-
-    return render(
-        request,
-        "frontend/service_search.html",
-        {
-            "page_obj": page_obj,
-            "query": query,
-        }
-    )
 def operations(request):
     return render(
         request,
@@ -1856,4 +1819,136 @@ def special_offers(request):
 
         context,
 
+    )
+    
+    
+
+
+
+def service_search(request):
+
+    search = request.GET.get("search", "").strip()
+
+    patient_type = request.GET.get(
+        "patient_type",
+        ""
+    ).strip()
+
+    date_from = request.GET.get(
+        "date_from",
+        ""
+    ).strip()
+
+    date_to = request.GET.get(
+        "date_to",
+        ""
+    ).strip()
+
+    services = (
+        ServiceRecord.objects
+        .all()
+        .order_by("-service_date")
+    )
+
+    # ==========================================
+    # Search
+    # ==========================================
+
+    if search:
+
+        services = services.filter(
+
+            Q(service_name__icontains=search)
+
+            |
+
+            Q(service_code__icontains=search)
+
+            |
+
+            Q(department_name__icontains=search)
+
+        )
+
+    # ==========================================
+    # Patient Type
+    # ==========================================
+
+    if patient_type:
+
+        services = services.filter(
+            patient_type=patient_type
+        )
+
+    # ==========================================
+    # Date From
+    # ==========================================
+
+    if date_from:
+
+        services = services.filter(
+            service_date__gte=date_from
+        )
+
+    # ==========================================
+    # Date To
+    # ==========================================
+
+    if date_to:
+
+        services = services.filter(
+            service_date__lte=date_to
+        )
+
+    total_amount = (
+        services.aggregate(
+            total=Sum("amount")
+        )["total"] or 0
+    )
+
+    paginator = Paginator(
+        services,
+        50
+    )
+
+    page_number = request.GET.get("page")
+
+    page_obj = paginator.get_page(
+        page_number
+    )
+
+    # ==========================================
+    # Format Amount
+    # ==========================================
+
+    for service in page_obj:
+
+        service.formatted_amount = (
+            f"{service.amount:,.0f}"
+            if service.amount is not None
+            else "-"
+        )
+
+    formatted_total_amount = f"{total_amount:,.0f}"
+
+    return render(
+        request,
+        "frontend/service_search.html",
+        {
+
+            "page_obj": page_obj,
+
+            "results_count": services.count(),
+
+            "total_amount": formatted_total_amount,
+
+            "search": search,
+
+            "patient_type": patient_type,
+
+            "date_from": date_from,
+
+            "date_to": date_to,
+
+        }
     )

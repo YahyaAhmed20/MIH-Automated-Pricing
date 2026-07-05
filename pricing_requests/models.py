@@ -325,3 +325,127 @@ class PricingStatusHistory(models.Model):
         indexes = [
             models.Index(fields=["pricing_request"]),
     ]
+        
+        
+class ServiceRecord(models.Model):
+
+    account_number = models.CharField(
+        max_length=100,
+        db_index=True,
+        verbose_name="الرقم الحسابى"
+    )
+
+    patient_type = models.CharField(
+        max_length=50,
+        db_index=True,
+        verbose_name="نوع المريض"
+    )
+
+    patient_name = models.CharField(
+        max_length=255,
+        verbose_name="اسم المريض"
+    )
+
+    admission_date = models.DateField(
+        blank=True,
+        null=True,
+        db_index=True,
+        verbose_name="تاريخ الدخول"
+    )
+
+    discharge_date = models.DateField(
+        blank=True,
+        null=True,
+        verbose_name="تاريخ الخروج"
+    )
+
+    stay_duration = models.CharField(
+        max_length=50,
+        blank=True,
+        null=True,
+        verbose_name="مدة الإقامة"
+    )
+
+    department_name = models.CharField(
+        max_length=255,
+        db_index=True,
+        verbose_name="اسم القسم"
+    )
+
+    service_name = models.CharField(
+        max_length=255,
+        db_index=True,
+        verbose_name="اسم الخدمة"
+    )
+
+    service_code = models.CharField(
+        max_length=100,
+        db_index=True,
+        verbose_name="الكود"
+    )
+
+    service_date = models.DateField(
+        blank=True,
+        null=True,
+        db_index=True,
+        verbose_name="التاريخ"
+    )
+
+    insurance_company = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name="شركة التأمين"
+    )
+
+    sub_company = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name="الشركة الفرعية"
+    )
+
+    amount = models.DecimalField(
+        max_digits=12,
+        decimal_places=2,
+        default=0,
+        verbose_name="المبلغ"
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True
+    )
+
+    class Meta:
+
+        verbose_name = "سجل خدمة"
+
+        verbose_name_plural = "سجلات الخدمات"
+
+        ordering = [
+            "-service_date",
+            "service_name",
+        ]
+
+        indexes = [
+            models.Index(fields=["service_name"]),
+            models.Index(fields=["service_code"]),
+            models.Index(fields=["department_name"]),
+            models.Index(fields=["patient_type"]),
+            models.Index(fields=["service_date"]),
+            models.Index(fields=["insurance_company"]),
+        ]
+        
+        constraints = [
+            models.UniqueConstraint(
+                fields=[
+                    "account_number",
+                    "service_code",
+                ],
+                name="unique_service_record"
+            )
+        ]
