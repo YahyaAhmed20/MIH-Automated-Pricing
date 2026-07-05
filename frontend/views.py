@@ -1824,25 +1824,17 @@ def special_offers(request):
     
 
 
+from django.shortcuts import render
+from django.db.models import Q, Sum
+from django.core.paginator import Paginator
+# ... باقي الـ Imports الخاصة بك ...
 
 def service_search(request):
 
     search = request.GET.get("search", "").strip()
-
-    patient_type = request.GET.get(
-        "patient_type",
-        ""
-    ).strip()
-
-    date_from = request.GET.get(
-        "date_from",
-        ""
-    ).strip()
-
-    date_to = request.GET.get(
-        "date_to",
-        ""
-    ).strip()
+    patient_type = request.GET.get("patient_type", "").strip()
+    date_from = request.GET.get("date_from", "").strip()
+    date_to = request.GET.get("date_to", "").strip()
 
     services = (
         ServiceRecord.objects
@@ -1853,87 +1845,56 @@ def service_search(request):
     # ==========================================
     # Search
     # ==========================================
-
     if search:
-
         search = search.strip()
-
-        code_match = ServiceRecord.objects.filter(
-            service_code__iexact=search
-        )
-
+        code_match = ServiceRecord.objects.filter(service_code__iexact=search)
         if code_match.exists():
-
-            services = services.filter(
-                service_code__iexact=search
-            )
-
+            services = services.filter(service_code__iexact=search)
         else:
-
             services = services.filter(
-                Q(service_name__icontains=search)
-                |
+                Q(service_name__icontains=search) |
                 Q(department_name__icontains=search)
             )
 
     # ==========================================
-    # Patient Type
+    # Filters
     # ==========================================
-
     if patient_type:
-
-        services = services.filter(
-            patient_type=patient_type
-        )
-
-    # ==========================================
-    # Date From
-    # ==========================================
+        services = services.filter(patient_type=patient_type)
 
     if date_from:
-
-        services = services.filter(
-            service_date__gte=date_from
-        )
-
-    # ==========================================
-    # Date To
-    # ==========================================
+        services = services.filter(service_date__gte=date_from)
 
     if date_to:
+        services = services.filter(service_date__lte=date_to)
 
-        services = services.filter(
-            service_date__lte=date_to
-        )
+    total_amount = services.aggregate(total=Sum("amount"))["total"] or 0
 
-    total_amount = (
-        services.aggregate(
-            total=Sum("amount")
-        )["total"] or 0
-    )
-
-    paginator = Paginator(
-        services,
-        50
-    )
-
+    paginator = Paginator(services, 50)
     page_number = request.GET.get("page")
-
-    page_obj = paginator.get_page(
-        page_number
-    )
+    page_obj = paginator.get_page(page_number)
 
     # ==========================================
-    # Format Amount
+    # Format Amount & Calculate Duration
     # ==========================================
-
     for service in page_obj:
-
         service.formatted_amount = (
             f"{service.amount:,.0f}"
             if service.amount is not None
             else "-"
         )
+
+        # ✅ حساب مدة الإقامة - نستخدم الحقل الموجود أولاً، ثم نحسبه إذا كان فارغاً
+        if service.stay_duration:
+            service.duration_of_stay = service.stay_duration
+        else:
+            admission = service.admission_date
+            discharge = service.discharge_date
+            if admission and discharge:
+                delta = discharge - admission
+                service.duration_of_stay = f"{delta.days} يوم"
+            else:
+                service.duration_of_stay = "-"
 
     formatted_total_amount = f"{total_amount:,.0f}"
 
@@ -1941,20 +1902,12 @@ def service_search(request):
         request,
         "frontend/service_search.html",
         {
-
             "page_obj": page_obj,
-
             "results_count": services.count(),
-
             "total_amount": formatted_total_amount,
-
             "search": search,
-
             "patient_type": patient_type,
-
             "date_from": date_from,
-
             "date_to": date_to,
-
         }
     )
