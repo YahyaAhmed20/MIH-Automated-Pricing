@@ -1829,12 +1829,20 @@ from django.db.models import Q, Sum
 from django.core.paginator import Paginator
 # ... باقي الـ Imports الخاصة بك ...
 
+from django.shortcuts import render
+from django.db.models import Q, Sum
+from django.core.paginator import Paginator
+from django.db.models.functions import Coalesce
+# ... باقي الـ Imports ...
+
 def service_search(request):
 
     search = request.GET.get("search", "").strip()
     patient_type = request.GET.get("patient_type", "").strip()
     date_from = request.GET.get("date_from", "").strip()
     date_to = request.GET.get("date_to", "").strip()
+    department = request.GET.get("department", "").strip()
+    insurance_company = request.GET.get("insurance_company", "").strip()
 
     services = (
         ServiceRecord.objects
@@ -1868,6 +1876,12 @@ def service_search(request):
     if date_to:
         services = services.filter(service_date__lte=date_to)
 
+    if department:
+        services = services.filter(department_name=department)
+
+    if insurance_company:
+        services = services.filter(insurance_company=insurance_company)
+
     total_amount = services.aggregate(total=Sum("amount"))["total"] or 0
 
     paginator = Paginator(services, 50)
@@ -1884,7 +1898,6 @@ def service_search(request):
             else "-"
         )
 
-        # ✅ حساب مدة الإقامة - نستخدم الحقل الموجود أولاً، ثم نحسبه إذا كان فارغاً
         if service.stay_duration:
             service.duration_of_stay = service.stay_duration
         else:
@@ -1898,6 +1911,44 @@ def service_search(request):
 
     formatted_total_amount = f"{total_amount:,.0f}"
 
+    # ✅ جلب قائمة الأقسام الفريدة
+    departments = (
+        ServiceRecord.objects
+        .values_list("department_name", flat=True)
+        .distinct()
+        .order_by("department_name")
+    )
+
+    # ✅ جلب قائمة شركات التأمين الفريدة
+    insurance_companies = (
+        ServiceRecord.objects
+        .values_list("insurance_company", flat=True)
+        .distinct()
+        .order_by("insurance_company")
+    )
+
+    # ✅ جلب اقتراحات البحث (أسماء خدمات + أكواد + أقسام)
+    service_names = (
+        ServiceRecord.objects
+        .values_list("service_name", flat=True)
+        .distinct()
+        .order_by("service_name")[:100]  # أول 100 اسم
+    )
+
+    service_codes = (
+        ServiceRecord.objects
+        .values_list("service_code", flat=True)
+        .distinct()
+        .order_by("service_code")[:100]  # أول 100 كود
+    )
+
+    department_names = (
+        ServiceRecord.objects
+        .values_list("department_name", flat=True)
+        .distinct()
+        .order_by("department_name")
+    )
+
     return render(
         request,
         "frontend/service_search.html",
@@ -1909,5 +1960,12 @@ def service_search(request):
             "patient_type": patient_type,
             "date_from": date_from,
             "date_to": date_to,
+            "department": department,
+            "insurance_company": insurance_company,
+            "departments": departments,
+            "insurance_companies": insurance_companies,
+            "service_names": service_names,
+            "service_codes": service_codes,
+            "department_names": department_names,
         }
     )
