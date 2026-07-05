@@ -1856,19 +1856,25 @@ def service_search(request):
 
     if search:
 
-        services = services.filter(
+        search = search.strip()
 
-            Q(service_name__icontains=search)
-
-            |
-
-            Q(service_code__icontains=search)
-
-            |
-
-            Q(department_name__icontains=search)
-
+        code_match = ServiceRecord.objects.filter(
+            service_code__iexact=search
         )
+
+        if code_match.exists():
+
+            services = services.filter(
+                service_code__iexact=search
+            )
+
+        else:
+
+            services = services.filter(
+                Q(service_name__icontains=search)
+                |
+                Q(department_name__icontains=search)
+            )
 
     # ==========================================
     # Patient Type
