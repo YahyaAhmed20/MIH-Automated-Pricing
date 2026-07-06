@@ -1956,15 +1956,16 @@ def pricing_details(request):
             "cost_notes",
             "group_name",
             "accountant_name",
+            "card_number",
         )
-        # ✅ شيل .order_by() - الموديل هيدبر الترتيب
     )
 
     if search:
         details = details.filter(
             Q(patient_name__icontains=search) |
             Q(procedure_name__icontains=search) |
-            Q(company_name__icontains=search)
+            Q(company_name__icontains=search) |
+            Q(card_number__icontains=search)
         )
 
     if group:
@@ -1994,8 +1995,9 @@ def pricing_details(request):
     paginator = Paginator(details, 50)
     page_obj = paginator.get_page(request.GET.get("page"))
 
+    # ✅ جلب الفلاتر من النتائج المفلترة
     groups = (
-        PricingDetail.objects
+        details
         .exclude(group_name="")
         .values_list("group_name", flat=True)
         .distinct()
@@ -2003,7 +2005,7 @@ def pricing_details(request):
     )
 
     companies = (
-        PricingDetail.objects
+        details
         .exclude(company_name="")
         .values_list("company_name", flat=True)
         .distinct()
@@ -2011,7 +2013,7 @@ def pricing_details(request):
     )
 
     doctors = (
-        PricingDetail.objects
+        details
         .exclude(doctor_name="")
         .values_list("doctor_name", flat=True)
         .distinct()
@@ -2019,7 +2021,7 @@ def pricing_details(request):
     )
 
     specialties = (
-        PricingDetail.objects
+        details
         .exclude(specialty_name="")
         .values_list("specialty_name", flat=True)
         .distinct()
@@ -2027,7 +2029,7 @@ def pricing_details(request):
     )
 
     accountants = (
-        PricingDetail.objects
+        details
         .exclude(accountant_name="")
         .values_list("accountant_name", flat=True)
         .distinct()

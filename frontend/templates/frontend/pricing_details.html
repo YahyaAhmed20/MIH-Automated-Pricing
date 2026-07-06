@@ -10,7 +10,17 @@
 <div class="container-fluid">
 
     <!-- ✅ Header محسن -->
- 
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h4 class="fw-bold mb-0">
+                <i class="fas fa-search text-primary me-2"></i>
+                تفاصيل التسعير
+            </h4>
+            <p class="text-muted small mt-1">
+                <i class="fas fa-arrow-left me-1"></i>
+                عرض وتحليل تفاصيل التسعير من شيت رقم 7
+            </p>
+        </div>
         <div>
             <span class="badge bg-primary rounded-pill fs-6 px-3 py-2">
                 <i class="fas fa-calendar-alt me-1"></i>
@@ -54,7 +64,7 @@
         <div class="card-body">
             <form method="get" id="searchForm">
                 <div class="row g-3">
-                    <!-- ✅ حقل البحث مع datalist -->
+                    <!-- ✅ حقل البحث مع datalist (مضاف إليه رقم الكارنية) -->
                     <div class="col-md-3">
                         <label class="form-label fw-bold small text-muted">
                             <i class="fas fa-search"></i> بحث
@@ -63,7 +73,7 @@
                                name="search" 
                                list="search-suggestions"
                                class="form-control form-control-lg" 
-                               placeholder="ابحث باسم المريض أو الإجراء أو الشركة..." 
+                               placeholder="ابحث باسم المريض أو الإجراء أو الشركة أو رقم الكارنية..." 
                                value="{{ search }}" 
                                onchange="this.form.submit()"
                                autocomplete="off">
@@ -72,6 +82,7 @@
                                 <option value="{{ item.patient_name }}">{{ item.patient_name }}</option>
                                 <option value="{{ item.procedure_name }}">{{ item.procedure_name }}</option>
                                 <option value="{{ item.company_name }}">{{ item.company_name }}</option>
+                                <option value="{{ item.card_number }}">{{ item.card_number }}</option>
                             {% endfor %}
                         </datalist>
                     </div>
@@ -272,7 +283,7 @@
     </div>
 
     <!-- ============================================ -->
-    <!-- ✅ جدول النتائج المحسن -->
+    <!-- ✅ جدول النتائج المحسن (مع إضافة رقم الكارنية) -->
     <!-- ============================================ -->
     <div class="card shadow-sm border-0 hover-shadow">
         <div class="card-header bg-gradient-info text-white d-flex justify-content-between align-items-center">
@@ -295,6 +306,7 @@
                         <th><i class="fas fa-building me-1"></i> الشركة</th>
                         <th><i class="fas fa-user-md me-1"></i> الطبيب</th>
                         <th><i class="fas fa-user-tie me-1"></i> المحاسب</th>
+                        <th><i class="fas fa-id-card me-1"></i> رقم الكارنية</th>
                         <th><i class="fas fa-procedures me-1"></i> الإجراء</th>
                         <th><i class="fas fa-stethoscope me-1"></i> التخصص</th>
                         <th><i class="fas fa-tag me-1"></i> نوع التسعير</th>
@@ -314,8 +326,9 @@
                         </td>
                         <td>{{ item.doctor_name|default:"-" }}</td>
                         <td>{{ item.accountant_name|default:"-" }}</td>
+                        <td><span class="badge bg-secondary">{{ item.card_number|default:"-" }}</span></td>
                         <td title="{{ item.procedure_name }}">
-                            {{ item.procedure_name|truncatechars:35 }}
+                            {{ item.procedure_name|truncatechars:30 }}
                         </td>
                         <td><span class="badge bg-info">{{ item.specialty_name|default:"-" }}</span></td>
                         <td>
@@ -342,6 +355,7 @@
                                     data-company="{{ item.company_name|default:'-' }}"
                                     data-doctor="{{ item.doctor_name|default:'-' }}"
                                     data-accountant="{{ item.accountant_name|default:'-' }}"
+                                    data-card="{{ item.card_number|default:'-' }}"
                                     data-specialty="{{ item.specialty_name|default:'-' }}"
                                     data-pricing-type="{{ item.pricing_type|default:'-' }}"
                                     data-report="{{ item.report_name|default:'-' }}"
@@ -353,7 +367,7 @@
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="10" class="text-center py-5">
+                        <td colspan="11" class="text-center py-5">
                             <i class="fas fa-inbox fa-4x d-block mb-3 text-muted"></i>
                             <h5 class="text-muted">لا توجد نتائج</h5>
                             <p class="text-muted small">حاول تغيير كلمات البحث أو الفلاتر</p>
@@ -366,7 +380,7 @@
     </div>
 
     <!-- ============================================ -->
-    <!-- ✅ Modal للتفاصيل -->
+    <!-- ✅ Modal للتفاصيل (مع إضافة رقم الكارنية) -->
     <!-- ============================================ -->
     <div class="modal fade" id="detailsModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -382,6 +396,10 @@
                         <div class="col-md-6">
                             <label class="text-muted small fw-bold">اسم المريض</label>
                             <p class="fw-bold" id="modal-patient">-</p>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="text-muted small fw-bold">رقم الكارنية</label>
+                            <p class="fw-bold text-primary" id="modal-card">-</p>
                         </div>
                         <div class="col-md-6">
                             <label class="text-muted small fw-bold">الشركة</label>
@@ -443,6 +461,7 @@
                 modal.addEventListener('show.bs.modal', function (event) {
                     const button = event.relatedTarget;
                     document.getElementById('modal-patient').textContent = button.getAttribute('data-patient') || '-';
+                    document.getElementById('modal-card').textContent = button.getAttribute('data-card') || '-';
                     document.getElementById('modal-company').textContent = button.getAttribute('data-company') || '-';
                     document.getElementById('modal-doctor').textContent = button.getAttribute('data-doctor') || '-';
                     document.getElementById('modal-accountant').textContent = button.getAttribute('data-accountant') || '-';
