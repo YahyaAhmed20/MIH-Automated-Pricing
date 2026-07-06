@@ -9,11 +9,14 @@
 
 <div class="container-fluid">
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h4 class="fw-bold">
-            <i class="fas fa-search text-primary"></i>
-            تفاصيل التسعير
-        </h4>
+    <!-- ✅ Header محسن -->
+ 
+        <div>
+            <span class="badge bg-primary rounded-pill fs-6 px-3 py-2">
+                <i class="fas fa-calendar-alt me-1"></i>
+                آخر تحديث: {% now "Y-m-d" %}
+            </span>
+        </div>
     </div>
 
     <!-- ============================================ -->
@@ -37,13 +40,21 @@
     </script>
 
     <!-- ============================================ -->
-    <!-- ✅ شريط البحث والفلاتر -->
+    <!-- ✅ شريط البحث والفلاتر المحسن -->
     <!-- ============================================ -->
-    <div class="card shadow-sm border-0 mb-4">
+    <div class="card shadow-sm border-0 mb-4 hover-shadow">
+
+        <div class="card-header bg-gradient-primary text-white">
+            <h5 class="mb-0">
+                <i class="fas fa-sliders-h"></i>
+                الفلاتر والبحث
+            </h5>
+        </div>
+
         <div class="card-body">
             <form method="get" id="searchForm">
                 <div class="row g-3">
-                    <!-- ✅ حقل البحث مع datalist (بدون oninput) -->
+                    <!-- ✅ حقل البحث مع datalist -->
                     <div class="col-md-3">
                         <label class="form-label fw-bold small text-muted">
                             <i class="fas fa-search"></i> بحث
@@ -52,7 +63,7 @@
                                name="search" 
                                list="search-suggestions"
                                class="form-control form-control-lg" 
-                               placeholder="ابحث باسم المريض أو الإجراء أو الشركة" 
+                               placeholder="ابحث باسم المريض أو الإجراء أو الشركة..." 
                                value="{{ search }}" 
                                onchange="this.form.submit()"
                                autocomplete="off">
@@ -65,7 +76,7 @@
                         </datalist>
                     </div>
                     
-                    <!-- ✅ فلتر الجروب مع datalist (بدون oninput) -->
+                    <!-- ✅ فلتر الجروب مع datalist -->
                     <div class="col-md-2">
                         <label class="form-label fw-bold small text-muted">
                             <i class="fas fa-layer-group"></i> الجروب
@@ -74,7 +85,7 @@
                                name="group" 
                                list="group-suggestions"
                                class="form-control form-control-lg" 
-                               placeholder="ابحث عن جروب" 
+                               placeholder="ابحث عن جروب..." 
                                value="{{ group }}" 
                                onchange="this.form.submit()"
                                autocomplete="off">
@@ -85,7 +96,7 @@
                         </datalist>
                     </div>
 
-                    <!-- ✅ فلتر الشركة مع datalist (بدون oninput) -->
+                    <!-- ✅ فلتر الشركة مع datalist -->
                     <div class="col-md-2">
                         <label class="form-label fw-bold small text-muted">
                             <i class="fas fa-building"></i> الشركة
@@ -94,7 +105,7 @@
                                name="company" 
                                list="company-suggestions"
                                class="form-control form-control-lg" 
-                               placeholder="ابحث عن شركة" 
+                               placeholder="ابحث عن شركة..." 
                                value="{{ company }}" 
                                onchange="this.form.submit()"
                                autocomplete="off">
@@ -105,7 +116,7 @@
                         </datalist>
                     </div>
 
-                    <!-- ✅ فلتر الطبيب مع datalist (بدون oninput) -->
+                    <!-- ✅ فلتر الطبيب مع datalist -->
                     <div class="col-md-2">
                         <label class="form-label fw-bold small text-muted">
                             <i class="fas fa-user-md"></i> الطبيب
@@ -114,7 +125,7 @@
                                name="doctor" 
                                list="doctor-suggestions"
                                class="form-control form-control-lg" 
-                               placeholder="ابحث عن طبيب" 
+                               placeholder="ابحث عن طبيب..." 
                                value="{{ doctor }}" 
                                onchange="this.form.submit()"
                                autocomplete="off">
@@ -125,7 +136,7 @@
                         </datalist>
                     </div>
 
-                    <!-- ✅ فلتر التخصص مع datalist (بدون oninput) -->
+                    <!-- ✅ فلتر التخصص مع datalist -->
                     <div class="col-md-2">
                         <label class="form-label fw-bold small text-muted">
                             <i class="fas fa-stethoscope"></i> التخصص
@@ -134,7 +145,7 @@
                                name="specialty" 
                                list="specialty-suggestions"
                                class="form-control form-control-lg" 
-                               placeholder="ابحث عن تخصص" 
+                               placeholder="ابحث عن تخصص..." 
                                value="{{ specialty }}" 
                                onchange="this.form.submit()"
                                autocomplete="off">
@@ -147,7 +158,7 @@
                 </div>
 
                 <div class="row g-3 mt-2">
-                    <!-- ✅ فلتر المحاسب مع datalist (بدون oninput) -->
+                    <!-- ✅ فلتر المحاسب مع datalist -->
                     <div class="col-md-2">
                         <label class="form-label fw-bold small text-muted">
                             <i class="fas fa-user-tie"></i> المحاسب
@@ -156,7 +167,7 @@
                                name="accountant" 
                                list="accountant-suggestions"
                                class="form-control form-control-lg" 
-                               placeholder="ابحث عن محاسب" 
+                               placeholder="ابحث عن محاسب..." 
                                value="{{ accountant }}" 
                                onchange="this.form.submit()"
                                autocomplete="off">
@@ -182,12 +193,15 @@
                     </div>
 
                     <div class="col-md-6 d-flex gap-2 align-items-end">
-                        <button class="btn btn-primary btn-lg" type="submit">
-                            <i class="fas fa-search"></i> بحث
+                        <button class="btn btn-primary btn-lg shadow-sm" type="submit">
+                            <i class="fas fa-search me-1"></i> بحث
                         </button>
-                        <a href="{% url 'pricing_details' %}" class="btn btn-outline-secondary btn-lg">
-                            <i class="fas fa-undo"></i> مسح الكل
+                        <a href="{% url 'pricing_details' %}" class="btn btn-outline-secondary btn-lg shadow-sm">
+                            <i class="fas fa-undo me-1"></i> مسح الكل
                         </a>
+                        {% if search or group or company or doctor or specialty or accountant or date_from or date_to %}
+                       
+                        {% endif %}
                     </div>
                 </div>
             </form>
@@ -195,58 +209,102 @@
     </div>
 
     <!-- ============================================ -->
-    <!-- ✅ إحصائيات النتائج -->
+    <!-- ✅ إحصائيات النتائج المحسنة -->
     <!-- ============================================ -->
-    <div class="row mb-4">
-        <div class="col-md-4">
-            <div class="card shadow-sm border-0">
-                <div class="card-body">
-                    <h6 class="text-muted"><i class="fas fa-list me-1"></i> عدد النتائج</h6>
-                    <h3 class="fw-bold text-primary">{{ results_count }}</h3>
+    <div class="row g-3 mb-4">
+
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 hover-shadow h-100">
+                <div class="card-body text-center py-3">
+                    <div class="d-flex align-items-center justify-content-center mb-2">
+                        <div class="rounded-circle bg-primary bg-opacity-10 p-2">
+                            <i class="fas fa-list text-primary fs-4"></i>
+                        </div>
+                    </div>
+                    <h6 class="text-muted mb-1">عدد النتائج</h6>
+                    <h3 class="fw-bold text-primary mb-0">{{ results_count }}</h3>
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="card shadow-sm border-0">
-                <div class="card-body">
-                    <h6 class="text-muted"><i class="fas fa-money-bill-wave me-1"></i> إجمالى التكلفة</h6>
-                    <h3 class="fw-bold text-success">{{ total_cost }} ج.م</h3>
+
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 hover-shadow h-100">
+                <div class="card-body text-center py-3">
+                    <div class="d-flex align-items-center justify-content-center mb-2">
+                        <div class="rounded-circle bg-success bg-opacity-10 p-2">
+                            <i class="fas fa-money-bill-wave text-success fs-4"></i>
+                        </div>
+                    </div>
+                    <h6 class="text-muted mb-1">إجمالى التكلفة</h6>
+                    <h3 class="fw-bold text-success mb-0">{{ total_cost }} ج.م</h3>
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="card shadow-sm border-0">
-                <div class="card-body">
-                    <h6 class="text-muted"><i class="fas fa-calculator me-1"></i> متوسط التكلفة</h6>
-                    <h3 class="fw-bold text-warning">{{ average_cost }} ج.م</h3>
+
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 hover-shadow h-100">
+                <div class="card-body text-center py-3">
+                    <div class="d-flex align-items-center justify-content-center mb-2">
+                        <div class="rounded-circle bg-warning bg-opacity-10 p-2">
+                            <i class="fas fa-calculator text-warning fs-4"></i>
+                        </div>
+                    </div>
+                    <h6 class="text-muted mb-1">متوسط التكلفة</h6>
+                    <h3 class="fw-bold text-warning mb-0">{{ average_cost }} ج.م</h3>
                 </div>
             </div>
         </div>
+
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 hover-shadow h-100">
+                <div class="card-body text-center py-3">
+                    <div class="d-flex align-items-center justify-content-center mb-2">
+                        <div class="rounded-circle bg-info bg-opacity-10 p-2">
+                            <i class="fas fa-user-md text-info fs-4"></i>
+                        </div>
+                    </div>
+                    <h6 class="text-muted mb-1">عدد الأطباء</h6>
+                    <h3 class="fw-bold text-info mb-0">{{ doctors|length }}</h3>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <!-- ============================================ -->
-    <!-- ✅ جدول النتائج -->
+    <!-- ✅ جدول النتائج المحسن -->
     <!-- ============================================ -->
-    <div class="card shadow-sm border-0">
+    <div class="card shadow-sm border-0 hover-shadow">
+        <div class="card-header bg-gradient-info text-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">
+                <i class="fas fa-table me-2"></i>
+                قائمة التسعيرات
+            </h5>
+            <span class="badge bg-light text-dark rounded-pill px-3 py-2">
+                <i class="fas fa-list me-1"></i>
+                {{ results_count }} سجل
+            </span>
+        </div>
+
         <div class="card-body table-responsive">
             <table class="table table-hover align-middle">
                 <thead class="table-light">
                     <tr>
-                        <th>التاريخ</th>
-                        <th>المريض</th>
-                        <th>الشركة</th>
-                        <th>الطبيب</th>
-                        <th>المحاسب</th>
-                        <th>الإجراء</th>
-                        <th>التخصص</th>
-                        <th>نوع التسعير</th>
-                        <th class="text-end">التكلفة</th>
-                        <th class="text-center">الإجراءات</th>
+                        <th><i class="fas fa-calendar-alt me-1"></i> التاريخ</th>
+                        <th><i class="fas fa-user me-1"></i> المريض</th>
+                        <th><i class="fas fa-building me-1"></i> الشركة</th>
+                        <th><i class="fas fa-user-md me-1"></i> الطبيب</th>
+                        <th><i class="fas fa-user-tie me-1"></i> المحاسب</th>
+                        <th><i class="fas fa-procedures me-1"></i> الإجراء</th>
+                        <th><i class="fas fa-stethoscope me-1"></i> التخصص</th>
+                        <th><i class="fas fa-tag me-1"></i> نوع التسعير</th>
+                        <th class="text-end"><i class="fas fa-money-bill-wave me-1"></i> التكلفة</th>
+                        <th class="text-center"><i class="fas fa-ellipsis-v me-1"></i> الإجراءات</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for item in page_obj %}
-                    <tr>
+                    <tr class="table-row-hover">
                         <td><span class="text-muted">{{ item.pricing_date|date:"Y-m-d" }}</span></td>
                         <td><strong>{{ item.patient_name }}</strong></td>
                         <td>
@@ -257,7 +315,7 @@
                         <td>{{ item.doctor_name|default:"-" }}</td>
                         <td>{{ item.accountant_name|default:"-" }}</td>
                         <td title="{{ item.procedure_name }}">
-                            {{ item.procedure_name|truncatechars:50 }}
+                            {{ item.procedure_name|truncatechars:35 }}
                         </td>
                         <td><span class="badge bg-info">{{ item.specialty_name|default:"-" }}</span></td>
                         <td>
@@ -296,7 +354,7 @@
                     {% empty %}
                     <tr>
                         <td colspan="10" class="text-center py-5">
-                            <i class="fas fa-inbox fa-3x d-block mb-3 text-muted"></i>
+                            <i class="fas fa-inbox fa-4x d-block mb-3 text-muted"></i>
                             <h5 class="text-muted">لا توجد نتائج</h5>
                             <p class="text-muted small">حاول تغيير كلمات البحث أو الفلاتر</p>
                         </td>
@@ -313,7 +371,7 @@
     <div class="modal fade" id="detailsModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
-                <div class="modal-header bg-primary text-white">
+                <div class="modal-header bg-gradient-primary text-white">
                     <h5 class="modal-title">
                         <i class="fas fa-info-circle me-2"></i> تفاصيل التسعير
                     </h5>
@@ -321,7 +379,6 @@
                 </div>
                 <div class="modal-body">
                     <div class="row g-3">
-                        <!-- ✅ معلومات أساسية -->
                         <div class="col-md-6">
                             <label class="text-muted small fw-bold">اسم المريض</label>
                             <p class="fw-bold" id="modal-patient">-</p>
@@ -347,35 +404,26 @@
                             <p id="modal-pricing-type">-</p>
                         </div>
                         
-                        <!-- ✅ التقرير -->
                         <div class="col-12">
                             <hr>
                             <label class="text-muted small fw-bold">
                                 <i class="fas fa-file-alt me-1"></i> التقرير
                             </label>
-                            <div class="p-2 bg-light rounded" id="modal-report">
-                                -
-                            </div>
+                            <div class="p-2 bg-light rounded" id="modal-report">-</div>
                         </div>
 
-                        <!-- ✅ التفاصيل -->
                         <div class="col-12">
                             <label class="text-muted small fw-bold">
                                 <i class="fas fa-list-ul me-1"></i> التفاصيل
                             </label>
-                            <div class="p-2 bg-light rounded" style="white-space: pre-line;" id="modal-details">
-                                -
-                            </div>
+                            <div class="p-2 bg-light rounded" style="white-space: pre-line;" id="modal-details">-</div>
                         </div>
 
-                        <!-- ✅ ملاحظات التكلفة -->
                         <div class="col-12">
                             <label class="text-muted small fw-bold">
                                 <i class="fas fa-sticky-note me-1"></i> ملاحظات التكلفة
                             </label>
-                            <div class="p-2 bg-light rounded" style="white-space: pre-line;" id="modal-cost-notes">
-                                -
-                            </div>
+                            <div class="p-2 bg-light rounded" style="white-space: pre-line;" id="modal-cost-notes">-</div>
                         </div>
                     </div>
                 </div>
@@ -388,9 +436,6 @@
         </div>
     </div>
 
-    <!-- ============================================ -->
-    <!-- ✅ Script لتحديث بيانات الـ Modal -->
-    <!-- ============================================ -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const modal = document.getElementById('detailsModal');
@@ -412,7 +457,7 @@
     </script>
 
     <!-- ============================================ -->
-    <!-- ✅ Pagination -->
+    <!-- ✅ Pagination المحسنة -->
     <!-- ============================================ -->
     {% if page_obj.has_other_pages %}
     <nav class="mt-4">
@@ -437,5 +482,88 @@
     {% endif %}
 
 </div>
+
+<!-- ============================================ -->
+<!-- ✅ CSS تحسينات -->
+<!-- ============================================ -->
+<style>
+    .bg-gradient-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .bg-gradient-info {
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    }
+
+    .hover-shadow {
+        transition: all 0.3s ease;
+    }
+
+    .hover-shadow:hover {
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+        transform: translateY(-2px);
+    }
+
+    .table-row-hover {
+        transition: all 0.2s ease;
+    }
+
+    .table-row-hover:hover {
+        background-color: #f8f9fa !important;
+        transform: scale(1.002);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .table-row-hover:hover td {
+        color: #333;
+    }
+
+    .card {
+        border-radius: 1rem;
+        overflow: hidden;
+    }
+
+    .card-header {
+        border-radius: 0 !important;
+    }
+
+    .badge {
+        font-weight: 500;
+    }
+
+    .form-control:focus {
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        border-color: #667eea;
+    }
+
+    ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: #667eea;
+        border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #5a67d8;
+    }
+
+    @media (max-width: 768px) {
+        .table-responsive {
+            font-size: 0.85rem;
+        }
+        .table-responsive td,
+        .table-responsive th {
+            padding: 0.5rem;
+        }
+    }
+</style>
 
 {% endblock %}
