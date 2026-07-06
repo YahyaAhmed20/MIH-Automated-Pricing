@@ -6,6 +6,9 @@ from django.db.models import Count
 from contracts.models import (
     CompanyDiscountProfile,
 )
+from django.db.models import Q, Sum, Avg
+from pricing_requests.models import PricingDetail
+from django.core.paginator import Paginator
 from django.db.models import Q, Sum
 from django.core.paginator import Paginator
 
@@ -289,49 +292,6 @@ def operations(request):
         "frontend/operations.html"
     )
 
-
-
-def pricing_details(request):
-
-    search = request.GET.get("search", "")
-
-    pricing = (
-        ContractPackage.objects
-        .select_related(
-            "contract__entity",
-            "package"
-        )
-        .order_by(
-            "contract__entity__name"
-        )
-    )
-
-    if search:
-        pricing = pricing.filter(
-            Q(contract__entity__name__icontains=search)
-            |
-            Q(package__name__icontains=search)
-        )
-
-    paginator = Paginator(pricing, 25)
-
-    page_number = request.GET.get("page")
-
-    page_obj = paginator.get_page(page_number)
-    
-    # ✅ تنسيق الأرقام بفواصل
-    for item in page_obj:
-        item.cash_price_formatted = f"{item.cash_price:,.0f}" if item.cash_price else "-"
-        item.package_price_formatted = f"{item.package_price:,.0f}" if item.package_price else "-"
-
-    return render(
-        request,
-        "frontend/pricing_details.html",
-        {
-            "page_obj": page_obj,
-            "search": search,
-        }
-    )
 
 
 
@@ -1966,5 +1926,134 @@ def service_search(request):
             "service_names": service_names,
             "service_codes": service_codes,
             "department_names": department_names,
+        }
+    )
+    
+def pricing_details(request):
+
+    search = request.GET.get("search", "").strip()
+    group = request.GET.get("group", "").strip()
+    company = request.GET.get("company", "").strip()
+    doctor = request.GET.get("doctor", "").strip()
+    specialty = request.GET.get("specialty", "").strip()
+    accountant = request.GET.get("accountant", "").strip()
+    date_from = request.GET.get("date_from", "").strip()
+    date_to = request.GET.get("date_to", "").strip()
+
+    details = (
+        PricingDetail.objects
+        .only(
+            "pricing_date",
+            "patient_name",
+            "company_name",
+            "doctor_name",
+            "procedure_name",
+            "specialty_name",
+            "pricing_type",
+            "cost",
+            "details",
+            "report_name",
+            "cost_notes",
+            "group_name",
+            "accountant_name",
+        )
+        # ✅ شيل .order_by() - الموديل هيدبر الترتيب
+    )
+
+    if search:
+        details = details.filter(
+            Q(patient_name__icontains=search) |
+            Q(procedure_name__icontains=search) |
+            Q(company_name__icontains=search)
+        )
+
+    if group:
+        details = details.filter(group_name=group)
+
+    if company:
+        details = details.filter(company_name=company)
+
+    if doctor:
+        details = details.filter(doctor_name=doctor)
+
+    if specialty:
+        details = details.filter(specialty_name=specialty)
+
+    if accountant:
+        details = details.filter(accountant_name=accountant)
+
+    if date_from:
+        details = details.filter(pricing_date__gte=date_from)
+
+    if date_to:
+        details = details.filter(pricing_date__lte=date_to)
+
+    total_cost = details.aggregate(total=Sum("cost"))["total"] or 0
+    average_cost = details.aggregate(avg=Avg("cost"))["avg"] or 0
+
+    paginator = Paginator(details, 50)
+    page_obj = paginator.get_page(request.GET.get("page"))
+
+    groups = (
+        PricingDetail.objects
+        .exclude(group_name="")
+        .values_list("group_name", flat=True)
+        .distinct()
+        .order_by("group_name")
+    )
+
+    companies = (
+        PricingDetail.objects
+        .exclude(company_name="")
+        .values_list("company_name", flat=True)
+        .distinct()
+        .order_by("company_name")
+    )
+
+    doctors = (
+        PricingDetail.objects
+        .exclude(doctor_name="")
+        .values_list("doctor_name", flat=True)
+        .distinct()
+        .order_by("doctor_name")
+    )
+
+    specialties = (
+        PricingDetail.objects
+        .exclude(specialty_name="")
+        .values_list("specialty_name", flat=True)
+        .distinct()
+        .order_by("specialty_name")
+    )
+
+    accountants = (
+        PricingDetail.objects
+        .exclude(accountant_name="")
+        .values_list("accountant_name", flat=True)
+        .distinct()
+        .order_by("accountant_name")
+    )
+
+    return render(
+        request,
+        "frontend/pricing_details.html",
+        {
+            "page_obj": page_obj,
+            "results_count": details.count(),
+            "total_cost": f"{total_cost:,.0f}",
+            "average_cost": f"{average_cost:,.0f}",
+            "groups": groups,
+            "companies": companies,
+            "doctors": doctors,
+            "specialties": specialties,
+            "accountants": accountants,
+            "search": search,
+            "group": group,
+            "company": company,
+            "doctor": doctor,
+            "specialty": specialty,
+            "accountant": accountant,
+            "date_from": date_from,
+            "date_to": date_to,
         }
     )

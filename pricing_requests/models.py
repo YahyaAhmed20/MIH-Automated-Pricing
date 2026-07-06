@@ -449,3 +449,137 @@ class ServiceRecord(models.Model):
                 name="unique_service_record"
             )
         ]
+        
+class PricingDetail(models.Model):
+
+    pricing_date = models.DateField(
+        blank=True,
+        null=True,
+        db_index=True,
+        verbose_name="تاريخ التسعير"
+    )
+
+    group_name = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        db_index=True,
+        verbose_name="الجروب"
+    )
+
+    patient_name = models.CharField(
+        max_length=255,
+        db_index=True,
+        verbose_name="اسم المريض"
+    )
+
+    company_name = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        db_index=True,
+        verbose_name="الشركة"
+    )
+
+    doctor_name = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        db_index=True,
+        verbose_name="اسم الطبيب"
+    )
+
+    report_name = models.TextField(
+        blank=True,
+        null=True,
+        verbose_name="التقرير"
+    )
+
+    procedure_name = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        db_index=True,
+        verbose_name="الإجراء"
+    )
+
+    specialty_name = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        db_index=True,
+        verbose_name="التخصص"
+    )
+
+    pricing_type = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        verbose_name="نوع التسعير"
+    )
+
+    card_number = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        db_index=True,
+        verbose_name="رقم الكارنية"
+    )
+
+    accountant_name = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        db_index=True,
+        verbose_name="اسم المحاسب"
+    )
+
+    cost_notes = models.TextField(
+        blank=True,
+        null=True,
+        verbose_name="ملاحظات خاصة بالتكلفة"
+    )
+
+    cost = models.DecimalField(
+        max_digits=12,
+        decimal_places=2,
+        default=0,
+        verbose_name="التكلفة"
+    )
+
+    details = models.TextField(
+        blank=True,
+        null=True,
+        verbose_name="التفاصيل"
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True
+    )
+
+    class Meta:
+
+        verbose_name = "تفصيل تسعير"
+
+        verbose_name_plural = "تفاصيل التسعير"
+
+        ordering = [
+        "-pricing_date",
+        "-cost",
+    ]
+
+        indexes = [
+            models.Index(fields=["patient_name"]),
+            models.Index(fields=["company_name"]),
+            models.Index(fields=["doctor_name"]),
+            models.Index(fields=["specialty_name"]),
+            models.Index(fields=["group_name"]),
+            models.Index(fields=["pricing_date"]),
+        ]
+
+    def __str__(self):
+        return f"{self.patient_name} - {self.procedure_name}"

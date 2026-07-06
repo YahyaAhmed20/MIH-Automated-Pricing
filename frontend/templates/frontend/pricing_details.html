@@ -1,4 +1,5 @@
-{% extends 'frontend/base.html' %}
+{% extends "frontend/base.html" %}
+{% load humanize %}
 
 {% block page_title %}
 تفاصيل التسعير
@@ -6,253 +7,434 @@
 
 {% block content %}
 
-<!-- ============================================ -->
-<!-- شريط البحث -->
-<!-- ============================================ -->
-<div class="card shadow border-0 hover-shadow">
+<div class="container-fluid">
 
-    <div class="card-body">
-
-        <form method="get">
-
-            <div class="row g-3 align-items-end">
-
-                <div class="col-md-9">
-
-                    <label class="form-label fw-bold small text-muted">
-                        <i class="bi bi-search"></i> بحث
-                    </label>
-
-                    <input
-                        type="text"
-                        name="search"
-                        class="form-control form-control-lg"
-                        placeholder="ابحث باسم الجهة أو الباكدج..."
-                        value="{{ search }}"
-                    >
-
-                </div>
-
-                <div class="col-md-3">
-
-                    <button class="btn btn-primary btn-lg w-100">
-                        <i class="bi bi-search"></i> بحث
-                    </button>
-
-                </div>
-
-            </div>
-
-        </form>
-
-    </div>
-
-</div>
-
-<!-- ============================================ -->
-<!-- عدد النتائج -->
-<!-- ============================================ -->
-<div class="alert alert-info d-flex justify-content-between align-items-center mt-3">
-
-    <span>
-        <i class="bi bi-list"></i>
-        عدد النتائج
-    </span>
-
-    <strong class="badge bg-info rounded-pill fs-5">
-        {{ page_obj.paginator.count }}
-    </strong>
-
-</div>
-
-<!-- ============================================ -->
-<!-- جدول النتائج -->
-<!-- ============================================ -->
-<div class="card shadow border-0 hover-shadow">
-
-    <div class="card-header d-flex justify-content-between align-items-center">
-        <h5 class="mb-0">
-            <i class="bi bi-cash-stack"></i>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4 class="fw-bold">
+            <i class="fas fa-search text-primary"></i>
             تفاصيل التسعير
-        </h5>
-        <span class="badge bg-primary rounded-pill">
-            {{ page_obj.paginator.count }}
-        </span>
+        </h4>
     </div>
 
-    <div class="card-body">
+    <!-- ============================================ -->
+    <!-- ✅ Script للبحث -->
+    <!-- ============================================ -->
+    <script>
+        // ✅ منع الإرسال المتكرر
+        let isSubmitting = false;
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('searchForm');
+            if (form) {
+                form.addEventListener('submit', function() {
+                    isSubmitting = true;
+                    setTimeout(function() {
+                        isSubmitting = false;
+                    }, 2000);
+                });
+            }
+        });
+    </script>
 
-        <div class="table-responsive">
+    <!-- ============================================ -->
+    <!-- ✅ شريط البحث والفلاتر -->
+    <!-- ============================================ -->
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+            <form method="get" id="searchForm">
+                <div class="row g-3">
+                    <!-- ✅ حقل البحث مع datalist (بدون oninput) -->
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold small text-muted">
+                            <i class="fas fa-search"></i> بحث
+                        </label>
+                        <input type="text" 
+                               name="search" 
+                               list="search-suggestions"
+                               class="form-control form-control-lg" 
+                               placeholder="ابحث باسم المريض أو الإجراء أو الشركة" 
+                               value="{{ search }}" 
+                               onchange="this.form.submit()"
+                               autocomplete="off">
+                        <datalist id="search-suggestions">
+                            {% for item in page_obj %}
+                                <option value="{{ item.patient_name }}">{{ item.patient_name }}</option>
+                                <option value="{{ item.procedure_name }}">{{ item.procedure_name }}</option>
+                                <option value="{{ item.company_name }}">{{ item.company_name }}</option>
+                            {% endfor %}
+                        </datalist>
+                    </div>
+                    
+                    <!-- ✅ فلتر الجروب مع datalist (بدون oninput) -->
+                    <div class="col-md-2">
+                        <label class="form-label fw-bold small text-muted">
+                            <i class="fas fa-layer-group"></i> الجروب
+                        </label>
+                        <input type="text" 
+                               name="group" 
+                               list="group-suggestions"
+                               class="form-control form-control-lg" 
+                               placeholder="ابحث عن جروب" 
+                               value="{{ group }}" 
+                               onchange="this.form.submit()"
+                               autocomplete="off">
+                        <datalist id="group-suggestions">
+                            {% for item in groups %}
+                                <option value="{{ item }}">{{ item }}</option>
+                            {% endfor %}
+                        </datalist>
+                    </div>
 
-            <table class="table table-hover table-striped align-middle">
+                    <!-- ✅ فلتر الشركة مع datalist (بدون oninput) -->
+                    <div class="col-md-2">
+                        <label class="form-label fw-bold small text-muted">
+                            <i class="fas fa-building"></i> الشركة
+                        </label>
+                        <input type="text" 
+                               name="company" 
+                               list="company-suggestions"
+                               class="form-control form-control-lg" 
+                               placeholder="ابحث عن شركة" 
+                               value="{{ company }}" 
+                               onchange="this.form.submit()"
+                               autocomplete="off">
+                        <datalist id="company-suggestions">
+                            {% for item in companies %}
+                                <option value="{{ item }}">{{ item }}</option>
+                            {% endfor %}
+                        </datalist>
+                    </div>
 
-                <thead class="table-light">
+                    <!-- ✅ فلتر الطبيب مع datalist (بدون oninput) -->
+                    <div class="col-md-2">
+                        <label class="form-label fw-bold small text-muted">
+                            <i class="fas fa-user-md"></i> الطبيب
+                        </label>
+                        <input type="text" 
+                               name="doctor" 
+                               list="doctor-suggestions"
+                               class="form-control form-control-lg" 
+                               placeholder="ابحث عن طبيب" 
+                               value="{{ doctor }}" 
+                               onchange="this.form.submit()"
+                               autocomplete="off">
+                        <datalist id="doctor-suggestions">
+                            {% for item in doctors %}
+                                <option value="{{ item }}">{{ item }}</option>
+                            {% endfor %}
+                        </datalist>
+                    </div>
 
-                    <tr>
+                    <!-- ✅ فلتر التخصص مع datalist (بدون oninput) -->
+                    <div class="col-md-2">
+                        <label class="form-label fw-bold small text-muted">
+                            <i class="fas fa-stethoscope"></i> التخصص
+                        </label>
+                        <input type="text" 
+                               name="specialty" 
+                               list="specialty-suggestions"
+                               class="form-control form-control-lg" 
+                               placeholder="ابحث عن تخصص" 
+                               value="{{ specialty }}" 
+                               onchange="this.form.submit()"
+                               autocomplete="off">
+                        <datalist id="specialty-suggestions">
+                            {% for item in specialties %}
+                                <option value="{{ item }}">{{ item }}</option>
+                            {% endfor %}
+                        </datalist>
+                    </div>
+                </div>
 
-                        <th>#</th>
+                <div class="row g-3 mt-2">
+                    <!-- ✅ فلتر المحاسب مع datalist (بدون oninput) -->
+                    <div class="col-md-2">
+                        <label class="form-label fw-bold small text-muted">
+                            <i class="fas fa-user-tie"></i> المحاسب
+                        </label>
+                        <input type="text" 
+                               name="accountant" 
+                               list="accountant-suggestions"
+                               class="form-control form-control-lg" 
+                               placeholder="ابحث عن محاسب" 
+                               value="{{ accountant }}" 
+                               onchange="this.form.submit()"
+                               autocomplete="off">
+                        <datalist id="accountant-suggestions">
+                            {% for item in accountants %}
+                                <option value="{{ item }}">{{ item }}</option>
+                            {% endfor %}
+                        </datalist>
+                    </div>
 
-                        <th>الجهة</th>
+                    <!-- ✅ فلتر الفترة -->
+                    <div class="col-md-2">
+                        <label class="form-label fw-bold small text-muted">
+                            <i class="fas fa-calendar-alt"></i> من تاريخ
+                        </label>
+                        <input type="date" name="date_from" class="form-control form-control-lg" value="{{ date_from }}" onchange="this.form.submit()">
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label fw-bold small text-muted">
+                            <i class="fas fa-calendar-alt"></i> إلى تاريخ
+                        </label>
+                        <input type="date" name="date_to" class="form-control form-control-lg" value="{{ date_to }}" onchange="this.form.submit()">
+                    </div>
 
-                        <th>الباكدج</th>
-
-                        <th>السعر النقدي</th>
-
-                        <th>سعر التعاقد</th>
-
-                        <th>الخصم %</th>
-
-                    </tr>
-
-                </thead>
-
-                <tbody>
-
-                {% for item in page_obj %}
-
-                    <tr>
-
-                        <td>
-                            <span class="badge bg-secondary rounded-circle">
-                                {{ forloop.counter }}
-                            </span>
-                        </td>
-
-                        <td>
-                            <strong>{{ item.contract.entity.name }}</strong>
-                        </td>
-
-                        <td>
-                            {{ item.package.name }}
-                        </td>
-
-                        <td>
-                            <span class="text-primary fw-bold">
-                                {{ item.cash_price_formatted }} ج.م
-                            </span>
-                        </td>
-
-                        <td>
-                            <span class="text-success fw-bold">
-                                {{ item.package_price_formatted }} ج.م
-                            </span>
-                        </td>
-
-                        <td>
-
-                            {% if item.current_discount_rate %}
-
-                                <span class="badge bg-success rounded-pill">
-                                    {{ item.current_discount_rate }}%
-                                </span>
-
-                            {% else %}
-
-                                <span class="badge bg-secondary rounded-pill">
-                                    0%
-                                </span>
-
-                            {% endif %}
-
-                        </td>
-
-                    </tr>
-
-                {% empty %}
-
-                    <tr>
-                        <td colspan="6" class="text-center text-muted py-4">
-                            <i class="bi bi-inbox fa-3x d-block mb-3"></i>
-                            لا توجد نتائج تطابق بحثك
-                        </td>
-                    </tr>
-
-                {% endfor %}
-
-                </tbody>
-
-            </table>
-
+                    <div class="col-md-6 d-flex gap-2 align-items-end">
+                        <button class="btn btn-primary btn-lg" type="submit">
+                            <i class="fas fa-search"></i> بحث
+                        </button>
+                        <a href="{% url 'pricing_details' %}" class="btn btn-outline-secondary btn-lg">
+                            <i class="fas fa-undo"></i> مسح الكل
+                        </a>
+                    </div>
+                </div>
+            </form>
         </div>
-
-        <!-- ============================================ -->
-        <!-- الترقيم -->
-        <!-- ============================================ -->
-        <nav>
-
-            <ul class="pagination justify-content-center">
-
-                {% if page_obj.has_previous %}
-
-                <li class="page-item">
-
-                    <a class="page-link"
-                       href="?page=1&search={{ search }}">
-
-                        <i class="bi bi-chevron-double-right"></i>
-                        الأولى
-
-                    </a>
-
-                </li>
-
-                <li class="page-item">
-
-                    <a class="page-link"
-                       href="?page={{ page_obj.previous_page_number }}&search={{ search }}">
-
-                        <i class="bi bi-chevron-right"></i>
-                        السابق
-
-                    </a>
-
-                </li>
-
-                {% endif %}
-
-                <li class="page-item active">
-
-                    <span class="page-link">
-
-                        {{ page_obj.number }}
-
-                    </span>
-
-                </li>
-
-                {% if page_obj.has_next %}
-
-                <li class="page-item">
-
-                    <a class="page-link"
-                       href="?page={{ page_obj.next_page_number }}&search={{ search }}">
-
-                        التالي
-                        <i class="bi bi-chevron-left"></i>
-
-                    </a>
-
-                </li>
-
-                <li class="page-item">
-
-                    <a class="page-link"
-                       href="?page={{ page_obj.paginator.num_pages }}&search={{ search }}">
-
-                        الأخيرة
-                        <i class="bi bi-chevron-double-left"></i>
-
-                    </a>
-
-                </li>
-
-                {% endif %}
-
-            </ul>
-
-        </nav>
-
     </div>
+
+    <!-- ============================================ -->
+    <!-- ✅ إحصائيات النتائج -->
+    <!-- ============================================ -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h6 class="text-muted"><i class="fas fa-list me-1"></i> عدد النتائج</h6>
+                    <h3 class="fw-bold text-primary">{{ results_count }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h6 class="text-muted"><i class="fas fa-money-bill-wave me-1"></i> إجمالى التكلفة</h6>
+                    <h3 class="fw-bold text-success">{{ total_cost }} ج.م</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h6 class="text-muted"><i class="fas fa-calculator me-1"></i> متوسط التكلفة</h6>
+                    <h3 class="fw-bold text-warning">{{ average_cost }} ج.م</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- ✅ جدول النتائج -->
+    <!-- ============================================ -->
+    <div class="card shadow-sm border-0">
+        <div class="card-body table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>التاريخ</th>
+                        <th>المريض</th>
+                        <th>الشركة</th>
+                        <th>الطبيب</th>
+                        <th>المحاسب</th>
+                        <th>الإجراء</th>
+                        <th>التخصص</th>
+                        <th>نوع التسعير</th>
+                        <th class="text-end">التكلفة</th>
+                        <th class="text-center">الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in page_obj %}
+                    <tr>
+                        <td><span class="text-muted">{{ item.pricing_date|date:"Y-m-d" }}</span></td>
+                        <td><strong>{{ item.patient_name }}</strong></td>
+                        <td>
+                            <span class="badge bg-primary">
+                                {{ item.company_name|default:"-" }}
+                            </span>
+                        </td>
+                        <td>{{ item.doctor_name|default:"-" }}</td>
+                        <td>{{ item.accountant_name|default:"-" }}</td>
+                        <td title="{{ item.procedure_name }}">
+                            {{ item.procedure_name|truncatechars:50 }}
+                        </td>
+                        <td><span class="badge bg-info">{{ item.specialty_name|default:"-" }}</span></td>
+                        <td>
+                            {% if item.pricing_type == "نقدي" %}
+                                <span class="badge bg-success">{{ item.pricing_type|default:"-" }}</span>
+                            {% elif item.pricing_type == "باكدج" %}
+                                <span class="badge bg-warning text-dark">{{ item.pricing_type|default:"-" }}</span>
+                            {% else %}
+                                <span class="badge bg-secondary">{{ item.pricing_type|default:"-" }}</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-end fw-bold text-success">
+                            {% if item.cost %}
+                                {{ item.cost|floatformat:0|intcomma }} ج.م
+                            {% else %}
+                                <span class="text-muted">-</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-center">
+                            <button class="btn btn-sm btn-outline-primary btn-details" 
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#detailsModal"
+                                    data-patient="{{ item.patient_name }}"
+                                    data-company="{{ item.company_name|default:'-' }}"
+                                    data-doctor="{{ item.doctor_name|default:'-' }}"
+                                    data-accountant="{{ item.accountant_name|default:'-' }}"
+                                    data-specialty="{{ item.specialty_name|default:'-' }}"
+                                    data-pricing-type="{{ item.pricing_type|default:'-' }}"
+                                    data-report="{{ item.report_name|default:'-' }}"
+                                    data-details="{{ item.details|default:'-' }}"
+                                    data-cost-notes="{{ item.cost_notes|default:'-' }}">
+                                <i class="fas fa-eye"></i> عرض
+                            </button>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="10" class="text-center py-5">
+                            <i class="fas fa-inbox fa-3x d-block mb-3 text-muted"></i>
+                            <h5 class="text-muted">لا توجد نتائج</h5>
+                            <p class="text-muted small">حاول تغيير كلمات البحث أو الفلاتر</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- ✅ Modal للتفاصيل -->
+    <!-- ============================================ -->
+    <div class="modal fade" id="detailsModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">
+                        <i class="fas fa-info-circle me-2"></i> تفاصيل التسعير
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <!-- ✅ معلومات أساسية -->
+                        <div class="col-md-6">
+                            <label class="text-muted small fw-bold">اسم المريض</label>
+                            <p class="fw-bold" id="modal-patient">-</p>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="text-muted small fw-bold">الشركة</label>
+                            <p id="modal-company">-</p>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="text-muted small fw-bold">الطبيب</label>
+                            <p id="modal-doctor">-</p>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="text-muted small fw-bold">المحاسب</label>
+                            <p id="modal-accountant">-</p>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="text-muted small fw-bold">التخصص</label>
+                            <p id="modal-specialty">-</p>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="text-muted small fw-bold">نوع التسعير</label>
+                            <p id="modal-pricing-type">-</p>
+                        </div>
+                        
+                        <!-- ✅ التقرير -->
+                        <div class="col-12">
+                            <hr>
+                            <label class="text-muted small fw-bold">
+                                <i class="fas fa-file-alt me-1"></i> التقرير
+                            </label>
+                            <div class="p-2 bg-light rounded" id="modal-report">
+                                -
+                            </div>
+                        </div>
+
+                        <!-- ✅ التفاصيل -->
+                        <div class="col-12">
+                            <label class="text-muted small fw-bold">
+                                <i class="fas fa-list-ul me-1"></i> التفاصيل
+                            </label>
+                            <div class="p-2 bg-light rounded" style="white-space: pre-line;" id="modal-details">
+                                -
+                            </div>
+                        </div>
+
+                        <!-- ✅ ملاحظات التكلفة -->
+                        <div class="col-12">
+                            <label class="text-muted small fw-bold">
+                                <i class="fas fa-sticky-note me-1"></i> ملاحظات التكلفة
+                            </label>
+                            <div class="p-2 bg-light rounded" style="white-space: pre-line;" id="modal-cost-notes">
+                                -
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-1"></i> إغلاق
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- ✅ Script لتحديث بيانات الـ Modal -->
+    <!-- ============================================ -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const modal = document.getElementById('detailsModal');
+            if (modal) {
+                modal.addEventListener('show.bs.modal', function (event) {
+                    const button = event.relatedTarget;
+                    document.getElementById('modal-patient').textContent = button.getAttribute('data-patient') || '-';
+                    document.getElementById('modal-company').textContent = button.getAttribute('data-company') || '-';
+                    document.getElementById('modal-doctor').textContent = button.getAttribute('data-doctor') || '-';
+                    document.getElementById('modal-accountant').textContent = button.getAttribute('data-accountant') || '-';
+                    document.getElementById('modal-specialty').textContent = button.getAttribute('data-specialty') || '-';
+                    document.getElementById('modal-pricing-type').textContent = button.getAttribute('data-pricing-type') || '-';
+                    document.getElementById('modal-report').textContent = button.getAttribute('data-report') || '-';
+                    document.getElementById('modal-details').textContent = button.getAttribute('data-details') || '-';
+                    document.getElementById('modal-cost-notes').textContent = button.getAttribute('data-cost-notes') || '-';
+                });
+            }
+        });
+    </script>
+
+    <!-- ============================================ -->
+    <!-- ✅ Pagination -->
+    <!-- ============================================ -->
+    {% if page_obj.has_other_pages %}
+    <nav class="mt-4">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}&search={{ search }}&group={{ group }}&company={{ company }}&doctor={{ doctor }}&specialty={{ specialty }}&accountant={{ accountant }}&date_from={{ date_from }}&date_to={{ date_to }}">
+                    <i class="fas fa-chevron-right"></i> السابق
+                </a>
+            </li>
+            {% endif %}
+            <li class="page-item active"><span class="page-link">{{ page_obj.number }}</span></li>
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}&search={{ search }}&group={{ group }}&company={{ company }}&doctor={{ doctor }}&specialty={{ specialty }}&accountant={{ accountant }}&date_from={{ date_from }}&date_to={{ date_to }}">
+                    التالي <i class="fas fa-chevron-left"></i>
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
 
 </div>
 
