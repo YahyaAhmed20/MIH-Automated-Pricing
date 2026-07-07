@@ -2126,57 +2126,76 @@ def similar_invoices(request):
             "statuses": statuses,
         }
     )
+    
 def procedures(request):
 
     search = request.GET.get("search", "").strip()
-
     specialty = request.GET.get("specialty", "").strip()
-
+    category = request.GET.get("category", "").strip()
     show_all = request.GET.get("show_all")
 
     procedures = Procedure.objects.all()
 
     if search:
-
         procedures = procedures.filter(
-            Q(operation_name__icontains=search)
-            |
+            Q(operation_name__icontains=search) |
             Q(code__icontains=search)
         )
 
     if specialty:
+        procedures = procedures.filter(specialty_name=specialty)
 
-        procedures = procedures.filter(
-            specialty_name=specialty
-        )
+    if category:
+        procedures = procedures.filter(category=category)
 
-    # ✅ التخصصات من النتائج المفلترة (وليس من كل البيانات)
+    # ✅ التخصصات من النتائج المفلترة
     specialties = (
-        procedures  # ✅ من النتائج مش من Procedure.objects
-        .values_list(
-            "specialty_name",
-            flat=True
-        )
+        procedures
+        .values_list("specialty_name", flat=True)
         .distinct()
         .order_by("specialty_name")
     )
+
+    # ✅ التصنيفات من النتائج المفلترة
+    categories = (
+        procedures
+        .exclude(category="")
+        .values_list("category", flat=True)
+        .distinct()
+        .order_by("category")
+    )
+
+    # ✅ عدد العمليات لكل تخصص (للعرض في البطاقات)
+    specialties_with_count = []
+    for spec in specialties:
+        count = procedures.filter(specialty_name=spec).count()
+        specialties_with_count.append({
+            "name": spec,
+            "count": count
+        })
+
+    procedures_list = list(procedures)
+    total_count = len(procedures_list)
+
+    # ✅ لو show_all = 1، اعرض الكل، وإلا اعرض 24
+    if show_all:
+        display_procedures = procedures_list
+    else:
+        display_procedures = procedures_list[:24]
 
     return render(
         request,
         "frontend/procedures.html",
         {
-            "procedures": procedures[:24],
-            "all_procedures": (
-                procedures.order_by(
-                    "specialty_name",
-                    "operation_name",
-                )
-                if show_all
-                else None
-            ),
+            "procedures": display_procedures,
+            "all_procedures": procedures_list if show_all else None,
             "specialties": specialties,
+            "categories": categories,
+            "specialties_with_count": specialties_with_count,
             "search": search,
             "specialty": specialty,
+            "category": category,
             "show_all": show_all,
+            "total_count": total_count,
         }
     )

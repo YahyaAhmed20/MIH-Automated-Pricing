@@ -11,7 +11,7 @@
 
     <!-- ✅ Header -->
     <div class="d-flex justify-content-between align-items-center mb-4">
-        
+      
         <div>
             <span class="badge bg-primary rounded-pill fs-6 px-3 py-2">
                 <i class="fas fa-calendar-alt me-1"></i>
@@ -35,7 +35,7 @@
         <div class="card-body">
             <form method="get" id="searchForm">
                 <div class="row g-3 align-items-end">
-                    <div class="col-md-6">
+                    <div class="col-md-5">
                         <label class="form-label fw-bold small text-muted">
                             <i class="fas fa-search"></i> اسم العملية أو الكود
                         </label>
@@ -62,7 +62,7 @@
                         </div>
                     </div>
 
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label class="form-label fw-bold small text-muted">
                             <i class="fas fa-stethoscope"></i> التخصص
                         </label>
@@ -86,17 +86,42 @@
                         </div>
                     </div>
 
+                    <!-- ✅ فلتر التصنيف -->
+                    <div class="col-md-2">
+                        <label class="form-label fw-bold small text-muted">
+                            <i class="fas fa-layer-group"></i> التصنيف
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-0">
+                                <i class="fas fa-layer-group text-primary"></i>
+                            </span>
+                            <select
+                                name="category"
+                                class="form-select form-select-lg border-0 shadow-sm"
+                                onchange="this.form.submit()">
+                                <option value="">كل التصنيفات</option>
+                                {% for cat in categories %}
+                                    <option
+                                        value="{{ cat }}"
+                                        {% if category == cat %}selected{% endif %}>
+                                        {{ cat }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
                     <div class="col-md-2">
                         <label class="form-label fw-bold small text-muted">&nbsp;</label>
                         {% if show_all %}
                         <a
-                            href="?search={{ search }}&specialty={{ specialty }}"
+                            href="?search={{ search }}&specialty={{ specialty }}&category={{ category }}"
                             class="btn btn-outline-danger btn-lg w-100 shadow-sm">
                             <i class="fas fa-eye-slash me-1"></i> إخفاء الجدول
                         </a>
                         {% else %}
                         <a
-                            href="?search={{ search }}&specialty={{ specialty }}&show_all=1"
+                            href="?search={{ search }}&specialty={{ specialty }}&category={{ category }}&show_all=1"
                             class="btn btn-outline-primary btn-lg w-100 shadow-sm">
                             <i class="fas fa-eye me-1"></i> عرض التوصيفات كلها
                         </a>
@@ -109,8 +134,8 @@
                         <a href="{% url 'procedures' %}" class="btn btn-outline-secondary btn-sm">
                             <i class="fas fa-undo me-1"></i> مسح الكل
                         </a>
-                        {% if search or specialty %}
-                        
+                        {% if search or specialty or category %}
+                       
                         {% endif %}
                     </div>
                 </div>
@@ -119,7 +144,7 @@
     </div>
 
     <!-- ============================================ -->
-    <!-- ✅ إحصائيات النتائج -->
+    <!-- ✅ إحصائيات النتائج المحسنة -->
     <!-- ============================================ -->
     <div class="row g-3 mb-4">
 
@@ -132,7 +157,7 @@
                         </div>
                     </div>
                     <h6 class="text-muted mb-1">عدد النتائج</h6>
-                    <h3 class="fw-bold text-primary mb-0">{{ procedures|length }}</h3>
+                    <h3 class="fw-bold text-primary mb-0">{{ total_count }}</h3>
                 </div>
             </div>
         </div>
@@ -160,7 +185,7 @@
                         </div>
                     </div>
                     <h6 class="text-muted mb-1">التصنيفات</h6>
-                    <h3 class="fw-bold text-warning mb-0">{{ procedures|dictsort:"category"|length }}</h3>
+                    <h3 class="fw-bold text-warning mb-0">{{ categories|length }}</h3>
                 </div>
             </div>
         </div>
@@ -179,6 +204,30 @@
             </div>
         </div>
 
+    </div>
+
+    <!-- ✅ إحصائيات التخصصات -->
+    <div class="row g-2 mb-4">
+        <div class="col-12">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h6 class="text-muted mb-2">
+                        <i class="fas fa-chart-pie me-1"></i>
+                        توزيع العمليات حسب التخصص
+                    </h6>
+                    <div class="d-flex flex-wrap gap-2">
+                        {% for spec in specialties_with_count %}
+                        <span class="badge bg-primary rounded-pill px-3 py-2">
+                            {{ spec.name }}
+                            <span class="badge bg-light text-dark ms-1 rounded-pill">
+                                {{ spec.count }}
+                            </span>
+                        </span>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- ============================================ -->
