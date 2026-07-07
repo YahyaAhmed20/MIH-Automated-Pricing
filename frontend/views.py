@@ -6,6 +6,7 @@ from django.db.models import Count
 from contracts.models import (
     CompanyDiscountProfile,
 )
+from pricing_requests.models import Procedure
 from django.db.models import Q, Sum, Avg
 from pricing_requests.models import PricingDetail
 from django.core.paginator import Paginator
@@ -2123,5 +2124,59 @@ def similar_invoices(request):
             "entities": entities,
             "doctors": doctors,
             "statuses": statuses,
+        }
+    )
+def procedures(request):
+
+    search = request.GET.get("search", "").strip()
+
+    specialty = request.GET.get("specialty", "").strip()
+
+    show_all = request.GET.get("show_all")
+
+    procedures = Procedure.objects.all()
+
+    if search:
+
+        procedures = procedures.filter(
+            Q(operation_name__icontains=search)
+            |
+            Q(code__icontains=search)
+        )
+
+    if specialty:
+
+        procedures = procedures.filter(
+            specialty_name=specialty
+        )
+
+    # ✅ التخصصات من النتائج المفلترة (وليس من كل البيانات)
+    specialties = (
+        procedures  # ✅ من النتائج مش من Procedure.objects
+        .values_list(
+            "specialty_name",
+            flat=True
+        )
+        .distinct()
+        .order_by("specialty_name")
+    )
+
+    return render(
+        request,
+        "frontend/procedures.html",
+        {
+            "procedures": procedures[:24],
+            "all_procedures": (
+                procedures.order_by(
+                    "specialty_name",
+                    "operation_name",
+                )
+                if show_all
+                else None
+            ),
+            "specialties": specialties,
+            "search": search,
+            "specialty": specialty,
+            "show_all": show_all,
         }
     )

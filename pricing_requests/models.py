@@ -761,3 +761,64 @@ class SimilarInvoice(models.Model):
 
     def __str__(self):
         return f"{self.patient_name} - {self.operation_name}"
+    
+class Procedure(models.Model):
+
+    code = models.CharField(
+        max_length=100,
+        unique=True,
+        db_index=True,
+        verbose_name="الكود"
+    )
+
+    operation_name = models.CharField(
+        max_length=255,
+        db_index=True,
+        verbose_name="اسم العملية"
+    )
+
+    specialty_name = models.CharField(
+        max_length=255,
+        db_index=True,
+        verbose_name="التخصص"
+    )
+
+    category = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name="التصنيف"
+    )
+
+    english_name = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name="المسمى باللغة الإنجليزية"
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True
+    )
+
+    class Meta:
+
+        verbose_name = "توصيف عملية"
+
+        verbose_name_plural = "توصيف العمليات"
+
+        ordering = [
+            "operation_name",
+        ]
+
+        indexes = [
+            models.Index(fields=["operation_name"]),
+            models.Index(fields=["specialty_name"]),
+        ]
+
+    def __str__(self):
+        return f"{self.code} - {self.operation_name}" 

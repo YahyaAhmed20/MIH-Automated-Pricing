@@ -119,6 +119,11 @@ urlpatterns = [
     ),
     
     path(
+        "procedures/",
+        views.procedures,
+        name="procedures",
+    ),
+    path(
         "similar-invoices/",
         views.similar_invoices,
         name="similar_invoices",
