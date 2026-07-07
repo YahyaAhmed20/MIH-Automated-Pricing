@@ -12,7 +12,7 @@ from django.core.paginator import Paginator
 from django.db.models import Q, Sum
 from django.core.paginator import Paginator
 
-
+from pricing_requests.models import SimilarInvoice
 
 from pricing_requests.models import ServiceRecord
 from django.db.models import Sum
@@ -886,48 +886,7 @@ def company_discounts(request):
 
     )
     
-from pricing_requests.models import PricingRequest
-from django.db.models import Q
 
-def similar_invoices(request):
-
-    search = request.GET.get("search", "")
-
-    invoices = PricingRequest.objects.none()
-
-    if search:
-
-        invoices = (
-            PricingRequest.objects
-            .select_related(
-                "patient",
-                "entity",
-                "specialty"
-            )
-            .filter(
-                Q(procedure_name__icontains=search)
-                |
-                Q(doctor_name__icontains=search)
-                |
-                Q(entity__name__icontains=search)
-            )
-            .order_by("-request_date")
-        )
-
-    # ✅ تنسيق الأرقام بفواصل
-    for item in invoices:
-        item.requested_cost_formatted = f"{item.requested_cost:,.0f}" if item.requested_cost else "-"
-        item.received_cost_formatted = f"{item.received_cost:,.0f}" if item.received_cost else "-"
-
-    return render(
-        request,
-        "frontend/similar_invoices.html",
-        {
-            "search": search,
-            "invoices": invoices,
-        }
-    )
-    
 
 
 
@@ -2057,5 +2016,112 @@ def pricing_details(request):
             "accountant": accountant,
             "date_from": date_from,
             "date_to": date_to,
+        }
+    )
+    
+def similar_invoices(request):
+
+    search = request.GET.get("search", "").strip()
+    patient_name = request.GET.get("patient_name", "").strip()
+    specialty = request.GET.get("specialty", "").strip()
+    entity = request.GET.get("entity", "").strip()
+    doctor = request.GET.get("doctor", "").strip()
+    status = request.GET.get("status", "").strip()
+    date_from = request.GET.get("date_from", "").strip()
+    date_to = request.GET.get("date_to", "").strip()
+
+    invoices = SimilarInvoice.objects.all().order_by("-admission_date")
+
+    # ✅ تطبيق الفلاتر
+    if search:
+        invoices = invoices.filter(operation_name__icontains=search)
+
+    if patient_name:
+        invoices = invoices.filter(patient_name__icontains=patient_name)
+
+    if specialty:
+        invoices = invoices.filter(specialty_name=specialty)
+
+    if entity:
+        invoices = invoices.filter(entity_name=entity)
+
+    if doctor:
+        invoices = invoices.filter(doctor_name=doctor)
+
+    if status:
+        invoices = invoices.filter(invoice_status=status)
+
+    if date_from:
+        invoices = invoices.filter(admission_date__gte=date_from)
+
+    if date_to:
+        invoices = invoices.filter(admission_date__lte=date_to)
+
+    # ✅ الإحصائيات
+    total_net_invoice = invoices.aggregate(total=Sum("net_invoice"))["total"] or 0
+    total_company_share = invoices.aggregate(total=Sum("company_share"))["total"] or 0
+
+    # ✅ Pagination
+    paginator = Paginator(invoices, 50)
+    page_obj = paginator.get_page(request.GET.get("page"))
+
+    # ✅ تنسيق الأرقام
+    for invoice in page_obj:
+        invoice.formatted_net_invoice = f"{invoice.net_invoice:,.0f}" if invoice.net_invoice else "-"
+        invoice.formatted_company_share = f"{invoice.company_share:,.0f}" if invoice.company_share else "-"
+
+    # ✅ ✅ ✅ الفلاتر من النتائج (وليس من كل البيانات)
+    specialties = (
+        invoices
+        .exclude(specialty_name="")
+        .values_list("specialty_name", flat=True)
+        .distinct()
+        .order_by("specialty_name")
+    )
+
+    entities = (
+        invoices
+        .exclude(entity_name="")
+        .values_list("entity_name", flat=True)
+        .distinct()
+        .order_by("entity_name")
+    )
+
+    doctors = (
+        invoices
+        .exclude(doctor_name="")
+        .values_list("doctor_name", flat=True)
+        .distinct()
+        .order_by("doctor_name")
+    )
+
+    statuses = (
+        invoices
+        .exclude(invoice_status="")
+        .values_list("invoice_status", flat=True)
+        .distinct()
+        .order_by("invoice_status")
+    )
+
+    return render(
+        request,
+        "frontend/similar_invoices.html",
+        {
+            "page_obj": page_obj,
+            "results_count": invoices.count(),
+            "total_net_invoice": f"{total_net_invoice:,.0f}",
+            "total_company_share": f"{total_company_share:,.0f}",
+            "search": search,
+            "patient_name": patient_name,
+            "specialty": specialty,
+            "entity": entity,
+            "doctor": doctor,
+            "status": status,
+            "date_from": date_from,
+            "date_to": date_to,
+            "specialties": specialties,
+            "entities": entities,
+            "doctors": doctors,
+            "statuses": statuses,
         }
     )

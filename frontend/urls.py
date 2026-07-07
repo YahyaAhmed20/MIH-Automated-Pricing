@@ -71,11 +71,7 @@ urlpatterns = [
     views.contract_entities,
     name="contract_entities",
     ),
-    path(
-        "similar-invoices/",
-        views.similar_invoices,
-        name="similar_invoices"
-    ),
+    
 
     path(
         "reports/",
@@ -123,10 +119,10 @@ urlpatterns = [
     ),
     
     path(
-    "similar-invoices/",
-    views.similar_invoices,
-    name="similar_invoices"
-),
+        "similar-invoices/",
+        views.similar_invoices,
+        name="similar_invoices",
+    ),
     
     path(
     "contract-entities/<int:pk>/",

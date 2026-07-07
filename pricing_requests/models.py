@@ -583,3 +583,181 @@ class PricingDetail(models.Model):
 
     def __str__(self):
         return f"{self.patient_name} - {self.procedure_name}"
+    
+    
+
+
+class SimilarInvoice(models.Model):
+
+    account_number = models.CharField(
+        max_length=100,
+        db_index=True,
+        verbose_name="الرقم الحسابي"
+    )
+
+    medical_number = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        db_index=True,
+        verbose_name="الرقم الطبي"
+    )
+
+    patient_name = models.CharField(
+        max_length=255,
+        db_index=True,
+        verbose_name="اسم المريض"
+    )
+
+    admission_date = models.DateField(
+        blank=True,
+        null=True,
+        db_index=True,
+        verbose_name="تاريخ الدخول"
+    )
+
+    discharge_date = models.DateField(
+        blank=True,
+        null=True,
+        verbose_name="تاريخ الخروج"
+    )
+
+    stay_duration = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        verbose_name="مدة الاقامة"
+    )
+
+    specialty_name = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        db_index=True,
+        verbose_name="التخصص"
+    )
+
+    doctor_name = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        db_index=True,
+        verbose_name="اسم الطبيب"
+    )
+
+    operation_name = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        db_index=True,
+        verbose_name="اسم العملية"
+    )
+
+    entity_name = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        db_index=True,
+        verbose_name="الجهة"
+    )
+
+    sub_company = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name="الشركة الفرعية"
+    )
+
+    building = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name="الدور / المبنى"
+    )
+
+    total_invoice = models.DecimalField(
+        max_digits=14,
+        decimal_places=2,
+        default=0
+    )
+
+    discount = models.DecimalField(
+        max_digits=14,
+        decimal_places=2,
+        default=0
+    )
+
+    net_invoice = models.DecimalField(
+        max_digits=14,
+        decimal_places=2,
+        default=0
+    )
+
+    company_share = models.DecimalField(
+        max_digits=14,
+        decimal_places=2,
+        default=0
+    )
+
+    patient_share = models.DecimalField(
+        max_digits=14,
+        decimal_places=2,
+        default=0
+    )
+
+    payments = models.DecimalField(
+        max_digits=14,
+        decimal_places=2,
+        default=0
+    )
+
+    invoice_status = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        db_index=True,
+        verbose_name="حالة الفاتورة"
+    )
+
+    invoice_closed_date = models.DateField(
+        blank=True,
+        null=True,
+        verbose_name="تاريخ إنهاء الفاتورة"
+    )
+
+    notes = models.TextField(
+        blank=True,
+        null=True,
+        verbose_name="ملاحظات"
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True
+    )
+
+    class Meta:
+
+        verbose_name = "فاتورة مماثلة"
+
+        verbose_name_plural = "فواتير مماثلة"
+
+        ordering = [
+            "-admission_date",
+            "-id",
+        ]
+
+        indexes = [
+            models.Index(fields=["patient_name"]),
+            models.Index(fields=["operation_name"]),
+            models.Index(fields=["entity_name"]),
+            models.Index(fields=["doctor_name"]),
+            models.Index(fields=["specialty_name"]),
+            models.Index(fields=["admission_date"]),
+        ]
+
+    def __str__(self):
+        return f"{self.patient_name} - {self.operation_name}"

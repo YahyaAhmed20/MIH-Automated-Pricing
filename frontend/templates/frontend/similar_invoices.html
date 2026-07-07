@@ -1,4 +1,5 @@
-{% extends 'frontend/base.html' %}
+{% extends "frontend/base.html" %}
+{% load humanize %}
 
 {% block page_title %}
 فواتير مماثلة
@@ -6,226 +7,735 @@
 
 {% block content %}
 
-<!-- ============================================ -->
-<!-- العنوان -->
-<!-- ============================================ -->
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h3>
-        <i class="bi bi-receipt"></i>
-        فواتير مماثلة
-    </h3>
-    <span class="text-muted">
-        <i class="bi bi-calendar"></i>
-        {{ now|date:"Y-m-d" }}
-    </span>
-</div>
+<div class="container-fluid">
 
-<!-- ============================================ -->
-<!-- شريط البحث -->
-<!-- ============================================ -->
-<div class="card shadow-sm border-0 mb-4 hover-shadow">
-
-    <div class="card-body">
-
-        <form method="get">
-
-            <div class="row g-3 align-items-end">
-
-                <div class="col-md-9">
-
-                    <label class="form-label fw-bold small text-muted">
-                        <i class="bi bi-search"></i> ابحث عن فاتورة
-                    </label>
-
-                    <input
-                        type="text"
-                        name="search"
-                        class="form-control form-control-lg"
-                        placeholder="ابحث باسم العملية أو الجهة أو الطبيب..."
-                        value="{{ search }}"
-                    >
-
-                </div>
-
-                <div class="col-md-3">
-
-                    <button class="btn btn-primary btn-lg w-100" type="submit">
-                        <i class="bi bi-search"></i> بحث
-                    </button>
-
-                </div>
-
-            </div>
-
-        </form>
-
+    <!-- ✅ Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        
+        <div>
+            <span class="badge bg-primary rounded-pill fs-6 px-3 py-2">
+                <i class="fas fa-calendar-alt me-1"></i>
+                آخر تحديث: {% now "Y-m-d" %}
+            </span>
+        </div>
     </div>
 
-</div>
+    <!-- ============================================ -->
+    <!-- ✅ Script للبحث -->
+    <!-- ============================================ -->
+    <script>
+        let searchTimeout;
+        let isSubmitting = false;
+        let lastSearchValue = '';
 
-<!-- ============================================ -->
-<!-- عدد النتائج -->
-<!-- ============================================ -->
-{% if search %}
+        function searchDelay() {
+            const input = document.querySelector('input[name="search"]');
+            if (!input) return;
+            
+            const currentValue = input.value.trim();
+            
+            // ✅ البحث بعد 3 أحرف على الأقل
+            if (currentValue.length > 0 && currentValue.length < 3) {
+                return;
+            }
+            
+            if (currentValue === lastSearchValue) {
+                return;
+            }
+            lastSearchValue = currentValue;
+            
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(function() {
+                if (!isSubmitting) {
+                    isSubmitting = true;
+                    document.getElementById('searchForm').submit();
+                    setTimeout(function() {
+                        isSubmitting = false;
+                    }, 1000);
+                }
+            }, 600);
+        }
 
-<div class="alert alert-info d-flex justify-content-between align-items-center">
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('searchForm');
+            if (form) {
+                form.addEventListener('submit', function() {
+                    isSubmitting = true;
+                    setTimeout(function() {
+                        isSubmitting = false;
+                    }, 2000);
+                });
+            }
+        });
+    </script>
 
-    <span>
-        <i class="bi bi-list"></i>
-        عدد النتائج
-    </span>
+    <!-- ============================================ -->
+    <!-- ✅ شريط البحث والفلاتر المحسن -->
+    <!-- ============================================ -->
+    <div class="card shadow-sm border-0 mb-4 hover-shadow">
 
-    <strong class="badge bg-info rounded-pill fs-5">
-        {{ invoices.count }}
-    </strong>
+        <div class="card-header bg-gradient-primary text-white">
+            <h5 class="mb-0">
+                <i class="fas fa-sliders-h"></i>
+                الفلاتر والبحث
+            </h5>
+        </div>
 
-</div>
-
-{% endif %}
-
-<!-- ============================================ -->
-<!-- جدول النتائج -->
-<!-- ============================================ -->
-<div class="card shadow-sm border-0 hover-shadow">
-
-    <div class="card-header d-flex justify-content-between align-items-center">
-        <h5 class="mb-0">
-            <i class="bi bi-receipt"></i>
-            الفواتير
-        </h5>
-        {% if search %}
-        <span class="badge bg-primary rounded-pill">
-            {{ invoices.count }}
-        </span>
-        {% endif %}
-    </div>
-
-    <div class="card-body">
-
-        <div class="table-responsive">
-
-            <table class="table table-hover table-striped align-middle">
-
-                <thead class="table-light">
-
-                    <tr>
-
-                        <th>#</th>
-
-                        <th>المريض</th>
-
-                        <th>الجهة</th>
-
-                        <th>الطبيب</th>
-
-                        <th>الإجراء</th>
-
-                        <th>المطلوب</th>
-
-                        <th>المستلم</th>
-
-                        <th>الحالة</th>
-
-                    </tr>
-
-                </thead>
-
-                <tbody>
-
-                {% for item in invoices %}
-
-                    <tr>
-
-                        <td>
-                            <span class="badge bg-secondary rounded-circle">
-                                {{ forloop.counter }}
+        <div class="card-body">
+            <form method="get" id="searchForm">
+                <div class="row g-3">
+                    <!-- ✅ حقل البحث مع datalist -->
+                    <div class="col-md-2">
+                        <label class="form-label fw-bold small text-muted">
+                            <i class="fas fa-search"></i> بحث
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-0">
+                                <i class="fas fa-search text-primary"></i>
                             </span>
-                        </td>
+                            <input type="text" 
+                                   name="search" 
+                                   list="search-suggestions"
+                                   class="form-control form-control-lg border-0 shadow-sm" 
+                                   placeholder="بحث باسم العملية..." 
+                                   value="{{ search }}" 
+                                   onchange="this.form.submit()"
+                                   autocomplete="off">
+                        </div>
+                        <datalist id="search-suggestions">
+                            {% for invoice in page_obj %}
+                                <option value="{{ invoice.operation_name }}">{{ invoice.operation_name }}</option>
+                            {% endfor %}
+                        </datalist>
+                    </div>
 
-                       <td>
-    <a href="{% url 'patient_detail' item.patient.id %}">
-        {{ item.patient.full_name }}
-    </a>
-</td>
-
-                        <td>
-                            {{ item.entity.name }}
-                        </td>
-
-                    <td>
-    <a href="{% url 'doctor_detail' item.doctor_name %}">
-        {{ item.doctor_name }}
-    </a>
-</td>
-                        <td>
-                            {{ item.procedure_name }}
-                        </td>
-
-                        <td>
-                            <span class="text-primary fw-bold">
-                                {{ item.requested_cost_formatted }} ج.م
+                    <!-- ✅ فلتر اسم المريض مع datalist -->
+                    <div class="col-md-2">
+                        <label class="form-label fw-bold small text-muted">
+                            <i class="fas fa-user"></i> المريض
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-0">
+                                <i class="fas fa-user text-primary"></i>
                             </span>
-                        </td>
+                            <input type="text" 
+                                   name="patient_name" 
+                                   list="patient-suggestions"
+                                   class="form-control form-control-lg border-0 shadow-sm" 
+                                   placeholder="اسم المريض..." 
+                                   value="{{ patient_name }}" 
+                                   onchange="this.form.submit()"
+                                   autocomplete="off">
+                        </div>
+                        <datalist id="patient-suggestions">
+                            {% for invoice in page_obj %}
+                                <option value="{{ invoice.patient_name }}">{{ invoice.patient_name }}</option>
+                            {% endfor %}
+                        </datalist>
+                    </div>
 
-                        <td>
-                            <span class="text-success fw-bold">
-                                {{ item.received_cost_formatted }} ج.م
+                    <!-- ✅ فلتر التخصص مع datalist -->
+                    <div class="col-md-2">
+                        <label class="form-label fw-bold small text-muted">
+                            <i class="fas fa-stethoscope"></i> التخصص
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-0">
+                                <i class="fas fa-stethoscope text-primary"></i>
                             </span>
-                        </td>
+                            <input type="text" 
+                                   name="specialty" 
+                                   list="specialty-suggestions"
+                                   class="form-control form-control-lg border-0 shadow-sm" 
+                                   placeholder="التخصص..." 
+                                   value="{{ specialty }}" 
+                                   onchange="this.form.submit()"
+                                   autocomplete="off">
+                        </div>
+                        <datalist id="specialty-suggestions">
+                            {% for item in specialties %}
+                                <option value="{{ item }}">{{ item }}</option>
+                            {% endfor %}
+                        </datalist>
+                    </div>
 
-                        <td>
-                            {% if item.status == "approved" %}
-                                <span class="badge bg-success rounded-pill">
-                                    <i class="bi bi-check-circle"></i> تمت الموافقة
-                                </span>
-                            {% elif item.status == "pending" %}
-                                <span class="badge bg-warning text-dark rounded-pill">
-                                    <i class="bi bi-clock"></i> قيد الانتظار
-                                </span>
-                            {% elif item.status == "rejected" %}
-                                <span class="badge bg-danger rounded-pill">
-                                    <i class="bi bi-x-circle"></i> مرفوضة
-                                </span>
-                            {% elif item.status == "service_done" %}
-                                <span class="badge bg-primary rounded-pill">
-                                    <i class="bi bi-check2-all"></i> تم التنفيذ
-                                </span>
-                            {% elif item.status == "patient_refused" %}
-                                <span class="badge bg-secondary rounded-pill">
-                                    <i class="bi bi-person-x"></i> رفض المريض
-                                </span>
-                            {% else %}
-                                <span class="badge bg-dark rounded-pill">
-                                    {{ item.status }}
-                                </span>
-                            {% endif %}
-                        </td>
+                    <!-- ✅ فلتر الجهة مع datalist -->
+                    <div class="col-md-2">
+                        <label class="form-label fw-bold small text-muted">
+                            <i class="fas fa-building"></i> الجهة
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-0">
+                                <i class="fas fa-building text-primary"></i>
+                            </span>
+                            <input type="text" 
+                                   name="entity" 
+                                   list="entity-suggestions"
+                                   class="form-control form-control-lg border-0 shadow-sm" 
+                                   placeholder="الجهة..." 
+                                   value="{{ entity }}" 
+                                   onchange="this.form.submit()"
+                                   autocomplete="off">
+                        </div>
+                        <datalist id="entity-suggestions">
+                            {% for item in entities %}
+                                <option value="{{ item }}">{{ item }}</option>
+                            {% endfor %}
+                        </datalist>
+                    </div>
 
-                    </tr>
+                    <!-- ✅ فلتر الطبيب مع datalist -->
+                    <div class="col-md-2">
+                        <label class="form-label fw-bold small text-muted">
+                            <i class="fas fa-user-md"></i> الطبيب
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-0">
+                                <i class="fas fa-user-md text-primary"></i>
+                            </span>
+                            <input type="text" 
+                                   name="doctor" 
+                                   list="doctor-suggestions"
+                                   class="form-control form-control-lg border-0 shadow-sm" 
+                                   placeholder="الطبيب..." 
+                                   value="{{ doctor }}" 
+                                   onchange="this.form.submit()"
+                                   autocomplete="off">
+                        </div>
+                        <datalist id="doctor-suggestions">
+                            {% for item in doctors %}
+                                <option value="{{ item }}">{{ item }}</option>
+                            {% endfor %}
+                        </datalist>
+                    </div>
+                </div>
 
-                {% empty %}
+                <div class="row g-3 mt-2">
+                    <!-- ✅ فلتر الفترة -->
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold small text-muted">
+                            <i class="fas fa-calendar-alt"></i> من تاريخ
+                        </label>
+                        <input type="date" name="date_from" class="form-control form-control-lg shadow-sm" value="{{ date_from }}" onchange="this.form.submit()">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold small text-muted">
+                            <i class="fas fa-calendar-alt"></i> إلى تاريخ
+                        </label>
+                        <input type="date" name="date_to" class="form-control form-control-lg shadow-sm" value="{{ date_to }}" onchange="this.form.submit()">
+                    </div>
 
-                    <tr>
-                        <td colspan="8" class="text-center text-muted py-4">
-                            <i class="bi bi-inbox fa-3x d-block mb-3"></i>
+                    <!-- ✅ فلتر الحالة مع datalist -->
+                    <div class="col-md-2">
+                        <label class="form-label fw-bold small text-muted">
+                            <i class="fas fa-tag"></i> الحالة
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-0">
+                                <i class="fas fa-tag text-primary"></i>
+                            </span>
+                            <input type="text" 
+                                   name="status" 
+                                   list="status-suggestions"
+                                   class="form-control form-control-lg border-0 shadow-sm" 
+                                   placeholder="الحالة..." 
+                                   value="{{ status }}" 
+                                   onchange="this.form.submit()"
+                                   autocomplete="off">
+                        </div>
+                        <datalist id="status-suggestions">
+                            {% for item in statuses %}
+                                <option value="{{ item }}">{{ item }}</option>
+                            {% endfor %}
+                        </datalist>
+                    </div>
+
+                    <div class="col-md-2 d-flex gap-2 align-items-end">
+                        <button class="btn btn-primary btn-lg shadow-sm w-100" type="submit">
+                            <i class="fas fa-search me-1"></i> بحث
+                        </button>
+                    </div>
+                    <div class="col-md-2 d-flex gap-2 align-items-end">
+                        <a href="{% url 'similar_invoices' %}" class="btn btn-outline-secondary btn-lg shadow-sm w-100">
+                            <i class="fas fa-undo me-1"></i> مسح
+                        </a>
+                    </div>
+                </div>
+
+                <!-- ✅ الفلاتر النشطة -->
+                {% if search or patient_name or specialty or entity or doctor or status or date_from or date_to %}
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <div class="d-flex flex-wrap gap-2">
+                           
                             {% if search %}
-                                لا توجد فواتير مطابقة للبحث
-                            {% else %}
-                                ابدأ بالبحث عن فواتير مماثلة
+                            <span class="badge bg-primary rounded-pill px-3 py-2">
+                                بحث: {{ search }}
+                            </span>
                             {% endif %}
-                        </td>
-                    </tr>
+                            {% if patient_name %}
+                            <span class="badge bg-secondary rounded-pill px-3 py-2">
+                                المريض: {{ patient_name }}
+                            </span>
+                            {% endif %}
+                            {% if specialty %}
+                            <span class="badge bg-info rounded-pill px-3 py-2">
+                                التخصص: {{ specialty }}
+                            </span>
+                            {% endif %}
+                            {% if entity %}
+                            <span class="badge bg-warning text-dark rounded-pill px-3 py-2">
+                                الجهة: {{ entity }}
+                            </span>
+                            {% endif %}
+                            {% if doctor %}
+                            <span class="badge bg-success rounded-pill px-3 py-2">
+                                الطبيب: {{ doctor }}
+                            </span>
+                            {% endif %}
+                            {% if status %}
+                            <span class="badge bg-danger rounded-pill px-3 py-2">
+                                الحالة: {{ status }}
+                            </span>
+                            {% endif %}
+                            {% if date_from %}
+                            <span class="badge bg-dark rounded-pill px-3 py-2">
+                                من: {{ date_from }}
+                            </span>
+                            {% endif %}
+                            {% if date_to %}
+                            <span class="badge bg-dark rounded-pill px-3 py-2">
+                                إلى: {{ date_to }}
+                            </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </form>
+        </div>
+    </div>
 
-                {% endfor %}
+    <!-- ============================================ -->
+    <!-- ✅ إحصائيات النتائج المحسنة -->
+    <!-- ============================================ -->
+    <div class="row g-3 mb-4">
 
-                </tbody>
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 hover-shadow h-100">
+                <div class="card-body text-center py-3">
+                    <div class="d-flex align-items-center justify-content-center mb-2">
+                        <div class="rounded-circle bg-primary bg-opacity-10 p-2">
+                            <i class="fas fa-list text-primary fs-4"></i>
+                        </div>
+                    </div>
+                    <h6 class="text-muted mb-1">عدد النتائج</h6>
+                    <h3 class="fw-bold text-primary mb-0">{{ results_count }}</h3>
+                </div>
+            </div>
+        </div>
 
-            </table>
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 hover-shadow h-100">
+                <div class="card-body text-center py-3">
+                    <div class="d-flex align-items-center justify-content-center mb-2">
+                        <div class="rounded-circle bg-success bg-opacity-10 p-2">
+                            <i class="fas fa-money-bill-wave text-success fs-4"></i>
+                        </div>
+                    </div>
+                    <h6 class="text-muted mb-1">إجمالي صافي الفاتورة</h6>
+                    <h3 class="fw-bold text-success mb-0">{{ total_net_invoice }} ج.م</h3>
+                </div>
+            </div>
+        </div>
 
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 hover-shadow h-100">
+                <div class="card-body text-center py-3">
+                    <div class="d-flex align-items-center justify-content-center mb-2">
+                        <div class="rounded-circle bg-info bg-opacity-10 p-2">
+                            <i class="fas fa-building text-info fs-4"></i>
+                        </div>
+                    </div>
+                    <h6 class="text-muted mb-1">إجمالي حصة الشركة</h6>
+                    <h3 class="fw-bold text-info mb-0">{{ total_company_share }} ج.م</h3>
+                </div>
+            </div>
         </div>
 
     </div>
 
+    <!-- ============================================ -->
+    <!-- ✅ جدول النتائج المحسن -->
+    <!-- ============================================ -->
+    <div class="card shadow-sm border-0 hover-shadow">
+        <div class="card-header bg-gradient-info text-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">
+                <i class="fas fa-table me-2"></i>
+                قائمة الفواتير
+            </h5>
+            <span class="badge bg-light text-dark rounded-pill px-3 py-2">
+                <i class="fas fa-list me-1"></i>
+                {{ results_count }} فاتورة
+            </span>
+        </div>
+
+        <div class="card-body table-responsive">
+            <table class="table table-hover align-middle table-striped">
+                <thead class="table-light">
+                    <tr>
+                        <th><i class="fas fa-calendar-alt me-1"></i> تاريخ الدخول</th>
+                        <th><i class="fas fa-user me-1"></i> اسم المريض</th>
+                        <th><i class="fas fa-procedures me-1"></i> اسم العملية</th>
+                        <th><i class="fas fa-stethoscope me-1"></i> التخصص</th>
+                        <th><i class="fas fa-building me-1"></i> الجهة</th>
+                        <th><i class="fas fa-user-md me-1"></i> اسم الطبيب</th>
+                        <th class="text-end"><i class="fas fa-money-bill-wave me-1"></i> صافي الفاتورة</th>
+                        <th class="text-end"><i class="fas fa-building me-1"></i> حصة الشركة</th>
+                        <th><i class="fas fa-tag me-1"></i> الحالة</th>
+                        <th class="text-center"><i class="fas fa-ellipsis-v me-1"></i> الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for invoice in page_obj %}
+                    <tr class="table-row-hover">
+                        <td><span class="text-muted">{{ invoice.admission_date|date:"Y-m-d"|default:"-" }}</span></td>
+                        <td><strong>{{ invoice.patient_name }}</strong></td>
+                        <td title="{{ invoice.operation_name }}">
+                            {{ invoice.operation_name|truncatechars:40 }}
+                        </td>
+                        <td><span class="badge bg-info">{{ invoice.specialty_name|default:"-" }}</span></td>
+                        <td>
+                            <span class="badge bg-primary">
+                                {{ invoice.entity_name|default:"-" }}
+                            </span>
+                        </td>
+                        <td>{{ invoice.doctor_name|default:"-" }}</td>
+                        <td class="text-end fw-bold text-success">
+                            {{ invoice.formatted_net_invoice }} ج.م
+                        </td>
+                        <td class="text-end fw-bold text-info">
+                            {{ invoice.formatted_company_share }} ج.م
+                        </td>
+                        <td>
+                            {% if invoice.invoice_status == "Final" %}
+                                <span class="badge bg-success">{{ invoice.invoice_status }}</span>
+                            {% elif invoice.invoice_status == "Pending" %}
+                                <span class="badge bg-warning text-dark">{{ invoice.invoice_status }}</span>
+                            {% else %}
+                                <span class="badge bg-secondary">{{ invoice.invoice_status|default:"-" }}</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-center">
+                            <button class="btn btn-sm btn-outline-primary btn-details" 
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#detailsModal"
+                                    data-account="{{ invoice.account_number|default:'-' }}"
+                                    data-medical="{{ invoice.medical_number|default:'-' }}"
+                                    data-patient="{{ invoice.patient_name }}"
+                                    data-entity="{{ invoice.entity_name|default:'-' }}"
+                                    data-doctor="{{ invoice.doctor_name|default:'-' }}"
+                                    data-specialty="{{ invoice.specialty_name|default:'-' }}"
+                                    data-operation="{{ invoice.operation_name }}"
+                                    data-admission="{{ invoice.admission_date|date:'Y-m-d' }}"
+                                    data-discharge="{{ invoice.discharge_date|date:'Y-m-d' }}"
+                                    data-stay="{{ invoice.stay_duration|default:'-' }}"
+                                    data-total="{{ invoice.total_invoice|floatformat:0 }}"
+                                    data-discount="{{ invoice.discount|floatformat:0 }}"
+                                    data-net="{{ invoice.net_invoice|floatformat:0 }}"
+                                    data-company-share="{{ invoice.company_share|floatformat:0 }}"
+                                    data-patient-share="{{ invoice.patient_share|floatformat:0 }}"
+                                    data-payments="{{ invoice.payments|floatformat:0 }}"
+                                    data-status="{{ invoice.invoice_status|default:'-' }}"
+                                    data-closed-date="{{ invoice.invoice_closed_date|date:'Y-m-d'|default:'-' }}"
+                                    data-notes="{{ invoice.notes|default:'-' }}">
+                                <i class="fas fa-eye"></i> عرض
+                            </button>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="10" class="text-center py-5">
+                            <i class="fas fa-inbox fa-4x d-block mb-3 text-muted"></i>
+                            <h5 class="text-muted">لا توجد بيانات</h5>
+                            <p class="text-muted small">حاول تغيير كلمات البحث أو الفلاتر</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- ✅ Modal للتفاصيل -->
+    <!-- ============================================ -->
+    <div class="modal fade" id="detailsModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-gradient-primary text-white">
+                    <h5 class="modal-title">
+                        <i class="fas fa-info-circle me-2"></i> تفاصيل الفاتورة
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <!-- ✅ معلومات المريض -->
+                        <div class="col-md-6">
+                            <label class="text-muted small fw-bold">الرقم الحسابي</label>
+                            <p class="fw-bold" id="modal-account">-</p>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="text-muted small fw-bold">الرقم الطبي</label>
+                            <p class="fw-bold" id="modal-medical">-</p>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="text-muted small fw-bold">اسم المريض</label>
+                            <p class="fw-bold" id="modal-patient">-</p>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="text-muted small fw-bold">الجهة</label>
+                            <p id="modal-entity">-</p>
+                        </div>
+                        
+                        <!-- ✅ معلومات الطبيب والعملية -->
+                        <div class="col-md-6">
+                            <label class="text-muted small fw-bold">الطبيب</label>
+                            <p id="modal-doctor">-</p>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="text-muted small fw-bold">التخصص</label>
+                            <p id="modal-specialty">-</p>
+                        </div>
+                        <div class="col-12">
+                            <label class="text-muted small fw-bold">اسم العملية</label>
+                            <p id="modal-operation">-</p>
+                        </div>
+
+                        <!-- ✅ معلومات الإقامة -->
+                        <div class="col-md-4">
+                            <label class="text-muted small fw-bold">تاريخ الدخول</label>
+                            <p id="modal-admission">-</p>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="text-muted small fw-bold">تاريخ الخروج</label>
+                            <p id="modal-discharge">-</p>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="text-muted small fw-bold">مدة الإقامة</label>
+                            <p id="modal-stay">-</p>
+                        </div>
+                        
+                        <!-- ✅ المعلومات المالية -->
+                        <div class="col-12">
+                            <hr>
+                            <h6 class="fw-bold text-muted">المعلومات المالية</h6>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="text-muted small fw-bold">إجمالي الفاتورة</label>
+                            <p class="fw-bold" id="modal-total">-</p>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="text-muted small fw-bold">الخصم</label>
+                            <p id="modal-discount">-</p>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="text-muted small fw-bold">صافي الفاتورة</label>
+                            <p class="fw-bold text-success" id="modal-net">-</p>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="text-muted small fw-bold">حصة الشركة</label>
+                            <p class="fw-bold text-info" id="modal-company-share">-</p>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="text-muted small fw-bold">حصة المريض</label>
+                            <p id="modal-patient-share">-</p>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="text-muted small fw-bold">المدفوعات</label>
+                            <p id="modal-payments">-</p>
+                        </div>
+
+                        <!-- ✅ الحالة والتواريخ -->
+                        <div class="col-md-6">
+                            <label class="text-muted small fw-bold">الحالة</label>
+                            <p id="modal-status">-</p>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="text-muted small fw-bold">تاريخ إنهاء الفاتورة</label>
+                            <p id="modal-closed-date">-</p>
+                        </div>
+
+                        <!-- ✅ الملاحظات -->
+                        <div class="col-12">
+                            <label class="text-muted small fw-bold">ملاحظات</label>
+                            <div class="p-2 bg-light rounded" style="white-space: pre-line;" id="modal-notes">-</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-1"></i> إغلاق
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const modal = document.getElementById('detailsModal');
+            if (modal) {
+                modal.addEventListener('show.bs.modal', function (event) {
+                    const button = event.relatedTarget;
+                    document.getElementById('modal-account').textContent = button.getAttribute('data-account') || '-';
+                    document.getElementById('modal-medical').textContent = button.getAttribute('data-medical') || '-';
+                    document.getElementById('modal-patient').textContent = button.getAttribute('data-patient') || '-';
+                    document.getElementById('modal-entity').textContent = button.getAttribute('data-entity') || '-';
+                    document.getElementById('modal-doctor').textContent = button.getAttribute('data-doctor') || '-';
+                    document.getElementById('modal-specialty').textContent = button.getAttribute('data-specialty') || '-';
+                    document.getElementById('modal-operation').textContent = button.getAttribute('data-operation') || '-';
+                    document.getElementById('modal-admission').textContent = button.getAttribute('data-admission') || '-';
+                    document.getElementById('modal-discharge').textContent = button.getAttribute('data-discharge') || '-';
+                    document.getElementById('modal-stay').textContent = button.getAttribute('data-stay') || '-';
+                    document.getElementById('modal-total').textContent = button.getAttribute('data-total') || '-';
+                    document.getElementById('modal-discount').textContent = button.getAttribute('data-discount') || '-';
+                    document.getElementById('modal-net').textContent = button.getAttribute('data-net') || '-';
+                    document.getElementById('modal-company-share').textContent = button.getAttribute('data-company-share') || '-';
+                    document.getElementById('modal-patient-share').textContent = button.getAttribute('data-patient-share') || '-';
+                    document.getElementById('modal-payments').textContent = button.getAttribute('data-payments') || '-';
+                    document.getElementById('modal-status').textContent = button.getAttribute('data-status') || '-';
+                    document.getElementById('modal-closed-date').textContent = button.getAttribute('data-closed-date') || '-';
+                    document.getElementById('modal-notes').textContent = button.getAttribute('data-notes') || '-';
+                });
+            }
+        });
+    </script>
+
+    <!-- ============================================ -->
+    <!-- ✅ Pagination المحسنة -->
+    <!-- ============================================ -->
+    {% if page_obj.has_other_pages %}
+    <nav class="mt-4">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}&search={{ search }}&patient_name={{ patient_name }}&specialty={{ specialty }}&entity={{ entity }}&doctor={{ doctor }}&status={{ status }}&date_from={{ date_from }}&date_to={{ date_to }}">
+                    <i class="fas fa-chevron-right"></i> السابق
+                </a>
+            </li>
+            {% endif %}
+            <li class="page-item active"><span class="page-link">{{ page_obj.number }}</span></li>
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}&search={{ search }}&patient_name={{ patient_name }}&specialty={{ specialty }}&entity={{ entity }}&doctor={{ doctor }}&status={{ status }}&date_from={{ date_from }}&date_to={{ date_to }}">
+                    التالي <i class="fas fa-chevron-left"></i>
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+
 </div>
+
+<!-- ============================================ -->
+<!-- ✅ CSS تحسينات إضافية -->
+<!-- ============================================ -->
+<style>
+    .bg-gradient-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .bg-gradient-info {
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    }
+
+    .hover-shadow {
+        transition: all 0.3s ease;
+    }
+
+    .hover-shadow:hover {
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+        transform: translateY(-2px);
+    }
+
+    .table-row-hover {
+        transition: all 0.2s ease;
+    }
+
+    .table-row-hover:hover {
+        background-color: #f0f8ff !important;
+        transform: scale(1.002);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+
+    .table-row-hover:hover td {
+        color: #1a1a1a;
+    }
+
+    .card {
+        border-radius: 1rem;
+        overflow: hidden;
+    }
+
+    .card-header {
+        border-radius: 0 !important;
+    }
+
+    .badge {
+        font-weight: 500;
+    }
+
+    .input-group-text {
+        border-radius: 0.5rem 0 0 0.5rem;
+        background: #f8f9fa;
+    }
+
+    .form-control {
+        border-radius: 0 0.5rem 0.5rem 0;
+    }
+
+    .form-control:focus {
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        border-color: #667eea;
+    }
+
+    /* ✅ تخصيص شريط التمرير */
+    ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: #667eea;
+        border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #5a67d8;
+    }
+
+    /* ✅ Responsive */
+    @media (max-width: 768px) {
+        .table-responsive {
+            font-size: 0.85rem;
+        }
+        .table-responsive td,
+        .table-responsive th {
+            padding: 0.4rem 0.3rem;
+        }
+        .badge.fs-6 {
+            font-size: 0.85rem !important;
+        }
+    }
+</style>
 
 {% endblock %}
