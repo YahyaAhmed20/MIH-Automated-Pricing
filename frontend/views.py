@@ -2199,3 +2199,103 @@ def procedures(request):
             "total_count": total_count,
         }
     )
+    
+    
+
+from pricing_requests.models import ProcedureFee
+def procedure_fees(request):
+
+    search = request.GET.get("search", "").strip()
+    category = request.GET.get("category", "").strip()
+
+    fees = ProcedureFee.objects.all()
+
+    if search:
+        fees = fees.filter(
+            Q(entity_name__icontains=search) |
+            Q(financial_category__icontains=search)
+        )
+
+    # ✅ ✅ ✅ نجيب الـ fees للتصنيف المختار (للأتعاب فقط)
+    fees_filtered = fees
+    if category:
+        fees_filtered = fees.filter(category=category)
+
+    # ✅ ✅ ✅ نجيب كل الجهات (حتى لو مش عندها التصنيف المختار)
+    entities = {}
+    
+    # ✅ نجيب كل الصفوف (بما فيها الصف الرئيسي) عشان ناخد discount_rate
+    all_fees = fees.all()
+    
+    for fee in all_fees:
+        key = f"{fee.entity_name}_{fee.financial_category}"
+        
+        if key not in entities:
+            entities[key] = {
+                "entity_name": fee.entity_name,
+                "financial_category": fee.financial_category,
+                "price_list": fee.price_list,
+                "discount_rate": fee.discount_rate,  # ✅ من الصف الرئيسي
+                "fees": {},
+            }
+        if fee.category:
+            entities[key]["fees"][fee.category] = {
+                "surgeon_fee": fee.surgeon_fee,
+                "anesthesia_fee": fee.anesthesia_fee,
+                "assistant_fee": fee.assistant_fee,
+                "total_fee": fee.total_fee,
+            }
+
+    # ✅ ✅ ✅ تصحيح الـ discount_rate (لو "0" أو فارغ، نجيبه من الصف الرئيسي)
+    for key, entity in entities.items():
+        if entity["discount_rate"] in ["0", "", None]:
+            # ✅ نجيب أول سجل للجهة دي مش "0"
+            correct_fee = all_fees.filter(
+                entity_name=entity["entity_name"],
+                financial_category=entity["financial_category"]
+            ).exclude(discount_rate__in=["0", "", None]).first()
+            
+            if correct_fee:
+                entity["discount_rate"] = correct_fee.discount_rate
+
+    # ✅ تصفية الجهات اللي عندها التصنيف المختار (لو اختار تصنيف)
+    entities_list = []
+    for key, entity in entities.items():
+        # ✅ لو في تصنيف محدد، نعرض بس الجهات اللي عندها التصنيف ده
+        if category and category not in entity["fees"]:
+            continue
+            
+        entity_data = {
+            "entity_name": entity["entity_name"],
+            "financial_category": entity["financial_category"],
+            "price_list": entity["price_list"],
+            "discount_rate": entity["discount_rate"],
+            "fees": entity["fees"],
+        }
+        if category and category in entity["fees"]:
+            fee_data = entity["fees"][category]
+            entity_data["selected_surgeon_fee"] = fee_data["surgeon_fee"]
+            entity_data["selected_anesthesia_fee"] = fee_data["anesthesia_fee"]
+            entity_data["selected_assistant_fee"] = fee_data["assistant_fee"]
+            entity_data["selected_total_fee"] = fee_data["total_fee"]
+        entities_list.append(entity_data)
+
+    # ✅ التصنيفات الفريدة
+    categories = (
+        ProcedureFee.objects
+        .exclude(category="")
+        .values_list("category", flat=True)
+        .distinct()
+        .order_by("category")
+    )
+
+    return render(
+        request,
+        "frontend/procedure_fees.html",
+        {
+            "entities": entities_list,
+            "categories": categories,
+            "selected_category": category,
+            "search": search,
+        }
+    )

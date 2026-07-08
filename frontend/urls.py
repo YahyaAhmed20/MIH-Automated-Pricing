@@ -130,6 +130,12 @@ urlpatterns = [
     ),
     
     path(
+        "procedure-fees/",
+        views.procedure_fees,
+        name="procedure_fees"
+    ),
+    
+    path(
     "contract-entities/<int:pk>/",
     views.contract_entity_detail,
     name="contract_entity_detail"

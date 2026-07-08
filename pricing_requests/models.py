@@ -822,3 +822,89 @@ class Procedure(models.Model):
 
     def __str__(self):
         return f"{self.code} - {self.operation_name}" 
+    
+    
+class ProcedureFee(models.Model):
+
+    entity_name = models.CharField(
+        max_length=255,
+        db_index=True,
+        verbose_name="الجهة"
+    )
+
+    financial_category = models.CharField(
+        max_length=100,
+        db_index=True,
+        verbose_name="الفئة المالية"
+    )
+
+    price_list = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        verbose_name="قائمة الأسعار"
+    )
+
+    category = models.CharField(
+        max_length=100,
+        db_index=True,
+        verbose_name="التصنيف"
+    )
+
+    surgeon_fee = models.DecimalField(
+        max_digits=12,
+        decimal_places=2,
+        default=0
+    )
+
+    anesthesia_fee = models.DecimalField(
+        max_digits=12,
+        decimal_places=2,
+        default=0
+    )
+
+    assistant_fee = models.DecimalField(
+        max_digits=12,
+        decimal_places=2,
+        default=0
+    )
+
+    total_fee = models.DecimalField(
+        max_digits=12,
+        decimal_places=2,
+        default=0
+    )
+
+    discount_rate = models.CharField(
+        max_length=50,
+        blank=True,
+        null=True,
+        verbose_name="معدل الخصم"
+        )
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True
+    )
+
+    class Meta:
+
+        verbose_name = "أتعاب عملية"
+
+        verbose_name_plural = "احتساب أتعاب العمليات"
+
+        ordering = [
+            "entity_name",
+            "category",
+        ]
+
+        indexes = [
+            models.Index(fields=["entity_name"]),
+            models.Index(fields=["financial_category"]),
+            models.Index(fields=["category"]),
+        ]
+
+    def __str__(self):
+        return f"{self.entity_name} - {self.category}"
