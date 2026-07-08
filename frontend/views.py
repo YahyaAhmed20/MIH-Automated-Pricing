@@ -2203,11 +2203,38 @@ def procedures(request):
     
 
 from pricing_requests.models import ProcedureFee
+
 def procedure_fees(request):
 
+    # ============================================
+    # ✅ الجديد: البحث عن العملية (شيت 13)
+    # ============================================
+    procedure_search = request.GET.get("procedure_search", "").strip()
+    
+    # ============================================
+    # ✅ القديم: البحث عن الجهة (شيت 14)
+    # ============================================
     search = request.GET.get("search", "").strip()
+    
+    # ============================================
+    # ✅ القديم: فلتر التصنيف
+    # ============================================
     category = request.GET.get("category", "").strip()
 
+    # ============================================
+    # ✅ العملية المختارة
+    # ============================================
+    selected_procedure = None
+    if procedure_search:
+        selected_procedure = Procedure.objects.filter(
+            Q(operation_name__icontains=procedure_search) |
+            Q(code__icontains=procedure_search) |
+            Q(category__icontains=procedure_search)
+        ).first()
+
+    # ============================================
+    # ✅ الأتعاب (شيت 14) - القديم
+    # ============================================
     fees = ProcedureFee.objects.all()
 
     if search:
@@ -2216,15 +2243,13 @@ def procedure_fees(request):
             Q(financial_category__icontains=search)
         )
 
-    # ✅ ✅ ✅ نجيب الـ fees للتصنيف المختار (للأتعاب فقط)
+    # ✅ تصفية حسب التصنيف
     fees_filtered = fees
     if category:
         fees_filtered = fees.filter(category=category)
 
-    # ✅ ✅ ✅ نجيب كل الجهات (حتى لو مش عندها التصنيف المختار)
+    # ✅ تجميع الجهات
     entities = {}
-    
-    # ✅ نجيب كل الصفوف (بما فيها الصف الرئيسي) عشان ناخد discount_rate
     all_fees = fees.all()
     
     for fee in all_fees:
@@ -2235,7 +2260,7 @@ def procedure_fees(request):
                 "entity_name": fee.entity_name,
                 "financial_category": fee.financial_category,
                 "price_list": fee.price_list,
-                "discount_rate": fee.discount_rate,  # ✅ من الصف الرئيسي
+                "discount_rate": fee.discount_rate,
                 "fees": {},
             }
         if fee.category:
@@ -2246,10 +2271,9 @@ def procedure_fees(request):
                 "total_fee": fee.total_fee,
             }
 
-    # ✅ ✅ ✅ تصحيح الـ discount_rate (لو "0" أو فارغ، نجيبه من الصف الرئيسي)
+    # ✅ تصحيح الـ discount_rate
     for key, entity in entities.items():
         if entity["discount_rate"] in ["0", "", None]:
-            # ✅ نجيب أول سجل للجهة دي مش "0"
             correct_fee = all_fees.filter(
                 entity_name=entity["entity_name"],
                 financial_category=entity["financial_category"]
@@ -2258,10 +2282,9 @@ def procedure_fees(request):
             if correct_fee:
                 entity["discount_rate"] = correct_fee.discount_rate
 
-    # ✅ تصفية الجهات اللي عندها التصنيف المختار (لو اختار تصنيف)
+    # ✅ تجهيز القائمة
     entities_list = []
     for key, entity in entities.items():
-        # ✅ لو في تصنيف محدد، نعرض بس الجهات اللي عندها التصنيف ده
         if category and category not in entity["fees"]:
             continue
             
@@ -2280,7 +2303,7 @@ def procedure_fees(request):
             entity_data["selected_total_fee"] = fee_data["total_fee"]
         entities_list.append(entity_data)
 
-    # ✅ التصنيفات الفريدة
+    # ✅ التصنيفات للـ Dropdown
     categories = (
         ProcedureFee.objects
         .exclude(category="")
@@ -2289,13 +2312,52 @@ def procedure_fees(request):
         .order_by("category")
     )
 
+    # ✅ قوائم الـ datalist
+    procedures_list = Procedure.objects.all()[:100]
+    
+    entities_list_for_datalist = (
+        ProcedureFee.objects
+        .values("entity_name", "financial_category")
+        .distinct()
+        .order_by("entity_name")[:100]
+    )
+
+    # ============================================
+    # ✅ الأتعاب للعملية المختارة (الجديد)
+    # ============================================
+    fees_data = None
+    selected_entity = None
+    
+    if selected_procedure:
+        # ✅ نجيب أول جهة من النتائج (أو نستخدم الـ search)
+        first_entity = None
+        if entities_list:
+            first_entity = entities_list[0]
+        
+        if first_entity:
+            selected_entity = first_entity
+            fees_data = ProcedureFee.objects.filter(
+                entity_name=first_entity["entity_name"],
+                financial_category=first_entity["financial_category"],
+                category=selected_procedure.category
+            ).first()
+
     return render(
         request,
         "frontend/procedure_fees.html",
         {
+            # ✅ القديم
             "entities": entities_list,
             "categories": categories,
             "selected_category": category,
             "search": search,
+            
+            # ✅ الجديد
+            "procedures_list": procedures_list,
+            "entities_list_for_datalist": entities_list_for_datalist,
+            "selected_procedure": selected_procedure,
+            "selected_entity": selected_entity,
+            "fees_data": fees_data,
+            "procedure_search": procedure_search,
         }
     )

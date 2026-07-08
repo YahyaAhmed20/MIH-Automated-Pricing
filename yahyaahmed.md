@@ -99,803 +99,386 @@ python manage.py migrate_contract_entities APP.xlsx
 
 
 
+def procedure_fees(request):
 
-ده ملف credit_package_pricing  + view
+    search = request.GET.get("search", "").strip()
+    category = request.GET.get("category", "").strip()
 
-{% extends 'frontend/base.html' %}
+    fees = ProcedureFee.objects.all()
+
+    if search:
+        fees = fees.filter(
+            Q(entity_name__icontains=search) |
+            Q(financial_category__icontains=search)
+        )
+
+    # ✅ ✅ ✅ نجيب الـ fees للتصنيف المختار (للأتعاب فقط)
+    fees_filtered = fees
+    if category:
+        fees_filtered = fees.filter(category=category)
+
+    # ✅ ✅ ✅ نجيب كل الجهات (حتى لو مش عندها التصنيف المختار)
+    entities = {}
+    
+    # ✅ نجيب كل الصفوف (بما فيها الصف الرئيسي) عشان ناخد discount_rate
+    all_fees = fees.all()
+    
+    for fee in all_fees:
+        key = f"{fee.entity_name}_{fee.financial_category}"
+        
+        if key not in entities:
+            entities[key] = {
+                "entity_name": fee.entity_name,
+                "financial_category": fee.financial_category,
+                "price_list": fee.price_list,
+                "discount_rate": fee.discount_rate,  # ✅ من الصف الرئيسي
+                "fees": {},
+            }
+        if fee.category:
+            entities[key]["fees"][fee.category] = {
+                "surgeon_fee": fee.surgeon_fee,
+                "anesthesia_fee": fee.anesthesia_fee,
+                "assistant_fee": fee.assistant_fee,
+                "total_fee": fee.total_fee,
+            }
+
+    # ✅ ✅ ✅ تصحيح الـ discount_rate (لو "0" أو فارغ، نجيبه من الصف الرئيسي)
+    for key, entity in entities.items():
+        if entity["discount_rate"] in ["0", "", None]:
+            # ✅ نجيب أول سجل للجهة دي مش "0"
+            correct_fee = all_fees.filter(
+                entity_name=entity["entity_name"],
+                financial_category=entity["financial_category"]
+            ).exclude(discount_rate__in=["0", "", None]).first()
+            
+            if correct_fee:
+                entity["discount_rate"] = correct_fee.discount_rate
+
+    # ✅ تصفية الجهات اللي عندها التصنيف المختار (لو اختار تصنيف)
+    entities_list = []
+    for key, entity in entities.items():
+        # ✅ لو في تصنيف محدد، نعرض بس الجهات اللي عندها التصنيف ده
+        if category and category not in entity["fees"]:
+            continue
+            
+        entity_data = {
+            "entity_name": entity["entity_name"],
+            "financial_category": entity["financial_category"],
+            "price_list": entity["price_list"],
+            "discount_rate": entity["discount_rate"],
+            "fees": entity["fees"],
+        }
+        if category and category in entity["fees"]:
+            fee_data = entity["fees"][category]
+            entity_data["selected_surgeon_fee"] = fee_data["surgeon_fee"]
+            entity_data["selected_anesthesia_fee"] = fee_data["anesthesia_fee"]
+            entity_data["selected_assistant_fee"] = fee_data["assistant_fee"]
+            entity_data["selected_total_fee"] = fee_data["total_fee"]
+        entities_list.append(entity_data)
+
+    # ✅ التصنيفات الفريدة
+    categories = (
+        ProcedureFee.objects
+        .exclude(category="")
+        .values_list("category", flat=True)
+        .distinct()
+        .order_by("category")
+    )
+
+    return render(
+        request,
+        "frontend/procedure_fees.html",
+        {
+            "entities": entities_list,
+            "categories": categories,
+            "selected_category": category,
+            "search": search,
+        }
+    )
+
+
+
+
+    {% extends "frontend/base.html" %}
+{% load humanize %}
 
 {% block page_title %}
-الباكدجات الآجل
+احتساب أتعاب العملية
 {% endblock %}
 
 {% block content %}
 
-<div class="card shadow border-0">
-
-    <div class="card-header">
-        <h4 class="mb-0">
-            <i class="bi bi-box"></i>
-            الباكدجات الآجل
-        </h4>
-    </div>
-
-    <div class="card-body">
-
-        <!-- ============================================ -->
-        <!-- Form البحث والفلتر -->
-        <!-- ============================================ -->
-        <form method="get">
-
-            <div class="row g-3 align-items-end">
-
-                <div class="col-md-5">
-
-                    <label class="form-label fw-bold text-muted small">
-                        <i class="bi bi-building"></i>
-                        الشركة
-                    </label>
-
-                    <select
-                        name="company"
-                        class="form-select form-select-lg"
-                        onchange="this.form.submit()">
-
-                        <option value="">
-                            اختر الشركة
-                        </option>
-
-                        {% for company in companies %}
-
-                        <option
-                            value="{{ company.id }}"
-                            {% if selected_company == company.id|stringformat:"s" %}
-                            selected
-                            {% endif %}
-                        >
-                            {{ company.name }}
-                        </option>
-
-                        {% endfor %}
-
-                    </select>
-
-                </div>
-
-                <div class="col-md-5">
-
-                    <label class="form-label fw-bold text-muted small">
-                        <i class="bi bi-box"></i>
-                        الباكدج
-                    </label>
-
-                    <select
-                        name="package"
-                        class="form-select form-select-lg"
-                        onchange="this.form.submit()">
-
-                        <option value="">
-                            {% if packages %}
-                                اختر الباكدج
-                            {% else %}
-                                اختر الشركة أولاً
-                            {% endif %}
-                        </option>
-
-                        {% for cp in packages %}
-
-                        <option
-                            value="{{ cp.id }}"
-                            {% if selected_package and selected_package.id == cp.id %}
-                            selected
-                            {% endif %}
-                        >
-                            {{ cp.package.name }}
-                        </option>
-
-                        {% endfor %}
-
-                    </select>
-
-                </div>
-
-                <div class="col-md-2">
-
-                    <a href="{% url 'credit_package_pricing' %}" class="btn btn-outline-secondary btn-lg w-100">
-                        <i class="bi bi-arrow-counterclockwise"></i>
-                        مسح
-                    </a>
-
-                </div>
-
-            </div>
-
-        </form>
-
-    </div>
-
-</div>
-
-<!-- ============================================ -->
-<!-- عرض تفاصيل الباكدج المختار -->
-<!-- ============================================ -->
-{% if selected_package %}
-
-<div class="card shadow border-0 mt-4">
-
-    <div class="card-header bg-primary text-white">
-
-        <h5 class="mb-0">
-            <i class="bi bi-info-circle"></i>
-            تفاصيل الباكدج
-        </h5>
-
-    </div>
-
-    <div class="card-body">
-
-        <div class="row g-4">
-
-            <div class="col-md-4">
-
-                <label class="text-muted">
-                    الشركة
-                </label>
-
-                <h6>
-                    {{ selected_package.contract.entity.name }}
-                </h6>
-
-            </div>
-
-            <div class="col-md-4">
-
-                <label class="text-muted">
-                    التخصص
-                </label>
-
-                <h6>
-                    {{ selected_package.package.specialty.name }}
-                </h6>
-
-            </div>
-
-            <div class="col-md-4">
-
-                <label class="text-muted">
-                    السعر
-                </label>
-
-                <h6 class="text-primary">
-                    {{ selected_package.formatted_price }} ج.م
-                </h6>
-
-            </div>
-
-            <div class="col-md-4">
-
-                <label class="text-muted">
-                    مدة الإقامة
-                </label>
-
-                <h6>
-                    {{ selected_package.package.stay_duration|default:"-" }}
-                </h6>
-
-            </div>
-
-            <div class="col-md-4">
-
-                <label class="text-muted">
-                    الكود
-                </label>
-
-                <h6>
-                    {{ selected_package.package.code|default:"-" }}
-                </h6>
-
-            </div>
-
-            <div class="col-md-4">
-
-                <label class="text-muted">
-                    الخصم الحالي
-                </label>
-
-                <h6>
-                    <span class="badge bg-success">
-                        {{ selected_package.formatted_discount }}%
-                    </span>
-                </h6>
-
-            </div>
-
-            <div class="col-md-4">
-
-                <label class="text-muted">
-                    السعر النقدي
-                </label>
-
-                <h6 class="text-success">
-                    {{ selected_package.formatted_cash }} ج.م
-                </h6>
-
-            </div>
-
-            <div class="col-md-4">
-
-                <label class="text-muted">
-                    اعتباراً من
-                </label>
-
-                <h6>
-                    {{ selected_package.effective_from|date:"Y-m-d"|default:"-" }}
-                </h6>
-
-            </div>
-
-            <div class="col-md-4">
-
-                {% comment %} <label class="text-muted">
-                    صالح حتى
-                </label> {% endcomment %}
-
-                <h6>
-                    {{ selected_package.valid_until|date:"Y-m-d"|default:"-" }}
-                </h6>
-
-            </div>
-
-            <!-- ✅ تحسين عرض الملاحظات -->
-            <div class="col-md-4">
-
-                <label class="text-muted">
-                    ملاحظات الباكدج
-                </label>
-
-                <h6 style="white-space: pre-line;">
-                    {% if selected_package.package.package_note %}
-                        {{ selected_package.package.package_note }}
-                    {% else %}
-                        -
-                    {% endif %}
-                </h6>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-
-<!-- ============================================ -->
-<!-- تخفيض السعر 🔥 -->
-<!-- ============================================ -->
-
-<div class="card shadow border-0 mt-4">
-
-    <div class="card-header bg-success text-white">
-
-        <h5 class="mb-0">
-            <i class="bi bi-percent"></i>
-            تخفيض السعر
-        </h5>
-
-    </div>
-
-    <div class="card-body">
-
-        <input
-            type="hidden"
-            id="base-price"
-            value="{{ selected_package.total_before_discount|default:0 }}"
-        >
-
-        <input
-            type="hidden"
-            id="special-price"
-            value="{{ selected_package.special_offer_price|default:0 }}"
-        >
-
-        <input
-            type="hidden"
-            id="cash-price"
-            value="{{ selected_package.cash_price|default:0 }}"
-        >
-
-        <div class="row g-4">
-
-            <div class="col-md-4">
-
-                <label class="form-label fw-bold text-muted small">
-                    الإجمالي بدون خصم
-                </label>
-
-                <input
-                    class="form-control"
-                    value="{{ selected_package.formatted_total_before }} ج.م"
-                    readonly
-                >
-
-            </div>
-
-            <div class="col-md-4">
-
-                <label class="form-label fw-bold text-muted small">
-                    Special Offer
-                </label>
-
-                <input
-                    class="form-control"
-                    value="{{ selected_package.formatted_special_offer }}"
-                    readonly
-                >
-
-            </div>
-
-            <div class="col-md-4">
-
-                <label class="form-label fw-bold text-muted small">
-                    Cash
-                </label>
-
-                <input
-                    class="form-control"
-                    value="{{ selected_package.formatted_cash }}"
-                    readonly
-                >
-
-            </div>
-
-            <div class="col-md-4">
-
-                <label class="form-label fw-bold text-muted small">
-                    الخصم الحالي
-                </label>
-
-                <input
-                    class="form-control"
-                    value="{{ selected_package.formatted_discount }}%"
-                    readonly
-                >
-
-            </div>
-
-            <div class="col-md-4">
-
-                <label class="form-label fw-bold text-muted small">
-                    معدل الخصم المقترح
-                </label>
-
-                <select
-                    id="discount-select"
-                    class="form-select">
-
-                    <option value="5">5%</option>
-                    <option value="10">10%</option>
-                    <option value="15">15%</option>
-                    <option value="20">20%</option>
-                    <option value="25">25%</option>
-
-                    {% if selected_package.special_offer_price %}
-                        <option value="special">Special Offer</option>
-                    {% endif %}
-
-                    <option value="cash">Cash</option>
-
-                </select>
-
-            </div>
-
-            <div class="col-md-4">
-
-                <label class="form-label fw-bold text-muted small">
-                    السعر المقترح
-                </label>
-
-                <input
-                    id="suggested-price"
-                    class="form-control"
-                    readonly
-                >
-
-            </div>
-
-        </div>
-
-        <!-- عرض الفرق المالي والوفر -->
-        <div class="row g-4 mt-3">
-
-            <div class="col-md-4">
-
-                <label class="form-label fw-bold text-muted small">
-                    السعر الحالي
-                </label>
-
-                <input
-                    id="current-price"
-                    class="form-control"
-                    value="{{ selected_package.formatted_price }} ج.م"
-                    readonly
-                >
-
-            </div>
-
-            <div class="col-md-4">
-
-                <label class="form-label fw-bold text-muted small">
-                    السعر المقترح
-                </label>
-
-                <input
-                    id="suggested-price-display"
-                    class="form-control"
-                    readonly
-                >
-
-            </div>
-
-            <div class="col-md-4">
-
-                <label class="form-label fw-bold text-muted small">
-                    الوفر
-                </label>
-
-                <input
-                    id="savings-display"
-                    class="form-control fw-bold"
-                    readonly
-                >
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-
-<!-- ============================================ -->
-<!-- جدول مقارنة الخصومات -->
-<!-- ============================================ -->
-
-<div class="card shadow border-0 mt-4">
-
-    <div class="card-header bg-warning">
-
-        <h5 class="mb-0">
-            <i class="bi bi-table"></i>
-            مقارنة الخصومات
-        </h5>
-
-    </div>
-
-    <div class="card-body">
-
-        <div class="table-responsive">
-
-            <table class="table table-bordered table-hover">
-
-                <thead class="table-light">
-
-                    <tr>
-                        <th>الخصم</th>
-                        <th>السعر</th>
-                    </tr>
-
-                </thead>
-
-                <tbody>
-
-                    <tr>
-                        <td><strong>5%</strong></td>
-                        <td id="price5">-</td>
-                    </tr>
-
-                    <tr>
-                        <td><strong>10%</strong></td>
-                        <td id="price10">-</td>
-                    </tr>
-
-                    <tr>
-                        <td><strong>15%</strong></td>
-                        <td id="price15">-</td>
-                    </tr>
-
-                    <tr>
-                        <td><strong>20%</strong></td>
-                        <td id="price20">-</td>
-                    </tr>
-
-                    <tr>
-                        <td><strong>25%</strong></td>
-                        <td id="price25">-</td>
-                    </tr>
-
-                </tbody>
-
-            </table>
-
-        </div>
-
-    </div>
-
-</div>
-
-<!-- ============================================ -->
-<!-- Box المرفقات -->
-<!-- ============================================ -->
-
-<div class="card shadow border-0 mt-4">
-
-    <div class="card-header bg-info text-white">
-
-        <h5 class="mb-0">
-            <i class="bi bi-paperclip"></i>
-            المرفقات
-        </h5>
-
-    </div>
-
-    <div class="card-body">
-
-        {% if selected_package.approval_pdf %}
-
-            <div class="alert alert-success mb-0">
-
-                <strong>
-                    <i class="bi bi-file-pdf"></i>
-                    المرفقات:
-                </strong>
-
-                <hr>
-
-                <pre class="mb-0" style="white-space: pre-wrap; word-wrap: break-word;">
-{{ selected_package.approval_pdf }}
-                </pre>
-
-            </div>
-
-        {% else %}
-
-            <div class="alert alert-warning mb-0">
-
-                <i class="bi bi-exclamation-triangle"></i>
-                لا توجد مرفقات
-
-            </div>
-
-        {% endif %}
-
-    </div>
-
-</div>
-
-{% endif %}
-
-<!-- ============================================ -->
-<!-- عرض جميع الباكدجات للشركة المختارة -->
-<!-- ============================================ -->
-{% if packages and not selected_package %}
-
-<div class="card mt-4 shadow">
-
-    <div class="card-header">
-        <h5 class="mb-0">
-            <i class="bi bi-list"></i>
-            الباكدجات المتاحة
-            <span class="badge bg-secondary ms-2">
-                {{ packages|length }}
+<div class="container-fluid">
+
+    <!-- ✅ Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      
+        <div>
+            <span class="badge bg-primary rounded-pill fs-6 px-3 py-2">
+                <i class="fas fa-calendar-alt me-1"></i>
+                آخر تحديث: {% now "Y-m-d" %}
             </span>
-        </h5>
+        </div>
     </div>
 
-    <div class="card-body">
+    <!-- ============================================ -->
+    <!-- ✅ شريط البحث والفلاتر -->
+    <!-- ============================================ -->
+    <div class="card shadow-sm border-0 mb-4 hover-shadow">
 
-        <div class="table-responsive">
+        <div class="card-header bg-gradient-primary text-white">
+            <h5 class="mb-0">
+                <i class="fas fa-sliders-h"></i>
+                البحث والفلاتر
+            </h5>
+        </div>
 
-            <table class="table table-hover table-striped">
+        <div class="card-body">
+            <form method="get" id="searchForm">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-5">
+                        <label class="form-label fw-bold small text-muted">
+                            <i class="fas fa-search"></i> بحث
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-0">
+                                <i class="fas fa-search text-primary"></i>
+                            </span>
+                            <input
+                                id="search"
+                                name="search"
+                                class="form-control form-control-lg border-0 shadow-sm"
+                                list="entityList"
+                                value="{{ search }}"
+                                onchange="this.form.submit()"
+                                onkeydown="if(event.key === 'Enter') this.form.submit()"
+                                placeholder="ابحث باسم الجهة أو الفئة المالية..."
+                                autocomplete="off">
+                            <datalist id="entityList">
+                                {% for entity in entities %}
+                                    <option value="{{ entity.entity_name }}">
+                                    <option value="{{ entity.financial_category }}">
+                                {% endfor %}
+                            </datalist>
+                        </div>
+                    </div>
 
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>اسم الباكدج</th>
-                        <th>السعر</th>
-                        <th>الخصم</th>
-                        <th>النقدي</th>
-                    </tr>
-                </thead>
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold small text-muted">
+                            <i class="fas fa-layer-group"></i> التصنيف
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-0">
+                                <i class="fas fa-layer-group text-primary"></i>
+                            </span>
+                            <select
+                                name="category"
+                                class="form-select form-select-lg border-0 shadow-sm"
+                                onchange="this.form.submit()">
+                                <option value="">كل التصنيفات</option>
+                                {% for cat in categories %}
+                                    <option
+                                        value="{{ cat }}"
+                                        {% if selected_category == cat %}selected{% endif %}>
+                                        {{ cat }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
 
-                <tbody>
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold small text-muted">&nbsp;</label>
+                        <a href="{% url 'procedure_fees' %}" class="btn btn-outline-secondary btn-lg w-100 shadow-sm">
+                            <i class="fas fa-undo me-1"></i> مسح الكل
+                        </a>
+                    </div>
+                </div>
 
-                {% for cp in packages %}
+                <div class="row mt-3">
+                    <div class="col-12">
+                        {% if search or selected_category %}
+                       
+                        {% endif %}
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 
-                    <tr>
-                        <td>{{ forloop.counter }}</td>
-                        <td>
-                            <strong>{{ cp.package.name }}</strong>
-                        </td>
-                        <td>{{ cp.package_price|floatformat:2 }} ج.م</td>
-                        <td>
-                            {% if cp.current_discount_rate %}
-                                {{ cp.current_discount_rate }}%
-                            {% else %}
-                                -
-                            {% endif %}
-                        </td>
-                        <td>{{ cp.cash_price|floatformat:2|default:"-" }} ج.م</td>
-                    </tr>
+    <!-- ============================================ -->
+    <!-- ✅ عرض البطاقات -->
+    <!-- ============================================ -->
+    <div class="row g-4">
 
-                {% endfor %}
+        {% for entity in entities %}
 
-                </tbody>
+        <div class="col-md-6 col-lg-4">
 
-            </table>
+            <div class="card shadow-sm border-0 hover-shadow h-100">
+
+                <div class="card-header bg-primary text-white">
+
+                    <h5 class="mb-0">
+                        <i class="fas fa-building me-2"></i>
+                        {{ entity.entity_name|default:"غير محدد" }}
+                    </h5>
+
+                </div>
+
+                <div class="card-body">
+
+                    <!-- ✅ معلومات الجهة -->
+                    <div class="mb-3">
+                        <p class="mb-1">
+                            <strong>الفئة المالية:</strong>
+                            <span class="badge bg-secondary">{{ entity.financial_category|default:"-" }}</span>
+                        </p>
+                        <p class="mb-1">
+                            <strong>قائمة الأسعار:</strong>
+                            {{ entity.price_list|default:"-" }}
+                        </p>
+                        <p class="mb-0">
+                            <strong>معدل الخصم:</strong>
+                            <span class="badge bg-success">{{ entity.discount_rate|default:"-" }}</span>
+                        </p>
+                    </div>
+
+                    <hr>
+
+                    <!-- ✅ الأتعاب حسب التصنيف -->
+                    <h6 class="fw-bold text-muted mb-3">
+                        <i class="fas fa-money-bill-wave me-1"></i>
+                        الأتعاب
+                        {% if selected_category %}
+                        <span class="badge bg-info">{{ selected_category }}</span>
+                        {% endif %}
+                    </h6>
+
+                    {% if selected_category %}
+
+                    <div class="table-responsive">
+                        <table class="table table-sm table-bordered mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>النوع</th>
+                                    <th class="text-end">القيمة</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>جراح</td>
+                                    <td class="text-end fw-bold">
+                                        {{ entity.selected_surgeon_fee|floatformat:0|default:"-" }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>تخدير</td>
+                                    <td class="text-end fw-bold">
+                                        {{ entity.selected_anesthesia_fee|floatformat:0|default:"-" }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>مساعد</td>
+                                    <td class="text-end fw-bold">
+                                        {{ entity.selected_assistant_fee|floatformat:0|default:"-" }}
+                                    </td>
+                                </tr>
+                                <tr class="table-success">
+                                    <td><strong>الإجمالي</strong></td>
+                                    <td class="text-end fw-bold text-success">
+                                        {{ entity.selected_total_fee|floatformat:0|default:"-" }}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    {% else %}
+
+                    <div class="alert alert-info text-center">
+                        <i class="fas fa-info-circle me-1"></i>
+                        اختر تصنيفاً لعرض الأتعاب
+                    </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
 
         </div>
+
+        {% empty %}
+
+        <div class="col-12">
+            <div class="alert alert-info text-center py-5">
+                <i class="fas fa-inbox fa-3x d-block mb-3 text-muted"></i>
+                <h5 class="text-muted">لا توجد نتائج</h5>
+                <p class="text-muted small">حاول تغيير كلمات البحث أو اختيار تصنيف آخر</p>
+            </div>
+        </div>
+
+        {% endfor %}
 
     </div>
 
 </div>
 
-{% endif %}
-
 <!-- ============================================ -->
-<!-- Script تخفيض السعر + جدول المقارنات -->
+<!-- ✅ CSS تحسينات -->
 <!-- ============================================ -->
-{% if selected_package %}
-<script>
-    function calculatePrice() {
-
-        const basePrice = parseFloat(
-            document.getElementById("base-price").value || 0
-        );
-
-        const discountValue =
-            document.getElementById("discount-select").value;
-
-        let result = basePrice;
-
-        const specialPrice =
-            parseFloat(
-                document.getElementById("special-price").value || 0
-            );
-
-        const cashPrice =
-            parseFloat(
-                document.getElementById("cash-price").value || 0
-            );
-
-        let displayPrice = 0;
-        let savings = 0;
-        const currentPrice = parseFloat(
-            document.getElementById("current-price").value.replace(/[^0-9.]/g, '') || 0
-        );
-
-        if (discountValue === "special") {
-            result = specialPrice;
-        }
-        else if (discountValue === "cash") {
-            result = cashPrice;
-        }
-        else {
-            const discount = parseFloat(discountValue);
-            result = basePrice * (1 - discount / 100);
-        }
-
-        const formattedResult = result.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-        const displayResult = formattedResult + " ج.م";
-
-        document.getElementById("suggested-price").value = displayResult;
-        document.getElementById("suggested-price-display").value = displayResult;
-
-        const resultNum = parseFloat(formattedResult);
-        displayPrice = resultNum;
-        savings = currentPrice - resultNum;
-
-        const suggestedInput = document.getElementById("suggested-price-display");
-        if (resultNum < currentPrice) {
-            suggestedInput.className = "form-control text-success fw-bold";
-        } else if (resultNum > currentPrice) {
-            suggestedInput.className = "form-control text-danger fw-bold";
-        } else {
-            suggestedInput.className = "form-control";
-        }
-
-        const savingsInput = document.getElementById("savings-display");
-        if (savings > 0) {
-            savingsInput.value = savings.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " ج.م";
-            savingsInput.className = "form-control fw-bold text-success";
-        } else if (savings < 0) {
-            savingsInput.value = Math.abs(savings).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " ج.م (خسارة)";
-            savingsInput.className = "form-control fw-bold text-danger";
-        } else {
-            savingsInput.value = "0.00 ج.م";
-            savingsInput.className = "form-control";
-        }
-
+<style>
+    .bg-gradient-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     }
 
-    document.addEventListener("DOMContentLoaded", function () {
+    .hover-shadow {
+        transition: all 0.3s ease;
+    }
 
-        calculatePrice();
+    .hover-shadow:hover {
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+        transform: translateY(-2px);
+    }
 
-        document.getElementById("discount-select")
-            .addEventListener("change", calculatePrice);
+    .card {
+        border-radius: 1rem;
+        overflow: hidden;
+    }
 
-        const basePrice = parseFloat(
-            document.getElementById("base-price").value || 0
-        );
+    .card-header {
+        border-radius: 0 !important;
+    }
 
-        [5, 10, 15, 20, 25].forEach(function(d) {
-            const value = basePrice * (1 - d / 100);
-            document.getElementById("price" + d).innerText =
-                value.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " ج.م";
-        });
+    .badge {
+        font-weight: 500;
+    }
 
-    });
-</script>
-{% endif %}
+    .input-group-text {
+        border-radius: 0.5rem 0 0 0.5rem;
+        background: #f8f9fa;
+    }
 
-{% endblock %}     
-def credit_package_pricing(request):
+    .form-control,
+    .form-select {
+        border-radius: 0 0.5rem 0.5rem 0;
+    }
 
-    company_id = request.GET.get("company")
-    package_id = request.GET.get("package")
+    .form-control:focus,
+    .form-select:focus {
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        border-color: #667eea;
+    }
 
-    companies = (
-        ContractEntity.objects
-        .filter(
-            contracts__contract_packages__isnull=False
-        )
-        .distinct()
-        .order_by("name")
-    )
-
-    packages = ContractPackage.objects.none()
-
-    selected_package = None
-
-    if company_id:
-
-        packages = (
-            ContractPackage.objects
-            .filter(
-                contract__entity_id=company_id
-            )
-            .select_related(
-                "package"
-            )
-            .order_by("package__name")
-        )
-
-    if package_id:
-
-        selected_package = get_object_or_404(
-            ContractPackage.objects.select_related(
-                "package",
-                "contract__entity",
-                "package__specialty",
-            ),
-            id=package_id
-        )
-
-        # ✅ تنسيق الأرقام في الـ View (زي ما عملت في home)
-        if selected_package:
-            selected_package.formatted_price = f"{selected_package.package_price:,.2f}"
-            selected_package.formatted_cash = f"{selected_package.cash_price:,.2f}" if selected_package.cash_price else "-"
-            selected_package.formatted_total_before = f"{selected_package.total_before_discount:,.2f}" if selected_package.total_before_discount else "0.00"
-            selected_package.formatted_special_offer = f"{selected_package.special_offer_price:,.2f}" if selected_package.special_offer_price else "-"
-            selected_package.formatted_discount = f"{selected_package.current_discount_rate:,.2f}" if selected_package.current_discount_rate else "0.00"
-            selected_package.formatted_current_price = f"{selected_package.package_price:,.2f}"
-
-    return render(
-        request,
-        "frontend/credit_package_pricing.html",
-        {
-            "companies": companies,
-            "packages": packages,
-            "selected_package": selected_package,
-            "selected_company": company_id,
+    @media (max-width: 768px) {
+        .card-body {
+            padding: 1rem;
         }
-    )
+        .badge.fs-6 {
+            font-size: 0.85rem !important;
+        }
+    }
+</style>
+
+{% endblock %}
