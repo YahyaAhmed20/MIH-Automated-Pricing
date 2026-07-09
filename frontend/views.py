@@ -6,6 +6,9 @@ from django.db.models import Count
 from contracts.models import (
     CompanyDiscountProfile,
 )
+from frontend.services.company_comparison_service import (
+    CompanyComparisonService,
+)
 from pricing_requests.models import Procedure
 from django.db.models import Q, Sum, Avg
 from pricing_requests.models import PricingDetail
@@ -775,8 +778,6 @@ def pending_analysis(request):
         "frontend/pending_analysis.html",
         context
     )
-
-
 def company_discounts(request):
 
     search = request.GET.get(
@@ -790,6 +791,29 @@ def company_discounts(request):
     section = request.GET.get(
         "section",
         ""
+    )
+    
+    active_tab = request.GET.get(
+        "tab",
+        "discounts"
+    )
+    
+    # ============================================
+    # ✅ Tab 2: مقارنة بين جهتين
+    # ============================================
+    compare_company_1 = request.GET.get(
+        "company1",
+        ""
+    )
+
+    compare_company_2 = request.GET.get(
+        "company2",
+        ""
+    )
+
+    compare_section = request.GET.get(
+        "compare_section",
+        "all"
     )
     
     selected_company = None
@@ -865,6 +889,82 @@ def company_discounts(request):
 
         company_cards.append(company)
 
+    # ============================================
+    # ✅ قائمة الشركات للـ Dropdown
+    # ============================================
+    company_names = (
+        CompanyDiscountProfile.objects
+        .values_list(
+            "company_name",
+            flat=True
+        )
+        .distinct()
+        .order_by("company_name")
+    )
+
+    # ============================================
+    # ✅ جلب بيانات الشركتين للمقارنة
+    # ============================================
+    company_1 = None
+    company_2 = None
+
+    if compare_company_1:
+        company_1 = (
+            CompanyDiscountProfile.objects
+            .prefetch_related(
+                Prefetch(
+                    "discounts",
+                    queryset=CompanyDiscount.objects.order_by(
+                        "section",
+                        "display_order",
+                    ),
+                )
+            )
+            .filter(company_name=compare_company_1)
+            .first()
+        )
+
+    if compare_company_2:
+        company_2 = (
+            CompanyDiscountProfile.objects
+            .prefetch_related(
+                Prefetch(
+                    "discounts",
+                    queryset=CompanyDiscount.objects.order_by(
+                        "section",
+                        "display_order",
+                    ),
+                )
+            )
+            .filter(company_name=compare_company_2)
+            .first()
+        )
+
+    # ============================================
+    # ✅ بناء بيانات المقارنة
+    # ============================================
+    comparison_rows = (
+        CompanyComparisonService.build_comparison(
+            company_1,
+            company_2,
+            compare_section,
+        )
+    )
+
+    # ============================================
+    # ✅ Tab 3: الأعلى والأقل خصماً
+    # ============================================
+    from pricing_requests.models import CompanyDiscountRank
+
+    rankings = CompanyDiscountRank.objects.all()
+
+    # ============================================
+    # ✅ Tab 4: الاستثناءات
+    # ============================================
+    from pricing_requests.models import CompanyException
+
+    exceptions = CompanyException.objects.all()
+
     return render(
 
         request,
@@ -882,15 +982,26 @@ def company_discounts(request):
             "results_count": len(company_cards),
             "selected_company": selected_company,
             "entity_id": entity_id,
+            "active_tab": active_tab,
+
+            # ✅ Tab 2: مقارنة بين جهتين
+            "company_names": company_names,
+            "compare_company_1": compare_company_1,
+            "compare_company_2": compare_company_2,
+            "compare_section": compare_section,
+            "company_1": company_1,
+            "company_2": company_2,
+            "comparison_rows": comparison_rows,
+
+            # ✅ Tab 3: الأعلى والأقل خصماً
+            "rankings": rankings,
+
+            # ✅ Tab 4: الاستثناءات
+            "exceptions": exceptions,
 
         }
 
     )
-    
-
-
-
-
 def contract_entity_detail(request, pk):
 
     entity = get_object_or_404(

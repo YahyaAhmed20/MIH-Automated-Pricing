@@ -1,0 +1,302 @@
+<!-- ============================================ -->
+<!-- ✅ مقارنة بين جهتين -->
+<!-- ============================================ -->
+
+<div class="card shadow-sm border-0 mb-4">
+
+    <div class="card-header bg-gradient-primary text-white">
+        <h5 class="mb-0">
+            <i class="fas fa-balance-scale"></i>
+            مقارنة بين جهتين
+        </h5>
+    </div>
+
+    <div class="card-body">
+
+        <form method="get" class="mb-4">
+
+            <!-- ✅ الحفاظ على الـ Tab والـ Entity -->
+            <input type="hidden" name="tab" value="compare">
+            {% if entity_id %}
+                <input type="hidden" name="entity" value="{{ entity_id }}">
+            {% endif %}
+
+            <div class="row g-3">
+
+                <div class="col-md-5">
+                    <label class="form-label fw-bold small text-muted">
+                        <i class="fas fa-building"></i>
+                        الجهة الأولى
+                    </label>
+                    <select name="company1" class="form-select form-select-lg shadow-sm">
+                        <option value="">اختر الجهة الأولى</option>
+                        {% for item in company_names %}
+                            <option value="{{ item }}" {% if compare_company_1 == item %}selected{% endif %}>
+                                {{ item }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="col-md-5">
+                    <label class="form-label fw-bold small text-muted">
+                        <i class="fas fa-building"></i>
+                        الجهة الثانية
+                    </label>
+                    <select name="company2" class="form-select form-select-lg shadow-sm">
+                        <option value="">اختر الجهة الثانية</option>
+                        {% for item in company_names %}
+                            <option value="{{ item }}" {% if compare_company_2 == item %}selected{% endif %}>
+                                {{ item }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="col-md-2">
+                    <label class="form-label fw-bold small text-muted">&nbsp;</label>
+                    <button class="btn btn-primary btn-lg w-100 shadow-sm" type="submit">
+                        <i class="fas fa-balance-scale"></i>
+                        مقارنة
+                    </button>
+                </div>
+
+            </div>
+
+            <div class="row mt-3">
+                <div class="col-md-4">
+                    <label class="form-label fw-bold small text-muted">
+                        <i class="fas fa-filter"></i>
+                        القسم
+                    </label>
+                    <select name="compare_section" class="form-select form-select-lg shadow-sm">
+                        <option value="all" {% if compare_section == "all" %}selected{% endif %}>
+                            الكل
+                        </option>
+                        <option value="internal" {% if compare_section == "internal" %}selected{% endif %}>
+                            🏥 داخلي
+                        </option>
+                        <option value="external" {% if compare_section == "external" %}selected{% endif %}>
+                            🚑 خارجي
+                        </option>
+                    </select>
+                </div>
+            </div>
+
+        </form>
+
+        <!-- ✅ عرض النتائج -->
+        {% if company_1 and company_2 %}
+
+        <!-- ✅ عنوان القسم المختار -->
+        <div class="alert alert-info mb-3">
+            <i class="fas fa-info-circle me-1"></i>
+            <strong>نتيجة المقارنة</strong>
+            {% if compare_section == "internal" %}
+                (القسم: داخلي 🏥)
+            {% elif compare_section == "external" %}
+                (القسم: خارجي 🚑)
+            {% else %}
+                (القسم: الكل)
+            {% endif %}
+        </div>
+
+        <!-- ✅ جدول المقارنة -->
+        <div class="table-responsive mb-4">
+            <table class="table table-bordered table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th style="width:40%">البند</th>
+                        <th style="width:30%" class="text-center">
+                            <span class="badge bg-success fs-6 px-3 py-2">
+                                🏦 {{ company_1.company_name }}
+                            </span>
+                        </th>
+                        <th style="width:30%" class="text-center">
+                            <span class="badge bg-primary fs-6 px-3 py-2">
+                                🏛️ {{ company_2.company_name }}
+                            </span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in comparison_rows %}
+                    <tr>
+                        <td><strong>{{ row.item }}</strong></td>
+                        <td class="text-center">
+                            {% if row.company1 %}
+                                {% if row.company1 == row.company2 %}
+                                    <span class="badge bg-success rounded-pill">{{ row.company1 }}</span>
+                                {% else %}
+                                    <span class="badge bg-warning text-dark rounded-pill">{{ row.company1 }}</span>
+                                {% endif %}
+                            {% else %}
+                                <span class="text-muted">-</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-center">
+                            {% if row.company2 %}
+                                {% if row.company1 == row.company2 %}
+                                    <span class="badge bg-success rounded-pill">{{ row.company2 }}</span>
+                                {% else %}
+                                    <span class="badge bg-warning text-dark rounded-pill">{{ row.company2 }}</span>
+                                {% endif %}
+                            {% else %}
+                                <span class="text-muted">-</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3" class="text-center text-muted py-3">
+                            لا توجد بنود للمقارنة
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ✅ الاستثناءات -->
+        <div class="row mt-4">
+
+            <div class="col-md-6">
+                <div class="card border-warning h-100">
+                    <div class="card-header bg-warning text-dark">
+                        <i class="fas fa-exclamation-triangle me-1"></i>
+                        استثناءات {{ company_1.company_name }}
+                    </div>
+                    <div class="card-body">
+                        {% with has_exceptions=False %}
+                            {% for item in company_1.internal_discounts %}
+                                {% if item.item_name == "الاستثناءات" and item.details %}
+                                    <div class="alert alert-warning mb-0">
+                                        <i class="fas fa-exclamation-triangle me-1"></i>
+                                        ⚠ يوجد استثناءات
+                                        <hr>
+                                        {{ item.details|linebreaksbr }}
+                                    </div>
+                                    {% with has_exceptions=True %}{% endwith %}
+                                {% endif %}
+                            {% endfor %}
+                            {% if not has_exceptions %}
+                                <div class="text-center text-muted py-3">
+                                    <i class="fas fa-check-circle text-success me-1"></i>
+                                    ✓ لا توجد استثناءات
+                                </div>
+                            {% endif %}
+                        {% endwith %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card border-warning h-100">
+                    <div class="card-header bg-warning text-dark">
+                        <i class="fas fa-exclamation-triangle me-1"></i>
+                        استثناءات {{ company_2.company_name }}
+                    </div>
+                    <div class="card-body">
+                        {% with has_exceptions=False %}
+                            {% for item in company_2.internal_discounts %}
+                                {% if item.item_name == "الاستثناءات" and item.details %}
+                                    <div class="alert alert-warning mb-0">
+                                        <i class="fas fa-exclamation-triangle me-1"></i>
+                                        ⚠ يوجد استثناءات
+                                        <hr>
+                                        {{ item.details|linebreaksbr }}
+                                    </div>
+                                    {% with has_exceptions=True %}{% endwith %}
+                                {% endif %}
+                            {% endfor %}
+                            {% if not has_exceptions %}
+                                <div class="text-center text-muted py-3">
+                                    <i class="fas fa-check-circle text-success me-1"></i>
+                                    ✓ لا توجد استثناءات
+                                </div>
+                            {% endif %}
+                        {% endwith %}
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ✅ تعليمات التشغيل -->
+        <div class="row mt-4">
+
+            <div class="col-md-6">
+                <div class="card border-info h-100">
+                    <div class="card-header bg-info text-white">
+                        <i class="fas fa-file-pdf me-1"></i>
+                        تعليمات التشغيل - {{ company_1.company_name }}
+                    </div>
+                    <div class="card-body">
+                        {% if company_1.operating_pdf %}
+                            <div class="alert alert-success mb-0">
+                                <i class="fas fa-check-circle me-1"></i>
+                                توجد تعليمات تشغيل
+                                <hr>
+                                <a href="{{ company_1.operating_pdf }}" target="_blank" class="btn btn-outline-info btn-sm">
+                                    <i class="fas fa-file-pdf me-1"></i>
+                                    فتح PDF
+                                </a>
+                            </div>
+                        {% else %}
+                            <div class="text-center text-muted py-3">
+                                <i class="fas fa-info-circle me-1"></i>
+                                لا توجد تعليمات تشغيل لهذه الجهة
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card border-info h-100">
+                    <div class="card-header bg-info text-white">
+                        <i class="fas fa-file-pdf me-1"></i>
+                        تعليمات التشغيل - {{ company_2.company_name }}
+                    </div>
+                    <div class="card-body">
+                        {% if company_2.operating_pdf %}
+                            <div class="alert alert-success mb-0">
+                                <i class="fas fa-check-circle me-1"></i>
+                                توجد تعليمات تشغيل
+                                <hr>
+                                <a href="{{ company_2.operating_pdf }}" target="_blank" class="btn btn-outline-info btn-sm">
+                                    <i class="fas fa-file-pdf me-1"></i>
+                                    فتح PDF
+                                </a>
+                            </div>
+                        {% else %}
+                            <div class="text-center text-muted py-3">
+                                <i class="fas fa-info-circle me-1"></i>
+                                لا توجد تعليمات تشغيل لهذه الجهة
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        {% elif compare_company_1 or compare_company_2 %}
+
+        <div class="alert alert-warning text-center py-4">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            يرجى اختيار جهتين للمقارنة
+        </div>
+
+        {% else %}
+
+        <div class="alert alert-info text-center py-4">
+            <i class="fas fa-info-circle me-2"></i>
+            اختر جهتين للمقارنة بين خصوماتهما
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>

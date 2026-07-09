@@ -1,0 +1,74 @@
+<!-- ============================================ -->
+<!-- ✅ الأعلى والأقل خصماً -->
+<!-- ============================================ -->
+
+<div class="card shadow-sm border-0 mb-4">
+
+    <div class="card-header bg-gradient-primary text-white">
+        <h5 class="mb-0">
+            <i class="fas fa-chart-line"></i>
+            ترتيب الشركات حسب نسبة الخصم
+        </h5>
+    </div>
+
+    <div class="card-body">
+
+        <div class="alert alert-info mb-4">
+            <i class="fas fa-info-circle me-1"></i>
+            ترتيب الشركات من الأعلى إلى الأقل خصماً (القسم الداخلي)
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-hover table-striped align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>#</th>
+                        <th>الشركة</th>
+                        <th>الفئة المالية</th>
+                        <th>الخصم الداخلي</th>
+                        <th>الخصم الخارجي</th>
+                        <th>المرفقات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in rankings %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td><strong>{{ item.company_name }}</strong></td>
+                        <td>{{ item.financial_category }}</td>
+                        <td>
+                            <span class="badge bg-success rounded-pill">
+                                {{ item.internal_discount|floatformat:0 }}%
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge bg-primary rounded-pill">
+                                {{ item.external_discount|floatformat:0 }}%
+                            </span>
+                        </td>
+                        <td>
+                            {% if item.attachment %}
+                                <a href="{{ item.attachment }}" target="_blank" class="btn btn-sm btn-outline-info">
+                                    <i class="fas fa-file-pdf"></i>
+                                    فتح
+                                </a>
+                            {% else %}
+                                <span class="text-muted">-</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-5">
+                            <i class="fas fa-inbox fa-2x d-block mb-2"></i>
+                            لا توجد بيانات
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+</div>

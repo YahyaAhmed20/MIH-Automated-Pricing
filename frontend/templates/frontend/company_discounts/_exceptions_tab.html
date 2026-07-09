@@ -1,0 +1,116 @@
+<!-- ============================================ -->
+<!-- ✅ الاستثناءات -->
+<!-- ============================================ -->
+
+<div class="card shadow-sm border-0 mb-4">
+
+    <div class="card-header bg-gradient-primary text-white">
+        <h5 class="mb-0">
+            <i class="fas fa-exclamation-triangle"></i>
+            الاستثناءات والخدمات غير الخاضعة للخصم
+        </h5>
+    </div>
+
+    <div class="card-body">
+
+        <div class="alert alert-info mb-4">
+            <i class="fas fa-info-circle me-1"></i>
+            عرض الاستثناءات والخدمات غير الخاضعة للخصم لكل جهة
+        </div>
+
+        <!-- ✅ عرض الاستثناءات -->
+        <div class="row g-4">
+
+            {% for item in exceptions %}
+
+            <div class="col-md-6 col-lg-4">
+
+                <div class="card shadow-sm border-warning h-100">
+
+                    <div class="card-header bg-warning text-dark">
+
+                        <h5 class="mb-0">
+                            <i class="fas fa-building me-2"></i>
+                            {{ item.entity_name }}
+                        </h5>
+
+                    </div>
+
+                    <div class="card-body">
+
+                        <p class="mb-1">
+                            <strong>الفئة المالية:</strong>
+                            <span class="badge bg-secondary">{{ item.financial_category|default:"-" }}</span>
+                        </p>
+
+                        <p class="mb-3">
+                            <strong>قائمة الأسعار:</strong>
+                            {{ item.price_list|default:"-" }}
+                        </p>
+
+                        <hr>
+
+                        {% if item.internal_discount or item.internal_details %}
+
+                        <div class="mb-2">
+                            <span class="badge bg-danger">داخلي</span>
+                            <div class="mt-2 p-2 bg-light rounded small">
+                                <strong>الخصم:</strong> {{ item.internal_discount|floatformat:0 }}%
+                                {% if item.internal_details %}
+                                <br>
+                                <strong>التفاصيل:</strong> {{ item.internal_details|linebreaksbr }}
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        {% endif %}
+
+                        {% if item.external_discount or item.external_details %}
+
+                        <div class="mb-2">
+                            <span class="badge bg-primary">خارجي</span>
+                            <div class="mt-2 p-2 bg-light rounded small">
+                                <strong>الخصم:</strong> {{ item.external_discount|floatformat:0 }}%
+                                {% if item.external_details %}
+                                <br>
+                                <strong>التفاصيل:</strong> {{ item.external_details|linebreaksbr }}
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        {% endif %}
+
+                        {% if item.attachment %}
+
+                        <div class="mt-3">
+                            <a href="{{ item.attachment }}" target="_blank" class="btn btn-outline-info btn-sm w-100">
+                                <i class="fas fa-file-pdf me-1"></i>
+                                صورة العقد
+                            </a>
+                        </div>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% empty %}
+
+            <div class="col-12">
+                <div class="alert alert-info text-center py-5">
+                    <i class="fas fa-inbox fa-3x d-block mb-3 text-muted"></i>
+                    <h5 class="text-muted">لا توجد استثناءات</h5>
+                    <p class="text-muted small">لا توجد استثناءات مسجلة للشركات</p>
+                </div>
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</div>

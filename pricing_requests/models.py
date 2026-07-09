@@ -908,3 +908,118 @@ class ProcedureFee(models.Model):
 
     def __str__(self):
         return f"{self.entity_name} - {self.category}"
+    
+    
+class CompanyDiscountRank(models.Model):
+
+    company_name = models.CharField(
+        max_length=255,
+        db_index=True
+    )
+
+    financial_category = models.CharField(
+        max_length=100
+    )
+
+    price_list = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True
+    )
+
+    internal_discount = models.DecimalField(
+        max_digits=6,
+        decimal_places=4,
+        default=0
+    )
+
+    external_discount = models.DecimalField(
+        max_digits=6,
+        decimal_places=4,
+        default=0
+    )
+
+    attachment = models.TextField(
+        blank=True,
+        null=True
+    )
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+
+        ordering = [
+            "-internal_discount",
+            "-external_discount",
+            "company_name",
+        ]
+
+    def __str__(self):
+        return self.company_name
+    
+    
+class CompanyException(models.Model):
+
+    entity_name = models.CharField(
+        max_length=255,
+        db_index=True
+    )
+
+    financial_category = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True
+    )
+
+    price_list = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True
+    )
+
+    # ✅ القسم الداخلي
+    internal_discount = models.DecimalField(
+        max_digits=6,
+        decimal_places=2,
+        default=0,
+        help_text="معدل الخصم الداخلي"
+    )
+
+    internal_details = models.TextField(
+        blank=True,
+        null=True,
+        help_text="تفاصيل الخصم الداخلي"
+    )
+
+    # ✅ القسم الخارجي
+    external_discount = models.DecimalField(
+        max_digits=6,
+        decimal_places=2,
+        default=0,
+        help_text="معدل الخصم الخارجي"
+    )
+
+    external_details = models.TextField(
+        blank=True,
+        null=True,
+        help_text="تفاصيل الخصم الخارجي"
+    )
+
+    attachment = models.TextField(
+        blank=True,
+        null=True,
+        help_text="رابط المرفقات"
+    )
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["entity_name"]
+        verbose_name = "استثناءات الشركة"
+        verbose_name_plural = "استثناءات الشركات"
+
+    def __str__(self):
+        return self.entity_name

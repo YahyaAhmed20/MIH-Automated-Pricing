@@ -97,333 +97,516 @@ python manage.py migrate_contract_entities APP.xlsx
 
 ركز بعد كده ع اسماء الشيتات 
 
-
-
-def procedure_fees(request):
-
-    search = request.GET.get("search", "").strip()
-    category = request.GET.get("category", "").strip()
-
-    fees = ProcedureFee.objects.all()
-
-    if search:
-        fees = fees.filter(
-            Q(entity_name__icontains=search) |
-            Q(financial_category__icontains=search)
-        )
-
-    # ✅ ✅ ✅ نجيب الـ fees للتصنيف المختار (للأتعاب فقط)
-    fees_filtered = fees
-    if category:
-        fees_filtered = fees.filter(category=category)
-
-    # ✅ ✅ ✅ نجيب كل الجهات (حتى لو مش عندها التصنيف المختار)
-    entities = {}
-    
-    # ✅ نجيب كل الصفوف (بما فيها الصف الرئيسي) عشان ناخد discount_rate
-    all_fees = fees.all()
-    
-    for fee in all_fees:
-        key = f"{fee.entity_name}_{fee.financial_category}"
-        
-        if key not in entities:
-            entities[key] = {
-                "entity_name": fee.entity_name,
-                "financial_category": fee.financial_category,
-                "price_list": fee.price_list,
-                "discount_rate": fee.discount_rate,  # ✅ من الصف الرئيسي
-                "fees": {},
-            }
-        if fee.category:
-            entities[key]["fees"][fee.category] = {
-                "surgeon_fee": fee.surgeon_fee,
-                "anesthesia_fee": fee.anesthesia_fee,
-                "assistant_fee": fee.assistant_fee,
-                "total_fee": fee.total_fee,
-            }
-
-    # ✅ ✅ ✅ تصحيح الـ discount_rate (لو "0" أو فارغ، نجيبه من الصف الرئيسي)
-    for key, entity in entities.items():
-        if entity["discount_rate"] in ["0", "", None]:
-            # ✅ نجيب أول سجل للجهة دي مش "0"
-            correct_fee = all_fees.filter(
-                entity_name=entity["entity_name"],
-                financial_category=entity["financial_category"]
-            ).exclude(discount_rate__in=["0", "", None]).first()
-            
-            if correct_fee:
-                entity["discount_rate"] = correct_fee.discount_rate
-
-    # ✅ تصفية الجهات اللي عندها التصنيف المختار (لو اختار تصنيف)
-    entities_list = []
-    for key, entity in entities.items():
-        # ✅ لو في تصنيف محدد، نعرض بس الجهات اللي عندها التصنيف ده
-        if category and category not in entity["fees"]:
-            continue
-            
-        entity_data = {
-            "entity_name": entity["entity_name"],
-            "financial_category": entity["financial_category"],
-            "price_list": entity["price_list"],
-            "discount_rate": entity["discount_rate"],
-            "fees": entity["fees"],
-        }
-        if category and category in entity["fees"]:
-            fee_data = entity["fees"][category]
-            entity_data["selected_surgeon_fee"] = fee_data["surgeon_fee"]
-            entity_data["selected_anesthesia_fee"] = fee_data["anesthesia_fee"]
-            entity_data["selected_assistant_fee"] = fee_data["assistant_fee"]
-            entity_data["selected_total_fee"] = fee_data["total_fee"]
-        entities_list.append(entity_data)
-
-    # ✅ التصنيفات الفريدة
-    categories = (
-        ProcedureFee.objects
-        .exclude(category="")
-        .values_list("category", flat=True)
-        .distinct()
-        .order_by("category")
-    )
-
-    return render(
-        request,
-        "frontend/procedure_fees.html",
-        {
-            "entities": entities_list,
-            "categories": categories,
-            "selected_category": category,
-            "search": search,
-        }
-    )
-
-
-
-
-    {% extends "frontend/base.html" %}
-{% load humanize %}
+{% extends 'frontend/base.html' %}
 
 {% block page_title %}
-احتساب أتعاب العملية
+خصومات الشركات
 {% endblock %}
 
 {% block content %}
 
-<div class="container-fluid">
+{% if selected_company %}
+    {% include "frontend/includes/company_tabs.html" %}
+{% endif %}
+<!-- ============================================ -->
+<!-- ✅ Script للبحث التلقائي -->
+<!-- ============================================ -->
+<script>
+    let searchTimeout;
 
-    <!-- ✅ Header -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-      
-        <div>
-            <span class="badge bg-primary rounded-pill fs-6 px-3 py-2">
-                <i class="fas fa-calendar-alt me-1"></i>
-                آخر تحديث: {% now "Y-m-d" %}
-            </span>
-        </div>
+    function searchDelay() {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(function() {
+            document.querySelector('form').submit();
+        }, 300);
+    }
+
+    // ✅ إظهار/إخفاء زر المسح
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.querySelector('input[name="search"]');
+        const clearBtn = document.querySelector('.clear-search-btn');
+
+        if (searchInput && clearBtn) {
+            searchInput.addEventListener('input', function() {
+                if (this.value.length > 0) {
+                    clearBtn.style.display = 'block';
+                } else {
+                    clearBtn.style.display = 'none';
+                }
+            });
+        }
+    });
+</script>
+
+<!-- ============================================ -->
+<!-- ✅ شريط البحث والفلتر المحسن -->
+<!-- ============================================ -->
+<div class="card shadow border-0 hover-shadow mb-4">
+
+    <div class="card-header bg-gradient-primary text-white">
+        <h5 class="mb-0">
+            <i class="fas fa-search"></i>
+            البحث في خصومات الشركات
+        </h5>
     </div>
 
-    <!-- ============================================ -->
-    <!-- ✅ شريط البحث والفلاتر -->
-    <!-- ============================================ -->
-    <div class="card shadow-sm border-0 mb-4 hover-shadow">
+    <div class="card-body">
 
-        <div class="card-header bg-gradient-primary text-white">
-            <h5 class="mb-0">
-                <i class="fas fa-sliders-h"></i>
-                البحث والفلاتر
-            </h5>
-        </div>
+        <form method="get">
 
-        <div class="card-body">
-            <form method="get" id="searchForm">
-                <div class="row g-3 align-items-end">
-                    <div class="col-md-5">
-                        <label class="form-label fw-bold small text-muted">
-                            <i class="fas fa-search"></i> بحث
-                        </label>
-                        <div class="input-group">
-                            <span class="input-group-text bg-light border-0">
-                                <i class="fas fa-search text-primary"></i>
-                            </span>
-                            <input
-                                id="search"
-                                name="search"
-                                class="form-control form-control-lg border-0 shadow-sm"
-                                list="entityList"
-                                value="{{ search }}"
-                                onchange="this.form.submit()"
-                                onkeydown="if(event.key === 'Enter') this.form.submit()"
-                                placeholder="ابحث باسم الجهة أو الفئة المالية..."
-                                autocomplete="off">
-                            <datalist id="entityList">
-                                {% for entity in entities %}
-                                    <option value="{{ entity.entity_name }}">
-                                    <option value="{{ entity.financial_category }}">
-                                {% endfor %}
-                            </datalist>
-                        </div>
-                    </div>
+            <div class="row g-3 align-items-end">
 
-                    <div class="col-md-4">
-                        <label class="form-label fw-bold small text-muted">
-                            <i class="fas fa-layer-group"></i> التصنيف
-                        </label>
-                        <div class="input-group">
-                            <span class="input-group-text bg-light border-0">
-                                <i class="fas fa-layer-group text-primary"></i>
-                            </span>
-                            <select
-                                name="category"
-                                class="form-select form-select-lg border-0 shadow-sm"
-                                onchange="this.form.submit()">
-                                <option value="">كل التصنيفات</option>
-                                {% for cat in categories %}
-                                    <option
-                                        value="{{ cat }}"
-                                        {% if selected_category == cat %}selected{% endif %}>
-                                        {{ cat }}
-                                    </option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                    </div>
+                <div class="col-md-6">
 
-                    <div class="col-md-3">
-                        <label class="form-label fw-bold small text-muted">&nbsp;</label>
-                        <a href="{% url 'procedure_fees' %}" class="btn btn-outline-secondary btn-lg w-100 shadow-sm">
-                            <i class="fas fa-undo me-1"></i> مسح الكل
+                    <label class="form-label fw-bold text-muted small">
+                        <i class="fas fa-building"></i>
+                        بحث
+                    </label>
+
+                    <div class="input-group input-group-lg">
+                        <span class="input-group-text bg-light border-0">
+                            <i class="fas fa-search text-primary"></i>
+                        </span>
+                        <input
+                            type="text"
+                            name="search"
+                            value="{{ search }}"
+                            class="form-control border-0 shadow-sm"
+                            placeholder="ابحث باسم الشركة أو الفئة المالية..."
+                            autofocus
+                            onkeyup="searchDelay()"
+                        >
+                        {% if search %}
+                        <a
+                            href="{% url 'company_discounts' %}"
+                            class="btn btn-outline-danger border-0 clear-search-btn"
+                            title="مسح البحث"
+                        >
+                            <i class="fas fa-times"></i>
                         </a>
-                    </div>
-                </div>
-
-                <div class="row mt-3">
-                    <div class="col-12">
-                        {% if search or selected_category %}
-                       
                         {% endif %}
                     </div>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- ============================================ -->
-    <!-- ✅ عرض البطاقات -->
-    <!-- ============================================ -->
-    <div class="row g-4">
-
-        {% for entity in entities %}
-
-        <div class="col-md-6 col-lg-4">
-
-            <div class="card shadow-sm border-0 hover-shadow h-100">
-
-                <div class="card-header bg-primary text-white">
-
-                    <h5 class="mb-0">
-                        <i class="fas fa-building me-2"></i>
-                        {{ entity.entity_name|default:"غير محدد" }}
-                    </h5>
 
                 </div>
 
-                <div class="card-body">
+                <div class="col-md-3">
 
-                    <!-- ✅ معلومات الجهة -->
-                    <div class="mb-3">
-                        <p class="mb-1">
-                            <strong>الفئة المالية:</strong>
-                            <span class="badge bg-secondary">{{ entity.financial_category|default:"-" }}</span>
-                        </p>
-                        <p class="mb-1">
-                            <strong>قائمة الأسعار:</strong>
-                            {{ entity.price_list|default:"-" }}
-                        </p>
-                        <p class="mb-0">
-                            <strong>معدل الخصم:</strong>
-                            <span class="badge bg-success">{{ entity.discount_rate|default:"-" }}</span>
-                        </p>
-                    </div>
+                    <label class="form-label fw-bold text-muted small">
+                        <i class="fas fa-filter"></i>
+                        القسم
+                    </label>
 
-                    <hr>
+                    <select
+                        name="section"
+                        class="form-select form-select-lg shadow-sm"
+                        onchange="this.form.submit()">
 
-                    <!-- ✅ الأتعاب حسب التصنيف -->
-                    <h6 class="fw-bold text-muted mb-3">
-                        <i class="fas fa-money-bill-wave me-1"></i>
-                        الأتعاب
-                        {% if selected_category %}
-                        <span class="badge bg-info">{{ selected_category }}</span>
-                        {% endif %}
-                    </h6>
+                        <option value="">
+                            <i class="fas fa-asterisk"></i> الكل
+                        </option>
 
-                    {% if selected_category %}
+                        <option
+                            value="internal"
+                            {% if selected_section == "internal" %}selected{% endif %}
+                        >
+                            🏥 داخلي
+                        </option>
 
-                    <div class="table-responsive">
-                        <table class="table table-sm table-bordered mb-0">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>النوع</th>
-                                    <th class="text-end">القيمة</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>جراح</td>
-                                    <td class="text-end fw-bold">
-                                        {{ entity.selected_surgeon_fee|floatformat:0|default:"-" }}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>تخدير</td>
-                                    <td class="text-end fw-bold">
-                                        {{ entity.selected_anesthesia_fee|floatformat:0|default:"-" }}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>مساعد</td>
-                                    <td class="text-end fw-bold">
-                                        {{ entity.selected_assistant_fee|floatformat:0|default:"-" }}
-                                    </td>
-                                </tr>
-                                <tr class="table-success">
-                                    <td><strong>الإجمالي</strong></td>
-                                    <td class="text-end fw-bold text-success">
-                                        {{ entity.selected_total_fee|floatformat:0|default:"-" }}
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                        <option
+                            value="external"
+                            {% if selected_section == "external" %}selected{% endif %}
+                        >
+                            🚑 خارجي
+                        </option>
 
-                    {% else %}
+                    </select>
 
-                    <div class="alert alert-info text-center">
-                        <i class="fas fa-info-circle me-1"></i>
-                        اختر تصنيفاً لعرض الأتعاب
-                    </div>
+                </div>
 
-                    {% endif %}
+                <div class="col-md-3">
+
+                    <button
+                        class="btn btn-primary btn-lg w-100 shadow-sm"
+                        type="submit">
+
+                        <i class="fas fa-search"></i>
+
+                        بحث
+
+                    </button>
 
                 </div>
 
             </div>
 
-        </div>
-
-        {% empty %}
-
-        <div class="col-12">
-            <div class="alert alert-info text-center py-5">
-                <i class="fas fa-inbox fa-3x d-block mb-3 text-muted"></i>
-                <h5 class="text-muted">لا توجد نتائج</h5>
-                <p class="text-muted small">حاول تغيير كلمات البحث أو اختيار تصنيف آخر</p>
-            </div>
-        </div>
-
-        {% endfor %}
+        </form>
 
     </div>
 
 </div>
+
+<!-- ============================================ -->
+<!-- ✅ إحصائيات النتائج -->
+<!-- ============================================ -->
+<div class="alert alert-info d-flex justify-content-between align-items-center shadow-sm">
+
+    <span>
+        <i class="fas fa-list"></i>
+        عدد النتائج
+    </span>
+
+    <span class="badge bg-primary rounded-pill fs-5 px-4 py-2">
+
+        {{ results_count }}
+
+    </span>
+
+</div>
+
+
+<!-- ============================================ -->
+<!-- ✅ عرض بيانات الشركات -->
+<!-- ============================================ -->
+{% for company in companies %}
+
+<div class="card shadow border-0 mb-4 hover-shadow">
+
+    <div class="card-header bg-gradient-primary text-white">
+
+        <div class="row align-items-center">
+
+            <div class="col-md-7">
+
+                <h5 class="mb-1 fw-bold">
+                    <i class="fas fa-building me-2"></i>
+                    {{ company.company_name }}
+                </h5>
+
+                <small>
+                    <i class="fas fa-handshake me-1"></i>
+                    {{ company.contract_type }}
+                    |
+                    <i class="fas fa-list-ul me-1"></i>
+                    قائمة الأسعار: {{ company.price_list }}
+                </small>
+
+            </div>
+
+            <div class="col-md-5 text-md-end mt-2 mt-md-0">
+
+                <span class="badge bg-light text-dark fs-6 px-4 py-2 shadow-sm">
+                    <i class="fas fa-tag me-1"></i>
+                    {{ company.financial_category }}
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="card-body">
+
+        <!-- ========================================== -->
+        <!-- ✅ القسم الداخلي -->
+        <!-- ========================================== -->
+        <div class="d-flex align-items-center mb-4">
+
+            <div class="flex-grow-1">
+                <hr class="border-success opacity-50">
+            </div>
+
+            <h5 class="text-success fw-bold mx-3 mb-0">
+                <i class="fas fa-hospital me-2"></i>
+                القسم الداخلي
+            </h5>
+
+            <div class="flex-grow-1">
+                <hr class="border-success opacity-50">
+            </div>
+
+        </div>
+
+        <div class="row g-3">
+
+        {% for item in company.internal_discounts %}
+
+            {% if item.item_name == "الاستثناءات" %}
+
+            <div class="col-12">
+
+                <div class="alert alert-warning shadow-sm border-start border-4 border-warning mt-2">
+
+                    <h6 class="mb-2 fw-bold">
+                        <i class="fas fa-exclamation-triangle text-warning"></i>
+                        الاستثناءات
+                    </h6>
+
+                    <div class="small" style="white-space: pre-line;">
+
+                        {{ item.details|linebreaksbr }}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% else %}
+
+            <div class="col-xl-3 col-lg-4 col-md-6">
+
+                <div class="card shadow-sm border-success border-2">
+
+                    <div class="card-body">
+
+                        <h6 class="fw-bold text-success">
+                            <i class="fas fa-check-circle me-1"></i>
+                            {{ item.item_name }}
+                        </h6>
+
+                        {% if item.discount %}
+
+                        <div class="mb-2">
+
+                            <span class="badge rounded-pill bg-success fs-6 px-3 py-2">
+
+                                <i class="fas fa-percent me-1"></i>
+                                {{ item.discount }}
+
+                            </span>
+
+                        </div>
+
+                        {% endif %}
+
+                        {% if item.details %}
+
+    {% if item.item_name == "اتعاب الاطباء" %}
+
+    <div class="accordion mt-2" id="doctorAccordion{{ forloop.counter }}">
+
+        <div class="accordion-item border-0">
+
+            <h2 class="accordion-header">
+
+                <button
+                    class="accordion-button collapsed py-2"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#doctorCollapse{{ forloop.counter }}">
+
+                    عرض تفاصيل الأتعاب
+                </button>
+
+            </h2>
+
+            <div
+                id="doctorCollapse{{ forloop.counter }}"
+                class="accordion-collapse collapse">
+
+                <div
+                    class="accordion-body small"
+                    style="white-space: pre-line;">
+
+                    {{ item.details|linebreaksbr }}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    {% else %}
+
+    <div class="small text-muted mb-2" style="white-space: pre-line;">
+
+        {{ item.details|linebreaksbr }}
+
+    </div>
+
+    {% endif %}
+
+{% endif %}
+
+                        {% if item.net_price and item.item_name != "الاقامه" %}
+
+                        <div class="fw-bold text-primary fs-5 mt-2">
+
+                            <i class="fas fa-money-bill-wave me-1"></i>
+                            {{ item.net_price|floatformat:0 }} جنيه
+
+                        </div>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% endif %}
+
+        {% endfor %}
+
+        </div>
+
+        <!-- ========================================== -->
+        <!-- ✅ القسم الخارجي -->
+        <!-- ========================================== -->
+        <div class="d-flex align-items-center my-5">
+
+            <div class="flex-grow-1">
+                <hr class="border-primary opacity-50">
+            </div>
+
+            <h5 class="text-primary fw-bold mx-3 mb-0">
+                <i class="fas fa-user-md me-2"></i>
+                القسم الخارجي
+            </h5>
+
+            <div class="flex-grow-1">
+                <hr class="border-primary opacity-50">
+            </div>
+
+        </div>
+
+        <div class="row g-3">
+
+        {% for item in company.external_discounts %}
+
+            {% if item.item_name == "الاستثناءات" %}
+
+            <div class="col-12">
+
+                <div class="alert alert-warning shadow-sm border-start border-4 border-warning mt-2">
+
+                    <h6 class="mb-2 fw-bold">
+                        <i class="fas fa-exclamation-triangle text-warning"></i>
+                        الاستثناءات
+                    </h6>
+
+                    <div class="small" style="white-space: pre-line;">
+
+                        {{ item.details|linebreaksbr }}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% else %}
+
+            <div class="col-xl-3 col-lg-4 col-md-6">
+
+                <div class="card shadow-sm border-primary border-2">
+
+                    <div class="card-body">
+
+                        <h6 class="fw-bold text-primary">
+                            <i class="fas fa-check-circle me-1"></i>
+                            {{ item.item_name }}
+                        </h6>
+
+                        {% if item.discount %}
+
+                        <div class="mb-2">
+
+                            <span class="badge rounded-pill bg-primary fs-6 px-3 py-2">
+
+                                <i class="fas fa-percent me-1"></i>
+                                {{ item.discount }}
+
+                            </span>
+
+                        </div>
+
+                        {% endif %}
+
+                        {% if item.details %}
+
+                        <div class="small text-muted mb-2" style="white-space: pre-line;">
+
+                            {{ item.details|linebreaksbr }}
+
+                        </div>
+
+                        {% endif %}
+
+                        {% if item.net_price %}
+
+                        <div class="fw-bold text-success fs-5 mt-2">
+
+                            <i class="fas fa-money-bill-wave me-1"></i>
+                            {{ item.net_price|floatformat:0 }} جنيه
+
+                        </div>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% endif %}
+
+        {% endfor %}
+
+        </div>
+
+        <!-- ========================================== -->
+        <!-- ✅ المرفقات -->
+        <!-- ========================================== -->
+        {% if company.operating_pdf %}
+
+        <div class="mt-4 p-3 bg-light rounded shadow-sm">
+
+            <div class="d-flex align-items-center justify-content-between">
+
+                <span>
+                    <i class="fas fa-paperclip text-danger me-2"></i>
+                    <strong>تعليمات التشغيل</strong>
+                </span>
+
+                <a
+                    href="{{ company.operating_pdf }}"
+                    target="_blank"
+                    class="btn btn-outline-danger btn-sm">
+
+                    <i class="fas fa-file-pdf me-1"></i>
+                    فتح PDF
+
+                </a>
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% empty %}
+
+<div class="alert alert-warning text-center py-5">
+
+    <i class="fas fa-inbox fa-3x d-block mb-3 text-muted"></i>
+
+    <h5 class="text-muted">لا توجد بيانات</h5>
+
+    <p class="text-muted small">حاول تغيير كلمات البحث</p>
+
+</div>
+
+{% endfor %}
 
 <!-- ============================================ -->
 <!-- ✅ CSS تحسينات -->
@@ -434,17 +617,22 @@ def procedure_fees(request):
     }
 
     .hover-shadow {
-        transition: all 0.3s ease;
+        transition: box-shadow 0.3s ease;
     }
 
     .hover-shadow:hover {
         box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
-        transform: translateY(-2px);
     }
 
     .card {
         border-radius: 1rem;
         overflow: hidden;
+        transition: 0.25s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0.75rem 1.5rem rgba(0, 0, 0, 0.12) !important;
     }
 
     .card-header {
@@ -455,30 +643,168 @@ def procedure_fees(request):
         font-weight: 500;
     }
 
-    .input-group-text {
-        border-radius: 0.5rem 0 0 0.5rem;
-        background: #f8f9fa;
+    .alert-warning {
+        background: #fff3cd;
+        border-color: #ffc107;
     }
 
-    .form-control,
-    .form-select {
+    .border-success {
+        border-color: #28a745 !important;
+    }
+
+    .border-primary {
+        border-color: #007bff !important;
+    }
+
+    .border-warning {
+        border-color: #ffc107 !important;
+    }
+
+    /* ✅ تخصيص شريط التمرير */
+    ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: #667eea;
+        border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #5a67d8;
+    }
+
+    /* ✅ زر مسح البحث */
+    .clear-search-btn {
         border-radius: 0 0.5rem 0.5rem 0;
-    }
-
-    .form-control:focus,
-    .form-select:focus {
-        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
-        border-color: #667eea;
-    }
-
-    @media (max-width: 768px) {
-        .card-body {
-            padding: 1rem;
-        }
-        .badge.fs-6 {
-            font-size: 0.85rem !important;
-        }
+        border-left: none;
     }
 </style>
 
 {% endblock %}
+
+
+
+
+
+
+
+
+
+def company_discounts(request):
+
+    search = request.GET.get(
+        "search",
+        ""
+    )
+    entity_id = request.GET.get(
+        "entity"
+    )
+
+    section = request.GET.get(
+        "section",
+        ""
+    )
+    
+    selected_company = None
+
+    if entity_id:
+
+        from contracts.models import ContractEntity
+
+        selected_company = get_object_or_404(
+            ContractEntity,
+            pk=entity_id
+        )
+
+        search = selected_company.name
+
+    companies = (
+        CompanyDiscountProfile.objects.prefetch_related(
+            Prefetch(
+                "discounts",
+                queryset=CompanyDiscount.objects.order_by(
+                    "section",
+                    "display_order",
+                ),
+            )
+        ).order_by(
+            "company_name"
+        )
+    )
+
+    if search:
+
+        companies = companies.filter(
+
+            Q(company_name__icontains=search)
+
+            |
+
+            Q(financial_category__icontains=search)
+
+        )
+
+    company_cards = []
+
+    for company in companies:
+
+        internal = []
+
+        external = []
+
+        for discount in company.discounts.all():
+
+            if section == "internal":
+
+                if discount.section != "داخلي":
+                    continue
+
+            elif section == "external":
+
+                if discount.section != "خارجي":
+                    continue
+
+            if discount.section == "داخلي":
+
+                internal.append(discount)
+
+            else:
+
+                external.append(discount)
+
+        company.internal_discounts = internal
+
+        company.external_discounts = external
+
+        company_cards.append(company)
+
+    return render(
+
+        request,
+
+        "frontend/company_discounts.html",
+
+        {
+
+            "companies": company_cards,
+
+            "search": search,
+
+            "selected_section": section,
+
+            "results_count": len(company_cards),
+            "selected_company": selected_company,
+            "entity_id": entity_id,
+
+        }
+
+    )
+    
+

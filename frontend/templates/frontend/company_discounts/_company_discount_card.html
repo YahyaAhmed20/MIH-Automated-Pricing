@@ -1,0 +1,328 @@
+<!-- ============================================ -->
+<!-- ✅ كارت خصومات شركة واحدة -->
+<!-- ============================================ -->
+
+<div class="card shadow border-0 mb-4 hover-shadow">
+
+    <div class="card-header bg-gradient-primary text-white">
+
+        <div class="row align-items-center">
+
+            <div class="col-md-7">
+
+                <h5 class="mb-1 fw-bold">
+                    <i class="fas fa-building me-2"></i>
+                    {{ company.company_name }}
+                </h5>
+
+                <small>
+                    <i class="fas fa-handshake me-1"></i>
+                    {{ company.contract_type }}
+                    |
+                    <i class="fas fa-list-ul me-1"></i>
+                    قائمة الأسعار: {{ company.price_list }}
+                </small>
+
+            </div>
+
+            <div class="col-md-5 text-md-end mt-2 mt-md-0">
+
+                <span class="badge bg-light text-dark fs-6 px-4 py-2 shadow-sm">
+                    <i class="fas fa-tag me-1"></i>
+                    {{ company.financial_category }}
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="card-body">
+
+        <!-- ========================================== -->
+        <!-- ✅ القسم الداخلي -->
+        <!-- ========================================== -->
+        <div class="d-flex align-items-center mb-4">
+
+            <div class="flex-grow-1">
+                <hr class="border-success opacity-50">
+            </div>
+
+            <h5 class="text-success fw-bold mx-3 mb-0">
+                <i class="fas fa-hospital me-2"></i>
+                القسم الداخلي
+            </h5>
+
+            <div class="flex-grow-1">
+                <hr class="border-success opacity-50">
+            </div>
+
+        </div>
+
+        <div class="row g-3">
+
+        {% for item in company.internal_discounts %}
+
+            {% if item.item_name == "الاستثناءات" %}
+
+            <div class="col-12">
+
+                <div class="alert alert-warning shadow-sm border-start border-4 border-warning mt-2">
+
+                    <h6 class="mb-2 fw-bold">
+                        <i class="fas fa-exclamation-triangle text-warning"></i>
+                        الاستثناءات
+                    </h6>
+
+                    <div class="small" style="white-space: pre-line;">
+
+                        {{ item.details|linebreaksbr }}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% else %}
+
+            <div class="col-xl-3 col-lg-4 col-md-6">
+
+                <div class="card shadow-sm border-success border-2">
+
+                    <div class="card-body">
+
+                        <h6 class="fw-bold text-success">
+                            <i class="fas fa-check-circle me-1"></i>
+                            {{ item.item_name }}
+                        </h6>
+
+                        {% if item.discount %}
+
+                        <div class="mb-2">
+
+                            <span class="badge rounded-pill bg-success fs-6 px-3 py-2">
+
+                                <i class="fas fa-percent me-1"></i>
+                                {{ item.discount }}
+
+                            </span>
+
+                        </div>
+
+                        {% endif %}
+
+                        {% if item.details %}
+
+                        {% if item.item_name == "اتعاب الاطباء" %}
+
+                        <div class="accordion mt-2" id="doctorAccordion{{ forloop.counter }}">
+
+                            <div class="accordion-item border-0">
+
+                                <h2 class="accordion-header">
+
+                                    <button
+                                        class="accordion-button collapsed py-2"
+                                        type="button"
+                                        data-bs-toggle="collapse"
+                                        data-bs-target="#doctorCollapse{{ forloop.counter }}">
+
+                                        عرض تفاصيل الأتعاب
+                                    </button>
+
+                                </h2>
+
+                                <div
+                                    id="doctorCollapse{{ forloop.counter }}"
+                                    class="accordion-collapse collapse">
+
+                                    <div
+                                        class="accordion-body small"
+                                        style="white-space: pre-line;">
+
+                                        {{ item.details|linebreaksbr }}
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        {% else %}
+
+                        <div class="small text-muted mb-2" style="white-space: pre-line;">
+
+                            {{ item.details|linebreaksbr }}
+
+                        </div>
+
+                        {% endif %}
+
+                        {% endif %}
+
+                        {% if item.net_price and item.item_name != "الاقامه" %}
+
+                        <div class="fw-bold text-primary fs-5 mt-2">
+
+                            <i class="fas fa-money-bill-wave me-1"></i>
+                            {{ item.net_price|floatformat:0 }} جنيه
+
+                        </div>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% endif %}
+
+        {% endfor %}
+
+        </div>
+
+        <!-- ========================================== -->
+        <!-- ✅ القسم الخارجي -->
+        <!-- ========================================== -->
+        <div class="d-flex align-items-center my-5">
+
+            <div class="flex-grow-1">
+                <hr class="border-primary opacity-50">
+            </div>
+
+            <h5 class="text-primary fw-bold mx-3 mb-0">
+                <i class="fas fa-user-md me-2"></i>
+                القسم الخارجي
+            </h5>
+
+            <div class="flex-grow-1">
+                <hr class="border-primary opacity-50">
+            </div>
+
+        </div>
+
+        <div class="row g-3">
+
+        {% for item in company.external_discounts %}
+
+            {% if item.item_name == "الاستثناءات" %}
+
+            <div class="col-12">
+
+                <div class="alert alert-warning shadow-sm border-start border-4 border-warning mt-2">
+
+                    <h6 class="mb-2 fw-bold">
+                        <i class="fas fa-exclamation-triangle text-warning"></i>
+                        الاستثناءات
+                    </h6>
+
+                    <div class="small" style="white-space: pre-line;">
+
+                        {{ item.details|linebreaksbr }}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% else %}
+
+            <div class="col-xl-3 col-lg-4 col-md-6">
+
+                <div class="card shadow-sm border-primary border-2">
+
+                    <div class="card-body">
+
+                        <h6 class="fw-bold text-primary">
+                            <i class="fas fa-check-circle me-1"></i>
+                            {{ item.item_name }}
+                        </h6>
+
+                        {% if item.discount %}
+
+                        <div class="mb-2">
+
+                            <span class="badge rounded-pill bg-primary fs-6 px-3 py-2">
+
+                                <i class="fas fa-percent me-1"></i>
+                                {{ item.discount }}
+
+                            </span>
+
+                        </div>
+
+                        {% endif %}
+
+                        {% if item.details %}
+
+                        <div class="small text-muted mb-2" style="white-space: pre-line;">
+
+                            {{ item.details|linebreaksbr }}
+
+                        </div>
+
+                        {% endif %}
+
+                        {% if item.net_price %}
+
+                        <div class="fw-bold text-success fs-5 mt-2">
+
+                            <i class="fas fa-money-bill-wave me-1"></i>
+                            {{ item.net_price|floatformat:0 }} جنيه
+
+                        </div>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% endif %}
+
+        {% endfor %}
+
+        </div>
+
+        <!-- ========================================== -->
+        <!-- ✅ المرفقات -->
+        <!-- ========================================== -->
+        {% if company.operating_pdf %}
+
+        <div class="mt-4 p-3 bg-light rounded shadow-sm">
+
+            <div class="d-flex align-items-center justify-content-between">
+
+                <span>
+                    <i class="fas fa-paperclip text-danger me-2"></i>
+                    <strong>تعليمات التشغيل</strong>
+                </span>
+
+                <a
+                    href="{{ company.operating_pdf }}"
+                    target="_blank"
+                    class="btn btn-outline-danger btn-sm">
+
+                    <i class="fas fa-file-pdf me-1"></i>
+                    فتح PDF
+
+                </a>
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>

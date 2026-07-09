@@ -1,0 +1,175 @@
+<!-- ============================================ -->
+<!-- ✅ Script للبحث التلقائي -->
+<!-- ============================================ -->
+<script>
+    let searchTimeout;
+
+    function searchDelay() {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(function() {
+            document.querySelector('form').submit();
+        }, 300);
+    }
+
+    // ✅ إظهار/إخفاء زر المسح
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.querySelector('input[name="search"]');
+        const clearBtn = document.querySelector('.clear-search-btn');
+
+        if (searchInput && clearBtn) {
+            searchInput.addEventListener('input', function() {
+                if (this.value.length > 0) {
+                    clearBtn.style.display = 'block';
+                } else {
+                    clearBtn.style.display = 'none';
+                }
+            });
+        }
+    });
+</script>
+
+<!-- ============================================ -->
+<!-- ✅ شريط البحث والفلتر المحسن -->
+<!-- ============================================ -->
+<div class="card shadow border-0 hover-shadow mb-4">
+
+    <div class="card-header bg-gradient-primary text-white">
+        <h5 class="mb-0">
+            <i class="fas fa-search"></i>
+            البحث في خصومات الشركات
+        </h5>
+    </div>
+
+    <div class="card-body">
+
+        <form method="get">
+
+            <div class="row g-3 align-items-end">
+
+                <div class="col-md-6">
+
+                    <label class="form-label fw-bold text-muted small">
+                        <i class="fas fa-building"></i>
+                        بحث
+                    </label>
+
+                    <div class="input-group input-group-lg">
+                        <span class="input-group-text bg-light border-0">
+                            <i class="fas fa-search text-primary"></i>
+                        </span>
+                        <input
+                            type="text"
+                            name="search"
+                            value="{{ search }}"
+                            class="form-control border-0 shadow-sm"
+                            placeholder="ابحث باسم الشركة أو الفئة المالية..."
+                            autofocus
+                            onkeyup="searchDelay()"
+                        >
+                        {% if search %}
+                        <a
+                            href="{% url 'company_discounts' %}"
+                            class="btn btn-outline-danger border-0 clear-search-btn"
+                            title="مسح البحث"
+                        >
+                            <i class="fas fa-times"></i>
+                        </a>
+                        {% endif %}
+                    </div>
+
+                </div>
+
+                <div class="col-md-3">
+
+                    <label class="form-label fw-bold text-muted small">
+                        <i class="fas fa-filter"></i>
+                        القسم
+                    </label>
+
+                    <select
+                        name="section"
+                        class="form-select form-select-lg shadow-sm"
+                        onchange="this.form.submit()">
+
+                        <option value="">
+                            <i class="fas fa-asterisk"></i> الكل
+                        </option>
+
+                        <option
+                            value="internal"
+                            {% if selected_section == "internal" %}selected{% endif %}
+                        >
+                            🏥 داخلي
+                        </option>
+
+                        <option
+                            value="external"
+                            {% if selected_section == "external" %}selected{% endif %}
+                        >
+                            🚑 خارجي
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <div class="col-md-3">
+
+                    <button
+                        class="btn btn-primary btn-lg w-100 shadow-sm"
+                        type="submit">
+
+                        <i class="fas fa-search"></i>
+
+                        بحث
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+<!-- ============================================ -->
+<!-- ✅ إحصائيات النتائج -->
+<!-- ============================================ -->
+<div class="alert alert-info d-flex justify-content-between align-items-center shadow-sm">
+
+    <span>
+        <i class="fas fa-list"></i>
+        عدد النتائج
+    </span>
+
+    <span class="badge bg-primary rounded-pill fs-5 px-4 py-2">
+
+        {{ results_count }}
+
+    </span>
+
+</div>
+
+<!-- ============================================ -->
+<!-- ✅ عرض بيانات الشركات (باستخدام الـ Include) -->
+<!-- ============================================ -->
+{% for company in companies %}
+
+    {% include "frontend/company_discounts/_company_discount_card.html" with company=company %}
+
+{% empty %}
+
+<div class="alert alert-warning text-center py-5">
+
+    <i class="fas fa-inbox fa-3x d-block mb-3 text-muted"></i>
+
+    <h5 class="text-muted">لا توجد بيانات</h5>
+
+    <p class="text-muted small">حاول تغيير كلمات البحث</p>
+
+</div>
+
+{% endfor %}

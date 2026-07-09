@@ -9,505 +9,71 @@
 {% if selected_company %}
     {% include "frontend/includes/company_tabs.html" %}
 {% endif %}
-<!-- ============================================ -->
-<!-- ✅ Script للبحث التلقائي -->
-<!-- ============================================ -->
-<script>
-    let searchTimeout;
-
-    function searchDelay() {
-        clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(function() {
-            document.querySelector('form').submit();
-        }, 300);
-    }
-
-    // ✅ إظهار/إخفاء زر المسح
-    document.addEventListener('DOMContentLoaded', function() {
-        const searchInput = document.querySelector('input[name="search"]');
-        const clearBtn = document.querySelector('.clear-search-btn');
-
-        if (searchInput && clearBtn) {
-            searchInput.addEventListener('input', function() {
-                if (this.value.length > 0) {
-                    clearBtn.style.display = 'block';
-                } else {
-                    clearBtn.style.display = 'none';
-                }
-            });
-        }
-    });
-</script>
 
 <!-- ============================================ -->
-<!-- ✅ شريط البحث والفلتر المحسن -->
+<!-- ✅ Tabs للخصومات -->
 <!-- ============================================ -->
-<div class="card shadow border-0 hover-shadow mb-4">
+<div class="card shadow-sm border-0 mb-4">
 
-    <div class="card-header bg-gradient-primary text-white">
-        <h5 class="mb-0">
-            <i class="fas fa-search"></i>
-            البحث في خصومات الشركات
-        </h5>
-    </div>
+    <div class="card-body py-2">
 
-    <div class="card-body">
+        <ul class="nav nav-tabs">
 
-        <form method="get">
+            <li class="nav-item">
+                <a class="nav-link {% if active_tab == 'discounts' or not active_tab %}active{% endif %}"
+                   href="?tab=discounts{% if entity_id %}&entity={{ entity_id }}{% endif %}{% if search %}&search={{ search }}{% endif %}{% if selected_section %}&section={{ selected_section }}{% endif %}">
+                    خصومات الشركات
+                </a>
+            </li>
 
-            <div class="row g-3 align-items-end">
+            <li class="nav-item">
+                <a class="nav-link {% if active_tab == 'compare' %}active{% endif %}"
+                   href="?tab=compare{% if entity_id %}&entity={{ entity_id }}{% endif %}{% if search %}&search={{ search }}{% endif %}{% if selected_section %}&section={{ selected_section }}{% endif %}">
+                    مقارنة بين جهتين
+                </a>
+            </li>
 
-                <div class="col-md-6">
+            <li class="nav-item">
+                <a class="nav-link {% if active_tab == 'ranking' %}active{% endif %}"
+                   href="?tab=ranking{% if entity_id %}&entity={{ entity_id }}{% endif %}{% if search %}&search={{ search }}{% endif %}{% if selected_section %}&section={{ selected_section }}{% endif %}">
+                    الأعلى والأقل خصماً
+                </a>
+            </li>
 
-                    <label class="form-label fw-bold text-muted small">
-                        <i class="fas fa-building"></i>
-                        بحث
-                    </label>
+            <li class="nav-item">
+                <a class="nav-link {% if active_tab == 'exceptions' %}active{% endif %}"
+                   href="?tab=exceptions{% if entity_id %}&entity={{ entity_id }}{% endif %}{% if search %}&search={{ search }}{% endif %}{% if selected_section %}&section={{ selected_section }}{% endif %}">
+                    الاستثناءات
+                </a>
+            </li>
 
-                    <div class="input-group input-group-lg">
-                        <span class="input-group-text bg-light border-0">
-                            <i class="fas fa-search text-primary"></i>
-                        </span>
-                        <input
-                            type="text"
-                            name="search"
-                            value="{{ search }}"
-                            class="form-control border-0 shadow-sm"
-                            placeholder="ابحث باسم الشركة أو الفئة المالية..."
-                            autofocus
-                            onkeyup="searchDelay()"
-                        >
-                        {% if search %}
-                        <a
-                            href="{% url 'company_discounts' %}"
-                            class="btn btn-outline-danger border-0 clear-search-btn"
-                            title="مسح البحث"
-                        >
-                            <i class="fas fa-times"></i>
-                        </a>
-                        {% endif %}
-                    </div>
-
-                </div>
-
-                <div class="col-md-3">
-
-                    <label class="form-label fw-bold text-muted small">
-                        <i class="fas fa-filter"></i>
-                        القسم
-                    </label>
-
-                    <select
-                        name="section"
-                        class="form-select form-select-lg shadow-sm"
-                        onchange="this.form.submit()">
-
-                        <option value="">
-                            <i class="fas fa-asterisk"></i> الكل
-                        </option>
-
-                        <option
-                            value="internal"
-                            {% if selected_section == "internal" %}selected{% endif %}
-                        >
-                            🏥 داخلي
-                        </option>
-
-                        <option
-                            value="external"
-                            {% if selected_section == "external" %}selected{% endif %}
-                        >
-                            🚑 خارجي
-                        </option>
-
-                    </select>
-
-                </div>
-
-                <div class="col-md-3">
-
-                    <button
-                        class="btn btn-primary btn-lg w-100 shadow-sm"
-                        type="submit">
-
-                        <i class="fas fa-search"></i>
-
-                        بحث
-
-                    </button>
-
-                </div>
-
-            </div>
-
-        </form>
+        </ul>
 
     </div>
 
 </div>
 
 <!-- ============================================ -->
-<!-- ✅ إحصائيات النتائج -->
+<!-- ✅ الـ Tabs (كل Tab في ملف مستقل) -->
 <!-- ============================================ -->
-<div class="alert alert-info d-flex justify-content-between align-items-center shadow-sm">
 
-    <span>
-        <i class="fas fa-list"></i>
-        عدد النتائج
-    </span>
+{% if active_tab == "discounts" or not active_tab %}
 
-    <span class="badge bg-primary rounded-pill fs-5 px-4 py-2">
+    {% include "frontend/company_discounts/_discounts_tab.html" %}
 
-        {{ results_count }}
+{% elif active_tab == "compare" %}
 
-    </span>
+    {% include "frontend/company_discounts/_compare_tab.html" %}
 
-</div>
+{% elif active_tab == "ranking" %}
 
+    {% include "frontend/company_discounts/_ranking_tab.html" %}
 
-<!-- ============================================ -->
-<!-- ✅ عرض بيانات الشركات -->
-<!-- ============================================ -->
-{% for company in companies %}
+{% elif active_tab == "exceptions" %}
 
-<div class="card shadow border-0 mb-4 hover-shadow">
-
-    <div class="card-header bg-gradient-primary text-white">
-
-        <div class="row align-items-center">
-
-            <div class="col-md-7">
-
-                <h5 class="mb-1 fw-bold">
-                    <i class="fas fa-building me-2"></i>
-                    {{ company.company_name }}
-                </h5>
-
-                <small>
-                    <i class="fas fa-handshake me-1"></i>
-                    {{ company.contract_type }}
-                    |
-                    <i class="fas fa-list-ul me-1"></i>
-                    قائمة الأسعار: {{ company.price_list }}
-                </small>
-
-            </div>
-
-            <div class="col-md-5 text-md-end mt-2 mt-md-0">
-
-                <span class="badge bg-light text-dark fs-6 px-4 py-2 shadow-sm">
-                    <i class="fas fa-tag me-1"></i>
-                    {{ company.financial_category }}
-                </span>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <div class="card-body">
-
-        <!-- ========================================== -->
-        <!-- ✅ القسم الداخلي -->
-        <!-- ========================================== -->
-        <div class="d-flex align-items-center mb-4">
-
-            <div class="flex-grow-1">
-                <hr class="border-success opacity-50">
-            </div>
-
-            <h5 class="text-success fw-bold mx-3 mb-0">
-                <i class="fas fa-hospital me-2"></i>
-                القسم الداخلي
-            </h5>
-
-            <div class="flex-grow-1">
-                <hr class="border-success opacity-50">
-            </div>
-
-        </div>
-
-        <div class="row g-3">
-
-        {% for item in company.internal_discounts %}
-
-            {% if item.item_name == "الاستثناءات" %}
-
-            <div class="col-12">
-
-                <div class="alert alert-warning shadow-sm border-start border-4 border-warning mt-2">
-
-                    <h6 class="mb-2 fw-bold">
-                        <i class="fas fa-exclamation-triangle text-warning"></i>
-                        الاستثناءات
-                    </h6>
-
-                    <div class="small" style="white-space: pre-line;">
-
-                        {{ item.details|linebreaksbr }}
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            {% else %}
-
-            <div class="col-xl-3 col-lg-4 col-md-6">
-
-                <div class="card shadow-sm border-success border-2">
-
-                    <div class="card-body">
-
-                        <h6 class="fw-bold text-success">
-                            <i class="fas fa-check-circle me-1"></i>
-                            {{ item.item_name }}
-                        </h6>
-
-                        {% if item.discount %}
-
-                        <div class="mb-2">
-
-                            <span class="badge rounded-pill bg-success fs-6 px-3 py-2">
-
-                                <i class="fas fa-percent me-1"></i>
-                                {{ item.discount }}
-
-                            </span>
-
-                        </div>
-
-                        {% endif %}
-
-                        {% if item.details %}
-
-    {% if item.item_name == "اتعاب الاطباء" %}
-
-    <div class="accordion mt-2" id="doctorAccordion{{ forloop.counter }}">
-
-        <div class="accordion-item border-0">
-
-            <h2 class="accordion-header">
-
-                <button
-                    class="accordion-button collapsed py-2"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#doctorCollapse{{ forloop.counter }}">
-
-                    عرض تفاصيل الأتعاب
-                </button>
-
-            </h2>
-
-            <div
-                id="doctorCollapse{{ forloop.counter }}"
-                class="accordion-collapse collapse">
-
-                <div
-                    class="accordion-body small"
-                    style="white-space: pre-line;">
-
-                    {{ item.details|linebreaksbr }}
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    {% else %}
-
-    <div class="small text-muted mb-2" style="white-space: pre-line;">
-
-        {{ item.details|linebreaksbr }}
-
-    </div>
-
-    {% endif %}
+    {% include "frontend/company_discounts/_exceptions_tab.html" %}
 
 {% endif %}
-
-                        {% if item.net_price and item.item_name != "الاقامه" %}
-
-                        <div class="fw-bold text-primary fs-5 mt-2">
-
-                            <i class="fas fa-money-bill-wave me-1"></i>
-                            {{ item.net_price|floatformat:0 }} جنيه
-
-                        </div>
-
-                        {% endif %}
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            {% endif %}
-
-        {% endfor %}
-
-        </div>
-
-        <!-- ========================================== -->
-        <!-- ✅ القسم الخارجي -->
-        <!-- ========================================== -->
-        <div class="d-flex align-items-center my-5">
-
-            <div class="flex-grow-1">
-                <hr class="border-primary opacity-50">
-            </div>
-
-            <h5 class="text-primary fw-bold mx-3 mb-0">
-                <i class="fas fa-user-md me-2"></i>
-                القسم الخارجي
-            </h5>
-
-            <div class="flex-grow-1">
-                <hr class="border-primary opacity-50">
-            </div>
-
-        </div>
-
-        <div class="row g-3">
-
-        {% for item in company.external_discounts %}
-
-            {% if item.item_name == "الاستثناءات" %}
-
-            <div class="col-12">
-
-                <div class="alert alert-warning shadow-sm border-start border-4 border-warning mt-2">
-
-                    <h6 class="mb-2 fw-bold">
-                        <i class="fas fa-exclamation-triangle text-warning"></i>
-                        الاستثناءات
-                    </h6>
-
-                    <div class="small" style="white-space: pre-line;">
-
-                        {{ item.details|linebreaksbr }}
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            {% else %}
-
-            <div class="col-xl-3 col-lg-4 col-md-6">
-
-                <div class="card shadow-sm border-primary border-2">
-
-                    <div class="card-body">
-
-                        <h6 class="fw-bold text-primary">
-                            <i class="fas fa-check-circle me-1"></i>
-                            {{ item.item_name }}
-                        </h6>
-
-                        {% if item.discount %}
-
-                        <div class="mb-2">
-
-                            <span class="badge rounded-pill bg-primary fs-6 px-3 py-2">
-
-                                <i class="fas fa-percent me-1"></i>
-                                {{ item.discount }}
-
-                            </span>
-
-                        </div>
-
-                        {% endif %}
-
-                        {% if item.details %}
-
-                        <div class="small text-muted mb-2" style="white-space: pre-line;">
-
-                            {{ item.details|linebreaksbr }}
-
-                        </div>
-
-                        {% endif %}
-
-                        {% if item.net_price %}
-
-                        <div class="fw-bold text-success fs-5 mt-2">
-
-                            <i class="fas fa-money-bill-wave me-1"></i>
-                            {{ item.net_price|floatformat:0 }} جنيه
-
-                        </div>
-
-                        {% endif %}
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            {% endif %}
-
-        {% endfor %}
-
-        </div>
-
-        <!-- ========================================== -->
-        <!-- ✅ المرفقات -->
-        <!-- ========================================== -->
-        {% if company.operating_pdf %}
-
-        <div class="mt-4 p-3 bg-light rounded shadow-sm">
-
-            <div class="d-flex align-items-center justify-content-between">
-
-                <span>
-                    <i class="fas fa-paperclip text-danger me-2"></i>
-                    <strong>تعليمات التشغيل</strong>
-                </span>
-
-                <a
-                    href="{{ company.operating_pdf }}"
-                    target="_blank"
-                    class="btn btn-outline-danger btn-sm">
-
-                    <i class="fas fa-file-pdf me-1"></i>
-                    فتح PDF
-
-                </a>
-
-            </div>
-
-        </div>
-
-        {% endif %}
-
-    </div>
-
-</div>
-
-{% empty %}
-
-<div class="alert alert-warning text-center py-5">
-
-    <i class="fas fa-inbox fa-3x d-block mb-3 text-muted"></i>
-
-    <h5 class="text-muted">لا توجد بيانات</h5>
-
-    <p class="text-muted small">حاول تغيير كلمات البحث</p>
-
-</div>
-
-{% endfor %}
 
 <!-- ============================================ -->
 <!-- ✅ CSS تحسينات -->
@@ -561,7 +127,6 @@
         border-color: #ffc107 !important;
     }
 
-    /* ✅ تخصيص شريط التمرير */
     ::-webkit-scrollbar {
         width: 8px;
         height: 8px;
@@ -581,7 +146,6 @@
         background: #5a67d8;
     }
 
-    /* ✅ زر مسح البحث */
     .clear-search-btn {
         border-radius: 0 0.5rem 0.5rem 0;
         border-left: none;
