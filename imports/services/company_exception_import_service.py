@@ -11,7 +11,7 @@ from pricing_requests.models import (
 from imports.utils.import_helpers import ImportHelpers
 
 
-# ✅ أعمدة الشيت 9
+# ✅ أعمدة الشيت 9 - تم التعديل
 COLUMN_MAP = [
     # ------------------ داخلي ------------------
     ("داخلي", "الاشعه التداخليه", 3, 4, None),
@@ -33,20 +33,15 @@ class CompanyExceptionImportService:
 
     @staticmethod
     def _get_discount_value(val):
-        """
-        استخراج قيمة الخصم وتحويلها لنسبة مئوية صحيحة
-        باستخدام ImportHelpers.clean_percentage
-        """
+        """استخراج قيمة الخصم وتحويلها لنسبة مئوية صحيحة"""
         if val is None or pd.isna(val):
             return None
         
-        # استخدام clean_percentage من ImportHelpers
         discount = ImportHelpers.clean_percentage(val)
         
         if discount is None:
             return None
         
-        # تقريب لعدد صحيح
         return round(discount)
 
     @staticmethod
@@ -138,7 +133,7 @@ class CompanyExceptionImportService:
 
                 # ✅ أولاً: نضيف الخدمات الأساسية من الصف الرئيسي
                 for section, service_name, discount_col, details_col, price_col in COLUMN_MAP:
-                    # قراءة الخصم باستخدام _get_discount_value
+                    # قراءة الخصم
                     discount = None
                     if discount_col is not None and len(row) > discount_col:
                         val = row.iloc[discount_col]
@@ -179,14 +174,9 @@ class CompanyExceptionImportService:
 
                 # ✅ ثانياً: نضيف التفاصيل الإضافية من الصفوف التالية
                 for detail_row in detail_rows:
+                    # ✅ نمر على كل خدمة في COLUMN_MAP
                     for section, service_name, discount_col, details_col, price_col in COLUMN_MAP:
-                        # التفاصيل الإضافية (نفس الخصم)
-                        discount = None
-                        if discount_col is not None and len(row) > discount_col:
-                            val = row.iloc[discount_col]
-                            if pd.notna(val):
-                                discount = CompanyExceptionImportService._get_discount_value(val)
-
+                        # ✅ نقرأ التفاصيل من الصف الحالي (detail_row) مش من الصف الرئيسي
                         details = ""
                         if details_col is not None and len(detail_row) > details_col:
                             val = detail_row.iloc[details_col]
@@ -199,11 +189,18 @@ class CompanyExceptionImportService:
                             if pd.notna(val):
                                 net_price = ImportHelpers.normalize_text(val)
 
-                        # لو مفيش بيانات نستمر
+                        # ✅ لو مفيش بيانات في هذا العمود، نستمر
                         if not details and not net_price:
                             continue
 
-                        # ✅ إنشاء الـ Item
+                        # ✅ نبحث عن الخصم من الصف الرئيسي
+                        discount = None
+                        if discount_col is not None and len(row) > discount_col:
+                            val = row.iloc[discount_col]
+                            if pd.notna(val):
+                                discount = CompanyExceptionImportService._get_discount_value(val)
+
+                        # ✅ إنشاء الـ Item مع التفاصيل الإضافية
                         CompanyExceptionItem.objects.create(
                             profile=current_profile,
                             section=section,
