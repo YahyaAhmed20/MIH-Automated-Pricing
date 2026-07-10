@@ -959,11 +959,80 @@ def company_discounts(request):
     rankings = CompanyDiscountRank.objects.all()
 
     # ============================================
-    # ✅ Tab 4: الاستثناءات
+    # ✅ Tab 4: الاستثناءات (موديل قديم)
     # ============================================
     from pricing_requests.models import CompanyException
 
     exceptions = CompanyException.objects.all()
+    
+    # ============================================
+    # ✅ Tab 4: الاستثناءات (موديل جديد - CompanyExceptionProfile)
+    # ============================================
+    from pricing_requests.models import CompanyExceptionProfile, CompanyExceptionItem
+    
+    # جلب جميع ملفات الاستثناءات مع عناصرها
+    exception_profiles = (
+        CompanyExceptionProfile.objects
+        .prefetch_related(
+            Prefetch(
+                "items",
+                queryset=CompanyExceptionItem.objects.order_by(
+                    "section",
+                    "display_order",
+                ),
+            )
+        )
+        .order_by("entity_name")
+    )
+    
+    # تنظيم البيانات للعرض وحساب الإحصائيات
+    exceptions_data = []
+    total_internal = 0
+    total_external = 0
+    total_services = 0
+    
+    for profile in exception_profiles:
+        internal_items = []
+        external_items = []
+        
+        for item in profile.items.all():
+            if item.section == "داخلي":
+                internal_items.append(item)
+                total_internal += 1
+            else:
+                external_items.append(item)
+                total_external += 1
+        
+        total_services = total_internal + total_external
+        
+        exceptions_data.append({
+            'profile': profile,
+            'internal_items': internal_items,
+            'external_items': external_items,
+        })
+    
+    # ============================================
+    # ✅ القائمة الثابتة للخدمات غير الخاضعة للخصم
+    # ============================================
+    EXCEPTIONS_LIST = [
+        "جميع خدمات بنك الدم",
+        "الأدوية والمستلزمات الطبية",
+        "الغازات الطبية والأجهزة الطبية المؤجرة من الخارج",
+        "أتعاب الأطباء والإشراف الطبي",
+        "الاتفاقيات الشاملة",
+        "الخدمة الطبية 15% والدمغة الطبية",
+        "قسم التخدير وعلاج الآلام",
+        "الأشعة التداخلية",
+        "خدمات الإسعاف",
+        "وحدة الكلى الصناعي",
+        "خدمات الفحص الشامل والاستشارات المنزلية",
+        "خدمات قسم المبتسرين",
+        "المرافق",
+        "جميع الخدمات التي تتم خارج المستشفى",
+        "وحدة العزل",
+        "العلاج الإشعاعي",
+        "التركيبات الصناعية للأسنان"
+    ]
 
     return render(
 
@@ -996,8 +1065,19 @@ def company_discounts(request):
             # ✅ Tab 3: الأعلى والأقل خصماً
             "rankings": rankings,
 
-            # ✅ Tab 4: الاستثناءات
+            # ✅ Tab 4: الاستثناءات (موديل قديم)
             "exceptions": exceptions,
+            
+            # ✅ Tab 4: الاستثناءات (موديل جديد)
+            "exceptions_data": exceptions_data,
+            
+            # ✅ القائمة الثابتة للخدمات غير الخاضعة للخصم
+            "exceptions_list": EXCEPTIONS_LIST,
+            
+            # ✅ الإحصائيات
+            "total_internal": total_internal,
+            "total_external": total_external,
+            "total_services": total_services,
 
         }
 

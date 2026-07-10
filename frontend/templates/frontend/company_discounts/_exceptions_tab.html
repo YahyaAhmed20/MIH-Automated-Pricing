@@ -2,63 +2,745 @@
 <!-- ✅ الاستثناءات -->
 <!-- ============================================ -->
 
-<div class="card shadow-sm border-0 mb-4">
+<style>
+    /* ✅ Color Palette */
+    :root {
+        --primary-color: #1a237e;
+        --primary-light: #0d47a1;
+        --internal-color: #2e7d32;
+        --internal-light: #e8f5e9;
+        --external-color: #e65100;
+        --external-light: #fff3e0;
+        --danger-color: #c62828;
+        --card-shadow: 0 8px 32px rgba(0,0,0,0.08);
+        --border-radius: 16px;
+        --transition-speed: 0.3s;
+    }
 
-    <div class="card-header bg-gradient-primary text-white">
+    /* ✅ Card Styles */
+    .exception-card {
+        border-radius: var(--border-radius);
+        box-shadow: var(--card-shadow);
+        transition: all var(--transition-speed) ease;
+        border: 1px solid #e9ecef;
+        overflow: hidden;
+        height: 100%;
+    }
+
+    .exception-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 48px rgba(0,0,0,0.12);
+    }
+
+    .exception-card .card-header {
+        background: #f8f9fa !important;
+        border-bottom: 2px solid #e9ecef;
+        padding: 1rem 1.5rem;
+    }
+
+    .exception-card .card-body {
+        padding: 1.5rem;
+        background: #ffffff;
+    }
+
+    /* ✅ Badges */
+    .badge-internal {
+        background-color: var(--internal-color) !important;
+        color: #fff !important;
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-weight: 500;
+    }
+
+    .badge-external {
+        background-color: var(--external-color) !important;
+        color: #fff !important;
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-weight: 500;
+    }
+
+    .badge-discount {
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.85rem;
+    }
+
+    /* ✅ Service Item */
+    .service-item {
+        cursor: pointer;
+        padding: 8px 12px;
+        border-radius: 10px;
+        transition: all var(--transition-speed) ease;
+        border: 1px solid transparent;
+        margin-bottom: 4px;
+        position: relative;
+    }
+
+    .service-item:hover {
+        background: rgba(13, 110, 253, 0.04);
+        border-color: #dee2e6;
+        transform: translateX(4px);
+    }
+
+    .service-item .service-name {
+        font-weight: 500;
+        font-size: 0.9rem;
+        color: #212529;
+    }
+
+    .service-item .service-details {
+        font-size: 0.8rem;
+        color: #6c757d;
+    }
+
+    /* ✅ Progress Bar */
+    .service-progress {
+        height: 6px;
+        border-radius: 10px;
+        background: #e9ecef;
+        overflow: hidden;
+        margin-top: 4px;
+    }
+
+    .service-progress .progress-bar {
+        height: 100%;
+        border-radius: 10px;
+        transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* ✅ Stats Cards */
+    .stats-card {
+        border-radius: var(--border-radius);
+        padding: 1.25rem;
+        text-align: center;
+        transition: all var(--transition-speed) ease;
+        border: none;
+    }
+
+    .stats-card:hover {
+        transform: scale(1.02);
+    }
+
+    .stats-card .stats-number {
+        font-size: 2rem;
+        font-weight: 700;
+        line-height: 1.2;
+    }
+
+    .stats-card .stats-label {
+        font-size: 0.8rem;
+        opacity: 0.8;
+        margin-top: 4px;
+    }
+
+    .stats-card-primary {
+        background: linear-gradient(135deg, #1a237e, #0d47a1);
+        color: #fff;
+    }
+
+    .stats-card-success {
+        background: linear-gradient(135deg, #1b5e20, #2e7d32);
+        color: #fff;
+    }
+
+    .stats-card-warning {
+        background: linear-gradient(135deg, #e65100, #f57c00);
+        color: #fff;
+    }
+
+    .stats-card-info {
+        background: linear-gradient(135deg, #00695c, #00897b);
+        color: #fff;
+    }
+
+    /* ✅ Search & Filter */
+    .search-filter-container {
+        background: #f8f9fa;
+        border-radius: var(--border-radius);
+        padding: 1.25rem;
+        margin-bottom: 1.5rem;
+        border: 1px solid #e9ecef;
+    }
+
+    .search-filter-container .input-group {
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .search-filter-container .input-group-text {
+        background: #fff;
+        border: 1px solid #dee2e6;
+        border-right: none;
+        color: #6c757d;
+    }
+
+    .search-filter-container .form-control {
+        border: 1px solid #dee2e6;
+        padding: 0.6rem 1rem;
+        font-size: 0.95rem;
+    }
+
+    .search-filter-container .form-control:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.2rem rgba(26, 35, 126, 0.1);
+    }
+
+    .search-filter-container .form-select {
+        border: 1px solid #dee2e6;
+        padding: 0.6rem 1rem;
+        font-size: 0.95rem;
+        border-radius: 12px;
+        cursor: pointer;
+    }
+
+    .search-filter-container .form-select:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.2rem rgba(26, 35, 126, 0.1);
+    }
+
+    .btn-reset {
+        border-radius: 12px;
+        padding: 0.6rem 1.5rem;
+        font-weight: 500;
+        transition: all var(--transition-speed) ease;
+        background: #6c757d;
+        border: none;
+        color: #fff;
+        width: 100%;
+    }
+
+    .btn-reset:hover {
+        background: #5a6268;
+        transform: translateY(-2px);
+    }
+
+    .btn-reset i {
+        margin-left: 8px;
+    }
+
+    .no-results {
+        padding: 3rem;
+        text-align: center;
+        color: #6c757d;
+        display: none;
+    }
+
+    .no-results i {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        opacity: 0.3;
+    }
+
+    /* ✅ Modal */
+    .modal-content {
+        border-radius: var(--border-radius);
+        border: none;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    }
+
+    .modal-header {
+        background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+        color: #fff;
+        border: none;
+        border-radius: var(--border-radius) var(--border-radius) 0 0;
+        padding: 1.25rem 1.5rem;
+    }
+
+    .modal-header .btn-close {
+        filter: brightness(0) invert(1);
+    }
+
+    .modal-body {
+        padding: 1.5rem;
+    }
+
+    .modal-footer {
+        border-top: 1px solid #e9ecef;
+        padding: 1rem 1.5rem;
+    }
+
+    /* ✅ Exceptions Dropdown */
+    .exceptions-dropdown-card {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-right: 4px solid var(--danger-color);
+        border-radius: var(--border-radius);
+        padding: 1.25rem;
+        margin-bottom: 1.5rem;
+        position: relative;
+    }
+
+    .exceptions-dropdown-card .icon-circle {
+        width: 45px;
+        height: 45px;
+        background: var(--danger-color);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 1.2rem;
+    }
+
+    .btn-exceptions-dropdown {
+        background: linear-gradient(135deg, #c62828, #b71c1c);
+        border: none;
+        border-radius: 50px;
+        padding: 0.6rem 1.5rem;
+        font-weight: 600;
+        color: #fff;
+        transition: all var(--transition-speed) ease;
+        box-shadow: 0 4px 12px rgba(198, 40, 40, 0.3);
+    }
+
+    .btn-exceptions-dropdown:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(198, 40, 40, 0.4);
+        color: #fff;
+    }
+
+    /* ✅ Responsive */
+    @media (max-width: 768px) {
+        .stats-card .stats-number {
+            font-size: 1.5rem;
+        }
+        
+        .exception-card .card-body {
+            padding: 1rem;
+        }
+        
+        .search-filter-container {
+            padding: 1rem;
+        }
+        
+        .search-filter-container .row > div {
+            margin-bottom: 0.5rem;
+        }
+    }
+
+    /* ✅ Animations */
+    .exception-item:hover {
+        background-color: #f8f9fa;
+        transform: translateX(5px);
+    }
+    
+    .exception-item:last-child .dropdown-item-text {
+        border-bottom: none !important;
+    }
+    
+    .dropdown-menu::-webkit-scrollbar {
+        width: 6px;
+    }
+    
+    .dropdown-menu::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+    }
+    
+    .dropdown-menu::-webkit-scrollbar-thumb {
+        background: #dc3545;
+        border-radius: 10px;
+    }
+    
+    .dropdown-menu::-webkit-scrollbar-thumb:hover {
+        background: #c82333;
+    }
+    
+    .dropdown-menu {
+        animation: slideDown 0.3s ease-out;
+    }
+    
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .card {
+        overflow: visible !important;
+    }
+    
+    .card-body {
+        overflow: visible !important;
+    }
+    
+    .exceptions-header {
+        z-index: 9999 !important;
+        position: relative !important;
+    }
+    
+    .dropdown {
+        z-index: 9999 !important;
+    }
+</style>
+
+<!-- ============================================ -->
+<!-- ✅ Stats / Summary -->
+<!-- ============================================ -->
+<div class="row g-3 mb-4">
+    <div class="col-6 col-md-3">
+        <div class="stats-card stats-card-primary">
+            <div class="stats-number">{{ exceptions_data|length }}</div>
+            <div class="stats-label"><i class="fas fa-building me-1"></i>الجهات</div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="stats-card stats-card-success">
+            <div class="stats-number">{{ total_internal|default:0 }}</div>
+            <div class="stats-label"><i class="fas fa-home me-1"></i>خدمات داخلية</div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="stats-card stats-card-warning">
+            <div class="stats-number">{{ total_external|default:0 }}</div>
+            <div class="stats-label"><i class="fas fa-globe me-1"></i>خدمات خارجية</div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="stats-card stats-card-info">
+            <div class="stats-number">{{ total_services|default:0 }}</div>
+            <div class="stats-label"><i class="fas fa-list me-1"></i>إجمالي الخدمات</div>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================ -->
+<!-- ✅ الاستثناءات -->
+<!-- ============================================ -->
+<div class="card shadow-sm border-0 mb-4" style="overflow: visible !important; border-radius: 16px;">
+
+    <div class="card-header bg-gradient-primary text-white" style="border-radius: 16px 16px 0 0; background: linear-gradient(135deg, #1a237e, #0d47a1);">
         <h5 class="mb-0">
             <i class="fas fa-exclamation-triangle"></i>
             الاستثناءات والخدمات غير الخاضعة للخصم
         </h5>
     </div>
 
-    <div class="card-body">
+    <div class="card-body" style="overflow: visible !important;">
 
-        <div class="alert alert-info mb-4">
-            <i class="fas fa-info-circle me-1"></i>
-            عرض الاستثناءات والخدمات غير الخاضعة للخصم لكل جهة
+        <!-- ✅ Dropdown للخدمات غير الخاضعة للخصم -->
+        <div class="exceptions-dropdown-card">
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                <div class="d-flex align-items-center">
+                    <div class="icon-circle me-3">
+                        <i class="fas fa-ban fa-lg"></i>
+                    </div>
+                    <div>
+                        <h6 class="mb-0 fw-bold text-dark">الخدمات غير الخاضعة للخصم</h6>
+                        <small class="text-muted">قائمة الخدمات المستثناة من نظام الخصومات</small>
+                    </div>
+                </div>
+                
+                <div class="dropdown" style="position: relative; z-index: 9999;">
+                    <button class="btn btn-exceptions-dropdown dropdown-toggle" type="button" 
+                            id="exceptionsDropdown" data-bs-toggle="dropdown" 
+                            aria-expanded="false">
+                        <i class="fas fa-list-ul me-2"></i>
+                        عرض القائمة <span class="badge bg-light text-danger ms-2 rounded-pill">{{ exceptions_list|length }}</span>
+                    </button>
+                    
+                    <ul class="dropdown-menu dropdown-menu-end p-0 mt-2 shadow-lg border-0" 
+                        style="min-width: 400px; max-height: 450px; overflow-y: auto; border-radius: 12px; position: fixed; z-index: 99999;" 
+                        aria-labelledby="exceptionsDropdown">
+                        
+                        <li class="p-3" style="background: var(--danger-color); border-radius: 12px 12px 0 0;">
+                            <div class="d-flex align-items-center text-white">
+                                <i class="fas fa-exclamation-circle me-2"></i>
+                                <span class="fw-bold">قائمة الخدمات المستثناة</span>
+                                <span class="badge bg-light text-danger ms-auto rounded-pill">{{ exceptions_list|length }} خدمة</span>
+                            </div>
+                        </li>
+                        
+                        {% for service in exceptions_list %}
+                        <li class="exception-item" style="transition: all 0.2s ease;">
+                            <span class="dropdown-item-text d-flex align-items-center py-2 px-3" 
+                                  style="border-bottom: 1px solid #f1f3f5; cursor: default;">
+                                <span class="badge bg-danger rounded-circle me-3" style="width: 24px; height: 24px; line-height: 24px; font-size: 11px; min-width: 24px;">
+                                    {{ forloop.counter }}
+                                </span>
+                                <span class="flex-grow-1">{{ service }}</span>
+                                <i class="fas fa-times-circle text-danger opacity-50 me-1"></i>
+                            </span>
+                        </li>
+                        {% endfor %}
+                        
+                        <li class="p-2" style="background: #f8f9fa; border-radius: 0 0 12px 12px;">
+                            <button class="dropdown-item text-center text-muted small py-2" 
+                                    onclick="document.getElementById('exceptionsDropdown').click();"
+                                    style="border-radius: 8px; transition: all 0.2s ease;">
+                                <i class="fas fa-chevron-up me-2"></i>
+                                إغلاق القائمة
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
 
-        <!-- ✅ عرض الاستثناءات -->
-        <div class="row g-4">
+        <!-- ✅ Search & Filter مع datalist -->
+        <div class="search-filter-container">
+            <div class="row g-3 align-items-end">
+                <div class="col-md-5">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-search"></i></span>
+                        <input type="text" id="exceptionSearch" class="form-control" 
+                               placeholder="ابحث عن خدمة أو جهة..." 
+                               list="searchSuggestions"
+                               onkeyup="filterExceptions()"
+                               oninput="filterExceptions()">
+                        <datalist id="searchSuggestions">
+                            <!-- يتم ملؤها بواسطة JavaScript -->
+                        </datalist>
+                        <button class="btn btn-outline-secondary" onclick="clearSearch()" type="button">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <select id="sectionFilter" class="form-select" onchange="filterExceptions()">
+                        <option value="all">جميع الأقسام</option>
+                        <option value="داخلي">داخلي</option>
+                        <option value="خارجي">خارجي</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <button class="btn btn-reset" onclick="resetFilters()">
+                        <i class="fas fa-undo me-2"></i>إعادة تعيين
+                    </button>
+                </div>
+            </div>
+        </div>
 
-            {% for item in exceptions %}
+        <!-- ✅ Results Count -->
+        <div id="resultsCount" class="text-muted small mb-3">
+            عرض <span id="visibleCount">0</span> من <span id="totalCount">0</span>
+        </div>
 
-            <div class="col-md-6 col-lg-4">
+        <!-- ========================================== -->
+        <!-- ✅ الاستثناءات الجديدة (CompanyExceptionProfile) -->
+        <!-- ========================================== -->
+        <h6 class="text-muted mb-3 border-bottom pb-2">
+            <i class="fas fa-star text-warning me-1"></i>
+            الاستثناءات المفصلة
+            <span class="badge bg-secondary ms-2 rounded-pill">{{ exceptions_data|length }}</span>
+        </h6>
+        
+        <div class="row g-4 mb-5" id="exceptionsContainer">
 
-                <div class="card shadow-sm border-warning h-100">
+            {% for data in exceptions_data %}
+            <div class="col-md-6 col-lg-4 exception-card-wrapper" 
+                 data-entity="{{ data.profile.entity_name|lower }}"
+                 data-entity-original="{{ data.profile.entity_name }}">
 
-                    <div class="card-header bg-warning text-dark">
+                <div class="card exception-card">
 
-                        <h5 class="mb-0">
-                            <i class="fas fa-building me-2"></i>
-                            {{ item.entity_name }}
-                        </h5>
-
+                    <div class="card-header">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0" style="font-size: 1rem; color: #212529;">
+                                <i class="fas fa-building me-2 text-primary"></i>
+                                {{ data.profile.entity_name }}
+                            </h5>
+                            <span class="badge bg-secondary rounded-pill">
+                                {{ data.profile.items.count }}
+                            </span>
+                        </div>
+                        <small style="color: #6c757d; font-size: 0.75rem;">
+                            الفئة: {{ data.profile.financial_category|default:"-" }} | 
+                            قائمة الأسعار: {{ data.profile.price_list|default:"-" }}
+                        </small>
                     </div>
 
                     <div class="card-body">
 
-                        <p class="mb-1">
-                            <strong>الفئة المالية:</strong>
-                            <span class="badge bg-secondary">{{ item.financial_category|default:"-" }}</span>
-                        </p>
+                        <!-- ✅ القسم الداخلي -->
+                        {% if data.internal_items %}
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center mb-2">
+                                <span class="badge badge-internal">
+                                    <i class="fas fa-home me-1"></i>داخلي
+                                </span>
+                                <span class="badge bg-light text-dark ms-2 rounded-pill">
+                                    {{ data.internal_items|length }}
+                                </span>
+                            </div>
+                            <div class="internal-items">
+                                {% for item in data.internal_items %}
+                                <div class="service-item" 
+                                     data-service="{{ item.service_name|lower }}"
+                                     data-service-original="{{ item.service_name }}"
+                                     data-section="داخلي"
+                                     onclick="showServiceModal('{{ item.service_name }}', 'داخلي', '{{ item.discount_rate }}', '{{ item.details|escapejs }}', '{{ item.net_price|default:"-" }}')">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <span class="service-name">{{ item.service_name }}</span>
+                                            {% if item.details %}
+                                            <span class="service-details d-block">- {{ item.details }}</span>
+                                            {% endif %}
+                                        </div>
+                                        <div class="text-end">
+                                            <span class="badge badge-discount" 
+                                                  style="background: var(--internal-color); color: #fff;">
+                                                {{ item.discount_rate }}%
+                                            </span>
+                                            {% if item.net_price %}
+                                            <span class="service-details d-block" style="font-size: 0.7rem;">
+                                                {{ item.net_price }}
+                                            </span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="service-progress">
+                                        <div class="progress-bar" 
+                                             style="width: {{ item.discount_rate }}%; background: var(--internal-color);">
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endif %}
 
-                        <p class="mb-3">
-                            <strong>قائمة الأسعار:</strong>
-                            {{ item.price_list|default:"-" }}
-                        </p>
+                        <!-- ✅ القسم الخارجي -->
+                        {% if data.external_items %}
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center mb-2">
+                                <span class="badge badge-external">
+                                    <i class="fas fa-globe me-1"></i>خارجي
+                                </span>
+                                <span class="badge bg-light text-dark ms-2 rounded-pill">
+                                    {{ data.external_items|length }}
+                                </span>
+                            </div>
+                            <div class="external-items">
+                                {% for item in data.external_items %}
+                                <div class="service-item" 
+                                     data-service="{{ item.service_name|lower }}"
+                                     data-service-original="{{ item.service_name }}"
+                                     data-section="خارجي"
+                                     onclick="showServiceModal('{{ item.service_name }}', 'خارجي', '{{ item.discount_rate }}', '{{ item.details|escapejs }}', '{{ item.net_price|default:"-" }}')">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <span class="service-name">{{ item.service_name }}</span>
+                                            {% if item.details %}
+                                            <span class="service-details d-block">- {{ item.details }}</span>
+                                            {% endif %}
+                                        </div>
+                                        <div class="text-end">
+                                            <span class="badge badge-discount" 
+                                                  style="background: var(--external-color); color: #fff;">
+                                                {{ item.discount_rate }}%
+                                            </span>
+                                            {% if item.net_price %}
+                                            <span class="service-details d-block" style="font-size: 0.7rem;">
+                                                {{ item.net_price }}
+                                            </span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="service-progress">
+                                        <div class="progress-bar" 
+                                             style="width: {{ item.discount_rate }}%; background: var(--external-color);">
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endif %}
 
-                        <hr>
+                        <!-- ✅ لو مفيش خدمات -->
+                        {% if not data.internal_items and not data.external_items %}
+                        <div class="alert alert-light text-center py-3 mb-0">
+                            <i class="fas fa-info-circle text-muted"></i>
+                            <span class="text-muted small d-block">لا توجد خدمات مسجلة</span>
+                        </div>
+                        {% endif %}
+
+                        <!-- ✅ المرفقات -->
+                        {% if data.profile.attachment %}
+                        <div class="mt-3">
+                            <a href="{{ data.profile.attachment }}" target="_blank" class="btn btn-outline-info btn-sm w-100">
+                                <i class="fas fa-file-pdf me-1"></i>
+                                صورة العقد
+                            </a>
+                        </div>
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </div>
+            {% empty %}
+
+            <div class="col-12">
+                <div class="alert alert-light text-center py-4">
+                    <i class="fas fa-info-circle text-muted"></i>
+                    <p class="text-muted small mb-0">لا توجد استثناءات مفصلة مسجلة</p>
+                </div>
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+        <!-- ✅ No Results Message -->
+        <div class="no-results" id="noResults">
+            <i class="fas fa-search"></i>
+            <h5>لا توجد نتائج</h5>
+            <p class="text-muted small">لم يتم العثور على خدمات تطابق معايير البحث</p>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- ✅ الاستثناءات القديمة (CompanyException) -->
+        <!-- ========================================== -->
+        <h6 class="text-muted mb-3 border-bottom pb-2 mt-4">
+            <i class="fas fa-clock text-secondary me-1"></i>
+            الاستثناءات الأساسية
+            <span class="badge bg-secondary ms-2 rounded-pill">{{ exceptions|length }}</span>
+        </h6>
+        
+        <div class="row g-4">
+
+            {% for item in exceptions %}
+            <div class="col-md-6 col-lg-4">
+
+                <div class="card shadow-sm h-100" style="border-radius: 16px; border: 1px solid #e9ecef;">
+
+                    <div class="card-header" style="background: #f8f9fa; border-bottom: 2px solid #e9ecef;">
+                        <h5 class="mb-0" style="font-size: 1rem;">
+                            <i class="fas fa-building me-2 text-primary"></i>
+                            {{ item.entity_name }}
+                        </h5>
+                        <small style="color: #6c757d; font-size: 0.75rem;">
+                            الفئة: {{ item.financial_category|default:"-" }} | 
+                            قائمة الأسعار: {{ item.price_list|default:"-" }}
+                        </small>
+                    </div>
+
+                    <div class="card-body">
 
                         {% if item.internal_discount or item.internal_details %}
 
                         <div class="mb-2">
-                            <span class="badge bg-danger">داخلي</span>
+                            <span class="badge" style="background: #2e7d32; color: #fff; padding: 6px 14px; border-radius: 20px;">
+                                <i class="fas fa-home me-1"></i>داخلي
+                            </span>
                             <div class="mt-2 p-2 bg-light rounded small">
-                                <strong>الخصم:</strong> {{ item.internal_discount|floatformat:0 }}%
+                                <div class="d-flex justify-content-between">
+                                    <strong>الخصم:</strong>
+                                    <span class="badge" style="background: #2e7d32; color: #fff;">{{ item.internal_discount|floatformat:0 }}%</span>
+                                </div>
                                 {% if item.internal_details %}
-                                <br>
-                                <strong>التفاصيل:</strong> {{ item.internal_details|linebreaksbr }}
+                                <div class="mt-1">
+                                    <strong>التفاصيل:</strong> {{ item.internal_details|linebreaksbr }}
+                                </div>
                                 {% endif %}
                             </div>
                         </div>
@@ -68,16 +750,29 @@
                         {% if item.external_discount or item.external_details %}
 
                         <div class="mb-2">
-                            <span class="badge bg-primary">خارجي</span>
+                            <span class="badge" style="background: #e65100; color: #fff; padding: 6px 14px; border-radius: 20px;">
+                                <i class="fas fa-globe me-1"></i>خارجي
+                            </span>
                             <div class="mt-2 p-2 bg-light rounded small">
-                                <strong>الخصم:</strong> {{ item.external_discount|floatformat:0 }}%
+                                <div class="d-flex justify-content-between">
+                                    <strong>الخصم:</strong>
+                                    <span class="badge" style="background: #e65100; color: #fff;">{{ item.external_discount|floatformat:0 }}%</span>
+                                </div>
                                 {% if item.external_details %}
-                                <br>
-                                <strong>التفاصيل:</strong> {{ item.external_details|linebreaksbr }}
+                                <div class="mt-1">
+                                    <strong>التفاصيل:</strong> {{ item.external_details|linebreaksbr }}
+                                </div>
                                 {% endif %}
                             </div>
                         </div>
 
+                        {% endif %}
+
+                        {% if not item.internal_discount and not item.external_discount and not item.internal_details and not item.external_details %}
+                        <div class="alert alert-light text-center py-3 mb-0">
+                            <i class="fas fa-info-circle text-muted"></i>
+                            <span class="text-muted small d-block">لا توجد بيانات مسجلة</span>
+                        </div>
                         {% endif %}
 
                         {% if item.attachment %}
@@ -96,14 +791,12 @@
                 </div>
 
             </div>
-
             {% empty %}
 
             <div class="col-12">
-                <div class="alert alert-info text-center py-5">
-                    <i class="fas fa-inbox fa-3x d-block mb-3 text-muted"></i>
-                    <h5 class="text-muted">لا توجد استثناءات</h5>
-                    <p class="text-muted small">لا توجد استثناءات مسجلة للشركات</p>
+                <div class="alert alert-light text-center py-4">
+                    <i class="fas fa-info-circle text-muted"></i>
+                    <p class="text-muted small mb-0">لا توجد استثناءات أساسية مسجلة</p>
                 </div>
             </div>
 
@@ -114,3 +807,223 @@
     </div>
 
 </div>
+
+<!-- ✅ Modal لعرض التفاصيل -->
+<div class="modal fade" id="serviceModal" tabindex="-1" aria-labelledby="serviceModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="serviceModalLabel">
+                    <i class="fas fa-info-circle me-2"></i>
+                    تفاصيل الخدمة
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- المحتوى يتم تحميله ديناميكياً -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-2"></i>إغلاق
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// ✅ جمع كل أسماء الخدمات والجهات للـ datalist
+function buildSuggestions() {
+    const suggestions = new Set();
+    
+    // إضافة أسماء الجهات
+    document.querySelectorAll('.exception-card-wrapper').forEach(wrapper => {
+        const entityName = wrapper.dataset.entityOriginal;
+        if (entityName) {
+            suggestions.add(entityName);
+        }
+    });
+    
+    // إضافة أسماء الخدمات
+    document.querySelectorAll('.service-item').forEach(item => {
+        const serviceName = item.dataset.serviceOriginal;
+        if (serviceName) {
+            suggestions.add(serviceName);
+        }
+    });
+    
+    // ملء الـ datalist
+    const datalist = document.getElementById('searchSuggestions');
+    datalist.innerHTML = '';
+    suggestions.forEach(value => {
+        const option = document.createElement('option');
+        option.value = value;
+        datalist.appendChild(option);
+    });
+}
+
+// ✅ Modal Functions
+function showServiceModal(serviceName, section, discount, details, price) {
+    const badgeColor = section === 'داخلي' ? '#2e7d32' : '#e65100';
+    const badgeIcon = section === 'داخلي' ? 'fa-home' : 'fa-globe';
+    const sectionName = section === 'داخلي' ? 'داخلي' : 'خارجي';
+    
+    document.getElementById('serviceModalLabel').textContent = serviceName;
+    document.getElementById('modalBody').innerHTML = `
+        <div class="row g-3">
+            <div class="col-md-6">
+                <div class="p-3 bg-light rounded-3 text-center">
+                    <i class="fas ${badgeIcon} fa-2x mb-2" style="color: ${badgeColor};"></i>
+                    <div>
+                        <small class="text-muted d-block">القسم</small>
+                        <span class="fw-bold">${sectionName}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="p-3 bg-light rounded-3 text-center">
+                    <i class="fas fa-percent fa-2x mb-2" style="color: ${badgeColor};"></i>
+                    <div>
+                        <small class="text-muted d-block">الخصم</small>
+                        <span class="fw-bold" style="font-size: 1.5rem; color: ${badgeColor};">${discount}%</span>
+                    </div>
+                </div>
+            </div>
+            ${details ? `
+            <div class="col-12">
+                <div class="p-3 bg-light rounded-3">
+                    <small class="text-muted d-block">التفاصيل</small>
+                    <span>${details}</span>
+                </div>
+            </div>
+            ` : ''}
+            ${price && price !== '-' ? `
+            <div class="col-12">
+                <div class="p-3 bg-light rounded-3">
+                    <small class="text-muted d-block">السعر</small>
+                    <span class="fw-bold">${price}</span>
+                </div>
+            </div>
+            ` : ''}
+            ${!details && (!price || price === '-') ? `
+            <div class="col-12">
+                <div class="alert alert-info mb-0">
+                    <i class="fas fa-info-circle me-2"></i>
+                    لا توجد تفاصيل إضافية لهذه الخدمة
+                </div>
+            </div>
+            ` : ''}
+        </div>
+    `;
+    
+    new bootstrap.Modal(document.getElementById('serviceModal')).show();
+}
+
+// ✅ Filter Functions
+function filterExceptions() {
+    const search = document.getElementById('exceptionSearch').value.toLowerCase().trim();
+    const section = document.getElementById('sectionFilter').value;
+    const wrappers = document.querySelectorAll('.exception-card-wrapper');
+    let visibleCount = 0;
+    
+    wrappers.forEach(wrapper => {
+        const entityName = wrapper.dataset.entity || '';
+        const serviceItems = wrapper.querySelectorAll('.service-item');
+        let hasVisibleService = false;
+        
+        serviceItems.forEach(item => {
+            const serviceName = item.dataset.service || '';
+            const itemSection = item.dataset.section;
+            let showService = true;
+            
+            if (search) {
+                if (!serviceName.includes(search) && !entityName.includes(search)) {
+                    showService = false;
+                }
+            }
+            
+            if (section !== 'all') {
+                if (itemSection !== section) {
+                    showService = false;
+                }
+            }
+            
+            if (showService) {
+                item.style.display = 'block';
+                hasVisibleService = true;
+            } else {
+                item.style.display = 'none';
+            }
+        });
+        
+        // ✅ إظهار/إخفاء أقسام الداخلي/الخارجي
+        const internalSection = wrapper.querySelector('.internal-items');
+        if (internalSection) {
+            const parentDiv = internalSection.closest('.mb-3');
+            const hasVisibleInternal = internalSection.querySelector('.service-item[style*="display: block"]');
+            if (parentDiv) {
+                parentDiv.style.display = hasVisibleInternal ? 'block' : 'none';
+            }
+        }
+        
+        const externalSection = wrapper.querySelector('.external-items');
+        if (externalSection) {
+            const parentDiv = externalSection.closest('.mb-3');
+            const hasVisibleExternal = externalSection.querySelector('.service-item[style*="display: block"]');
+            if (parentDiv) {
+                parentDiv.style.display = hasVisibleExternal ? 'block' : 'none';
+            }
+        }
+        
+        if (hasVisibleService) {
+            wrapper.style.display = 'block';
+            visibleCount++;
+        } else {
+            wrapper.style.display = 'none';
+        }
+    });
+    
+    // ✅ تحديث العدد
+    document.getElementById('visibleCount').textContent = visibleCount;
+    const totalWrappers = document.querySelectorAll('.exception-card-wrapper').length;
+    document.getElementById('totalCount').textContent = totalWrappers;
+    
+    // ✅ إظهار/إخفاء رسالة لا توجد نتائج
+    const noResults = document.getElementById('noResults');
+    if (visibleCount === 0 && totalWrappers > 0) {
+        noResults.style.display = 'block';
+    } else {
+        noResults.style.display = 'none';
+    }
+}
+
+function resetFilters() {
+    document.getElementById('exceptionSearch').value = '';
+    document.getElementById('sectionFilter').value = 'all';
+    filterExceptions();
+}
+
+function clearSearch() {
+    document.getElementById('exceptionSearch').value = '';
+    filterExceptions();
+    document.getElementById('exceptionSearch').focus();
+}
+
+// ✅ تحديث الأرقام عند تحميل الصفحة
+document.addEventListener('DOMContentLoaded', function() {
+    buildSuggestions();
+    const wrappers = document.querySelectorAll('.exception-card-wrapper');
+    document.getElementById('totalCount').textContent = wrappers.length;
+    filterExceptions();
+});
+
+// ✅ تحسين ظهور الـ Dropdown
+document.querySelectorAll('.exception-item').forEach(item => {
+    item.addEventListener('mouseenter', function() {
+        this.style.backgroundColor = '#f8f9fa';
+    });
+    item.addEventListener('mouseleave', function() {
+        this.style.backgroundColor = 'transparent';
+    });
+});
+</script>

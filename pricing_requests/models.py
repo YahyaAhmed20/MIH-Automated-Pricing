@@ -1023,3 +1023,126 @@ class CompanyException(models.Model):
 
     def __str__(self):
         return self.entity_name
+    
+    
+    
+# ============================================
+# ✅ Company Exception Models (جديد - بدون تعديل القديم)
+# ============================================
+
+class CompanyExceptionProfile(models.Model):
+    """ملف استثناءات الشركة"""
+    
+    entity_name = models.CharField(
+        max_length=255,
+        db_index=True,
+        verbose_name="اسم الجهة"
+    )
+    
+    financial_category = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        verbose_name="الفئة المالية"
+    )
+    
+    price_list = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        verbose_name="قائمة الأسعار"
+    )
+    
+    attachment = models.TextField(
+        blank=True,
+        null=True,
+        verbose_name="المرفقات"
+    )
+    
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name="تاريخ الإنشاء"
+    )
+    
+    updated_at = models.DateTimeField(
+        auto_now=True,
+        verbose_name="تاريخ التحديث"
+    )
+    
+    class Meta:
+        ordering = ["entity_name"]
+        verbose_name = "ملف استثناءات شركة"
+        verbose_name_plural = "ملفات استثناءات الشركات"
+    
+    def __str__(self):
+        return self.entity_name
+
+
+class CompanyExceptionItem(models.Model):
+    """عنصر استثناء (خدمة داخلية/خارجية)"""
+    
+    SECTION_CHOICES = [
+        ("داخلي", "داخلي"),
+        ("خارجي", "خارجي"),
+    ]
+    
+    profile = models.ForeignKey(
+        CompanyExceptionProfile,
+        on_delete=models.CASCADE,
+        related_name="items",
+        verbose_name="ملف الاستثناءات"
+    )
+    
+    section = models.CharField(
+        max_length=20,
+        choices=SECTION_CHOICES,
+        verbose_name="القسم"
+    )
+    
+    service_name = models.CharField(
+        max_length=255,
+        verbose_name="اسم الخدمة"
+    )
+    
+    discount_rate = models.CharField(
+        max_length=50,
+        blank=True,
+        null=True,
+        verbose_name="نسبة الخصم"
+    )
+    
+    details = models.TextField(
+        blank=True,
+        null=True,
+        verbose_name="التفاصيل"
+    )
+    
+    net_price = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        verbose_name="السعر الصافي"
+    )
+    
+    display_order = models.PositiveIntegerField(
+        default=0,
+        verbose_name="ترتيب العرض"
+    )
+    
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name="تاريخ الإنشاء"
+    )
+    
+    updated_at = models.DateTimeField(
+        auto_now=True,
+        verbose_name="تاريخ التحديث"
+    )
+    
+    class Meta:
+        ordering = ["section", "display_order"]
+        verbose_name = "عنصر استثناء"
+        verbose_name_plural = "عناصر الاستثناءات"
+    
+    def __str__(self):
+        return f"{self.profile.entity_name} - {self.service_name}"
