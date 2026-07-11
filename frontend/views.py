@@ -466,6 +466,7 @@ import json
 
 SPECIALTIES = [
     "الانف والاذن",
+    "الجراحه",          
     "العظام",
     "القسطره وجراحات القلب",
     "القلب المفتوح",
@@ -477,6 +478,8 @@ SPECIALTIES = [
 
 SPECIALTY_ICONS = {
     "الانف والاذن": "fas fa-ear",
+    "الجراحه": "fas fa-scalpel",  # ✅ أضف
+
     "العظام": "fas fa-bone",
     "القسطره وجراحات القلب": "fas fa-heart-pulse",
     "القلب المفتوح": "fas fa-heartbeat",
@@ -488,6 +491,8 @@ SPECIALTY_ICONS = {
 
 SPECIALTY_COLORS = {
     "الانف والاذن": "#6f42c1",
+    "الجراحه": "#0d6efd",  # ✅ أضف (أزرق)
+
     "العظام": "#fd7e14",
     "القسطره وجراحات القلب": "#dc3545",
     "القلب المفتوح": "#e83e8c",
@@ -883,7 +888,7 @@ def reports_statistics(request):
 
         monthly = (
             statistics
-            .filter(specialty=specialty)
+            .filter(specialty__icontains=specialty)  # ✅ استخدم __icontains
             .values("month")
             .annotate(total=Count("id"))
             .order_by()
@@ -905,6 +910,21 @@ def reports_statistics(request):
         for month in MONTH_ORDER:
             if month in chart_data.get(specialty, {}):
                 chart_sorted[month] = chart_data[specialty][month]
+
+        # ✅ ✅ ✅ جلب السجلات التفصيلية لكل تخصص
+        specialty_records = statistics.filter(specialty__icontains=specialty)
+        
+        records_list = specialty_records.values(
+            'account_number',
+            'patient_name',
+            'admission_date',
+            'discharge_date',
+            'package_name',
+            'entity_name',
+            'sub_company',
+            'amount',
+            'month',
+        ).order_by('-admission_date')  # ✅ حد أقصى 50 سجل
 
         specialties.append({
 
@@ -935,6 +955,8 @@ def reports_statistics(request):
                 list(chart_sorted.values())
             ),
 
+            "records": list(records_list),  # ✅ السجلات التفصيلية
+
         })
 
     return render(
@@ -958,11 +980,110 @@ def reports_statistics(request):
             "bottom_sub_companies": bottom_sub_companies,
             "top_specialties": top_specialties,
             "bottom_specialties": bottom_specialties,
-            "top_packages": top_packages,        # ✅ جديد - أعلى 5 باكدجات
-            "bottom_packages": bottom_packages,  # ✅ جديد - أقل 5 باكدجات
+            "top_packages": top_packages,
+            "bottom_packages": bottom_packages,
             "specialties": specialties,
         },
     )
+    
+    
+from django.db.models import Count, Q
+from django.shortcuts import render, get_object_or_404
+from pricing_requests.models import ReportStatistic
+import json
+from django.core.paginator import Paginator
+
+
+def specialty_detail(request, specialty_name):
+    """صفحة تفاصيل التخصص - عرض جميع السجلات"""
+    
+    # ✅ الفلتر (الشهر)
+    selected_month = request.GET.get("month", "")
+    
+    # ✅ البحث
+    search_query = request.GET.get("search", "")
+    
+    # ✅ جلب السجلات الخاصة بالتخصص
+    records = ReportStatistic.objects.filter(specialty__icontains=specialty_name)
+    
+    if selected_month:
+        records = records.filter(month=selected_month)
+    
+    if search_query:
+        records = records.filter(
+            Q(patient_name__icontains=search_query) |
+            Q(account_number__icontains=search_query) |
+            Q(package_name__icontains=search_query) |
+            Q(entity_name__icontains=search_query) |
+            Q(sub_company__icontains=search_query)
+        )
+    
+    # ✅ إحصائيات التخصص
+    total_count = records.count()
+    cash_count = records.filter(payment_type="نقدي").count()
+    credit_count = records.filter(payment_type="اجل").count()
+    
+    # ✅ إجمالي المبالغ
+    total_amount = records.aggregate(total=Sum('amount'))['total'] or 0
+    
+    # ✅ الشهور المتاحة للفلتر
+    months_raw = list(
+        records.values_list('month', flat=True).distinct()
+    )
+    
+    # ✅ ترتيب الشهور
+    MONTH_ORDER = [
+        "يناير", "فبراير", "مارس", "ابريل", "مايو", "يونيو",
+        "يوليو", "اغسطس", "سبتمبر", "اكتوبر", "نوفمبر", "ديسمبر"
+    ]
+    
+    months = [m for m in MONTH_ORDER if m in months_raw]
+    
+    # ✅ Pagination - 50 سجل في الصفحة
+    paginator = Paginator(records.order_by('-admission_date'), 50)
+    page_number = request.GET.get('page', 1)
+    page_obj = paginator.get_page(page_number)
+    
+    # ✅ التوزيع حسب نوع الدفع
+    payment_distribution = (
+        records.values('payment_type')
+        .annotate(total=Count('id'))
+        .order_by('-total')
+    )
+    
+    # ✅ التوزيع حسب القطاع
+    sector_distribution = (
+        records.values('sector')
+        .annotate(total=Count('id'))
+        .order_by('-total')
+    )
+    
+    # ✅ قائمة الاقتراحات للـ datalist
+    suggestions = list(
+        records.values_list('patient_name', flat=True).distinct()[:20]
+    ) + list(
+        records.values_list('account_number', flat=True).distinct()[:20]
+    ) + list(
+        records.values_list('package_name', flat=True).distinct()[:20]
+    )
+    suggestions = list(set(suggestions))  # إزالة التكرار
+    
+    context = {
+        'specialty_name': specialty_name,
+        'records': page_obj,
+        'total_count': total_count,
+        'cash_count': cash_count,
+        'credit_count': credit_count,
+        'total_amount': total_amount,
+        'months': months,
+        'selected_month': selected_month,
+        'search_query': search_query,
+        'suggestions': suggestions,
+        'payment_distribution': payment_distribution,
+        'sector_distribution': sector_distribution,
+    }
+    
+    return render(request, 'frontend/specialty_detail.html', context)
 def pending_analysis(request):
 
     pending_qs = (

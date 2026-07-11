@@ -29,7 +29,7 @@ class ReportStatisticImportService:
         
         for idx, row in data.iterrows():
             try:
-                # ✅ قراءة البيانات - مع التعامل مع None
+                # ✅ قراءة البيانات
                 patient_name = ""
                 if len(row) > 2 and pd.notna(row.iloc[2]):
                     patient_name = ImportHelpers.normalize_text(row.iloc[2])
@@ -88,40 +88,38 @@ class ReportStatisticImportService:
                 amount = 0
                 if len(row) > 12 and pd.notna(row.iloc[12]):
                     amount_raw = row.iloc[12]
-                    # لو كان رقم
                     if isinstance(amount_raw, (int, float)):
                         amount = float(amount_raw)
                     else:
-                        # لو كان نص
                         try:
                             amount = float(str(amount_raw).replace(",", ""))
                         except:
                             amount = 0
                 
-                # ✅ إنشاء أو تحديث السجل
-                obj, created = ReportStatistic.objects.update_or_create(
+                # ✅ ✅ ✅ استخدم create بدون أي تتبع للتكرار
+                # ✅ كل سجل في الـ Excel يتحول إلى سجل في قاعدة البيانات
+                obj = ReportStatistic.objects.create(
+                    medical_number=medical_number,
                     account_number=account_number,
                     patient_name=patient_name,
-                    package_name=package_name,
                     admission_date=admission_date,
-                    defaults={
-                        "medical_number": medical_number,
-                        "discharge_date": discharge_date,
-                        "month": month,
-                        "specialty": specialty,
-                        "entity_name": entity_name,
-                        "sector": sector,
-                        "payment_type": payment_type,
-                        "sub_company": sub_company,
-                        "amount": amount,
-                    }
+                    discharge_date=discharge_date,
+                    month=month,
+                    specialty=specialty,
+                    package_name=package_name,
+                    entity_name=entity_name,
+                    sector=sector,
+                    payment_type=payment_type,
+                    sub_company=sub_company,
+                    amount=amount,
                 )
                 
                 result["processed"] += 1
-                if created:
-                    result["created"] += 1
-                else:
-                    result["updated"] += 1
+                result["created"] += 1
+                
+                # ✅ عرض التقدم كل 100 سجل
+                if result["processed"] % 100 == 0:
+                    print(f"   📊 تم معالجة {result['processed']} سجل...")
                     
             except Exception as e:
                 result["errors"] += 1
@@ -129,6 +127,7 @@ class ReportStatisticImportService:
                     print(f"   ❌ خطأ في الصف {idx + 2}: {str(e)[:80]}...")
                 continue
         
+        # ✅ عرض النتائج النهائية
         print("\n" + "=" * 50)
         print("✅ انتهى الاستيراد!")
         print(f"   📊 تمت المعالجة: {result['processed']}")

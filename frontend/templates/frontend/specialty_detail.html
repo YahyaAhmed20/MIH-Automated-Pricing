@@ -1,0 +1,533 @@
+{% extends 'frontend/base.html' %}
+{% load static %}
+{% load humanize %}
+{% block content %}
+
+<style>
+    .stats-card {
+        border-radius: 16px;
+        padding: 1.5rem 1.25rem;
+        text-align: center;
+        transition: all 0.3s ease;
+        border: none;
+        color: #fff;
+    }
+    
+    .stats-card .stats-number {
+        font-size: 2.5rem;
+        font-weight: 700;
+    }
+    
+    .stats-card .stats-label {
+        font-size: 0.85rem;
+        opacity: 0.9;
+        margin-top: 6px;
+    }
+    
+    .stats-card-total {
+        background: linear-gradient(135deg, #1a237e, #0d47a1);
+    }
+    
+    .stats-card-cash {
+        background: linear-gradient(135deg, #2e7d32, #43a047);
+    }
+    
+    .stats-card-credit {
+        background: linear-gradient(135deg, #e65100, #f57c00);
+    }
+    
+    .stats-card-amount {
+        background: linear-gradient(135deg, #00695c, #00897b);
+    }
+    
+    .months-scroll {
+        display: flex;
+        overflow-x: auto;
+        gap: 10px;
+        padding: 8px 0 12px 0;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .months-scroll::-webkit-scrollbar {
+        display: none;
+    }
+    
+    .month-pill {
+        white-space: nowrap;
+        text-decoration: none;
+        padding: 8px 20px;
+        border-radius: 30px;
+        background: #f4f6f9;
+        color: #444;
+        font-weight: 600;
+        font-size: 0.85rem;
+        transition: all 0.25s ease;
+        border: 2px solid transparent;
+        flex-shrink: 0;
+    }
+    
+    .month-pill:hover {
+        background: #0d6efd;
+        color: white;
+        transform: scale(1.05);
+        text-decoration: none;
+    }
+    
+    .month-pill.active {
+        background: #0d6efd;
+        color: white;
+        border-color: #0d6efd;
+        box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
+    }
+    
+    .month-pill.all-pill {
+        background: #6c757d;
+        color: white;
+    }
+    
+    .month-pill.all-pill:hover {
+        background: #5a6268;
+    }
+    
+    .month-pill.all-pill.active {
+        background: #0d6efd;
+    }
+    
+    /* ✅ Search Box */
+    .search-box {
+        position: relative;
+    }
+    
+    .search-box .form-control {
+        border-radius: 30px;
+        padding: 0.6rem 1.2rem 0.6rem 3rem;
+        border: 2px solid #e9ecef;
+        transition: all 0.3s ease;
+        font-size: 0.95rem;
+        background-color: #fff;
+    }
+    
+    .search-box .form-control:focus {
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.1);
+    }
+    
+    .search-box .search-icon {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #6c757d;
+        z-index: 10;
+        cursor: pointer;
+        padding: 8px;
+        transition: color 0.3s ease;
+    }
+    
+    .search-box .search-icon:hover {
+        color: #0d6efd;
+    }
+    
+    .search-box .clear-btn {
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        color: #6c757d;
+        cursor: pointer;
+        padding: 0 5px;
+        z-index: 10;
+        font-size: 1.2rem;
+        transition: color 0.3s ease;
+    }
+    
+    .search-box .clear-btn:hover {
+        color: #dc3545;
+    }
+    
+    .table-records {
+        font-size: 0.9rem;
+    }
+    
+    .table-records thead {
+        background: #f8f9fa;
+    }
+    
+    .table-records tbody tr:hover {
+        background: #f1f3f5;
+    }
+    
+    /* ✅ Datalist Styling */
+    datalist {
+        display: none;
+    }
+    
+    /* ✅ تنسيق الأرقام في الجدول */
+    .amount-number {
+        font-family: 'Courier New', monospace;
+        font-weight: 700;
+        direction: ltr;
+        display: inline-block;
+        text-align: right;
+    }
+    
+    @media (max-width: 768px) {
+        .stats-card .stats-number {
+            font-size: 1.8rem;
+        }
+    }
+</style>
+
+<!-- ============================================ -->
+<!-- ✅ رجوع -->
+<!-- ============================================ -->
+<div class="container-fluid py-4">
+    <div class="mb-3">
+        <a href="{% url 'reports' %}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-right me-1"></i>
+            رجوع إلى التقارير
+        </a>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- ✅ العنوان -->
+    <!-- ============================================ -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h4 class="mb-0 fw-bold">
+                <i class="fas fa-stethoscope text-primary me-2"></i>
+                تفاصيل التخصص: {{ specialty_name }}
+            </h4>
+            <p class="text-muted small mb-0">
+                إجمالي السجلات: {{ total_count }}
+            </p>
+        </div>
+        <small class="text-muted">شيت 11</small>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- ✅ فلتر الشهور + Search -->
+    <!-- ============================================ -->
+    <div class="card shadow-sm mb-4 border-0">
+        <div class="card-body">
+            <div class="row g-3 align-items-center">
+                
+                <!-- ✅ فلتر الشهور -->
+                <div class="col-md-8">
+                    <div class="d-flex align-items-center mb-2">
+                        <i class="fas fa-calendar-alt text-primary me-2"></i>
+                        <h6 class="mb-0 fw-bold">فلتر الشهور</h6>
+                    </div>
+                    <div class="months-scroll">
+                        <a href="?{% if selected_month %}month={% endif %}{% if search_query %}&search={{ search_query }}{% endif %}" 
+                           class="month-pill all-pill {% if not selected_month %}active{% endif %}">
+                            <i class="fas fa-undo me-1"></i> الكل
+                        </a>
+                        {% for month in months %}
+                        <a href="?month={{ month }}{% if search_query %}&search={{ search_query }}{% endif %}" 
+                           class="month-pill {% if month == selected_month %}active{% endif %}">
+                            {{ month }}
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <!-- ✅ Search Box مع datalist -->
+                <div class="col-md-4">
+                    <form method="GET" class="search-box" id="searchForm">
+                        <i class="fas fa-search search-icon" id="searchIcon"></i>
+                        <input type="text" 
+                               name="search" 
+                               id="searchInput"
+                               class="form-control" 
+                               placeholder="ابحث عن مريض، حساب، باكدج..."
+                               value="{{ search_query }}"
+                               list="searchSuggestions"
+                               autocomplete="off">
+                        <datalist id="searchSuggestions">
+                            {% for suggestion in suggestions %}
+                            <option value="{{ suggestion }}">
+                            {% endfor %}
+                        </datalist>
+                        {% if search_query %}
+                        <button type="button" class="clear-btn" id="clearSearch">
+                            <i class="fas fa-times-circle"></i>
+                        </button>
+                        {% endif %}
+                    </form>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- ✅ 4 بوكسات مع كاونتر -->
+    <!-- ============================================ -->
+    <div class="row g-4 mb-4">
+        
+        <div class="col-md-3">
+            <div class="stats-card stats-card-total">
+                <div class="stats-number counter" data-target="{{ total_count }}">0</div>
+                <div class="stats-label"><i class="fas fa-boxes me-1"></i>إجمالي السجلات</div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="stats-card stats-card-cash">
+                <div class="stats-number counter" data-target="{{ cash_count }}">0</div>
+                <div class="stats-label"><i class="fas fa-money-bill-wave me-1"></i>نقدي</div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="stats-card stats-card-credit">
+                <div class="stats-number counter" data-target="{{ credit_count }}">0</div>
+                <div class="stats-label"><i class="fas fa-clock me-1"></i>آجل</div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="stats-card stats-card-amount">
+                <div class="stats-number counter" data-target="{{ total_amount|floatformat:0|intcomma }}">0</div>
+                <div class="stats-label"><i class="fas fa-dollar-sign me-1"></i>إجمالي المبالغ</div>
+            </div>
+        </div>
+        
+    </div>
+
+    <!-- ✅ نتائج البحث -->
+    {% if search_query %}
+    <div class="alert alert-info mb-3">
+        <i class="fas fa-search me-2"></i>
+        نتائج البحث عن: <strong>"{{ search_query }}"</strong>
+        <span class="badge bg-primary ms-2 rounded-pill">{{ total_count }}</span>
+        <a href="?{% if selected_month %}month={{ selected_month }}{% endif %}" class="float-end text-decoration-none">
+            <i class="fas fa-times"></i> إلغاء
+        </a>
+    </div>
+    {% endif %}
+
+    <!-- ============================================ -->
+    <!-- ✅ الجدول التفصيلي -->
+    <!-- ============================================ -->
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-light">
+            <div class="d-flex justify-content-between align-items-center">
+                <h6 class="mb-0">
+                    <i class="fas fa-list me-2"></i>
+                    السجلات التفصيلية
+                    <span class="badge bg-secondary ms-2 rounded-pill">{{ total_count }}</span>
+                </h6>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover table-records mb-0">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>الرقم الحسابى</th>
+                            <th>اسم المريض</th>
+                            <th>الباكدج</th>
+                            <th>الجهة</th>
+                            <th>الشركة الفرعية</th>
+                            <th>المبلغ</th>
+                            <th>نوع الدفع</th>
+                            <th>تاريخ الدخول</th>
+                            <th>تاريخ الخروج</th>
+                            <th>الشهر</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for record in records %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ record.account_number|default:"-" }}</td>
+                            <td class="fw-bold">{{ record.patient_name|truncatechars:25 }}</td>
+                            <td>{{ record.package_name|default:"-"|truncatechars:20 }}</td>
+                            <td>{{ record.entity_name|default:"-"|truncatechars:20 }}</td>
+                            <td>{{ record.sub_company|default:"-"|truncatechars:20 }}</td>
+                            <td>
+                                <span class="amount-number">
+                                    {{ record.amount|floatformat:2|intcomma }}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge {% if record.payment_type == 'نقدي' %}bg-success{% else %}bg-warning text-dark{% endif %}">
+                                    {{ record.payment_type|default:"-" }}
+                                </span>
+                            </td>
+                            <td>{{ record.admission_date|date:"Y-m-d"|default:"-" }}</td>
+                            <td>{{ record.discharge_date|date:"Y-m-d"|default:"-" }}</td>
+                            <td>{{ record.month|default:"-" }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="11" class="text-center text-muted py-4">
+                                <i class="fas fa-inbox fa-2x d-block mb-2 opacity-50"></i>
+                                لا توجد سجلات
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- ✅ Pagination -->
+    <!-- ============================================ -->
+    {% if records.has_other_pages %}
+    <div class="d-flex justify-content-center mt-4">
+        <nav>
+            <ul class="pagination">
+                {% if records.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ records.previous_page_number }}{% if selected_month %}&month={{ selected_month }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                </li>
+                {% endif %}
+                
+                {% for num in records.paginator.page_range %}
+                <li class="page-item {% if num == records.number %}active{% endif %}">
+                    <a class="page-link" href="?page={{ num }}{% if selected_month %}&month={{ selected_month }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">
+                        {{ num }}
+                    </a>
+                </li>
+                {% endfor %}
+                
+                {% if records.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ records.next_page_number }}{% if selected_month %}&month={{ selected_month }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">
+                        <i class="fas fa-chevron-left"></i>
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+// ============================================
+// ✅ 1. الكاونترات المتحركة
+// ============================================
+document.addEventListener('DOMContentLoaded', function() {
+    
+    const counters = document.querySelectorAll('.counter');
+    
+    counters.forEach(counter => {
+        // الحصول على القيمة المستهدفة مع إزالة الفواصل
+        const targetStr = counter.getAttribute('data-target');
+        const target = parseInt(targetStr.replace(/,/g, ''));
+        let current = 0;
+        const increment = Math.max(1, Math.ceil(target / 50));
+        
+        const updateCounter = () => {
+            if (current < target) {
+                current += increment;
+                if (current > target) current = target;
+                // تنسيق الرقم مع فواصل الآلاف
+                counter.textContent = current.toLocaleString('en-US');
+                requestAnimationFrame(updateCounter);
+            } else {
+                counter.textContent = target.toLocaleString('en-US');
+            }
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    updateCounter();
+                    observer.unobserve(entry.target);
+                }
+            });
+        });
+        
+        observer.observe(counter);
+    });
+    
+    // ============================================
+    // ✅ 2. Search Functionality
+    // ============================================
+    const searchForm = document.getElementById('searchForm');
+    const searchInput = document.getElementById('searchInput');
+    const searchIcon = document.getElementById('searchIcon');
+    const clearBtn = document.getElementById('clearSearch');
+    
+    // ✅ Function to submit search
+    function submitSearch() {
+        if (searchInput.value.trim()) {
+            searchForm.submit();
+        }
+    }
+    
+    // ✅ Click on search icon submits form
+    if (searchIcon) {
+        searchIcon.addEventListener('click', function(e) {
+            e.preventDefault();
+            submitSearch();
+        });
+    }
+    
+    // ✅ Press Enter submits form
+    if (searchInput) {
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                submitSearch();
+            }
+        });
+    }
+    
+    // ✅ Select from datalist submits form immediately
+    if (searchInput) {
+        searchInput.addEventListener('input', function(e) {
+            // Check if the value matches any option in datalist
+            const datalist = document.getElementById('searchSuggestions');
+            if (datalist) {
+                const options = datalist.options;
+                let matched = false;
+                for (let option of options) {
+                    if (option.value === this.value) {
+                        matched = true;
+                        break;
+                    }
+                }
+                if (matched && this.value.trim()) {
+                    // Submit the form when a suggestion is selected
+                    submitSearch();
+                }
+            }
+        });
+    }
+    
+    // ✅ Clear search button
+    if (clearBtn) {
+        clearBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            // Build the URL without search parameter
+            let url = window.location.pathname + '?';
+            const params = new URLSearchParams(window.location.search);
+            params.delete('search');
+            
+            // Preserve month filter if exists
+            if (params.has('month')) {
+                url += 'month=' + params.get('month');
+            }
+            
+            window.location.href = url;
+        });
+    }
+    
+});
+</script>
+
+{% endblock %}

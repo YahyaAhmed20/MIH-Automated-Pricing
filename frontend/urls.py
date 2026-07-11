@@ -94,6 +94,8 @@ urlpatterns = [
         name="price_lists"
     ),
     
+    path('reports/specialty/<str:specialty_name>/', views.specialty_detail, name='specialty_detail'),  # ✅ جديد
+
   
     
     path(
