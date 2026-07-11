@@ -1,313 +1,650 @@
 {% extends 'frontend/base.html' %}
-
-{% block page_title %}
-التقارير والإحصائيات
-{% endblock %}
+{% load static %}
 
 {% block content %}
 
+<style>
+    /* ============================================ */
+    /* ✅ Stats Cards - ثلاث بوكسات */
+    /* ============================================ */
+    .stats-card {
+        border-radius: 16px;
+        padding: 1.5rem 1.25rem;
+        text-align: center;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border: none;
+        color: #fff;
+        position: relative;
+        overflow: hidden;
+        cursor: default;
+    }
+    
+    .stats-card:hover {
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: 0 12px 40px rgba(0,0,0,0.2);
+    }
+    
+    .stats-card .stats-number {
+        font-size: 2.5rem;
+        font-weight: 700;
+        line-height: 1.2;
+    }
+    
+    .stats-card .stats-label {
+        font-size: 0.85rem;
+        opacity: 0.9;
+        margin-top: 6px;
+    }
+    
+    .stats-card .stats-icon {
+        font-size: 2rem;
+        opacity: 0.2;
+        position: absolute;
+        bottom: 10px;
+        right: 15px;
+    }
+    
+    .stats-card-total {
+        background: linear-gradient(135deg, #1a237e, #0d47a1);
+    }
+    
+    .stats-card-credit {
+        background: linear-gradient(135deg, #e65100, #f57c00);
+    }
+    
+    .stats-card-cash {
+        background: linear-gradient(135deg, #2e7d32, #43a047);
+    }
+    
+    /* ============================================ */
+    /* ✅ Payment Chart */
+    /* ============================================ */
+    .payment-chart-wrapper {
+        width: 340px;
+        height: 340px;
+        margin: auto;
+        position: relative;
+    }
+    
+    @media (max-width: 992px) {
+        .payment-chart-wrapper {
+            width: 280px;
+            height: 280px;
+        }
+    }
+    
+    /* ============================================ */
+    /* ✅ Specialty Cards */
+    /* ============================================ */
+    .specialty-card {
+        border-radius: 20px;
+        border: 1px solid #e9ecef;
+        overflow: hidden;
+        background: #fff;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        margin-bottom: 1.5rem;
+        width: 100%;
+    }
+    
+    .specialty-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 40px rgba(0,0,0,0.1);
+    }
+    
+    .specialty-card .specialty-header {
+        padding: 1.25rem 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        border-bottom: 2px solid #f1f3f5;
+        flex-wrap: wrap;
+    }
+    
+    .specialty-card .specialty-icon-wrapper {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.8rem;
+        color: #fff;
+        flex-shrink: 0;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    
+    .specialty-card:hover .specialty-icon-wrapper {
+        transform: scale(1.05) rotate(-5deg);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+    }
+    
+    .specialty-card .specialty-name {
+        font-size: 1.3rem;
+        font-weight: 700;
+        margin: 0;
+    }
+    
+    /* ✅ Months Scroll - أفقي */
+    .months-scroll {
+        display: flex;
+        overflow-x: auto;
+        gap: 10px;
+        padding: 8px 0 12px 0;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .months-scroll::-webkit-scrollbar {
+        display: none;
+    }
+    
+    .month-pill {
+        white-space: nowrap;
+        text-decoration: none;
+        padding: 8px 20px;
+        border-radius: 30px;
+        background: #f4f6f9;
+        color: #444;
+        font-weight: 600;
+        font-size: 0.85rem;
+        transition: all 0.25s ease;
+        border: 2px solid transparent;
+        flex-shrink: 0;
+        cursor: pointer;
+    }
+    
+    .month-pill:hover {
+        background: #0d6efd;
+        color: white;
+        transform: scale(1.05);
+        text-decoration: none;
+    }
+    
+    .month-pill.active {
+        background: #0d6efd;
+        color: white;
+        border-color: #0d6efd;
+        box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
+    }
+    
+    .month-pill.all-pill {
+        background: #6c757d;
+        color: white;
+    }
+    
+    .month-pill.all-pill:hover {
+        background: #5a6268;
+    }
+    
+    .month-pill.all-pill.active {
+        background: #0d6efd;
+        border-color: #0d6efd;
+    }
+    
+    /* ✅ Chart Placeholder */
+    .chart-placeholder {
+        height: 100px;
+        position: relative;
+    }
+    
+    .chart-placeholder canvas {
+        width: 100% !important;
+        height: 100% !important;
+    }
+    
+    /* ✅ Responsive */
+    @media (max-width: 768px) {
+        .stats-card .stats-number {
+            font-size: 1.8rem;
+        }
+        
+        .specialty-card .specialty-header {
+            flex-direction: column;
+            text-align: center;
+        }
+        
+        .specialty-card .specialty-icon-wrapper {
+            width: 60px;
+            height: 60px;
+            font-size: 2rem;
+        }
+        
+        .month-pill {
+            padding: 6px 14px;
+            font-size: 0.75rem;
+        }
+        
+        .months-scroll {
+            gap: 6px;
+        }
+    }
+</style>
+
 <!-- ============================================ -->
-<!-- العنوان -->
+<!-- ✅ العنوان -->
 <!-- ============================================ -->
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h3>
-        <i class="bi bi-bar-chart"></i>
-        التقارير والإحصائيات
-    </h3>
-    <span class="text-muted">
-        <i class="bi bi-calendar"></i>
-        {{ now|date:"Y-m-d" }}
-    </span>
+<div class="container-fluid py-4">
+    
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h4 class="mb-0 fw-bold">
+                <i class="fas fa-chart-bar text-primary me-2"></i>
+                التقارير والإحصائيات
+            </h4>
+            <p class="text-muted small mb-0">حركة الباكجات الطبية</p>
+        </div>
+        <small class="text-muted">شيت 11</small>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- ✅ فلتر الشهور (أفقي) -->
+    <!-- ============================================ -->
+    <div class="card shadow-sm mb-4 border-0">
+        <div class="card-body">
+            <div class="d-flex align-items-center mb-2">
+                <i class="fas fa-calendar-alt text-primary me-2"></i>
+                <h6 class="mb-0 fw-bold">حركة الباكجات</h6>
+            </div>
+            <div class="months-scroll">
+                <a href="?" class="month-pill all-pill {% if not selected_month %}active{% endif %}">
+                    <i class="fas fa-undo me-1"></i> الكل
+                </a>
+                {% for month in months %}
+                <a href="?month={{ month }}" class="month-pill {% if month == selected_month %}active{% endif %}">
+                    {{ month }}
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+    <!-- ============================================ -->
+    <!-- ✅ ثلاث بوكسات -->
+    <!-- ============================================ -->
+    <div class="row g-4 mb-4">
+        
+        <div class="col-md-4">
+            <div class="stats-card stats-card-total">
+                <div class="stats-number">{{ total_packages }}</div>
+                <div class="stats-label"><i class="fas fa-boxes me-1"></i>إجمالي الباكدجات</div>
+                <div class="stats-icon"><i class="fas fa-boxes"></i></div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="stats-card stats-card-cash">
+                <div class="stats-number">{{ cash_packages }}</div>
+                <div class="stats-label"><i class="fas fa-money-bill-wave me-1"></i>باكدجات النقدي</div>
+                <div class="stats-icon"><i class="fas fa-money-bill-wave"></i></div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="stats-card stats-card-credit">
+                <div class="stats-number">{{ credit_packages }}</div>
+                <div class="stats-label"><i class="fas fa-clock me-1"></i>باكدجات الآجل</div>
+                <div class="stats-icon"><i class="fas fa-clock"></i></div>
+            </div>
+        </div>
+        
+    </div>
+
+    <!-- ============================================ -->
+    <!-- ✅ التخصصات -->
+    <!-- ============================================ -->
+    <div class="row g-4">
+        {% for specialty in specialties %}
+        
+        <div class="col-xl-4 col-lg-6">
+            <div class="card specialty-card h-100">
+                
+                <div class="card-header bg-white border-0 pt-3">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="specialty-icon-wrapper" style="background: {{ specialty.color }};">
+                            <i class="{{ specialty.icon }}"></i>
+                        </div>
+                        <h5 class="fw-bold mb-0" style="color: {{ specialty.color }};">
+                            {{ specialty.name }}
+                        </h5>
+                    </div>
+                </div>
+                
+                <div class="card-body">
+                    
+                    <!-- ✅ الرسم البياني -->
+                    <div class="chart-placeholder mb-3">
+                        <canvas id="chart{{ forloop.counter }}"></canvas>
+                    </div>
+                    
+                    <!-- ✅ إجمالي الباكجات (كاونتر متحرك) -->
+                    <div class="text-center mb-3">
+                        <div class="display-5 fw-bold text-primary counter" data-target="{{ specialty.total }}">
+                            0
+                        </div>
+                        <small class="text-muted">إجمالي الباكجات</small>
+                    </div>
+                    
+                    <div class="row g-2">
+                        <!-- ✅ باكجات نقدي -->
+                        <div class="col-6">
+                            <div class="card bg-success bg-opacity-10 border-0 h-100">
+                                <div class="card-body py-3 text-center">
+                                    <div class="fw-bold text-success">💰 نقدي</div>
+                                    <div class="fs-3 fw-bold">{{ specialty.cash }}</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- ✅ باكجات آجل -->
+                        <div class="col-6">
+                            <div class="card bg-warning bg-opacity-10 border-0 h-100">
+                                <div class="card-body py-3 text-center">
+                                    <div class="fw-bold text-warning">📄 آجل</div>
+                                    <div class="fs-3 fw-bold">{{ specialty.credit }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+        
+        {% empty %}
+        
+        <div class="col-12">
+            <div class="alert alert-info text-center py-5">
+                <i class="fas fa-inbox fa-3x d-block mb-3 text-muted"></i>
+                <h5>لا توجد بيانات</h5>
+                <p class="text-muted small">لا توجد سجلات في قاعدة البيانات</p>
+            </div>
+        </div>
+        
+        {% endfor %}
+    </div>
+
 </div>
 
-<!-- ============================================ -->
-<!-- الصف الأول: التكاليف -->
-<!-- ============================================ -->
-<div class="row g-3 mb-4">
 
-    <div class="col-md-3">
-        <div class="card border-primary shadow-sm h-100 hover-shadow">
-            <div class="card-body text-center">
-                <div class="icon-circle bg-primary bg-opacity-10 mb-2 mx-auto">
-                    <i class="bi bi-coin text-primary"></i>
+    <!-- ============================================ -->
+    <!-- ✅ الباكجات حسب نوع الدفع (Doughnut Chart) -->
+    <!-- ============================================ -->
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-white border-0 py-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h5 class="fw-bold mb-1">
+                        <i class="fas fa-chart-pie text-primary me-2"></i>
+                        الباكجات حسب نوع الدفع
+                    </h5>
+                    <small class="text-muted">
+                        إجمالي الباكجات حسب طريقة الدفع
+                    </small>
                 </div>
-                <h6 class="text-muted">إجمالي التكلفة المطلوبة</h6>
-                <h4 class="text-primary">
-                    {{ total_requested }} <small>ج.م</small>
-                </h4>
             </div>
         </div>
-    </div>
-
-    <div class="col-md-3">
-        <div class="card border-success shadow-sm h-100 hover-shadow">
-            <div class="card-body text-center">
-                <div class="icon-circle bg-success bg-opacity-10 mb-2 mx-auto">
-                    <i class="bi bi-check-circle text-success"></i>
+        <div class="card-body">
+            <div class="row align-items-center">
+                <!-- الرسم البياني -->
+                <div class="col-lg-6 text-center">
+                    <div class="payment-chart-wrapper">
+                        <canvas id="paymentChart"></canvas>
+                    </div>
                 </div>
-                <h6 class="text-muted">إجمالي التكلفة المستلمة</h6>
-                <h4 class="text-success">
-                    {{ total_received }} <small>ج.م</small>
-                </h4>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-3">
-        <div class="card border-{% if difference >= 0 %}info{% else %}danger{% endif %} shadow-sm h-100 hover-shadow">
-            <div class="card-body text-center">
-                <div class="icon-circle bg-{% if difference >= 0 %}info{% else %}danger{% endif %} bg-opacity-10 mb-2 mx-auto">
-                    <i class="bi bi-arrow-left-right text-{% if difference >= 0 %}info{% else %}danger{% endif %}"></i>
+                <!-- الإحصائيات -->
+                <div class="col-lg-6">
+                    <div class="card border-0 bg-success bg-opacity-10 mb-3">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h5 class="fw-bold text-success mb-1">
+                                        {{ cash_packages }}
+                                    </h5>
+                                    <small class="text-muted">
+                                        باكدج نقدي
+                                    </small>
+                                </div>
+                                <div class="text-end">
+                                    <span class="badge bg-success rounded-pill fs-6">
+                                        {{ cash_percentage }}%
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card border-0 bg-warning bg-opacity-10">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h5 class="fw-bold text-warning mb-1">
+                                        {{ credit_packages }}
+                                    </h5>
+                                    <small class="text-muted">
+                                        باكدج آجل
+                                    </small>
+                                </div>
+                                <div class="text-end">
+                                    <span class="badge bg-warning text-dark rounded-pill fs-6">
+                                        {{ credit_percentage }}%
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <h6 class="text-muted">فرق التكاليف</h6>
-                <h4 class="text-{% if difference >= 0 %}info{% else %}danger{% endif %}">
-                    {{ difference }} <small>ج.م</small>
-                </h4>
             </div>
         </div>
     </div>
 
-    <div class="col-md-3">
-        <div class="card border-secondary shadow-sm h-100 hover-shadow">
-            <div class="card-body text-center">
-                <div class="icon-circle bg-secondary bg-opacity-10 mb-2 mx-auto">
-                    <i class="bi bi-file-medical text-secondary"></i>
+    <!-- ============================================ -->
+    <!-- ✅ الباكجات حسب القطاع (آجل فقط) -->
+    <!-- ============================================ -->
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-white border-0 py-3">
+            <h5 class="fw-bold mb-1">
+                <i class="fas fa-chart-pie text-primary me-2"></i>
+                الباكجات حسب القطاع (آجل فقط)
+            </h5>
+            <small class="text-muted">
+                توزيع الباكجات الآجلة حسب القطاع
+            </small>
+        </div>
+        <div class="card-body">
+            <div class="row align-items-center">
+                <!-- الرسم البياني -->
+                <div class="col-lg-6">
+                    <div class="payment-chart-wrapper">
+                        <canvas id="sectorChart"></canvas>
+                    </div>
                 </div>
-                <h6 class="text-muted">إجمالي الطلبات</h6>
-                <h4 class="text-secondary">
-                    {{ total_requests }}
-                </h4>
-            </div>
-        </div>
-    </div>
-
-</div>
-
-<hr>
-
-<!-- ============================================ -->
-<!-- الصف الثاني: إحصائيات عامة -->
-<!-- ============================================ -->
-<div class="row g-3 mb-4">
-
-    <div class="col-md-3">
-        <div class="card border-info shadow-sm h-100 hover-shadow">
-            <div class="card-body text-center">
-                <div class="icon-circle bg-info bg-opacity-10 mb-2 mx-auto">
-                    <i class="bi bi-check2-all text-info"></i>
+                <!-- التفاصيل -->
+                <div class="col-lg-6">
+                    {% for sector in sector_data %}
+                    <div class="card border-0 bg-light mb-2">
+                        <div class="card-body py-2">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong>
+                                        {{ sector.name }}
+                                    </strong>
+                                </div>
+                                <div class="text-end">
+                                    <div class="fw-bold">
+                                        {{ sector.total }}
+                                    </div>
+                                    <small class="text-muted">
+                                        {{ sector.percentage }}%
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-inbox fa-2x text-muted mb-2 d-block"></i>
+                        <p class="text-muted mb-0">لا توجد بيانات للقطاعات</p>
+                    </div>
+                    {% endfor %}
                 </div>
-                <h6 class="text-muted">الموافقات الصادرة</h6>
-                <h4 class="text-info">
-                    {{ approval_numbers }}
-                </h4>
             </div>
         </div>
     </div>
 
-    <div class="col-md-3">
-        <div class="card border-warning shadow-sm h-100 hover-shadow">
-            <div class="card-body text-center">
-                <div class="icon-circle bg-warning bg-opacity-10 mb-2 mx-auto">
-                    <i class="bi bi-building text-warning"></i>
+    <!-- ============================================ -->
+    <!-- ✅ أعلى وأقل 5 جهات (آجل فقط) -->
+    <!-- ============================================ -->
+    <div class="row g-4 mb-4">
+
+        <!-- أعلى 5 جهات -->
+        <div class="col-lg-6">
+
+            <div class="card shadow-sm border-0 h-100">
+
+                <div class="card-header bg-white">
+
+                    <h5 class="fw-bold mb-0">
+
+                        🏆 أعلى 5 جهات (آجل)
+
+                    </h5>
+
                 </div>
-                <h6 class="text-muted">عدد الجهات</h6>
-                <h4 class="text-warning">
-                    {{ entities }}
-                </h4>
-            </div>
-        </div>
-    </div>
 
-    <div class="col-md-3">
-        <div class="card border-danger shadow-sm h-100 hover-shadow">
-            <div class="card-body text-center">
-                <div class="icon-circle bg-danger bg-opacity-10 mb-2 mx-auto">
-                    <i class="bi bi-tags text-danger"></i>
-                </div>
-                <h6 class="text-muted">عدد التخصصات</h6>
-                <h4 class="text-danger">
-                    {{ specialties }}
-                </h4>
-            </div>
-        </div>
-    </div>
+                <div class="card-body">
 
-    <div class="col-md-3">
-        <div class="card border-primary shadow-sm h-100 hover-shadow">
-            <div class="card-body text-center">
-                <div class="icon-circle bg-primary bg-opacity-10 mb-2 mx-auto">
-                    <i class="bi bi-person-badge text-primary"></i>
-                </div>
-                <h6 class="text-muted">عدد الأطباء</h6>
-                <h4 class="text-primary">
-                    {{ doctors }}
-                </h4>
-            </div>
-        </div>
-    </div>
+                    {% for entity in top_entities %}
 
-</div>
+                    <div class="mb-4">
 
-<hr>
+                        <div class="d-flex justify-content-between align-items-center mb-1">
 
-<!-- ============================================ -->
-<!-- جودة البيانات -->
-<!-- ============================================ -->
-<h4 class="mb-3">
-    <i class="bi bi-exclamation-triangle"></i>
-    جودة البيانات
-</h4>
+                            <div>
 
-<div class="row g-3">
+                                {% if forloop.counter == 1 %}
+                                    🥇
+                                {% elif forloop.counter == 2 %}
+                                    🥈
+                                {% elif forloop.counter == 3 %}
+                                    🥉
+                                {% else %}
+                                    {{ forloop.counter }}.
+                                {% endif %}
 
-    <div class="col-md-6">
+                                <strong>
 
-        <div class="alert alert-warning d-flex justify-content-between align-items-center">
-            <span>
-                <i class="bi bi-arrow-up-circle"></i>
-                تكلفة مستلمة أكبر من المطلوبة
-            </span>
-            <strong class="badge bg-warning text-dark rounded-pill fs-5">
-                {{ received_gt_requested }}
-            </strong>
-        </div>
+                                    {{ entity.name }}
 
-    </div>
+                                </strong>
 
-    <div class="col-md-6">
+                            </div>
 
-        <div class="alert alert-danger d-flex justify-content-between align-items-center">
-            <span>
-                <i class="bi bi-slash-circle"></i>
-                بدون تخصص
-            </span>
-            <strong class="badge bg-danger rounded-pill fs-5">
-                {{ missing_specialty }}
-            </strong>
-        </div>
+                            <span class="badge bg-success">
 
-    </div>
+                                {{ entity.percentage }}%
 
-</div>
-
-<hr>
-
-<!-- ============================================ -->
-<!-- توزيع حالات الطلبات -->
-<!-- ============================================ -->
-<h4 class="mb-3">
-    <i class="bi bi-pie-chart"></i>
-    توزيع حالات الطلبات
-</h4>
-
-<div class="row g-3 mb-4">
-
-    <div class="col-md-2">
-        <div class="card border-success shadow-sm hover-shadow">
-            <div class="card-body text-center">
-                <div class="icon-circle bg-success bg-opacity-10 mb-2 mx-auto">
-                    <i class="bi bi-check-circle text-success"></i>
-                </div>
-                <h6 class="text-muted">تمت الموافقة</h6>
-                <h4 class="text-success">{{ approved }}</h4>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-2">
-        <div class="card border-warning shadow-sm hover-shadow">
-            <div class="card-body text-center">
-                <div class="icon-circle bg-warning bg-opacity-10 mb-2 mx-auto">
-                    <i class="bi bi-clock text-warning"></i>
-                </div>
-                <h6 class="text-muted">قيد الانتظار</h6>
-                <h4 class="text-warning">{{ pending }}</h4>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-2">
-        <div class="card border-danger shadow-sm hover-shadow">
-            <div class="card-body text-center">
-                <div class="icon-circle bg-danger bg-opacity-10 mb-2 mx-auto">
-                    <i class="bi bi-x-circle text-danger"></i>
-                </div>
-                <h6 class="text-muted">مرفوضة</h6>
-                <h4 class="text-danger">{{ rejected }}</h4>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-2">
-        <div class="card border-primary shadow-sm hover-shadow">
-            <div class="card-body text-center">
-                <div class="icon-circle bg-primary bg-opacity-10 mb-2 mx-auto">
-                    <i class="bi bi-check2-all text-primary"></i>
-                </div>
-                <h6 class="text-muted">تم التنفيذ</h6>
-                <h4 class="text-primary">{{ service_done }}</h4>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-2">
-        <div class="card border-secondary shadow-sm hover-shadow">
-            <div class="card-body text-center">
-                <div class="icon-circle bg-secondary bg-opacity-10 mb-2 mx-auto">
-                    <i class="bi bi-person-x text-secondary"></i>
-                </div>
-                <h6 class="text-muted">رفض المريض</h6>
-                <h4 class="text-secondary">{{ patient_refused }}</h4>
-            </div>
-        </div>
-    </div>
-
-</div>
-
-<!-- ============================================ -->
-<!-- أعلى الجهات والأطباء طلباً -->
-<!-- ============================================ -->
-<hr>
-
-<div class="row g-4 mb-4">
-
-    <div class="col-md-6">
-
-        <div class="card shadow border-0 h-100 hover-shadow">
-
-            <div class="card-header bg-primary bg-opacity-10 d-flex justify-content-between align-items-center">
-                <span>
-                    <i class="bi bi-building"></i>
-                    أعلى الجهات طلباً
-                </span>
-                <span class="badge bg-primary rounded-pill">
-                    {{ top_entities|length }}
-                </span>
-            </div>
-
-            <div class="card-body p-0">
-
-                <div class="list-group list-group-flush">
-
-                    {% for item in top_entities %}
-
-                    <div class="list-group-item d-flex justify-content-between align-items-center">
-                        <span>
-                            <span class="badge bg-primary rounded-circle me-2">
-                                {{ forloop.counter }}
                             </span>
-                            <strong>{{ item.entity__name }}</strong>
-                        </span>
-                        <span class="badge bg-primary rounded-pill">
-                            {{ item.total }}
-                        </span>
+
+                        </div>
+
+                        <div class="progress mb-2" style="height:8px;">
+
+                            <div
+                                class="progress-bar bg-success"
+                                style="width: {{ entity.percentage }}%;">
+                            </div>
+
+                        </div>
+
+                        <small class="text-muted">
+
+                            {{ entity.total }} باكدج
+
+                        </small>
+
                     </div>
 
                     {% empty %}
 
-                    <div class="list-group-item text-center text-muted py-4">
-                        <i class="bi bi-inbox"></i>
+                    <div class="text-center text-muted">
+
                         لا توجد بيانات
+
+                    </div>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- أقل 5 جهات -->
+        <div class="col-lg-6">
+
+            <div class="card shadow-sm border-0 h-100">
+
+                <div class="card-header bg-white">
+
+                    <h5 class="fw-bold mb-0">
+
+                        📉 أقل 5 جهات (آجل)
+
+                    </h5>
+
+                </div>
+
+                <div class="card-body">
+
+                    {% for entity in bottom_entities %}
+
+                    <div class="mb-4">
+
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+
+                            <strong>
+
+                                {{ entity.name }}
+
+                            </strong>
+
+                            <span class="badge bg-danger">
+
+                                {{ entity.percentage }}%
+
+                            </span>
+
+                        </div>
+
+                        <div class="progress mb-2" style="height:8px;">
+
+                            <div
+                                class="progress-bar bg-danger"
+                                style="width: {{ entity.percentage }}%;">
+                            </div>
+
+                        </div>
+
+                        <small class="text-muted">
+
+                            {{ entity.total }} باكدج
+
+                        </small>
+
+                    </div>
+
+                    {% empty %}
+
+                    <div class="text-center text-muted">
+
+                        لا توجد بيانات
+
                     </div>
 
                     {% endfor %}
@@ -320,47 +657,155 @@
 
     </div>
 
-    <div class="col-md-6">
+    <!-- ============================================ -->
+    <!-- ✅ أعلى وأقل 5 شركات فرعية (آجل فقط) -->
+    <!-- ============================================ -->
+    <div class="row g-4 mb-4">
 
-        <div class="card shadow border-0 h-100 hover-shadow">
+        <!-- أعلى 5 شركات فرعية -->
+        <div class="col-lg-6">
 
-            <div class="card-header bg-info bg-opacity-10 d-flex justify-content-between align-items-center">
-                <span>
-                    <i class="bi bi-person-badge"></i>
-                    أعلى الأطباء طلباً
-                </span>
-                <span class="badge bg-info rounded-pill">
-                    {{ top_doctors|length }}
-                </span>
-            </div>
+            <div class="card shadow-sm border-0 h-100">
 
-            <div class="card-body p-0">
+                <div class="card-header bg-white">
 
-                <div class="list-group list-group-flush">
+                    <h5 class="fw-bold mb-0">
 
-                    {% for item in top_doctors %}
+                        🏢 أعلى 5 شركات فرعية (آجل)
 
-                    <div class="list-group-item d-flex justify-content-between align-items-center">
-                        <span>
-                            <span class="badge bg-info rounded-circle me-2">
-                                {{ forloop.counter }}
+                    </h5>
+
+                </div>
+
+                <div class="card-body">
+
+                    {% for company in top_sub_companies %}
+
+                    <div class="mb-4">
+
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+
+                            <div>
+
+                                {% if forloop.counter == 1 %}
+                                    🥇
+                                {% elif forloop.counter == 2 %}
+                                    🥈
+                                {% elif forloop.counter == 3 %}
+                                    🥉
+                                {% else %}
+                                    {{ forloop.counter }}.
+                                {% endif %}
+
+                                <strong>
+
+                                    {{ company.name }}
+
+                                </strong>
+
+                            </div>
+
+                            <span class="badge bg-success">
+
+                                {{ company.percentage }}%
+
                             </span>
-                            <td>
-    <a href="{% url 'doctor_detail' item.doctor_name %}">
-        {{ item.doctor_name }}
-    </a>
-</td>
-                        </span>
-                        <span class="badge bg-info rounded-pill">
-                            {{ item.total }}
-                        </span>
+
+                        </div>
+
+                        <div class="progress mb-2" style="height:8px;">
+
+                            <div
+                                class="progress-bar bg-success"
+                                style="width: {{ company.percentage }}%;">
+                            </div>
+
+                        </div>
+
+                        <small class="text-muted">
+
+                            {{ company.total }} باكدج
+
+                        </small>
+
                     </div>
 
                     {% empty %}
 
-                    <div class="list-group-item text-center text-muted py-4">
-                        <i class="bi bi-inbox"></i>
+                    <div class="text-center text-muted">
+
                         لا توجد بيانات
+
+                    </div>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- أقل 5 شركات فرعية -->
+        <div class="col-lg-6">
+
+            <div class="card shadow-sm border-0 h-100">
+
+                <div class="card-header bg-white">
+
+                    <h5 class="fw-bold mb-0">
+
+                        📉 أقل 5 شركات فرعية (آجل)
+
+                    </h5>
+
+                </div>
+
+                <div class="card-body">
+
+                    {% for company in bottom_sub_companies %}
+
+                    <div class="mb-4">
+
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+
+                            <strong>
+
+                                {{ company.name }}
+
+                            </strong>
+
+                            <span class="badge bg-danger">
+
+                                {{ company.percentage }}%
+
+                            </span>
+
+                        </div>
+
+                        <div class="progress mb-2" style="height:8px;">
+
+                            <div
+                                class="progress-bar bg-danger"
+                                style="width: {{ company.percentage }}%;">
+                            </div>
+
+                        </div>
+
+                        <small class="text-muted">
+
+                            {{ company.total }} باكدج
+
+                        </small>
+
+                    </div>
+
+                    {% empty %}
+
+                    <div class="text-center text-muted">
+
+                        لا توجد بيانات
+
                     </div>
 
                     {% endfor %}
@@ -373,52 +818,155 @@
 
     </div>
 
-</div>
+    <!-- ============================================ -->
+    <!-- ✅ أعلى وأقل 5 تخصصات -->
+    <!-- ============================================ -->
+    <div class="row g-4 mb-4">
 
-<!-- ============================================ -->
-<!-- أعلى الجهات تكلفة + إحصائيات إضافية -->
-<!-- ============================================ -->
-<hr>
+        <!-- أعلى 5 تخصصات -->
+        <div class="col-lg-6">
 
-<div class="row g-4 mb-4">
+            <div class="card shadow-sm border-0 h-100">
 
-    <div class="col-md-6">
+                <div class="card-header bg-white">
 
-        <div class="card shadow border-0 h-100 hover-shadow">
+                    <h5 class="fw-bold mb-0">
 
-            <div class="card-header bg-danger bg-opacity-10 d-flex justify-content-between align-items-center">
-                <span>
-                    <i class="bi bi-coin"></i>
-                    أعلى الجهات تكلفة
-                </span>
-                <span class="badge bg-danger rounded-pill">
-                    {{ top_cost_entities|length }}
-                </span>
-            </div>
+                        🩺 أعلى 5 تخصصات
 
-            <div class="card-body p-0">
+                    </h5>
 
-                <div class="list-group list-group-flush">
+                </div>
 
-                    {% for item in top_cost_entities %}
+                <div class="card-body">
 
-                    <div class="list-group-item d-flex justify-content-between align-items-center">
-                        <span>
-                            <span class="badge bg-danger rounded-circle me-2">
-                                {{ forloop.counter }}
+                    {% for specialty in top_specialties %}
+
+                    <div class="mb-4">
+
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+
+                            <div>
+
+                                {% if forloop.counter == 1 %}
+                                    🥇
+                                {% elif forloop.counter == 2 %}
+                                    🥈
+                                {% elif forloop.counter == 3 %}
+                                    🥉
+                                {% else %}
+                                    {{ forloop.counter }}.
+                                {% endif %}
+
+                                <strong>
+
+                                    {{ specialty.name }}
+
+                                </strong>
+
+                            </div>
+
+                            <span class="badge bg-success">
+
+                                {{ specialty.percentage }}%
+
                             </span>
-                            <strong>{{ item.entity__name }}</strong>
-                        </span>
-                        <span class="badge bg-danger rounded-pill">
-                            {{ item.total_cost|floatformat:0 }} ج.م
-                        </span>
+
+                        </div>
+
+                        <div class="progress mb-2" style="height:8px;">
+
+                            <div
+                                class="progress-bar bg-success"
+                                style="width: {{ specialty.percentage }}%;">
+                            </div>
+
+                        </div>
+
+                        <small class="text-muted">
+
+                            {{ specialty.total }} باكدج
+
+                        </small>
+
                     </div>
 
                     {% empty %}
 
-                    <div class="list-group-item text-center text-muted py-4">
-                        <i class="bi bi-inbox"></i>
+                    <div class="text-center text-muted">
+
                         لا توجد بيانات
+
+                    </div>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- أقل 5 تخصصات -->
+        <div class="col-lg-6">
+
+            <div class="card shadow-sm border-0 h-100">
+
+                <div class="card-header bg-white">
+
+                    <h5 class="fw-bold mb-0">
+
+                        📉 أقل 5 تخصصات
+
+                    </h5>
+
+                </div>
+
+                <div class="card-body">
+
+                    {% for specialty in bottom_specialties %}
+
+                    <div class="mb-4">
+
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+
+                            <strong>
+
+                                {{ specialty.name }}
+
+                            </strong>
+
+                            <span class="badge bg-danger">
+
+                                {{ specialty.percentage }}%
+
+                            </span>
+
+                        </div>
+
+                        <div class="progress mb-2" style="height:8px;">
+
+                            <div
+                                class="progress-bar bg-danger"
+                                style="width: {{ specialty.percentage }}%;">
+                            </div>
+
+                        </div>
+
+                        <small class="text-muted">
+
+                            {{ specialty.total }} باكدج
+
+                        </small>
+
+                    </div>
+
+                    {% empty %}
+
+                    <div class="text-center text-muted">
+
+                        لا توجد بيانات
+
                     </div>
 
                     {% endfor %}
@@ -431,636 +979,451 @@
 
     </div>
 
-    <div class="col-md-6">
+    <!-- ============================================ -->
+    <!-- ✅ أعلى وأقل 5 باكدجات -->
+    <!-- ============================================ -->
+    <div class="row g-4 mb-4">
 
-        <div class="row g-3">
+        <!-- أعلى 5 باكدجات -->
+        <div class="col-lg-6">
 
-            <div class="col-md-6">
-                <div class="card border-info shadow-sm h-100 hover-shadow">
-                    <div class="card-body text-center">
-                        <div class="icon-circle bg-info bg-opacity-10 mb-2 mx-auto">
-                            <i class="bi bi-calculator text-info"></i>
-                        </div>
-                        <h6 class="text-muted">متوسط قيمة الطلب</h6>
-                        <h4 class="text-info">{{ avg_request }} <small>ج.م</small></h4>
-                    </div>
+            <div class="card shadow-sm border-0 h-100">
+
+                <div class="card-header bg-white">
+
+                    <h5 class="fw-bold mb-0">
+
+                        📦 أعلى 5 باكدجات
+
+                    </h5>
+
                 </div>
-            </div>
 
-            <div class="col-md-6">
-                <div class="card border-success shadow-sm h-100 hover-shadow">
-                    <div class="card-body text-center">
-                        <div class="icon-circle bg-success bg-opacity-10 mb-2 mx-auto">
-                            <i class="bi bi-pie-chart text-success"></i>
+                <div class="card-body">
+
+                    {% for package in top_packages %}
+
+                    <div class="mb-4">
+
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+
+                            <div>
+
+                                {% if forloop.counter == 1 %}
+                                    🥇
+                                {% elif forloop.counter == 2 %}
+                                    🥈
+                                {% elif forloop.counter == 3 %}
+                                    🥉
+                                {% else %}
+                                    {{ forloop.counter }}.
+                                {% endif %}
+
+                                <strong>
+
+                                    {{ package.name }}
+
+                                </strong>
+
+                            </div>
+
+                            <span class="badge bg-success">
+
+                                {{ package.percentage }}%
+
+                            </span>
+
                         </div>
-                        <h6 class="text-muted">نسبة الموافقات</h6>
-                        <h4 class="text-success">{{ approval_rate }}%</h4>
-                    </div>
-                </div>
-            </div>
 
-            <div class="col-md-12">
-                <div class="card border-warning shadow-sm h-100 hover-shadow">
-                    <div class="card-body text-center">
-                        <div class="icon-circle bg-warning bg-opacity-10 mb-2 mx-auto">
-                            <i class="bi bi-file-medical text-warning"></i>
+                        <div class="progress mb-2" style="height:8px;">
+
+                            <div
+                                class="progress-bar bg-success"
+                                style="width: {{ package.percentage }}%;">
+                            </div>
+
                         </div>
-                        <h6 class="text-muted">إجمالي الطلبات</h6>
-                        <h4 class="text-warning">{{ total_requests }}</h4>
+
+                        <small class="text-muted">
+
+                            {{ package.total }} باكدج
+
+                        </small>
+
                     </div>
+
+                    {% empty %}
+
+                    <div class="text-center text-muted">
+
+                        لا توجد بيانات
+
+                    </div>
+
+                    {% endfor %}
+
                 </div>
+
+            </div>
+
+        </div>
+
+        <!-- أقل 5 باكدجات -->
+        <div class="col-lg-6">
+
+            <div class="card shadow-sm border-0 h-100">
+
+                <div class="card-header bg-white">
+
+                    <h5 class="fw-bold mb-0">
+
+                        📉 أقل 5 باكدجات
+
+                    </h5>
+
+                </div>
+
+                <div class="card-body">
+
+                    {% for package in bottom_packages %}
+
+                    <div class="mb-4">
+
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+
+                            <strong>
+
+                                {{ package.name }}
+
+                            </strong>
+
+                            <span class="badge bg-danger">
+
+                                {{ package.percentage }}%
+
+                            </span>
+
+                        </div>
+
+                        <div class="progress mb-2" style="height:8px;">
+
+                            <div
+                                class="progress-bar bg-danger"
+                                style="width: {{ package.percentage }}%;">
+                            </div>
+
+                        </div>
+
+                        <small class="text-muted">
+
+                            {{ package.total }} باكدج
+
+                        </small>
+
+                    </div>
+
+                    {% empty %}
+
+                    <div class="text-center text-muted">
+
+                        لا توجد بيانات
+
+                    </div>
+
+                    {% endfor %}
+
+                </div>
+
             </div>
 
         </div>
 
     </div>
 
-</div>
 
 <!-- ============================================ -->
-<!-- أعلى الأطباء تكلفة (جديد) -->
+<!-- ✅ Chart.js -->
 <!-- ============================================ -->
-<hr>
-
-<div class="card shadow mb-4 hover-shadow">
-
-    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-        <span>
-            <i class="bi bi-person-badge"></i>
-            أعلى الأطباء تكلفة
-        </span>
-        <span class="badge bg-light text-dark rounded-pill">
-            {{ top_doctors_cost|length }}
-        </span>
-    </div>
-
-    <div class="card-body p-0">
-
-        <div class="list-group list-group-flush">
-
-            {% for item in top_doctors_cost %}
-
-            <div class="list-group-item d-flex justify-content-between align-items-center">
-                <span>
-                    <span class="badge bg-primary rounded-circle me-2">
-                        {{ forloop.counter }}
-                    </span>
-                   <td>
-    <a href="{% url 'doctor_detail' item.doctor_name %}">
-        {{ item.doctor_name }}
-    </a>
-</td>
-                </span>
-                <span>
-                    <span class="badge bg-info rounded-pill me-1">
-                        {{ item.total_requests }} طلب
-                    </span>
-                    <span class="badge bg-success rounded-pill">
-                        {{ item.total_cost|floatformat:0 }} ج.م
-                    </span>
-                </span>
-            </div>
-
-            {% empty %}
-
-            <div class="list-group-item text-center text-muted py-4">
-                <i class="bi bi-inbox"></i>
-                لا توجد بيانات
-            </div>
-
-            {% endfor %}
-
-        </div>
-
-    </div>
-
-</div>
-
-<!-- ============================================ -->
-<!-- أعلى الإجراءات تكلفة (جديد) -->
-<!-- ============================================ -->
-<div class="card shadow mb-4 hover-shadow">
-
-    <div class="card-header bg-warning text-dark d-flex justify-content-between align-items-center">
-        <span>
-            <i class="bi bi-list-check"></i>
-            أعلى الإجراءات تكلفة
-        </span>
-        <span class="badge bg-dark text-white rounded-pill">
-            {{ top_procedures_cost|length }}
-        </span>
-    </div>
-
-    <div class="card-body p-0">
-
-        <div class="list-group list-group-flush">
-
-            {% for item in top_procedures_cost %}
-
-            <div class="list-group-item d-flex justify-content-between align-items-center">
-                <span>
-                    <span class="badge bg-warning text-dark rounded-circle me-2">
-                        {{ forloop.counter }}
-                    </span>
-                    <strong>{{ item.procedure_name }}</strong>
-                </span>
-                <span>
-                    <span class="badge bg-info rounded-pill me-1">
-                        {{ item.total_requests }} طلب
-                    </span>
-                    <span class="badge bg-success rounded-pill">
-                        {{ item.total_cost|floatformat:0 }} ج.م
-                    </span>
-                </span>
-            </div>
-
-            {% empty %}
-
-            <div class="list-group-item text-center text-muted py-4">
-                <i class="bi bi-inbox"></i>
-                لا توجد بيانات
-            </div>
-
-            {% endfor %}
-
-        </div>
-
-    </div>
-
-</div>
-
-<!-- ============================================ -->
-<!-- أعلى التخصصات تكلفة (جديد) -->
-<!-- ============================================ -->
-<div class="card shadow mb-4 hover-shadow">
-
-    <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
-        <span>
-            <i class="bi bi-tags"></i>
-            أعلى التخصصات تكلفة
-        </span>
-        <span class="badge bg-light text-dark rounded-pill">
-            {{ top_specialties_cost|length }}
-        </span>
-    </div>
-
-    <div class="card-body p-0">
-
-        <div class="list-group list-group-flush">
-
-            {% for item in top_specialties_cost %}
-
-            <div class="list-group-item d-flex justify-content-between align-items-center">
-                <span>
-                    <span class="badge bg-info rounded-circle me-2">
-                        {{ forloop.counter }}
-                    </span>
-                    <strong>{{ item.specialty__name|default:"غير محدد" }}</strong>
-                </span>
-                <span>
-                    <span class="badge bg-info rounded-pill me-1">
-                        {{ item.total_requests }} طلب
-                    </span>
-                    <span class="badge bg-success rounded-pill">
-                        {{ item.total_cost|floatformat:0 }} ج.م
-                    </span>
-                </span>
-            </div>
-
-            {% empty %}
-
-            <div class="list-group-item text-center text-muted py-4">
-                <i class="bi bi-inbox"></i>
-                لا توجد بيانات
-            </div>
-
-            {% endfor %}
-
-        </div>
-
-    </div>
-
-</div>
-
-
-
-
-
-{% comment %} chatrts {% endcomment %}
-<div class="card shadow mb-4 hover-shadow">
-
-    <div class="card-header bg-primary bg-opacity-10 d-flex justify-content-between align-items-center">
-        <span>
-            <i class="bi bi-pie-chart"></i>
-            توزيع حالات الطلبات
-        </span>
-    </div>
-
-    <div class="card-body">
-
-        <canvas id="statusChart" height="250"></canvas>
-
-    </div>
-
-</div>
-
-<!-- ============================================ -->
-<!-- أعلى الجهات طلباً - Bar Chart -->
-<!-- ============================================ -->
-<div class="card shadow mb-4 hover-shadow">
-
-    <div class="card-header bg-success bg-opacity-10 d-flex justify-content-between align-items-center">
-        <span>
-            <i class="bi bi-bar-chart"></i>
-            أعلى الجهات طلباً
-        </span>
-    </div>
-
-    <div class="card-body">
-
-        <canvas id="entitiesChart" height="250"></canvas>
-
-    </div>
-
-</div>
-
-<!-- ============================================ -->
-<!-- أعلى الأطباء طلباً - Bar Chart -->
-<!-- ============================================ -->
-<div class="card shadow mb-4 hover-shadow">
-
-    <div class="card-header bg-info bg-opacity-10 d-flex justify-content-between align-items-center">
-        <span>
-            <i class="bi bi-bar-chart"></i>
-            أعلى الأطباء طلباً
-        </span>
-    </div>
-
-    <div class="card-body">
-
-        <canvas id="doctorsChart" height="250"></canvas>
-
-    </div>
-
-</div>
-
-<!-- ============================================ -->
-<!-- أعلى التخصصات طلباً - Bar Chart -->
-<!-- ============================================ -->
-<div class="card shadow mb-4 hover-shadow">
-
-    <div class="card-header bg-danger bg-opacity-10 d-flex justify-content-between align-items-center">
-        <span>
-            <i class="bi bi-bar-chart"></i>
-            أعلى التخصصات طلباً
-        </span>
-    </div>
-
-    <div class="card-body">
-
-        <canvas id="specialtiesChart" height="250"></canvas>
-
-    </div>
-
-</div>
-
-<!-- ============================================ -->
-<!-- أعلى الجهات تكلفة - Bar Chart (جديد) -->
-<!-- ============================================ -->
-<div class="card shadow mb-4 hover-shadow">
-
-    <div class="card-header bg-warning bg-opacity-10 d-flex justify-content-between align-items-center">
-        <span>
-            <i class="bi bi-bar-chart"></i>
-            أعلى الجهات تكلفة
-        </span>
-    </div>
-
-    <div class="card-body">
-
-        <canvas id="costEntitiesChart" height="250"></canvas>
-
-    </div>
-
-</div>
-
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-
-        // ==========================================
-        // Pie Chart - توزيع حالات الطلبات
-        // ==========================================
-        const data = {{ status_chart|safe }};
-
-        new Chart(
-            document.getElementById('statusChart'),
-            {
-                type: 'pie',
-                data: {
-                    labels: [
-                        'تمت الموافقة',
-                        'قيد الانتظار',
-                        'مرفوضة',
-                        'تم تنفيذ الخدمة',
-                        'رفض المريض'
-                    ],
-                    datasets: [{
-                        data: [
-                            data.approved,
-                            data.pending,
-                            data.rejected,
-                            data.service_done,
-                            data.patient_refused
-                        ],
-                        backgroundColor: [
-                            '#198754',  // success - green
-                            '#ffc107',  // warning - yellow
-                            '#dc3545',  // danger - red
-                            '#0d6efd',  // primary - blue
-                            '#6c757d'   // secondary - gray
-                        ],
-                        borderWidth: 2,
-                        borderColor: '#fff'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                font: {
-                                    size: 13
-                                },
-                                padding: 15,
-                                usePointStyle: true,
-                                pointStyle: 'circle'
-                            }
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    let total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                    let percentage = total > 0 ? ((context.parsed / total) * 100).toFixed(1) : 0;
-                                    return context.label + ': ' + context.parsed + ' (' + percentage + '%)';
-                                }
-                            }
-                        }
-                    }
-                }
+document.addEventListener('DOMContentLoaded', function() {
+    
+    // ============================================
+    // ✅ 1. الكاونترات المتحركة
+    // ============================================
+    const counters = document.querySelectorAll('.counter');
+    
+    counters.forEach(counter => {
+        const target = parseInt(counter.getAttribute('data-target'));
+        let current = 0;
+        const increment = Math.max(1, Math.ceil(target / 50));
+        
+        const updateCounter = () => {
+            if (current < target) {
+                current += increment;
+                if (current > target) current = target;
+                counter.textContent = current;
+                requestAnimationFrame(updateCounter);
+            } else {
+                counter.textContent = target;
             }
-        );
-
-
-        // ==========================================
-        // Bar Chart - أعلى الجهات طلباً
-        // ==========================================
-        const entitiesLabels = {{ top_entities_labels|safe }};
-        const entitiesValues = {{ top_entities_values|safe }};
-
-        const colors = [
-            '#0d6efd', '#0dcaf0', '#198754', '#ffc107', '#fd7e14',
-            '#dc3545', '#6f42c1', '#d63384', '#20c997', '#6610f2'
-        ];
-
-        new Chart(
-            document.getElementById('entitiesChart'),
-            {
-                type: 'bar',
-                data: {
-                    labels: entitiesLabels,
-                    datasets: [{
-                        label: 'عدد الطلبات',
-                        data: entitiesValues,
-                        backgroundColor: colors.slice(0, entitiesLabels.length),
-                        borderRadius: 8,
-                        borderSkipped: false,
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    plugins: {
-                        legend: {
-                            display: false
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return context.parsed.y + ' طلب';
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                stepSize: 1
-                            },
-                            grid: {
-                                color: 'rgba(0,0,0,0.05)'
-                            }
-                        },
-                        x: {
-                            grid: {
-                                display: false
-                            }
-                        }
-                    }
+        };
+        
+        // ✅ تشغيل الكاونتر عند ظهور العنصر
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    updateCounter();
+                    observer.unobserve(entry.target);
                 }
-            }
-        );
-
-
-        // ==========================================
-        // Bar Chart - أعلى الأطباء طلباً
-        // ==========================================
-        const doctorsLabels = {{ top_doctors_labels|safe }};
-        const doctorsValues = {{ top_doctors_values|safe }};
-
-        const doctorsColors = [
-            '#6f42c1', '#d63384', '#dc3545', '#fd7e14', '#ffc107',
-            '#198754', '#0dcaf0', '#0d6efd', '#6610f2', '#20c997'
-        ];
-
-        new Chart(
-            document.getElementById('doctorsChart'),
-            {
-                type: 'bar',
-                data: {
-                    labels: doctorsLabels,
-                    datasets: [{
-                        label: 'عدد الطلبات',
-                        data: doctorsValues,
-                        backgroundColor: doctorsColors.slice(0, doctorsLabels.length),
-                        borderRadius: 8,
-                        borderSkipped: false,
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    plugins: {
-                        legend: {
-                            display: false
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return context.parsed.y + ' طلب';
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                stepSize: 1
-                            },
-                            grid: {
-                                color: 'rgba(0,0,0,0.05)'
-                            }
-                        },
-                        x: {
-                            grid: {
-                                display: false
-                            }
-                        }
-                    }
-                }
-            }
-        );
-
-
-        // ==========================================
-        // Bar Chart - أعلى التخصصات طلباً
-        // ==========================================
-        const specialtiesLabels = {{ top_specialties_labels|safe }};
-        const specialtiesValues = {{ top_specialties_values|safe }};
-
-        const specialtiesColors = [
-            '#dc3545', '#fd7e14', '#ffc107', '#198754', '#0dcaf0',
-            '#0d6efd', '#6f42c1', '#d63384', '#20c997', '#6610f2'
-        ];
-
-        new Chart(
-            document.getElementById('specialtiesChart'),
-            {
-                type: 'bar',
-                data: {
-                    labels: specialtiesLabels,
-                    datasets: [{
-                        label: 'عدد الطلبات',
-                        data: specialtiesValues,
-                        backgroundColor: specialtiesColors.slice(0, specialtiesLabels.length),
-                        borderRadius: 8,
-                        borderSkipped: false,
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    plugins: {
-                        legend: {
-                            display: false
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return context.parsed.y + ' طلب';
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                stepSize: 1
-                            },
-                            grid: {
-                                color: 'rgba(0,0,0,0.05)'
-                            }
-                        },
-                        x: {
-                            grid: {
-                                display: false
-                            }
-                        }
-                    }
-                }
-            }
-        );
-
-
-        // ==========================================
-        // Bar Chart - أعلى الجهات تكلفة (جديد)
-        // ==========================================
-        const costEntitiesLabels = {{ top_cost_entities_labels|safe }};
-        const costEntitiesValues = {{ top_cost_entities_values|safe }};
-
-        const costColors = [
-            '#fd7e14', '#ffc107', '#198754', '#0dcaf0', '#0d6efd',
-            '#6f42c1', '#d63384', '#dc3545', '#20c997', '#6610f2'
-        ];
-
-        new Chart(
-            document.getElementById('costEntitiesChart'),
-            {
-                type: 'bar',
-                data: {
-                    labels: costEntitiesLabels,
-                    datasets: [{
-                        label: 'إجمالي التكلفة (ج.م)',
-                        data: costEntitiesValues,
-                        backgroundColor: costColors.slice(0, costEntitiesLabels.length),
-                        borderRadius: 8,
-                        borderSkipped: false,
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    plugins: {
-                        legend: {
-                            display: false
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return context.parsed.y.toLocaleString() + ' ج.م';
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                callback: function(value) {
-                                    return value.toLocaleString();
-                                }
-                            },
-                            grid: {
-                                color: 'rgba(0,0,0,0.05)'
-                            }
-                        },
-                        x: {
-                            grid: {
-                                display: false
-                            }
-                        }
-                    }
-                }
-            }
-        );
-
+            });
+        });
+        
+        observer.observe(counter);
     });
+    
+    // ============================================
+    // ✅ 2. Function to create Doughnut Chart
+    // ============================================
+    function createDoughnutChart(canvasId, labels, values, colors, centerTitle, centerValue) {
+        const ctx = document.getElementById(canvasId);
+        
+        if (!ctx) return;
+        
+        // Center text plugin
+        const centerTextPlugin = {
+            id: "centerText",
+            beforeDraw(chart) {
+                const {ctx} = chart;
+                const meta = chart.getDatasetMeta(0);
+                
+                if (!meta.data.length) return;
+                
+                const x = meta.data[0].x;
+                const y = meta.data[0].y;
+                
+                ctx.save();
+                ctx.textAlign = "center";
+                
+                // Title
+                ctx.fillStyle = "#6c757d";
+                ctx.font = "18px Cairo";
+                ctx.fillText(centerTitle, x, y - 18);
+                
+                // Value
+                ctx.fillStyle = "#212529";
+                ctx.font = "bold 42px Cairo";
+                ctx.fillText(centerValue, x, y + 12);
+                
+                // Label
+                ctx.fillStyle = "#6c757d";
+                ctx.font = "16px Cairo";
+                ctx.fillText("باكدج", x, y + 38);
+                
+                ctx.restore();
+            }
+        };
+        
+        new Chart(ctx, {
+            type: "doughnut",
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: values,
+                    backgroundColor: colors,
+                    borderColor: "#ffffff",
+                    borderWidth: 4,
+                    hoverOffset: 20,
+                    hoverBorderWidth: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                cutout: "68%",
+                animation: {
+                    animateRotate: true,
+                    animateScale: true,
+                    duration: 1800,
+                    easing: "easeOutQuart"
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label(context) {
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const value = context.parsed;
+                                const percent = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+                                return context.label + ": " + value + " (" + percent + "%)";
+                            }
+                        }
+                    }
+                }
+            },
+            plugins: [centerTextPlugin]
+        });
+    }
+    
+    // ============================================
+    // ✅ 3. Payment Type Doughnut Chart
+    // ============================================
+    createDoughnutChart(
+        "paymentChart",
+        ["نقدي", "آجل"],
+        [
+            {{ cash_packages }},
+            {{ credit_packages }}
+        ],
+        [
+            "#2e7d32",
+            "#1976d2"
+        ],
+        "الإجمالي",
+        "{{ total_packages }}"
+    );
+    
+    // ============================================
+    // ✅ 4. Sector Doughnut Chart
+    // ============================================
+    const sectorLabels = {{ sector_labels|safe }};
+    const sectorValues = {{ sector_values|safe }};
+    const sectorColors = {{ sector_colors|safe }};
+    
+    if (sectorLabels.length > 0) {
+        createDoughnutChart(
+            "sectorChart",
+            sectorLabels,
+            sectorValues,
+            sectorColors.slice(0, sectorLabels.length),
+            "إجمالي الآجل",
+            "{{ credit_packages }}"
+        );
+    }
+    
+    // ============================================
+    // ✅ 5. الرسوم البيانية - Line Charts للتخصصات
+    // ============================================
+    {% for specialty in specialties %}
+    const ctx{{ forloop.counter }} =
+        document.getElementById("chart{{ forloop.counter }}");
+
+    if (ctx{{ forloop.counter }}) {
+
+        new Chart(ctx{{ forloop.counter }}, {
+
+            type: "line",
+
+            data: {
+
+                labels: {{ specialty.chart_labels|safe }},
+
+                datasets: [{
+
+                    label: "{{ specialty.name }}",
+
+                    data: {{ specialty.chart_values|safe }},
+
+                    borderColor: "{{ specialty.color }}",
+
+                    backgroundColor: "{{ specialty.color }}20",
+
+                    borderWidth: 3,
+
+                    fill: true,
+
+                    tension: 0.35,
+
+                    pointBackgroundColor: "{{ specialty.color }}",
+
+                    pointBorderColor: "#fff",
+
+                    pointBorderWidth: 2,
+
+                    pointRadius: 4,
+
+                    pointHoverRadius: 6,
+
+                }]
+
+            },
+
+            options: {
+
+                responsive: true,
+
+                maintainAspectRatio: false,
+
+                plugins: {
+
+                    legend: {
+                        display: false
+                    },
+
+                    tooltip: {
+                        callbacks: {
+                            label: function(context){
+                                return context.parsed.y + " باكج";
+                            }
+                        }
+                    }
+
+                },
+
+                interaction: {
+
+                    intersect: false,
+
+                    mode: "index"
+
+                },
+
+                scales: {
+
+                    y: {
+
+                        beginAtZero: true,
+
+                        ticks: {
+
+                            stepSize: 1,
+
+                            precision: 0
+
+                        },
+
+                        grid: {
+
+                            color: "#f1f3f5"
+
+                        }
+
+                    },
+
+                    x: {
+
+                        grid: {
+
+                            display: false
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        });
+
+    }
+
+    {% endfor %}
+    
+});
 </script>
 
 {% endblock %}

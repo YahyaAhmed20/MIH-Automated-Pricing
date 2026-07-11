@@ -106,7 +106,7 @@ class ImportHelpers:
         
     
     
-        # ============================================================
+    # ============================================================
     # ✅ Normalize Company Name
     # ============================================================
     @staticmethod
@@ -127,8 +127,8 @@ class ImportHelpers:
         
         
     # ============================================================
-# ✅ Get Or Create Specialty
-# ============================================================
+    # ✅ Get Or Create Specialty
+    # ============================================================
     @staticmethod
     def get_or_create_specialty(
         specialty_name,
@@ -190,3 +190,24 @@ class ImportHelpers:
             return f"{value * 100:.0f}%"
 
         return ImportHelpers.normalize_text(value)
+
+    # ============================================================
+    # ✅ Helper: معالجة المبلغ
+    # ============================================================
+    @staticmethod
+    def clean_amount(value):
+        """
+        تنظيف قيمة المبلغ
+        مثال: 1,250.50 -> 1250.50
+        """
+        if pd.isna(value):
+            return 0
+        
+        try:
+            if isinstance(value, str):
+                # إزالة الفواصل الآلاف
+                cleaned = value.replace(",", "").strip()
+                return float(cleaned)
+            return float(value)
+        except Exception:
+            return 0

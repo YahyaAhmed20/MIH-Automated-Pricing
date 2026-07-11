@@ -459,255 +459,509 @@ def approval_detail(request, pk):
             "approval": approval
         }
     )
+from django.db.models import Count, Q
+from django.shortcuts import render
+from pricing_requests.models import ReportStatistic
+import json
+
+SPECIALTIES = [
+    "الانف والاذن",
+    "العظام",
+    "القسطره وجراحات القلب",
+    "القلب المفتوح",
+    "الكلي و المسالك البوليه",
+    "النساء والتوليد",
+    "جراحة المخ والاعصاب",
+]
 
 
+SPECIALTY_ICONS = {
+    "الانف والاذن": "fas fa-ear",
+    "العظام": "fas fa-bone",
+    "القسطره وجراحات القلب": "fas fa-heart-pulse",
+    "القلب المفتوح": "fas fa-heartbeat",
+    "الكلي و المسالك البوليه": "fas fa-kidney",
+    "النساء والتوليد": "fas fa-person-pregnant",
+    "جراحة المخ والاعصاب": "fas fa-brain",
+}
 
 
-def reports(request):
+SPECIALTY_COLORS = {
+    "الانف والاذن": "#6f42c1",
+    "العظام": "#fd7e14",
+    "القسطره وجراحات القلب": "#dc3545",
+    "القلب المفتوح": "#e83e8c",
+    "الكلي و المسالك البوليه": "#20c997",
+    "النساء والتوليد": "#ff6b6b",
+    "جراحة المخ والاعصاب": "#4dabf7",
+}
 
-    total_requested = (
-        PricingRequest.objects.aggregate(
-            total=Sum("requested_cost")
-        )["total"] or 0
+
+MONTH_ORDER = [
+    "يناير",
+    "فبراير",
+    "مارس",
+    "ابريل",
+    "مايو",
+    "يونيو",
+    "يوليو",
+    "اغسطس",
+    "سبتمبر",
+    "اكتوبر",
+    "نوفمبر",
+    "ديسمبر",
+]
+
+
+def reports_statistics(request):
+
+    selected_month = request.GET.get("month", "")
+
+    statistics = ReportStatistic.objects.all()
+
+    if selected_month:
+        statistics = statistics.filter(month=selected_month)
+
+    months_raw = list(
+        ReportStatistic.objects.values_list(
+            "month",
+            flat=True
+        ).distinct()
     )
 
-    total_received = (
-        PricingRequest.objects.aggregate(
-            total=Sum("received_cost")
-        )["total"] or 0
-    )
+    months = [
+        month
+        for month in MONTH_ORDER
+        if month in months_raw
+    ]
 
-    total_requests = PricingRequest.objects.count()
+    total_packages = statistics.count()
 
-    approval_numbers = (
-        PricingRequest.objects
-        .exclude(approval_number__isnull=True)
-        .exclude(approval_number="")
-        .count()
-    )
+    cash_packages = statistics.filter(
+        payment_type="نقدي"
+    ).count()
 
-    anomalies_received = (
-        PricingRequest.objects.filter(
-            received_cost__gt=F("requested_cost")
-        ).count()
-    )
+    credit_packages = statistics.filter(
+        payment_type="اجل"
+    ).count()
 
-    anomalies_specialty = (
-        PricingRequest.objects.filter(
-            specialty__name="غير محدد"
-        ).count()
-    )
+    # ============================================
+    # Payment Type Statistics - النسب المئوية
+    # ============================================
+    
+    if total_packages > 0:
+        cash_percentage = round(
+            (cash_packages / total_packages) * 100,
+            1
+        )
+        
+        credit_percentage = round(
+            (credit_packages / total_packages) * 100,
+            1
+        )
+    else:
+        cash_percentage = 0
+        credit_percentage = 0
 
-    active_doctors = (
-        PricingRequest.objects
-        .exclude(doctor_name="")
-        .values("doctor_name")
-        .distinct()
-        .count()
-    )
-
-    # ✅ توزيع حالات الطلبات
-    approved = PricingRequest.objects.filter(status="approved").count()
-    pending = PricingRequest.objects.filter(status="pending").count()
-    rejected = PricingRequest.objects.filter(status="rejected").count()
-    service_done = PricingRequest.objects.filter(status="service_done").count()
-    patient_refused = PricingRequest.objects.filter(status="patient_refused").count()
-
-    # ✅ 1. أعلى الجهات طلباً
-    top_entities = (
-        PricingRequest.objects
-        .values("entity__name")
+    # ============================================
+    # Packages By Sector (Credit Only)
+    # ============================================
+    
+    sector_statistics = (
+        statistics
+        .filter(payment_type="اجل")
+        .values("sector")
         .annotate(total=Count("id"))
-        .order_by("-total")[:10]
+        .order_by("-total")
     )
+    
+    sector_data = []
+    
+    for row in sector_statistics:
+        
+        percentage = 0
+        
+        if credit_packages > 0:
+            
+            percentage = round(
+                (row["total"] / credit_packages) * 100,
+                1
+            )
+        
+        sector_data.append({
+            
+            "name": row["sector"],
+            
+            "total": row["total"],
+            
+            "percentage": percentage,
+            
+        })
 
-    # ✅ 2. أعلى الأطباء طلباً
-    top_doctors = (
-        PricingRequest.objects
-        .exclude(doctor_name="")
-        .values("doctor_name")
+    # ============================================
+    # Sector Chart Data - جاهز للـ Doughnut Chart
+    # ============================================
+    
+    sector_labels = json.dumps(
+        [item["name"] for item in sector_data],
+        ensure_ascii=False
+    )
+    
+    sector_values = json.dumps(
+        [item["total"] for item in sector_data]
+    )
+    
+    sector_colors = json.dumps([
+        "#0d6efd",
+        "#20c997",
+        "#ffc107",
+        "#dc3545",
+        "#6f42c1",
+        "#fd7e14",
+        "#198754",
+        "#6610f2",
+        "#0dcaf0",
+        "#6c757d",
+    ])
+
+    # ============================================
+    # Top & Bottom 5 Entities (Credit Only)
+    # ============================================
+    
+    entity_statistics = (
+        statistics
+        .filter(payment_type="اجل")
+        .values("entity_name")
         .annotate(total=Count("id"))
-        .order_by("-total")[:10]
     )
+    
+    # أعلى 5 جهات
+    top_entities = []
+    
+    for row in entity_statistics.order_by("-total")[:5]:
+        
+        percentage = 0
+        
+        if credit_packages > 0:
+            percentage = round(
+                (row["total"] / credit_packages) * 100,
+                1
+            )
+        
+        top_entities.append({
+            
+            "name": row["entity_name"],
+            
+            "total": row["total"],
+            
+            "percentage": percentage,
+            
+        })
+    
+    # أقل 5 جهات
+    bottom_entities = []
+    
+    for row in entity_statistics.order_by("total", "entity_name")[:5]:
+        
+        percentage = 0
+        
+        if credit_packages > 0:
+            percentage = round(
+                (row["total"] / credit_packages) * 100,
+                1
+            )
+        
+        bottom_entities.append({
+            
+            "name": row["entity_name"],
+            
+            "total": row["total"],
+            
+            "percentage": percentage,
+            
+        })
 
-    # ✅ 3. أعلى الجهات تكلفة
-    top_cost_entities = (
-        PricingRequest.objects
-        .values("entity__name")
-        .annotate(
-            total_cost=Sum("requested_cost")
+    # ============================================
+    # Top & Bottom 5 Sub Companies (Credit Only)
+    # ============================================
+    
+    sub_company_statistics = (
+        statistics
+        .filter(payment_type="اجل")
+        .exclude(sub_company="")
+        .exclude(sub_company__isnull=True)
+        .values("sub_company")
+        .annotate(total=Count("id"))
+    )
+    
+    # أعلى 5 شركات فرعية
+    top_sub_companies = []
+    
+    for row in sub_company_statistics.order_by("-total")[:5]:
+        
+        percentage = 0
+        
+        if credit_packages > 0:
+            percentage = round(
+                (row["total"] / credit_packages) * 100,
+                1
+            )
+        
+        top_sub_companies.append({
+            
+            "name": row["sub_company"],
+            
+            "total": row["total"],
+            
+            "percentage": percentage,
+            
+        })
+    
+    # أقل 5 شركات فرعية
+    bottom_sub_companies = []
+    
+    for row in sub_company_statistics.order_by("total", "sub_company")[:5]:
+        
+        percentage = 0
+        
+        if credit_packages > 0:
+            percentage = round(
+                (row["total"] / credit_packages) * 100,
+                1
+            )
+        
+        bottom_sub_companies.append({
+            
+            "name": row["sub_company"],
+            
+            "total": row["total"],
+            
+            "percentage": percentage,
+            
+        })
+
+    # ============================================
+    # Top & Bottom 5 Specialties
+    # ============================================
+    
+    specialty_statistics = (
+        statistics
+        .exclude(specialty="")
+        .exclude(specialty__isnull=True)
+        .values("specialty")
+        .annotate(total=Count("id"))
+    )
+    
+    # أعلى 5 تخصصات
+    top_specialties = []
+    
+    for row in specialty_statistics.order_by("-total")[:5]:
+        
+        percentage = 0
+        
+        if total_packages > 0:
+            
+            percentage = round(
+                (row["total"] / total_packages) * 100,
+                1
+            )
+        
+        top_specialties.append({
+            
+            "name": row["specialty"],
+            
+            "total": row["total"],
+            
+            "percentage": percentage,
+            
+        })
+    
+    # أقل 5 تخصصات
+    bottom_specialties = []
+    
+    for row in specialty_statistics.order_by("total", "specialty")[:5]:
+        
+        percentage = 0
+        
+        if total_packages > 0:
+            
+            percentage = round(
+                (row["total"] / total_packages) * 100,
+                1
+            )
+        
+        bottom_specialties.append({
+            
+            "name": row["specialty"],
+            
+            "total": row["total"],
+            
+            "percentage": percentage,
+            
+        })
+
+    # ============================================
+    # Top & Bottom 5 Packages
+    # ============================================
+    
+    package_statistics = (
+        statistics
+        .exclude(package_name="")
+        .exclude(package_name__isnull=True)
+        .values("package_name")
+        .annotate(total=Count("id"))
+    )
+    
+    # أعلى 5 باكدجات
+    top_packages = []
+    
+    for row in package_statistics.order_by("-total")[:5]:
+        
+        percentage = 0
+        
+        if total_packages > 0:
+            percentage = round(
+                (row["total"] / total_packages) * 100,
+                1
+            )
+        
+        top_packages.append({
+            
+            "name": row["package_name"],
+            
+            "total": row["total"],
+            
+            "percentage": percentage,
+            
+        })
+    
+    # أقل 5 باكدجات
+    bottom_packages = []
+    
+    for row in package_statistics.order_by("total", "package_name")[:5]:
+        
+        percentage = 0
+        
+        if total_packages > 0:
+            percentage = round(
+                (row["total"] / total_packages) * 100,
+                1
+            )
+        
+        bottom_packages.append({
+            
+            "name": row["package_name"],
+            
+            "total": row["total"],
+            
+            "percentage": percentage,
+            
+        })
+
+    specialty_summary = {
+        row["specialty"]: row
+        for row in (
+            statistics
+            .values("specialty")
+            .annotate(
+                total=Count("id"),
+                cash=Count(
+                    "id",
+                    filter=Q(payment_type="نقدي"),
+                ),
+                credit=Count(
+                    "id",
+                    filter=Q(payment_type="اجل"),
+                ),
+            )
         )
-        .order_by("-total_cost")[:10]
-    )
-
-    # ✅ 4. متوسط قيمة الطلب
-    avg_request = (
-        PricingRequest.objects.aggregate(
-            avg=Avg("requested_cost")
-        )["avg"] or 0
-    )
-
-    # ✅ 5. نسبة الموافقات
-    approval_rate = 0
-    if total_requests:
-        approval_rate = (approved / total_requests) * 100
-
-    # ✅ 6. أعلى الأطباء تكلفة
-    top_doctors_cost = (
-        PricingRequest.objects
-        .exclude(doctor_name="")
-        .values("doctor_name")
-        .annotate(
-            total_cost=Sum("requested_cost"),
-            total_requests=Count("id")
-        )
-        .order_by("-total_cost")[:10]
-    )
-
-    # ✅ 7. أعلى الإجراءات تكلفة
-    top_procedures_cost = (
-        PricingRequest.objects
-        .exclude(procedure_name="")
-        .values("procedure_name")
-        .annotate(
-            total_cost=Sum("requested_cost"),
-            total_requests=Count("id")
-        )
-        .order_by("-total_cost")[:10]
-    )
-
-    # ✅ 8. أعلى التخصصات تكلفة
-    top_specialties_cost = (
-        PricingRequest.objects
-        .values("specialty__name")
-        .annotate(
-            total_cost=Sum("requested_cost"),
-            total_requests=Count("id")
-        )
-        .order_by("-total_cost")[:10]
-    )
-
-    # ✅ 9. Chart Data - Status Doughnut
-    status_chart = {
-        "approved": approved,
-        "pending": pending,
-        "rejected": rejected,
-        "service_done": service_done,
-        "patient_refused": patient_refused,
     }
 
-    # ✅ 10. Chart Data - Top Entities Bar
-    top_entities_chart = (
-        PricingRequest.objects
-        .values("entity__name")
-        .annotate(total=Count("id"))
-        .order_by("-total")[:10]
-    )
+    chart_data = {}
 
-    # ✅ 11. Chart Data - Top Doctors Bar
-    top_doctors_chart = (
-        PricingRequest.objects
-        .exclude(doctor_name="")
-        .values("doctor_name")
-        .annotate(total=Count("id"))
-        .order_by("-total")[:10]
-    )
+    for specialty in SPECIALTIES:
 
-    # ✅ 12. Chart Data - Top Specialties Bar
-    top_specialties_chart = (
-        PricingRequest.objects
-        .values("specialty__name")
-        .annotate(
-            total_requests=Count("id"),
-            total_cost=Sum("requested_cost")
+        monthly = (
+            statistics
+            .filter(specialty=specialty)
+            .values("month")
+            .annotate(total=Count("id"))
+            .order_by()
         )
-        .order_by("-total_requests")[:10]
-    )
 
-    # ✅ 13. Chart Data - Top Cost Entities Bar
-    top_cost_entities_chart = (
-        PricingRequest.objects
-        .values("entity__name")
-        .annotate(
-            total_cost=Sum("requested_cost")
-        )
-        .order_by("-total_cost")[:10]
-    )
+        chart_data[specialty] = {
+            row["month"]: row["total"]
+            for row in monthly
+        }
 
-    context = {
-        # التكاليف
-        "total_requested": f"{total_requested:,.0f}",
-        "total_received": f"{total_received:,.0f}",
-        "difference": f"{total_requested - total_received:,.0f}",
+    specialties = []
 
-        "total_requests": f"{total_requests:,}",
-        "approval_numbers": f"{approval_numbers:,}",
-        "entities": f"{ContractEntity.objects.count():,}",
-        "specialties": f"{Specialty.objects.count():,}",
-        "doctors": f"{active_doctors:,}",
+    for specialty in SPECIALTIES:
 
-        "received_gt_requested": f"{anomalies_received:,}",
-        "missing_specialty": f"{anomalies_specialty:,}",
+        row = specialty_summary.get(specialty, {})
 
-        # توزيع الحالات
-        "approved": f"{approved:,}",
-        "pending": f"{pending:,}",
-        "rejected": f"{rejected:,}",
-        "service_done": f"{service_done:,}",
-        "patient_refused": f"{patient_refused:,}",
+        chart_sorted = {}
 
-        # الإضافات السابقة
-        "top_entities": top_entities,
-        "top_doctors": top_doctors,
-        "top_cost_entities": top_cost_entities,
-        "avg_request": f"{avg_request:,.0f}",
-        "approval_rate": round(approval_rate, 1),
+        for month in MONTH_ORDER:
+            if month in chart_data.get(specialty, {}):
+                chart_sorted[month] = chart_data[specialty][month]
 
-        # الإضافات الجديدة
-        "top_doctors_cost": top_doctors_cost,
-        "top_procedures_cost": top_procedures_cost,
-        "top_specialties_cost": top_specialties_cost,
+        specialties.append({
 
-        # ✅ Charts
-        "status_chart": json.dumps(status_chart),
+            "name": specialty,
 
-        # ✅ Bar Chart Data - Entities
-        "top_entities_labels": json.dumps([
-            x["entity__name"] for x in top_entities_chart
-        ]),
-        "top_entities_values": json.dumps([
-            x["total"] for x in top_entities_chart
-        ]),
+            "icon": SPECIALTY_ICONS.get(
+                specialty,
+                "fas fa-stethoscope"
+            ),
 
-        # ✅ Bar Chart Data - Doctors
-        "top_doctors_labels": json.dumps([
-            x["doctor_name"] for x in top_doctors_chart
-        ]),
-        "top_doctors_values": json.dumps([
-            x["total"] for x in top_doctors_chart
-        ]),
+            "color": SPECIALTY_COLORS.get(
+                specialty,
+                "#6c757d"
+            ),
 
-        # ✅ Bar Chart Data - Specialties
-        "top_specialties_labels": json.dumps([
-            x["specialty__name"] or "غير محدد" for x in top_specialties_chart
-        ]),
-        "top_specialties_values": json.dumps([
-            x["total_requests"] for x in top_specialties_chart
-        ]),
+            "total": row.get("total", 0),
 
-        # ✅ Bar Chart Data - Cost Entities (مع تحويل Decimal إلى float)
-        "top_cost_entities_labels": json.dumps([
-            x["entity__name"] for x in top_cost_entities_chart
-        ]),
-        "top_cost_entities_values": json.dumps([
-            float(x["total_cost"]) for x in top_cost_entities_chart  # ✅ تحويل Decimal إلى float
-        ]),
-    }
+            "cash": row.get("cash", 0),
+
+            "credit": row.get("credit", 0),
+
+            "chart_labels": json.dumps(
+                list(chart_sorted.keys()),
+                ensure_ascii=False
+            ),
+
+            "chart_values": json.dumps(
+                list(chart_sorted.values())
+            ),
+
+        })
 
     return render(
         request,
         "frontend/reports.html",
-        context
+        {
+            "months": months,
+            "selected_month": selected_month,
+            "total_packages": total_packages,
+            "cash_packages": cash_packages,
+            "credit_packages": credit_packages,
+            "cash_percentage": cash_percentage,
+            "credit_percentage": credit_percentage,
+            "sector_data": sector_data,
+            "sector_labels": sector_labels,
+            "sector_values": sector_values,
+            "sector_colors": sector_colors,
+            "top_entities": top_entities,
+            "bottom_entities": bottom_entities,
+            "top_sub_companies": top_sub_companies,
+            "bottom_sub_companies": bottom_sub_companies,
+            "top_specialties": top_specialties,
+            "bottom_specialties": bottom_specialties,
+            "top_packages": top_packages,        # ✅ جديد - أعلى 5 باكدجات
+            "bottom_packages": bottom_packages,  # ✅ جديد - أقل 5 باكدجات
+            "specialties": specialties,
+        },
     )
 def pending_analysis(request):
 

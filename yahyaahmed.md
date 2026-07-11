@@ -1,18 +1,19 @@
+
+
+
 <datalist>
 SEARCH
 ثم شغل:
 
-الاسم
- ده اسم المريض 
 
-✅ الحل: أضف خاصية onkeyup في الـ HTML
+اسم الباكدج ده الي هو اجمالي الباكدجات 
+
+التاني لباكجات الاجل البوكس  التالت الباكجات النقدي  دول هيسحبو من نوع الدفع 
 
 
-python manage.py import_package_catalog APP.xlsx
 
-ثم:
 
-python manage.py migrate_contract_entities APP.xlsx
+
 
   الصفحة 1: 'ردود النموذج 1'
   الصفحة 2: 'DATA'

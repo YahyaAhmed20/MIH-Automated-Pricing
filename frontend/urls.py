@@ -75,7 +75,7 @@ urlpatterns = [
 
     path(
         "reports/",
-        views.reports,
+        views.reports_statistics,
         name="reports"
     ),
 
@@ -94,11 +94,7 @@ urlpatterns = [
         name="price_lists"
     ),
     
-    path(
-    "reports/",
-    views.reports,
-    name="reports"
-),
+  
     
     path(
     "pending-analysis/",
