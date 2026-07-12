@@ -3,6 +3,8 @@
 
 <datalist>
 SEARCH
+🚀 تعديل HTML - شيل oninput وخلي الفلترة عند اختيار من datalist
+
 ثم شغل:
 
 

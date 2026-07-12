@@ -94,58 +94,77 @@
         background: #0d6efd;
     }
     
-    /* ✅ Search Box */
-    .search-box {
+    /* ✅ Search Boxes */
+    .filter-box {
         position: relative;
     }
     
-    .search-box .form-control {
+    .filter-box .form-control {
         border-radius: 30px;
-        padding: 0.6rem 1.2rem 0.6rem 3rem;
+        padding: 0.5rem 1rem 0.5rem 2.5rem;
         border: 2px solid #e9ecef;
         transition: all 0.3s ease;
-        font-size: 0.95rem;
+        font-size: 0.9rem;
         background-color: #fff;
     }
     
-    .search-box .form-control:focus {
+    .filter-box .form-control:focus {
         border-color: #0d6efd;
         box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.1);
     }
     
-    .search-box .search-icon {
+    .filter-box .filter-icon {
         position: absolute;
-        left: 1rem;
+        left: 0.8rem;
         top: 50%;
         transform: translateY(-50%);
         color: #6c757d;
         z-index: 10;
-        cursor: pointer;
-        padding: 8px;
-        transition: color 0.3s ease;
+        font-size: 0.9rem;
     }
     
-    .search-box .search-icon:hover {
-        color: #0d6efd;
-    }
-    
-    .search-box .clear-btn {
+    /* ✅ Clear Button - نسخة أنيقة */
+    .filter-box .clear-btn {
         position: absolute;
-        right: 1rem;
+        right: 0.8rem;
         top: 50%;
         transform: translateY(-50%);
-        background: none;
-        border: none;
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 20px;
         color: #6c757d;
         cursor: pointer;
-        padding: 0 5px;
+        padding: 0.1rem 0.8rem;
         z-index: 10;
-        font-size: 1.2rem;
-        transition: color 0.3s ease;
+        font-size: 0.75rem;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        white-space: nowrap;
     }
     
-    .search-box .clear-btn:hover {
-        color: #dc3545;
+    .filter-box .clear-btn:hover {
+        background: #dc3545;
+        color: #fff;
+        border-color: #dc3545;
+        transform: translateY(-50%) scale(1.05);
+    }
+    
+    .filter-box .clear-btn i {
+        font-size: 0.6rem;
+    }
+    
+    .filter-box .filter-label {
+        font-size: 0.7rem;
+        color: #6c757d;
+        position: absolute;
+        bottom: -18px;
+        right: 10px;
+        background: #fff;
+        padding: 0 8px;
+        border-radius: 10px;
     }
     
     .table-records {
@@ -160,12 +179,10 @@
         background: #f1f3f5;
     }
     
-    /* ✅ Datalist Styling */
     datalist {
         display: none;
     }
     
-    /* ✅ تنسيق الأرقام في الجدول */
     .amount-number {
         font-family: 'Courier New', monospace;
         font-weight: 700;
@@ -174,9 +191,53 @@
         text-align: right;
     }
     
+    /* ✅ Package & Entity Badges */
+    .badge-package {
+        background: rgba(13, 110, 253, 0.1) !important;
+        color: #0d6efd !important;
+        font-weight: 600;
+    }
+    
+    .badge-entity {
+        background: rgba(13, 202, 240, 0.1) !important;
+        color: #0dcaf0 !important;
+        font-weight: 600;
+    }
+    
+    /* ✅ Search Button */
+    .search-btn {
+        position: absolute;
+        right: 0.3rem;
+        top: 50%;
+        transform: translateY(-50%);
+        background: #0d6efd;
+        color: #fff;
+        border: none;
+        border-radius: 30px;
+        padding: 0.25rem 1rem;
+        font-size: 0.8rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        z-index: 10;
+    }
+    
+    .search-btn:hover {
+        background: #0b5ed7;
+        transform: translateY(-50%) scale(1.05);
+    }
+    
+    .search-btn i {
+        margin-left: 4px;
+    }
+    
     @media (max-width: 768px) {
         .stats-card .stats-number {
             font-size: 1.8rem;
+        }
+        
+        .filter-box .clear-btn {
+            font-size: 0.65rem;
+            padding: 0.1rem 0.6rem;
         }
     }
 </style>
@@ -205,29 +266,28 @@
                 إجمالي السجلات: {{ total_count }}
             </p>
         </div>
-        <small class="text-muted">شيت 11</small>
     </div>
 
     <!-- ============================================ -->
-    <!-- ✅ فلتر الشهور + Search -->
+    <!-- ✅ فلتر الشهور + فلتر الباكدج + فلتر الجهة -->
     <!-- ============================================ -->
     <div class="card shadow-sm mb-4 border-0">
         <div class="card-body">
-            <div class="row g-3 align-items-center">
+            <div class="row g-3 align-items-end">
                 
                 <!-- ✅ فلتر الشهور -->
-                <div class="col-md-8">
+                <div class="col-lg-4 col-md-12">
                     <div class="d-flex align-items-center mb-2">
                         <i class="fas fa-calendar-alt text-primary me-2"></i>
                         <h6 class="mb-0 fw-bold">فلتر الشهور</h6>
                     </div>
                     <div class="months-scroll">
-                        <a href="?{% if selected_month %}month={% endif %}{% if search_query %}&search={{ search_query }}{% endif %}" 
+                        <a href="?{% if selected_month %}month={% endif %}{% if package_search %}&package_search={{ package_search }}{% endif %}{% if entity_search %}&entity_search={{ entity_search }}{% endif %}" 
                            class="month-pill all-pill {% if not selected_month %}active{% endif %}">
                             <i class="fas fa-undo me-1"></i> الكل
                         </a>
                         {% for month in months %}
-                        <a href="?month={{ month }}{% if search_query %}&search={{ search_query }}{% endif %}" 
+                        <a href="?month={{ month }}{% if package_search %}&package_search={{ package_search }}{% endif %}{% if entity_search %}&entity_search={{ entity_search }}{% endif %}" 
                            class="month-pill {% if month == selected_month %}active{% endif %}">
                             {{ month }}
                         </a>
@@ -235,31 +295,118 @@
                     </div>
                 </div>
                 
-                <!-- ✅ Search Box مع datalist -->
-                <div class="col-md-4">
-                    <form method="GET" class="search-box" id="searchForm">
-                        <i class="fas fa-search search-icon" id="searchIcon"></i>
-                        <input type="text" 
-                               name="search" 
-                               id="searchInput"
-                               class="form-control" 
-                               placeholder="ابحث عن مريض، حساب، باكدج..."
-                               value="{{ search_query }}"
-                               list="searchSuggestions"
-                               autocomplete="off">
-                        <datalist id="searchSuggestions">
-                            {% for suggestion in suggestions %}
-                            <option value="{{ suggestion }}">
-                            {% endfor %}
-                        </datalist>
-                        {% if search_query %}
-                        <button type="button" class="clear-btn" id="clearSearch">
-                            <i class="fas fa-times-circle"></i>
-                        </button>
-                        {% endif %}
-                    </form>
+                <!-- ✅ فلتر الباكدج -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="filter-box">
+                        <i class="fas fa-box filter-icon text-primary"></i>
+                        <form method="GET" id="packageSearchForm">
+                            <input type="text" 
+                                   name="package_search" 
+                                   id="packageSearchInput"
+                                   class="form-control" 
+                                   placeholder="🔍 ابحث عن باكدج..."
+                                   value="{{ package_search }}"
+                                   list="packageSuggestions"
+                                   autocomplete="off">
+                            <datalist id="packageSuggestions">
+                                {% for suggestion in package_suggestions %}
+                                <option value="{{ suggestion }}">
+                                {% endfor %}
+                            </datalist>
+                            <button type="submit" class="search-btn">
+                                <i class="fas fa-search"></i>
+                            </button>
+                            {% if package_search %}
+                            <a href="?{% if selected_month %}month={{ selected_month }}{% endif %}{% if entity_search %}&entity_search={{ entity_search }}{% endif %}" class="clear-btn">
+                                <i class="fas fa-times me-1"></i> إلغاء
+                            </a>
+                            {% endif %}
+                            {% if selected_month %}
+                            <input type="hidden" name="month" value="{{ selected_month }}">
+                            {% endif %}
+                            {% if entity_search %}
+                            <input type="hidden" name="entity_search" value="{{ entity_search }}">
+                            {% endif %}
+                            <span class="filter-label">الباكدج</span>
+                        </form>
+                    </div>
                 </div>
                 
+                <!-- ✅ فلتر الجهة -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="filter-box">
+                        <i class="fas fa-building filter-icon text-info"></i>
+                        <form method="GET" id="entitySearchForm">
+                            <input type="text" 
+                                   name="entity_search" 
+                                   id="entitySearchInput"
+                                   class="form-control" 
+                                   placeholder="🔍 ابحث عن جهة..."
+                                   value="{{ entity_search }}"
+                                   list="entitySuggestions"
+                                   autocomplete="off">
+                            <datalist id="entitySuggestions">
+                                {% for suggestion in entity_suggestions %}
+                                <option value="{{ suggestion }}">
+                                {% endfor %}
+                            </datalist>
+                            <button type="submit" class="search-btn">
+                                <i class="fas fa-search"></i>
+                            </button>
+                            {% if entity_search %}
+                            <a href="?{% if selected_month %}month={{ selected_month }}{% endif %}{% if package_search %}&package_search={{ package_search }}{% endif %}" class="clear-btn">
+                                <i class="fas fa-times me-1"></i> إلغاء
+                            </a>
+                            {% endif %}
+                            {% if selected_month %}
+                            <input type="hidden" name="month" value="{{ selected_month }}">
+                            {% endif %}
+                            {% if package_search %}
+                            <input type="hidden" name="package_search" value="{{ package_search }}">
+                            {% endif %}
+                            <span class="filter-label">الجهة</span>
+                        </form>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <!-- ✅ عرض الفلاتر النشطة -->
+            <div class="row mt-3">
+                <div class="col-12">
+                    <div class="d-flex flex-wrap gap-2">
+                        {% if selected_month %}
+                        <span class="badge bg-primary p-2">
+                            <i class="fas fa-calendar-alt me-1"></i>
+                            الشهر: {{ selected_month }}
+                            <a href="?{% if package_search %}&package_search={{ package_search }}{% endif %}{% if entity_search %}&entity_search={{ entity_search }}{% endif %}" 
+                               class="text-white ms-1 text-decoration-none">
+                                <i class="fas fa-times-circle"></i>
+                            </a>
+                        </span>
+                        {% endif %}
+                        {% if package_search %}
+                        <span class="badge bg-primary p-2">
+                            <i class="fas fa-box me-1"></i>
+                            الباكدج: {{ package_search }}
+                            <a href="?{% if selected_month %}month={{ selected_month }}{% endif %}{% if entity_search %}&entity_search={{ entity_search }}{% endif %}" 
+                               class="text-white ms-1 text-decoration-none">
+                                <i class="fas fa-times-circle"></i>
+                            </a>
+                        </span>
+                        {% endif %}
+                        {% if entity_search %}
+                        <span class="badge bg-info p-2">
+                            <i class="fas fa-building me-1"></i>
+                            الجهة: {{ entity_search }}
+                            <a href="?{% if selected_month %}month={{ selected_month }}{% endif %}{% if package_search %}&package_search={{ package_search }}{% endif %}" 
+                               class="text-white ms-1 text-decoration-none">
+                                <i class="fas fa-times-circle"></i>
+                            </a>
+                        </span>
+                        {% endif %}
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -299,14 +446,82 @@
         
     </div>
 
-    <!-- ✅ نتائج البحث -->
-    {% if search_query %}
-    <div class="alert alert-info mb-3">
-        <i class="fas fa-search me-2"></i>
-        نتائج البحث عن: <strong>"{{ search_query }}"</strong>
-        <span class="badge bg-primary ms-2 rounded-pill">{{ total_count }}</span>
-        <a href="?{% if selected_month %}month={{ selected_month }}{% endif %}" class="float-end text-decoration-none">
-            <i class="fas fa-times"></i> إلغاء
+<!-- ============================================ -->
+<!-- ✅ توزيع العمليات حسب التخصص - مع ترقيم -->
+<!-- ============================================ -->
+<div class="card shadow-sm border-0 mb-4">
+    <div class="card-header bg-white">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h5 class="fw-bold mb-0">
+                    <i class="fas fa-list-ol text-primary me-2"></i>
+                    توزيع العمليات
+                </h5>
+                <small class="text-muted">
+                    إجمالي {{ total_unique_packages }} عملية مختلفة
+                </small>
+            </div>
+            <span class="badge bg-secondary rounded-pill fs-6">
+                {{ total_count }} سجل
+            </span>
+        </div>
+    </div>
+    <div class="card-body p-2">
+        <div class="row g-1">
+            {% for package in package_distribution %}
+            <div class="col-md-3 col-6">
+                <div class="d-flex justify-content-between align-items-center p-2 rounded-3 
+                           {% if forloop.counter == 1 %}bg-warning bg-opacity-10 border border-warning
+                           {% elif forloop.counter == 2 %}bg-secondary bg-opacity-10 border border-secondary
+                           {% elif forloop.counter == 3 %}bg-danger bg-opacity-10 border border-danger
+                           {% else %}bg-light{% endif %}"
+                     style="transition: all 0.2s ease;">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="badge {% if forloop.counter == 1 %}bg-warning{% elif forloop.counter == 2 %}bg-secondary{% elif forloop.counter == 3 %}bg-danger{% else %}bg-light text-dark{% endif %} rounded-circle" 
+                              style="width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 700;">
+                            {{ forloop.counter }}
+                        </span>
+                        <span style="font-size: 0.8rem; font-weight: 500; color: #212529;">
+                            {{ package.package_name|truncatechars:20 }}
+                        </span>
+                    </div>
+                    <span class="badge bg-primary rounded-pill px-3 py-2 fw-bold" 
+                          style="font-size: 0.8rem; min-width: 32px; text-align: center;">
+                        {{ package.total }}
+                    </span>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <div class="text-center py-4">
+                    <i class="fas fa-inbox fa-2x text-muted mb-2 d-block"></i>
+                    <p class="text-muted mb-0">لا توجد عمليات مسجلة</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+    <!-- ✅ نتائج الفلترة -->
+    {% if package_search or entity_search or selected_month %}
+    <div class="alert alert-info mb-3 d-flex justify-content-between align-items-center">
+        <div>
+            <i class="fas fa-filter me-2"></i>
+            <strong>نتائج الفلترة:</strong>
+            {% if package_search %}
+            <span class="badge bg-primary ms-1">{{ package_search }}</span>
+            {% endif %}
+            {% if entity_search %}
+            <span class="badge bg-info ms-1">{{ entity_search }}</span>
+            {% endif %}
+            {% if selected_month %}
+            <span class="badge bg-secondary ms-1">{{ selected_month }}</span>
+            {% endif %}
+            <span class="badge bg-dark ms-2 rounded-pill">{{ total_count }}</span>
+        </div>
+        <a href="?{% if selected_month %}month={{ selected_month }}{% endif %}" class="text-decoration-none fw-bold">
+            <i class="fas fa-undo-alt me-1"></i> إعادة ضبط الكل
         </a>
     </div>
     {% endif %}
@@ -348,8 +563,16 @@
                             <td>{{ forloop.counter }}</td>
                             <td>{{ record.account_number|default:"-" }}</td>
                             <td class="fw-bold">{{ record.patient_name|truncatechars:25 }}</td>
-                            <td>{{ record.package_name|default:"-"|truncatechars:20 }}</td>
-                            <td>{{ record.entity_name|default:"-"|truncatechars:20 }}</td>
+                            <td>
+                                <span class="badge badge-package">
+                                    {{ record.package_name|default:"-"|truncatechars:20 }}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge badge-entity">
+                                    {{ record.entity_name|default:"-"|truncatechars:20 }}
+                                </span>
+                            </td>
                             <td>{{ record.sub_company|default:"-"|truncatechars:20 }}</td>
                             <td>
                                 <span class="amount-number">
@@ -369,7 +592,7 @@
                         <tr>
                             <td colspan="11" class="text-center text-muted py-4">
                                 <i class="fas fa-inbox fa-2x d-block mb-2 opacity-50"></i>
-                                لا توجد سجلات
+                                لا توجد سجلات تطابق الفلترة
                             </td>
                         </tr>
                         {% endfor %}
@@ -388,7 +611,7 @@
             <ul class="pagination">
                 {% if records.has_previous %}
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ records.previous_page_number }}{% if selected_month %}&month={{ selected_month }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">
+                    <a class="page-link" href="?page={{ records.previous_page_number }}{% if selected_month %}&month={{ selected_month }}{% endif %}{% if package_search %}&package_search={{ package_search }}{% endif %}{% if entity_search %}&entity_search={{ entity_search }}{% endif %}">
                         <i class="fas fa-chevron-right"></i>
                     </a>
                 </li>
@@ -396,7 +619,7 @@
                 
                 {% for num in records.paginator.page_range %}
                 <li class="page-item {% if num == records.number %}active{% endif %}">
-                    <a class="page-link" href="?page={{ num }}{% if selected_month %}&month={{ selected_month }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">
+                    <a class="page-link" href="?page={{ num }}{% if selected_month %}&month={{ selected_month }}{% endif %}{% if package_search %}&package_search={{ package_search }}{% endif %}{% if entity_search %}&entity_search={{ entity_search }}{% endif %}">
                         {{ num }}
                     </a>
                 </li>
@@ -404,7 +627,7 @@
                 
                 {% if records.has_next %}
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ records.next_page_number }}{% if selected_month %}&month={{ selected_month }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">
+                    <a class="page-link" href="?page={{ records.next_page_number }}{% if selected_month %}&month={{ selected_month }}{% endif %}{% if package_search %}&package_search={{ package_search }}{% endif %}{% if entity_search %}&entity_search={{ entity_search }}{% endif %}">
                         <i class="fas fa-chevron-left"></i>
                     </a>
                 </li>
@@ -424,7 +647,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const counters = document.querySelectorAll('.counter');
     
     counters.forEach(counter => {
-        // الحصول على القيمة المستهدفة مع إزالة الفواصل
         const targetStr = counter.getAttribute('data-target');
         const target = parseInt(targetStr.replace(/,/g, ''));
         let current = 0;
@@ -434,7 +656,6 @@ document.addEventListener('DOMContentLoaded', function() {
             if (current < target) {
                 current += increment;
                 if (current > target) current = target;
-                // تنسيق الرقم مع فواصل الآلاف
                 counter.textContent = current.toLocaleString('en-US');
                 requestAnimationFrame(updateCounter);
             } else {
@@ -454,44 +675,18 @@ document.addEventListener('DOMContentLoaded', function() {
         observer.observe(counter);
     });
     
-    // ============================================
-    // ✅ 2. Search Functionality
-    // ============================================
-    const searchForm = document.getElementById('searchForm');
-    const searchInput = document.getElementById('searchInput');
-    const searchIcon = document.getElementById('searchIcon');
-    const clearBtn = document.getElementById('clearSearch');
+});
+
+// ============================================
+// ✅ 2. عند اختيار من الـ datalist يتم إرسال الفورم
+// ============================================
+document.addEventListener('DOMContentLoaded', function() {
     
-    // ✅ Function to submit search
-    function submitSearch() {
-        if (searchInput.value.trim()) {
-            searchForm.submit();
-        }
-    }
-    
-    // ✅ Click on search icon submits form
-    if (searchIcon) {
-        searchIcon.addEventListener('click', function(e) {
-            e.preventDefault();
-            submitSearch();
-        });
-    }
-    
-    // ✅ Press Enter submits form
-    if (searchInput) {
-        searchInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                submitSearch();
-            }
-        });
-    }
-    
-    // ✅ Select from datalist submits form immediately
-    if (searchInput) {
-        searchInput.addEventListener('input', function(e) {
-            // Check if the value matches any option in datalist
-            const datalist = document.getElementById('searchSuggestions');
+    // ✅ فلتر الباكدج
+    const packageInput = document.getElementById('packageSearchInput');
+    if (packageInput) {
+        packageInput.addEventListener('input', function(e) {
+            const datalist = document.getElementById('packageSuggestions');
             if (datalist) {
                 const options = datalist.options;
                 let matched = false;
@@ -502,28 +697,30 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 }
                 if (matched && this.value.trim()) {
-                    // Submit the form when a suggestion is selected
-                    submitSearch();
+                    document.getElementById('packageSearchForm').submit();
                 }
             }
         });
     }
     
-    // ✅ Clear search button
-    if (clearBtn) {
-        clearBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            // Build the URL without search parameter
-            let url = window.location.pathname + '?';
-            const params = new URLSearchParams(window.location.search);
-            params.delete('search');
-            
-            // Preserve month filter if exists
-            if (params.has('month')) {
-                url += 'month=' + params.get('month');
+    // ✅ فلتر الجهة
+    const entityInput = document.getElementById('entitySearchInput');
+    if (entityInput) {
+        entityInput.addEventListener('input', function(e) {
+            const datalist = document.getElementById('entitySuggestions');
+            if (datalist) {
+                const options = datalist.options;
+                let matched = false;
+                for (let option of options) {
+                    if (option.value === this.value) {
+                        matched = true;
+                        break;
+                    }
+                }
+                if (matched && this.value.trim()) {
+                    document.getElementById('entitySearchForm').submit();
+                }
             }
-            
-            window.location.href = url;
         });
     }
     

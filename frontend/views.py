@@ -1000,8 +1000,11 @@ def specialty_detail(request, specialty_name):
     # ✅ الفلتر (الشهر)
     selected_month = request.GET.get("month", "")
     
-    # ✅ البحث
-    search_query = request.GET.get("search", "")
+    # ✅ البحث (الباكدج)
+    package_search = request.GET.get("package_search", "")
+    
+    # ✅ البحث (الجهة)
+    entity_search = request.GET.get("entity_search", "")
     
     # ✅ جلب السجلات الخاصة بالتخصص
     records = ReportStatistic.objects.filter(specialty__icontains=specialty_name)
@@ -1009,29 +1012,39 @@ def specialty_detail(request, specialty_name):
     if selected_month:
         records = records.filter(month=selected_month)
     
-    if search_query:
-        records = records.filter(
-            Q(patient_name__icontains=search_query) |
-            Q(account_number__icontains=search_query) |
-            Q(package_name__icontains=search_query) |
-            Q(entity_name__icontains=search_query) |
-            Q(sub_company__icontains=search_query)
-        )
+    if package_search:
+        records = records.filter(package_name__icontains=package_search)
+    
+    if entity_search:
+        records = records.filter(entity_name__icontains=entity_search)
     
     # ✅ إحصائيات التخصص
     total_count = records.count()
     cash_count = records.filter(payment_type="نقدي").count()
     credit_count = records.filter(payment_type="اجل").count()
-    
-    # ✅ إجمالي المبالغ
     total_amount = records.aggregate(total=Sum('amount'))['total'] or 0
+    
+    # ✅ ✅ ✅ توزيع العمليات (الباكدجات) داخل التخصص
+    package_distribution = (
+        records
+        .values('package_name')
+        .annotate(
+            total=Count('id'),
+            total_amount=Sum('amount')
+        )
+        .filter(package_name__isnull=False)
+        .exclude(package_name='')
+        .order_by('-total')[:20]  # ✅ أهم 20 عملية
+    )
+    
+    # ✅ إجمالي العمليات الفريدة
+    total_unique_packages = records.values('package_name').distinct().count()
     
     # ✅ الشهور المتاحة للفلتر
     months_raw = list(
         records.values_list('month', flat=True).distinct()
     )
     
-    # ✅ ترتيب الشهور
     MONTH_ORDER = [
         "يناير", "فبراير", "مارس", "ابريل", "مايو", "يونيو",
         "يوليو", "اغسطس", "سبتمبر", "اكتوبر", "نوفمبر", "ديسمبر"
@@ -1039,7 +1052,7 @@ def specialty_detail(request, specialty_name):
     
     months = [m for m in MONTH_ORDER if m in months_raw]
     
-    # ✅ Pagination - 50 سجل في الصفحة
+    # ✅ Pagination
     paginator = Paginator(records.order_by('-admission_date'), 50)
     page_number = request.GET.get('page', 1)
     page_obj = paginator.get_page(page_number)
@@ -1058,15 +1071,21 @@ def specialty_detail(request, specialty_name):
         .order_by('-total')
     )
     
-    # ✅ قائمة الاقتراحات للـ datalist
-    suggestions = list(
-        records.values_list('patient_name', flat=True).distinct()[:20]
-    ) + list(
-        records.values_list('account_number', flat=True).distinct()[:20]
-    ) + list(
-        records.values_list('package_name', flat=True).distinct()[:20]
+    # ✅ قائمة الباكدجات للاقتراحات
+    package_suggestions = list(
+        records.values_list('package_name', flat=True)
+        .distinct()
+        .filter(package_name__isnull=False)
+        .exclude(package_name='')[:50]
     )
-    suggestions = list(set(suggestions))  # إزالة التكرار
+    
+    # ✅ قائمة الجهات للاقتراحات
+    entity_suggestions = list(
+        records.values_list('entity_name', flat=True)
+        .distinct()
+        .filter(entity_name__isnull=False)
+        .exclude(entity_name='')[:50]
+    )
     
     context = {
         'specialty_name': specialty_name,
@@ -1077,10 +1096,15 @@ def specialty_detail(request, specialty_name):
         'total_amount': total_amount,
         'months': months,
         'selected_month': selected_month,
-        'search_query': search_query,
-        'suggestions': suggestions,
+        'package_search': package_search,
+        'entity_search': entity_search,
+        'package_suggestions': package_suggestions,
+        'entity_suggestions': entity_suggestions,
         'payment_distribution': payment_distribution,
         'sector_distribution': sector_distribution,
+        # ✅ ✅ ✅ جديد
+        'package_distribution': package_distribution,
+        'total_unique_packages': total_unique_packages,
     }
     
     return render(request, 'frontend/specialty_detail.html', context)
