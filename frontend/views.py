@@ -1024,7 +1024,7 @@ def specialty_detail(request, specialty_name):
     credit_count = records.filter(payment_type="اجل").count()
     total_amount = records.aggregate(total=Sum('amount'))['total'] or 0
     
-    # ✅ ✅ ✅ توزيع العمليات (الباكدجات) داخل التخصص
+    # ✅ توزيع العمليات
     package_distribution = (
         records
         .values('package_name')
@@ -1034,13 +1034,12 @@ def specialty_detail(request, specialty_name):
         )
         .filter(package_name__isnull=False)
         .exclude(package_name='')
-        .order_by('-total')[:20]  # ✅ أهم 20 عملية
+        .order_by('-total')[:20]
     )
     
-    # ✅ إجمالي العمليات الفريدة
     total_unique_packages = records.values('package_name').distinct().count()
     
-    # ✅ الشهور المتاحة للفلتر
+    # ✅ الشهور
     months_raw = list(
         records.values_list('month', flat=True).distinct()
     )
@@ -1071,21 +1070,21 @@ def specialty_detail(request, specialty_name):
         .order_by('-total')
     )
     
-    # ✅ قائمة الباكدجات للاقتراحات
-    package_suggestions = list(
-        records.values_list('package_name', flat=True)
-        .distinct()
+    # ✅ ✅ ✅ قائمة الباكدجات للاقتراحات (فريدة باستخدام set)
+    package_suggestions = list(set(
+        records
+        .values_list('package_name', flat=True)
         .filter(package_name__isnull=False)
-        .exclude(package_name='')[:50]
-    )
+        .exclude(package_name='')
+    ))[:50]
     
-    # ✅ قائمة الجهات للاقتراحات
-    entity_suggestions = list(
-        records.values_list('entity_name', flat=True)
-        .distinct()
+    # ✅ ✅ ✅ قائمة الجهات للاقتراحات (فريدة باستخدام set)
+    entity_suggestions = list(set(
+        records
+        .values_list('entity_name', flat=True)
         .filter(entity_name__isnull=False)
-        .exclude(entity_name='')[:50]
-    )
+        .exclude(entity_name='')
+    ))[:50]
     
     context = {
         'specialty_name': specialty_name,
@@ -1102,7 +1101,6 @@ def specialty_detail(request, specialty_name):
         'entity_suggestions': entity_suggestions,
         'payment_distribution': payment_distribution,
         'sector_distribution': sector_distribution,
-        # ✅ ✅ ✅ جديد
         'package_distribution': package_distribution,
         'total_unique_packages': total_unique_packages,
     }
