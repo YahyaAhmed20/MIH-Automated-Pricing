@@ -447,46 +447,47 @@
     </div>
 
 <!-- ============================================ -->
-<!-- ✅ توزيع العمليات حسب التخصص - مع ترقيم -->
+<!-- ✅ توزيع العمليات حسب التخصص - تصميم أنيق -->
 <!-- ============================================ -->
 <div class="card shadow-sm border-0 mb-4">
-    <div class="card-header bg-white">
+    <div class="card-header bg-white border-0 pb-0">
         <div class="d-flex justify-content-between align-items-center">
             <div>
                 <h5 class="fw-bold mb-0">
-                    <i class="fas fa-list-ol text-primary me-2"></i>
+                    <i class="fas fa-chart-simple text-primary me-2"></i>
                     توزيع العمليات
                 </h5>
                 <small class="text-muted">
-                    إجمالي {{ total_unique_packages }} عملية مختلفة
+                    إجمالي <span class="fw-bold text-primary">{{ total_unique_packages }}</span> عملية مختلفة
                 </small>
             </div>
-            <span class="badge bg-secondary rounded-pill fs-6">
-                {{ total_count }} سجل
+            <span class="badge bg-secondary bg-opacity-10 text-secondary rounded-pill px-3 py-2 fs-6 fw-bold">
+                <i class="fas fa-file-lines me-1"></i>
+                {{ total_count }}
             </span>
         </div>
     </div>
-    <div class="card-body p-2">
-        <div class="row g-1">
+    <div class="card-body pt-2">
+        <div class="row g-2">
             {% for package in package_distribution %}
-            <div class="col-md-3 col-6">
-                <div class="d-flex justify-content-between align-items-center p-2 rounded-3 
-                           {% if forloop.counter == 1 %}bg-warning bg-opacity-10 border border-warning
-                           {% elif forloop.counter == 2 %}bg-secondary bg-opacity-10 border border-secondary
-                           {% elif forloop.counter == 3 %}bg-danger bg-opacity-10 border border-danger
-                           {% else %}bg-light{% endif %}"
-                     style="transition: all 0.2s ease;">
-                    <div class="d-flex align-items-center gap-2">
-                        <span class="badge {% if forloop.counter == 1 %}bg-warning{% elif forloop.counter == 2 %}bg-secondary{% elif forloop.counter == 3 %}bg-danger{% else %}bg-light text-dark{% endif %} rounded-circle" 
-                              style="width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 700;">
-                            {{ forloop.counter }}
+            <div class="col-md-4 col-lg-3 col-6">
+                <div class="d-flex justify-content-between align-items-center p-3 rounded-3 
+                           {% if forloop.counter|divisibleby:2 %}bg-light{% else %}bg-white{% endif %}"
+                     style="border: 1px solid #f1f3f5; transition: all 0.2s ease; height: 100%;">
+                    <div class="d-flex align-items-center gap-2 flex-grow-1" style="min-width: 0;">
+                        <span class="badge {% if forloop.counter <= 3 %}bg-primary{% else %}bg-light text-secondary{% endif %} rounded-circle fw-bold" 
+                              style="width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; flex-shrink: 0;">
+                            {% if forloop.counter == 1 %}🥇
+                            {% elif forloop.counter == 2 %}🥈
+                            {% elif forloop.counter == 3 %}🥉
+                            {% else %}{{ forloop.counter }}{% endif %}
                         </span>
-                        <span style="font-size: 0.8rem; font-weight: 500; color: #212529;">
-                            {{ package.package_name|truncatechars:20 }}
+                        <span class="text-truncate" style="font-size: 0.85rem; font-weight: 500; color: #212529; max-width: 120px;">
+                            {{ package.package_name|truncatechars:18 }}
                         </span>
                     </div>
                     <span class="badge bg-primary rounded-pill px-3 py-2 fw-bold" 
-                          style="font-size: 0.8rem; min-width: 32px; text-align: center;">
+                          style="font-size: 0.85rem; min-width: 38px; text-align: center; flex-shrink: 0;">
                         {{ package.total }}
                     </span>
                 </div>
