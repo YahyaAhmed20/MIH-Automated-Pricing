@@ -95,9 +95,14 @@ urlpatterns = [
     ),
     
     path('reports/specialty/<str:specialty_name>/', views.specialty_detail, name='specialty_detail'),  # ✅ جديد
+    path('reports/payment-details/', views.payment_details, name='payment_details'),
 
-  
-    
+
+    path('reports/sector-details/', views.sector_details, name='sector_details'),
+
+    path('reports/entities-details/', views.entities_details, name='entities_details'),
+    path('reports/sub-companies-details/', views.sub_companies_details, name='sub_companies_details'),
+
     path(
     "pending-analysis/",
     views.pending_analysis,

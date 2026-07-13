@@ -993,7 +993,7 @@ from pricing_requests.models import ReportStatistic
 import json
 from django.core.paginator import Paginator
 
-
+# التخصص
 def specialty_detail(request, specialty_name):
     """صفحة تفاصيل التخصص - عرض جميع السجلات"""
     
@@ -1039,6 +1039,21 @@ def specialty_detail(request, specialty_name):
     
     total_unique_packages = records.values('package_name').distinct().count()
     
+    # ✅ ✅ ✅ توزيع الجهات
+    entity_distribution = (
+        records
+        .values('entity_name')
+        .annotate(
+            total=Count('id'),
+            total_amount=Sum('amount')
+        )
+        .filter(entity_name__isnull=False)
+        .exclude(entity_name='')
+        .order_by('-total')[:20]
+    )
+    
+    total_unique_entities = records.values('entity_name').distinct().count()
+    
     # ✅ الشهور
     months_raw = list(
         records.values_list('month', flat=True).distinct()
@@ -1070,7 +1085,7 @@ def specialty_detail(request, specialty_name):
         .order_by('-total')
     )
     
-    # ✅ ✅ ✅ قائمة الباكدجات للاقتراحات (فريدة باستخدام set)
+    # ✅ قائمة الباكدجات للاقتراحات
     package_suggestions = list(set(
         records
         .values_list('package_name', flat=True)
@@ -1078,7 +1093,7 @@ def specialty_detail(request, specialty_name):
         .exclude(package_name='')
     ))[:50]
     
-    # ✅ ✅ ✅ قائمة الجهات للاقتراحات (فريدة باستخدام set)
+    # ✅ قائمة الجهات للاقتراحات
     entity_suggestions = list(set(
         records
         .values_list('entity_name', flat=True)
@@ -1103,9 +1118,396 @@ def specialty_detail(request, specialty_name):
         'sector_distribution': sector_distribution,
         'package_distribution': package_distribution,
         'total_unique_packages': total_unique_packages,
+        # ✅ ✅ ✅ جديد
+        'entity_distribution': entity_distribution,
+        'total_unique_entities': total_unique_entities,
     }
     
     return render(request, 'frontend/specialty_detail.html', context)
+
+# frontend/views.py
+
+from django.db.models import Count, Sum, Q
+from django.shortcuts import render
+from django.core.paginator import Paginator
+from pricing_requests.models import ReportStatistic
+
+
+# frontend/views.py
+
+from django.db.models import Count, Sum, Q
+from django.shortcuts import render
+from django.core.paginator import Paginator
+from pricing_requests.models import ReportStatistic
+
+#  الباكجات حسب نوع الدفع
+
+def payment_details(request):
+    """صفحة تفاصيل الباكدجات حسب نوع الدفع"""
+    
+    # ✅ فلتر نوع الدفع
+    payment_type = request.GET.get("payment_type", "")
+    
+    # ✅ فلتر التخصص
+    specialty_search = request.GET.get("specialty_search", "")
+    
+    # ✅ جلب جميع السجلات
+    records = ReportStatistic.objects.all()
+    
+    if payment_type:
+        records = records.filter(payment_type=payment_type)
+    
+    if specialty_search:
+        records = records.filter(specialty__icontains=specialty_search)
+    
+    # ✅ إحصائيات
+    total_count = records.count()
+    cash_count = records.filter(payment_type="نقدي").count()
+    credit_count = records.filter(payment_type="اجل").count()
+    total_amount = records.aggregate(total=Sum('amount'))['total'] or 0
+    
+    # ✅ التوزيع حسب نوع الدفع
+    payment_distribution = (
+        records.values('payment_type')
+        .annotate(total=Count('id'))
+        .order_by('-total')
+    )
+    
+    # ✅ التوزيع حسب القطاع (للآجل فقط)
+    sector_distribution = (
+        records
+        .filter(payment_type="اجل")
+        .values('sector')
+        .annotate(total=Count('id'))
+        .order_by('-total')
+    )
+    
+    # ✅ ✅ ✅ قائمة التخصصات للاقتراحات (فريدة)
+    specialty_suggestions = list(set(
+        records
+        .values_list('specialty', flat=True)
+        .filter(specialty__isnull=False)
+        .exclude(specialty='')
+    ))[:50]
+    
+    # ✅ Pagination
+    paginator = Paginator(records.order_by('-admission_date'), 50)
+    page_number = request.GET.get('page', 1)
+    page_obj = paginator.get_page(page_number)
+    
+    context = {
+        'records': page_obj,
+        'total_count': total_count,
+        'cash_count': cash_count,
+        'credit_count': credit_count,
+        'total_amount': total_amount,
+        'payment_type': payment_type,
+        'specialty_search': specialty_search,
+        'payment_distribution': payment_distribution,
+        'sector_distribution': sector_distribution,
+        'specialty_suggestions': specialty_suggestions,
+    }
+    
+    return render(request, 'frontend/payment_details.html', context)
+#  الباكجات حسب القطاع (آجل فقط)
+
+# frontend/views.py
+
+from django.db.models import Count, Sum, Q
+from django.shortcuts import render
+from django.core.paginator import Paginator
+from pricing_requests.models import ReportStatistic
+
+# الباكجات حسب القطاع (آجل فقط)
+def sector_details(request):
+    """صفحة تفاصيل الباكجات حسب القطاع (آجل فقط)"""
+    
+    # ✅ فلتر القطاع
+    sector_search = request.GET.get("sector_search", "")
+    
+    # ✅ فلتر التخصص
+    specialty_search = request.GET.get("specialty_search", "")
+    
+    # ✅ جلب السجلات (آجل فقط)
+    records = ReportStatistic.objects.filter(payment_type="اجل")
+    
+    if sector_search:
+        records = records.filter(sector__icontains=sector_search)
+    
+    if specialty_search:
+        records = records.filter(specialty__icontains=specialty_search)
+    
+    # ✅ إحصائيات
+    total_count = records.count()
+    total_amount = records.aggregate(total=Sum('amount'))['total'] or 0
+    
+    # ✅ التوزيع حسب القطاع
+    sector_distribution = (
+        records
+        .values('sector')
+        .annotate(
+            total=Count('id'),
+            total_amount=Sum('amount')
+        )
+        .filter(sector__isnull=False)
+        .exclude(sector='')
+        .order_by('-total')
+    )
+    
+    # ✅ ✅ ✅ قائمة القطاعات للاقتراحات (فريدة)
+    sector_suggestions = list(set(
+        records
+        .values_list('sector', flat=True)
+        .filter(sector__isnull=False)
+        .exclude(sector='')
+    ))[:50]
+    
+    # ✅ ✅ ✅ قائمة التخصصات للاقتراحات (فريدة)
+    specialty_suggestions = list(set(
+        records
+        .values_list('specialty', flat=True)
+        .filter(specialty__isnull=False)
+        .exclude(specialty='')
+    ))[:50]
+    
+    # ✅ إجمالي القطاعات
+    total_sectors = records.values('sector').distinct().count()
+    
+    # ✅ Pagination
+    paginator = Paginator(records.order_by('-admission_date'), 50)
+    page_number = request.GET.get('page', 1)
+    page_obj = paginator.get_page(page_number)
+    
+    context = {
+        'records': page_obj,
+        'total_count': total_count,
+        'total_amount': total_amount,
+        'total_sectors': total_sectors,
+        'sector_search': sector_search,
+        'specialty_search': specialty_search,
+        'sector_distribution': sector_distribution,
+        'sector_suggestions': sector_suggestions,
+        'specialty_suggestions': specialty_suggestions,
+    }
+    
+    return render(request, 'frontend/sector_details.html', context)
+
+# 🏆 أعلى الجهات                          📉 أقل الجهات
+
+# frontend/views.py
+
+from django.db.models import Count, Sum, Q
+from django.shortcuts import render
+from django.core.paginator import Paginator
+from pricing_requests.models import ReportStatistic
+
+
+def entities_details(request):
+    """صفحة تفاصيل الجهات (آجل فقط) - أعلى وأقل"""
+    
+    # ✅ فلتر الجهة
+    entity_search = request.GET.get("entity_search", "")
+    
+    # ✅ فلتر التخصص
+    specialty_search = request.GET.get("specialty_search", "")
+    
+    # ✅ جلب السجلات (آجل فقط)
+    records = ReportStatistic.objects.filter(payment_type="اجل")
+    
+    if entity_search:
+        records = records.filter(entity_name__icontains=entity_search)
+    
+    if specialty_search:
+        records = records.filter(specialty__icontains=specialty_search)
+    
+    # ✅ إحصائيات
+    total_count = records.count()
+    total_amount = records.aggregate(total=Sum('amount'))['total'] or 0
+    
+    # ✅ ✅ ✅ توزيع الجهات (أعلى وأقل)
+    entity_statistics = (
+        records
+        .values('entity_name')
+        .annotate(
+            total=Count('id'),
+            total_amount=Sum('amount')
+        )
+        .filter(entity_name__isnull=False)
+        .exclude(entity_name='')
+    )
+    
+    # ✅ أعلى الجهات
+    top_entities = []
+    for row in entity_statistics.order_by('-total'):
+        percentage = round((row['total'] / total_count * 100), 1) if total_count > 0 else 0
+        top_entities.append({
+            'name': row['entity_name'],
+            'total': row['total'],
+            'total_amount': row['total_amount'],
+            'percentage': percentage,
+        })
+    
+    # ✅ أقل الجهات
+    bottom_entities = []
+    for row in entity_statistics.order_by('total', 'entity_name'):
+        percentage = round((row['total'] / total_count * 100), 1) if total_count > 0 else 0
+        bottom_entities.append({
+            'name': row['entity_name'],
+            'total': row['total'],
+            'total_amount': row['total_amount'],
+            'percentage': percentage,
+        })
+    
+    # ✅ ✅ ✅ قائمة الجهات للاقتراحات (فريدة)
+    entity_suggestions = list(set(
+        records
+        .values_list('entity_name', flat=True)
+        .filter(entity_name__isnull=False)
+        .exclude(entity_name='')
+    ))[:50]
+    
+    # ✅ ✅ ✅ قائمة التخصصات للاقتراحات (فريدة)
+    specialty_suggestions = list(set(
+        records
+        .values_list('specialty', flat=True)
+        .filter(specialty__isnull=False)
+        .exclude(specialty='')
+    ))[:50]
+    
+    # ✅ إجمالي الجهات
+    total_entities = records.values('entity_name').distinct().count()
+    
+    # ✅ Pagination (لأعلى الجهات)
+    paginator_top = Paginator(top_entities, 50)
+    page_number_top = request.GET.get('page_top', 1)
+    top_page_obj = paginator_top.get_page(page_number_top)
+    
+    # ✅ Pagination (لأقل الجهات)
+    paginator_bottom = Paginator(bottom_entities, 50)
+    page_number_bottom = request.GET.get('page_bottom', 1)
+    bottom_page_obj = paginator_bottom.get_page(page_number_bottom)
+    
+    context = {
+        'top_entities': top_page_obj,
+        'bottom_entities': bottom_page_obj,
+        'total_count': total_count,
+        'total_amount': total_amount,
+        'total_entities': total_entities,
+        'entity_search': entity_search,
+        'specialty_search': specialty_search,
+        'entity_suggestions': entity_suggestions,
+        'specialty_suggestions': specialty_suggestions,
+    }
+    
+    return render(request, 'frontend/entities_details.html', context)
+
+
+# frontend/views.py
+
+from django.db.models import Count, Sum, Q
+from django.shortcuts import render
+from django.core.paginator import Paginator
+from pricing_requests.models import ReportStatistic
+
+
+def sub_companies_details(request):
+    """صفحة تفاصيل الشركات الفرعية (آجل فقط) - أعلى وأقل"""
+    
+    # ✅ فلتر الشركة الفرعية
+    sub_company_search = request.GET.get("sub_company_search", "")
+    
+    # ✅ فلتر التخصص
+    specialty_search = request.GET.get("specialty_search", "")
+    
+    # ✅ جلب السجلات (آجل فقط)
+    records = ReportStatistic.objects.filter(payment_type="اجل")
+    
+    if sub_company_search:
+        records = records.filter(sub_company__icontains=sub_company_search)
+    
+    if specialty_search:
+        records = records.filter(specialty__icontains=specialty_search)
+    
+    # ✅ إحصائيات
+    total_count = records.count()
+    total_amount = records.aggregate(total=Sum('amount'))['total'] or 0
+    
+    # ✅ ✅ ✅ توزيع الشركات الفرعية (أعلى وأقل)
+    sub_company_statistics = (
+        records
+        .values('sub_company')
+        .annotate(
+            total=Count('id'),
+            total_amount=Sum('amount')
+        )
+        .filter(sub_company__isnull=False)
+        .exclude(sub_company='')
+    )
+    
+    # ✅ أعلى الشركات الفرعية
+    top_sub_companies = []
+    for row in sub_company_statistics.order_by('-total'):
+        percentage = round((row['total'] / total_count * 100), 1) if total_count > 0 else 0
+        top_sub_companies.append({
+            'name': row['sub_company'],
+            'total': row['total'],
+            'total_amount': row['total_amount'],
+            'percentage': percentage,
+        })
+    
+    # ✅ أقل الشركات الفرعية
+    bottom_sub_companies = []
+    for row in sub_company_statistics.order_by('total', 'sub_company'):
+        percentage = round((row['total'] / total_count * 100), 1) if total_count > 0 else 0
+        bottom_sub_companies.append({
+            'name': row['sub_company'],
+            'total': row['total'],
+            'total_amount': row['total_amount'],
+            'percentage': percentage,
+        })
+    
+    # ✅ ✅ ✅ قائمة الشركات الفرعية للاقتراحات (فريدة)
+    sub_company_suggestions = list(set(
+        records
+        .values_list('sub_company', flat=True)
+        .filter(sub_company__isnull=False)
+        .exclude(sub_company='')
+    ))[:50]
+    
+    # ✅ ✅ ✅ قائمة التخصصات للاقتراحات (فريدة)
+    specialty_suggestions = list(set(
+        records
+        .values_list('specialty', flat=True)
+        .filter(specialty__isnull=False)
+        .exclude(specialty='')
+    ))[:50]
+    
+    # ✅ إجمالي الشركات الفرعية
+    total_sub_companies = records.values('sub_company').distinct().count()
+    
+    # ✅ Pagination (لأعلى الشركات)
+    paginator_top = Paginator(top_sub_companies, 50)
+    page_number_top = request.GET.get('page_top', 1)
+    top_page_obj = paginator_top.get_page(page_number_top)
+    
+    # ✅ Pagination (لأقل الشركات)
+    paginator_bottom = Paginator(bottom_sub_companies, 50)
+    page_number_bottom = request.GET.get('page_bottom', 1)
+    bottom_page_obj = paginator_bottom.get_page(page_number_bottom)
+    
+    context = {
+        'top_sub_companies': top_page_obj,
+        'bottom_sub_companies': bottom_page_obj,
+        'total_count': total_count,
+        'total_amount': total_amount,
+        'total_sub_companies': total_sub_companies,
+        'sub_company_search': sub_company_search,
+        'specialty_search': specialty_search,
+        'sub_company_suggestions': sub_company_suggestions,
+        'specialty_suggestions': specialty_suggestions,
+    }
+    
+    return render(request, 'frontend/sub_companies_details.html', context)
 def pending_analysis(request):
 
     pending_qs = (

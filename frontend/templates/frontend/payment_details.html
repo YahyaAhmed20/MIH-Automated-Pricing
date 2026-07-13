@@ -1,0 +1,552 @@
+{% extends 'frontend/base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+
+<style>
+    .stats-card {
+        border-radius: 16px;
+        padding: 1.5rem 1.25rem;
+        text-align: center;
+        transition: all 0.3s ease;
+        border: none;
+        color: #fff;
+    }
+    
+    .stats-card .stats-number {
+        font-size: 2.5rem;
+        font-weight: 700;
+    }
+    
+    .stats-card .stats-label {
+        font-size: 0.85rem;
+        opacity: 0.9;
+        margin-top: 6px;
+    }
+    
+    .stats-card-total {
+        background: linear-gradient(135deg, #1a237e, #0d47a1);
+    }
+    
+    .stats-card-cash {
+        background: linear-gradient(135deg, #2e7d32, #43a047);
+    }
+    
+    .stats-card-credit {
+        background: linear-gradient(135deg, #e65100, #f57c00);
+    }
+    
+    .stats-card-amount {
+        background: linear-gradient(135deg, #00695c, #00897b);
+    }
+    
+    .table-records {
+        font-size: 0.9rem;
+    }
+    
+    .table-records thead {
+        background: #f8f9fa;
+    }
+    
+    .table-records tbody tr:hover {
+        background: #f1f3f5;
+    }
+    
+    .amount-number {
+        font-family: 'Courier New', monospace;
+        font-weight: 700;
+        direction: ltr;
+        display: inline-block;
+        text-align: right;
+    }
+    
+    /* ✅ Search Box */
+    .search-box {
+        position: relative;
+    }
+    
+    .search-box .form-control {
+        border-radius: 30px;
+        padding: 0.4rem 1rem 0.4rem 2.5rem;
+        border: 2px solid #e9ecef;
+        transition: all 0.3s ease;
+        font-size: 0.9rem;
+        background-color: #fff;
+    }
+    
+    .search-box .form-control:focus {
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.1);
+    }
+    
+    .search-box .search-icon {
+        position: absolute;
+        left: 0.8rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #6c757d;
+        z-index: 10;
+        font-size: 0.9rem;
+    }
+    
+    .search-box .clear-btn {
+        position: absolute;
+        right: 0.8rem;
+        top: 50%;
+        transform: translateY(-50%);
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 20px;
+        color: #6c757d;
+        cursor: pointer;
+        padding: 0.1rem 0.8rem;
+        z-index: 10;
+        font-size: 0.75rem;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        white-space: nowrap;
+    }
+    
+    .search-box .clear-btn:hover {
+        background: #dc3545;
+        color: #fff;
+        border-color: #dc3545;
+        transform: translateY(-50%) scale(1.05);
+    }
+    
+    .filter-pill {
+        padding: 6px 16px;
+        border-radius: 30px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+    
+    .filter-pill:hover {
+        transform: scale(1.05);
+    }
+    
+    .filter-pill.active {
+        background: #0d6efd;
+        color: #fff;
+        border-color: #0d6efd;
+    }
+    
+    .filter-pill.cash {
+        background: #e8f5e9;
+        color: #2e7d32;
+        border: 2px solid #2e7d32;
+    }
+    
+    .filter-pill.cash.active {
+        background: #2e7d32;
+        color: #fff;
+    }
+    
+    .filter-pill.credit {
+        background: #fff3e0;
+        color: #e65100;
+        border: 2px solid #e65100;
+    }
+    
+    .filter-pill.credit.active {
+        background: #e65100;
+        color: #fff;
+    }
+    
+    .filter-pill.all {
+        background: #e3f2fd;
+        color: #0d47a1;
+        border: 2px solid #0d47a1;
+    }
+    
+    .filter-pill.all.active {
+        background: #0d47a1;
+        color: #fff;
+    }
+    
+    @media (max-width: 768px) {
+        .stats-card .stats-number {
+            font-size: 1.8rem;
+        }
+        
+        .filter-pill {
+            font-size: 0.75rem;
+            padding: 4px 12px;
+        }
+    }
+</style>
+
+<!-- ============================================ -->
+<!-- ✅ رجوع -->
+<!-- ============================================ -->
+<div class="container-fluid py-4">
+    <div class="mb-3">
+        <a href="{% url 'reports' %}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-right me-1"></i>
+            رجوع إلى التقارير
+        </a>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- ✅ العنوان -->
+    <!-- ============================================ -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h4 class="mb-0 fw-bold">
+                <i class="fas fa-credit-card text-primary me-2"></i>
+                تفاصيل الباكدجات حسب نوع الدفع
+            </h4>
+            <p class="text-muted small mb-0">
+                إجمالي السجلات: <span class="fw-bold">{{ total_count }}</span>
+            </p>
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- ✅ فلتر نوع الدفع + فلتر التخصص -->
+    <!-- ============================================ -->
+    <div class="card shadow-sm mb-4 border-0">
+        <div class="card-body">
+            <div class="row g-3">
+                
+                <!-- ✅ فلتر نوع الدفع -->
+                <div class="col-lg-6">
+                    <div class="d-flex align-items-center mb-2">
+                        <i class="fas fa-credit-card text-primary me-2"></i>
+                        <h6 class="mb-0 fw-bold">فلتر نوع الدفع</h6>
+                    </div>
+                    <div class="d-flex flex-wrap gap-2">
+                        <a href="?{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}" 
+                           class="filter-pill all {% if not payment_type %}active{% endif %}">
+                            <i class="fas fa-undo me-1"></i> الكل
+                        </a>
+                        <a href="?payment_type=نقدي{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}" 
+                           class="filter-pill cash {% if payment_type == 'نقدي' %}active{% endif %}">
+                            <i class="fas fa-money-bill-wave me-1"></i> نقدي
+                        </a>
+                        <a href="?payment_type=اجل{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}" 
+                           class="filter-pill credit {% if payment_type == 'اجل' %}active{% endif %}">
+                            <i class="fas fa-clock me-1"></i> آجل
+                        </a>
+                        {% if payment_type %}
+                        <a href="?{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}" 
+                           class="filter-pill" style="background: #f8d7da; color: #dc3545; border: 2px solid #dc3545;">
+                            <i class="fas fa-times me-1"></i> إلغاء
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <!-- ✅ فلتر التخصص (Search with datalist) -->
+                <div class="col-lg-6">
+                    <div class="d-flex align-items-center mb-2">
+                        <i class="fas fa-stethoscope text-info me-2"></i>
+                        <h6 class="mb-0 fw-bold">فلتر التخصص</h6>
+                    </div>
+                    <form method="GET" class="search-box" id="specialtySearchForm">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" 
+                               name="specialty_search" 
+                               id="specialtySearchInput"
+                               class="form-control" 
+                               placeholder="🔍 ابحث عن تخصص..."
+                               value="{{ specialty_search }}"
+                               list="specialtySuggestions"
+                               autocomplete="off">
+                        <datalist id="specialtySuggestions">
+                            {% for suggestion in specialty_suggestions %}
+                            <option value="{{ suggestion }}">
+                            {% endfor %}
+                        </datalist>
+                        {% if specialty_search %}
+                        <a href="?{% if payment_type %}&payment_type={{ payment_type }}{% endif %}" class="clear-btn">
+                            <i class="fas fa-times me-1"></i> إلغاء
+                        </a>
+                        {% endif %}
+                        {% if payment_type %}
+                        <input type="hidden" name="payment_type" value="{{ payment_type }}">
+                        {% endif %}
+                    </form>
+                    <small class="text-muted d-block mt-1" style="font-size: 0.7rem;">
+                        <i class="fas fa-info-circle me-1"></i>
+                        ابحث عن تخصص معين
+                    </small>
+                </div>
+                
+            </div>
+            
+            <!-- ✅ عرض الفلاتر النشطة -->
+            {% if payment_type or specialty_search %}
+            <div class="row mt-3">
+                <div class="col-12">
+                    <div class="d-flex flex-wrap gap-2">
+                        {% if payment_type %}
+                        <span class="badge bg-primary p-2">
+                            <i class="fas fa-credit-card me-1"></i>
+                            نوع الدفع: {{ payment_type }}
+                            <a href="?{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}" 
+                               class="text-white ms-1 text-decoration-none">
+                                <i class="fas fa-times-circle"></i>
+                            </a>
+                        </span>
+                        {% endif %}
+                        {% if specialty_search %}
+                        <span class="badge bg-info p-2">
+                            <i class="fas fa-stethoscope me-1"></i>
+                            التخصص: {{ specialty_search }}
+                            <a href="?{% if payment_type %}&payment_type={{ payment_type }}{% endif %}" 
+                               class="text-white ms-1 text-decoration-none">
+                                <i class="fas fa-times-circle"></i>
+                            </a>
+                        </span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- ✅ 4 بوكسات مع كاونتر -->
+    <!-- ============================================ -->
+    <div class="row g-4 mb-4">
+        
+        <div class="col-md-3">
+            <div class="stats-card stats-card-total">
+                <div class="stats-number counter" data-target="{{ total_count }}">0</div>
+                <div class="stats-label"><i class="fas fa-boxes me-1"></i>إجمالي السجلات</div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="stats-card stats-card-cash">
+                <div class="stats-number counter" data-target="{{ cash_count }}">0</div>
+                <div class="stats-label"><i class="fas fa-money-bill-wave me-1"></i>نقدي</div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="stats-card stats-card-credit">
+                <div class="stats-number counter" data-target="{{ credit_count }}">0</div>
+                <div class="stats-label"><i class="fas fa-clock me-1"></i>آجل</div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="stats-card stats-card-amount">
+                <div class="stats-number counter" data-target="{{ total_amount|floatformat:0|intcomma }}">0</div>
+                <div class="stats-label"><i class="fas fa-dollar-sign me-1"></i>إجمالي المبالغ</div>
+            </div>
+        </div>
+        
+    </div>
+
+    <!-- ============================================ -->
+    <!-- ✅ توزيع حسب القطاع (لآجل فقط) -->
+    <!-- ============================================ -->
+    {% if not payment_type or payment_type == 'اجل' %}
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-white">
+            <h5 class="fw-bold mb-0">
+                <i class="fas fa-chart-pie text-info me-2"></i>
+                توزيع القطاعات (آجل فقط)
+            </h5>
+        </div>
+        <div class="card-body">
+            <div class="row g-2">
+                {% for sector in sector_distribution %}
+                <div class="col-md-3 col-6">
+                    <div class="d-flex justify-content-between align-items-center p-2 border-bottom">
+                        <span style="font-size: 0.85rem; font-weight: 500;">{{ sector.sector|default:"غير محدد" }}</span>
+                        <span class="badge bg-warning rounded-pill">{{ sector.total }}</span>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-12">
+                    <div class="text-center py-3 text-muted">لا توجد قطاعات</div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- ============================================ -->
+    <!-- ✅ الجدول التفصيلي -->
+    <!-- ============================================ -->
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-light">
+            <div class="d-flex justify-content-between align-items-center">
+                <h6 class="mb-0">
+                    <i class="fas fa-list me-2"></i>
+                    السجلات التفصيلية
+                    <span class="badge bg-secondary ms-2 rounded-pill">{{ total_count }}</span>
+                </h6>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover table-records mb-0">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>الرقم الحسابى</th>
+                            <th>اسم المريض</th>
+                            <th>التخصص</th>
+                            <th>الباكدج</th>
+                            <th>الجهة</th>
+                            <th>المبلغ</th>
+                            <th>نوع الدفع</th>
+                            <th>تاريخ الدخول</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for record in records %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ record.account_number|default:"-" }}</td>
+                            <td class="fw-bold">{{ record.patient_name|truncatechars:25 }}</td>
+                            <td>{{ record.specialty|default:"-"|truncatechars:20 }}</td>
+                            <td>{{ record.package_name|default:"-"|truncatechars:20 }}</td>
+                            <td>{{ record.entity_name|default:"-"|truncatechars:20 }}</td>
+                            <td>
+                                <span class="amount-number">
+                                    {{ record.amount|floatformat:2|intcomma }}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge {% if record.payment_type == 'نقدي' %}bg-success{% else %}bg-warning text-dark{% endif %}">
+                                    {{ record.payment_type|default:"-" }}
+                                </span>
+                            </td>
+                            <td>{{ record.admission_date|date:"Y-m-d"|default:"-" }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="9" class="text-center text-muted py-4">
+                                <i class="fas fa-inbox fa-2x d-block mb-2 opacity-50"></i>
+                                لا توجد سجلات تطابق الفلترة
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- ✅ Pagination -->
+    <!-- ============================================ -->
+    {% if records.has_other_pages %}
+    <div class="d-flex justify-content-center mt-4">
+        <nav>
+            <ul class="pagination">
+                {% if records.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ records.previous_page_number }}{% if payment_type %}&payment_type={{ payment_type }}{% endif %}{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}">
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                </li>
+                {% endif %}
+                
+                {% for num in records.paginator.page_range %}
+                <li class="page-item {% if num == records.number %}active{% endif %}">
+                    <a class="page-link" href="?page={{ num }}{% if payment_type %}&payment_type={{ payment_type }}{% endif %}{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}">
+                        {{ num }}
+                    </a>
+                </li>
+                {% endfor %}
+                
+                {% if records.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ records.next_page_number }}{% if payment_type %}&payment_type={{ payment_type }}{% endif %}{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}">
+                        <i class="fas fa-chevron-left"></i>
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+    {% endif %}
+
+</div>
+
+<script>
+// ============================================
+// ✅ 1. الكاونترات المتحركة
+// ============================================
+document.addEventListener('DOMContentLoaded', function() {
+    
+    const counters = document.querySelectorAll('.counter');
+    
+    counters.forEach(counter => {
+        const targetStr = counter.getAttribute('data-target');
+        const target = parseInt(targetStr.replace(/,/g, ''));
+        let current = 0;
+        const increment = Math.max(1, Math.ceil(target / 50));
+        
+        const updateCounter = () => {
+            if (current < target) {
+                current += increment;
+                if (current > target) current = target;
+                counter.textContent = current.toLocaleString('en-US');
+                requestAnimationFrame(updateCounter);
+            } else {
+                counter.textContent = target.toLocaleString('en-US');
+            }
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    updateCounter();
+                    observer.unobserve(entry.target);
+                }
+            });
+        });
+        
+        observer.observe(counter);
+    });
+    
+});
+
+// ============================================
+// ✅ 2. عند اختيار من الـ datalist يتم إرسال الفورم
+// ============================================
+document.addEventListener('DOMContentLoaded', function() {
+    
+    const specialtyInput = document.getElementById('specialtySearchInput');
+    if (specialtyInput) {
+        specialtyInput.addEventListener('input', function(e) {
+            const datalist = document.getElementById('specialtySuggestions');
+            if (datalist) {
+                const options = datalist.options;
+                let matched = false;
+                for (let option of options) {
+                    if (option.value === this.value) {
+                        matched = true;
+                        break;
+                    }
+                }
+                if (matched && this.value.trim()) {
+                    document.getElementById('specialtySearchForm').submit();
+                }
+            }
+        });
+    }
+    
+});
+</script>
+
+{% endblock %}

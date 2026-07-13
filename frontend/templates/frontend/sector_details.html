@@ -1,0 +1,547 @@
+{% extends 'frontend/base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+
+<style>
+    .stats-card {
+        border-radius: 16px;
+        padding: 1.5rem 1.25rem;
+        text-align: center;
+        transition: all 0.3s ease;
+        border: none;
+        color: #fff;
+    }
+    
+    .stats-card .stats-number {
+        font-size: 2.5rem;
+        font-weight: 700;
+    }
+    
+    .stats-card .stats-label {
+        font-size: 0.85rem;
+        opacity: 0.9;
+        margin-top: 6px;
+    }
+    
+    .stats-card-total {
+        background: linear-gradient(135deg, #1a237e, #0d47a1);
+    }
+    
+    .stats-card-amount {
+        background: linear-gradient(135deg, #00695c, #00897b);
+    }
+    
+    .stats-card-sectors {
+        background: linear-gradient(135deg, #e65100, #f57c00);
+    }
+    
+    .table-records {
+        font-size: 0.9rem;
+    }
+    
+    .table-records thead {
+        background: #f8f9fa;
+    }
+    
+    .table-records tbody tr:hover {
+        background: #f1f3f5;
+    }
+    
+    .amount-number {
+        font-family: 'Courier New', monospace;
+        font-weight: 700;
+        direction: ltr;
+        display: inline-block;
+        text-align: right;
+    }
+    
+    /* ✅ Search Box */
+    .search-box {
+        position: relative;
+    }
+    
+    .search-box .form-control {
+        border-radius: 30px;
+        padding: 0.4rem 1rem 0.4rem 2.5rem;
+        border: 2px solid #e9ecef;
+        transition: all 0.3s ease;
+        font-size: 0.9rem;
+        background-color: #fff;
+    }
+    
+    .search-box .form-control:focus {
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.1);
+    }
+    
+    .search-box .search-icon {
+        position: absolute;
+        left: 0.8rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #6c757d;
+        z-index: 10;
+        font-size: 0.9rem;
+    }
+    
+    .search-box .clear-btn {
+        position: absolute;
+        right: 0.8rem;
+        top: 50%;
+        transform: translateY(-50%);
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 20px;
+        color: #6c757d;
+        cursor: pointer;
+        padding: 0.1rem 0.8rem;
+        z-index: 10;
+        font-size: 0.75rem;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        white-space: nowrap;
+    }
+    
+    .search-box .clear-btn:hover {
+        background: #dc3545;
+        color: #fff;
+        border-color: #dc3545;
+        transform: translateY(-50%) scale(1.05);
+    }
+    
+    .sector-item {
+        transition: all 0.2s ease;
+        cursor: default;
+    }
+    
+    .sector-item:hover {
+        transform: translateX(5px);
+        background: #f8f9fa;
+    }
+    
+    .progress-bar-custom {
+        height: 6px;
+        border-radius: 10px;
+        background: #e9ecef;
+        overflow: hidden;
+    }
+    
+    .progress-bar-custom .bar {
+        height: 100%;
+        border-radius: 10px;
+        transition: width 0.8s ease;
+    }
+    
+    @media (max-width: 768px) {
+        .stats-card .stats-number {
+            font-size: 1.8rem;
+        }
+    }
+</style>
+
+<!-- ============================================ -->
+<!-- ✅ رجوع -->
+<!-- ============================================ -->
+<div class="container-fluid py-4">
+    <div class="mb-3">
+        <a href="{% url 'reports' %}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-right me-1"></i>
+            رجوع إلى التقارير
+        </a>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- ✅ العنوان -->
+    <!-- ============================================ -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h4 class="mb-0 fw-bold">
+                <i class="fas fa-chart-pie text-warning me-2"></i>
+                تفاصيل الباكجات حسب القطاع (آجل فقط)
+            </h4>
+            <p class="text-muted small mb-0">
+                إجمالي السجلات: <span class="fw-bold">{{ total_count }}</span>
+            </p>
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- ✅ فلتر القطاع + فلتر التخصص -->
+    <!-- ============================================ -->
+    <div class="card shadow-sm mb-4 border-0">
+        <div class="card-body">
+            <div class="row g-3">
+                
+                <!-- ✅ فلتر القطاع -->
+                <div class="col-lg-6">
+                    <div class="d-flex align-items-center mb-2">
+                        <i class="fas fa-building text-warning me-2"></i>
+                        <h6 class="mb-0 fw-bold">فلتر القطاع</h6>
+                    </div>
+                    <form method="GET" class="search-box" id="sectorSearchForm">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" 
+                               name="sector_search" 
+                               id="sectorSearchInput"
+                               class="form-control" 
+                               placeholder="🔍 ابحث عن قطاع..."
+                               value="{{ sector_search }}"
+                               list="sectorSuggestions"
+                               autocomplete="off">
+                        <datalist id="sectorSuggestions">
+                            {% for suggestion in sector_suggestions %}
+                            <option value="{{ suggestion }}">
+                            {% endfor %}
+                        </datalist>
+                        {% if sector_search %}
+                        <a href="?{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}" class="clear-btn">
+                            <i class="fas fa-times me-1"></i> إلغاء
+                        </a>
+                        {% endif %}
+                        {% if specialty_search %}
+                        <input type="hidden" name="specialty_search" value="{{ specialty_search }}">
+                        {% endif %}
+                    </form>
+                    <small class="text-muted d-block mt-1" style="font-size: 0.7rem;">
+                        <i class="fas fa-info-circle me-1"></i>
+                        ابحث عن قطاع معين
+                    </small>
+                </div>
+                
+                <!-- ✅ فلتر التخصص -->
+                <div class="col-lg-6">
+                    <div class="d-flex align-items-center mb-2">
+                        <i class="fas fa-stethoscope text-info me-2"></i>
+                        <h6 class="mb-0 fw-bold">فلتر التخصص</h6>
+                    </div>
+                    <form method="GET" class="search-box" id="specialtySearchForm">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" 
+                               name="specialty_search" 
+                               id="specialtySearchInput"
+                               class="form-control" 
+                               placeholder="🔍 ابحث عن تخصص..."
+                               value="{{ specialty_search }}"
+                               list="specialtySuggestions"
+                               autocomplete="off">
+                        <datalist id="specialtySuggestions">
+                            {% for suggestion in specialty_suggestions %}
+                            <option value="{{ suggestion }}">
+                            {% endfor %}
+                        </datalist>
+                        {% if specialty_search %}
+                        <a href="?{% if sector_search %}&sector_search={{ sector_search }}{% endif %}" class="clear-btn">
+                            <i class="fas fa-times me-1"></i> إلغاء
+                        </a>
+                        {% endif %}
+                        {% if sector_search %}
+                        <input type="hidden" name="sector_search" value="{{ sector_search }}">
+                        {% endif %}
+                    </form>
+                    <small class="text-muted d-block mt-1" style="font-size: 0.7rem;">
+                        <i class="fas fa-info-circle me-1"></i>
+                        ابحث عن تخصص معين
+                    </small>
+                </div>
+                
+            </div>
+            
+            <!-- ✅ عرض الفلاتر النشطة -->
+            {% if sector_search or specialty_search %}
+            <div class="row mt-3">
+                <div class="col-12">
+                    <div class="d-flex flex-wrap gap-2">
+                        {% if sector_search %}
+                        <span class="badge bg-warning text-dark p-2">
+                            <i class="fas fa-building me-1"></i>
+                            القطاع: {{ sector_search }}
+                            <a href="?{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}" 
+                               class="text-dark ms-1 text-decoration-none">
+                                <i class="fas fa-times-circle"></i>
+                            </a>
+                        </span>
+                        {% endif %}
+                        {% if specialty_search %}
+                        <span class="badge bg-info p-2">
+                            <i class="fas fa-stethoscope me-1"></i>
+                            التخصص: {{ specialty_search }}
+                            <a href="?{% if sector_search %}&sector_search={{ sector_search }}{% endif %}" 
+                               class="text-white ms-1 text-decoration-none">
+                                <i class="fas fa-times-circle"></i>
+                            </a>
+                        </span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- ✅ 3 بوكسات -->
+    <!-- ============================================ -->
+    <div class="row g-4 mb-4">
+        
+        <div class="col-md-4">
+            <div class="stats-card stats-card-total">
+                <div class="stats-number counter" data-target="{{ total_count }}">0</div>
+                <div class="stats-label"><i class="fas fa-boxes me-1"></i>إجمالي السجلات</div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="stats-card stats-card-sectors">
+                <div class="stats-number counter" data-target="{{ total_sectors }}">0</div>
+                <div class="stats-label"><i class="fas fa-building me-1"></i>عدد القطاعات</div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="stats-card stats-card-amount">
+                <div class="stats-number counter" data-target="{{ total_amount|floatformat:0|intcomma }}">0</div>
+                <div class="stats-label"><i class="fas fa-dollar-sign me-1"></i>إجمالي المبالغ</div>
+            </div>
+        </div>
+        
+    </div>
+
+    <!-- ============================================ -->
+    <!-- ✅ توزيع القطاعات -->
+    <!-- ============================================ -->
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-white">
+            <h5 class="fw-bold mb-0">
+                <i class="fas fa-chart-bar text-warning me-2"></i>
+                توزيع القطاعات
+            </h5>
+            <small class="text-muted">
+                إجمالي <span class="fw-bold text-warning">{{ total_sectors }}</span> قطاع مختلف
+            </small>
+        </div>
+        <div class="card-body">
+            <div class="row g-2">
+                {% for sector in sector_distribution %}
+                <div class="col-md-6">
+                    <div class="sector-item d-flex justify-content-between align-items-center p-2 border-bottom">
+                        <div style="flex: 1;">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span style="font-size: 0.9rem; font-weight: 500;">{{ sector.sector|default:"غير محدد" }}</span>
+                                <span class="badge bg-warning rounded-pill">{{ sector.total }}</span>
+                            </div>
+                            <div class="progress-bar-custom mt-1">
+                                <div class="bar" style="width: {% widthratio sector.total total_count 100 %}%; background: #e65100;"></div>
+                            </div>
+                            <small class="text-muted">
+                                {% widthratio sector.total total_count 100 %}%
+                                <span class="ms-2">{{ sector.total_amount|floatformat:0|intcomma }} ج.م</span>
+                            </small>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-12">
+                    <div class="text-center py-4">
+                        <i class="fas fa-inbox fa-2x text-muted mb-2 d-block"></i>
+                        <p class="text-muted mb-0">لا توجد قطاعات</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- ✅ الجدول التفصيلي -->
+    <!-- ============================================ -->
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-light">
+            <div class="d-flex justify-content-between align-items-center">
+                <h6 class="mb-0">
+                    <i class="fas fa-list me-2"></i>
+                    السجلات التفصيلية
+                    <span class="badge bg-secondary ms-2 rounded-pill">{{ total_count }}</span>
+                </h6>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover table-records mb-0">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>الرقم الحسابى</th>
+                            <th>اسم المريض</th>
+                            <th>التخصص</th>
+                            <th>القطاع</th>
+                            <th>الباكدج</th>
+                            <th>الجهة</th>
+                            <th>المبلغ</th>
+                            <th>تاريخ الدخول</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for record in records %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ record.account_number|default:"-" }}</td>
+                            <td class="fw-bold">{{ record.patient_name|truncatechars:25 }}</td>
+                            <td>{{ record.specialty|default:"-"|truncatechars:20 }}</td>
+                            <td>
+                                <span class="badge bg-warning text-dark">{{ record.sector|default:"-" }}</span>
+                            </td>
+                            <td>{{ record.package_name|default:"-"|truncatechars:20 }}</td>
+                            <td>{{ record.entity_name|default:"-"|truncatechars:20 }}</td>
+                            <td>
+                                <span class="amount-number">
+                                    {{ record.amount|floatformat:2|intcomma }}
+                                </span>
+                            </td>
+                            <td>{{ record.admission_date|date:"Y-m-d"|default:"-" }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="9" class="text-center text-muted py-4">
+                                <i class="fas fa-inbox fa-2x d-block mb-2 opacity-50"></i>
+                                لا توجد سجلات تطابق الفلترة
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- ✅ Pagination -->
+    <!-- ============================================ -->
+    {% if records.has_other_pages %}
+    <div class="d-flex justify-content-center mt-4">
+        <nav>
+            <ul class="pagination">
+                {% if records.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ records.previous_page_number }}{% if sector_search %}&sector_search={{ sector_search }}{% endif %}{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}">
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                </li>
+                {% endif %}
+                
+                {% for num in records.paginator.page_range %}
+                <li class="page-item {% if num == records.number %}active{% endif %}">
+                    <a class="page-link" href="?page={{ num }}{% if sector_search %}&sector_search={{ sector_search }}{% endif %}{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}">
+                        {{ num }}
+                    </a>
+                </li>
+                {% endfor %}
+                
+                {% if records.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ records.next_page_number }}{% if sector_search %}&sector_search={{ sector_search }}{% endif %}{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}">
+                        <i class="fas fa-chevron-left"></i>
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+    {% endif %}
+
+</div>
+
+<script>
+// ============================================
+// ✅ 1. الكاونترات المتحركة
+// ============================================
+document.addEventListener('DOMContentLoaded', function() {
+    
+    const counters = document.querySelectorAll('.counter');
+    
+    counters.forEach(counter => {
+        const targetStr = counter.getAttribute('data-target');
+        const target = parseInt(targetStr.replace(/,/g, ''));
+        let current = 0;
+        const increment = Math.max(1, Math.ceil(target / 50));
+        
+        const updateCounter = () => {
+            if (current < target) {
+                current += increment;
+                if (current > target) current = target;
+                counter.textContent = current.toLocaleString('en-US');
+                requestAnimationFrame(updateCounter);
+            } else {
+                counter.textContent = target.toLocaleString('en-US');
+            }
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    updateCounter();
+                    observer.unobserve(entry.target);
+                }
+            });
+        });
+        
+        observer.observe(counter);
+    });
+    
+});
+
+// ============================================
+// ✅ 2. عند اختيار من الـ datalist يتم إرسال الفورم
+// ============================================
+document.addEventListener('DOMContentLoaded', function() {
+    
+    // ✅ فلتر القطاع
+    const sectorInput = document.getElementById('sectorSearchInput');
+    if (sectorInput) {
+        sectorInput.addEventListener('input', function(e) {
+            const datalist = document.getElementById('sectorSuggestions');
+            if (datalist) {
+                const options = datalist.options;
+                let matched = false;
+                for (let option of options) {
+                    if (option.value === this.value) {
+                        matched = true;
+                        break;
+                    }
+                }
+                if (matched && this.value.trim()) {
+                    document.getElementById('sectorSearchForm').submit();
+                }
+            }
+        });
+    }
+    
+    // ✅ فلتر التخصص
+    const specialtyInput = document.getElementById('specialtySearchInput');
+    if (specialtyInput) {
+        specialtyInput.addEventListener('input', function(e) {
+            const datalist = document.getElementById('specialtySuggestions');
+            if (datalist) {
+                const options = datalist.options;
+                let matched = false;
+                for (let option of options) {
+                    if (option.value === this.value) {
+                        matched = true;
+                        break;
+                    }
+                }
+                if (matched && this.value.trim()) {
+                    document.getElementById('specialtySearchForm').submit();
+                }
+            }
+        });
+    }
+    
+});
+</script>
+
+{% endblock %}
