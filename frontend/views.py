@@ -3351,3 +3351,200 @@ def procedure_fees(request):
             "procedure_search": procedure_search,
         }
     )
+    
+    
+# frontend/views.py
+
+from django.db.models import Q
+from django.shortcuts import render
+from pricing_requests.models import ExternalApproval
+
+
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
+def patient_search(request):
+    """صفحة البحث عن مريض"""
+    
+    # ✅ البحث الأساسي
+    search_query = request.GET.get("search", "")
+    
+    # ✅ الفلاتر
+    attachment_type = request.GET.get("attachment_type", "")
+    company_filter = request.GET.get("company", "")
+    doctor_filter = request.GET.get("doctor", "")
+    specialty_filter = request.GET.get("specialty", "")
+    date_from = request.GET.get("date_from", "")
+    date_to = request.GET.get("date_to", "")
+    
+    # ✅ جلب كل السجلات
+    patients = ExternalApproval.objects.all().order_by('-date', '-id')
+    
+    # ✅ البحث الأساسي
+    if search_query:
+        patients = patients.filter(
+            Q(patient_name__icontains=search_query) |
+            Q(phone__icontains=search_query) |
+            Q(card_number__icontains=search_query) |
+            Q(medical_number__icontains=search_query) |
+            Q(account_number__icontains=search_query) |
+            Q(company__icontains=search_query)
+        )
+    
+    # ✅ الفلاتر
+    if attachment_type:
+        patients = patients.filter(attachment_type__icontains=attachment_type)
+    
+    if company_filter:
+        patients = patients.filter(company__icontains=company_filter)
+    
+    if doctor_filter:
+        patients = patients.filter(doctor_name__icontains=doctor_filter)
+    
+    if specialty_filter:
+        patients = patients.filter(specialty__icontains=specialty_filter)
+    
+    if date_from:
+        try:
+            patients = patients.filter(date__gte=date_from)
+        except:
+            pass
+    
+    if date_to:
+        try:
+            patients = patients.filter(date__lte=date_to)
+        except:
+            pass
+    
+    # ✅ ✅ ✅ Pagination
+    paginator = Paginator(patients, 50)
+    page_number = request.GET.get('page', 1)
+    
+    try:
+        page_obj = paginator.get_page(page_number)
+    except PageNotAnInteger:
+        page_obj = paginator.get_page(1)
+    except EmptyPage:
+        page_obj = paginator.get_page(paginator.num_pages)
+    
+    # ✅ ✅ ✅ قيم الفلاتر - بناءً على الفلاتر الحالية (Dynamic)
+    # ✅ نبدأ بجميع السجلات للفلاتر
+    filter_queryset = ExternalApproval.objects.all()
+    
+    # ✅ نطبق نفس الفلاتر (ما عدا الفلتر الحالي لكل قائمة)
+    if search_query:
+        filter_queryset = filter_queryset.filter(
+            Q(patient_name__icontains=search_query) |
+            Q(phone__icontains=search_query) |
+            Q(card_number__icontains=search_query) |
+            Q(medical_number__icontains=search_query) |
+            Q(account_number__icontains=search_query) |
+            Q(company__icontains=search_query)
+        )
+    
+    # ✅ attachment_types - مع مراعاة الفلاتر التانية (ما عدا attachment_type)
+    attachment_queryset = filter_queryset
+    if company_filter:
+        attachment_queryset = attachment_queryset.filter(company__icontains=company_filter)
+    if doctor_filter:
+        attachment_queryset = attachment_queryset.filter(doctor_name__icontains=doctor_filter)
+    if specialty_filter:
+        attachment_queryset = attachment_queryset.filter(specialty__icontains=specialty_filter)
+    if date_from:
+        attachment_queryset = attachment_queryset.filter(date__gte=date_from)
+    if date_to:
+        attachment_queryset = attachment_queryset.filter(date__lte=date_to)
+    
+    attachment_types = list(
+        attachment_queryset
+        .values_list('attachment_type', flat=True)
+        .distinct()
+        .exclude(attachment_type__isnull=True)
+        .exclude(attachment_type='')
+        .order_by('attachment_type')
+    )
+    
+    # ✅ companies - مع مراعاة الفلاتر التانية (ما عدا company)
+    company_queryset = filter_queryset
+    if attachment_type:
+        company_queryset = company_queryset.filter(attachment_type__icontains=attachment_type)
+    if doctor_filter:
+        company_queryset = company_queryset.filter(doctor_name__icontains=doctor_filter)
+    if specialty_filter:
+        company_queryset = company_queryset.filter(specialty__icontains=specialty_filter)
+    if date_from:
+        company_queryset = company_queryset.filter(date__gte=date_from)
+    if date_to:
+        company_queryset = company_queryset.filter(date__lte=date_to)
+    
+    companies = list(
+        company_queryset
+        .values_list('company', flat=True)
+        .distinct()
+        .exclude(company__isnull=True)
+        .exclude(company='')
+        .order_by('company')
+    )
+    
+    # ✅ doctors - مع مراعاة الفلاتر التانية (ما عدا doctor)
+    doctor_queryset = filter_queryset
+    if attachment_type:
+        doctor_queryset = doctor_queryset.filter(attachment_type__icontains=attachment_type)
+    if company_filter:
+        doctor_queryset = doctor_queryset.filter(company__icontains=company_filter)
+    if specialty_filter:
+        doctor_queryset = doctor_queryset.filter(specialty__icontains=specialty_filter)
+    if date_from:
+        doctor_queryset = doctor_queryset.filter(date__gte=date_from)
+    if date_to:
+        doctor_queryset = doctor_queryset.filter(date__lte=date_to)
+    
+    doctors = list(
+        doctor_queryset
+        .values_list('doctor_name', flat=True)
+        .distinct()
+        .exclude(doctor_name__isnull=True)
+        .exclude(doctor_name='')
+        .order_by('doctor_name')
+    )
+    
+    # ✅ specialties - مع مراعاة الفلاتر التانية (ما عدا specialty)
+    specialty_queryset = filter_queryset
+    if attachment_type:
+        specialty_queryset = specialty_queryset.filter(attachment_type__icontains=attachment_type)
+    if company_filter:
+        specialty_queryset = specialty_queryset.filter(company__icontains=company_filter)
+    if doctor_filter:
+        specialty_queryset = specialty_queryset.filter(doctor_name__icontains=doctor_filter)
+    if date_from:
+        specialty_queryset = specialty_queryset.filter(date__gte=date_from)
+    if date_to:
+        specialty_queryset = specialty_queryset.filter(date__lte=date_to)
+    
+    specialties = list(
+        specialty_queryset
+        .values_list('specialty', flat=True)
+        .distinct()
+        .exclude(specialty__isnull=True)
+        .exclude(specialty='')
+        .order_by('specialty')
+    )
+    
+    context = {
+        'search_query': search_query,
+        'patients': page_obj,
+        'patient_count': patients.count(),
+        # ✅ الفلاتر
+        'attachment_type': attachment_type,
+        'company_filter': company_filter,
+        'doctor_filter': doctor_filter,
+        'specialty_filter': specialty_filter,
+        'date_from': date_from,
+        'date_to': date_to,
+        # ✅ قيم الفلاتر (Dynamic)
+        'attachment_types': attachment_types,
+        'companies': companies,
+        'doctors': doctors,
+        'specialties': specialties,
+    }
+    
+    return render(request, 'frontend/patient_search.html', context)

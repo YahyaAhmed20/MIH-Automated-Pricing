@@ -55,6 +55,8 @@ urlpatterns = [
         name="approval_detail"
     ),
 
+    path('patient-search/', views.patient_search, name='patient_search'),
+
     path(
         "operations/",
         views.operations,

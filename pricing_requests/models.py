@@ -1283,3 +1283,304 @@ class ReportStatistic(models.Model):
     
     def __str__(self):
         return f"{self.patient_name} - {self.package_name} ({self.amount})"
+    
+    
+    
+# ============================================
+# ✅ External Approvals Follow-up - Sheet 12
+# ============================================
+
+class ExternalApproval(models.Model):
+    """متابعة موافقات الخارجي - شيت 12"""
+    
+    # ✅ الأعمدة الأساسية
+    attachment_type = models.CharField(
+        max_length=50,
+        blank=True,
+        null=True,
+        verbose_name="ملحق او رئيسى"
+    )
+    
+    patient_name = models.CharField(
+        max_length=255,
+        db_index=True,
+        verbose_name="اسم المريض"
+    )
+    
+    card_number = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        db_index=True,
+        verbose_name="رقم الكارنية"
+    )
+    
+    company = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        db_index=True,
+        verbose_name="الشركة"
+    )
+    
+    sub_account = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        db_index=True,
+        verbose_name="Sub Account"
+    )
+    
+    date = models.DateField(
+        blank=True,
+        null=True,
+        db_index=True,
+        verbose_name="التاريخ"
+    )
+    
+    medical_number = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        db_index=True,
+        verbose_name="الرقم الطبي"
+    )
+    
+    doctor_name = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        db_index=True,
+        verbose_name="الطبيب"
+    )
+    
+    specialty = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        db_index=True,
+        verbose_name="التخصص"
+    )
+    
+    required = models.TextField(
+        blank=True,
+        null=True,
+        verbose_name="المطلوب"
+    )
+    
+    procedure = models.TextField(
+        blank=True,
+        null=True,
+        verbose_name="الاجراء"
+    )
+    
+    phone = models.CharField(
+        max_length=50,
+        blank=True,
+        null=True,
+        verbose_name="رقم التليفون"
+    )
+    
+    agent_1 = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        verbose_name="Agent 1"
+    )
+    
+    status = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        db_index=True,
+        verbose_name="Status"
+    )
+    
+    main_status = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        db_index=True,
+        verbose_name="Main Status"
+    )
+    
+    initial_cost = models.DecimalField(
+        max_digits=14,
+        decimal_places=2,
+        default=0,
+        verbose_name="التكلفه المبدئية"
+    )
+    
+    pricing_date = models.DateField(
+        blank=True,
+        null=True,
+        verbose_name="تاريخ التسعير"
+    )
+    
+    pricing_responsible = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        verbose_name="مسئول التسعير"
+    )
+    
+    billing_status = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        db_index=True,
+        verbose_name="Billing Status"
+    )
+    
+    approval_review_responsible = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        verbose_name="مسئول مراجعة الموافقة و التسعير"
+    )
+    
+    accounts_notes = models.TextField(
+        blank=True,
+        null=True,
+        verbose_name="ملاحظات الحسابات"
+    )
+    
+    account_number = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        db_index=True,
+        verbose_name="الرقم الحسابى"
+    )
+    
+    received_cost = models.DecimalField(
+        max_digits=14,
+        decimal_places=2,
+        default=0,
+        verbose_name="التكلفة المستلمه"
+    )
+    
+    report = models.TextField(
+        blank=True,
+        null=True,
+        verbose_name="Report"
+    )
+    
+    approval = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name="Approval"
+    )
+    
+    request_approval_no = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        verbose_name="Request and Approval NO."
+    )
+    
+    approval_date = models.DateField(
+        blank=True,
+        null=True,
+        verbose_name="Approval Date"
+    )
+    
+    expiry_date = models.DateField(
+        blank=True,
+        null=True,
+        verbose_name="Expiry Date"
+    )
+    
+    notes = models.TextField(
+        blank=True,
+        null=True,
+        verbose_name="الملاحظات"
+    )
+    
+    last_update = models.DateField(
+        blank=True,
+        null=True,
+        verbose_name="Last Update"
+    )
+    
+    agent_2 = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        verbose_name="Agent 2"
+    )
+    
+    opd_sales_cs = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        verbose_name="OPD ,Sales or CS"
+    )
+    
+    admission_date = models.DateField(
+        blank=True,
+        null=True,
+        verbose_name="تاريخ الدخول"
+    )
+    
+    or_coordinator_notes = models.TextField(
+        blank=True,
+        null=True,
+        verbose_name="ملاحظات الـ OR Coordinator"
+    )
+    
+    sales_account = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        verbose_name="sales account"
+    )
+    
+    head = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        verbose_name="Head"
+    )
+    
+    user = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        verbose_name="USER"
+    )
+    
+    sales_notes = models.TextField(
+        blank=True,
+        null=True,
+        verbose_name="ملاحظات السيلز"
+    )
+    
+    # ✅ حقول التحكم
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name="تاريخ الإنشاء"
+    )
+    
+    updated_at = models.DateTimeField(
+        auto_now=True,
+        verbose_name="تاريخ التحديث"
+    )
+    
+    class Meta:
+        ordering = ["-date", "-id"]
+        verbose_name = "متابعة موافقة خارجي"
+        verbose_name_plural = "متابعة موافقات الخارجي"
+        indexes = [
+            models.Index(fields=["patient_name"]),
+            models.Index(fields=["company"]),
+            models.Index(fields=["specialty"]),
+            models.Index(fields=["status"]),
+            models.Index(fields=["main_status"]),
+            models.Index(fields=["date"]),
+            models.Index(fields=["account_number"]),
+        ]
+    
+    def __str__(self):
+        return f"{self.patient_name} - {self.company} ({self.date})"

@@ -1,0 +1,841 @@
+{% extends 'frontend/base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+
+<style>
+    /* ✅ البوكسات - تصميم محسن */
+    .info-card {
+        border-radius: 16px;
+        padding: 1.25rem;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 1px solid #e9ecef;
+        height: 100%;
+        background: #fff;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .info-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #0d6efd, #0dcaf0);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    
+    .info-card:hover::before {
+        opacity: 1;
+    }
+    
+    .info-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 12px 40px rgba(0,0,0,0.1);
+        border-color: #0d6efd;
+    }
+    
+    .info-card .card-title {
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: #495057;
+        margin-bottom: 0.75rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .info-card .card-title i {
+        font-size: 1.1rem;
+        width: 24px;
+        text-align: center;
+    }
+    
+    .info-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 6px 0;
+        border-bottom: 1px solid #f1f3f5;
+        font-size: 0.85rem;
+        transition: background 0.2s ease;
+        border-radius: 4px;
+        padding: 6px 8px;
+    }
+    
+    .info-item:hover {
+        background: #f8f9fa;
+    }
+    
+    .info-item:last-child {
+        border-bottom: none;
+    }
+    
+    .info-item .label {
+        color: #6c757d;
+        font-weight: 500;
+        font-size: 0.8rem;
+    }
+    
+    .info-item .value {
+        font-weight: 600;
+        color: #212529;
+        text-align: left;
+        word-break: break-word;
+        max-width: 60%;
+        font-size: 0.85rem;
+    }
+    
+    .info-item .value a {
+        color: #0d6efd;
+        text-decoration: none;
+        font-weight: 500;
+    }
+    
+    .info-item .value a:hover {
+        text-decoration: underline;
+        color: #0b5ed7;
+    }
+    
+    /* ✅ Patient Card - تصميم محسن */
+    .patient-card {
+        border-radius: 16px;
+        border: none;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        overflow: hidden;
+    }
+    
+    .patient-card:hover {
+        box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+        transform: translateY(-2px);
+    }
+    
+    .patient-card .card-header {
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        border-bottom: 2px solid #dee2e6;
+        padding: 0.75rem 1.25rem;
+    }
+    
+    .patient-card .card-header .patient-name {
+        color: #1a237e;
+        font-weight: 700;
+    }
+    
+    .patient-card .card-header .patient-date {
+        background: #0d6efd;
+        color: #fff;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.7rem;
+        font-weight: 600;
+    }
+    
+    /* ✅ Search Box - محسن */
+    .search-wrapper {
+        max-width: 750px;
+        margin: 0 auto 2rem;
+    }
+    
+    .search-wrapper .input-group {
+        border-radius: 50px;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+        transition: box-shadow 0.3s ease;
+    }
+    
+    .search-wrapper .input-group:focus-within {
+        box-shadow: 0 4px 30px rgba(13, 110, 253, 0.15);
+    }
+    
+    .search-wrapper .input-group .form-control {
+        border: 2px solid #e9ecef;
+        padding: 0.8rem 1.5rem;
+        font-size: 1rem;
+        border-right: none;
+        background: #fff;
+    }
+    
+    .search-wrapper .input-group .form-control:focus {
+        border-color: #0d6efd;
+        box-shadow: none;
+    }
+    
+    .search-wrapper .input-group .btn-search {
+        padding: 0.8rem 2.5rem;
+        border-radius: 0 50px 50px 0;
+        background: linear-gradient(135deg, #0d6efd, #0b5ed7);
+        color: #fff;
+        border: 2px solid #0d6efd;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .search-wrapper .input-group .btn-search:hover {
+        background: linear-gradient(135deg, #0b5ed7, #0a58ca);
+        transform: scale(1.02);
+    }
+    
+    /* ✅ Filter Card - محسن */
+    .filter-card {
+        border-radius: 16px;
+        border: none;
+        background: #fff;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+        margin-bottom: 1.5rem;
+    }
+    
+    .filter-card .card-body {
+        padding: 1.25rem;
+    }
+    
+    .filter-card .form-label {
+        font-size: 0.7rem;
+        font-weight: 700;
+        color: #495057;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.3rem;
+    }
+    
+    .filter-card .form-select,
+    .filter-card .form-control {
+        border-radius: 10px;
+        border: 2px solid #e9ecef;
+        font-size: 0.85rem;
+        padding: 0.4rem 0.8rem;
+        transition: all 0.3s ease;
+        background: #fff;
+    }
+    
+    .filter-card .form-select:focus,
+    .filter-card .form-control:focus {
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.1);
+    }
+    
+    .filter-card .btn-filter {
+        border-radius: 10px;
+        padding: 0.4rem 1.2rem;
+        font-weight: 600;
+        font-size: 0.85rem;
+        transition: all 0.3s ease;
+    }
+    
+    .filter-card .btn-filter:hover {
+        transform: translateY(-2px);
+    }
+    
+    /* ✅ Results Count */
+    .results-count {
+        background: #f8f9fa;
+        border-radius: 12px;
+        padding: 0.6rem 1.2rem;
+        border: 1px solid #e9ecef;
+    }
+    
+    .results-count .count-badge {
+        background: #0d6efd;
+        color: #fff;
+        padding: 0.2rem 0.8rem;
+        border-radius: 20px;
+        font-weight: 700;
+        font-size: 0.9rem;
+    }
+    
+    /* ✅ No Results */
+    .no-results {
+        text-align: center;
+        padding: 4rem 1rem;
+        background: #f8f9fa;
+        border-radius: 16px;
+    }
+    
+    .no-results i {
+        font-size: 4rem;
+        color: #dee2e6;
+        margin-bottom: 1rem;
+    }
+    
+    /* ✅ Colors */
+    .text-success-cost {
+        color: #28a745 !important;
+    }
+    
+    .text-danger-cost {
+        color: #dc3545 !important;
+    }
+    
+    /* ✅ Status Badge */
+    .status-badge {
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.7rem;
+        font-weight: 600;
+    }
+    
+    .status-badge.done {
+        background: #d4edda;
+        color: #155724;
+    }
+    
+    .status-badge.pending {
+        background: #fff3cd;
+        color: #856404;
+    }
+    
+    .status-badge.approved {
+        background: #cce5ff;
+        color: #004085;
+    }
+    
+    .status-badge.rejected {
+        background: #f8d7da;
+        color: #721c24;
+    }
+    
+    .status-badge.default {
+        background: #e9ecef;
+        color: #495057;
+    }
+    
+    /* ✅ Responsive */
+    @media (max-width: 768px) {
+        .info-item {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 2px;
+            padding: 4px 6px;
+        }
+        
+        .info-item .value {
+            max-width: 100%;
+            width: 100%;
+        }
+        
+        .search-wrapper .input-group .btn-search {
+            padding: 0.75rem 1rem;
+        }
+        
+        .pagination-sm .page-link {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+        }
+        
+        .filter-card .col-md-2 {
+            margin-bottom: 0.5rem;
+        }
+    }
+</style>
+
+<!-- ============================================ -->
+<!-- ✅ البحث -->
+<!-- ============================================ -->
+<div class="container-fluid py-4">
+    
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h4 class="mb-0 fw-bold">
+                <i class="fas fa-search text-primary me-2"></i>
+                البحث عن مريض
+            </h4>
+            <p class="text-muted small mb-0">
+                <i class="fas fa-database me-1"></i>
+                {{ patient_count }} سجل
+            </p>
+        </div>
+        <span class="badge bg-light text-dark px-3 py-2">
+            <i class="fas fa-file-excel me-1"></i>
+            
+        </span>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- ✅ الفلاتر -->
+    <!-- ============================================ -->
+    <div class="card filter-card">
+        <div class="card-body">
+            <form method="GET" class="row g-3 align-items-end">
+                
+                <!-- ✅ فلتر 1: ملحق او رئيسى -->
+                <div class="col-md-2">
+                    <label class="form-label">📌 النوع</label>
+                    <select name="attachment_type" class="form-select">
+                        <option value="">الكل</option>
+                        {% for type in attachment_types %}
+                        <option value="{{ type }}" {% if type == attachment_type %}selected{% endif %}>
+                            {{ type }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <!-- ✅ فلتر 2: الشركة -->
+                <div class="col-md-3">
+                    <label class="form-label">🏢 الشركة</label>
+                    <select name="company" class="form-select">
+                        <option value="">الكل</option>
+                        {% for company in companies %}
+                        <option value="{{ company }}" {% if company == company_filter %}selected{% endif %}>
+                            {{ company }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <!-- ✅ فلتر 3: الطبيب -->
+                <div class="col-md-3">
+                    <label class="form-label">👨‍⚕️ الطبيب</label>
+                    <select name="doctor" class="form-select">
+                        <option value="">الكل</option>
+                        {% for doctor in doctors %}
+                        <option value="{{ doctor }}" {% if doctor == doctor_filter %}selected{% endif %}>
+                            {{ doctor }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <!-- ✅ فلتر 4: التخصص -->
+                <div class="col-md-2">
+                    <label class="form-label">📚 التخصص</label>
+                    <select name="specialty" class="form-select">
+                        <option value="">الكل</option>
+                        {% for specialty in specialties %}
+                        <option value="{{ specialty }}" {% if specialty == specialty_filter %}selected{% endif %}>
+                            {{ specialty }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <!-- ✅ فلتر 5: التاريخ من - إلى -->
+                <div class="col-md-2">
+                    <label class="form-label">📅 من</label>
+                    <input type="date" name="date_from" class="form-control" value="{{ date_from }}">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">📅 إلى</label>
+                    <input type="date" name="date_to" class="form-control" value="{{ date_to }}">
+                </div>
+                
+                <!-- ✅ أزرار الفلاتر -->
+                <div class="col-12 mt-3 d-flex gap-2">
+                    <button type="submit" class="btn btn-primary btn-filter">
+                        <i class="fas fa-filter me-1"></i> تطبيق الفلاتر
+                    </button>
+                    <a href="?" class="btn btn-secondary btn-filter">
+                        <i class="fas fa-undo me-1"></i> إعادة تعيين
+                    </a>
+                </div>
+                
+            </form>
+        </div>
+    </div>
+
+    <!-- ✅ الفلاتر النشطة -->
+    {% if attachment_type or company_filter or doctor_filter or specialty_filter or date_from or date_to %}
+    <div class="alert alert-info mb-3 d-flex justify-content-between align-items-center">
+        <div class="d-flex flex-wrap gap-1">
+            <i class="fas fa-filter me-2"></i>
+            <strong>الفلاتر النشطة:</strong>
+            {% if attachment_type %}
+            <span class="badge bg-primary ms-1">{{ attachment_type }}</span>
+            {% endif %}
+            {% if company_filter %}
+            <span class="badge bg-secondary ms-1">{{ company_filter|truncatechars:15 }}</span>
+            {% endif %}
+            {% if doctor_filter %}
+            <span class="badge bg-info ms-1">{{ doctor_filter|truncatechars:15 }}</span>
+            {% endif %}
+            {% if specialty_filter %}
+            <span class="badge bg-warning ms-1">{{ specialty_filter|truncatechars:15 }}</span>
+            {% endif %}
+            {% if date_from %}
+            <span class="badge bg-success ms-1">من: {{ date_from }}</span>
+            {% endif %}
+            {% if date_to %}
+            <span class="badge bg-danger ms-1">إلى: {{ date_to }}</span>
+            {% endif %}
+            <span class="badge bg-dark ms-2 rounded-pill">{{ patient_count }}</span>
+        </div>
+        <a href="?" class="text-decoration-none fw-bold text-danger">
+            <i class="fas fa-times me-1"></i> إلغاء الكل
+        </a>
+    </div>
+    {% endif %}
+
+    <!-- ✅ Search Box -->
+    <div class="search-wrapper">
+        <form method="GET" class="input-group">
+            <input type="text" 
+                   name="search" 
+                   class="form-control" 
+                   placeholder="🔍 ابحث بالاسم / رقم التليفون / رقم الكارنية / الرقم الطبي..."
+                   value="{{ search_query }}">
+            <button class="btn btn-search" type="submit">
+                <i class="fas fa-search me-2"></i>بحث
+            </button>
+        </form>
+        {% if search_query %}
+        <div class="text-center mt-2">
+            <small class="text-muted">
+                نتائج البحث عن: <strong>"{{ search_query }}"</strong>
+                <a href="?" class="ms-2 text-danger text-decoration-none">
+                    <i class="fas fa-times"></i> إلغاء
+                </a>
+            </small>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- ============================================ -->
+    <!-- ✅ عدد النتائج -->
+    <!-- ============================================ -->
+    {% if patients %}
+    <div class="results-count d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <span class="count-badge">{{ patient_count }}</span>
+            <span class="text-muted small ms-1">نتيجة</span>
+            {% if search_query %}
+            <span class="text-muted small ms-2">للبحث: <strong>"{{ search_query }}"</strong></span>
+            {% endif %}
+        </div>
+        <div>
+            <span class="text-muted small">
+                عرض {{ patients.start_index }} - {{ patients.end_index }}
+                <i class="fas fa-arrow-left mx-1"></i>
+                {{ patient_count }}
+            </span>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- ============================================ -->
+    <!-- ✅ النتائج -->
+    <!-- ============================================ -->
+    {% if patients %}
+
+    <div class="row g-4">
+        {% for patient in patients %}
+        <div class="col-12">
+            <div class="card patient-card">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0 fw-bold">
+                            <i class="fas fa-user-circle text-primary me-2"></i>
+                            <span class="patient-name">{{ patient.patient_name }}</span>
+                        </h6>
+                        <span class="patient-date">
+                            <i class="fas fa-calendar-alt me-1"></i>
+                            {{ patient.date|date:"Y-m-d" }}
+                        </span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row g-4">
+                        
+                        <!-- ✅ 1/ بيانات المريض -->
+                        <div class="col-md-6 col-xl-3">
+                            <div class="info-card">
+                                <div class="card-title">
+                                    <i class="fas fa-user-circle text-primary"></i>
+                                    بيانات المريض
+                                </div>
+                                <div class="info-item">
+                                    <span class="label">اسم المريض</span>
+                                    <span class="value">{{ patient.patient_name|default:"-" }}</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="label">رقم التليفون</span>
+                                    <span class="value">{{ patient.phone|default:"-" }}</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="label">رقم الكارنية</span>
+                                    <span class="value">{{ patient.card_number|default:"-" }}</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="label">الرقم الطبي</span>
+                                    <span class="value">
+                                        {% if patient.medical_number %}
+                                            {{ patient.medical_number|stringformat:"s" }}
+                                        {% else %}
+                                            -
+                                        {% endif %}
+                                    </span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="label">الرقم الحسابي</span>
+                                    <span class="value">{{ patient.account_number|default:"-" }}</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="label">الجهة</span>
+                                    <span class="value">{{ patient.company|default:"-" }}</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="label">الشركة الفرعية</span>
+                                    <span class="value">{{ patient.sub_account|default:"-" }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ✅ 2/ بيانات الاجراء المطلوب -->
+                        <div class="col-md-6 col-xl-3">
+                            <div class="info-card">
+                                <div class="card-title">
+                                    <i class="fas fa-syringe text-success"></i>
+                                    بيانات الاجراء
+                                </div>
+                                <div class="info-item">
+                                    <span class="label">تاريخ الاجراء</span>
+                                    <span class="value">{{ patient.date|date:"Y-m-d"|default:"-" }}</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="label">اسم الاجراء</span>
+                                    <span class="value">{{ patient.procedure|default:"-"|truncatechars:35 }}</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="label">الطبيب</span>
+                                    <span class="value">{{ patient.doctor_name|default:"-" }}</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="label">التخصص</span>
+                                    <span class="value">{{ patient.specialty|default:"-" }}</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="label">التقرير</span>
+                                    <span class="value">
+                                        {% if patient.report %}
+                                        <a href="{{ patient.report }}" target="_blank">
+                                            <i class="fas fa-file-pdf text-danger"></i> عرض
+                                        </a>
+                                        {% else %}
+                                        -
+                                        {% endif %}
+                                    </span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="label">التكلفة المطلوبة</span>
+                                    <span class="value">{{ patient.initial_cost|floatformat:2|intcomma }}</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="label">التكلفة المستلمة</span>
+                                    <span class="value {% if patient.received_cost < patient.initial_cost %}text-danger-cost{% elif patient.received_cost >= patient.initial_cost %}text-success-cost{% endif %}">
+                                        {{ patient.received_cost|floatformat:2|intcomma }}
+                                        {% if patient.received_cost < patient.initial_cost %}
+                                        <i class="fas fa-arrow-down text-danger ms-1"></i>
+                                        {% elif patient.received_cost >= patient.initial_cost %}
+                                        <i class="fas fa-arrow-up text-success ms-1"></i>
+                                        {% endif %}
+                                    </span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="label">رقم الطلب</span>
+                                    <span class="value">{{ patient.request_approval_no|default:"-" }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ✅ 3/ حاله الاجراء / الدخول -->
+                        <div class="col-md-6 col-xl-3">
+                            <div class="info-card">
+                                <div class="card-title">
+                                    <i class="fas fa-clipboard-check text-warning"></i>
+                                    حالة الاجراء
+                                </div>
+                                <div class="info-item">
+                                    <span class="label">حاله الموافقه</span>
+                                    <span class="value">
+                                        <span class="status-badge 
+                                            {% if patient.main_status == 'Serv. Done' %}done
+                                            {% elif patient.main_status == 'Pending' or patient.main_status == 'pending' %}pending
+                                            {% elif patient.main_status == 'Approved' or patient.main_status == 'approved' %}approved
+                                            {% elif patient.main_status == 'Rejected' or patient.main_status == 'rejected' %}rejected
+                                            {% else %}default{% endif %}">
+                                            {{ patient.main_status|default:"-" }}
+                                        </span>
+                                    </span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="label">صوره الموافقه</span>
+                                    <span class="value">
+                                        {% if patient.approval %}
+                                        <a href="{{ patient.approval }}" target="_blank">
+                                            <i class="fas fa-file-pdf text-danger"></i> عرض
+                                        </a>
+                                        {% else %}
+                                        -
+                                        {% endif %}
+                                    </span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="label">تاريخ الموافقه</span>
+                                    <span class="value">{{ patient.approval_date|date:"Y-m-d"|default:"-" }}</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="label">صلاحيه الموافقه</span>
+                                    <span class="value">{{ patient.expiry_date|date:"Y-m-d"|default:"-" }}</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="label">رد الحسابات</span>
+                                    <span class="value">{{ patient.billing_status|default:"-" }}</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="label">تاريخ الدخول</span>
+                                    <span class="value">{{ patient.admission_date|date:"Y-m-d"|default:"-" }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ✅ 4/ ملاحظات الاقسام -->
+                        <div class="col-md-6 col-xl-3">
+                            <div class="info-card">
+                                <div class="card-title">
+                                    <i class="fas fa-sticky-note text-info"></i>
+                                    ملاحظات الاقسام
+                                </div>
+                                <div class="info-item">
+                                    <span class="label">الموافقات</span>
+                                    <span class="value" style="font-size: 0.8rem;">{{ patient.notes|default:"-"|truncatechars:60 }}</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="label">منسق العمليات</span>
+                                    <span class="value" style="font-size: 0.8rem;">{{ patient.or_coordinator_notes|default:"-"|truncatechars:60 }}</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="label">الحسابات</span>
+                                    <span class="value" style="font-size: 0.8rem;">{{ patient.accounts_notes|default:"-"|truncatechars:60 }}</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="label">السيلز</span>
+                                    <span class="value" style="font-size: 0.8rem;">{{ patient.sales_notes|default:"-"|truncatechars:60 }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- ============================================ -->
+    <!-- ✅ Pagination -->
+    <!-- ============================================ -->
+    {% if patients.has_other_pages %}
+    <div class="d-flex justify-content-center mt-4">
+        <nav>
+            <ul class="pagination pagination-sm">
+                {% if patients.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ patients.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if attachment_type %}&attachment_type={{ attachment_type }}{% endif %}{% if company_filter %}&company={{ company_filter }}{% endif %}{% if doctor_filter %}&doctor={{ doctor_filter }}{% endif %}{% if specialty_filter %}&specialty={{ specialty_filter }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}">
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                </li>
+                {% endif %}
+                
+                {% for num in patients.paginator.page_range %}
+                    {% if num >= patients.number|add:'-2' and num <= patients.number|add:'2' %}
+                    <li class="page-item {% if num == patients.number %}active{% endif %}">
+                        <a class="page-link" href="?page={{ num }}{% if search_query %}&search={{ search_query }}{% endif %}{% if attachment_type %}&attachment_type={{ attachment_type }}{% endif %}{% if company_filter %}&company={{ company_filter }}{% endif %}{% if doctor_filter %}&doctor={{ doctor_filter }}{% endif %}{% if specialty_filter %}&specialty={{ specialty_filter }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}">
+                            {{ num }}
+                        </a>
+                    </li>
+                    {% endif %}
+                {% endfor %}
+                
+                {% if patients.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ patients.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if attachment_type %}&attachment_type={{ attachment_type }}{% endif %}{% if company_filter %}&company={{ company_filter }}{% endif %}{% if doctor_filter %}&doctor={{ doctor_filter }}{% endif %}{% if specialty_filter %}&specialty={{ specialty_filter }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}">
+                        <i class="fas fa-chevron-left"></i>
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+    {% endif %}
+
+    <!-- ============================================ -->
+    <!-- ✅ لو مفيش نتائج -->
+    <!-- ============================================ -->
+    {% elif search_query %}
+
+    <div class="no-results">
+        <i class="fas fa-user-slash"></i>
+        <h5 class="text-muted">لا توجد نتائج</h5>
+        <p class="text-muted small">
+            لم يتم العثور على مريض يطابق <strong>"{{ search_query }}"</strong>
+        </p>
+        <a href="?" class="btn btn-outline-primary btn-sm mt-2">
+            <i class="fas fa-undo me-1"></i> بحث جديد
+        </a>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- ✅ الصفحة الرئيسية (قبل البحث) -->
+    <!-- ============================================ -->
+    {% else %}
+
+    <div class="text-center py-5">
+        <i class="fas fa-search-plus fa-4x text-muted opacity-25 mb-3"></i>
+        <h5 class="text-muted">ابحث عن مريض</h5>
+        <p class="text-muted small">
+            ابحث بالاسم / رقم التليفون / رقم الكارنية / الرقم الطبي
+        </p>
+        <div class="d-flex justify-content-center gap-3 flex-wrap mt-3">
+            <span class="badge bg-light text-dark px-3 py-2">
+                <i class="fas fa-user me-1"></i> اسم المريض
+            </span>
+            <span class="badge bg-light text-dark px-3 py-2">
+                <i class="fas fa-phone me-1"></i> رقم التليفون
+            </span>
+            <span class="badge bg-light text-dark px-3 py-2">
+                <i class="fas fa-id-card me-1"></i> رقم الكارنية
+            </span>
+            <span class="badge bg-light text-dark px-3 py-2">
+                <i class="fas fa-stethoscope me-1"></i> الرقم الطبي
+            </span>
+        </div>
+    </div>
+
+    {% endif %}
+
+</div>
+
+<script>
+// ============================================
+// ✅ تشغيل البحث عند الضغط على Enter
+// ============================================
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.querySelector('input[name="search"]');
+    if (searchInput) {
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                this.form.submit();
+            }
+        });
+    }
+});
+
+// ============================================
+// ✅ تحسين تجربة المستخدم - Auto Submit للفلاتر
+// ============================================
+document.addEventListener('DOMContentLoaded', function() {
+    // ✅ عند تغيير أي فلتر غير التاريخ، يتم إرسال الفورم تلقائياً
+    const filterSelects = document.querySelectorAll('.filter-card select');
+    filterSelects.forEach(select => {
+        select.addEventListener('change', function() {
+            this.closest('form').submit();
+        });
+    });
+});
+</script>
+
+{% endblock %}
