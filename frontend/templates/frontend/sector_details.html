@@ -114,6 +114,16 @@
         transform: translateY(-50%) scale(1.05);
     }
     
+    .filter-label-icon {
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: #495057;
+        margin-bottom: 4px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+    
     .sector-item {
         transition: all 0.2s ease;
         cursor: default;
@@ -135,6 +145,63 @@
         height: 100%;
         border-radius: 10px;
         transition: width 0.8s ease;
+    }
+    
+    /* ✅ Months Scroll - أفقي للتواريخ */
+    .filter-scroll {
+        display: flex;
+        overflow-x: auto;
+        gap: 8px;
+        padding: 4px 0 8px 0;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .filter-scroll::-webkit-scrollbar {
+        display: none;
+    }
+    
+    .filter-pill {
+        white-space: nowrap;
+        text-decoration: none;
+        padding: 4px 14px;
+        border-radius: 20px;
+        background: #f4f6f9;
+        color: #444;
+        font-weight: 600;
+        font-size: 0.75rem;
+        transition: all 0.25s ease;
+        border: 2px solid transparent;
+        flex-shrink: 0;
+        cursor: pointer;
+    }
+    
+    .filter-pill:hover {
+        background: #0d6efd;
+        color: white;
+        transform: scale(1.05);
+        text-decoration: none;
+    }
+    
+    .filter-pill.active {
+        background: #0d6efd;
+        color: white;
+        border-color: #0d6efd;
+        box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
+    }
+    
+    .filter-pill.all-pill {
+        background: #6c757d;
+        color: white;
+    }
+    
+    .filter-pill.all-pill:hover {
+        background: #5a6268;
+    }
+    
+    .filter-pill.all-pill.active {
+        background: #0d6efd;
+        border-color: #0d6efd;
     }
     
     @media (max-width: 768px) {
@@ -171,17 +238,45 @@
     </div>
 
     <!-- ============================================ -->
-    <!-- ✅ فلتر القطاع + فلتر التخصص -->
+    <!-- ✅ الفلاتر -->
     <!-- ============================================ -->
     <div class="card shadow-sm mb-4 border-0">
         <div class="card-body">
+            
+            <!-- ✅ فلتر التواريخ (أفقي) -->
+            <div class="mb-3">
+                <div class="d-flex align-items-center mb-2">
+                    <i class="fas fa-calendar-alt text-primary me-2"></i>
+                    <h6 class="mb-0 fw-bold">فلتر التواريخ</h6>
+                </div>
+                <div class="filter-scroll">
+                    <a href="?{% if sector_search %}&sector_search={{ sector_search }}{% endif %}{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}{% if entity_search %}&entity_search={{ entity_search }}{% endif %}{% if sub_company_search %}&sub_company_search={{ sub_company_search }}{% endif %}{% if package_search %}&package_search={{ package_search }}{% endif %}" 
+                       class="filter-pill all-pill {% if not date_from and not date_to %}active{% endif %}">
+                        <i class="fas fa-undo me-1"></i> الكل
+                    </a>
+                    <a href="?date_from=2026-01-01&date_to=2026-01-31{% if sector_search %}&sector_search={{ sector_search }}{% endif %}{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}{% if entity_search %}&entity_search={{ entity_search }}{% endif %}{% if sub_company_search %}&sub_company_search={{ sub_company_search }}{% endif %}{% if package_search %}&package_search={{ package_search }}{% endif %}" 
+                       class="filter-pill {% if date_from == '2026-01-01' and date_to == '2026-01-31' %}active{% endif %}">
+                        يناير
+                    </a>
+                    <a href="?date_from=2026-02-01&date_to=2026-02-28{% if sector_search %}&sector_search={{ sector_search }}{% endif %}{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}{% if entity_search %}&entity_search={{ entity_search }}{% endif %}{% if sub_company_search %}&sub_company_search={{ sub_company_search }}{% endif %}{% if package_search %}&package_search={{ package_search }}{% endif %}" 
+                       class="filter-pill {% if date_from == '2026-02-01' and date_to == '2026-02-28' %}active{% endif %}">
+                        فبراير
+                    </a>
+                    <a href="?date_from=2026-03-01&date_to=2026-03-31{% if sector_search %}&sector_search={{ sector_search }}{% endif %}{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}{% if entity_search %}&entity_search={{ entity_search }}{% endif %}{% if sub_company_search %}&sub_company_search={{ sub_company_search }}{% endif %}{% if package_search %}&package_search={{ package_search }}{% endif %}" 
+                       class="filter-pill {% if date_from == '2026-03-01' and date_to == '2026-03-31' %}active{% endif %}">
+                        مارس
+                    </a>
+                   
+                    
+                </div>
+            </div>
+            
             <div class="row g-3">
                 
                 <!-- ✅ فلتر القطاع -->
-                <div class="col-lg-6">
-                    <div class="d-flex align-items-center mb-2">
-                        <i class="fas fa-building text-warning me-2"></i>
-                        <h6 class="mb-0 fw-bold">فلتر القطاع</h6>
+                <div class="col-lg-3 col-md-6">
+                    <div class="filter-label-icon">
+                        <i class="fas fa-building text-warning"></i> القطاع
                     </div>
                     <form method="GET" class="search-box" id="sectorSearchForm">
                         <i class="fas fa-search search-icon"></i>
@@ -189,7 +284,7 @@
                                name="sector_search" 
                                id="sectorSearchInput"
                                class="form-control" 
-                               placeholder="🔍 ابحث عن قطاع..."
+                               placeholder="بحث عن قطاع..."
                                value="{{ sector_search }}"
                                list="sectorSuggestions"
                                autocomplete="off">
@@ -199,25 +294,173 @@
                             {% endfor %}
                         </datalist>
                         {% if sector_search %}
-                        <a href="?{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}" class="clear-btn">
+                        <a href="?{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}{% if entity_search %}&entity_search={{ entity_search }}{% endif %}{% if sub_company_search %}&sub_company_search={{ sub_company_search }}{% endif %}{% if package_search %}&package_search={{ package_search }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}" class="clear-btn">
                             <i class="fas fa-times me-1"></i> إلغاء
                         </a>
                         {% endif %}
                         {% if specialty_search %}
                         <input type="hidden" name="specialty_search" value="{{ specialty_search }}">
                         {% endif %}
+                        {% if entity_search %}
+                        <input type="hidden" name="entity_search" value="{{ entity_search }}">
+                        {% endif %}
+                        {% if sub_company_search %}
+                        <input type="hidden" name="sub_company_search" value="{{ sub_company_search }}">
+                        {% endif %}
+                        {% if package_search %}
+                        <input type="hidden" name="package_search" value="{{ package_search }}">
+                        {% endif %}
+                        {% if date_from %}
+                        <input type="hidden" name="date_from" value="{{ date_from }}">
+                        {% endif %}
+                        {% if date_to %}
+                        <input type="hidden" name="date_to" value="{{ date_to }}">
+                        {% endif %}
                     </form>
-                    <small class="text-muted d-block mt-1" style="font-size: 0.7rem;">
-                        <i class="fas fa-info-circle me-1"></i>
-                        ابحث عن قطاع معين
-                    </small>
+                </div>
+                
+                <!-- ✅ فلتر الجهة -->
+                <div class="col-lg-3 col-md-6">
+                    <div class="filter-label-icon">
+                        <i class="fas fa-building text-primary"></i> الجهة
+                    </div>
+                    <form method="GET" class="search-box" id="entitySearchForm">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" 
+                               name="entity_search" 
+                               id="entitySearchInput"
+                               class="form-control" 
+                               placeholder="بحث عن جهة..."
+                               value="{{ entity_search }}"
+                               list="entitySuggestions"
+                               autocomplete="off">
+                        <datalist id="entitySuggestions">
+                            {% for suggestion in entity_suggestions %}
+                            <option value="{{ suggestion }}">
+                            {% endfor %}
+                        </datalist>
+                        {% if entity_search %}
+                        <a href="?{% if sector_search %}&sector_search={{ sector_search }}{% endif %}{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}{% if sub_company_search %}&sub_company_search={{ sub_company_search }}{% endif %}{% if package_search %}&package_search={{ package_search }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}" class="clear-btn">
+                            <i class="fas fa-times me-1"></i> إلغاء
+                        </a>
+                        {% endif %}
+                        {% if sector_search %}
+                        <input type="hidden" name="sector_search" value="{{ sector_search }}">
+                        {% endif %}
+                        {% if specialty_search %}
+                        <input type="hidden" name="specialty_search" value="{{ specialty_search }}">
+                        {% endif %}
+                        {% if sub_company_search %}
+                        <input type="hidden" name="sub_company_search" value="{{ sub_company_search }}">
+                        {% endif %}
+                        {% if package_search %}
+                        <input type="hidden" name="package_search" value="{{ package_search }}">
+                        {% endif %}
+                        {% if date_from %}
+                        <input type="hidden" name="date_from" value="{{ date_from }}">
+                        {% endif %}
+                        {% if date_to %}
+                        <input type="hidden" name="date_to" value="{{ date_to }}">
+                        {% endif %}
+                    </form>
+                </div>
+                
+                <!-- ✅ فلتر الشركة الفرعية -->
+                <div class="col-lg-2 col-md-6">
+                    <div class="filter-label-icon">
+                        <i class="fas fa-building text-info"></i> الشركة الفرعية
+                    </div>
+                    <form method="GET" class="search-box" id="subCompanySearchForm">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" 
+                               name="sub_company_search" 
+                               id="subCompanySearchInput"
+                               class="form-control" 
+                               placeholder="بحث عن شركة..."
+                               value="{{ sub_company_search }}"
+                               list="subCompanySuggestions"
+                               autocomplete="off">
+                        <datalist id="subCompanySuggestions">
+                            {% for suggestion in sub_company_suggestions %}
+                            <option value="{{ suggestion }}">
+                            {% endfor %}
+                        </datalist>
+                        {% if sub_company_search %}
+                        <a href="?{% if sector_search %}&sector_search={{ sector_search }}{% endif %}{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}{% if entity_search %}&entity_search={{ entity_search }}{% endif %}{% if package_search %}&package_search={{ package_search }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}" class="clear-btn">
+                            <i class="fas fa-times me-1"></i> إلغاء
+                        </a>
+                        {% endif %}
+                        {% if sector_search %}
+                        <input type="hidden" name="sector_search" value="{{ sector_search }}">
+                        {% endif %}
+                        {% if specialty_search %}
+                        <input type="hidden" name="specialty_search" value="{{ specialty_search }}">
+                        {% endif %}
+                        {% if entity_search %}
+                        <input type="hidden" name="entity_search" value="{{ entity_search }}">
+                        {% endif %}
+                        {% if package_search %}
+                        <input type="hidden" name="package_search" value="{{ package_search }}">
+                        {% endif %}
+                        {% if date_from %}
+                        <input type="hidden" name="date_from" value="{{ date_from }}">
+                        {% endif %}
+                        {% if date_to %}
+                        <input type="hidden" name="date_to" value="{{ date_to }}">
+                        {% endif %}
+                    </form>
+                </div>
+                
+                <!-- ✅ فلتر الباكدج -->
+                <div class="col-lg-2 col-md-6">
+                    <div class="filter-label-icon">
+                        <i class="fas fa-box text-success"></i> الباكدج
+                    </div>
+                    <form method="GET" class="search-box" id="packageSearchForm">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" 
+                               name="package_search" 
+                               id="packageSearchInput"
+                               class="form-control" 
+                               placeholder="بحث عن باكدج..."
+                               value="{{ package_search }}"
+                               list="packageSuggestions"
+                               autocomplete="off">
+                        <datalist id="packageSuggestions">
+                            {% for suggestion in package_suggestions %}
+                            <option value="{{ suggestion }}">
+                            {% endfor %}
+                        </datalist>
+                        {% if package_search %}
+                        <a href="?{% if sector_search %}&sector_search={{ sector_search }}{% endif %}{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}{% if entity_search %}&entity_search={{ entity_search }}{% endif %}{% if sub_company_search %}&sub_company_search={{ sub_company_search }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}" class="clear-btn">
+                            <i class="fas fa-times me-1"></i> إلغاء
+                        </a>
+                        {% endif %}
+                        {% if sector_search %}
+                        <input type="hidden" name="sector_search" value="{{ sector_search }}">
+                        {% endif %}
+                        {% if specialty_search %}
+                        <input type="hidden" name="specialty_search" value="{{ specialty_search }}">
+                        {% endif %}
+                        {% if entity_search %}
+                        <input type="hidden" name="entity_search" value="{{ entity_search }}">
+                        {% endif %}
+                        {% if sub_company_search %}
+                        <input type="hidden" name="sub_company_search" value="{{ sub_company_search }}">
+                        {% endif %}
+                        {% if date_from %}
+                        <input type="hidden" name="date_from" value="{{ date_from }}">
+                        {% endif %}
+                        {% if date_to %}
+                        <input type="hidden" name="date_to" value="{{ date_to }}">
+                        {% endif %}
+                    </form>
                 </div>
                 
                 <!-- ✅ فلتر التخصص -->
-                <div class="col-lg-6">
-                    <div class="d-flex align-items-center mb-2">
-                        <i class="fas fa-stethoscope text-info me-2"></i>
-                        <h6 class="mb-0 fw-bold">فلتر التخصص</h6>
+                <div class="col-lg-2 col-md-6">
+                    <div class="filter-label-icon">
+                        <i class="fas fa-stethoscope text-danger"></i> التخصص
                     </div>
                     <form method="GET" class="search-box" id="specialtySearchForm">
                         <i class="fas fa-search search-icon"></i>
@@ -225,7 +468,7 @@
                                name="specialty_search" 
                                id="specialtySearchInput"
                                class="form-control" 
-                               placeholder="🔍 ابحث عن تخصص..."
+                               placeholder="بحث عن تخصص..."
                                value="{{ specialty_search }}"
                                list="specialtySuggestions"
                                autocomplete="off">
@@ -235,43 +478,90 @@
                             {% endfor %}
                         </datalist>
                         {% if specialty_search %}
-                        <a href="?{% if sector_search %}&sector_search={{ sector_search }}{% endif %}" class="clear-btn">
+                        <a href="?{% if sector_search %}&sector_search={{ sector_search }}{% endif %}{% if entity_search %}&entity_search={{ entity_search }}{% endif %}{% if sub_company_search %}&sub_company_search={{ sub_company_search }}{% endif %}{% if package_search %}&package_search={{ package_search }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}" class="clear-btn">
                             <i class="fas fa-times me-1"></i> إلغاء
                         </a>
                         {% endif %}
                         {% if sector_search %}
                         <input type="hidden" name="sector_search" value="{{ sector_search }}">
                         {% endif %}
+                        {% if entity_search %}
+                        <input type="hidden" name="entity_search" value="{{ entity_search }}">
+                        {% endif %}
+                        {% if sub_company_search %}
+                        <input type="hidden" name="sub_company_search" value="{{ sub_company_search }}">
+                        {% endif %}
+                        {% if package_search %}
+                        <input type="hidden" name="package_search" value="{{ package_search }}">
+                        {% endif %}
+                        {% if date_from %}
+                        <input type="hidden" name="date_from" value="{{ date_from }}">
+                        {% endif %}
+                        {% if date_to %}
+                        <input type="hidden" name="date_to" value="{{ date_to }}">
+                        {% endif %}
                     </form>
-                    <small class="text-muted d-block mt-1" style="font-size: 0.7rem;">
-                        <i class="fas fa-info-circle me-1"></i>
-                        ابحث عن تخصص معين
-                    </small>
                 </div>
                 
             </div>
             
             <!-- ✅ عرض الفلاتر النشطة -->
-            {% if sector_search or specialty_search %}
+            {% if sector_search or specialty_search or entity_search or sub_company_search or package_search or date_from or date_to %}
             <div class="row mt-3">
                 <div class="col-12">
                     <div class="d-flex flex-wrap gap-2">
                         {% if sector_search %}
                         <span class="badge bg-warning text-dark p-2">
-                            <i class="fas fa-building me-1"></i>
-                            القطاع: {{ sector_search }}
-                            <a href="?{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}" 
-                               class="text-dark ms-1 text-decoration-none">
+                            <i class="fas fa-building me-1"></i> القطاع: {{ sector_search }}
+                            <a href="?{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}{% if entity_search %}&entity_search={{ entity_search }}{% endif %}{% if sub_company_search %}&sub_company_search={{ sub_company_search }}{% endif %}{% if package_search %}&package_search={{ package_search }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}" class="text-dark ms-1 text-decoration-none">
                                 <i class="fas fa-times-circle"></i>
                             </a>
                         </span>
                         {% endif %}
                         {% if specialty_search %}
                         <span class="badge bg-info p-2">
-                            <i class="fas fa-stethoscope me-1"></i>
-                            التخصص: {{ specialty_search }}
-                            <a href="?{% if sector_search %}&sector_search={{ sector_search }}{% endif %}" 
-                               class="text-white ms-1 text-decoration-none">
+                            <i class="fas fa-stethoscope me-1"></i> التخصص: {{ specialty_search }}
+                            <a href="?{% if sector_search %}&sector_search={{ sector_search }}{% endif %}{% if entity_search %}&entity_search={{ entity_search }}{% endif %}{% if sub_company_search %}&sub_company_search={{ sub_company_search }}{% endif %}{% if package_search %}&package_search={{ package_search }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}" class="text-white ms-1 text-decoration-none">
+                                <i class="fas fa-times-circle"></i>
+                            </a>
+                        </span>
+                        {% endif %}
+                        {% if entity_search %}
+                        <span class="badge bg-primary p-2">
+                            <i class="fas fa-building me-1"></i> الجهة: {{ entity_search }}
+                            <a href="?{% if sector_search %}&sector_search={{ sector_search }}{% endif %}{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}{% if sub_company_search %}&sub_company_search={{ sub_company_search }}{% endif %}{% if package_search %}&package_search={{ package_search }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}" class="text-white ms-1 text-decoration-none">
+                                <i class="fas fa-times-circle"></i>
+                            </a>
+                        </span>
+                        {% endif %}
+                        {% if sub_company_search %}
+                        <span class="badge bg-secondary p-2">
+                            <i class="fas fa-building me-1"></i> الشركة: {{ sub_company_search }}
+                            <a href="?{% if sector_search %}&sector_search={{ sector_search }}{% endif %}{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}{% if entity_search %}&entity_search={{ entity_search }}{% endif %}{% if package_search %}&package_search={{ package_search }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}" class="text-white ms-1 text-decoration-none">
+                                <i class="fas fa-times-circle"></i>
+                            </a>
+                        </span>
+                        {% endif %}
+                        {% if package_search %}
+                        <span class="badge bg-success p-2">
+                            <i class="fas fa-box me-1"></i> الباكدج: {{ package_search }}
+                            <a href="?{% if sector_search %}&sector_search={{ sector_search }}{% endif %}{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}{% if entity_search %}&entity_search={{ entity_search }}{% endif %}{% if sub_company_search %}&sub_company_search={{ sub_company_search }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}" class="text-white ms-1 text-decoration-none">
+                                <i class="fas fa-times-circle"></i>
+                            </a>
+                        </span>
+                        {% endif %}
+                        {% if date_from %}
+                        <span class="badge bg-success p-2">
+                            <i class="fas fa-calendar-alt me-1"></i> من: {{ date_from }}
+                            <a href="?{% if sector_search %}&sector_search={{ sector_search }}{% endif %}{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}{% if entity_search %}&entity_search={{ entity_search }}{% endif %}{% if sub_company_search %}&sub_company_search={{ sub_company_search }}{% endif %}{% if package_search %}&package_search={{ package_search }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}" class="text-white ms-1 text-decoration-none">
+                                <i class="fas fa-times-circle"></i>
+                            </a>
+                        </span>
+                        {% endif %}
+                        {% if date_to %}
+                        <span class="badge bg-danger p-2">
+                            <i class="fas fa-calendar-alt me-1"></i> إلى: {{ date_to }}
+                            <a href="?{% if sector_search %}&sector_search={{ sector_search }}{% endif %}{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}{% if entity_search %}&entity_search={{ entity_search }}{% endif %}{% if sub_company_search %}&sub_company_search={{ sub_company_search }}{% endif %}{% if package_search %}&package_search={{ package_search }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}" class="text-white ms-1 text-decoration-none">
                                 <i class="fas fa-times-circle"></i>
                             </a>
                         </span>
@@ -280,6 +570,7 @@
                 </div>
             </div>
             {% endif %}
+            
         </div>
     </div>
 
@@ -318,7 +609,7 @@
         <div class="card-header bg-white">
             <h5 class="fw-bold mb-0">
                 <i class="fas fa-chart-bar text-warning me-2"></i>
-                توزيع القطاعات
+                 توزيع الجهات داخل القطاع
             </h5>
             <small class="text-muted">
                 إجمالي <span class="fw-bold text-warning">{{ total_sectors }}</span> قطاع مختلف
@@ -427,7 +718,7 @@
             <ul class="pagination">
                 {% if records.has_previous %}
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ records.previous_page_number }}{% if sector_search %}&sector_search={{ sector_search }}{% endif %}{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}">
+                    <a class="page-link" href="?page={{ records.previous_page_number }}{% if sector_search %}&sector_search={{ sector_search }}{% endif %}{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}{% if entity_search %}&entity_search={{ entity_search }}{% endif %}{% if sub_company_search %}&sub_company_search={{ sub_company_search }}{% endif %}{% if package_search %}&package_search={{ package_search }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}">
                         <i class="fas fa-chevron-right"></i>
                     </a>
                 </li>
@@ -435,7 +726,7 @@
                 
                 {% for num in records.paginator.page_range %}
                 <li class="page-item {% if num == records.number %}active{% endif %}">
-                    <a class="page-link" href="?page={{ num }}{% if sector_search %}&sector_search={{ sector_search }}{% endif %}{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}">
+                    <a class="page-link" href="?page={{ num }}{% if sector_search %}&sector_search={{ sector_search }}{% endif %}{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}{% if entity_search %}&entity_search={{ entity_search }}{% endif %}{% if sub_company_search %}&sub_company_search={{ sub_company_search }}{% endif %}{% if package_search %}&package_search={{ package_search }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}">
                         {{ num }}
                     </a>
                 </li>
@@ -443,7 +734,7 @@
                 
                 {% if records.has_next %}
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ records.next_page_number }}{% if sector_search %}&sector_search={{ sector_search }}{% endif %}{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}">
+                    <a class="page-link" href="?page={{ records.next_page_number }}{% if sector_search %}&sector_search={{ sector_search }}{% endif %}{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}{% if entity_search %}&entity_search={{ entity_search }}{% endif %}{% if sub_company_search %}&sub_company_search={{ sub_company_search }}{% endif %}{% if package_search %}&package_search={{ package_search }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}">
                         <i class="fas fa-chevron-left"></i>
                     </a>
                 </li>
@@ -515,6 +806,69 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 if (matched && this.value.trim()) {
                     document.getElementById('sectorSearchForm').submit();
+                }
+            }
+        });
+    }
+    
+    // ✅ فلتر الجهة
+    const entityInput = document.getElementById('entitySearchInput');
+    if (entityInput) {
+        entityInput.addEventListener('input', function(e) {
+            const datalist = document.getElementById('entitySuggestions');
+            if (datalist) {
+                const options = datalist.options;
+                let matched = false;
+                for (let option of options) {
+                    if (option.value === this.value) {
+                        matched = true;
+                        break;
+                    }
+                }
+                if (matched && this.value.trim()) {
+                    document.getElementById('entitySearchForm').submit();
+                }
+            }
+        });
+    }
+    
+    // ✅ فلتر الشركة الفرعية
+    const subCompanyInput = document.getElementById('subCompanySearchInput');
+    if (subCompanyInput) {
+        subCompanyInput.addEventListener('input', function(e) {
+            const datalist = document.getElementById('subCompanySuggestions');
+            if (datalist) {
+                const options = datalist.options;
+                let matched = false;
+                for (let option of options) {
+                    if (option.value === this.value) {
+                        matched = true;
+                        break;
+                    }
+                }
+                if (matched && this.value.trim()) {
+                    document.getElementById('subCompanySearchForm').submit();
+                }
+            }
+        });
+    }
+    
+    // ✅ فلتر الباكدج
+    const packageInput = document.getElementById('packageSearchInput');
+    if (packageInput) {
+        packageInput.addEventListener('input', function(e) {
+            const datalist = document.getElementById('packageSuggestions');
+            if (datalist) {
+                const options = datalist.options;
+                let matched = false;
+                for (let option of options) {
+                    if (option.value === this.value) {
+                        matched = true;
+                        break;
+                    }
+                }
+                if (matched && this.value.trim()) {
+                    document.getElementById('packageSearchForm').submit();
                 }
             }
         });

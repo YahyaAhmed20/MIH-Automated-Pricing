@@ -1228,6 +1228,21 @@ def sector_details(request):
     # ✅ فلتر التخصص
     specialty_search = request.GET.get("specialty_search", "")
     
+    # ✅ فلتر الجهة
+    entity_search = request.GET.get("entity_search", "")
+    
+    # ✅ فلتر الشركة الفرعية
+    sub_company_search = request.GET.get("sub_company_search", "")
+    
+    # ✅ فلتر الباكدج
+    package_search = request.GET.get("package_search", "")
+    
+    # ✅ فلتر التاريخ من
+    date_from = request.GET.get("date_from", "")
+    
+    # ✅ فلتر التاريخ إلى
+    date_to = request.GET.get("date_to", "")
+    
     # ✅ جلب السجلات (آجل فقط)
     records = ReportStatistic.objects.filter(payment_type="اجل")
     
@@ -1236,6 +1251,27 @@ def sector_details(request):
     
     if specialty_search:
         records = records.filter(specialty__icontains=specialty_search)
+    
+    if entity_search:
+        records = records.filter(entity_name__icontains=entity_search)
+    
+    if sub_company_search:
+        records = records.filter(sub_company__icontains=sub_company_search)
+    
+    if package_search:
+        records = records.filter(package_name__icontains=package_search)
+    
+    if date_from:
+        try:
+            records = records.filter(admission_date__gte=date_from)
+        except:
+            pass
+    
+    if date_to:
+        try:
+            records = records.filter(admission_date__lte=date_to)
+        except:
+            pass
     
     # ✅ إحصائيات
     total_count = records.count()
@@ -1254,7 +1290,7 @@ def sector_details(request):
         .order_by('-total')
     )
     
-    # ✅ ✅ ✅ قائمة القطاعات للاقتراحات (فريدة)
+    # ✅ قائمة القطاعات للاقتراحات
     sector_suggestions = list(set(
         records
         .values_list('sector', flat=True)
@@ -1262,12 +1298,36 @@ def sector_details(request):
         .exclude(sector='')
     ))[:50]
     
-    # ✅ ✅ ✅ قائمة التخصصات للاقتراحات (فريدة)
+    # ✅ قائمة التخصصات للاقتراحات
     specialty_suggestions = list(set(
         records
         .values_list('specialty', flat=True)
         .filter(specialty__isnull=False)
         .exclude(specialty='')
+    ))[:50]
+    
+    # ✅ قائمة الجهات للاقتراحات
+    entity_suggestions = list(set(
+        records
+        .values_list('entity_name', flat=True)
+        .filter(entity_name__isnull=False)
+        .exclude(entity_name='')
+    ))[:50]
+    
+    # ✅ قائمة الشركات الفرعية للاقتراحات
+    sub_company_suggestions = list(set(
+        records
+        .values_list('sub_company', flat=True)
+        .filter(sub_company__isnull=False)
+        .exclude(sub_company='')
+    ))[:50]
+    
+    # ✅ قائمة الباكدجات للاقتراحات
+    package_suggestions = list(set(
+        records
+        .values_list('package_name', flat=True)
+        .filter(package_name__isnull=False)
+        .exclude(package_name='')
     ))[:50]
     
     # ✅ إجمالي القطاعات
@@ -1285,9 +1345,17 @@ def sector_details(request):
         'total_sectors': total_sectors,
         'sector_search': sector_search,
         'specialty_search': specialty_search,
+        'entity_search': entity_search,
+        'sub_company_search': sub_company_search,
+        'package_search': package_search,
+        'date_from': date_from,
+        'date_to': date_to,
         'sector_distribution': sector_distribution,
         'sector_suggestions': sector_suggestions,
         'specialty_suggestions': specialty_suggestions,
+        'entity_suggestions': entity_suggestions,
+        'sub_company_suggestions': sub_company_suggestions,
+        'package_suggestions': package_suggestions,
     }
     
     return render(request, 'frontend/sector_details.html', context)
