@@ -5,7 +5,223 @@
 {% block content %}
 
 <style>
-    /* ✅ البوكسات - تصميم محسن */
+    /* ✅ Filter Card */
+    .filter-card {
+        border-radius: 16px;
+        border: none;
+        background: #fff;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+        margin-bottom: 1.5rem;
+    }
+    
+    .filter-card .card-body {
+        padding: 1.25rem;
+    }
+    
+    .filter-card .form-label {
+        font-size: 0.7rem;
+        font-weight: 700;
+        color: #495057;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.3rem;
+    }
+    
+    .filter-card .form-select,
+    .filter-card .form-control {
+        border-radius: 10px;
+        border: 2px solid #e9ecef;
+        font-size: 0.85rem;
+        padding: 0.4rem 0.8rem;
+        transition: all 0.3s ease;
+        background: #fff;
+    }
+    
+    .filter-card .form-select:focus,
+    .filter-card .form-control:focus {
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.1);
+    }
+    
+    .filter-card .btn-filter {
+        border-radius: 10px;
+        padding: 0.4rem 1.2rem;
+        font-weight: 600;
+        font-size: 0.85rem;
+        transition: all 0.3s ease;
+    }
+    
+    .filter-card .btn-filter:hover {
+        transform: translateY(-2px);
+    }
+    
+    /* ✅ Search Box */
+    .search-wrapper {
+        max-width: 750px;
+        margin: 0 auto 2rem;
+    }
+    
+    .search-wrapper .input-group {
+        border-radius: 50px;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+        transition: box-shadow 0.3s ease;
+    }
+    
+    .search-wrapper .input-group:focus-within {
+        box-shadow: 0 4px 30px rgba(13, 110, 253, 0.15);
+    }
+    
+    .search-wrapper .input-group .form-control {
+        border: 2px solid #e9ecef;
+        padding: 0.8rem 1.5rem;
+        font-size: 1rem;
+        border-right: none;
+        background: #fff;
+    }
+    
+    .search-wrapper .input-group .form-control:focus {
+        border-color: #0d6efd;
+        box-shadow: none;
+    }
+    
+    .search-wrapper .input-group .btn-search {
+        padding: 0.8rem 2.5rem;
+        border-radius: 0 50px 50px 0;
+        background: linear-gradient(135deg, #0d6efd, #0b5ed7);
+        color: #fff;
+        border: 2px solid #0d6efd;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .search-wrapper .input-group .btn-search:hover {
+        background: linear-gradient(135deg, #0b5ed7, #0a58ca);
+        transform: scale(1.02);
+    }
+    
+    /* ✅ Results Count */
+    .results-count {
+        background: #f8f9fa;
+        border-radius: 12px;
+        padding: 0.6rem 1.2rem;
+        border: 1px solid #e9ecef;
+    }
+    
+    .results-count .count-badge {
+        background: #0d6efd;
+        color: #fff;
+        padding: 0.2rem 0.8rem;
+        border-radius: 20px;
+        font-weight: 700;
+        font-size: 0.9rem;
+    }
+    
+    /* ✅ Status Badge */
+    .status-badge {
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        display: inline-block;
+    }
+    
+    .status-badge.done {
+        background: #d4edda;
+        color: #155724;
+    }
+    
+    .status-badge.pending {
+        background: #fff3cd;
+        color: #856404;
+    }
+    
+    .status-badge.approved {
+        background: #cce5ff;
+        color: #004085;
+    }
+    
+    .status-badge.rejected {
+        background: #f8d7da;
+        color: #721c24;
+    }
+    
+    .status-badge.default {
+        background: #e9ecef;
+        color: #495057;
+    }
+    
+    /* ✅ Patients Table */
+    .patients-table {
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+    }
+    
+    .patients-table thead {
+        background: linear-gradient(135deg, #1a237e, #0d47a1);
+        color: #fff;
+    }
+    
+    .patients-table thead th {
+        padding: 0.75rem 1rem;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border: none;
+        white-space: nowrap;
+    }
+    
+    .patients-table tbody td {
+        padding: 0.75rem 1rem;
+        font-size: 0.85rem;
+        vertical-align: middle;
+        border-bottom: 1px solid #f1f3f5;
+    }
+    
+    .patients-table tbody tr {
+        transition: all 0.3s ease;
+    }
+    
+    .patients-table tbody tr:hover {
+        background: #f8f9fa;
+    }
+    
+    .patients-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+    
+    .patients-table .patient-name-link {
+        color: #1a237e;
+        font-weight: 600;
+        text-decoration: none;
+        cursor: pointer;
+    }
+    
+    .patients-table .patient-name-link:hover {
+        color: #0d6efd;
+        text-decoration: underline;
+    }
+    
+    .btn-view-details {
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        background: #0d6efd;
+        color: #fff;
+        border: none;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-view-details:hover {
+        background: #0b5ed7;
+        transform: scale(1.05);
+        color: #fff;
+    }
+    
+    /* ✅ Info Cards (للمظهر الداخلي) */
     .info-card {
         border-radius: 16px;
         padding: 1.25rem;
@@ -102,150 +318,41 @@
         color: #0b5ed7;
     }
     
-    /* ✅ Patient Card - تصميم محسن */
-    .patient-card {
-        border-radius: 16px;
-        border: none;
-        box-shadow: 0 4px 16px rgba(0,0,0,0.04);
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        overflow: hidden;
+    .text-success-cost {
+        color: #28a745 !important;
     }
     
-    .patient-card:hover {
-        box-shadow: 0 8px 32px rgba(0,0,0,0.08);
-        transform: translateY(-2px);
+    .text-danger-cost {
+        color: #dc3545 !important;
     }
     
-    .patient-card .card-header {
-        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-        border-bottom: 2px solid #dee2e6;
-        padding: 0.75rem 1.25rem;
-    }
-    
-    .patient-card .card-header .patient-name {
-        color: #1a237e;
-        font-weight: 700;
-    }
-    
-    .patient-card .card-header .patient-date {
-        background: #0d6efd;
-        color: #fff;
-        padding: 0.25rem 0.75rem;
-        border-radius: 20px;
-        font-size: 0.7rem;
-        font-weight: 600;
-    }
-    
-    /* ✅ Search Box - محسن */
-    .search-wrapper {
-        max-width: 750px;
-        margin: 0 auto 2rem;
-    }
-    
-    .search-wrapper .input-group {
-        border-radius: 50px;
-        overflow: hidden;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.06);
-        transition: box-shadow 0.3s ease;
-    }
-    
-    .search-wrapper .input-group:focus-within {
-        box-shadow: 0 4px 30px rgba(13, 110, 253, 0.15);
-    }
-    
-    .search-wrapper .input-group .form-control {
-        border: 2px solid #e9ecef;
-        padding: 0.8rem 1.5rem;
-        font-size: 1rem;
-        border-right: none;
-        background: #fff;
-    }
-    
-    .search-wrapper .input-group .form-control:focus {
-        border-color: #0d6efd;
-        box-shadow: none;
-    }
-    
-    .search-wrapper .input-group .btn-search {
-        padding: 0.8rem 2.5rem;
-        border-radius: 0 50px 50px 0;
-        background: linear-gradient(135deg, #0d6efd, #0b5ed7);
-        color: #fff;
-        border: 2px solid #0d6efd;
-        font-weight: 600;
-        transition: all 0.3s ease;
-    }
-    
-    .search-wrapper .input-group .btn-search:hover {
-        background: linear-gradient(135deg, #0b5ed7, #0a58ca);
-        transform: scale(1.02);
-    }
-    
-    /* ✅ Filter Card - محسن */
-    .filter-card {
-        border-radius: 16px;
-        border: none;
-        background: #fff;
-        box-shadow: 0 4px 16px rgba(0,0,0,0.04);
-        margin-bottom: 1.5rem;
-    }
-    
-    .filter-card .card-body {
-        padding: 1.25rem;
-    }
-    
-    .filter-card .form-label {
-        font-size: 0.7rem;
-        font-weight: 700;
-        color: #495057;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        margin-bottom: 0.3rem;
-    }
-    
-    .filter-card .form-select,
-    .filter-card .form-control {
-        border-radius: 10px;
-        border: 2px solid #e9ecef;
-        font-size: 0.85rem;
-        padding: 0.4rem 0.8rem;
-        transition: all 0.3s ease;
-        background: #fff;
-    }
-    
-    .filter-card .form-select:focus,
-    .filter-card .form-control:focus {
-        border-color: #0d6efd;
-        box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.1);
-    }
-    
-    .filter-card .btn-filter {
-        border-radius: 10px;
-        padding: 0.4rem 1.2rem;
-        font-weight: 600;
-        font-size: 0.85rem;
-        transition: all 0.3s ease;
-    }
-    
-    .filter-card .btn-filter:hover {
-        transform: translateY(-2px);
-    }
-    
-    /* ✅ Results Count */
-    .results-count {
+    /* ✅ Details Expand Row */
+    .details-expand-row {
         background: #f8f9fa;
-        border-radius: 12px;
-        padding: 0.6rem 1.2rem;
-        border: 1px solid #e9ecef;
     }
     
-    .results-count .count-badge {
-        background: #0d6efd;
-        color: #fff;
-        padding: 0.2rem 0.8rem;
-        border-radius: 20px;
-        font-weight: 700;
-        font-size: 0.9rem;
+    .details-expand-row td {
+        padding: 0 !important;
+        border-bottom: none !important;
+    }
+    
+    .details-container {
+        padding: 1.5rem;
+        background: #f8f9fa;
+        border-top: 3px solid #0d6efd;
+        border-bottom: 3px solid #0d6efd;
+        animation: slideDown 0.3s ease;
+    }
+    
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
     
     /* ✅ No Results */
@@ -262,50 +369,22 @@
         margin-bottom: 1rem;
     }
     
-    /* ✅ Colors */
-    .text-success-cost {
-        color: #28a745 !important;
-    }
-    
-    .text-danger-cost {
-        color: #dc3545 !important;
-    }
-    
-    /* ✅ Status Badge */
-    .status-badge {
-        padding: 0.25rem 0.75rem;
-        border-radius: 20px;
-        font-size: 0.7rem;
-        font-weight: 600;
-    }
-    
-    .status-badge.done {
-        background: #d4edda;
-        color: #155724;
-    }
-    
-    .status-badge.pending {
-        background: #fff3cd;
-        color: #856404;
-    }
-    
-    .status-badge.approved {
-        background: #cce5ff;
-        color: #004085;
-    }
-    
-    .status-badge.rejected {
-        background: #f8d7da;
-        color: #721c24;
-    }
-    
-    .status-badge.default {
-        background: #e9ecef;
-        color: #495057;
-    }
-    
-    /* ✅ Responsive */
+    /* ✅ Mobile Responsive */
     @media (max-width: 768px) {
+        .patients-table {
+            font-size: 0.75rem;
+        }
+        
+        .patients-table thead th,
+        .patients-table tbody td {
+            padding: 0.5rem 0.5rem;
+        }
+        
+        .btn-view-details {
+            font-size: 0.65rem;
+            padding: 0.15rem 0.5rem;
+        }
+        
         .info-item {
             flex-direction: column;
             align-items: flex-start;
@@ -317,27 +396,15 @@
             max-width: 100%;
             width: 100%;
         }
-        
-        .search-wrapper .input-group .btn-search {
-            padding: 0.75rem 1rem;
-        }
-        
-        .pagination-sm .page-link {
-            padding: 0.25rem 0.5rem;
-            font-size: 0.75rem;
-        }
-        
-        .filter-card .col-md-2 {
-            margin-bottom: 0.5rem;
-        }
     }
 </style>
 
 <!-- ============================================ -->
-<!-- ✅ البحث -->
+<!-- ✅ صفحة البحث -->
 <!-- ============================================ -->
 <div class="container-fluid py-4">
     
+    <!-- ✅ العنوان -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h4 class="mb-0 fw-bold">
@@ -349,10 +416,53 @@
                 {{ patient_count }} سجل
             </p>
         </div>
-        <span class="badge bg-light text-dark px-3 py-2">
-            <i class="fas fa-file-excel me-1"></i>
+    </div>
+
+    <!-- ✅ Search Box (في الأعلى) -->
+    <div class="search-wrapper">
+        <form method="GET" class="input-group">
+            <!-- ✅ الحفاظ على الفلاتر في البحث -->
+            {% if attachment_type %}
+            <input type="hidden" name="attachment_type" value="{{ attachment_type }}">
+            {% endif %}
+            {% if company_filter %}
+            <input type="hidden" name="company" value="{{ company_filter }}">
+            {% endif %}
+            {% if sub_account_filter %}
+            <input type="hidden" name="sub_account" value="{{ sub_account_filter }}">
+            {% endif %}
+            {% if doctor_filter %}
+            <input type="hidden" name="doctor" value="{{ doctor_filter }}">
+            {% endif %}
+            {% if specialty_filter %}
+            <input type="hidden" name="specialty" value="{{ specialty_filter }}">
+            {% endif %}
+            {% if date_from %}
+            <input type="hidden" name="date_from" value="{{ date_from }}">
+            {% endif %}
+            {% if date_to %}
+            <input type="hidden" name="date_to" value="{{ date_to }}">
+            {% endif %}
             
-        </span>
+            <input type="text" 
+                   name="search" 
+                   class="form-control" 
+                   placeholder="🔍 ابحث بالاسم / رقم التليفون / رقم الكارنية / الرقم الطبي..."
+                   value="{{ search_query }}">
+            <button class="btn btn-search" type="submit">
+                <i class="fas fa-search me-2"></i>بحث
+            </button>
+        </form>
+        {% if search_query %}
+        <div class="text-center mt-2">
+            <small class="text-muted">
+                نتائج البحث عن: <strong>"{{ search_query }}"</strong>
+                <a href="?" class="ms-2 text-danger text-decoration-none">
+                    <i class="fas fa-times"></i> إلغاء
+                </a>
+            </small>
+        </div>
+        {% endif %}
     </div>
 
     <!-- ============================================ -->
@@ -360,7 +470,7 @@
     <!-- ============================================ -->
     <div class="card filter-card">
         <div class="card-body">
-            <form method="GET" class="row g-3 align-items-end">
+            <form method="GET" class="row g-3 align-items-end" id="filterForm">
                 
                 <!-- ✅ فلتر 1: ملحق او رئيسى -->
                 <div class="col-md-2">
@@ -383,6 +493,19 @@
                         {% for company in companies %}
                         <option value="{{ company }}" {% if company == company_filter %}selected{% endif %}>
                             {{ company }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <!-- ✅ فلتر 2.5: الشركة الفرعية -->
+                <div class="col-md-3">
+                    <label class="form-label">🏢 الشركة الفرعية</label>
+                    <select name="sub_account" class="form-select">
+                        <option value="">الكل</option>
+                        {% for sub in sub_accounts %}
+                        <option value="{{ sub }}" {% if sub == sub_account_filter %}selected{% endif %}>
+                            {{ sub }}
                         </option>
                         {% endfor %}
                     </select>
@@ -439,7 +562,7 @@
     </div>
 
     <!-- ✅ الفلاتر النشطة -->
-    {% if attachment_type or company_filter or doctor_filter or specialty_filter or date_from or date_to %}
+    {% if attachment_type or company_filter or sub_account_filter or doctor_filter or specialty_filter or date_from or date_to %}
     <div class="alert alert-info mb-3 d-flex justify-content-between align-items-center">
         <div class="d-flex flex-wrap gap-1">
             <i class="fas fa-filter me-2"></i>
@@ -448,13 +571,16 @@
             <span class="badge bg-primary ms-1">{{ attachment_type }}</span>
             {% endif %}
             {% if company_filter %}
-            <span class="badge bg-secondary ms-1">{{ company_filter|truncatechars:15 }}</span>
+            <span class="badge bg-secondary ms-1">{{ company_filter }}</span>
+            {% endif %}
+            {% if sub_account_filter %}
+            <span class="badge bg-secondary ms-1">{{ sub_account_filter }}</span>
             {% endif %}
             {% if doctor_filter %}
-            <span class="badge bg-info ms-1">{{ doctor_filter|truncatechars:15 }}</span>
+            <span class="badge bg-info ms-1">{{ doctor_filter }}</span>
             {% endif %}
             {% if specialty_filter %}
-            <span class="badge bg-warning ms-1">{{ specialty_filter|truncatechars:15 }}</span>
+            <span class="badge bg-warning ms-1">{{ specialty_filter }}</span>
             {% endif %}
             {% if date_from %}
             <span class="badge bg-success ms-1">من: {{ date_from }}</span>
@@ -469,30 +595,6 @@
         </a>
     </div>
     {% endif %}
-
-    <!-- ✅ Search Box -->
-    <div class="search-wrapper">
-        <form method="GET" class="input-group">
-            <input type="text" 
-                   name="search" 
-                   class="form-control" 
-                   placeholder="🔍 ابحث بالاسم / رقم التليفون / رقم الكارنية / الرقم الطبي..."
-                   value="{{ search_query }}">
-            <button class="btn btn-search" type="submit">
-                <i class="fas fa-search me-2"></i>بحث
-            </button>
-        </form>
-        {% if search_query %}
-        <div class="text-center mt-2">
-            <small class="text-muted">
-                نتائج البحث عن: <strong>"{{ search_query }}"</strong>
-                <a href="?" class="ms-2 text-danger text-decoration-none">
-                    <i class="fas fa-times"></i> إلغاء
-                </a>
-            </small>
-        </div>
-        {% endif %}
-    </div>
 
     <!-- ============================================ -->
     <!-- ✅ عدد النتائج -->
@@ -517,212 +619,255 @@
     {% endif %}
 
     <!-- ============================================ -->
-    <!-- ✅ النتائج -->
+    <!-- ✅ الجدول الرئيسي -->
     <!-- ============================================ -->
     {% if patients %}
 
-    <div class="row g-4">
-        {% for patient in patients %}
-        <div class="col-12">
-            <div class="card patient-card">
-                <div class="card-header">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h6 class="mb-0 fw-bold">
-                            <i class="fas fa-user-circle text-primary me-2"></i>
-                            <span class="patient-name">{{ patient.patient_name }}</span>
-                        </h6>
-                        <span class="patient-date">
-                            <i class="fas fa-calendar-alt me-1"></i>
-                            {{ patient.date|date:"Y-m-d" }}
+    <div class="table-responsive patients-table">
+        <table class="table table-hover mb-0" id="patientsTable">
+            <thead>
+                <tr>
+                    <th style="width: 50px;">#</th>
+                    <th>👤 اسم المريض</th>
+                    <th>🏢 الجهة</th>
+                    <th>🏢 الشركة الفرعية</th>
+                    <th>👨‍⚕️ الطبيب</th>
+                    <th>📋 اسم الاجراء</th>
+                    <th>📌 حالة الموافقه</th>
+                    <th>📅 تاريخ الاجراء</th>
+                    <th style="width: 120px;">⚡ الإجراء</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for patient in patients %}
+                <!-- ✅ صف المريض الرئيسي -->
+                <tr class="patient-row" data-patient-id="{{ patient.id }}">
+                    <td>{{ forloop.counter0|add:patients.start_index }}</td>
+                    <td>
+                        <span class="patient-name-link" onclick="toggleDetails({{ patient.id }})">
+                            {{ patient.patient_name|default:"-" }}
                         </span>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="row g-4">
-                        
-                        <!-- ✅ 1/ بيانات المريض -->
-                        <div class="col-md-6 col-xl-3">
-                            <div class="info-card">
-                                <div class="card-title">
-                                    <i class="fas fa-user-circle text-primary"></i>
-                                    بيانات المريض
+                    </td>
+                    <td>{{ patient.company|default:"-" }}</td>
+                    <td>{{ patient.sub_account|default:"-" }}</td>
+                    <td>{{ patient.doctor_name|default:"-" }}</td>
+                    <td>{{ patient.procedure|default:"-" }}</td>
+                    <td>
+                        <span class="status-badge 
+                            {% if patient.main_status == 'Serv. Done' %}done
+                            {% elif patient.main_status == 'Pending' or patient.main_status == 'pending' %}pending
+                            {% elif patient.main_status == 'Approved' or patient.main_status == 'approved' %}approved
+                            {% elif patient.main_status == 'Rejected' or patient.main_status == 'rejected' %}rejected
+                            {% else %}default{% endif %}">
+                            {{ patient.main_status|default:"-" }}
+                        </span>
+                    </td>
+                    <td>{{ patient.date|date:"Y-m-d"|default:"-" }}</td>
+                    <td>
+                        <button class="btn-view-details" onclick="toggleDetails({{ patient.id }})">
+                            <i class="fas fa-chevron-down me-1"></i> عرض المزيد
+                        </button>
+                    </td>
+                </tr>
+                
+                <!-- ✅ صف التفاصيل (يظهر عند الضغط على عرض المزيد) -->
+                <tr class="details-expand-row" id="details-{{ patient.id }}" style="display: none;">
+                    <td colspan="9">
+                        <div class="details-container">
+                            <div class="row g-4">
+                                
+                                <!-- ✅ 1/ بيانات المريض -->
+                                <div class="col-md-6 col-xl-3">
+                                    <div class="info-card">
+                                        <div class="card-title">
+                                            <i class="fas fa-user-circle text-primary"></i>
+                                            بيانات المريض
+                                        </div>
+                                        <div class="info-item">
+                                            <span class="label">اسم المريض</span>
+                                            <span class="value">{{ patient.patient_name|default:"-" }}</span>
+                                        </div>
+                                        <div class="info-item">
+                                            <span class="label">رقم التليفون</span>
+                                            <span class="value">{{ patient.phone|default:"-" }}</span>
+                                        </div>
+                                        <div class="info-item">
+                                            <span class="label">رقم الكارنية</span>
+                                            <span class="value">{{ patient.card_number|default:"-" }}</span>
+                                        </div>
+                                        <div class="info-item">
+                                            <span class="label">الرقم الطبي</span>
+                                            <span class="value">
+                                                {% if patient.medical_number %}
+                                                    {{ patient.medical_number|stringformat:"s" }}
+                                                {% else %}
+                                                    -
+                                                {% endif %}
+                                            </span>
+                                        </div>
+                                        <div class="info-item">
+                                            <span class="label">الرقم الحسابي</span>
+                                            <span class="value">{{ patient.account_number|default:"-" }}</span>
+                                        </div>
+                                        <div class="info-item">
+                                            <span class="label">الجهة</span>
+                                            <span class="value">{{ patient.company|default:"-" }}</span>
+                                        </div>
+                                        <div class="info-item">
+                                            <span class="label">الشركة الفرعية</span>
+                                            <span class="value">{{ patient.sub_account|default:"-" }}</span>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="info-item">
-                                    <span class="label">اسم المريض</span>
-                                    <span class="value">{{ patient.patient_name|default:"-" }}</span>
+
+                                <!-- ✅ 2/ بيانات الاجراء المطلوب -->
+                                <div class="col-md-6 col-xl-3">
+                                    <div class="info-card">
+                                        <div class="card-title">
+                                            <i class="fas fa-syringe text-success"></i>
+                                            بيانات الاجراء
+                                        </div>
+                                        <div class="info-item">
+                                            <span class="label">تاريخ الاجراء</span>
+                                            <span class="value">{{ patient.date|date:"Y-m-d"|default:"-" }}</span>
+                                        </div>
+                                        <div class="info-item">
+                                            <span class="label">اسم الاجراء</span>
+                                            <span class="value">{{ patient.procedure|default:"-" }}</span>
+                                        </div>
+                                        <div class="info-item">
+                                            <span class="label">الطبيب</span>
+                                            <span class="value">{{ patient.doctor_name|default:"-" }}</span>
+                                        </div>
+                                        <div class="info-item">
+                                            <span class="label">التخصص</span>
+                                            <span class="value">{{ patient.specialty|default:"-" }}</span>
+                                        </div>
+                                        <div class="info-item">
+                                            <span class="label">التقرير</span>
+                                            <span class="value">
+                                                {% if patient.report %}
+                                                <a href="{{ patient.report }}" target="_blank">
+                                                    <i class="fas fa-file-pdf text-danger"></i> عرض
+                                                </a>
+                                                {% else %}
+                                                -
+                                                {% endif %}
+                                            </span>
+                                        </div>
+                                        <div class="info-item">
+                                            <span class="label">التكلفة المطلوبة</span>
+                                            <span class="value">{{ patient.initial_cost|floatformat:2|intcomma }}</span>
+                                        </div>
+                                        <div class="info-item">
+                                            <span class="label">التكلفة المستلمة</span>
+                                            <span class="value {% if patient.received_cost < patient.initial_cost %}text-danger-cost{% elif patient.received_cost >= patient.initial_cost %}text-success-cost{% endif %}">
+                                                {{ patient.received_cost|floatformat:2|intcomma }}
+                                                {% if patient.received_cost < patient.initial_cost %}
+                                                <i class="fas fa-arrow-down text-danger ms-1"></i>
+                                                {% elif patient.received_cost >= patient.initial_cost %}
+                                                <i class="fas fa-arrow-up text-success ms-1"></i>
+                                                {% endif %}
+                                            </span>
+                                        </div>
+                                        <div class="info-item">
+                                            <span class="label">رقم الطلب</span>
+                                            <span class="value">{{ patient.request_approval_no|default:"-" }}</span>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="info-item">
-                                    <span class="label">رقم التليفون</span>
-                                    <span class="value">{{ patient.phone|default:"-" }}</span>
+
+                                <!-- ✅ 3/ حاله الاجراء / الدخول -->
+                                <div class="col-md-6 col-xl-3">
+                                    <div class="info-card">
+                                        <div class="card-title">
+                                            <i class="fas fa-clipboard-check text-warning"></i>
+                                            حالة الاجراء
+                                        </div>
+                                        <div class="info-item">
+                                            <span class="label">حاله الموافقه</span>
+                                            <span class="value">
+                                                <span class="status-badge 
+                                                    {% if patient.main_status == 'Serv. Done' %}done
+                                                    {% elif patient.main_status == 'Pending' or patient.main_status == 'pending' %}pending
+                                                    {% elif patient.main_status == 'Approved' or patient.main_status == 'approved' %}approved
+                                                    {% elif patient.main_status == 'Rejected' or patient.main_status == 'rejected' %}rejected
+                                                    {% else %}default{% endif %}">
+                                                    {{ patient.main_status|default:"-" }}
+                                                </span>
+                                            </span>
+                                        </div>
+                                        <div class="info-item">
+                                            <span class="label">صوره الموافقه</span>
+                                            <span class="value">
+                                                {% if patient.approval %}
+                                                <a href="{{ patient.approval }}" target="_blank">
+                                                    <i class="fas fa-file-pdf text-danger"></i> عرض
+                                                </a>
+                                                {% else %}
+                                                -
+                                                {% endif %}
+                                            </span>
+                                        </div>
+                                        <div class="info-item">
+                                            <span class="label">تاريخ الموافقه</span>
+                                            <span class="value">{{ patient.approval_date|date:"Y-m-d"|default:"-" }}</span>
+                                        </div>
+                                        <div class="info-item">
+                                            <span class="label">صلاحيه الموافقه</span>
+                                            <span class="value">{{ patient.expiry_date|date:"Y-m-d"|default:"-" }}</span>
+                                        </div>
+                                        <div class="info-item">
+                                            <span class="label">رد الحسابات</span>
+                                            <span class="value">{{ patient.billing_status|default:"-" }}</span>
+                                        </div>
+                                        <div class="info-item">
+                                            <span class="label">تاريخ الدخول</span>
+                                            <span class="value">{{ patient.admission_date|date:"Y-m-d"|default:"-" }}</span>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="info-item">
-                                    <span class="label">رقم الكارنية</span>
-                                    <span class="value">{{ patient.card_number|default:"-" }}</span>
+
+                                <!-- ✅ 4/ ملاحظات الاقسام -->
+                                <div class="col-md-6 col-xl-3">
+                                    <div class="info-card">
+                                        <div class="card-title">
+                                            <i class="fas fa-sticky-note text-info"></i>
+                                            ملاحظات الاقسام
+                                        </div>
+                                        <div class="info-item">
+                                            <span class="label">الموافقات</span>
+                                            <span class="value" style="font-size: 0.8rem;">{{ patient.notes|default:"-" }}</span>
+                                        </div>
+                                        <div class="info-item">
+                                            <span class="label">منسق العمليات</span>
+                                            <span class="value" style="font-size: 0.8rem;">{{ patient.or_coordinator_notes|default:"-" }}</span>
+                                        </div>
+                                        <div class="info-item">
+                                            <span class="label">الحسابات</span>
+                                            <span class="value" style="font-size: 0.8rem;">{{ patient.accounts_notes|default:"-" }}</span>
+                                        </div>
+                                        <div class="info-item">
+                                            <span class="label">السيلز</span>
+                                            <span class="value" style="font-size: 0.8rem;">{{ patient.sales_notes|default:"-" }}</span>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="info-item">
-                                    <span class="label">الرقم الطبي</span>
-                                    <span class="value">
-                                        {% if patient.medical_number %}
-                                            {{ patient.medical_number|stringformat:"s" }}
-                                        {% else %}
-                                            -
-                                        {% endif %}
-                                    </span>
+
+                                <!-- ✅ زر إغلاق التفاصيل -->
+                                <div class="col-12 text-center mt-3">
+                                    <button class="btn btn-sm btn-outline-danger" onclick="toggleDetails({{ patient.id }})">
+                                        <i class="fas fa-times me-1"></i> إغلاق التفاصيل
+                                    </button>
                                 </div>
-                                <div class="info-item">
-                                    <span class="label">الرقم الحسابي</span>
-                                    <span class="value">{{ patient.account_number|default:"-" }}</span>
-                                </div>
-                                <div class="info-item">
-                                    <span class="label">الجهة</span>
-                                    <span class="value">{{ patient.company|default:"-" }}</span>
-                                </div>
-                                <div class="info-item">
-                                    <span class="label">الشركة الفرعية</span>
-                                    <span class="value">{{ patient.sub_account|default:"-" }}</span>
-                                </div>
+
                             </div>
                         </div>
-
-                        <!-- ✅ 2/ بيانات الاجراء المطلوب -->
-                        <div class="col-md-6 col-xl-3">
-                            <div class="info-card">
-                                <div class="card-title">
-                                    <i class="fas fa-syringe text-success"></i>
-                                    بيانات الاجراء
-                                </div>
-                                <div class="info-item">
-                                    <span class="label">تاريخ الاجراء</span>
-                                    <span class="value">{{ patient.date|date:"Y-m-d"|default:"-" }}</span>
-                                </div>
-                                <div class="info-item">
-                                    <span class="label">اسم الاجراء</span>
-                                    <span class="value">{{ patient.procedure|default:"-"|truncatechars:35 }}</span>
-                                </div>
-                                <div class="info-item">
-                                    <span class="label">الطبيب</span>
-                                    <span class="value">{{ patient.doctor_name|default:"-" }}</span>
-                                </div>
-                                <div class="info-item">
-                                    <span class="label">التخصص</span>
-                                    <span class="value">{{ patient.specialty|default:"-" }}</span>
-                                </div>
-                                <div class="info-item">
-                                    <span class="label">التقرير</span>
-                                    <span class="value">
-                                        {% if patient.report %}
-                                        <a href="{{ patient.report }}" target="_blank">
-                                            <i class="fas fa-file-pdf text-danger"></i> عرض
-                                        </a>
-                                        {% else %}
-                                        -
-                                        {% endif %}
-                                    </span>
-                                </div>
-                                <div class="info-item">
-                                    <span class="label">التكلفة المطلوبة</span>
-                                    <span class="value">{{ patient.initial_cost|floatformat:2|intcomma }}</span>
-                                </div>
-                                <div class="info-item">
-                                    <span class="label">التكلفة المستلمة</span>
-                                    <span class="value {% if patient.received_cost < patient.initial_cost %}text-danger-cost{% elif patient.received_cost >= patient.initial_cost %}text-success-cost{% endif %}">
-                                        {{ patient.received_cost|floatformat:2|intcomma }}
-                                        {% if patient.received_cost < patient.initial_cost %}
-                                        <i class="fas fa-arrow-down text-danger ms-1"></i>
-                                        {% elif patient.received_cost >= patient.initial_cost %}
-                                        <i class="fas fa-arrow-up text-success ms-1"></i>
-                                        {% endif %}
-                                    </span>
-                                </div>
-                                <div class="info-item">
-                                    <span class="label">رقم الطلب</span>
-                                    <span class="value">{{ patient.request_approval_no|default:"-" }}</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- ✅ 3/ حاله الاجراء / الدخول -->
-                        <div class="col-md-6 col-xl-3">
-                            <div class="info-card">
-                                <div class="card-title">
-                                    <i class="fas fa-clipboard-check text-warning"></i>
-                                    حالة الاجراء
-                                </div>
-                                <div class="info-item">
-                                    <span class="label">حاله الموافقه</span>
-                                    <span class="value">
-                                        <span class="status-badge 
-                                            {% if patient.main_status == 'Serv. Done' %}done
-                                            {% elif patient.main_status == 'Pending' or patient.main_status == 'pending' %}pending
-                                            {% elif patient.main_status == 'Approved' or patient.main_status == 'approved' %}approved
-                                            {% elif patient.main_status == 'Rejected' or patient.main_status == 'rejected' %}rejected
-                                            {% else %}default{% endif %}">
-                                            {{ patient.main_status|default:"-" }}
-                                        </span>
-                                    </span>
-                                </div>
-                                <div class="info-item">
-                                    <span class="label">صوره الموافقه</span>
-                                    <span class="value">
-                                        {% if patient.approval %}
-                                        <a href="{{ patient.approval }}" target="_blank">
-                                            <i class="fas fa-file-pdf text-danger"></i> عرض
-                                        </a>
-                                        {% else %}
-                                        -
-                                        {% endif %}
-                                    </span>
-                                </div>
-                                <div class="info-item">
-                                    <span class="label">تاريخ الموافقه</span>
-                                    <span class="value">{{ patient.approval_date|date:"Y-m-d"|default:"-" }}</span>
-                                </div>
-                                <div class="info-item">
-                                    <span class="label">صلاحيه الموافقه</span>
-                                    <span class="value">{{ patient.expiry_date|date:"Y-m-d"|default:"-" }}</span>
-                                </div>
-                                <div class="info-item">
-                                    <span class="label">رد الحسابات</span>
-                                    <span class="value">{{ patient.billing_status|default:"-" }}</span>
-                                </div>
-                                <div class="info-item">
-                                    <span class="label">تاريخ الدخول</span>
-                                    <span class="value">{{ patient.admission_date|date:"Y-m-d"|default:"-" }}</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- ✅ 4/ ملاحظات الاقسام -->
-                        <div class="col-md-6 col-xl-3">
-                            <div class="info-card">
-                                <div class="card-title">
-                                    <i class="fas fa-sticky-note text-info"></i>
-                                    ملاحظات الاقسام
-                                </div>
-                                <div class="info-item">
-                                    <span class="label">الموافقات</span>
-                                    <span class="value" style="font-size: 0.8rem;">{{ patient.notes|default:"-"|truncatechars:60 }}</span>
-                                </div>
-                                <div class="info-item">
-                                    <span class="label">منسق العمليات</span>
-                                    <span class="value" style="font-size: 0.8rem;">{{ patient.or_coordinator_notes|default:"-"|truncatechars:60 }}</span>
-                                </div>
-                                <div class="info-item">
-                                    <span class="label">الحسابات</span>
-                                    <span class="value" style="font-size: 0.8rem;">{{ patient.accounts_notes|default:"-"|truncatechars:60 }}</span>
-                                </div>
-                                <div class="info-item">
-                                    <span class="label">السيلز</span>
-                                    <span class="value" style="font-size: 0.8rem;">{{ patient.sales_notes|default:"-"|truncatechars:60 }}</span>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-        {% endfor %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 
     <!-- ============================================ -->
@@ -734,7 +879,7 @@
             <ul class="pagination pagination-sm">
                 {% if patients.has_previous %}
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ patients.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if attachment_type %}&attachment_type={{ attachment_type }}{% endif %}{% if company_filter %}&company={{ company_filter }}{% endif %}{% if doctor_filter %}&doctor={{ doctor_filter }}{% endif %}{% if specialty_filter %}&specialty={{ specialty_filter }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}">
+                    <a class="page-link" href="?page={{ patients.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if attachment_type %}&attachment_type={{ attachment_type }}{% endif %}{% if company_filter %}&company={{ company_filter }}{% endif %}{% if sub_account_filter %}&sub_account={{ sub_account_filter }}{% endif %}{% if doctor_filter %}&doctor={{ doctor_filter }}{% endif %}{% if specialty_filter %}&specialty={{ specialty_filter }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}">
                         <i class="fas fa-chevron-right"></i>
                     </a>
                 </li>
@@ -743,7 +888,7 @@
                 {% for num in patients.paginator.page_range %}
                     {% if num >= patients.number|add:'-2' and num <= patients.number|add:'2' %}
                     <li class="page-item {% if num == patients.number %}active{% endif %}">
-                        <a class="page-link" href="?page={{ num }}{% if search_query %}&search={{ search_query }}{% endif %}{% if attachment_type %}&attachment_type={{ attachment_type }}{% endif %}{% if company_filter %}&company={{ company_filter }}{% endif %}{% if doctor_filter %}&doctor={{ doctor_filter }}{% endif %}{% if specialty_filter %}&specialty={{ specialty_filter }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}">
+                        <a class="page-link" href="?page={{ num }}{% if search_query %}&search={{ search_query }}{% endif %}{% if attachment_type %}&attachment_type={{ attachment_type }}{% endif %}{% if company_filter %}&company={{ company_filter }}{% endif %}{% if sub_account_filter %}&sub_account={{ sub_account_filter }}{% endif %}{% if doctor_filter %}&doctor={{ doctor_filter }}{% endif %}{% if specialty_filter %}&specialty={{ specialty_filter }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}">
                             {{ num }}
                         </a>
                     </li>
@@ -752,7 +897,7 @@
                 
                 {% if patients.has_next %}
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ patients.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if attachment_type %}&attachment_type={{ attachment_type }}{% endif %}{% if company_filter %}&company={{ company_filter }}{% endif %}{% if doctor_filter %}&doctor={{ doctor_filter }}{% endif %}{% if specialty_filter %}&specialty={{ specialty_filter }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}">
+                    <a class="page-link" href="?page={{ patients.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if attachment_type %}&attachment_type={{ attachment_type }}{% endif %}{% if company_filter %}&company={{ company_filter }}{% endif %}{% if sub_account_filter %}&sub_account={{ sub_account_filter }}{% endif %}{% if doctor_filter %}&doctor={{ doctor_filter }}{% endif %}{% if specialty_filter %}&specialty={{ specialty_filter }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}">
                         <i class="fas fa-chevron-left"></i>
                     </a>
                 </li>
@@ -828,7 +973,6 @@ document.addEventListener('DOMContentLoaded', function() {
 // ✅ تحسين تجربة المستخدم - Auto Submit للفلاتر
 // ============================================
 document.addEventListener('DOMContentLoaded', function() {
-    // ✅ عند تغيير أي فلتر غير التاريخ، يتم إرسال الفورم تلقائياً
     const filterSelects = document.querySelectorAll('.filter-card select');
     filterSelects.forEach(select => {
         select.addEventListener('change', function() {
@@ -836,6 +980,48 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
+// ============================================
+// ✅ Toggle Details - فتح/غلق التاب
+// ============================================
+function toggleDetails(patientId) {
+    const detailsRow = document.getElementById('details-' + patientId);
+    const btn = document.querySelector(`.btn-view-details[onclick="toggleDetails(${patientId})"]`);
+    
+    if (detailsRow) {
+        if (detailsRow.style.display === 'none' || detailsRow.style.display === '') {
+            // ✅ إغلاق أي تفاصيل مفتوحة أخرى
+            document.querySelectorAll('.details-expand-row').forEach(function(row) {
+                if (row.id !== 'details-' + patientId) {
+                    row.style.display = 'none';
+                    // تغيير نص الزر في الصف المغلق
+                    const otherBtn = document.querySelector(`.btn-view-details[onclick="toggleDetails(${row.id.replace('details-', '')})"]`);
+                    if (otherBtn) {
+                        otherBtn.innerHTML = '<i class="fas fa-chevron-down me-1"></i> عرض المزيد';
+                    }
+                }
+            });
+            
+            // ✅ فتح التفاصيل المطلوبة
+            detailsRow.style.display = 'table-row';
+            if (btn) {
+                btn.innerHTML = '<i class="fas fa-chevron-up me-1"></i> إخفاء التفاصيل';
+            }
+            
+            // ✅ تمرير الصفحة إلى التفاصيل مع تأثير سلس
+            setTimeout(function() {
+                detailsRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 100);
+            
+        } else {
+            // ✅ إغلاق التفاصيل
+            detailsRow.style.display = 'none';
+            if (btn) {
+                btn.innerHTML = '<i class="fas fa-chevron-down me-1"></i> عرض المزيد';
+            }
+        }
+    }
+}
 </script>
 
 {% endblock %}

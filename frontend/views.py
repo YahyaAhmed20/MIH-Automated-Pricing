@@ -3439,6 +3439,7 @@ def patient_search(request):
     # ✅ الفلاتر
     attachment_type = request.GET.get("attachment_type", "")
     company_filter = request.GET.get("company", "")
+    sub_account_filter = request.GET.get("sub_account", "")  # ✅ جديد
     doctor_filter = request.GET.get("doctor", "")
     specialty_filter = request.GET.get("specialty", "")
     date_from = request.GET.get("date_from", "")
@@ -3455,7 +3456,8 @@ def patient_search(request):
             Q(card_number__icontains=search_query) |
             Q(medical_number__icontains=search_query) |
             Q(account_number__icontains=search_query) |
-            Q(company__icontains=search_query)
+            Q(company__icontains=search_query) |
+            Q(sub_account__icontains=search_query)  # ✅ إضافة البحث في الشركة الفرعية
         )
     
     # ✅ الفلاتر
@@ -3464,6 +3466,9 @@ def patient_search(request):
     
     if company_filter:
         patients = patients.filter(company__icontains=company_filter)
+    
+    if sub_account_filter:  # ✅ جديد
+        patients = patients.filter(sub_account__icontains=sub_account_filter)
     
     if doctor_filter:
         patients = patients.filter(doctor_name__icontains=doctor_filter)
@@ -3506,13 +3511,16 @@ def patient_search(request):
             Q(card_number__icontains=search_query) |
             Q(medical_number__icontains=search_query) |
             Q(account_number__icontains=search_query) |
-            Q(company__icontains=search_query)
+            Q(company__icontains=search_query) |
+            Q(sub_account__icontains=search_query)  # ✅ إضافة البحث في الشركة الفرعية
         )
     
     # ✅ attachment_types - مع مراعاة الفلاتر التانية (ما عدا attachment_type)
     attachment_queryset = filter_queryset
     if company_filter:
         attachment_queryset = attachment_queryset.filter(company__icontains=company_filter)
+    if sub_account_filter:  # ✅ جديد
+        attachment_queryset = attachment_queryset.filter(sub_account__icontains=sub_account_filter)
     if doctor_filter:
         attachment_queryset = attachment_queryset.filter(doctor_name__icontains=doctor_filter)
     if specialty_filter:
@@ -3535,6 +3543,8 @@ def patient_search(request):
     company_queryset = filter_queryset
     if attachment_type:
         company_queryset = company_queryset.filter(attachment_type__icontains=attachment_type)
+    if sub_account_filter:  # ✅ جديد
+        company_queryset = company_queryset.filter(sub_account__icontains=sub_account_filter)
     if doctor_filter:
         company_queryset = company_queryset.filter(doctor_name__icontains=doctor_filter)
     if specialty_filter:
@@ -3553,12 +3563,38 @@ def patient_search(request):
         .order_by('company')
     )
     
+    # ✅ sub_accounts - مع مراعاة الفلاتر التانية (ما عدا sub_account)  # ✅ جديد
+    sub_account_queryset = filter_queryset
+    if attachment_type:
+        sub_account_queryset = sub_account_queryset.filter(attachment_type__icontains=attachment_type)
+    if company_filter:
+        sub_account_queryset = sub_account_queryset.filter(company__icontains=company_filter)
+    if doctor_filter:
+        sub_account_queryset = sub_account_queryset.filter(doctor_name__icontains=doctor_filter)
+    if specialty_filter:
+        sub_account_queryset = sub_account_queryset.filter(specialty__icontains=specialty_filter)
+    if date_from:
+        sub_account_queryset = sub_account_queryset.filter(date__gte=date_from)
+    if date_to:
+        sub_account_queryset = sub_account_queryset.filter(date__lte=date_to)
+    
+    sub_accounts = list(
+        sub_account_queryset
+        .values_list('sub_account', flat=True)
+        .distinct()
+        .exclude(sub_account__isnull=True)
+        .exclude(sub_account='')
+        .order_by('sub_account')
+    )
+    
     # ✅ doctors - مع مراعاة الفلاتر التانية (ما عدا doctor)
     doctor_queryset = filter_queryset
     if attachment_type:
         doctor_queryset = doctor_queryset.filter(attachment_type__icontains=attachment_type)
     if company_filter:
         doctor_queryset = doctor_queryset.filter(company__icontains=company_filter)
+    if sub_account_filter:  # ✅ جديد
+        doctor_queryset = doctor_queryset.filter(sub_account__icontains=sub_account_filter)
     if specialty_filter:
         doctor_queryset = doctor_queryset.filter(specialty__icontains=specialty_filter)
     if date_from:
@@ -3581,6 +3617,8 @@ def patient_search(request):
         specialty_queryset = specialty_queryset.filter(attachment_type__icontains=attachment_type)
     if company_filter:
         specialty_queryset = specialty_queryset.filter(company__icontains=company_filter)
+    if sub_account_filter:  # ✅ جديد
+        specialty_queryset = specialty_queryset.filter(sub_account__icontains=sub_account_filter)
     if doctor_filter:
         specialty_queryset = specialty_queryset.filter(doctor_name__icontains=doctor_filter)
     if date_from:
@@ -3604,6 +3642,7 @@ def patient_search(request):
         # ✅ الفلاتر
         'attachment_type': attachment_type,
         'company_filter': company_filter,
+        'sub_account_filter': sub_account_filter,  # ✅ جديد
         'doctor_filter': doctor_filter,
         'specialty_filter': specialty_filter,
         'date_from': date_from,
@@ -3611,6 +3650,7 @@ def patient_search(request):
         # ✅ قيم الفلاتر (Dynamic)
         'attachment_types': attachment_types,
         'companies': companies,
+        'sub_accounts': sub_accounts,  # ✅ جديد
         'doctors': doctors,
         'specialties': specialties,
     }
