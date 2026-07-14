@@ -4,7 +4,7 @@
 
 {% block content %}
 
-<style>
+<style>  
     .stats-card {
         border-radius: 16px;
         padding: 1.5rem 1.25rem;
@@ -35,6 +35,10 @@
     
     .stats-card-sectors {
         background: linear-gradient(135deg, #e65100, #f57c00);
+    }
+    
+    .stats-card-entities {
+        background: linear-gradient(135deg, #1565c0, #42a5f5);
     }
     
     .table-records {
@@ -204,9 +208,53 @@
         border-color: #0d6efd;
     }
     
+    /* ✅ Accordion Custom */
+    .accordion-button:not(.collapsed) {
+        background: #f8f9fa;
+        color: #0d6efd;
+    }
+    
+    .accordion-button:focus {
+        box-shadow: none;
+        border-color: #dee2e6;
+    }
+    
+    .accordion-item {
+        border: 1px solid #e9ecef;
+        margin-bottom: 8px;
+        border-radius: 10px !important;
+        overflow: hidden;
+    }
+    
+    .accordion-item:last-child {
+        margin-bottom: 0;
+    }
+    
+    .accordion-button .badge {
+        font-size: 0.75rem;
+    }
+    
+    .entity-package-item {
+        transition: all 0.2s ease;
+    }
+    
+    .entity-package-item:hover {
+        background: #f8f9fa;
+        transform: translateX(3px);
+    }
+    
     @media (max-width: 768px) {
         .stats-card .stats-number {
             font-size: 1.8rem;
+        }
+        
+        .accordion-button {
+            font-size: 0.85rem;
+            padding: 0.75rem 1rem;
+        }
+        
+        .accordion-button .badge {
+            font-size: 0.65rem;
         }
     }
 </style>
@@ -266,8 +314,6 @@
                        class="filter-pill {% if date_from == '2026-03-01' and date_to == '2026-03-31' %}active{% endif %}">
                         مارس
                     </a>
-                   
-                    
                 </div>
             </div>
             
@@ -319,10 +365,10 @@
                     </form>
                 </div>
                 
-                <!-- ✅ فلتر الجهة -->
+                <!-- ✅ فلتر الجهة (النقابة) -->
                 <div class="col-lg-3 col-md-6">
                     <div class="filter-label-icon">
-                        <i class="fas fa-building text-primary"></i> الجهة
+                        <i class="fas fa-users text-primary"></i> النقابة
                     </div>
                     <form method="GET" class="search-box" id="entitySearchForm">
                         <i class="fas fa-search search-icon"></i>
@@ -330,7 +376,7 @@
                                name="entity_search" 
                                id="entitySearchInput"
                                class="form-control" 
-                               placeholder="بحث عن جهة..."
+                               placeholder="بحث عن نقابة..."
                                value="{{ entity_search }}"
                                list="entitySuggestions"
                                autocomplete="off">
@@ -528,7 +574,7 @@
                         {% endif %}
                         {% if entity_search %}
                         <span class="badge bg-primary p-2">
-                            <i class="fas fa-building me-1"></i> الجهة: {{ entity_search }}
+                            <i class="fas fa-users me-1"></i> النقابة: {{ entity_search }}
                             <a href="?{% if sector_search %}&sector_search={{ sector_search }}{% endif %}{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}{% if sub_company_search %}&sub_company_search={{ sub_company_search }}{% endif %}{% if package_search %}&package_search={{ package_search }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}" class="text-white ms-1 text-decoration-none">
                                 <i class="fas fa-times-circle"></i>
                             </a>
@@ -575,25 +621,32 @@
     </div>
 
     <!-- ============================================ -->
-    <!-- ✅ 3 بوكسات -->
+    <!-- ✅ 4 بوكسات -->
     <!-- ============================================ -->
     <div class="row g-4 mb-4">
         
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="stats-card stats-card-total">
                 <div class="stats-number counter" data-target="{{ total_count }}">0</div>
                 <div class="stats-label"><i class="fas fa-boxes me-1"></i>إجمالي السجلات</div>
             </div>
         </div>
         
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="stats-card stats-card-sectors">
                 <div class="stats-number counter" data-target="{{ total_sectors }}">0</div>
                 <div class="stats-label"><i class="fas fa-building me-1"></i>عدد القطاعات</div>
             </div>
         </div>
         
-        <div class="col-md-4">
+        <div class="col-md-3">
+            <div class="stats-card stats-card-entities">
+                <div class="stats-number counter" data-target="{{ total_entities }}">0</div>
+                <div class="stats-label"><i class="fas fa-users me-1"></i>عدد النقابات</div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
             <div class="stats-card stats-card-amount">
                 <div class="stats-number counter" data-target="{{ total_amount|floatformat:0|intcomma }}">0</div>
                 <div class="stats-label"><i class="fas fa-dollar-sign me-1"></i>إجمالي المبالغ</div>
@@ -609,7 +662,7 @@
         <div class="card-header bg-white">
             <h5 class="fw-bold mb-0">
                 <i class="fas fa-chart-bar text-warning me-2"></i>
-                 توزيع الجهات داخل القطاع
+                توزيع الجهات داخل القطاع
             </h5>
             <small class="text-muted">
                 إجمالي <span class="fw-bold text-warning">{{ total_sectors }}</span> قطاع مختلف
@@ -647,6 +700,110 @@
         </div>
     </div>
 
+      <!-- ============================================ -->
+    <!-- ✅ توزيع النقابات مع الباكدجات والتخصصات -->
+    <!-- ============================================ -->
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-white">
+            <h5 class="fw-bold mb-0">
+                <i class="fas fa-users text-primary me-2"></i>
+                توزيع النقابات داخل القطاع
+            </h5>
+            <small class="text-muted">
+                إجمالي <span class="fw-bold text-primary">{{ total_entities }}</span> نقابة مختلفة
+            </small>
+        </div>
+        <div class="card-body">
+            {% if entity_details %}
+            <div class="accordion" id="entityAccordion">
+                {% for entity in entity_details %}
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="heading{{ forloop.counter }}">
+                        <button class="accordion-button {% if forloop.counter != 1 %}collapsed{% endif %}" 
+                                type="button" 
+                                data-bs-toggle="collapse" 
+                                data-bs-target="#collapse{{ forloop.counter }}" 
+                                aria-expanded="{% if forloop.counter == 1 %}true{% else %}false{% endif %}" 
+                                aria-controls="collapse{{ forloop.counter }}">
+                            <div class="d-flex justify-content-between align-items-center w-100 me-3">
+                                <span class="fw-bold">{{ entity.entity_name|default:"غير محدد" }}</span>
+                                <div class="d-flex gap-2 flex-wrap">
+                                    <span class="badge bg-primary rounded-pill">
+                                        <i class="fas fa-box me-1"></i> {{ entity.total }} باكدج
+                                    </span>
+                                    <span class="badge bg-success rounded-pill">
+                                        <i class="fas fa-dollar-sign me-1"></i> {{ entity.total_amount|floatformat:0|intcomma }} ج.م
+                                    </span>
+                                </div>
+                            </div>
+                        </button>
+                    </h2>
+                    <div id="collapse{{ forloop.counter }}" 
+                         class="accordion-collapse collapse {% if forloop.counter == 1 %}show{% endif %}" 
+                         data-bs-parent="#entityAccordion">
+                        <div class="accordion-body">
+                            <div class="row">
+                                <!-- ✅ توزيع التخصصات داخل النقابة -->
+                                <div class="col-md-6">
+                                    <h6 class="fw-bold text-secondary mb-3">
+                                        <i class="fas fa-stethoscope text-danger me-1"></i>
+                                        توزيع التخصصات
+                                    </h6>
+                                    {% if entity.specialties %}
+                                    <div class="list-group list-group-flush">
+                                        {% for spec in entity.specialties %}
+                                        <div class="list-group-item d-flex justify-content-between align-items-center px-0 py-2 border-bottom entity-package-item">
+                                            <span>{{ spec.specialty|default:"غير محدد" }}</span>
+                                            <div>
+                                                <span class="badge bg-info rounded-pill me-2">{{ spec.total }}</span>
+                                                <span class="small text-muted">{{ spec.total_amount|floatformat:0|intcomma }} ج.م</span>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                    {% else %}
+                                    <p class="text-muted small">لا توجد تخصصات</p>
+                                    {% endif %}
+                                </div>
+                                
+                                <!-- ✅ توزيع الباكدجات داخل النقابة -->
+                                <div class="col-md-6">
+                                    <h6 class="fw-bold text-secondary mb-3">
+                                        <i class="fas fa-box text-success me-1"></i>
+                                        توزيع الباكدجات
+                                    </h6>
+                                    {% if entity.packages %}
+                                    <div class="list-group list-group-flush">
+                                        {% for pkg in entity.packages %}
+                                        <div class="list-group-item d-flex justify-content-between align-items-center px-0 py-2 border-bottom entity-package-item">
+                                            <span>{{ pkg.package_name|default:"غير محدد"|truncatechars:30 }}</span>
+                                            <div>
+                                                <span class="badge bg-success rounded-pill me-2">{{ pkg.total }}</span>
+                                                <span class="small text-muted">{{ pkg.total_amount|floatformat:0|intcomma }} ج.م</span>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                    {% else %}
+                                    <p class="text-muted small">لا توجد باكدجات</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="text-center py-4">
+                <i class="fas fa-inbox fa-2x text-muted mb-2 d-block"></i>
+                <p class="text-muted mb-0">لا توجد نقابات</p>
+            </div>
+            {% endif %}
+        </div>
+    
+    </div>
+
     <!-- ============================================ -->
     <!-- ✅ الجدول التفصيلي -->
     <!-- ============================================ -->
@@ -670,8 +827,8 @@
                             <th>اسم المريض</th>
                             <th>التخصص</th>
                             <th>القطاع</th>
+                            <th>النقابة</th>
                             <th>الباكدج</th>
-                            <th>الجهة</th>
                             <th>المبلغ</th>
                             <th>تاريخ الدخول</th>
                         </tr>
@@ -686,8 +843,8 @@
                             <td>
                                 <span class="badge bg-warning text-dark">{{ record.sector|default:"-" }}</span>
                             </td>
-                            <td>{{ record.package_name|default:"-"|truncatechars:20 }}</td>
                             <td>{{ record.entity_name|default:"-"|truncatechars:20 }}</td>
+                            <td>{{ record.package_name|default:"-"|truncatechars:20 }}</td>
                             <td>
                                 <span class="amount-number">
                                     {{ record.amount|floatformat:2|intcomma }}
@@ -811,7 +968,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // ✅ فلتر الجهة
+    // ✅ فلتر النقابة
     const entityInput = document.getElementById('entitySearchInput');
     if (entityInput) {
         entityInput.addEventListener('input', function(e) {

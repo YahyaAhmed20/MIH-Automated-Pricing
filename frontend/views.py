@@ -1290,6 +1290,60 @@ def sector_details(request):
         .order_by('-total')
     )
     
+    # ✅ ✅ ✅ التوزيع حسب النقابة (entity_name) داخل القطاع المحدد
+    entity_distribution = (
+        records
+        .values('entity_name')
+        .annotate(
+            total=Count('id'),
+            total_amount=Sum('amount')
+        )
+        .filter(entity_name__isnull=False)
+        .exclude(entity_name='')
+        .order_by('-total')
+    )
+    
+    # ✅ ✅ ✅ تجهيز بيانات النقابات مع التخصصات والباكدجات (منظمة)
+    entity_details = []
+    for entity in entity_distribution:
+        entity_name = entity['entity_name']
+        
+        # التخصصات داخل النقابة
+        specialties = (
+            records
+            .filter(entity_name=entity_name)
+            .values('specialty')
+            .annotate(
+                total=Count('id'),
+                total_amount=Sum('amount')
+            )
+            .filter(specialty__isnull=False)
+            .exclude(specialty='')
+            .order_by('-total')
+        )
+        
+        # الباكدجات داخل النقابة
+        packages = (
+            records
+            .filter(entity_name=entity_name)
+            .values('package_name')
+            .annotate(
+                total=Count('id'),
+                total_amount=Sum('amount')
+            )
+            .filter(package_name__isnull=False)
+            .exclude(package_name='')
+            .order_by('-total')
+        )
+        
+        entity_details.append({
+            'entity_name': entity_name,
+            'total': entity['total'],
+            'total_amount': entity['total_amount'],
+            'specialties': specialties,
+            'packages': packages,
+        })
+    
     # ✅ قائمة القطاعات للاقتراحات
     sector_suggestions = list(set(
         records
@@ -1333,6 +1387,9 @@ def sector_details(request):
     # ✅ إجمالي القطاعات
     total_sectors = records.values('sector').distinct().count()
     
+    # ✅ إجمالي النقابات
+    total_entities = entity_distribution.count()
+    
     # ✅ Pagination
     paginator = Paginator(records.order_by('-admission_date'), 50)
     page_number = request.GET.get('page', 1)
@@ -1343,6 +1400,7 @@ def sector_details(request):
         'total_count': total_count,
         'total_amount': total_amount,
         'total_sectors': total_sectors,
+        'total_entities': total_entities,
         'sector_search': sector_search,
         'specialty_search': specialty_search,
         'entity_search': entity_search,
@@ -1351,6 +1409,7 @@ def sector_details(request):
         'date_from': date_from,
         'date_to': date_to,
         'sector_distribution': sector_distribution,
+        'entity_details': entity_details,  # ✅ بيانات منظمة
         'sector_suggestions': sector_suggestions,
         'specialty_suggestions': specialty_suggestions,
         'entity_suggestions': entity_suggestions,
