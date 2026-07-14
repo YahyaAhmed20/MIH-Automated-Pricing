@@ -1,368 +1,354 @@
 {% extends 'frontend/base.html' %}
-
-{% block page_title %}
-متابعة موافقات الخارجي
-{% endblock %}
+{% load static %}
+{% load humanize %}
 
 {% block content %}
 
-<!-- ============================================ -->
-<!-- بطاقات الإحصائيات -->
-<!-- ============================================ -->
-<div class="row g-3 mb-4">
+<style>
+    /* ✅ Animations */
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.03); }
+        100% { transform: scale(1); }
+    }
+    
+    @keyframes slideUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes countUp {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    
+    .stats-box {
+        border-radius: 20px;
+        padding: 1.8rem 1.5rem;
+        text-align: center;
+        color: #fff;
+        transition: all 0.4s ease;
+        position: relative;
+        overflow: hidden;
+        animation: slideUp 0.6s ease forwards;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+        cursor: default;
+        min-height: 160px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .stats-box:hover {
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: 0 15px 50px rgba(0,0,0,0.25);
+    }
+    
+    .stats-box .stats-number {
+        font-size: 3.2rem;
+        font-weight: 800;
+        animation: countUp 1s ease forwards;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        line-height: 1.2;
+    }
+    
+    .stats-box .stats-label {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-top: 8px;
+        opacity: 0.95;
+        letter-spacing: 0.5px;
+    }
+    
+    .stats-box .stats-icon {
+        font-size: 2.5rem;
+        margin-bottom: 8px;
+        opacity: 0.8;
+    }
+    
+    /* ✅ Glow effect */
+    .stats-box::after {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+        opacity: 0;
+        transition: opacity 0.6s ease;
+        pointer-events: none;
+    }
+    
+    .stats-box:hover::after {
+        opacity: 1;
+    }
+    
+    /* ✅ Shine effect */
+    .stats-box::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+        transform: skewX(-25deg);
+        transition: left 0.8s ease;
+    }
+    
+    .stats-box:hover::before {
+        left: 200%;
+    }
+    
+    /* ✅ Delays for animation */
+    .stats-box:nth-child(1) { animation-delay: 0.1s; }
+    .stats-box:nth-child(2) { animation-delay: 0.2s; }
+    .stats-box:nth-child(3) { animation-delay: 0.3s; }
+    .stats-box:nth-child(4) { animation-delay: 0.4s; }
+    .stats-box:nth-child(5) { animation-delay: 0.5s; }
+    
+    /* ✅ Status badges */
+    .status-badge {
+        padding: 0.4rem 1rem;
+        border-radius: 30px;
+        font-weight: 600;
+        font-size: 0.8rem;
+        display: inline-block;
+        min-width: 80px;
+        text-align: center;
+    }
+    
+    .status-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 12px;
+        border-bottom: 1px solid #f1f3f5;
+        transition: all 0.2s ease;
+        border-radius: 8px;
+    }
+    
+    .status-item:hover {
+        background: #f8f9fa;
+        transform: translateX(5px);
+    }
+    
+    .status-item:last-child {
+        border-bottom: none;
+    }
+    
+    .status-progress {
+        height: 8px;
+        border-radius: 10px;
+        background: #e9ecef;
+        overflow: hidden;
+        flex: 1;
+        margin: 0 15px;
+    }
+    
+    .status-progress .bar {
+        height: 100%;
+        border-radius: 10px;
+        transition: width 1.2s ease;
+    }
+    
+    /* ✅ Responsive */
+    @media (max-width: 768px) {
+        .stats-box .stats-number {
+            font-size: 2.2rem;
+        }
+        .stats-box {
+            padding: 1.2rem 1rem;
+            min-height: 120px;
+        }
+        .status-item {
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .status-progress {
+            flex: 1 1 100%;
+            margin: 5px 0;
+        }
+    }
+</style>
 
-    <div class="col-md-2">
-        <div class="card text-center border-primary shadow-sm hover-shadow">
-            <div class="card-body">
-                <div class="icon-circle bg-primary bg-opacity-10 mb-2 mx-auto">
-                    <i class="bi bi-file-medical text-primary"></i>
-                </div>
-                <h6 class="text-muted">إجمالي الطلبات</h6>
-                <h3 class="text-primary">{{ total_requests }}</h3>
-            </div>
+<!-- ============================================ -->
+<!-- ✅ العنوان -->
+<!-- ============================================ -->
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+           
+            <p class="text-muted small mb-0">
+                <i class="fas fa-calendar-alt me-1"></i>
+                آخر تحديث: {% now "Y-m-d H:i" %}
+            </p>
         </div>
     </div>
 
-    <div class="col-md-2">
-        <div class="card text-center border-info shadow-sm hover-shadow">
-            <div class="card-body">
-                <div class="icon-circle bg-info bg-opacity-10 mb-2 mx-auto">
-                    <i class="bi bi-check2-all text-info"></i>
+    <!-- ============================================ -->
+    <!-- ✅ البوكسات الخمسة -->
+    <!-- ============================================ -->
+    <div class="row g-4 mb-4">
+        
+        <!-- ✅ A/ إجمالي الحالات المرسلة للتسعير -->
+        <div class="col-md-2-4 col-lg-2 col-md-4 col-sm-6">
+            <div class="stats-box" style="background: {{ box_colors.total }};">
+                <div class="stats-icon">
+                    <i class="fas fa-file-medical-alt"></i>
                 </div>
-                <h6 class="text-muted">الموافقات</h6>
-                <h3 class="text-info">{{ approval_numbers }}</h3>
+                <div class="stats-number counter" data-target="{{ total_cases }}">0</div>
+                <div class="stats-label">
+                    <i class="fas fa-arrow-up me-1"></i>
+                    إجمالي الحالات المرسلة للتسعير
+                </div>
             </div>
         </div>
-    </div>
-
-    <div class="col-md-2">
-        <div class="card text-center border-success shadow-sm hover-shadow">
-            <div class="card-body">
-                <div class="icon-circle bg-success bg-opacity-10 mb-2 mx-auto">
-                    <i class="bi bi-check-circle text-success"></i>
+        
+        <!-- ✅ B/ الحالات المعطلة طرف الحسابات -->
+        <div class="col-md-2-4 col-lg-2 col-md-4 col-sm-6">
+            <div class="stats-box" style="background: {{ box_colors.accounts }};">
+                <div class="stats-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
                 </div>
-                <h6 class="text-muted">تمت الموافقة</h6>
-                <h3 class="text-success">{{ approved }}</h3>
+                <div class="stats-number counter" data-target="{{ pending_accounts }}">0</div>
+                <div class="stats-label">
+                    <i class="fas fa-user-tie me-1"></i>
+                    الحالات المعطلة طرف الحسابات
+                </div>
             </div>
         </div>
-    </div>
-
-    <div class="col-md-2">
-        <div class="card text-center border-warning shadow-sm hover-shadow">
-            <div class="card-body">
-                <div class="icon-circle bg-warning bg-opacity-10 mb-2 mx-auto">
-                    <i class="bi bi-clock text-warning"></i>
+        
+        <!-- ✅ C/ الحالات المعطلة طرف منسق العيادات -->
+        <div class="col-md-2-4 col-lg-2 col-md-4 col-sm-6">
+            <div class="stats-box" style="background: {{ box_colors.coordinator }};">
+                <div class="stats-icon">
+                    <i class="fas fa-user-md"></i>
                 </div>
-                <h6 class="text-muted">قيد الانتظار</h6>
-                <h3 class="text-warning">{{ pending }}</h3>
+                <div class="stats-number counter" data-target="{{ pending_coordinator }}">0</div>
+                <div class="stats-label">
+                    <i class="fas fa-clock me-1"></i>
+                    الحالات المعطلة طرف منسق العيادات
+                </div>
             </div>
         </div>
-    </div>
-
-    <div class="col-md-2">
-        <div class="card text-center border-danger shadow-sm hover-shadow">
-            <div class="card-body">
-                <div class="icon-circle bg-danger bg-opacity-10 mb-2 mx-auto">
-                    <i class="bi bi-x-circle text-danger"></i>
+        
+        <!-- ✅ D/ حالات دخول باكر -->
+        <div class="col-md-2-4 col-lg-2 col-md-4 col-sm-6">
+            <div class="stats-box" style="background: {{ box_colors.early }};">
+                <div class="stats-icon">
+                    <i class="fas fa-calendar-check"></i>
                 </div>
-                <h6 class="text-muted">مرفوضة</h6>
-                <h3 class="text-danger">{{ rejected }}</h3>
+                <div class="stats-number counter" data-target="{{ early_admissions }}">0</div>
+                <div class="stats-label">
+                    <i class="fas fa-rocket me-1"></i>
+                    حالات دخول باكر (غداً)
+                </div>
             </div>
         </div>
-    </div>
-
-    <div class="col-md-2">
-        <div class="card text-center border-success shadow-sm hover-shadow">
-            <div class="card-body">
-                <div class="icon-circle bg-success bg-opacity-10 mb-2 mx-auto">
-                    <i class="bi bi-check2-all text-success"></i>
+        
+        <!-- ✅ E/ نظرة عامة على موقف الحالات -->
+        <div class="col-md-2-4 col-lg-2 col-md-4 col-sm-6">
+            <div class="stats-box" style="background: {{ box_colors.overview }};">
+                <div class="stats-icon">
+                    <i class="fas fa-chart-pie"></i>
                 </div>
-                <h6 class="text-muted">تم التنفيذ</h6>
-                <h3 class="text-success">{{ service_done }}</h3>
+                <div class="stats-number">
+                    <i class="fas fa-chevron-down me-1"></i>
+                    <span class="counter" data-target="{{ total_cases }}">0</span>
+                </div>
+                <div class="stats-label">
+                    <i class="fas fa-eye me-1"></i>
+                    نظرة عامة على موقف الحالات
+                </div>
             </div>
         </div>
+        
     </div>
 
-</div>
-
+   <!-- ============================================ -->
+<!-- ✅ تفاصيل الحالات (نظرة عامة) -->
 <!-- ============================================ -->
-<!-- شريط البحث -->
-<!-- ============================================ -->
-<div class="card shadow-sm border-0 hover-shadow">
-
-    <div class="card-body">
-
-        <form method="get">
-
-            <div class="row g-3 align-items-end">
-
-                <div class="col-md-7">
-
-                    <label class="form-label fw-bold small text-muted">
-                        <i class="bi bi-search"></i> بحث
-                    </label>
-
-                    <input
-                        type="text"
-                        class="form-control form-control-lg"
-                        name="search"
-                        placeholder="اسم المريض أو الطبيب أو رقم الموافقة..."
-                        value="{{ search }}"
-                    >
-
-                </div>
-
-                <div class="col-md-3">
-
-                    <label class="form-label fw-bold small text-muted">
-                        <i class="bi bi-filter"></i> الحالة
-                    </label>
-
-                    <select name="status" class="form-select form-select-lg">
-                        <option value="">كل الحالات</option>
-                        <option value="pending" {% if status == 'pending' %}selected{% endif %}>قيد الانتظار</option>
-                        <option value="approved" {% if status == 'approved' %}selected{% endif %}>تمت الموافقة</option>
-                        <option value="rejected" {% if status == 'rejected' %}selected{% endif %}>مرفوضة</option>
-                        <option value="service_done" {% if status == 'service_done' %}selected{% endif %}>تم التنفيذ</option>
-                    </select>
-
-                </div>
-
-                <div class="col-md-2">
-
-                    <button class="btn btn-primary btn-lg w-100">
-                        <i class="bi bi-search"></i> بحث
-                    </button>
-
-                </div>
-
-            </div>
-
-        </form>
-
-    </div>
-
-</div>
-
-<!-- ============================================ -->
-<!-- عرض عدد النتائج -->
-<!-- ============================================ -->
-<div class="d-flex justify-content-between align-items-center mt-3">
-    <div class="alert alert-info mb-0 d-flex align-items-center gap-2">
-        <i class="bi bi-list"></i>
-        عدد النتائج:
-        <strong class="badge bg-info rounded-pill fs-6">
-            {{ page_obj.paginator.count }}
-        </strong>
-    </div>
-    <a href="{% url 'external_approvals' %}" class="btn btn-outline-secondary btn-sm">
-        <i class="bi bi-arrow-counterclockwise"></i> مسح الكل
-    </a>
-</div>
-
-<!-- ============================================ -->
-<!-- جدول البيانات -->
-<!-- ============================================ -->
-<div class="card shadow-sm border-0 mt-3 hover-shadow">
-
-    <div class="card-header d-flex justify-content-between align-items-center">
-        <h5 class="mb-0">
-            <i class="bi bi-table"></i>
-            قائمة الطلبات
+<div class="card shadow-sm border-0">
+    <div class="card-header bg-white">
+        <h5 class="fw-bold mb-0">
+            <i class="fas fa-chart-bar text-primary me-2"></i>
+            توزيع الحالات حسب الحالة
         </h5>
-        <span class="badge bg-primary rounded-pill">
-            {{ page_obj.paginator.count }}
-        </span>
+        <small class="text-muted">
+            إجمالي <span class="fw-bold">{{ total_cases }}</span> حالة
+        </small>
     </div>
-
     <div class="card-body">
-
-        <div class="table-responsive">
-
-            <table class="table table-hover table-striped align-middle">
-
-                <thead class="table-light">
-
-                    <tr>
-
-                        <th>#</th>
-                        <th>المريض</th>
-                        <th>الجهة</th>
-                        <th>الطبيب</th>
-                        <th>الحالة</th>
-                        <th>رقم الموافقة</th>
-                        <th>التاريخ</th>
-
-                    </tr>
-
-                </thead>
-
-                <tbody>
-
-                {% for item in page_obj %}
-
-                    <tr>
-
-                        <td>
-
-                            <a href="{% url 'approval_detail' item.id %}" class="badge bg-primary rounded-pill text-decoration-none">
-                                {{ item.id }}
-                            </a>
-
-                        </td>
-
-                        <td>
-    <a href="{% url 'patient_detail' item.patient.id %}">
-        {{ item.patient.full_name }}
-    </a>
-</td>
-
-                        <td>{{ item.entity.name }}</td>
-
-                       <td>
-    <a href="{% url 'doctor_detail' item.doctor_name %}">
-        {{ item.doctor_name }}
-    </a>
-</td>
-
-                        <td>
-                            {% if item.status == "approved" %}
-                                <span class="badge bg-success rounded-pill">
-                                    <i class="bi bi-check-circle"></i> تمت الموافقة
-                                </span>
-                            {% elif item.status == "pending" %}
-                                <span class="badge bg-warning text-dark rounded-pill">
-                                    <i class="bi bi-clock"></i> قيد الانتظار
-                                </span>
-                            {% elif item.status == "rejected" %}
-                                <span class="badge bg-danger rounded-pill">
-                                    <i class="bi bi-x-circle"></i> مرفوضة
-                                </span>
-                            {% elif item.status == "service_done" %}
-                                <span class="badge bg-primary rounded-pill">
-                                    <i class="bi bi-check2-all"></i> تم تنفيذ الخدمة
-                                </span>
-                            {% elif item.status == "patient_refused" %}
-                                <span class="badge bg-secondary rounded-pill">
-                                    <i class="bi bi-person-x"></i> رفض المريض
-                                </span>
-                            {% else %}
-                                <span class="badge bg-dark rounded-pill">
-                                    {{ item.status }}
-                                </span>
-                            {% endif %}
-                        </td>
-
-                        <td>
-                            <span class="badge bg-light text-dark rounded-pill">
-                                {{ item.approval_number|default:"-" }}
-                            </span>
-                        </td>
-
-                        <td>
-                            <span class="text-muted">
-                                {{ item.request_date|date:"Y-m-d" }}
-                            </span>
-                        </td>
-
-                    </tr>
-
-                {% empty %}
-
-                    <tr>
-                        <td colspan="7" class="text-center text-muted py-4">
-                            <i class="bi bi-inbox fa-3x d-block mb-3"></i>
-                            لا توجد طلبات مطابقة للبحث
-                        </td>
-                    </tr>
-
-                {% endfor %}
-
-                </tbody>
-
-            </table>
-
-        </div>
-
-        <!-- ============================================ -->
-        <!-- الترقيم -->
-        <!-- ============================================ -->
-        <nav>
-
-            <ul class="pagination justify-content-center">
-
-                {% if page_obj.has_previous %}
-
-                <li class="page-item">
-
-                    <a class="page-link"
-                       href="?page=1&search={{ search }}&status={{ status }}">
-
-                        <i class="bi bi-chevron-double-right"></i>
-                        الأولى
-
-                    </a>
-
-                </li>
-
-                <li class="page-item">
-
-                    <a class="page-link"
-                       href="?page={{ page_obj.previous_page_number }}&search={{ search }}&status={{ status }}">
-
-                        <i class="bi bi-chevron-right"></i>
-                        السابق
-
-                    </a>
-
-                </li>
-
-                {% endif %}
-
-                <li class="page-item active">
-
-                    <span class="page-link">
-
-                        {{ page_obj.number }}
-
+        <div class="row">
+            {% for status in status_data %}
+            <div class="col-md-6 col-lg-4">
+                <div class="status-item">
+                    <span class="status-badge" style="background: {{ status.color }}; color: #fff;">
+                        {{ status.name }}
                     </span>
-
-                </li>
-
-                {% if page_obj.has_next %}
-
-                <li class="page-item">
-
-                    <a class="page-link"
-                       href="?page={{ page_obj.next_page_number }}&search={{ search }}&status={{ status }}">
-
-                        التالي
-                        <i class="bi bi-chevron-left"></i>
-
-                    </a>
-
-                </li>
-
-                <li class="page-item">
-
-                    <a class="page-link"
-                       href="?page={{ page_obj.paginator.num_pages }}&search={{ search }}&status={{ status }}">
-
-                        الأخيرة
-                        <i class="bi bi-chevron-double-left"></i>
-
-                    </a>
-
-                </li>
-
-                {% endif %}
-
-            </ul>
-
-        </nav>
-
+                    <span class="fw-bold fs-5">{{ status.count }}</span>
+                    <div class="status-progress">
+                        <div class="bar" style="width: {{ status.percentage }}%; background: {{ status.color }};"></div>
+                    </div>
+                    <span class="text-muted small" style="min-width: 45px; text-align: right;">
+                        {{ status.percentage }}%
+                    </span>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <div class="text-center py-4">
+                    <i class="fas fa-inbox fa-2x text-muted mb-2 d-block"></i>
+                    <p class="text-muted mb-0">لا توجد حالات</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
     </div>
-
 </div>
+</div>
+
+<script>
+// ============================================
+// ✅ Counter Animation
+// ============================================
+document.addEventListener('DOMContentLoaded', function() {
+    
+    const counters = document.querySelectorAll('.counter');
+    
+    counters.forEach(counter => {
+        const targetStr = counter.getAttribute('data-target');
+        const target = parseInt(targetStr.replace(/,/g, ''));
+        let current = 0;
+        const increment = Math.max(1, Math.ceil(target / 50));
+        
+        const updateCounter = () => {
+            if (current < target) {
+                current += increment;
+                if (current > target) current = target;
+                counter.textContent = current.toLocaleString('en-US');
+                requestAnimationFrame(updateCounter);
+            } else {
+                counter.textContent = target.toLocaleString('en-US');
+            }
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    updateCounter();
+                    observer.unobserve(entry.target);
+                }
+            });
+        });
+        
+        observer.observe(counter);
+    });
+    
+});
+</script>
 
 {% endblock %}

@@ -843,8 +843,8 @@
                             <td>
                                 <span class="badge bg-warning text-dark">{{ record.sector|default:"-" }}</span>
                             </td>
-                            <td>{{ record.entity_name|default:"-"|truncatechars:20 }}</td>
-                            <td>{{ record.package_name|default:"-"|truncatechars:20 }}</td>
+                            <td>{{ record.entity_name|default:"-" }}</td>
+                            <td>{{ record.package_name|default:"-" }}</td>
                             <td>
                                 <span class="amount-number">
                                     {{ record.amount|floatformat:2|intcomma }}
