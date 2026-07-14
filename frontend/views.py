@@ -395,25 +395,34 @@ def external_approvals(request):
     # ============================================
     # 📊 B/ الحالات المعطلة طرف الحسابات
     # ============================================
+    # المقارنة بين Approval (موجود) و Billing Status (فارغ)
+    # = الحالات اللي فيها Approval مش فارغ و Billing Status فارغ
     pending_accounts = all_records.filter(
-        ~Q(approval__isnull=True) & ~Q(approval=''),
-        Q(billing_status__isnull=True) | Q(billing_status='')
+        ~Q(approval__isnull=True) & ~Q(approval=''),  # Approval موجود
+        Q(billing_status__isnull=True) | Q(billing_status='')  # Billing Status فارغ
     ).count()
     
     # ============================================
     # 📊 C/ الحالات المعطلة طرف منسق العيادات
     # ============================================
+    # المقارنة بين Approval (موجود) و Admission Date (فارغ)
+    # = الحالات اللي فيها Approval مش فارغ و Admission Date فارغ
     pending_coordinator = all_records.filter(
-        ~Q(approval__isnull=True) & ~Q(approval=''),
-        Q(admission_date__isnull=True)
+        ~Q(approval__isnull=True) & ~Q(approval=''),  # Approval موجود
+        Q(admission_date__isnull=True)  # تاريخ الدخول فارغ
     ).count()
     
     # ============================================
-    # 📊 D/ حالات دخول باكر
+    # 📊 D/ حالات دخول باكر (غداً)
     # ============================================
-    today = timezone.now().date()
+    # ✅ الخطوة 1: جيب تاريخ النهاردة الفعلي من السيرفر
+    today = timezone.localtime().date()  # ✅ بدلاً من timezone.now().date()
+
+    
+    # ✅ الخطوة 2: احسب تاريخ الغد
     tomorrow = today + timedelta(days=1)
     
+    # ✅ الخطوة 3: فلتر السجلات اللي تاريخ دخولها = الغد
     early_admissions = all_records.filter(
         admission_date=tomorrow
     ).count()
@@ -421,6 +430,7 @@ def external_approvals(request):
     # ============================================
     # 📊 E/ نظرة عامة على موقف الحالات
     # ============================================
+    # توزيع الحالات حسب Main Status
     status_distribution = (
         all_records
         .values('main_status')
@@ -428,10 +438,12 @@ def external_approvals(request):
         .order_by('-count')
     )
     
+    # إجمالي الحالات المحددة الحالة
     defined_status_count = all_records.filter(
         ~Q(main_status__isnull=True) & ~Q(main_status='')
     ).count()
     
+    # الحالات غير المحددة
     undefined_status = total_cases - defined_status_count
     
     # ✅ ألوان الحالات
@@ -440,6 +452,7 @@ def external_approvals(request):
         'Pending': '#ffc107',
         'Rejected': '#dc3545',
         'Serv. Done': '#17a2b8',
+        'Patient refused': '#6c757d',
         'غير محدد': '#6c757d',
     }
     
@@ -453,7 +466,7 @@ def external_approvals(request):
             'name': status_name,
             'count': count,
             'percentage': percentage,
-            'color': status_colors.get(status_name, '#6c757d'),  # ✅ إضافة اللون هنا
+            'color': status_colors.get(status_name, '#6c757d'),
         })
     
     # ✅ إضافة "غير محدد" إذا كان موجود
@@ -478,11 +491,11 @@ def external_approvals(request):
     # ✅ إعداد الألوان لكل بوكس
     # ============================================
     box_colors = {
-        'total': 'linear-gradient(135deg, #1a237e, #0d47a1)',
-        'accounts': 'linear-gradient(135deg, #b71c1c, #d32f2f)',
-        'coordinator': 'linear-gradient(135deg, #e65100, #f57c00)',
-        'early': 'linear-gradient(135deg, #1b5e20, #2e7d32)',
-        'overview': 'linear-gradient(135deg, #4a148c, #6a1b9a)',
+        'total': 'linear-gradient(135deg, #1a237e, #0d47a1)',  # أزرق غامق
+        'accounts': 'linear-gradient(135deg, #b71c1c, #d32f2f)',  # أحمر
+        'coordinator': 'linear-gradient(135deg, #e65100, #f57c00)',  # برتقالي
+        'early': 'linear-gradient(135deg, #1b5e20, #2e7d32)',  # أخضر غامق
+        'overview': 'linear-gradient(135deg, #4a148c, #6a1b9a)',  # بنفسجي
     }
     
     context = {

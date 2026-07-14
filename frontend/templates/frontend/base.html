@@ -780,12 +780,14 @@ body {
             </a>
 
             <div class="collapse submenu" id="approvalMenu">
-                <a href="{% url 'external_approvals' %}">
-                    <i class="bi bi-list"></i> لوحة المتابعة
-                </a>
-                <a href="{% url 'patient_search' %}">
+
+                  <a href="{% url 'patient_search' %}">
                     <i class="bi bi-search"></i> بحث عن مريض
                 </a>
+                <a href="{% url 'external_approvals' %}">
+                    <i class="bi bi-list"></i>  متابعة الموافقات 
+                </a>
+              
             </div>
         </li>
 
