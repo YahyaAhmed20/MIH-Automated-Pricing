@@ -374,15 +374,18 @@ def contract_entities(request):
 
     )
 
+# frontend/views.py
+
 def external_approvals(request):
     """
     صفحة متابعة موافقات الخارجي - شيت 12
-    عرض مؤشرات متابعة موافقات الخارجي
+    عرض مؤشرات متابعة موافقات الخارجي مع تفاصيل لكل بوكس
     """
 
-    from django.db.models import Count
+    from django.db.models import Count, Q
     from django.utils import timezone
     from datetime import timedelta
+    from django.core.paginator import Paginator
 
     # =====================================================
     # جلب جميع السجلات
@@ -394,6 +397,19 @@ def external_approvals(request):
     # =====================================================
     total_cases = all_records.count()
 
+    # ✅ بيانات تفصيلية لإجمالي الحالات
+    total_cases_details = all_records.values(
+        'attachment_type', 'patient_name', 'card_number', 'company',
+        'sub_account', 'date', 'medical_number', 'doctor_name',
+        'specialty', 'procedure', 'phone', 'main_status',
+        'initial_cost', 'billing_status', 'accounts_notes', 'received_cost'
+    ).order_by('-date')
+
+    # ✅ Pagination لإجمالي الحالات
+    paginator_total = Paginator(total_cases_details, 50)
+    page_total = request.GET.get('page_total', 1)
+    total_cases_page = paginator_total.get_page(page_total)
+
     # =====================================================
     # عدد الحالات التي لديها Approval
     # =====================================================
@@ -404,17 +420,22 @@ def external_approvals(request):
     ).count()
 
     # =====================================================
-    # NEW
     # حالات بدون موافقة
     # =====================================================
-    cases_without_approval = max(
-        total_cases - approval_count,
-        0
-    )
+    cases_without_approval = max(total_cases - approval_count, 0)
+
+    without_approval_details = all_records.filter(
+        Q(approval__isnull=True) | Q(approval='')
+    ).values(
+        'patient_name', 'company', 'date', 'doctor_name', 'main_status'
+    ).order_by('-date')
+
+    paginator_without = Paginator(without_approval_details, 50)
+    page_without = request.GET.get('page_without', 1)
+    without_approval_page = paginator_without.get_page(page_without)
 
     # =====================================================
     # B/ الحالات المعطلة طرف الحسابات
-    # Approval Count - Billing Status Count
     # =====================================================
     billing_count = all_records.exclude(
         billing_status__isnull=True
@@ -422,15 +443,21 @@ def external_approvals(request):
         billing_status=""
     ).count()
 
-    pending_accounts = max(
-        approval_count - billing_count,
-        0
-    )
+    pending_accounts = max(approval_count - billing_count, 0)
+
+    pending_accounts_details = all_records.filter(
+        ~Q(approval__isnull=True) & ~Q(approval=''),
+        Q(billing_status__isnull=True) | Q(billing_status='')
+    ).values(
+        'patient_name', 'company', 'date', 'doctor_name', 'main_status', 'billing_status'
+    ).order_by('-date')
+
+    paginator_accounts = Paginator(pending_accounts_details, 50)
+    page_accounts = request.GET.get('page_accounts', 1)
+    pending_accounts_page = paginator_accounts.get_page(page_accounts)
 
     # =====================================================
     # C/ الحالات المعطلة طرف منسق العيادات
-    # كل حالة فيها Billing Status
-    # وليس لها Admission Date
     # =====================================================
     pending_coordinator = all_records.exclude(
         billing_status__isnull=True
@@ -439,6 +466,20 @@ def external_approvals(request):
     ).filter(
         admission_date__isnull=True
     ).count()
+
+    pending_coordinator_details = all_records.exclude(
+        billing_status__isnull=True
+    ).exclude(
+        billing_status=""
+    ).filter(
+        admission_date__isnull=True
+    ).values(
+        'patient_name', 'company', 'date', 'doctor_name', 'main_status', 'admission_date'
+    ).order_by('-date')
+
+    paginator_coordinator = Paginator(pending_coordinator_details, 50)
+    page_coordinator = request.GET.get('page_coordinator', 1)
+    pending_coordinator_page = paginator_coordinator.get_page(page_coordinator)
 
     # =====================================================
     # D/ حالات دخول باكر
@@ -449,6 +490,16 @@ def external_approvals(request):
     early_admissions = all_records.filter(
         admission_date=tomorrow
     ).count()
+
+    early_admissions_details = all_records.filter(
+        admission_date=tomorrow
+    ).values(
+        'patient_name', 'company', 'date', 'doctor_name', 'main_status', 'admission_date'
+    ).order_by('-date')
+
+    paginator_early = Paginator(early_admissions_details, 50)
+    page_early = request.GET.get('page_early', 1)
+    early_admissions_page = paginator_early.get_page(page_early)
 
     # =====================================================
     # E/ نظرة عامة على موقف الحالات
@@ -563,6 +614,12 @@ def external_approvals(request):
         "early_admissions": early_admissions,
         "status_data": status_data,
         "box_colors": box_colors,
+        # ✅ البيانات مع Pagination
+        "total_cases_details": total_cases_page,
+        "without_approval_details": without_approval_page,
+        "pending_accounts_details": pending_accounts_page,
+        "pending_coordinator_details": pending_coordinator_page,
+        "early_admissions_details": early_admissions_page,
     }
 
     return render(

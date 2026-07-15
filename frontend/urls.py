@@ -54,6 +54,7 @@ urlpatterns = [
         views.approval_detail,
         name="approval_detail"
     ),
+    
 
     path('patient-search/', views.patient_search, name='patient_search'),
 
