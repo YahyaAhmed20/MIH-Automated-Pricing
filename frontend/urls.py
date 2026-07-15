@@ -112,6 +112,9 @@ urlpatterns = [
     views.pending_analysis,
     name="pending_analysis"
 ),
+    path('report-statistic/<int:pk>/', views.report_statistic_detail, name='report_statistic_detail'),
+    
+
     
     path(
     "company-discounts/",

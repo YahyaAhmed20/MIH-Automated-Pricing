@@ -1,351 +1,876 @@
+<!-- frontend/templates/frontend/pending_analysis.html -->
 {% extends 'frontend/base.html' %}
+{% load static %}
+{% load humanize %}
 
 {% block page_title %}
-تحليل الحالات المعلقة
+احصائيات الموافقات 
 {% endblock %}
 
 {% block content %}
 
-<!-- ============================================ -->
-<!-- العنوان -->
-<!-- ============================================ -->
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h3>
-        <i class="bi bi-clock-history"></i>
-        تحليل الحالات المعلقة
-    </h3>
-    <a href="{% url 'external_approvals' %}" class="btn btn-outline-secondary btn-sm">
-        <i class="bi bi-arrow-right"></i> العودة للموافقات
-    </a>
-</div>
+<style>
+    /* ============================================ */
+    /* 🌟 CSS Variables & Base Styles */
+    /* ============================================ */
+    :root {
+        --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --card-shadow: 0 8px 32px rgba(0,0,0,0.08);
+        --border-radius-lg: 20px;
+        --border-radius-md: 16px;
+        --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* ============================================ */
+    /* 🎴 Stat Cards - Modern Glass Effect */
+    /* ============================================ */
+    .stat-card {
+        position: relative;
+        border-radius: var(--border-radius-md);
+        padding: 1.5rem 1.25rem;
+        text-align: center;
+        color: #fff;
+        transition: var(--transition);
+        overflow: hidden;
+        min-height: 130px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        border: none;
+    }
+    
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 200%;
+        height: 200%;
+        background: rgba(255,255,255,0.05);
+        border-radius: 50%;
+        transition: var(--transition);
+    }
+    
+    .stat-card:hover {
+        transform: translateY(-6px) scale(1.02);
+        box-shadow: 0 16px 48px rgba(0,0,0,0.15);
+    }
+    
+    .stat-card:hover::before {
+        transform: scale(1.2);
+    }
+    
+    .stat-card .stat-icon {
+        font-size: 2rem;
+        margin-bottom: 6px;
+        opacity: 0.9;
+        filter: drop-shadow(0 2px 8px rgba(0,0,0,0.1));
+    }
+    
+    .stat-card .stat-number {
+        font-size: 2.2rem;
+        font-weight: 800;
+        line-height: 1.1;
+        letter-spacing: -0.5px;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .stat-card .stat-label {
+        font-size: 0.8rem;
+        opacity: 0.9;
+        margin-top: 4px;
+        font-weight: 500;
+        letter-spacing: 0.3px;
+    }
+    
+    .stat-card .stat-trend {
+        position: absolute;
+        top: 12px;
+        right: 14px;
+        font-size: 0.7rem;
+        background: rgba(255,255,255,0.2);
+        padding: 2px 10px;
+        border-radius: 20px;
+        backdrop-filter: blur(4px);
+    }
+    
+    /* Card Colors with Gradients */
+    .stat-card.primary { background: linear-gradient(135deg, #4f46e5, #7c3aed); }
+    .stat-card.warning { background: linear-gradient(135deg, #f59e0b, #d97706); }
+    .stat-card.success { background: linear-gradient(135deg, #10b981, #059669); }
+    .stat-card.info { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+    .stat-card.danger { background: linear-gradient(135deg, #ef4444, #dc2626); }
+    .stat-card.purple { background: linear-gradient(135deg, #8b5cf6, #6d28d9); }
+    .stat-card.teal { background: linear-gradient(135deg, #14b8a6, #0d9488); }
+    .stat-card.pink { background: linear-gradient(135deg, #ec4899, #db2777); }
+
+    /* ============================================ */
+    /* 🔍 Search Box - Modern Design */
+    /* ============================================ */
+    .search-box {
+        border-radius: 50px;
+        overflow: hidden;
+        box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+        background: #fff;
+        border: 2px solid transparent;
+        transition: var(--transition);
+    }
+    
+    .search-box:focus-within {
+        border-color: #4f46e5;
+        box-shadow: 0 4px 24px rgba(79, 70, 229, 0.15);
+    }
+    
+    .search-box .form-control {
+        border: none;
+        padding: 0.9rem 1.8rem;
+        background: transparent;
+        font-size: 0.95rem;
+        color: #1e293b;
+    }
+    
+    .search-box .form-control::placeholder {
+        color: #94a3b8;
+        font-weight: 400;
+    }
+    
+    .search-box .form-control:focus {
+        box-shadow: none;
+        background: transparent;
+    }
+    
+    .search-box .btn-search {
+        padding: 0.9rem 2.5rem;
+        border-radius: 0 50px 50px 0;
+        background: var(--primary-gradient);
+        color: #fff;
+        border: none;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: var(--transition);
+        letter-spacing: 0.3px;
+    }
+    
+    .search-box .btn-search:hover {
+        transform: scale(1.02);
+        box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    /* ============================================ */
+    /* 📊 Charts - Enhanced Container */
+    /* ============================================ */
+    .chart-container {
+        background: #fff;
+        border-radius: var(--border-radius-md);
+        padding: 1.5rem 1.25rem;
+        box-shadow: var(--card-shadow);
+        height: 100%;
+        border: 1px solid rgba(241, 245, 249, 0.8);
+        transition: var(--transition);
+    }
+    
+    .chart-container:hover {
+        box-shadow: 0 12px 40px rgba(0,0,0,0.08);
+        transform: translateY(-2px);
+    }
+    
+    .chart-container .chart-title {
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: #334155;
+        margin-bottom: 1.2rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding-bottom: 0.75rem;
+        border-bottom: 2px solid #f1f5f9;
+    }
+    
+    .chart-container .chart-title i {
+        font-size: 1.1rem;
+        width: 28px;
+        height: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        background: #f1f5f9;
+    }
+    
+    .chart-container canvas {
+        max-height: 220px;
+        max-width: 100%;
+    }
+
+    /* ============================================ */
+    /* 📋 Lists - Rank Badges & Items */
+    /* ============================================ */
+    .list-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 16px;
+        border-bottom: 1px solid #f1f5f9;
+        transition: var(--transition);
+        border-radius: 10px;
+        margin: 2px 0;
+    }
+    
+    .list-item:hover {
+        background: #f8fafc;
+        transform: translateX(4px);
+    }
+    
+    .list-item:last-child {
+        border-bottom: none;
+    }
+    
+    .list-item .item-info {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    
+    .rank-badge {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 0.75rem;
+        color: #fff;
+        flex-shrink: 0;
+        transition: var(--transition);
+    }
+    
+    .rank-badge.gold { 
+        background: linear-gradient(135deg, #fbbf24, #f59e0b);
+        color: #78350f;
+        box-shadow: 0 2px 12px rgba(245, 158, 11, 0.3);
+    }
+    .rank-badge.silver { 
+        background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
+        color: #475569;
+        box-shadow: 0 2px 12px rgba(148, 163, 184, 0.3);
+    }
+    .rank-badge.bronze { 
+        background: linear-gradient(135deg, #fb923c, #f97316);
+        color: #7c2d12;
+        box-shadow: 0 2px 12px rgba(249, 115, 22, 0.3);
+    }
+    .rank-badge.default { 
+        background: #e2e8f0;
+        color: #64748b;
+    }
+
+    /* ============================================ */
+    /* 🗂️ Table - Enhanced Design */
+    /* ============================================ */
+    .table-container {
+        overflow-x: auto;
+        border-radius: var(--border-radius-md);
+    }
+    
+    .table-custom {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        font-size: 0.9rem;
+    }
+    
+    .table-custom thead th {
+        background: #f8fafc;
+        color: #475569;
+        font-weight: 700;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        padding: 1rem 1.2rem;
+        border-bottom: 2px solid #e2e8f0;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+    
+    .table-custom tbody td {
+        padding: 0.9rem 1.2rem;
+        vertical-align: middle;
+        border-bottom: 1px solid #f1f5f9;
+        color: #1e293b;
+    }
+    
+    .table-custom tbody tr {
+        transition: var(--transition);
+    }
+    
+    .table-custom tbody tr:hover {
+        background: #f8fafc;
+        transform: scale(1.002);
+    }
+    
+    .table-custom tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    /* ============================================ */
+    /* 🏷️ Badges - Status & Age */
+    /* ============================================ */
+    .badge-age {
+        padding: 0.35rem 0.9rem;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 0.75rem;
+    }
+    
+    .badge-age.old { background: #fee2e2; color: #991b1b; }
+    .badge-age.medium { background: #fef3c7; color: #92400e; }
+    .badge-age.new { background: #d1fae5; color: #065f46; }
+
+    /* ============================================ */
+    /* 📄 Pagination - Modern */
+    /* ============================================ */
+    .pagination-custom .page-item .page-link {
+        border: none;
+        padding: 0.5rem 1rem;
+        margin: 0 3px;
+        border-radius: 10px;
+        color: #475569;
+        font-weight: 500;
+        transition: var(--transition);
+        background: transparent;
+    }
+    
+    .pagination-custom .page-item .page-link:hover {
+        background: #eef2ff;
+        color: #4f46e5;
+        transform: translateY(-2px);
+    }
+    
+    .pagination-custom .page-item.active .page-link {
+        background: var(--primary-gradient);
+        color: #fff;
+        box-shadow: 0 4px 16px rgba(79, 70, 229, 0.3);
+    }
+
+    /* ============================================ */
+    /* 📱 Responsive */
+    /* ============================================ */
+    @media (max-width: 1200px) {
+        .stat-card .stat-number { font-size: 1.8rem; }
+        .stat-card { min-height: 110px; padding: 1.2rem; }
+    }
+    
+    @media (max-width: 992px) {
+        .stat-card .stat-number { font-size: 1.6rem; }
+        .chart-container canvas { max-height: 180px; }
+    }
+    
+    @media (max-width: 768px) {
+        .stat-card { 
+            min-height: 100px; 
+            padding: 1rem;
+        }
+        .stat-card .stat-number { font-size: 1.4rem; }
+        .stat-card .stat-icon { font-size: 1.5rem; }
+        .stat-card .stat-label { font-size: 0.7rem; }
+        .search-box .btn-search { 
+            padding: 0.7rem 1.5rem;
+            font-size: 0.8rem;
+        }
+        .search-box .form-control { 
+            padding: 0.7rem 1.2rem;
+            font-size: 0.85rem;
+        }
+        .table-custom thead th,
+        .table-custom tbody td {
+            padding: 0.6rem 0.8rem;
+            font-size: 0.8rem;
+        }
+        .chart-container { padding: 1rem; }
+        .chart-container canvas { max-height: 150px; }
+    }
+    
+    @media (max-width: 576px) {
+        .stat-card .stat-number { font-size: 1.2rem; }
+        .stat-card { 
+            min-height: 85px;
+            padding: 0.8rem;
+        }
+        .stat-card .stat-icon { font-size: 1.2rem; }
+        .search-box .btn-search { 
+            padding: 0.6rem 1rem;
+            font-size: 0.75rem;
+        }
+        .search-box .form-control { 
+            padding: 0.6rem 1rem;
+            font-size: 0.8rem;
+        }
+        .rank-badge { 
+            width: 24px; 
+            height: 24px; 
+            font-size: 0.65rem;
+        }
+        .list-item { 
+            padding: 8px 12px;
+            font-size: 0.85rem;
+        }
+        .pagination-custom .page-item .page-link {
+            padding: 0.3rem 0.7rem;
+            font-size: 0.8rem;
+        }
+    }
+</style>
 
 <!-- ============================================ -->
-<!-- شريط البحث -->
+<!-- ✅ Main Content -->
 <!-- ============================================ -->
-<div class="card shadow-sm border-0 mb-4 hover-shadow">
+<div class="container-fluid py-3 py-md-4">
+    
+    <!-- Header -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+        <div>
+            <h4 class="mb-0 fw-bold text-dark">
+                <i class="fas fa-chart-pie text-primary me-2"></i>
+احصائيات الموافقات 
+            </h4>
+            <p class="text-muted small mb-0">
+                <i class="fas fa-database me-1"></i>
+                نظرة شاملة على  احصائيات الموافقات 
 
-    <div class="card-body">
+            </p>
+        </div>
+        <a href="{% url 'external_approvals' %}" class="btn btn-outline-secondary btn-sm rounded-pill px-4">
+            <i class="fas fa-arrow-right me-1"></i> رجوع
+        </a>
+    </div>
 
-        <form method="get">
-
-            <div class="row g-3 align-items-end">
-
-                <div class="col-md-9">
-
-                    <label class="form-label fw-bold small text-muted">
-                        <i class="bi bi-search"></i> بحث
-                    </label>
-
-                    <input 
-                        type="text" 
-                        name="search" 
-                        class="form-control form-control-lg" 
-                        placeholder="بحث باسم المريض، الطبيب، أو الجهة..."
-                        value="{{ search }}"
-                    >
-
-                </div>
-
-                <div class="col-md-3">
-
-                    <button class="btn btn-primary btn-lg w-100" type="submit">
-                        <i class="bi bi-search"></i> بحث
-                    </button>
-
-                </div>
-
-            </div>
-
+    <!-- Search Box -->
+    <div class="search-box mb-4">
+        <form method="GET" class="d-flex">
+            <input type="text" 
+                   name="search" 
+                   class="form-control" 
+                   placeholder="🔍 ابحث باسم المريض، التخصص، أو الجهة..."
+                   value="{{ search }}">
+            <button class="btn btn-search" type="submit">
+                <i class="fas fa-search me-2"></i> بحث
+            </button>
         </form>
-
     </div>
 
-</div>
-
-<!-- ============================================ -->
-<!-- بطاقات الإحصائيات -->
-<!-- ============================================ -->
-<div class="row g-3 mb-4">
-
-    <div class="col-md-3">
-        <div class="card border-warning shadow-sm h-100 hover-shadow">
-            <div class="card-body text-center">
-                <div class="icon-circle bg-warning bg-opacity-10 mb-2 mx-auto">
-                    <i class="bi bi-hourglass-split text-warning"></i>
-                </div>
-                <h6 class="text-muted">إجمالي الحالات المعلقة</h6>
-                <h2 class="text-warning">{{ pending_count }}</h2>
+    <!-- ============================================ -->
+    <!-- ✅ Stat Cards - 8 Cards Grid -->
+    <!-- ============================================ -->
+    <div class="row g-3 g-md-4 mb-4">
+        
+        <div class="col-6 col-md-4 col-lg-3 col-xl-1-5">
+            <div class="stat-card warning">
+                <div class="stat-icon"><i class="fas fa-hourglass-half"></i></div>
+                <div class="stat-number">{{ pending_count }}</div>
+                <div class="stat-label">إجمالي المعلقة</div>
             </div>
         </div>
-    </div>
-
-    <div class="col-md-3">
-        <div class="card border-primary shadow-sm h-100 hover-shadow">
-            <div class="card-body text-center">
-                <div class="icon-circle bg-primary bg-opacity-10 mb-2 mx-auto">
-                    <i class="bi bi-currency-dollar text-primary"></i>
-                </div>
-                <h6 class="text-muted">متوسط قيمة الطلب</h6>
-                <h2 class="text-primary">{{ avg_cost }} <small>ج.م</small></h2>
+        
+        <div class="col-6 col-md-4 col-lg-3 col-xl-1-5">
+            <div class="stat-card primary">
+                <div class="stat-icon"><i class="fas fa-currency-dollar"></i></div>
+                <div class="stat-number">{{ total_cost }}</div>
+                <div class="stat-label">إجمالي التكلفة</div>
             </div>
         </div>
-    </div>
-
-    <div class="col-md-3">
-        <div class="card border-info shadow-sm h-100 hover-shadow">
-            <div class="card-body text-center">
-                <div class="icon-circle bg-info bg-opacity-10 mb-2 mx-auto">
-                    <i class="bi bi-building text-info"></i>
-                </div>
-                <h6 class="text-muted">عدد الجهات</h6>
-                <h2 class="text-info">{{ entities_count }}</h2>
+        
+        <div class="col-6 col-md-4 col-lg-3 col-xl-1-5">
+            <div class="stat-card info">
+                <div class="stat-icon"><i class="fas fa-building"></i></div>
+                <div class="stat-number">{{ entities_count }}</div>
+                <div class="stat-label">الجهات</div>
             </div>
         </div>
-    </div>
-
-    <div class="col-md-3">
-        <div class="card border-success shadow-sm h-100 hover-shadow">
-            <div class="card-body text-center">
-                <div class="icon-circle bg-success bg-opacity-10 mb-2 mx-auto">
-                    <i class="bi bi-person-badge text-success"></i>
-                </div>
-                <h6 class="text-muted">عدد الأطباء</h6>
-                <h2 class="text-success">{{ doctors_count }}</h2>
+        
+        <div class="col-6 col-md-4 col-lg-3 col-xl-1-5">
+            <div class="stat-card success">
+                <div class="stat-icon"><i class="fas fa-user-md"></i></div>
+                <div class="stat-number">{{ doctors_count }}</div>
+                <div class="stat-label">التخصصات</div>
             </div>
         </div>
+        
+        <div class="col-6 col-md-4 col-lg-3 col-xl-1-5">
+            <div class="stat-card danger">
+                <div class="stat-icon"><i class="fas fa-clock"></i></div>
+                <div class="stat-number">{{ avg_cost }}</div>
+                <div class="stat-label">متوسط التكلفة</div>
+            </div>
+        </div>
+        
+        <div class="col-6 col-md-4 col-lg-3 col-xl-1-5">
+            <div class="stat-card purple">
+                <div class="stat-icon"><i class="fas fa-layer-group"></i></div>
+                <div class="stat-number">{{ total_entities }}</div>
+                <div class="stat-label">أعلى الجهات</div>
+            </div>
+        </div>
+        
+        <div class="col-6 col-md-4 col-lg-3 col-xl-1-5 d-xl-none">
+            <div class="stat-card teal">
+                <div class="stat-icon"><i class="fas fa-percent"></i></div>
+                <div class="stat-number">{% widthratio pending_count pending_count 100 %}%</div>
+                <div class="stat-label">النسبة</div>
+            </div>
+        </div>
+        
     </div>
 
-</div>
-
-<hr>
-
-<!-- ============================================ -->
-<!-- أعلى الجهات والأطباء -->
-<!-- ============================================ -->
-<div class="row g-4 mb-4">
-
-    <div class="col-md-6">
-
-        <div class="card shadow-sm border-0 h-100 hover-shadow">
-
-            <div class="card-header bg-warning bg-opacity-10 d-flex justify-content-between align-items-center">
-                <span>
-                    <i class="bi bi-building"></i>
-                    أعلى الجهات المعلقة
-                </span>
-                <span class="badge bg-warning text-dark rounded-pill">
-                    {{ top_entities|length }}
-                </span>
+    <!-- ============================================ -->
+    <!-- ✅ Charts - 4 Charts Grid -->
+    <!-- ============================================ -->
+    <div class="row g-3 g-md-4 mb-4">
+        
+        <div class="col-md-6 col-xl-3">
+            <div class="chart-container">
+                <div class="chart-title">
+                    <i class="fas fa-chart-pie text-warning"></i>
+                    توزيع الجهات
+                </div>
+                <canvas id="entityChart"></canvas>
             </div>
+        </div>
+        
+        <div class="col-md-6 col-xl-3">
+            <div class="chart-container">
+                <div class="chart-title">
+                    <i class="fas fa-chart-bar text-primary"></i>
+                    توزيع التخصصات
+                </div>
+                <canvas id="doctorChart"></canvas>
+            </div>
+        </div>
+        
+        <div class="col-md-6 col-xl-3">
+            <div class="chart-container">
+                <div class="chart-title">
+                    <i class="fas fa-clock text-danger"></i>
+                    عمر الطلبات
+                </div>
+                <canvas id="ageChart"></canvas>
+            </div>
+        </div>
+        
+        <div class="col-md-6 col-xl-3">
+            <div class="chart-container">
+                <div class="chart-title">
+                    <i class="fas fa-stethoscope text-success"></i>
+                    التوزيع حسب القطاع
+                </div>
+                <canvas id="specialtyChart"></canvas>
+            </div>
+        </div>
+        
+    </div>
 
-            <div class="card-body p-0">
-
-                <div class="list-group list-group-flush">
-
+    <!-- ============================================ -->
+    <!-- ✅ Top Entities & Specialties -->
+    <!-- ============================================ -->
+    <div class="row g-3 g-md-4 mb-4">
+        
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
+                <div class="card-header bg-white border-0 py-3">
+                    <h6 class="mb-0 fw-bold">
+                        <i class="fas fa-building text-warning me-2"></i>
+                        أعلى الجهات المعلقة
+                    </h6>
+                </div>
+                <div class="card-body p-0">
                     {% for item in top_entities %}
-
-                    <div class="list-group-item d-flex justify-content-between align-items-center">
-                        <span>
-                            <span class="badge bg-warning text-dark rounded-circle me-2">
+                    <div class="list-item">
+                        <div class="item-info">
+                            <span class="rank-badge 
+                                {% if forloop.counter == 1 %}gold
+                                {% elif forloop.counter == 2 %}silver
+                                {% elif forloop.counter == 3 %}bronze
+                                {% else %}default{% endif %}">
                                 {{ forloop.counter }}
                             </span>
-                            <strong>{{ item.entity__name }}</strong>
-                        </span>
-                        <span class="badge bg-warning text-dark rounded-pill">
+                            <strong>{{ item.entity_name|default:"غير محدد" }}</strong>
+                        </div>
+                        <span class="badge bg-warning bg-opacity-25 text-dark rounded-pill px-3 py-2">
                             {{ item.total }}
                         </span>
                     </div>
-
                     {% empty %}
-
-                    <div class="list-group-item text-center text-muted py-4">
-                        <i class="bi bi-inbox"></i>
+                    <div class="text-center py-4 text-muted">
+                        <i class="fas fa-inbox fa-2x d-block mb-2 opacity-50"></i>
                         لا توجد جهات
                     </div>
-
                     {% endfor %}
-
                 </div>
-
             </div>
-
         </div>
-
-    </div>
-
-    <div class="col-md-6">
-
-        <div class="card shadow-sm border-0 h-100 hover-shadow">
-
-            <div class="card-header bg-info bg-opacity-10 d-flex justify-content-between align-items-center">
-                <span>
-                    <i class="bi bi-person-badge"></i>
-                    أعلى الأطباء بالحالات المعلقة
-                </span>
-                <span class="badge bg-info rounded-pill">
-                    {{ top_doctors|length }}
-                </span>
-            </div>
-
-            <div class="card-body p-0">
-
-                <div class="list-group list-group-flush">
-
+        
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
+                <div class="card-header bg-white border-0 py-3">
+                    <h6 class="mb-0 fw-bold">
+                        <i class="fas fa-stethoscope text-info me-2"></i>
+                        أعلى التخصصات
+                    </h6>
+                </div>
+                <div class="card-body p-0">
                     {% for item in top_doctors %}
-
-                    <div class="list-group-item d-flex justify-content-between align-items-center">
-                        <span>
-                            <span class="badge bg-info rounded-circle me-2">
+                    <div class="list-item">
+                        <div class="item-info">
+                            <span class="rank-badge 
+                                {% if forloop.counter == 1 %}gold
+                                {% elif forloop.counter == 2 %}silver
+                                {% elif forloop.counter == 3 %}bronze
+                                {% else %}default{% endif %}">
                                 {{ forloop.counter }}
                             </span>
-                            <td>
-    <a href="{% url 'doctor_detail' item.doctor_name %}">
-        {{ item.doctor_name }}
-    </a>
-</td>
-                        </span>
-                        <span class="badge bg-info rounded-pill">
+                            <strong>{{ item.specialty|default:"غير محدد" }}</strong>
+                        </div>
+                        <span class="badge bg-info bg-opacity-25 text-dark rounded-pill px-3 py-2">
                             {{ item.total }}
                         </span>
                     </div>
-
                     {% empty %}
-
-                    <div class="list-group-item text-center text-muted py-4">
-                        <i class="bi bi-inbox"></i>
-                        لا يوجد أطباء
+                    <div class="text-center py-4 text-muted">
+                        <i class="fas fa-inbox fa-2x d-block mb-2 opacity-50"></i>
+                        لا يوجد تخصصات
                     </div>
-
                     {% endfor %}
-
                 </div>
-
             </div>
-
         </div>
-
+        
     </div>
 
-</div>
-
-<hr>
-
-<!-- ============================================ -->
-<!-- قائمة الحالات المعلقة -->
-<!-- ============================================ -->
-<div class="card shadow-sm border-0 hover-shadow">
-
-    <div class="card-header d-flex justify-content-between align-items-center">
-        <span>
-            <i class="bi bi-list"></i>
-            الحالات المعلقة
-        </span>
-        <span class="badge bg-warning text-dark rounded-pill">
-            {{ pending_cases|length }}
-        </span>
-    </div>
-
-    <div class="card-body">
-
-        <div class="table-responsive">
-
-            <table class="table table-hover table-striped align-middle">
-
-                <thead class="table-light">
-
+    <!-- ============================================ -->
+    <!-- ✅ Pending Cases Table -->
+    <!-- ============================================ -->
+    <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
+        <div class="card-header bg-white border-0 d-flex flex-wrap justify-content-between align-items-center py-3">
+            <h6 class="mb-0 fw-bold">
+                <i class="fas fa-list me-2"></i>
+                الحالات المعلقة
+            </h6>
+            <span class="badge bg-warning text-dark rounded-pill px-3 py-2">
+                {{ pending_cases|length }}
+            </span>
+        </div>
+        
+        <div class="card-body p-0 table-container">
+            <table class="table-custom">
+                <thead>
                     <tr>
                         <th>#</th>
                         <th>المريض</th>
                         <th>الجهة</th>
-                        <th>الطبيب</th>
+                        <th>التخصص</th>
                         <th>التكلفة</th>
                         <th>عمر الطلب</th>
-                        <th>التاريخ</th>
+                        <th>تاريخ الدخول</th>
                         <th>الإجراء</th>
                     </tr>
-
                 </thead>
-
                 <tbody>
-
-                {% for item in pending_cases %}
-
+                    {% for item in pending_cases %}
                     <tr>
-
+                        <td class="fw-bold text-muted">{{ forloop.counter }}</td>
+                        <td class="fw-bold">{{ item.patient_name|default:"-" }}</td>
+                        <td>{{ item.entity_name|default:"-" }}</td>
+                        <td>{{ item.specialty|default:"-" }}</td>
                         <td>
-                            <span class="badge bg-secondary rounded-circle">
-                                {{ forloop.counter }}
+                            <span class="fw-bold text-primary">
+                                {{ item.amount|floatformat:0|default:"-" }}
                             </span>
                         </td>
-
-                      <td>
-    <a href="{% url 'patient_detail' item.patient.id %}">
-        {{ item.patient.full_name }}
-    </a>
-</td>
-
-                        <td>{{ item.entity.name }}</td>
-
-                        <td>
-    <a href="{% url 'doctor_detail' item.doctor_name %}">
-        {{ item.doctor_name }}
-    </a>
-</td>
-
-                        <td>
-                            <span class="text-primary fw-bold">
-                                {{ item.requested_cost|floatformat:0|default:"-" }} ج.م
-                            </span>
-
-                            {% if item.requested_cost and item.requested_cost > 100000 %}
-                                <span class="badge bg-danger rounded-pill ms-1">
-                                    <i class="bi bi-exclamation-triangle"></i> مرتفع
-                                </span>
-                            {% endif %}
-                        </td>
-
                         <td>
                             {% if item.age_days %}
-                                <span class="badge {% if item.age_days > 60 %}bg-danger{% elif item.age_days > 30 %}bg-warning text-dark{% else %}bg-success{% endif %} rounded-pill">
-                                    {{ item.age_days }} يوم
-                                </span>
+                            <span class="badge-age 
+                                {% if item.age_days > 60 %}old
+                                {% elif item.age_days > 30 %}medium
+                                {% else %}new{% endif %}">
+                                {{ item.age_days }} يوم
+                            </span>
                             {% else %}
-                                <span class="text-muted">-</span>
+                            <span class="text-muted">-</span>
                             {% endif %}
                         </td>
-
+                        <td>{{ item.admission_date|date:"Y-m-d"|default:"-" }}</td>
                         <td>
-                            <span class="text-muted">{{ item.request_date|date:"Y-m-d" }}</span>
-                        </td>
-
-                        <td>
-                            <a href="{% url 'approval_detail' item.id %}" 
-                               class="btn btn-sm btn-outline-primary">
-                                <i class="bi bi-eye"></i> عرض
+                            <a href="{% url 'report_statistic_detail' item.id %}" 
+                               class="btn btn-sm btn-outline-primary rounded-pill px-3">
+                                <i class="fas fa-eye"></i>
                             </a>
                         </td>
-
                     </tr>
-
-                {% empty %}
-
+                    {% empty %}
                     <tr>
-                        <td colspan="8" class="text-center text-muted py-4">
-                            <i class="bi bi-inbox fa-3x d-block mb-3"></i>
-                            لا توجد حالات معلقة حالياً 🎉
+                        <td colspan="8" class="text-center text-muted py-5">
+                            <i class="fas fa-inbox fa-3x d-block mb-3 opacity-25"></i>
+                            <span class="fw-bold">لا توجد حالات معلقة</span>
                         </td>
                     </tr>
-
-                {% endfor %}
-
+                    {% endfor %}
                 </tbody>
-
             </table>
-
         </div>
-
+        
+        <!-- Pagination -->
+        {% if pending_cases.has_other_pages %}
+        <div class="card-footer bg-white border-0 py-3">
+            <nav>
+                <ul class="pagination pagination-custom justify-content-center mb-0">
+                    {% if pending_cases.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ pending_cases.previous_page_number }}{% if search %}&search={{ search }}{% endif %}">
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </li>
+                    {% endif %}
+                    
+                    {% for num in pending_cases.paginator.page_range %}
+                        {% if num >= pending_cases.number|add:'-2' and num <= pending_cases.number|add:'2' %}
+                        <li class="page-item {% if num == pending_cases.number %}active{% endif %}">
+                            <a class="page-link" href="?page={{ num }}{% if search %}&search={{ search }}{% endif %}">
+                                {{ num }}
+                            </a>
+                        </li>
+                        {% endif %}
+                    {% endfor %}
+                    
+                    {% if pending_cases.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ pending_cases.next_page_number }}{% if search %}&search={{ search }}{% endif %}">
+                            <i class="fas fa-chevron-left"></i>
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+        {% endif %}
     </div>
 
 </div>
+
+<!-- ============================================ -->
+<!-- ✅ Chart.js Scripts -->
+<!-- ============================================ -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    
+    // Colors
+    const colors = {{ chart_colors|safe }};
+    const chartDefaults = {
+        responsive: true,
+        maintainAspectRatio: true,
+        plugins: {
+            legend: {
+                position: 'bottom',
+                labels: {
+                    font: { size: 10, family: 'system-ui' },
+                    padding: 8,
+                    boxWidth: 12,
+                    usePointStyle: true
+                }
+            }
+        }
+    };
+    
+    // ============================================
+    // 1️⃣ Entity Chart - Pie
+    // ============================================
+    new Chart(document.getElementById('entityChart'), {
+        type: 'pie',
+        data: {
+            labels: {{ entity_chart_labels|safe }},
+            datasets: [{
+                data: {{ entity_chart_values|safe }},
+                backgroundColor: colors,
+                borderWidth: 2,
+                borderColor: '#fff'
+            }]
+        },
+        options: chartDefaults
+    });
+    
+    // ============================================
+    // 2️⃣ Doctor Chart - Bar
+    // ============================================
+    new Chart(document.getElementById('doctorChart'), {
+        type: 'bar',
+        data: {
+            labels: {{ doctor_chart_labels|safe }},
+            datasets: [{
+                label: 'عدد الحالات',
+                data: {{ doctor_chart_values|safe }},
+                backgroundColor: colors.slice(0, 5),
+                borderRadius: 6,
+                borderSkipped: false,
+                maxBarThickness: 40
+            }]
+        },
+        options: {
+            ...chartDefaults,
+            plugins: { legend: { display: false } },
+            scales: {
+                y: { beginAtZero: true, ticks: { stepSize: 1, font: { size: 9 } } },
+                x: { ticks: { font: { size: 9 } } }
+            }
+        }
+    });
+    
+    // ============================================
+    // 3️⃣ Age Chart - Doughnut
+    // ============================================
+    new Chart(document.getElementById('ageChart'), {
+        type: 'doughnut',
+        data: {
+            labels: {{ age_labels|safe }},
+            datasets: [{
+                data: {{ age_values|safe }},
+                backgroundColor: ['#10b981', '#f59e0b', '#fb923c', '#ef4444', '#94a3b8'],
+                borderWidth: 2,
+                borderColor: '#fff'
+            }]
+        },
+        options: chartDefaults
+    });
+    
+    // ============================================
+    // 4️⃣ Specialty Chart - Bar
+    // ============================================
+    new Chart(document.getElementById('specialtyChart'), {
+        type: 'bar',
+        data: {
+            labels: {{ specialty_labels|safe }},
+            datasets: [{
+                label: 'عدد الحالات',
+                data: {{ specialty_values|safe }},
+                backgroundColor: colors.slice(0, 5),
+                borderRadius: 6,
+                borderSkipped: false,
+                maxBarThickness: 40
+            }]
+        },
+        options: {
+            ...chartDefaults,
+            plugins: { legend: { display: false } },
+            scales: {
+                y: { beginAtZero: true, ticks: { stepSize: 1, font: { size: 9 } } },
+                x: { ticks: { font: { size: 9 } } }
+            }
+        }
+    });
+    
+});
+</script>
 
 {% endblock %}

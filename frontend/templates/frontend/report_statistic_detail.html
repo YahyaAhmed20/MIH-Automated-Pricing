@@ -1,0 +1,622 @@
+<!-- frontend/templates/frontend/record_detail.html -->
+{% extends 'frontend/base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block page_title %}
+تفاصيل السجل - شيت 12
+{% endblock %}
+
+{% block content %}
+
+<style>
+    /* ============================================ */
+    /* 🌟 CSS Variables & Base Styles */
+    /* ============================================ */
+    :root {
+        --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --card-shadow: 0 8px 32px rgba(0,0,0,0.08);
+        --border-radius-lg: 20px;
+        --border-radius-md: 16px;
+        --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* ============================================ */
+    /* 🎴 Detail Cards - Modern Design */
+    /* ============================================ */
+    .detail-card {
+        background: #fff;
+        border-radius: var(--border-radius-md);
+        box-shadow: var(--card-shadow);
+        border: 1px solid rgba(241, 245, 249, 0.8);
+        transition: var(--transition);
+        overflow: hidden;
+        height: 100%;
+    }
+    
+    .detail-card:hover {
+        box-shadow: 0 12px 40px rgba(0,0,0,0.1);
+        transform: translateY(-2px);
+    }
+    
+    .detail-card .card-header-custom {
+        padding: 1rem 1.5rem;
+        background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+        border-bottom: 2px solid #e2e8f0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .detail-card .card-header-custom .header-icon {
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        color: #fff;
+        font-size: 1rem;
+    }
+    
+    .detail-card .card-header-custom .header-icon.primary { 
+        background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    }
+    
+    .detail-card .card-header-custom .header-icon.success { 
+        background: linear-gradient(135deg, #10b981, #059669);
+    }
+    
+    .detail-card .card-header-custom .header-icon.info { 
+        background: linear-gradient(135deg, #3b82f6, #2563eb);
+    }
+    
+    .detail-card .card-header-custom h6 {
+        margin: 0;
+        font-weight: 700;
+        color: #1e293b;
+        font-size: 0.95rem;
+    }
+    
+    .detail-card .card-body-custom {
+        padding: 1.5rem;
+    }
+
+    /* ============================================ */
+    /* 📋 Info Items - Enhanced */
+    /* ============================================ */
+    .info-item {
+        padding: 0.75rem 0;
+        border-bottom: 1px solid #f1f5f9;
+        transition: var(--transition);
+    }
+    
+    .info-item:last-child {
+        border-bottom: none;
+    }
+    
+    .info-item:hover {
+        padding-right: 4px;
+    }
+    
+    .info-item .info-label {
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #94a3b8;
+        display: block;
+        margin-bottom: 2px;
+    }
+    
+    .info-item .info-value {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #0f172a;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .info-item .info-value .badge-custom {
+        padding: 0.25rem 0.9rem;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 0.7rem;
+    }
+    
+    .info-item .info-value .badge-custom.bg-warning-light {
+        background: #fef3c7;
+        color: #92400e;
+    }
+    
+    .info-item .info-value .badge-custom.bg-success-light {
+        background: #d1fae5;
+        color: #065f46;
+    }
+    
+    .info-item .info-value .badge-custom.bg-primary-light {
+        background: #dbeafe;
+        color: #1e40af;
+    }
+
+    /* ============================================ */
+    /* 🏷️ Status Badge - Large */
+    /* ============================================ */
+    .status-badge-large {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 0.5rem 1.5rem;
+        border-radius: 50px;
+        font-weight: 700;
+        font-size: 0.9rem;
+    }
+    
+    .status-badge-large i {
+        font-size: 1rem;
+    }
+    
+    .status-badge-large.warning {
+        background: #fef3c7;
+        color: #92400e;
+    }
+    
+    .status-badge-large.success {
+        background: #d1fae5;
+        color: #065f46;
+    }
+    
+    .status-badge-large.info {
+        background: #dbeafe;
+        color: #1e40af;
+    }
+    
+    .status-badge-large.danger {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    /* ============================================ */
+    /* 💰 Amount Display - Enhanced */
+    /* ============================================ */
+    .amount-display {
+        display: flex;
+        align-items: baseline;
+        gap: 6px;
+    }
+    
+    .amount-display .amount-number {
+        font-size: 1.8rem;
+        font-weight: 800;
+        color: #059669;
+        letter-spacing: -0.5px;
+    }
+    
+    .amount-display .amount-currency {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #94a3b8;
+    }
+
+    /* ============================================ */
+    /* 📊 Similar Records Table */
+    /* ============================================ */
+    .table-container {
+        overflow-x: auto;
+        border-radius: var(--border-radius-md);
+    }
+    
+    .table-custom {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        font-size: 0.9rem;
+    }
+    
+    .table-custom thead th {
+        background: #f8fafc;
+        color: #475569;
+        font-weight: 700;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        padding: 1rem 1.2rem;
+        border-bottom: 2px solid #e2e8f0;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+    
+    .table-custom tbody td {
+        padding: 0.85rem 1.2rem;
+        vertical-align: middle;
+        border-bottom: 1px solid #f1f5f9;
+        color: #1e293b;
+    }
+    
+    .table-custom tbody tr {
+        transition: var(--transition);
+    }
+    
+    .table-custom tbody tr:hover {
+        background: #f8fafc;
+    }
+    
+    .table-custom tbody tr:last-child td {
+        border-bottom: none;
+    }
+    
+    .table-custom .btn-action {
+        width: 32px;
+        height: 32px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        border: 1px solid #e2e8f0;
+        color: #64748b;
+        transition: var(--transition);
+        background: #fff;
+    }
+    
+    .table-custom .btn-action:hover {
+        background: #4f46e5;
+        color: #fff;
+        border-color: #4f46e5;
+        transform: scale(1.1);
+    }
+
+    /* ============================================ */
+    /* 📱 Responsive */
+    /* ============================================ */
+    @media (max-width: 768px) {
+        .detail-card .card-body-custom {
+            padding: 1rem;
+        }
+        
+        .detail-card .card-header-custom {
+            padding: 0.75rem 1rem;
+        }
+        
+        .detail-card .card-header-custom h6 {
+            font-size: 0.85rem;
+        }
+        
+        .info-item .info-value {
+            font-size: 0.9rem;
+        }
+        
+        .amount-display .amount-number {
+            font-size: 1.4rem;
+        }
+        
+        .table-custom thead th,
+        .table-custom tbody td {
+            padding: 0.6rem 0.8rem;
+            font-size: 0.8rem;
+        }
+        
+        .status-badge-large {
+            padding: 0.35rem 1rem;
+            font-size: 0.8rem;
+        }
+        
+        .detail-card .card-header-custom .header-icon {
+            width: 30px;
+            height: 30px;
+            font-size: 0.85rem;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .amount-display .amount-number {
+            font-size: 1.2rem;
+        }
+        
+        .info-item {
+            padding: 0.5rem 0;
+        }
+        
+        .info-item .info-label {
+            font-size: 0.65rem;
+        }
+        
+        .info-item .info-value {
+            font-size: 0.85rem;
+        }
+        
+        .table-custom thead th,
+        .table-custom tbody td {
+            padding: 0.5rem 0.6rem;
+            font-size: 0.75rem;
+        }
+    }
+</style>
+
+<!-- ============================================ -->
+<!-- ✅ Main Content -->
+<!-- ============================================ -->
+<div class="container-fluid py-3 py-md-4">
+    
+    <!-- Header -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+        <div>
+            <h4 class="mb-0 fw-bold text-dark">
+                <i class="fas fa-file-medical-alt text-primary me-2"></i>
+                تفاصيل السجل - شيت 12
+            </h4>
+            <p class="text-muted small mb-0">
+                <i class="fas fa-hashtag me-1"></i>
+                رقم السجل: <span class="fw-bold text-dark">{{ record.id }}</span>
+            </p>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{% url 'pending_analysis' %}" class="btn btn-outline-secondary btn-sm rounded-pill px-4">
+                <i class="fas fa-arrow-right me-1"></i> رجوع
+            </a>
+            <button onclick="window.print()" class="btn btn-outline-primary btn-sm rounded-pill px-4">
+                <i class="fas fa-print me-1"></i> طباعة
+            </button>
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- ✅ Patient & Procedure Data -->
+    <!-- ============================================ -->
+    <div class="row g-3 g-md-4 mb-4">
+        
+        <!-- Patient Data Card -->
+        <div class="col-md-6">
+            <div class="detail-card">
+                <div class="card-header-custom">
+                    <span class="header-icon primary">
+                        <i class="fas fa-user-circle"></i>
+                    </span>
+                    <h6>بيانات المريض</h6>
+                    <span class="ms-auto status-badge-large 
+                        {% if record.payment_type == 'اجل' %}warning
+                        {% else %}success{% endif %}">
+                        <i class="fas 
+                            {% if record.payment_type == 'اجل' %}fa-clock
+                            {% else %}fa-check-circle{% endif %}">
+                        </i>
+                        {{ record.payment_type|default:"غير محدد" }}
+                    </span>
+                </div>
+                <div class="card-body-custom">
+                    <div class="row g-2">
+                        <div class="col-sm-6">
+                            <div class="info-item">
+                                <span class="info-label">
+                                    <i class="fas fa-user me-1"></i> اسم المريض
+                                </span>
+                                <p class="info-value">{{ record.patient_name|default:"-" }}</p>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="info-item">
+                                <span class="info-label">
+                                    <i class="fas fa-hashtag me-1"></i> الرقم الحسابي
+                                </span>
+                                <p class="info-value">
+                                    <span class="badge-custom bg-primary-light">
+                                        {{ record.account_number|default:"-" }}
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="info-item">
+                                <span class="info-label">
+                                    <i class="fas fa-building me-1"></i> الجهة
+                                </span>
+                                <p class="info-value">
+                                    <i class="fas fa-flag text-warning me-1" style="font-size:0.8rem;"></i>
+                                    {{ record.entity_name|default:"-" }}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="info-item">
+                                <span class="info-label">
+                                    <i class="fas fa-sitemap me-1"></i> الشركة الفرعية
+                                </span>
+                                <p class="info-value">{{ record.sub_company|default:"-" }}</p>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="info-item">
+                                <span class="info-label">
+                                    <i class="fas fa-tag me-1"></i> القطاع
+                                </span>
+                                <p class="info-value">
+                                    <span class="badge-custom bg-info-light">
+                                        {{ record.sector|default:"-" }}
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="info-item">
+                                <span class="info-label">
+                                    <i class="fas fa-credit-card me-1"></i> نوع الدفع
+                                </span>
+                                <p class="info-value">
+                                    <span class="badge-custom {% if record.payment_type == 'اجل' %}bg-warning-light{% else %}bg-success-light{% endif %}">
+                                        <i class="fas {% if record.payment_type == 'اجل' %}fa-clock{% else %}fa-check{% endif %} me-1"></i>
+                                        {{ record.payment_type|default:"-" }}
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Procedure Data Card -->
+        <div class="col-md-6">
+            <div class="detail-card">
+                <div class="card-header-custom">
+                    <span class="header-icon success">
+                        <i class="fas fa-syringe"></i>
+                    </span>
+                    <h6>بيانات الإجراء</h6>
+                    <span class="ms-auto">
+                        <span class="badge-custom bg-primary-light">
+                            <i class="fas fa-calendar-alt me-1"></i>
+                            {{ record.month|default:"-" }}
+                        </span>
+                    </span>
+                </div>
+                <div class="card-body-custom">
+                    <div class="row g-2">
+                        <div class="col-sm-6">
+                            <div class="info-item">
+                                <span class="info-label">
+                                    <i class="fas fa-stethoscope me-1"></i> التخصص
+                                </span>
+                                <p class="info-value">
+                                    <i class="fas fa-user-md text-info me-1" style="font-size:0.8rem;"></i>
+                                    {{ record.specialty|default:"-" }}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="info-item">
+                                <span class="info-label">
+                                    <i class="fas fa-box me-1"></i> الباكدج
+                                </span>
+                                <p class="info-value">{{ record.package_name|default:"-" }}</p>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="info-item">
+                                <span class="info-label">
+                                    <i class="fas fa-money-bill-wave me-1"></i> المبلغ
+                                </span>
+                                <p class="info-value">
+                                    <span class="amount-display">
+                                        <span class="amount-number">{{ record.amount|floatformat:2|intcomma }}</span>
+                                        <span class="amount-currency">ر.س</span>
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="info-item">
+                                <span class="info-label">
+                                    <i class="fas fa-calendar-plus me-1"></i> تاريخ الدخول
+                                </span>
+                                <p class="info-value">
+                                    <i class="fas fa-sign-in-alt text-success me-1" style="font-size:0.8rem;"></i>
+                                    {{ record.admission_date|date:"Y-m-d"|default:"-" }}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="info-item">
+                                <span class="info-label">
+                                    <i class="fas fa-calendar-minus me-1"></i> تاريخ الخروج
+                                </span>
+                                <p class="info-value">
+                                    <i class="fas fa-sign-out-alt text-danger me-1" style="font-size:0.8rem;"></i>
+                                    {{ record.discharge_date|date:"Y-m-d"|default:"-" }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+    <!-- ============================================ -->
+    <!-- ✅ Similar Records -->
+    <!-- ============================================ -->
+    {% if similar_records %}
+    <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
+        <div class="card-header bg-white border-0 d-flex flex-wrap justify-content-between align-items-center py-3">
+            <h6 class="mb-0 fw-bold">
+                <i class="fas fa-list text-primary me-2"></i>
+                سجلات مشابهة
+            </h6>
+            <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-3 py-2">
+                <i class="fas fa-copy me-1"></i>
+                {{ similar_records|length }} سجل
+            </span>
+        </div>
+        
+        <div class="card-body p-0 table-container">
+            <table class="table-custom">
+                <thead>
+                    <tr>
+                        <th>
+                            <i class="fas fa-user me-1"></i> المريض
+                        </th>
+                        <th>
+                            <i class="fas fa-building me-1"></i> الجهة
+                        </th>
+                        <th>
+                            <i class="fas fa-stethoscope me-1"></i> التخصص
+                        </th>
+                        <th>
+                            <i class="fas fa-box me-1"></i> الباكدج
+                        </th>
+                        <th>
+                            <i class="fas fa-money-bill me-1"></i> المبلغ
+                        </th>
+                        <th>
+                            <i class="fas fa-calendar me-1"></i> التاريخ
+                        </th>
+                        <th>
+                            <i class="fas fa-cog me-1"></i> الإجراء
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in similar_records %}
+                    <tr>
+                        <td>
+                            <span class="fw-bold">{{ item.patient_name|default:"-" }}</span>
+                        </td>
+                        <td>
+                            <span class="badge-custom bg-primary-light">
+                                {{ item.entity_name|default:"-" }}
+                            </span>
+                        </td>
+                        <td>{{ item.specialty|default:"-" }}</td>
+                        <td>
+                            <span class="text-muted small">{{ item.package_name|default:"-" }}</span>
+                        </td>
+                        <td>
+                            <span class="fw-bold text-success">
+                                {{ item.amount|floatformat:2|intcomma }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="text-muted small">
+                                {{ item.admission_date|date:"Y-m-d"|default:"-" }}
+                            </span>
+                        </td>
+                        <td>
+                            <a href="{% url 'report_statistic_detail' item.id %}" 
+                               class="btn-action" 
+                               title="عرض التفاصيل">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
+
+</div>
+
+{% endblock %}

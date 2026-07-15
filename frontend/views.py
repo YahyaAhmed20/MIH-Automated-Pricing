@@ -1836,75 +1836,197 @@ def sub_companies_details(request):
     }
     
     return render(request, 'frontend/sub_companies_details.html', context)
+
+# frontend/views.py - الجزء الخاص بـ pending_analysis
+
 def pending_analysis(request):
-
-    pending_qs = (
-        PricingRequest.objects
-        .filter(status="pending")
-        .select_related(
-            "patient",
-            "entity",
-            "specialty"
-        )
-        .order_by("-request_date")
-    )
-
+    """
+    تحليل الحالات المعلقة من شيت 12 (ReportStatistic)
+    """
+    
+    from django.db.models import Q, Count, Sum, Avg
+    from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+    from datetime import date
+    import json
+    
+    # ✅ جلب البيانات من ReportStatistic (شيت 12)
+    pending_qs = ReportStatistic.objects.filter(payment_type="اجل")
+    
+    # ✅ البحث
     search = request.GET.get("search", "")
-
     if search:
         pending_qs = pending_qs.filter(
-            Q(patient__full_name__icontains=search) |
-            Q(doctor_name__icontains=search) |
-            Q(entity__name__icontains=search)
+            Q(patient_name__icontains=search) |
+            Q(entity_name__icontains=search) |
+            Q(package_name__icontains=search) |
+            Q(sub_company__icontains=search) |
+            Q(specialty__icontains=search)
         )
-
+    
+    # ✅ الإحصائيات
+    total_pending = pending_qs.count()
+    total_amount = pending_qs.aggregate(total=Sum('amount'))['total'] or 0
+    avg_amount = pending_qs.aggregate(avg=Avg('amount'))['avg'] or 0
+    
+    # ✅ عدد الجهات
+    entities_count = pending_qs.values('entity_name').distinct().count()
+    
+    # ✅ عدد التخصصات
+    specialties_count = pending_qs.exclude(specialty='').values('specialty').distinct().count()
+    
+    # ✅ أعلى الجهات
     top_entities = (
-        PricingRequest.objects
-        .filter(status="pending")
-        .values("entity__name")
-        .annotate(total=Count("id"))
-        .order_by("-total")[:10]
+        pending_qs
+        .values('entity_name')
+        .annotate(total=Count('id'))
+        .order_by('-total')[:10]
     )
-
-    top_doctors = (
-        PricingRequest.objects
-        .filter(status="pending")
-        .values("doctor_name")
-        .annotate(total=Count("id"))
-        .order_by("-total")[:10]
+    
+    # ✅ أعلى التخصصات
+    top_specialties = (
+        pending_qs
+        .exclude(specialty='')
+        .values('specialty')
+        .annotate(total=Count('id'))
+        .order_by('-total')[:10]
     )
-
-    # ✅ عدد الجهات والأطباء في الحالات المعلقة
-    entities_count = pending_qs.values('entity').distinct().count()
-    doctors_count = pending_qs.exclude(doctor_name="").values('doctor_name').distinct().count()
-
-    # ✅ إضافة عمر الطلب لكل حالة
+    
+    # ✅ أعلى الباكدجات
+    top_packages = (
+        pending_qs
+        .exclude(package_name='')
+        .values('package_name')
+        .annotate(total=Count('id'))
+        .order_by('-total')[:10]
+    )
+    
+    # ✅ أعلى القطاعات
+    top_sectors = (
+        pending_qs
+        .exclude(sector='')
+        .values('sector')
+        .annotate(total=Count('id'))
+        .order_by('-total')[:10]
+    )
+    
+    # ✅ CHART 1: توزيع الحالات حسب الجهة (Pie)
+    entity_labels = json.dumps([item['entity_name'] or 'غير محدد' for item in top_entities], ensure_ascii=False)
+    entity_values = json.dumps([item['total'] for item in top_entities])
+    
+    # ✅ CHART 2: توزيع الحالات حسب التخصص (Bar)
+    specialty_labels = json.dumps([item['specialty'] or 'غير محدد' for item in top_specialties], ensure_ascii=False)
+    specialty_values = json.dumps([item['total'] for item in top_specialties])
+    
+    # ✅ CHART 3: عمر الطلبات (Doughnut)
     today = date.today()
+    age_ranges = {
+        "0-7 أيام": 0,
+        "8-14 يوم": 0,
+        "15-30 يوم": 0,
+        "31-60 يوم": 0,
+        "أكثر من 60 يوم": 0,
+    }
+    
+    for item in pending_qs:
+        if item.admission_date:
+            age = (today - item.admission_date).days
+            if age <= 7:
+                age_ranges["0-7 أيام"] += 1
+            elif age <= 14:
+                age_ranges["8-14 يوم"] += 1
+            elif age <= 30:
+                age_ranges["15-30 يوم"] += 1
+            elif age <= 60:
+                age_ranges["31-60 يوم"] += 1
+            else:
+                age_ranges["أكثر من 60 يوم"] += 1
+    
+    age_labels = json.dumps(list(age_ranges.keys()), ensure_ascii=False)
+    age_values = json.dumps(list(age_ranges.values()))
+    
+    # ✅ CHART 4: توزيع الحالات حسب القطاع (Doughnut)
+    sector_labels = json.dumps([item['sector'] or 'غير محدد' for item in top_sectors], ensure_ascii=False)
+    sector_values = json.dumps([item['total'] for item in top_sectors])
+    
+    # ✅ ألوان الـ Charts
+    chart_colors = json.dumps([
+        "#0d6efd", "#20c997", "#ffc107", "#dc3545", 
+        "#6f42c1", "#fd7e14", "#198754", "#6610f2",
+        "#0dcaf0", "#6c757d"
+    ])
+    
+    # ✅ إضافة عمر الطلب لكل حالة
     pending_cases = list(pending_qs[:100])
     for item in pending_cases:
-        if item.request_date:
-            item.age_days = (today - item.request_date).days
+        if item.admission_date:
+            item.age_days = (today - item.admission_date).days
         else:
             item.age_days = None
-
-    # ✅ تنسيق الأرقام بفواصل
-    avg_cost = pending_qs.aggregate(avg=Avg("requested_cost"))["avg"] or 0
-
+    
+    # ✅ Pagination
+    paginator = Paginator(pending_qs, 50)
+    page_number = request.GET.get('page', 1)
+    
+    try:
+        page_obj = paginator.get_page(page_number)
+    except PageNotAnInteger:
+        page_obj = paginator.get_page(1)
+    except EmptyPage:
+        page_obj = paginator.get_page(paginator.num_pages)
+    
     context = {
-        "pending_count": f"{pending_qs.count():,}",
-        "avg_cost": f"{avg_cost:,.0f}",
-        "top_entities": top_entities,
-        "top_doctors": top_doctors,
-        "pending_cases": pending_cases,
-        "entities_count": f"{entities_count:,}",
-        "doctors_count": f"{doctors_count:,}",
+        # ✅ الإحصائيات
+        'pending_count': f"{total_pending:,}",
+        'total_cost': f"{total_amount:,.0f}",
+        'avg_cost': f"{avg_amount:,.0f}",
+        'entities_count': f"{entities_count:,}",
+        'doctors_count': f"{specialties_count:,}",
+        
+        # ✅ البيانات
+        'pending_cases': page_obj,
+        'search': search,
+        'top_entities': top_entities,
+        'top_doctors': top_specialties,
+        'top_specialties': top_specialties,
+        'top_packages': top_packages,
+        'top_sectors': top_sectors,
+        'total_entities': top_entities.count(),
+        'total_doctors': top_specialties.count(),
+        
+        # ✅ Charts Data
+        'entity_chart_labels': entity_labels,
+        'entity_chart_values': entity_values,
+        'doctor_chart_labels': specialty_labels,
+        'doctor_chart_values': specialty_values,
+        'age_labels': age_labels,
+        'age_values': age_values,
+        'specialty_labels': sector_labels,
+        'specialty_values': sector_values,
+        'chart_colors': chart_colors,
     }
+    
+    return render(request, "frontend/pending_analysis.html", context)
 
-    return render(
-        request,
-        "frontend/pending_analysis.html",
-        context
-    )
+def report_statistic_detail(request, pk):
+    """
+    صفحة تفاصيل سجل من شيت 12 (ReportStatistic)
+    """
+    
+    record = get_object_or_404(ReportStatistic, pk=pk)
+    
+    # ✅ بيانات إضافية (ممكن تجيب سجلات مشابهة)
+    similar_records = ReportStatistic.objects.filter(
+        Q(patient_name=record.patient_name) |
+        Q(entity_name=record.entity_name) |
+        Q(specialty=record.specialty)
+    ).exclude(pk=record.pk).order_by('-admission_date')[:10]
+    
+    context = {
+        'record': record,
+        'similar_records': similar_records,
+    }
+    
+    return render(request, 'frontend/report_statistic_detail.html', context)
 def company_discounts(request):
 
     search = request.GET.get(

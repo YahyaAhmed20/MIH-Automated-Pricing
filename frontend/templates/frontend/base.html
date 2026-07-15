@@ -787,17 +787,20 @@ body {
                 <a href="{% url 'external_approvals' %}">
                     <i class="bi bi-list"></i>  متابعة الموافقات 
                 </a>
+                <a href="{% url 'pending_analysis' %}">
+                    <i class="bi bi-list"></i>  احصائيات الموافقات  
+                </a>
               
             </div>
         </li>
 
         <!-- 12. تحليل الحالات Pending -->
-        <li class="menu-item">
+        {% comment %} <li class="menu-item">
             <a class="menu-link" href="{% url 'pending_analysis' %}">
                 <i class="bi bi-clock-history"></i>
                 تحليل الحالات Pending
             </a>
-        </li>
+        </li> {% endcomment %}
 
         <!-- 13. قوائم الأسعار -->
         <li class="menu-item">
