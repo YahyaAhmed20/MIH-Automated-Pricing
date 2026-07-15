@@ -574,6 +574,20 @@
                         {% endfor %}
                     </select>
                 </div>
+
+                
+<!-- ✅ NEW: فلتر 6: حالة الموافقة -->
+<div class="col-md-2">
+    <label class="form-label">📌 حالة الموافقة</label>
+    <select name="main_status" class="form-select">
+        <option value="">الكل</option>
+        {% for status in main_statuses %}
+        <option value="{{ status }}" {% if status == main_status_filter %}selected{% endif %}>
+            {{ status }}
+        </option>
+        {% endfor %}
+    </select>
+</div>
                 
                 <!-- ✅ فلتر 6: التاريخ من - إلى -->
                 <div class="col-md-2">

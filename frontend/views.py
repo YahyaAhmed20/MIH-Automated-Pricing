@@ -471,18 +471,15 @@ def external_approvals(request):
     return render(request, 'frontend/external_approvals.html', context)
 
 
+# frontend/views.py
+
 def external_approvals_detail(request, filter_type):
-    """
-    صفحة تفاصيل الموافقات الخارجية - بنفس تصميم patient_search
-    filter_type: total | accounts | coordinator | without_approval | early | status
-    """
+    """صفحة تفاصيل الموافقات الخارجية"""
     
     all_records = ExternalApproval.objects.all()
     total_cases = all_records.count()
-    approval_count = all_records.exclude(approval__isnull=True).exclude(approval="").count()
-    billing_count = all_records.exclude(billing_status__isnull=True).exclude(billing_status="").count()
     
-    # ✅ الفلتر حسب نوع البوكس
+    # ✅ الفلتر حسب النوع
     if filter_type == "total":
         patients = all_records
         title = "إجمالي الحالات المرسلة للتسعير"
@@ -503,29 +500,22 @@ def external_approvals_detail(request, filter_type):
         tomorrow = today + timedelta(days=1)
         patients = all_records.filter(admission_date=tomorrow)
         title = "حالات دخول باكر (غداً)"
-    elif filter_type == "status":
-        status_name = request.GET.get('status', '')
-        if status_name == 'غير محدد':
-            patients = all_records.filter(Q(main_status__isnull=True) | Q(main_status=''))
-        else:
-            patients = all_records.filter(main_status=status_name)
-        title = f"حالات {status_name}"
     else:
         patients = all_records
         title = "جميع الحالات"
     
-    # ✅ البحث
+    # ✅ البحث والفلاتر
     search_query = request.GET.get("search", "")
-    
-    # ✅ الفلاتر
     attachment_type = request.GET.get("attachment_type", "")
     company_filter = request.GET.get("company", "")
     sub_account_filter = request.GET.get("sub_account", "")
     doctor_filter = request.GET.get("doctor", "")
     specialty_filter = request.GET.get("specialty", "")
+    main_status_filter = request.GET.get("main_status", "")  # ✅ NEW
     date_from = request.GET.get("date_from", "")
     date_to = request.GET.get("date_to", "")
     
+    # ✅ تطبيق الفلاتر
     if search_query:
         patients = patients.filter(
             Q(patient_name__icontains=search_query) |
@@ -547,6 +537,8 @@ def external_approvals_detail(request, filter_type):
         patients = patients.filter(doctor_name__icontains=doctor_filter)
     if specialty_filter:
         patients = patients.filter(specialty__icontains=specialty_filter)
+    if main_status_filter:  # ✅ NEW
+        patients = patients.filter(main_status__icontains=main_status_filter)
     if date_from:
         try:
             patients = patients.filter(date__gte=date_from)
@@ -569,10 +561,9 @@ def external_approvals_detail(request, filter_type):
     except EmptyPage:
         page_obj = paginator.get_page(paginator.num_pages)
     
-    # ✅ قيم الفلاتر (Dynamic) - نفس الـ logic بتاع patient_search
+    # ✅ قيم الفلاتر
     filter_queryset = patients
     
-    # attachment_types
     attachment_types = list(
         filter_queryset
         .values_list('attachment_type', flat=True)
@@ -582,7 +573,6 @@ def external_approvals_detail(request, filter_type):
         .order_by('attachment_type')
     )
     
-    # companies
     companies = list(
         filter_queryset
         .values_list('company', flat=True)
@@ -592,7 +582,6 @@ def external_approvals_detail(request, filter_type):
         .order_by('company')
     )
     
-    # sub_accounts
     sub_accounts = list(
         filter_queryset
         .values_list('sub_account', flat=True)
@@ -602,7 +591,6 @@ def external_approvals_detail(request, filter_type):
         .order_by('sub_account')
     )
     
-    # doctors
     doctors = list(
         filter_queryset
         .values_list('doctor_name', flat=True)
@@ -612,7 +600,6 @@ def external_approvals_detail(request, filter_type):
         .order_by('doctor_name')
     )
     
-    # specialties
     specialties = list(
         filter_queryset
         .values_list('specialty', flat=True)
@@ -622,20 +609,27 @@ def external_approvals_detail(request, filter_type):
         .order_by('specialty')
     )
     
+    # ✅ NEW: قيم Main Status للفلتر
+    main_statuses = list(
+        filter_queryset
+        .values_list('main_status', flat=True)
+        .distinct()
+        .exclude(main_status__isnull=True)
+        .exclude(main_status='')
+        .order_by('main_status')
+    )
+    
     context = {
         'title': title,
-        'filter_type': filter_type,
         'search_query': search_query,
         'patients': page_obj,
         'patient_count': patients.count(),
-        'total_cases': total_cases,
-        'approval_count': approval_count,
-        'billing_count': billing_count,
         'attachment_type': attachment_type,
         'company_filter': company_filter,
         'sub_account_filter': sub_account_filter,
         'doctor_filter': doctor_filter,
         'specialty_filter': specialty_filter,
+        'main_status_filter': main_status_filter,  # ✅ NEW
         'date_from': date_from,
         'date_to': date_to,
         'attachment_types': attachment_types,
@@ -643,7 +637,7 @@ def external_approvals_detail(request, filter_type):
         'sub_accounts': sub_accounts,
         'doctors': doctors,
         'specialties': specialties,
-        'back_url': request.META.get('HTTP_REFERER', '/external-approvals/'),
+        'main_statuses': main_statuses,  # ✅ NEW
     }
     
     return render(request, 'frontend/external_approvals_detail.html', context)
