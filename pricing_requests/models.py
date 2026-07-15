@@ -1302,9 +1302,11 @@ class ExternalApproval(models.Model):
     )
     
     patient_name = models.CharField(
-        max_length=255,
-        db_index=True,
-        verbose_name="اسم المريض"
+    max_length=255,
+    blank=True,
+    null=True,
+    db_index=True,
+    verbose_name="اسم المريض"
     )
     
     card_number = models.CharField(

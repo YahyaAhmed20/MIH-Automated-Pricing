@@ -379,141 +379,169 @@ def external_approvals(request):
     صفحة متابعة موافقات الخارجي - شيت 12
     عرض 5 مؤشرات رئيسية مع ألوان جذابة ومتحركة
     """
-    
+
     from django.db.models import Count, Q
     from django.utils import timezone
     from datetime import timedelta
-    
+
     # ✅ جلب جميع السجلات
     all_records = ExternalApproval.objects.all()
-    
+
     # ============================================
     # 📊 A/ إجمالي الحالات المرسلة للتسعير
     # ============================================
     total_cases = all_records.count()
-    
+
     # ============================================
     # 📊 B/ الحالات المعطلة طرف الحسابات
+    # المعادلة:
+    # Approval Count - Billing Status Count
     # ============================================
-    # المقارنة بين Approval (موجود) و Billing Status (فارغ)
-    # = الحالات اللي فيها Approval مش فارغ و Billing Status فارغ
-    pending_accounts = all_records.filter(
-        ~Q(approval__isnull=True) & ~Q(approval=''),  # Approval موجود
-        Q(billing_status__isnull=True) | Q(billing_status='')  # Billing Status فارغ
+    approval_count = all_records.exclude(
+        approval__isnull=True
+    ).exclude(
+        approval=""
     ).count()
-    
+
+    billing_count = all_records.exclude(
+        billing_status__isnull=True
+    ).exclude(
+        billing_status=""
+    ).count()
+
+    pending_accounts = max(
+        approval_count - billing_count,
+        0
+    )
+
     # ============================================
     # 📊 C/ الحالات المعطلة طرف منسق العيادات
+    # كل حالة فيها Billing Status
+    # ولا يوجد لها Admission Date
     # ============================================
-    # المقارنة بين Approval (موجود) و Admission Date (فارغ)
-    # = الحالات اللي فيها Approval مش فارغ و Admission Date فارغ
-    pending_coordinator = all_records.filter(
-        ~Q(approval__isnull=True) & ~Q(approval=''),  # Approval موجود
-        Q(admission_date__isnull=True)  # تاريخ الدخول فارغ
+    pending_coordinator = all_records.exclude(
+        billing_status__isnull=True
+    ).exclude(
+        billing_status=""
+    ).filter(
+        admission_date__isnull=True
     ).count()
-    
-    # ============================================
-    # 📊 D/ حالات دخول باكر (غداً)
-    # ============================================
-    # ✅ الخطوة 1: جيب تاريخ النهاردة الفعلي من السيرفر
-    today = timezone.localtime().date()  # ✅ بدلاً من timezone.now().date()
 
-    
-    # ✅ الخطوة 2: احسب تاريخ الغد
+    # ============================================
+    # 📊 D/ حالات دخول باكر
+    # ============================================
+    today = timezone.now().date()
     tomorrow = today + timedelta(days=1)
-    
-    # ✅ الخطوة 3: فلتر السجلات اللي تاريخ دخولها = الغد
+
     early_admissions = all_records.filter(
         admission_date=tomorrow
     ).count()
-    
+
     # ============================================
     # 📊 E/ نظرة عامة على موقف الحالات
     # ============================================
-    # توزيع الحالات حسب Main Status
     status_distribution = (
         all_records
-        .values('main_status')
-        .annotate(count=Count('id'))
-        .order_by('-count')
+        .values("main_status")
+        .annotate(count=Count("id"))
+        .order_by("-count")
     )
-    
-    # إجمالي الحالات المحددة الحالة
-    defined_status_count = all_records.filter(
-        ~Q(main_status__isnull=True) & ~Q(main_status='')
+
+    defined_status_count = all_records.exclude(
+        main_status__isnull=True
+    ).exclude(
+        main_status=""
     ).count()
-    
-    # الحالات غير المحددة
+
     undefined_status = total_cases - defined_status_count
-    
+
+    # ============================================
     # ✅ ألوان الحالات
+    # ============================================
     status_colors = {
-        'Approved': '#28a745',
-        'Pending': '#ffc107',
-        'Rejected': '#dc3545',
-        'Serv. Done': '#17a2b8',
-        'Patient refused': '#6c757d',
-        'غير محدد': '#6c757d',
+        "Approved": "#28a745",
+        "Pending": "#ffc107",
+        "Rejected": "#dc3545",
+        "Serv. Done": "#17a2b8",
+        "Patient refused": "#6c757d",
+        "غير محدد": "#6c757d",
     }
-    
-    # ✅ تجهيز بيانات الحالات مع الألوان
+
+    # ============================================
+    # ✅ تجهيز بيانات الحالات
+    # ============================================
     status_data = []
+
     for item in status_distribution:
-        status_name = item['main_status'] or 'غير محدد'
-        count = item['count']
-        percentage = round((count / total_cases) * 100, 1) if total_cases > 0 else 0
+        status_name = item["main_status"] or "غير محدد"
+        count = item["count"]
+
+        percentage = (
+            round((count / total_cases) * 100, 1)
+            if total_cases > 0 else 0
+        )
+
         status_data.append({
-            'name': status_name,
-            'count': count,
-            'percentage': percentage,
-            'color': status_colors.get(status_name, '#6c757d'),
+            "name": status_name,
+            "count": count,
+            "percentage": percentage,
+            "color": status_colors.get(status_name, "#6c757d"),
         })
-    
-    # ✅ إضافة "غير محدد" إذا كان موجود
+
+    # إضافة غير محدد
     if undefined_status > 0:
         found = False
+
         for item in status_data:
-            if item['name'] == 'غير محدد':
-                item['count'] = undefined_status
-                item['percentage'] = round((undefined_status / total_cases) * 100, 1) if total_cases > 0 else 0
-                item['color'] = status_colors.get('غير محدد', '#6c757d')
+            if item["name"] == "غير محدد":
+                item["count"] = undefined_status
+                item["percentage"] = (
+                    round((undefined_status / total_cases) * 100, 1)
+                    if total_cases > 0 else 0
+                )
+                item["color"] = status_colors["غير محدد"]
                 found = True
                 break
+
         if not found:
             status_data.append({
-                'name': 'غير محدد',
-                'count': undefined_status,
-                'percentage': round((undefined_status / total_cases) * 100, 1) if total_cases > 0 else 0,
-                'color': status_colors.get('غير محدد', '#6c757d'),
+                "name": "غير محدد",
+                "count": undefined_status,
+                "percentage": (
+                    round((undefined_status / total_cases) * 100, 1)
+                    if total_cases > 0 else 0
+                ),
+                "color": status_colors["غير محدد"],
             })
-    
+
     # ============================================
-    # ✅ إعداد الألوان لكل بوكس
+    # ✅ إعداد الألوان
     # ============================================
     box_colors = {
-        'total': 'linear-gradient(135deg, #1a237e, #0d47a1)',  # أزرق غامق
-        'accounts': 'linear-gradient(135deg, #b71c1c, #d32f2f)',  # أحمر
-        'coordinator': 'linear-gradient(135deg, #e65100, #f57c00)',  # برتقالي
-        'early': 'linear-gradient(135deg, #1b5e20, #2e7d32)',  # أخضر غامق
-        'overview': 'linear-gradient(135deg, #4a148c, #6a1b9a)',  # بنفسجي
+        "total": "linear-gradient(135deg, #1a237e, #0d47a1)",
+        "accounts": "linear-gradient(135deg, #b71c1c, #d32f2f)",
+        "coordinator": "linear-gradient(135deg, #e65100, #f57c00)",
+        "early": "linear-gradient(135deg, #1b5e20, #2e7d32)",
+        "overview": "linear-gradient(135deg, #4a148c, #6a1b9a)",
     }
-    
+
     context = {
-        'total_cases': total_cases,
-        'pending_accounts': pending_accounts,
-        'pending_coordinator': pending_coordinator,
-        'early_admissions': early_admissions,
-        'status_data': status_data,
-        'box_colors': box_colors,
+        "total_cases": total_cases,
+        "pending_accounts": pending_accounts,
+        "pending_coordinator": pending_coordinator,
+        "early_admissions": early_admissions,
+        "status_data": status_data,
+        "box_colors": box_colors,
     }
-    
+
     return render(
         request,
         "frontend/external_approvals.html",
-        context
+        context,
     )
 def approval_detail(request, pk):
 
+    
     approval = get_object_or_404(
         PricingRequest.objects.select_related(
             "patient",
