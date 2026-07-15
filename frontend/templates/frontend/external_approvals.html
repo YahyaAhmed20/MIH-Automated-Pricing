@@ -210,6 +210,7 @@
             </div>
         </div>
         
+        
         <!-- ✅ B/ الحالات المعطلة طرف الحسابات -->
         <div class="col-md-2-4 col-lg-2 col-md-4 col-sm-6">
             <div class="stats-box" style="background: {{ box_colors.accounts }};">
@@ -238,6 +239,24 @@
             </div>
         </div>
         
+        <!-- ✅ حالات بدون موافقة -->
+<div class="col-md-2-4 col-lg-2 col-md-4 col-sm-6">
+    <div class="stats-box" style="background: {{ box_colors.without_approval }};">
+        <div class="stats-icon">
+            <i class="fas fa-file-circle-xmark"></i>
+        </div>
+
+        <div class="stats-number counter"
+             data-target="{{ cases_without_approval }}">
+            0
+        </div>
+
+        <div class="stats-label">
+            <i class="fas fa-ban me-1"></i>
+            حالات بدون موافقة
+        </div>
+    </div>
+</div>
         <!-- ✅ D/ حالات دخول باكر -->
         <div class="col-md-2-4 col-lg-2 col-md-4 col-sm-6">
             <div class="stats-box" style="background: {{ box_colors.early }};">

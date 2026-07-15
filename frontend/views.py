@@ -377,32 +377,45 @@ def contract_entities(request):
 def external_approvals(request):
     """
     صفحة متابعة موافقات الخارجي - شيت 12
-    عرض 5 مؤشرات رئيسية مع ألوان جذابة ومتحركة
+    عرض مؤشرات متابعة موافقات الخارجي
     """
 
-    from django.db.models import Count, Q
+    from django.db.models import Count
     from django.utils import timezone
     from datetime import timedelta
 
-    # ✅ جلب جميع السجلات
+    # =====================================================
+    # جلب جميع السجلات
+    # =====================================================
     all_records = ExternalApproval.objects.all()
 
-    # ============================================
-    # 📊 A/ إجمالي الحالات المرسلة للتسعير
-    # ============================================
+    # =====================================================
+    # A/ إجمالي الحالات المرسلة للتسعير
+    # =====================================================
     total_cases = all_records.count()
 
-    # ============================================
-    # 📊 B/ الحالات المعطلة طرف الحسابات
-    # المعادلة:
-    # Approval Count - Billing Status Count
-    # ============================================
+    # =====================================================
+    # عدد الحالات التي لديها Approval
+    # =====================================================
     approval_count = all_records.exclude(
         approval__isnull=True
     ).exclude(
         approval=""
     ).count()
 
+    # =====================================================
+    # NEW
+    # حالات بدون موافقة
+    # =====================================================
+    cases_without_approval = max(
+        total_cases - approval_count,
+        0
+    )
+
+    # =====================================================
+    # B/ الحالات المعطلة طرف الحسابات
+    # Approval Count - Billing Status Count
+    # =====================================================
     billing_count = all_records.exclude(
         billing_status__isnull=True
     ).exclude(
@@ -414,11 +427,11 @@ def external_approvals(request):
         0
     )
 
-    # ============================================
-    # 📊 C/ الحالات المعطلة طرف منسق العيادات
+    # =====================================================
+    # C/ الحالات المعطلة طرف منسق العيادات
     # كل حالة فيها Billing Status
-    # ولا يوجد لها Admission Date
-    # ============================================
+    # وليس لها Admission Date
+    # =====================================================
     pending_coordinator = all_records.exclude(
         billing_status__isnull=True
     ).exclude(
@@ -427,9 +440,9 @@ def external_approvals(request):
         admission_date__isnull=True
     ).count()
 
-    # ============================================
-    # 📊 D/ حالات دخول باكر
-    # ============================================
+    # =====================================================
+    # D/ حالات دخول باكر
+    # =====================================================
     today = timezone.now().date()
     tomorrow = today + timedelta(days=1)
 
@@ -437,9 +450,9 @@ def external_approvals(request):
         admission_date=tomorrow
     ).count()
 
-    # ============================================
-    # 📊 E/ نظرة عامة على موقف الحالات
-    # ============================================
+    # =====================================================
+    # E/ نظرة عامة على موقف الحالات
+    # =====================================================
     status_distribution = (
         all_records
         .values("main_status")
@@ -455,9 +468,9 @@ def external_approvals(request):
 
     undefined_status = total_cases - defined_status_count
 
-    # ============================================
-    # ✅ ألوان الحالات
-    # ============================================
+    # =====================================================
+    # ألوان الحالات
+    # =====================================================
     status_colors = {
         "Approved": "#28a745",
         "Pending": "#ffc107",
@@ -467,12 +480,13 @@ def external_approvals(request):
         "غير محدد": "#6c757d",
     }
 
-    # ============================================
-    # ✅ تجهيز بيانات الحالات
-    # ============================================
+    # =====================================================
+    # تجهيز بيانات الرسم
+    # =====================================================
     status_data = []
 
     for item in status_distribution:
+
         status_name = item["main_status"] or "غير محدد"
         count = item["count"]
 
@@ -485,40 +499,56 @@ def external_approvals(request):
             "name": status_name,
             "count": count,
             "percentage": percentage,
-            "color": status_colors.get(status_name, "#6c757d"),
+            "color": status_colors.get(
+                status_name,
+                "#6c757d"
+            ),
         })
 
-    # إضافة غير محدد
     if undefined_status > 0:
+
         found = False
 
         for item in status_data:
+
             if item["name"] == "غير محدد":
+
                 item["count"] = undefined_status
+
                 item["percentage"] = (
-                    round((undefined_status / total_cases) * 100, 1)
+                    round(
+                        (undefined_status / total_cases) * 100,
+                        1
+                    )
                     if total_cases > 0 else 0
                 )
+
                 item["color"] = status_colors["غير محدد"]
+
                 found = True
                 break
 
         if not found:
+
             status_data.append({
                 "name": "غير محدد",
                 "count": undefined_status,
                 "percentage": (
-                    round((undefined_status / total_cases) * 100, 1)
+                    round(
+                        (undefined_status / total_cases) * 100,
+                        1
+                    )
                     if total_cases > 0 else 0
                 ),
                 "color": status_colors["غير محدد"],
             })
 
-    # ============================================
-    # ✅ إعداد الألوان
-    # ============================================
+    # =====================================================
+    # ألوان البوكسات
+    # =====================================================
     box_colors = {
         "total": "linear-gradient(135deg, #1a237e, #0d47a1)",
+        "without_approval": "linear-gradient(135deg, #6a1b9a, #8e24aa)",
         "accounts": "linear-gradient(135deg, #b71c1c, #d32f2f)",
         "coordinator": "linear-gradient(135deg, #e65100, #f57c00)",
         "early": "linear-gradient(135deg, #1b5e20, #2e7d32)",
@@ -527,6 +557,7 @@ def external_approvals(request):
 
     context = {
         "total_cases": total_cases,
+        "cases_without_approval": cases_without_approval,
         "pending_accounts": pending_accounts,
         "pending_coordinator": pending_coordinator,
         "early_admissions": early_admissions,
