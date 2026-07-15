@@ -376,152 +376,41 @@ def contract_entities(request):
 
 # frontend/views.py
 
+from datetime import timedelta
+
+
 def external_approvals(request):
     """
     صفحة متابعة موافقات الخارجي - شيت 12
-    عرض مؤشرات متابعة موافقات الخارجي مع تفاصيل لكل بوكس
+    عرض 6 بوكسات إحصائية + توزيع الحالات
     """
-
-    from django.db.models import Count, Q
-    from django.utils import timezone
-    from datetime import timedelta
-    from django.core.paginator import Paginator
-
-    # =====================================================
-    # جلب جميع السجلات
-    # =====================================================
+    
     all_records = ExternalApproval.objects.all()
-
-    # =====================================================
-    # A/ إجمالي الحالات المرسلة للتسعير
-    # =====================================================
     total_cases = all_records.count()
-
-    # ✅ بيانات تفصيلية لإجمالي الحالات
-    total_cases_details = all_records.values(
-        'attachment_type', 'patient_name', 'card_number', 'company',
-        'sub_account', 'date', 'medical_number', 'doctor_name',
-        'specialty', 'procedure', 'phone', 'main_status',
-        'initial_cost', 'billing_status', 'accounts_notes', 'received_cost'
-    ).order_by('-date')
-
-    # ✅ Pagination لإجمالي الحالات
-    paginator_total = Paginator(total_cases_details, 50)
-    page_total = request.GET.get('page_total', 1)
-    total_cases_page = paginator_total.get_page(page_total)
-
-    # =====================================================
-    # عدد الحالات التي لديها Approval
-    # =====================================================
-    approval_count = all_records.exclude(
-        approval__isnull=True
-    ).exclude(
-        approval=""
-    ).count()
-
-    # =====================================================
-    # حالات بدون موافقة
-    # =====================================================
-    cases_without_approval = max(total_cases - approval_count, 0)
-
-    without_approval_details = all_records.filter(
-        Q(approval__isnull=True) | Q(approval='')
-    ).values(
-        'patient_name', 'company', 'date', 'doctor_name', 'main_status'
-    ).order_by('-date')
-
-    paginator_without = Paginator(without_approval_details, 50)
-    page_without = request.GET.get('page_without', 1)
-    without_approval_page = paginator_without.get_page(page_without)
-
-    # =====================================================
-    # B/ الحالات المعطلة طرف الحسابات
-    # =====================================================
-    billing_count = all_records.exclude(
-        billing_status__isnull=True
-    ).exclude(
-        billing_status=""
-    ).count()
-
+    
+    # ✅ الإحصائيات
+    approval_count = all_records.exclude(approval__isnull=True).exclude(approval="").count()
+    billing_count = all_records.exclude(billing_status__isnull=True).exclude(billing_status="").count()
+    
     pending_accounts = max(approval_count - billing_count, 0)
-
-    pending_accounts_details = all_records.filter(
-        ~Q(approval__isnull=True) & ~Q(approval=''),
-        Q(billing_status__isnull=True) | Q(billing_status='')
-    ).values(
-        'patient_name', 'company', 'date', 'doctor_name', 'main_status', 'billing_status'
-    ).order_by('-date')
-
-    paginator_accounts = Paginator(pending_accounts_details, 50)
-    page_accounts = request.GET.get('page_accounts', 1)
-    pending_accounts_page = paginator_accounts.get_page(page_accounts)
-
-    # =====================================================
-    # C/ الحالات المعطلة طرف منسق العيادات
-    # =====================================================
-    pending_coordinator = all_records.exclude(
-        billing_status__isnull=True
-    ).exclude(
-        billing_status=""
-    ).filter(
-        admission_date__isnull=True
-    ).count()
-
-    pending_coordinator_details = all_records.exclude(
-        billing_status__isnull=True
-    ).exclude(
-        billing_status=""
-    ).filter(
-        admission_date__isnull=True
-    ).values(
-        'patient_name', 'company', 'date', 'doctor_name', 'main_status', 'admission_date'
-    ).order_by('-date')
-
-    paginator_coordinator = Paginator(pending_coordinator_details, 50)
-    page_coordinator = request.GET.get('page_coordinator', 1)
-    pending_coordinator_page = paginator_coordinator.get_page(page_coordinator)
-
-    # =====================================================
-    # D/ حالات دخول باكر
-    # =====================================================
-    today = timezone.now().date()
+    pending_coordinator = all_records.exclude(billing_status__isnull=True).exclude(billing_status="").filter(admission_date__isnull=True).count()
+    cases_without_approval = max(total_cases - approval_count, 0)
+    
+    today = timezone.localtime().date()
     tomorrow = today + timedelta(days=1)
-
-    early_admissions = all_records.filter(
-        admission_date=tomorrow
-    ).count()
-
-    early_admissions_details = all_records.filter(
-        admission_date=tomorrow
-    ).values(
-        'patient_name', 'company', 'date', 'doctor_name', 'main_status', 'admission_date'
-    ).order_by('-date')
-
-    paginator_early = Paginator(early_admissions_details, 50)
-    page_early = request.GET.get('page_early', 1)
-    early_admissions_page = paginator_early.get_page(page_early)
-
-    # =====================================================
-    # E/ نظرة عامة على موقف الحالات
-    # =====================================================
+    early_admissions = all_records.filter(admission_date=tomorrow).count()
+    
+    # ✅ توزيع الحالات حسب Main Status
     status_distribution = (
         all_records
         .values("main_status")
         .annotate(count=Count("id"))
         .order_by("-count")
     )
-
-    defined_status_count = all_records.exclude(
-        main_status__isnull=True
-    ).exclude(
-        main_status=""
-    ).count()
-
+    
+    defined_status_count = all_records.exclude(main_status__isnull=True).exclude(main_status="").count()
     undefined_status = total_cases - defined_status_count
-
-    # =====================================================
-    # ألوان الحالات
-    # =====================================================
+    
     status_colors = {
         "Approved": "#28a745",
         "Pending": "#ffc107",
@@ -530,73 +419,36 @@ def external_approvals(request):
         "Patient refused": "#6c757d",
         "غير محدد": "#6c757d",
     }
-
-    # =====================================================
-    # تجهيز بيانات الرسم
-    # =====================================================
+    
     status_data = []
-
     for item in status_distribution:
-
         status_name = item["main_status"] or "غير محدد"
         count = item["count"]
-
-        percentage = (
-            round((count / total_cases) * 100, 1)
-            if total_cases > 0 else 0
-        )
-
+        percentage = round((count / total_cases) * 100, 1) if total_cases > 0 else 0
         status_data.append({
             "name": status_name,
             "count": count,
             "percentage": percentage,
-            "color": status_colors.get(
-                status_name,
-                "#6c757d"
-            ),
+            "color": status_colors.get(status_name, "#6c757d"),
         })
-
+    
     if undefined_status > 0:
-
         found = False
-
         for item in status_data:
-
             if item["name"] == "غير محدد":
-
                 item["count"] = undefined_status
-
-                item["percentage"] = (
-                    round(
-                        (undefined_status / total_cases) * 100,
-                        1
-                    )
-                    if total_cases > 0 else 0
-                )
-
+                item["percentage"] = round((undefined_status / total_cases) * 100, 1) if total_cases > 0 else 0
                 item["color"] = status_colors["غير محدد"]
-
                 found = True
                 break
-
         if not found:
-
             status_data.append({
                 "name": "غير محدد",
                 "count": undefined_status,
-                "percentage": (
-                    round(
-                        (undefined_status / total_cases) * 100,
-                        1
-                    )
-                    if total_cases > 0 else 0
-                ),
+                "percentage": round((undefined_status / total_cases) * 100, 1) if total_cases > 0 else 0,
                 "color": status_colors["غير محدد"],
             })
-
-    # =====================================================
-    # ألوان البوكسات
-    # =====================================================
+    
     box_colors = {
         "total": "linear-gradient(135deg, #1a237e, #0d47a1)",
         "without_approval": "linear-gradient(135deg, #6a1b9a, #8e24aa)",
@@ -605,28 +457,196 @@ def external_approvals(request):
         "early": "linear-gradient(135deg, #1b5e20, #2e7d32)",
         "overview": "linear-gradient(135deg, #4a148c, #6a1b9a)",
     }
-
+    
     context = {
-        "total_cases": total_cases,
-        "cases_without_approval": cases_without_approval,
-        "pending_accounts": pending_accounts,
-        "pending_coordinator": pending_coordinator,
-        "early_admissions": early_admissions,
-        "status_data": status_data,
-        "box_colors": box_colors,
-        # ✅ البيانات مع Pagination
-        "total_cases_details": total_cases_page,
-        "without_approval_details": without_approval_page,
-        "pending_accounts_details": pending_accounts_page,
-        "pending_coordinator_details": pending_coordinator_page,
-        "early_admissions_details": early_admissions_page,
+        'total_cases': total_cases,
+        'cases_without_approval': cases_without_approval,
+        'pending_accounts': pending_accounts,
+        'pending_coordinator': pending_coordinator,
+        'early_admissions': early_admissions,
+        'status_data': status_data,
+        'box_colors': box_colors,
     }
+    
+    return render(request, 'frontend/external_approvals.html', context)
 
-    return render(
-        request,
-        "frontend/external_approvals.html",
-        context,
+
+def external_approvals_detail(request, filter_type):
+    """
+    صفحة تفاصيل الموافقات الخارجية - بنفس تصميم patient_search
+    filter_type: total | accounts | coordinator | without_approval | early | status
+    """
+    
+    all_records = ExternalApproval.objects.all()
+    total_cases = all_records.count()
+    approval_count = all_records.exclude(approval__isnull=True).exclude(approval="").count()
+    billing_count = all_records.exclude(billing_status__isnull=True).exclude(billing_status="").count()
+    
+    # ✅ الفلتر حسب نوع البوكس
+    if filter_type == "total":
+        patients = all_records
+        title = "إجمالي الحالات المرسلة للتسعير"
+    elif filter_type == "accounts":
+        patients = all_records.filter(
+            ~Q(approval__isnull=True) & ~Q(approval=''),
+            Q(billing_status__isnull=True) | Q(billing_status='')
+        )
+        title = "الحالات المعطلة طرف الحسابات"
+    elif filter_type == "coordinator":
+        patients = all_records.exclude(billing_status__isnull=True).exclude(billing_status="").filter(admission_date__isnull=True)
+        title = "الحالات المعطلة طرف منسق العيادات"
+    elif filter_type == "without_approval":
+        patients = all_records.filter(Q(approval__isnull=True) | Q(approval=''))
+        title = "حالات بدون موافقة"
+    elif filter_type == "early":
+        today = timezone.localtime().date()
+        tomorrow = today + timedelta(days=1)
+        patients = all_records.filter(admission_date=tomorrow)
+        title = "حالات دخول باكر (غداً)"
+    elif filter_type == "status":
+        status_name = request.GET.get('status', '')
+        if status_name == 'غير محدد':
+            patients = all_records.filter(Q(main_status__isnull=True) | Q(main_status=''))
+        else:
+            patients = all_records.filter(main_status=status_name)
+        title = f"حالات {status_name}"
+    else:
+        patients = all_records
+        title = "جميع الحالات"
+    
+    # ✅ البحث
+    search_query = request.GET.get("search", "")
+    
+    # ✅ الفلاتر
+    attachment_type = request.GET.get("attachment_type", "")
+    company_filter = request.GET.get("company", "")
+    sub_account_filter = request.GET.get("sub_account", "")
+    doctor_filter = request.GET.get("doctor", "")
+    specialty_filter = request.GET.get("specialty", "")
+    date_from = request.GET.get("date_from", "")
+    date_to = request.GET.get("date_to", "")
+    
+    if search_query:
+        patients = patients.filter(
+            Q(patient_name__icontains=search_query) |
+            Q(phone__icontains=search_query) |
+            Q(card_number__icontains=search_query) |
+            Q(medical_number__icontains=search_query) |
+            Q(account_number__icontains=search_query) |
+            Q(company__icontains=search_query) |
+            Q(sub_account__icontains=search_query)
+        )
+    
+    if attachment_type:
+        patients = patients.filter(attachment_type__icontains=attachment_type)
+    if company_filter:
+        patients = patients.filter(company__icontains=company_filter)
+    if sub_account_filter:
+        patients = patients.filter(sub_account__icontains=sub_account_filter)
+    if doctor_filter:
+        patients = patients.filter(doctor_name__icontains=doctor_filter)
+    if specialty_filter:
+        patients = patients.filter(specialty__icontains=specialty_filter)
+    if date_from:
+        try:
+            patients = patients.filter(date__gte=date_from)
+        except:
+            pass
+    if date_to:
+        try:
+            patients = patients.filter(date__lte=date_to)
+        except:
+            pass
+    
+    # ✅ Pagination
+    paginator = Paginator(patients, 50)
+    page_number = request.GET.get('page', 1)
+    
+    try:
+        page_obj = paginator.get_page(page_number)
+    except PageNotAnInteger:
+        page_obj = paginator.get_page(1)
+    except EmptyPage:
+        page_obj = paginator.get_page(paginator.num_pages)
+    
+    # ✅ قيم الفلاتر (Dynamic) - نفس الـ logic بتاع patient_search
+    filter_queryset = patients
+    
+    # attachment_types
+    attachment_types = list(
+        filter_queryset
+        .values_list('attachment_type', flat=True)
+        .distinct()
+        .exclude(attachment_type__isnull=True)
+        .exclude(attachment_type='')
+        .order_by('attachment_type')
     )
+    
+    # companies
+    companies = list(
+        filter_queryset
+        .values_list('company', flat=True)
+        .distinct()
+        .exclude(company__isnull=True)
+        .exclude(company='')
+        .order_by('company')
+    )
+    
+    # sub_accounts
+    sub_accounts = list(
+        filter_queryset
+        .values_list('sub_account', flat=True)
+        .distinct()
+        .exclude(sub_account__isnull=True)
+        .exclude(sub_account='')
+        .order_by('sub_account')
+    )
+    
+    # doctors
+    doctors = list(
+        filter_queryset
+        .values_list('doctor_name', flat=True)
+        .distinct()
+        .exclude(doctor_name__isnull=True)
+        .exclude(doctor_name='')
+        .order_by('doctor_name')
+    )
+    
+    # specialties
+    specialties = list(
+        filter_queryset
+        .values_list('specialty', flat=True)
+        .distinct()
+        .exclude(specialty__isnull=True)
+        .exclude(specialty='')
+        .order_by('specialty')
+    )
+    
+    context = {
+        'title': title,
+        'filter_type': filter_type,
+        'search_query': search_query,
+        'patients': page_obj,
+        'patient_count': patients.count(),
+        'total_cases': total_cases,
+        'approval_count': approval_count,
+        'billing_count': billing_count,
+        'attachment_type': attachment_type,
+        'company_filter': company_filter,
+        'sub_account_filter': sub_account_filter,
+        'doctor_filter': doctor_filter,
+        'specialty_filter': specialty_filter,
+        'date_from': date_from,
+        'date_to': date_to,
+        'attachment_types': attachment_types,
+        'companies': companies,
+        'sub_accounts': sub_accounts,
+        'doctors': doctors,
+        'specialties': specialties,
+        'back_url': request.META.get('HTTP_REFERER', '/external-approvals/'),
+    }
+    
+    return render(request, 'frontend/external_approvals_detail.html', context)
 def approval_detail(request, pk):
 
     
