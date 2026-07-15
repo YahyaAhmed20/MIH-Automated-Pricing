@@ -861,6 +861,21 @@
                                                 {% endif %}
                                             </span>
                                         </div>
+
+                                         <!-- ✅ NEW: Status -->
+        <div class="info-item">
+            <span class="label">الحاله</span>
+            <span class="value">
+                <span class="status-badge 
+                    {% if patient.status == 'Serv. Done' %}done
+                    {% elif patient.status == 'Pending' or patient.status == 'pending' %}pending
+                    {% elif patient.status == 'Approved' or patient.status == 'approved' %}approved
+                    {% elif patient.status == 'Rejected' or patient.status == 'rejected' %}rejected
+                    {% else %}default{% endif %}">
+                    {{ patient.status|default:"-" }}
+                </span>
+            </span>
+        </div>
                                         <div class="info-item">
                                             <span class="label">تاريخ الموافقه</span>
                                             <span class="value">{{ patient.approval_date|date:"Y-m-d"|default:"-" }}</span>
