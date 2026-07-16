@@ -7,36 +7,6 @@
 {% block content %}
 
 <!-- ============================================ -->
-<!-- ✅ Script للبحث التلقائي -->
-<!-- ============================================ -->
-<script>
-    let searchTimeout;
-
-    function searchDelay() {
-        clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(function() {
-            document.querySelector('form').submit();
-        }, 300);
-    }
-
-    // ✅ تحسين المظهر: إظهار/إخفاء زر المسح حسب وجود نص
-    document.addEventListener('DOMContentLoaded', function() {
-        const searchInput = document.querySelector('input[name="search"]');
-        const clearBtn = document.querySelector('.clear-search-btn');
-
-        if (searchInput && clearBtn) {
-            searchInput.addEventListener('input', function() {
-                if (this.value.length > 0) {
-                    clearBtn.style.display = 'block';
-                } else {
-                    clearBtn.style.display = 'none';
-                }
-            });
-        }
-    });
-</script>
-
-<!-- ============================================ -->
 <!-- ✅ شريط البحث المحسن -->
 <!-- ============================================ -->
 <div class="card shadow border-0 hover-shadow">
@@ -50,7 +20,7 @@
 
     <div class="card-body">
 
-        <form method="get">
+        <form method="get" id="searchForm">
 
             <div class="row g-3 align-items-end">
 
@@ -64,36 +34,47 @@
                     <div class="input-group input-group-lg">
 
                         <span class="input-group-text bg-light border-0">
-
                             <i class="fas fa-search text-primary"></i>
-
                         </span>
 
+                        <!-- ✅ حقل البحث مع Datalist -->
                         <input
                             type="text"
                             name="search"
                             class="form-control border-0 shadow-sm"
-                            placeholder="اكتب اسم الجهة أو الفئة المالية..."
+                            placeholder="ابحث باسم الجهة أو الفئة المالية..."
                             value="{{ search }}"
-                            onkeyup="searchDelay()"
+                            id="searchInput"
+                            list="entitiesList"
+                            autocomplete="off"
                             autofocus
                         >
 
-                        {% if search %}
+                        <!-- ✅ قائمة الاقتراحات Datalist -->
+                        <datalist id="entitiesList">
+                            {% for entity in all_entities %}
+                                <option value="{{ entity.name }}">
+                                    {{ entity.name }}
+                                </option>
+                            {% endfor %}
+                        </datalist>
 
+                        {% if search %}
                         <a
                             href="{% url 'contract_entities' %}"
                             class="btn btn-outline-danger border-0 clear-search-btn"
                             title="مسح البحث"
                         >
-
                             <i class="fas fa-times"></i>
-
                         </a>
-
                         {% endif %}
 
                     </div>
+
+                    <small class="text-muted mt-2 d-block">
+                        <i class="fas fa-info-circle text-primary"></i>
+                        اختار من القايمة أو اضغط Enter للبحث
+                    </small>
 
                 </div>
 
@@ -102,11 +83,8 @@
                     <button
                         class="btn btn-primary btn-lg w-100 shadow-sm"
                         type="submit">
-
                         <i class="fas fa-search"></i>
-
                         بحث
-
                     </button>
 
                 </div>
@@ -116,11 +94,8 @@
                     <a
                         href="{% url 'contract_entities' %}"
                         class="btn btn-outline-secondary btn-lg w-100 shadow-sm">
-
                         <i class="fas fa-undo"></i>
-
                         مسح الكل
-
                     </a>
 
                 </div>
@@ -141,19 +116,13 @@
     <div class="card-header bg-gradient-info text-white d-flex justify-content-between align-items-center">
 
         <h5 class="mb-0">
-
             <i class="fas fa-building"></i>
-
             الجهات المتعاقدة
-
         </h5>
 
         <span class="badge bg-light text-dark rounded-pill fs-6 px-3 py-2">
-
             <i class="fas fa-list"></i>
-
             {{ results_count }}
-
         </span>
 
     </div>
@@ -164,107 +133,59 @@
         <div class="row g-3 mb-4">
 
             <div class="col-md-3">
-
                 <div class="card bg-light border-0 shadow-sm">
-
                     <div class="card-body text-center py-3">
-
                         <h6 class="text-muted mb-1">
-
                             <i class="fas fa-building"></i>
-
                             إجمالي الجهات
-
                         </h6>
-
                         <h4 class="mb-0 text-primary">
-
                             {{ results_count }}
-
                         </h4>
-
                     </div>
-
                 </div>
-
             </div>
 
             <div class="col-md-3">
-
                 <div class="card bg-light border-0 shadow-sm">
-
                     <div class="card-body text-center py-3">
-
                         <h6 class="text-muted mb-1">
-
                             <i class="fas fa-handshake"></i>
-
                             أنواع التعاقد
-
                         </h6>
-
                         <h4 class="mb-0 text-success">
-
                             {{ contracts|dictsort:"contract_type"|length }}
-
                         </h4>
-
                     </div>
-
                 </div>
-
             </div>
 
             <div class="col-md-3">
-
                 <div class="card bg-light border-0 shadow-sm">
-
                     <div class="card-body text-center py-3">
-
                         <h6 class="text-muted mb-1">
-
                             <i class="fas fa-tags"></i>
-
                             الفئات المالية
-
                         </h6>
-
                         <h4 class="mb-0 text-warning">
-
                             {{ contracts|dictsort:"financial_category.code"|length }}
-
                         </h4>
-
                     </div>
-
                 </div>
-
             </div>
 
             <div class="col-md-3">
-
                 <div class="card bg-light border-0 shadow-sm">
-
                     <div class="card-body text-center py-3">
-
                         <h6 class="text-muted mb-1">
-
                             <i class="fas fa-calendar-alt"></i>
-
                             العقود النشطة
-
                         </h6>
-
                         <h4 class="mb-0 text-success">
-
                             {{ contracts|length }}
-
                         </h4>
-
                     </div>
-
                 </div>
-
             </div>
 
         </div>
@@ -272,55 +193,43 @@
         <!-- ✅ جدول البيانات -->
         <div class="table-responsive">
 
-            <table
-                class="table table-hover table-striped align-middle">
+            <table class="table table-hover table-striped align-middle">
 
                 <thead class="table-light">
-
                     <tr>
-
                         <th>
                             <i class="fas fa-building"></i>
                             الجهة
                         </th>
-
                         <th>
                             <i class="fas fa-handshake"></i>
                             نوع التعاقد
                         </th>
-
                         <th>
                             <i class="fas fa-tag"></i>
                             الفئة المالية
                         </th>
-
                         <th>
                             <i class="fas fa-list-ul"></i>
                             قائمة الأسعار
                         </th>
-
                         <th>
                             <i class="fas fa-notes-medical"></i>
                             الخدمة الطبية
                         </th>
-
                         <th>
                             <i class="fas fa-calendar-check"></i>
                             اعتبارًا من
                         </th>
-
                         <th>
                             <i class="fas fa-cogs"></i>
                             تعليمات التشغيل
                         </th>
-
                         <th class="text-center" style="width:120px;">
                             <i class="fas fa-eye"></i>
                             الإجراءات
                         </th>
-
                     </tr>
-
                 </thead>
 
                 <tbody>
@@ -330,187 +239,105 @@
                 <tr class="table-row-hover">
 
                     <td>
-
                        <a
                             href="{% url 'contract_entity_detail' contract.entity.id %}"
                             class="text-decoration-none fw-bold text-primary">
-
                             <i class="fas fa-building me-1"></i>
-
                             {{ contract.entity.name }}
-
                         </a>
-
                     </td>
 
                     <td>
-
                         {% if contract.contract_type %}
-
                             <span class="badge bg-primary rounded-pill px-3 py-2">
-
                                 <i class="fas fa-check-circle me-1"></i>
-
                                 {{ contract.contract_type }}
-
                             </span>
-
                         {% else %}
-
                             <span class="text-muted">
-
                                 <i class="fas fa-minus-circle"></i>
-
                                 -
-
                             </span>
-
                         {% endif %}
-
                     </td>
 
                     <td>
-
                         {% if contract.financial_category %}
-
                             <span class="badge bg-secondary rounded-pill px-3 py-2">
-
                                 <i class="fas fa-tag me-1"></i>
-
                                 {{ contract.financial_category.code }}
-
                             </span>
-
                         {% else %}
-
                             <span class="text-muted">
-
                                 <i class="fas fa-minus-circle"></i>
-
                                 -
-
                             </span>
-
                         {% endif %}
-
                     </td>
 
                     <td>
-
                         {% if contract.price_list %}
-
                             <span class="fw-semibold">
-
                                 <i class="fas fa-list-ul text-info me-1"></i>
-
                                 {{ contract.price_list.name }}
-
                             </span>
-
                         {% else %}
-
                             <span class="text-muted">
-
                                 <i class="fas fa-minus-circle"></i>
-
                                 -
-
                             </span>
-
                         {% endif %}
-
                     </td>
 
                     <td>
-
                         {% if contract.medical_service %}
-
                         <div style="white-space: pre-line; max-width: 200px; font-size: 0.9rem;">
-
                             <i class="fas fa-notes-medical text-success me-1"></i>
-
                             {{ contract.medical_service|truncatechars:50 }}
-
                         </div>
-
                         {% else %}
-
                             <span class="text-muted">
-
                                 <i class="fas fa-minus-circle"></i>
-
                                 -
-
                             </span>
-
                         {% endif %}
-
                     </td>
 
                     <td>
-
                         {% if contract.effective_from %}
-
                             <span class="fw-semibold text-success">
-
                                 <i class="fas fa-calendar-check me-1"></i>
-
                                 {{ contract.effective_from|date:"Y-m-d" }}
-
                             </span>
-
                         {% else %}
-
                             <span class="text-muted">
-
                                 <i class="fas fa-minus-circle"></i>
-
                                 -
-
                             </span>
-
                         {% endif %}
-
                     </td>
 
                     <td style="min-width:200px;">
-
                         {% if contract.operating_instructions %}
-
                         <div style="white-space: pre-line; font-size: 0.9rem;">
-
                             <i class="fas fa-cogs text-warning me-1"></i>
-
                             {{ contract.operating_instructions|linebreaksbr|truncatechars:60 }}
-
                         </div>
-
                         {% else %}
-
                             <span class="text-muted">
-
                                 <i class="fas fa-minus-circle"></i>
-
                                 -
-
                             </span>
-
                         {% endif %}
-
                     </td>
 
                     <td class="text-center">
-
                         <a
                             href="{% url 'contract_entity_detail' contract.entity.id %}"
                             class="btn btn-primary btn-sm">
-
                             <i class="fas fa-eye"></i>
-
                             لوحة البيانات
-
                         </a>
-
                     </td>
 
                 </tr>
@@ -518,19 +345,13 @@
                 {% empty %}
 
                 <tr>
-
                     <td
                         colspan="8"
                         class="text-center text-muted py-5">
-
                         <i class="fas fa-inbox fa-4x d-block mb-3 text-muted"></i>
-
                         <h5 class="text-muted">لا توجد جهات متعاقدة</h5>
-
                         <p class="text-muted small">حاول تغيير كلمات البحث</p>
-
                     </td>
-
                 </tr>
 
                 {% endfor %}
@@ -544,6 +365,46 @@
     </div>
 
 </div>
+
+<!-- ============================================ -->
+<!-- ✅ JavaScript - بحث فقط عند اختيار من القائمة أو Enter -->
+<!-- ============================================ -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('searchInput');
+        const searchForm = document.getElementById('searchForm');
+        const entitiesList = document.getElementById('entitiesList');
+        
+        // ✅ البحث فقط عند اختيار عنصر من الـ Datalist أو الضغط Enter
+        if (searchInput) {
+            let lastSelectedValue = searchInput.value;
+            
+            // ✅ حدث عند الضغط على Enter
+            searchInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    searchForm.submit();
+                }
+            });
+            
+            // ✅ حدث عند تغيير القيمة (بعد اختيار من Datalist)
+            searchInput.addEventListener('change', function(e) {
+                if (e.target.value !== lastSelectedValue) {
+                    lastSelectedValue = e.target.value;
+                    
+                    // ✅ البحث عن الـ option المختار في الـ Datalist
+                    const options = Array.from(entitiesList.options);
+                    const selectedOption = options.find(opt => opt.value === e.target.value);
+                    
+                    // ✅ لو موجودة في القائمة نعمل Submit
+                    if (selectedOption && e.target.value.trim() !== '') {
+                        searchForm.submit();
+                    }
+                }
+            });
+        }
+    });
+</script>
 
 <!-- ============================================ -->
 <!-- ✅ CSS تحسينات إضافية -->

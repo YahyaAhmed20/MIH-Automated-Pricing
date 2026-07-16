@@ -9,799 +9,339 @@
     {% include "frontend/includes/company_tabs.html" %}
 {% endif %}
 
+<!-- ============================================ -->
+<!-- هيدر الصفحة -->
+<!-- ============================================ -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold mb-1">
+            <i class="fas fa-building text-primary me-2"></i>
+            {{ entity.name }}
+        </h2>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="{% url 'contract_entities' %}" class="text-decoration-none">الجهات المتعاقدة</a></li>
+                <li class="breadcrumb-item active">{{ entity.name }}</li>
+            </ol>
+        </nav>
+    </div>
+    <a href="{% url 'contract_entities' %}" class="btn btn-outline-secondary">
+        <i class="fas fa-arrow-right me-2"></i> العودة للجهات
+    </a>
+</div>
 
-<div class="card shadow-sm border-0 mb-4">
-
-    <div class="card-header bg-primary text-white">
-        <h5 class="mb-0">
-            <i class="fas fa-file-contract me-2"></i>
-            بيانات التعاقد
-        </h5>
+<!-- ============================================ -->
+<!-- بطاقة بيانات التعاقد -->
+<!-- ============================================ -->
+<div class="card border-0 shadow-sm mb-4">
+    
+    <!-- هيدر البطاقة -->
+    <div class="card-header bg-gradient-primary text-white border-0 py-3">
+        <div class="d-flex align-items-center">
+            <div class="icon-circle bg-white bg-opacity-25 me-3">
+                <i class="fas fa-file-contract text-white"></i>
+            </div>
+            <div>
+                <h5 class="mb-0 fw-bold">بيانات التعاقد</h5>
+                <small class="text-white-50">تفاصيل العقد والخدمات الطبية</small>
+            </div>
+            <div class="ms-auto">
+                <span class="badge bg-white text-primary rounded-pill px-3 py-2">
+                    <i class="fas fa-check-circle me-1"></i>
+                    عقد نشط
+                </span>
+            </div>
+        </div>
     </div>
 
-    <div class="card-body">
+    <!-- جسم البطاقة -->
+    <div class="card-body p-4">
 
         <div class="row g-4">
 
-            <div class="col-md-6">
-                <label class="text-muted small">الجهة</label>
-                <h5>{{ entity.name }}</h5>
-            </div>
-
-            <div class="col-md-6">
-                <label class="text-muted small">نوع التعاقد</label>
-                <h5>{{ contract.contract_type|default:"-" }}</h5>
-            </div>
-
-            <div class="col-md-6">
-                <label class="text-muted small">الفئة المالية</label>
-                <h5>{{ contract.financial_category.code|default:"-" }}</h5>
-            </div>
-
-            <div class="col-md-6">
-                <label class="text-muted small">قائمة الأسعار</label>
-                <h5>{{ contract.price_list.name|default:"-" }}</h5>
-            </div>
-
-            <div class="col-md-6">
-                <label class="text-muted small">الخدمة الطبية</label>
-                <h5>{{ contract.medical_service|default:"-" }}</h5>
-            </div>
-
-            <div class="col-md-6">
-                <label class="text-muted small">اعتبارًا من</label>
-                <h5>{{ contract.effective_from|date:"Y-m-d"|default:"-" }}</h5>
-            </div>
-
-            <div class="col-12">
-                <label class="text-muted small">تعليمات التشغيل</label>
-
-                {% if contract.operating_instructions %}
-    <h5>{{ contract.operating_instructions }}</h5>
-{% else %}
-    <h5>-</h5>
-{% endif %}
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-
-<style>
-    .col-md-2-4 {
-    flex: 0 0 20%;
-    max-width: 20%;
-}
-</style>
-<!-- ============================================ -->
-<!-- عنوان الجهة -->
-<!-- ============================================ -->
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h2>
-        <i class="bi bi-building"></i>
-        {{ entity.name }}
-    </h2>
-    <a href="{% url 'contract_entities' %}" class="btn btn-outline-secondary btn-sm">
-        <i class="bi bi-arrow-right"></i> العودة للجهات
-    </a>
-</div>
-{% comment %}
-<!-- ============================================ -->
-<!-- الصف الأول: كروت الإحصائيات الرئيسية (6 كروت) -->
-<!-- ============================================ -->
-<div class="row g-3 mb-4">
-
-    <div class="col-md-2-4">
-        <div class="card border-primary shadow-sm h-100 hover-shadow">
-            <div class="card-body text-center">
-                <div class="icon-circle bg-primary bg-opacity-10 mb-2 mx-auto">
-                    <i class="bi bi-file-earmark-text text-primary"></i>
+            <!-- الجهة -->
+            <div class="col-lg-4 col-md-6">
+                <div class="info-card bg-light rounded-3 p-3 h-100 border-start border-4 border-primary">
+                    <div class="d-flex align-items-center mb-2">
+                        <div class="icon-sm bg-primary bg-opacity-10 rounded-circle p-2 me-2">
+                            <i class="fas fa-building text-primary"></i>
+                        </div>
+                        <label class="text-muted small fw-bold mb-0">الجهة</label>
+                    </div>
+                    <h6 class="fw-bold mb-0">{{ entity.name }}</h6>
                 </div>
-                <h6 class="text-muted">عدد العقود</h6>
-                <h3 class="text-primary">{{ contracts_count }}</h3>
             </div>
-        </div>
-    </div>
 
-    <div class="col-md-2-4">
-        <div class="card border-info shadow-sm h-100 hover-shadow">
-            <div class="card-body text-center">
-                <div class="icon-circle bg-info bg-opacity-10 mb-2 mx-auto">
-                    <i class="bi bi-file-medical text-info"></i>
-                </div>
-                <h6 class="text-muted">عدد الطلبات</h6>
-                <h3 class="text-info">{{ total_requests }}</h3>
-            </div>
-        </div>
-    </div>
-
-    <!-- ✅ كارت جديد: عدد التسعيرات -->
-    <div class="col-md-2-4">
-        <div class="card border-info shadow-sm h-100 hover-shadow">
-            <div class="card-body text-center">
-                <div class="icon-circle bg-info bg-opacity-10 mb-2 mx-auto">
-                    <i class="bi bi-cash-stack text-info"></i>
-                </div>
-                <h6 class="text-muted">عدد التسعيرات</h6>
-                <h3 class="text-info">{{ contract_packages_count }}</h3>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-2-4">
-        <div class="card border-success shadow-sm h-100 hover-shadow">
-            <div class="card-body text-center">
-                <div class="icon-circle bg-success bg-opacity-10 mb-2 mx-auto">
-                    <i class="bi bi-coin text-success"></i>
-                </div>
-                <h6 class="text-muted">إجمالي التكلفة</h6>
-                <h3 class="text-success">{{ total_cost|floatformat:0 }} <small>ج.م</small></h3>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-2-4">
-        <div class="card border-warning shadow-sm h-100 hover-shadow">
-            <div class="card-body text-center">
-                <div class="icon-circle bg-warning bg-opacity-10 mb-2 mx-auto">
-                    <i class="bi bi-calculator text-warning"></i>
-                </div>
-                <h6 class="text-muted">متوسط الطلب</h6>
-                <h3 class="text-warning">{{ avg_cost|floatformat:0 }} <small>ج.م</small></h3>
-            </div>
-        </div>
-    </div>
-
-    <!-- ✅ كارت نسبة الموافقات (جديد) -->
-    <div class="col-md-2-4">
-        <div class="card border-success shadow-sm h-100 hover-shadow">
-            <div class="card-body text-center">
-                <div class="icon-circle bg-success bg-opacity-10 mb-2 mx-auto">
-                    <i class="bi bi-pie-chart text-success"></i>
-                </div>
-                <h6 class="text-muted">نسبة الموافقات</h6>
-                <h3 class="text-success">{{ approval_rate }}%</h3>
-            </div>
-        </div>
-    </div>
-
-</div>
-
-<!-- ============================================ -->
-<!-- الصف الثاني: كروت إضافية (مستلم - تحصيل - ترتيب) -->
-<!-- ============================================ -->
-<div class="row g-3 mb-4">
-
-    <div class="col-md-4">
-        <div class="card border-success shadow-sm h-100 hover-shadow">
-            <div class="card-body text-center">
-                <div class="icon-circle bg-success bg-opacity-10 mb-2 mx-auto">
-                    <i class="bi bi-arrow-down-circle text-success"></i>
-                </div>
-                <h6 class="text-muted">إجمالي المستلم</h6>
-                <h3 class="text-success">{{ total_received|floatformat:0 }} <small>ج.م</small></h3>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-4">
-        <div class="card border-{% if collection_rate >= 80 %}success{% elif collection_rate >= 50 %}warning{% else %}danger{% endif %} shadow-sm h-100 hover-shadow">
-            <div class="card-body text-center">
-                <div class="icon-circle bg-{% if collection_rate >= 80 %}success{% elif collection_rate >= 50 %}warning{% else %}danger{% endif %} bg-opacity-10 mb-2 mx-auto">
-                    <i class="bi bi-percent text-{% if collection_rate >= 80 %}success{% elif collection_rate >= 50 %}warning{% else %}danger{% endif %}"></i>
-                </div>
-                <h6 class="text-muted">نسبة التحصيل</h6>
-                <h3 class="text-{% if collection_rate >= 80 %}success{% elif collection_rate >= 50 %}warning{% else %}danger{% endif %}">
-                    {{ collection_rate }}%
-                </h3>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-4">
-        <div class="card border-info shadow-sm h-100 hover-shadow">
-            <div class="card-body text-center">
-                <div class="icon-circle bg-info bg-opacity-10 mb-2 mx-auto">
-                    <i class="bi bi-trophy text-info"></i>
-                </div>
-                <h6 class="text-muted">ترتيب الجهة</h6>
-                <h3 class="text-info">
-                    {% if entity_rank %}
-                        #{{ entity_rank }}
+            <!-- نوع التعاقد -->
+            <div class="col-lg-4 col-md-6">
+                <div class="info-card bg-light rounded-3 p-3 h-100 border-start border-4 border-info">
+                    <div class="d-flex align-items-center mb-2">
+                        <div class="icon-sm bg-info bg-opacity-10 rounded-circle p-2 me-2">
+                            <i class="fas fa-handshake text-info"></i>
+                        </div>
+                        <label class="text-muted small fw-bold mb-0">نوع التعاقد</label>
+                    </div>
+                    {% if contract.contract_type %}
+                        <span class="badge bg-info rounded-pill px-3 py-2">
+                            <i class="fas fa-tag me-1"></i>
+                            {{ contract.contract_type }}
+                        </span>
                     {% else %}
-                        -
+                        <span class="text-muted">-</span>
                     {% endif %}
-                </h3>
-                <small class="text-muted">من بين جميع الجهات</small>
-            </div>
-        </div>
-    </div>
-
-</div>
-
-<!-- ============================================ -->
-<!-- توزيع حالات الطلبات -->
-<!-- ============================================ -->
-<div class="row g-3 mb-4">
-
-    <div class="col-md-3">
-        <div class="card border-success shadow-sm h-100 hover-shadow">
-            <div class="card-body text-center">
-                <div class="icon-circle bg-success bg-opacity-10 mb-2 mx-auto">
-                    <i class="bi bi-check-circle text-success"></i>
                 </div>
-                <h6 class="text-muted">تمت الموافقة</h6>
-                <h4 class="text-success">{{ approved }}</h4>
             </div>
-        </div>
-    </div>
 
-    <div class="col-md-3">
-        <div class="card border-warning shadow-sm h-100 hover-shadow">
-            <div class="card-body text-center">
-                <div class="icon-circle bg-warning bg-opacity-10 mb-2 mx-auto">
-                    <i class="bi bi-clock text-warning"></i>
+            <!-- الفئة المالية -->
+            <div class="col-lg-4 col-md-6">
+                <div class="info-card bg-light rounded-3 p-3 h-100 border-start border-4 border-success">
+                    <div class="d-flex align-items-center mb-2">
+                        <div class="icon-sm bg-success bg-opacity-10 rounded-circle p-2 me-2">
+                            <i class="fas fa-coins text-success"></i>
+                        </div>
+                        <label class="text-muted small fw-bold mb-0">الفئة المالية</label>
+                    </div>
+                    {% if contract.financial_category.code %}
+                        <span class="badge bg-success rounded-pill px-3 py-2">
+                            <i class="fas fa-layer-group me-1"></i>
+                            {{ contract.financial_category.code }}
+                        </span>
+                    {% else %}
+                        <span class="text-muted">-</span>
+                    {% endif %}
                 </div>
-                <h6 class="text-muted">قيد الانتظار</h6>
-                <h4 class="text-warning">{{ pending }}</h4>
             </div>
-        </div>
-    </div>
 
-    <div class="col-md-3">
-        <div class="card border-danger shadow-sm h-100 hover-shadow">
-            <div class="card-body text-center">
-                <div class="icon-circle bg-danger bg-opacity-10 mb-2 mx-auto">
-                    <i class="bi bi-x-circle text-danger"></i>
+            <!-- قائمة الأسعار -->
+            <div class="col-lg-4 col-md-6">
+                <div class="info-card bg-light rounded-3 p-3 h-100 border-start border-4 border-warning">
+                    <div class="d-flex align-items-center mb-2">
+                        <div class="icon-sm bg-warning bg-opacity-10 rounded-circle p-2 me-2">
+                            <i class="fas fa-list-ul text-warning"></i>
+                        </div>
+                        <label class="text-muted small fw-bold mb-0">قائمة الأسعار</label>
+                    </div>
+                    <h6 class="fw-bold mb-0">
+                        {% if contract.price_list.name %}
+                            <i class="fas fa-file-invoice text-warning me-1"></i>
+                            {{ contract.price_list.name }}
+                        {% else %}
+                            <span class="text-muted">-</span>
+                        {% endif %}
+                    </h6>
                 </div>
-                <h6 class="text-muted">مرفوضة</h6>
-                <h4 class="text-danger">{{ rejected }}</h4>
             </div>
-        </div>
-    </div>
 
-    <div class="col-md-3">
-        <div class="card border-primary shadow-sm h-100 hover-shadow">
-            <div class="card-body text-center">
-                <div class="icon-circle bg-primary bg-opacity-10 mb-2 mx-auto">
-                    <i class="bi bi-check2-all text-primary"></i>
+            <!-- الخدمة الطبية -->
+            <div class="col-lg-4 col-md-6">
+                <div class="info-card bg-light rounded-3 p-3 h-100 border-start border-4 border-danger">
+                    <div class="d-flex align-items-center mb-2">
+                        <div class="icon-sm bg-danger bg-opacity-10 rounded-circle p-2 me-2">
+                            <i class="fas fa-stethoscope text-danger"></i>
+                        </div>
+                        <label class="text-muted small fw-bold mb-0">الخدمة الطبية</label>
+                    </div>
+                    <h6 class="fw-bold mb-0">
+                        {% if contract.medical_service %}
+                            <span class="text-danger">{{ contract.medical_service }}</span>
+                        {% else %}
+                            <span class="text-muted">-</span>
+                        {% endif %}
+                    </h6>
                 </div>
-                <h6 class="text-muted">تم التنفيذ</h6>
-                <h4 class="text-primary">{{ service_done }}</h4>
-            </div>
-        </div>
-    </div>
-
-</div>
-
-<!-- ============================================ -->
-<!-- أعلى التخصصات -->
-<!-- ============================================ -->
-<div class="card shadow mb-4 hover-shadow">
-
-    <div class="card-header bg-success bg-opacity-10 d-flex justify-content-between align-items-center">
-        <span>
-            <i class="bi bi-tags"></i>
-            أعلى التخصصات
-        </span>
-        <span class="badge bg-success rounded-pill">
-            {{ top_specialties|length }}
-        </span>
-    </div>
-
-    <div class="card-body p-0">
-
-        <div class="list-group list-group-flush">
-
-            {% for item in top_specialties %}
-
-            <div class="list-group-item d-flex justify-content-between align-items-center">
-                <span>
-                    <span class="badge bg-success rounded-circle me-2">
-                        {{ forloop.counter }}
-                    </span>
-                    <strong>{{ item.specialty__name|default:"غير محدد" }}</strong>
-                </span>
-                <span class="badge bg-success rounded-pill">
-                    {{ item.total }}
-                </span>
             </div>
 
-            {% empty %}
-
-            <div class="list-group-item text-center text-muted py-4">
-                <i class="bi bi-inbox"></i>
-                لا توجد بيانات
+            <!-- اعتبارًا من -->
+            <div class="col-lg-4 col-md-6">
+                <div class="info-card bg-light rounded-3 p-3 h-100 border-start border-4 border-secondary">
+                    <div class="d-flex align-items-center mb-2">
+                        <div class="icon-sm bg-secondary bg-opacity-10 rounded-circle p-2 me-2">
+                            <i class="fas fa-calendar-check text-secondary"></i>
+                        </div>
+                        <label class="text-muted small fw-bold mb-0">اعتبارًا من</label>
+                    </div>
+                    <h6 class="fw-bold mb-0">
+                        {% if contract.effective_from %}
+                            <i class="far fa-calendar-alt text-secondary me-1"></i>
+                            {{ contract.effective_from|date:"Y-m-d" }}
+                        {% else %}
+                            <span class="text-muted">-</span>
+                        {% endif %}
+                    </h6>
+                </div>
             </div>
 
-            {% endfor %}
-
-        </div>
-
-    </div>
-
-</div>
-
-<!-- ============================================ -->
-<!-- أعلى الإجراءات -->
-<!-- ============================================ -->
-<div class="card shadow mb-4 hover-shadow">
-
-    <div class="card-header bg-danger bg-opacity-10 d-flex justify-content-between align-items-center">
-        <span>
-            <i class="bi bi-list-check"></i>
-            أعلى الإجراءات
-        </span>
-        <span class="badge bg-danger rounded-pill">
-            {{ top_procedures|length }}
-        </span>
-    </div>
-
-    <div class="card-body p-0">
-
-        <div class="list-group list-group-flush">
-
-            {% for item in top_procedures %}
-
-            <div class="list-group-item d-flex justify-content-between align-items-center">
-                <span>
-                    <span class="badge bg-danger rounded-circle me-2">
-                        {{ forloop.counter }}
-                    </span>
-                    <strong>{{ item.procedure_name }}</strong>
-                </span>
-                <span class="badge bg-danger rounded-pill">
-                    {{ item.total }}
-                </span>
-            </div>
-
-            {% empty %}
-
-            <div class="list-group-item text-center text-muted py-4">
-                <i class="bi bi-inbox"></i>
-                لا توجد بيانات
-            </div>
-
-            {% endfor %}
-
-        </div>
-
-    </div>
-
-</div>
-
-<!-- ============================================ -->
-<!-- أعلى الإجراءات تكلفة -->
-<!-- ============================================ -->
-<div class="card shadow mb-4 hover-shadow">
-
-    <div class="card-header bg-danger text-white d-flex justify-content-between align-items-center">
-        <span>
-            <i class="bi bi-coin"></i>
-            أعلى الإجراءات تكلفة
-        </span>
-        <span class="badge bg-light text-dark rounded-pill">
-            {{ top_costly_procedures|length }}
-        </span>
-    </div>
-
-    <div class="card-body p-0">
-
-        <div class="list-group list-group-flush">
-
-            {% for item in top_costly_procedures %}
-
-            <div class="list-group-item d-flex justify-content-between align-items-center">
-                <span>
-                    <span class="badge bg-danger rounded-circle me-2">
-                        {{ forloop.counter }}
-                    </span>
-                    <strong>{{ item.procedure_name }}</strong>
-                </span>
-                <span>
-                    <span class="badge bg-info rounded-pill me-1">
-                        {{ item.total_requests }} طلب
-                    </span>
-                    <span class="badge bg-success rounded-pill">
-                        {{ item.total_cost|floatformat:0 }} ج.م
-                    </span>
-                </span>
-            </div>
-
-            {% empty %}
-
-            <div class="list-group-item text-center text-muted py-4">
-                <i class="bi bi-inbox"></i>
-                لا توجد بيانات
-            </div>
-
-            {% endfor %}
-
-        </div>
-
-    </div>
-
-</div>
-
-<!-- ============================================ -->
-<!-- أعلى الأطباء -->
-<!-- ============================================ -->
-<div class="card shadow mb-4 hover-shadow">
-
-    <div class="card-header bg-info bg-opacity-10 d-flex justify-content-between align-items-center">
-        <span>
-            <i class="bi bi-person-badge"></i>
-            أعلى الأطباء
-        </span>
-        <span class="badge bg-info rounded-pill">
-            {{ top_doctors|length }}
-        </span>
-    </div>
-
-    <div class="card-body p-0">
-
-        <div class="list-group list-group-flush">
-
-            {% for item in top_doctors %}
-
-            <div class="list-group-item d-flex justify-content-between align-items-center">
-                <span>
-                    <span class="badge bg-info rounded-circle me-2">
-                        {{ forloop.counter }}
-                    </span>
-
-                    <td>
-    <a href="{% url 'doctor_detail' item.doctor_name %}">
-        {{ item.doctor_name }}
-    </a>
-</td>
-                </span>
-                <span>
-                    <span class="badge bg-primary rounded-pill me-1">
-                        {{ item.total }} طلب
-                    </span>
-                    <span class="badge bg-success rounded-pill">
-                        {{ item.cost|floatformat:0 }} ج.م
-                    </span>
-                </span>
-            </div>
-
-            {% empty %}
-
-            <div class="list-group-item text-center text-muted py-4">
-                <i class="bi bi-inbox"></i>
-                لا توجد بيانات
-            </div>
-
-            {% endfor %}
-
-        </div>
-
-    </div>
-
-</div>
-
-<!-- ============================================ -->
-<!-- أعلى المرضى تكلفة (جديد) -->
-<!-- ============================================ -->
-<div class="card shadow mb-4 hover-shadow">
-
-    <div class="card-header bg-primary bg-opacity-10 d-flex justify-content-between align-items-center">
-        <span>
-            <i class="bi bi-people"></i>
-            أعلى المرضى تكلفة
-        </span>
-        <span class="badge bg-primary rounded-pill">
-            {{ top_patients_cost|length }}
-        </span>
-    </div>
-
-    <div class="card-body p-0">
-
-        <div class="list-group list-group-flush">
-
-            {% for item in top_patients_cost %}
-
-            <div class="list-group-item d-flex justify-content-between align-items-center">
-                <span>
-                    <span class="badge bg-primary rounded-circle me-2">
-                        {{ forloop.counter }}
-                    </span>
-                    <strong>{{ item.patient__full_name }}</strong>
-                </span>
-                <span>
-                    <span class="badge bg-info rounded-pill me-1">
-                        {{ item.total_requests }} طلب
-                    </span>
-                    <span class="badge bg-success rounded-pill">
-                        {{ item.total_cost|floatformat:0 }} ج.م
-                    </span>
-                </span>
-            </div>
-
-            {% empty %}
-
-            <div class="list-group-item text-center text-muted py-4">
-                <i class="bi bi-inbox"></i>
-                لا توجد بيانات
-            </div>
-
-            {% endfor %}
-
-        </div>
-
-    </div>
-
-</div>
-
-<!-- ============================================ -->
-<!-- أعلى المرضى عدد طلبات (جديد) -->
-<!-- ============================================ -->
-<div class="card shadow mb-4 hover-shadow">
-
-    <div class="card-header bg-secondary bg-opacity-10 d-flex justify-content-between align-items-center">
-        <span>
-            <i class="bi bi-people"></i>
-            أعلى المرضى عدد طلبات
-        </span>
-        <span class="badge bg-secondary rounded-pill">
-            {{ top_patients_requests|length }}
-        </span>
-    </div>
-
-    <div class="card-body p-0">
-
-        <div class="list-group list-group-flush">
-
-            {% for item in top_patients_requests %}
-
-            <div class="list-group-item d-flex justify-content-between align-items-center">
-                <span>
-                    <span class="badge bg-secondary rounded-circle me-2">
-                        {{ forloop.counter }}
-                    </span>
-                    <strong>{{ item.patient__full_name }}</strong>
-                </span>
-                <span class="badge bg-secondary rounded-pill">
-                    {{ item.total }} طلب
-                </span>
-            </div>
-
-            {% empty %}
-
-            <div class="list-group-item text-center text-muted py-4">
-                <i class="bi bi-inbox"></i>
-                لا توجد بيانات
-            </div>
-
-            {% endfor %}
-
-        </div>
-
-    </div>
-
-</div>
-
-<!-- ============================================ -->
-<!-- الحالات المعلقة Pending الخاصة بالجهة (جديد) -->
-<!-- ============================================ -->
-<div class="card shadow mb-4 hover-shadow">
-
-    <div class="card-header bg-warning bg-opacity-10 d-flex justify-content-between align-items-center">
-        <span>
-            <i class="bi bi-clock-history"></i>
-            الحالات المعلقة Pending
-        </span>
-        <span class="badge bg-warning text-dark rounded-pill">
-            {{ pending_requests_entity|length }}
-        </span>
-    </div>
-
-    <div class="card-body">
-
-        <div class="table-responsive">
-
-            <table class="table table-hover table-striped align-middle">
-
-                <thead class="table-light">
-
-                    <tr>
-                        <th>#</th>
-                        <th>المريض</th>
-                        <th>التخصص</th>
-                        <th>الطبيب</th>
-                        <th>التكلفة</th>
-                        <th>التاريخ</th>
-                    </tr>
-
-                </thead>
-
-                <tbody>
-
-                {% for item in pending_requests_entity %}
-
-                    <tr>
-
-                        <td>
-                            <span class="badge bg-secondary rounded-circle">
-                                {{ forloop.counter }}
+            <!-- تعليمات التشغيل -->
+            <div class="col-12">
+                <div class="info-card bg-light rounded-3 p-3 border-start border-4 border-dark">
+                    <div class="d-flex align-items-center mb-2">
+                        <div class="icon-sm bg-dark bg-opacity-10 rounded-circle p-2 me-2">
+                            <i class="fas fa-cogs text-dark"></i>
+                        </div>
+                        <label class="text-muted small fw-bold mb-0">تعليمات التشغيل</label>
+                    </div>
+                    <div class="p-3 bg-white rounded-3 mt-2">
+                        {% if contract.operating_instructions %}
+                            <div class="text-dark" style="white-space: pre-line; line-height: 1.8;">
+                                <i class="fas fa-info-circle text-primary me-1"></i>
+                                {{ contract.operating_instructions }}
+                            </div>
+                        {% else %}
+                            <span class="text-muted">
+                                <i class="fas fa-minus-circle me-1"></i>
+                                لا توجد تعليمات تشغيل
                             </span>
-                        </td>
-
-                       <td>
-    <a href="{% url 'patient_detail' item.patient.id %}">
-        {{ item.patient.full_name }}
-    </a>
-</td>
-
-                        <td>
-                            {{ item.specialty.name }}
-                        </td>
-
-                       <td>
-    <a href="{% url 'doctor_detail' item.doctor_name %}">
-        {{ item.doctor_name }}
-    </a>
-</td>
-
-                        <td>
-                            <span class="text-danger fw-bold">
-                                {{ item.requested_cost|floatformat:0|default:"-" }} ج.م
-                            </span>
-                        </td>
-
-                        <td>
-                            <span class="text-muted">{{ item.request_date|date:"Y-m-d" }}</span>
-                        </td>
-
-                    </tr>
-
-                {% empty %}
-
-                    <tr>
-                        <td colspan="6" class="text-center text-muted py-4">
-                            <i class="bi bi-check-circle fa-3x d-block mb-3 text-success"></i>
-                            لا توجد حالات معلقة
-                        </td>
-                    </tr>
-
-                {% endfor %}
-
-                </tbody>
-
-            </table>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
 
         </div>
 
     </div>
 
-</div>
-
-<!-- ============================================ -->
-<!-- آخر الطلبات -->
-<!-- ============================================ -->
-<div class="card shadow hover-shadow">
-
-    <div class="card-header d-flex justify-content-between align-items-center">
-        <span>
-            <i class="bi bi-clock-history"></i>
-            آخر الطلبات
-        </span>
-        <span class="badge bg-secondary rounded-pill">
-            {{ latest_requests|length }}
-        </span>
-    </div>
-
-    <div class="card-body">
-
-        <div class="table-responsive">
-
-            <table class="table table-hover table-striped align-middle">
-
-                <thead class="table-light">
-
-                    <tr>
-                        <th>#</th>
-                        <th>المريض</th>
-                        <th>التخصص</th>
-                        <th>الطبيب</th>
-                        <th>التكلفة</th>
-                        <th>الحالة</th>
-                        <th>التاريخ</th>
-                    </tr>
-
-                </thead>
-
-                <tbody>
-
-                {% for item in latest_requests %}
-
-                    <tr>
-
-                        <td>
-                            <span class="badge bg-secondary rounded-circle">
-                                {{ item.id }}
-                            </span>
-                        </td>
-
-                      <td>
-    <a href="{% url 'patient_detail' item.patient.id %}">
-        {{ item.patient.full_name }}
-    </a>
-</td>
-
-                        <td>
-                            {{ item.specialty.name }}
-                        </td>
-
-                        <td>
-    <a href="{% url 'doctor_detail' item.doctor_name %}">
-        {{ item.doctor_name }}
-    </a>
-</td>
-
-                        <td>
-                            <span class="text-primary fw-bold">
-                                {{ item.requested_cost|floatformat:0|default:"-" }} ج.م
-                            </span>
-                        </td>
-
-                        <td>
-                            {% if item.status == "approved" %}
-                                <span class="badge bg-success rounded-pill">
-                                    <i class="bi bi-check-circle"></i> تمت الموافقة
-                                </span>
-                            {% elif item.status == "pending" %}
-                                <span class="badge bg-warning text-dark rounded-pill">
-                                    <i class="bi bi-clock"></i> قيد الانتظار
-                                </span>
-                            {% elif item.status == "rejected" %}
-                                <span class="badge bg-danger rounded-pill">
-                                    <i class="bi bi-x-circle"></i> مرفوضة
-                                </span>
-                            {% elif item.status == "service_done" %}
-                                <span class="badge bg-primary rounded-pill">
-                                    <i class="bi bi-check2-all"></i> تم التنفيذ
-                                </span>
-                            {% elif item.status == "patient_refused" %}
-                                <span class="badge bg-secondary rounded-pill">
-                                    <i class="bi bi-person-x"></i> رفض المريض
-                                </span>
-                            {% else %}
-                                <span class="badge bg-dark rounded-pill">
-                                    {{ item.status }}
-                                </span>
-                            {% endif %}
-                        </td>
-
-                        <td>
-                            <span class="text-muted">{{ item.request_date|date:"Y-m-d" }}</span>
-                        </td>
-
-                    </tr>
-
-                {% empty %}
-
-                    <tr>
-                        <td colspan="7" class="text-center text-muted py-4">
-                            <i class="bi bi-inbox fa-3x d-block mb-3"></i>
-                            لا توجد طلبات لهذه الجهة
-                        </td>
-                    </tr>
-
-                {% endfor %}
-
-                </tbody>
-
-            </table>
-
-        </div>
-
+    <!-- فوتر البطاقة -->
+    <div class="card-footer bg-light border-0 d-flex justify-content-between align-items-center py-3">
+        <small class="text-muted">
+            <i class="fas fa-sync-alt me-1"></i>
+            آخر تحديث: {{ contract.updated_at|date:"Y-m-d H:i"|default:"-" }}
+        </small>
+        <button class="btn btn-outline-primary btn-sm">
+            <i class="fas fa-print me-1"></i>
+            طباعة
+        </button>
     </div>
 
 </div>
-{% endcomment %}
+
+<!-- ============================================ -->
+<!-- CSS للتنسيقات -->
+<!-- ============================================ -->
+<style>
+    /* ===== تدرج لوني للهيدر ===== */
+    .bg-gradient-primary {
+        background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
+    }
+
+    /* ===== دوائر الأيقونات ===== */
+    .icon-circle {
+        width: 45px;
+        height: 45px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        font-size: 1.2rem;
+    }
+
+    .icon-sm {
+        width: 35px;
+        height: 35px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* ===== بطاقات المعلومات ===== */
+    .info-card {
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .info-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08) !important;
+        background: white !important;
+    }
+
+    .info-card::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 4px;
+        height: 0;
+        background: inherit;
+        transition: height 0.3s ease;
+    }
+
+    .info-card:hover::after {
+        height: 100%;
+    }
+
+    /* ===== البطاقة الرئيسية ===== */
+    .card {
+        border-radius: 1rem;
+        overflow: hidden;
+    }
+
+    .card-header {
+        border-radius: 1rem 1rem 0 0 !important;
+    }
+
+    .card-footer {
+        border-radius: 0 0 1rem 1rem !important;
+    }
+
+    /* ===== أنيميشن ===== */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .info-card {
+        animation: fadeInUp 0.5s ease forwards;
+    }
+
+    .info-card:nth-child(1) { animation-delay: 0.1s; }
+    .info-card:nth-child(2) { animation-delay: 0.2s; }
+    .info-card:nth-child(3) { animation-delay: 0.3s; }
+    .info-card:nth-child(4) { animation-delay: 0.4s; }
+    .info-card:nth-child(5) { animation-delay: 0.5s; }
+    .info-card:nth-child(6) { animation-delay: 0.6s; }
+    .info-card:nth-child(7) { animation-delay: 0.7s; }
+
+    /* ===== Breadcrumb ===== */
+    .breadcrumb {
+        background: transparent;
+        padding: 0;
+    }
+
+    .breadcrumb-item + .breadcrumb-item::before {
+        content: "\f053";
+        font-family: "Font Awesome 5 Free";
+        font-weight: 900;
+        color: #6c757d;
+    }
+
+    /* ===== زر الطباعة ===== */
+    .btn-outline-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(78, 115, 223, 0.3);
+    }
+
+    /* ===== تحسين الموبايل ===== */
+    @media (max-width: 768px) {
+        .card-header .d-flex {
+            flex-direction: column;
+            text-align: center;
+        }
+        
+        .card-header .ms-auto {
+            margin: 1rem auto 0 auto;
+        }
+        
+        .info-card {
+            margin-bottom: 0.5rem;
+        }
+    }
+</style>
+
 {% endblock %}

@@ -1,3 +1,5 @@
+from xml.dom.minidom import Entity
+
 from django.db.models.functions import TruncMonth
 from contracts.services.pricing_engine import PricingEngine
 from django.db.models import Count
@@ -323,6 +325,14 @@ def price_lists(request):
 def contract_entities(request):
 
     search = request.GET.get("search", "")
+    
+    # ✅ اجلب فقط الجهات اللي عندها عقود نشطة وخدمة طبية (نفس تصفية الجدول)
+    all_entities = ContractEntity.objects.filter(
+        contracts__is_active=True,
+        contracts__medical_service__isnull=False,
+    ).exclude(
+        contracts__medical_service=""
+    ).distinct().order_by("name")
 
     contracts = (
         Contract.objects.select_related(
@@ -363,7 +373,7 @@ def contract_entities(request):
         "frontend/contract_entities.html",
 
         {
-
+            "all_entities": all_entities,
             "contracts": contracts,
 
             "search": search,
@@ -373,7 +383,6 @@ def contract_entities(request):
         }
 
     )
-
 # frontend/views.py
 
 from datetime import timedelta
@@ -2029,53 +2038,23 @@ def report_statistic_detail(request, pk):
     return render(request, 'frontend/report_statistic_detail.html', context)
 def company_discounts(request):
 
-    search = request.GET.get(
-        "search",
-        ""
-    )
-    entity_id = request.GET.get(
-        "entity"
-    )
-
-    section = request.GET.get(
-        "section",
-        ""
-    )
-    
-    active_tab = request.GET.get(
-        "tab",
-        "discounts"
-    )
+    search = request.GET.get("search", "")
+    entity_id = request.GET.get("entity")
+    section = request.GET.get("section", "")
+    active_tab = request.GET.get("tab", "discounts")
     
     # ============================================
     # ✅ Tab 2: مقارنة بين جهتين
     # ============================================
-    compare_company_1 = request.GET.get(
-        "company1",
-        ""
-    )
-
-    compare_company_2 = request.GET.get(
-        "company2",
-        ""
-    )
-
-    compare_section = request.GET.get(
-        "compare_section",
-        "all"
-    )
+    compare_company_1 = request.GET.get("company1", "")
+    compare_company_2 = request.GET.get("company2", "")
+    compare_section = request.GET.get("compare_section", "all")
     
     selected_company = None
 
     if entity_id:
-
         from contracts.models import ContractEntity
-
-        selected_company = get_object_or_404(
-            ContractEntity,
-            pk=entity_id
-        )
-
+        selected_company = get_object_or_404(ContractEntity, pk=entity_id)
         search = selected_company.name
 
     companies = (
@@ -2087,66 +2066,44 @@ def company_discounts(request):
                     "display_order",
                 ),
             )
-        ).order_by(
-            "company_name"
-        )
+        ).order_by("company_name")
     )
 
     if search:
-
         companies = companies.filter(
-
-            Q(company_name__icontains=search)
-
-            |
-
+            Q(company_name__icontains=search) |
             Q(financial_category__icontains=search)
-
         )
 
     company_cards = []
 
     for company in companies:
-
         internal = []
-
         external = []
 
         for discount in company.discounts.all():
-
             if section == "internal":
-
                 if discount.section != "داخلي":
                     continue
-
             elif section == "external":
-
                 if discount.section != "خارجي":
                     continue
 
             if discount.section == "داخلي":
-
                 internal.append(discount)
-
             else:
-
                 external.append(discount)
 
         company.internal_discounts = internal
-
         company.external_discounts = external
-
         company_cards.append(company)
 
     # ============================================
-    # ✅ قائمة الشركات للـ Dropdown
+    # ✅ قائمة الشركات للـ Datalist
     # ============================================
-    company_names = (
+    all_companies = (
         CompanyDiscountProfile.objects
-        .values_list(
-            "company_name",
-            flat=True
-        )
+        .values_list("company_name", flat=True)
         .distinct()
         .order_by("company_name")
     )
@@ -2284,26 +2241,22 @@ def company_discounts(request):
     ]
 
     return render(
-
         request,
-
         "frontend/company_discounts.html",
-
         {
-
             "companies": company_cards,
-
             "search": search,
-
             "selected_section": section,
-
             "results_count": len(company_cards),
             "selected_company": selected_company,
             "entity_id": entity_id,
             "active_tab": active_tab,
 
+            # ✅ قائمة الشركات للـ Datalist
+            "all_companies": all_companies,
+
             # ✅ Tab 2: مقارنة بين جهتين
-            "company_names": company_names,
+            "company_names": all_companies,
             "compare_company_1": compare_company_1,
             "compare_company_2": compare_company_2,
             "compare_section": compare_section,
@@ -2327,9 +2280,7 @@ def company_discounts(request):
             "total_internal": total_internal,
             "total_external": total_external,
             "total_services": total_services,
-
         }
-
     )
 def contract_entity_detail(request, pk):
 
@@ -3095,6 +3046,11 @@ def cash_packages(request):
         is_cash_package=True
     ).order_by("name")
 
+    # ✅ كل الباكدجات بدون تصفية (عشان الـ Datalist)
+    all_packages = Package.objects.filter(
+        is_cash_package=True
+    ).order_by("name")
+
     # البحث
     if search:
         packages = packages.filter(
@@ -3118,6 +3074,7 @@ def cash_packages(request):
         "frontend/cash_packages.html",
         {
             "packages": packages,
+            "all_packages": all_packages,  # ✅ أضفناها هنا
             "search": search,
             "specialties": specialties,
             "selected_specialty": specialty,
@@ -3126,24 +3083,13 @@ def cash_packages(request):
     
 def special_offers(request):
 
-    search = request.GET.get(
-        "search",
-        ""
-    ).strip()
-
+    search = request.GET.get("search", "").strip()
     entity_id = request.GET.get("entity")
     selected_company = None
-
-    company = request.GET.get(
-        "company",
-        ""
-    ).strip()
+    company = request.GET.get("company", "").strip()
 
     if entity_id:
-        selected_company = get_object_or_404(
-            ContractEntity,
-            pk=entity_id
-        )
+        selected_company = get_object_or_404(ContractEntity, pk=entity_id)
         company = selected_company.name
 
     offers = SpecialOffersService.get_special_offers(
@@ -3152,36 +3098,26 @@ def special_offers(request):
     )
 
     companies = SpecialOffersService.get_companies()
+    
+    # ✅ كل أسماء الشركات للـ Datalist (كل الشركات بدون تصفية)
+    all_companies = SpecialOffersService.get_companies()
 
     context = {
-
         "offers": offers,
-
         "companies": companies,
-
+        "all_companies": all_companies,  # ✅ للـ Datalist
         "company": company,
-
         "search": search,
-
         "selected_company": selected_company,
         "entity_id": entity_id,
-
-
         "results_count": offers.count(),
-
     }
 
     return render(
-
         request,
-
         "frontend/special_offers.html",
-
         context,
-
     )
-    
-    
 
 
 from django.shortcuts import render

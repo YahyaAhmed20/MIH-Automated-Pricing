@@ -9,104 +9,67 @@
 {% if selected_company %}
     {% include "frontend/includes/company_tabs.html" %}
 {% endif %}
-<!-- ============================================ -->
-<!-- ✅ Script للبحث التلقائي -->
-<!-- ============================================ -->
-<script>
-    let searchTimeout;
-
-    function searchDelay() {
-        clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(function() {
-            document.querySelector('form').submit();
-        }, 700); // ⬅️ 700ms عشان تدي وقت للكتابة
-    }
-
-    // ✅ إظهار/إخفاء زر المسح
-    document.addEventListener('DOMContentLoaded', function() {
-        const searchInput = document.querySelector('input[name="search"]');
-        const clearBtn = document.querySelector('.clear-search-btn');
-
-        if (searchInput && clearBtn) {
-            searchInput.addEventListener('input', function() {
-                if (this.value.length > 0) {
-                    clearBtn.style.display = 'block';
-                } else {
-                    clearBtn.style.display = 'none';
-                }
-            });
-        }
-    });
-</script>
 
 <div class="container py-4">
 
     <div class="text-center mb-4">
-
         <h2 class="fw-bold">
-
             <i class="fas fa-tags text-danger"></i>
-
             العروض الخاصة
-
         </h2>
-
         <p class="text-muted">
-
             MIH Automated Pricing System
-
         </p>
-
     </div>
 
     <!-- ============================================ -->
-    <!-- ✅ شريط البحث المحسن (Dynamic) -->
+    <!-- ✅ شريط البحث المحسن (Datalist) -->
     <!-- ============================================ -->
-    <form method="get" class="mb-4">
+    <form method="get" class="mb-4" id="searchForm">
 
         <div class="input-group input-group-lg">
 
             <span class="input-group-text bg-light border-0">
-
                 <i class="fas fa-search text-primary"></i>
-
             </span>
 
+            <!-- ✅ حقل البحث مع Datalist -->
             <input
-
                 type="text"
-
                 class="form-control border-0 shadow-sm"
-
                 name="search"
-
                 placeholder="ابحث باسم الشركة أو الإجراء..."
-
                 value="{{ search }}"
-
-                oninput="searchDelay()" 
-
-                
-
+                id="searchInput"
+                list="companiesList"
+                autocomplete="off"
             >
 
+            <!-- ✅ قائمة الاقتراحات Datalist -->
+            <datalist id="companiesList">
+                {% for company_name in all_companies %}
+                    <option value="{{ company_name }}">
+                        {{ company_name }}
+                    </option>
+                {% endfor %}
+            </datalist>
+
             {% if search %}
-
             <a
-
                 href="{% url 'special_offers' %}"
                 class="btn btn-outline-danger border-0 clear-search-btn"
                 title="مسح البحث"
-
             >
-
                 <i class="fas fa-times"></i>
-
             </a>
-
             {% endif %}
 
         </div>
+
+        <small class="text-muted mt-2 d-block">
+            <i class="fas fa-info-circle text-primary"></i>
+            اختار من القايمة أو اضغط Enter للبحث
+        </small>
 
     </form>
 
@@ -114,46 +77,36 @@
     <!-- ✅ إحصائيات النتائج -->
     <!-- ============================================ -->
     <div class="mb-4">
-
         <span class="badge bg-secondary fs-6 px-4 py-2">
-
             <i class="fas fa-list me-1"></i>
-
             عدد النتائج
-
             {{ results_count }}
-
         </span>
-
     </div>
 
     <!-- ============================================ -->
     <!-- ✅ فلتر الشركات -->
     <!-- ============================================ -->
     <div class="mb-4">
-
         <div class="d-flex flex-wrap gap-2">
 
             <a
                 href="{% url 'special_offers' %}"
                 class="btn {% if not company %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                <i class="fas fa-globe me-1"></i>
                 جميع الشركات
             </a>
 
             {% for company_name in companies %}
-
                 <a
                     href="{% url 'special_offers' %}?company={{ company_name }}"
                     class="btn {% if company == company_name %}btn-primary{% else %}btn-outline-primary{% endif %}">
-
+                    <i class="fas fa-building me-1"></i>
                     {{ company_name }}
-
                 </a>
-
             {% endfor %}
 
         </div>
-
     </div>
 
     <!-- ============================================ -->
@@ -170,19 +123,13 @@
                 <div class="card-header company-header-{{ offer.company_color }} text-white">
 
                     <h4 class="fw-bold mb-2">
-
                         <i class="fas fa-building"></i>
-
                         {{ offer.entity.name }}
-
                     </h4>
 
                     <span class="badge bg-light text-dark rounded-pill">
-
                         <i class="fas fa-tag me-1"></i>
-
                         {{ offer.offer_for }}
-
                     </span>
 
                 </div>
@@ -190,117 +137,62 @@
                 <div class="card-body">
 
                     <div class="mb-3">
-
                         <h6 class="text-muted">
-
                             <i class="fas fa-stethoscope"></i>
-
                             التخصص
-
                         </h6>
-
                         <div class="fw-bold">
-
                             {{ offer.specialty.name }}
-
                         </div>
-
                     </div>
 
                     <div class="mb-3">
-
                         <h6 class="text-muted">
-
                             <i class="fas fa-notes-medical"></i>
-
                             الإجراء
-
                         </h6>
-
                         <div>
-
                             {{ offer.procedure_name }}
-
                         </div>
-
                     </div>
 
                     <div class="mb-3">
-
                         <h6 class="text-muted">
-
                             <i class="fas fa-money-bill-wave"></i>
-
                             سعر الإجراء
-
                         </h6>
-
                         {% if offer.price %}
-
                             <span class="badge bg-success fs-5 px-3 py-2 rounded-pill">
-
                                 {{ offer.price|floatformat:0|intcomma }} جنيه
-
                             </span>
-
                         {% else %}
-
                             <span class="badge bg-secondary rounded-pill">
-
                                 غير محدد
-
                             </span>
-
                         {% endif %}
-
                     </div>
 
                     {% if offer.notes %}
-
                     <div class="alert alert-warning">
-
                         <strong>
-
                             <i class="fas fa-sticky-note"></i>
-
                             ملاحظات
-
                         </strong>
-
                         <hr>
-
                         {{ offer.notes|linebreaksbr }}
-
                     </div>
-
                     {% endif %}
 
                 </div>
 
                 <div class="card-footer bg-light">
-
                     <small class="text-muted">
-
                         <i class="fas fa-calendar-alt"></i>
-
                         من
-
-                        <strong>
-
-                            {{ offer.valid_from }}
-
-                        </strong>
-
+                        <strong>{{ offer.valid_from }}</strong>
                         إلى
-
-                        <strong>
-
-                            {{ offer.valid_to }}
-
-                        </strong>
-
+                        <strong>{{ offer.valid_to }}</strong>
                     </small>
-
                 </div>
 
             </div>
@@ -310,17 +202,11 @@
     {% empty %}
 
         <div class="col-12">
-
             <div class="alert alert-info text-center py-5">
-
                 <i class="fas fa-inbox fa-3x d-block mb-3 text-muted"></i>
-
                 <h5 class="text-muted">لا توجد عروض مطابقة</h5>
-
                 <p class="text-muted small">حاول تغيير كلمات البحث</p>
-
             </div>
-
         </div>
 
     {% endfor %}
@@ -328,6 +214,58 @@
     </div>
 
 </div>
+
+<!-- ============================================ -->
+<!-- ✅ JavaScript - بحث فقط عند اختيار من القائمة أو Enter -->
+<!-- ============================================ -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('searchInput');
+        const searchForm = document.getElementById('searchForm');
+        const companiesList = document.getElementById('companiesList');
+        
+        // ✅ إظهار/إخفاء زر المسح
+        const clearBtn = document.querySelector('.clear-search-btn');
+        if (searchInput && clearBtn) {
+            searchInput.addEventListener('input', function() {
+                if (this.value.length > 0) {
+                    clearBtn.style.display = 'block';
+                } else {
+                    clearBtn.style.display = 'none';
+                }
+            });
+        }
+        
+        // ✅ البحث فقط عند اختيار عنصر من الـ Datalist أو الضغط Enter
+        if (searchInput) {
+            let lastSelectedValue = searchInput.value;
+            
+            // ✅ حدث عند الضغط على Enter
+            searchInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    searchForm.submit();
+                }
+            });
+            
+            // ✅ حدث عند تغيير القيمة (بعد اختيار من Datalist)
+            searchInput.addEventListener('change', function(e) {
+                if (e.target.value !== lastSelectedValue) {
+                    lastSelectedValue = e.target.value;
+                    
+                    // ✅ البحث عن الـ option المختار في الـ Datalist
+                    const options = Array.from(companiesList.options);
+                    const selectedOption = options.find(opt => opt.value === e.target.value);
+                    
+                    // ✅ لو موجودة في القائمة نعمل Submit
+                    if (selectedOption && e.target.value.trim() !== '') {
+                        searchForm.submit();
+                    }
+                }
+            });
+        }
+    });
+</script>
 
 <!-- ============================================ -->
 <!-- ✅ CSS تحسينات -->

@@ -1,34 +1,4 @@
 <!-- ============================================ -->
-<!-- ✅ Script للبحث التلقائي -->
-<!-- ============================================ -->
-<script>
-    let searchTimeout;
-
-    function searchDelay() {
-        clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(function() {
-            document.querySelector('form').submit();
-        }, 300);
-    }
-
-    // ✅ إظهار/إخفاء زر المسح
-    document.addEventListener('DOMContentLoaded', function() {
-        const searchInput = document.querySelector('input[name="search"]');
-        const clearBtn = document.querySelector('.clear-search-btn');
-
-        if (searchInput && clearBtn) {
-            searchInput.addEventListener('input', function() {
-                if (this.value.length > 0) {
-                    clearBtn.style.display = 'block';
-                } else {
-                    clearBtn.style.display = 'none';
-                }
-            });
-        }
-    });
-</script>
-
-<!-- ============================================ -->
 <!-- ✅ شريط البحث والفلتر المحسن -->
 <!-- ============================================ -->
 <div class="card shadow border-0 hover-shadow mb-4">
@@ -42,7 +12,15 @@
 
     <div class="card-body">
 
-        <form method="get">
+        <form method="get" id="searchForm">
+
+            <!-- ✅ الحفاظ على التبويب النشط -->
+            <input type="hidden" name="tab" value="{{ active_tab }}">
+            
+            <!-- ✅ الحفاظ على الجهة المختارة -->
+            {% if entity_id %}
+            <input type="hidden" name="entity" value="{{ entity_id }}">
+            {% endif %}
 
             <div class="row g-3 align-items-end">
 
@@ -57,18 +35,32 @@
                         <span class="input-group-text bg-light border-0">
                             <i class="fas fa-search text-primary"></i>
                         </span>
+                        
+                        <!-- ✅ حقل البحث مع Datalist -->
                         <input
                             type="text"
                             name="search"
                             value="{{ search }}"
                             class="form-control border-0 shadow-sm"
                             placeholder="ابحث باسم الشركة أو الفئة المالية..."
+                            id="searchInput"
+                            list="companiesList"
+                            autocomplete="off"
                             autofocus
-                            onkeyup="searchDelay()"
                         >
+                        
+                        <!-- ✅ قائمة الاقتراحات Datalist -->
+                        <datalist id="companiesList">
+                            {% for company_name in all_companies %}
+                                <option value="{{ company_name }}">
+                                    {{ company_name }}
+                                </option>
+                            {% endfor %}
+                        </datalist>
+                        
                         {% if search %}
                         <a
-                            href="{% url 'company_discounts' %}"
+                            href="?tab={{ active_tab }}{% if entity_id %}&entity={{ entity_id }}{% endif %}{% if selected_section %}&section={{ selected_section }}{% endif %}"
                             class="btn btn-outline-danger border-0 clear-search-btn"
                             title="مسح البحث"
                         >
@@ -76,6 +68,11 @@
                         </a>
                         {% endif %}
                     </div>
+                    
+                    <small class="text-muted mt-2 d-block">
+                        <i class="fas fa-info-circle text-primary"></i>
+                        اختار من القايمة أو اضغط Enter للبحث
+                    </small>
 
                 </div>
 
@@ -89,7 +86,7 @@
                     <select
                         name="section"
                         class="form-select form-select-lg shadow-sm"
-                        onchange="this.form.submit()">
+                        id="sectionSelect">
 
                         <option value="">
                             <i class="fas fa-asterisk"></i> الكل
@@ -173,3 +170,63 @@
 </div>
 
 {% endfor %}
+
+<!-- ============================================ -->
+<!-- ✅ JavaScript - بحث فقط عند اختيار من القائمة أو Enter -->
+<!-- ============================================ -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('searchInput');
+        const searchForm = document.getElementById('searchForm');
+        const companiesList = document.getElementById('companiesList');
+        const sectionSelect = document.getElementById('sectionSelect');
+        
+        // ✅ إظهار/إخفاء زر المسح
+        const clearBtn = document.querySelector('.clear-search-btn');
+        if (searchInput && clearBtn) {
+            searchInput.addEventListener('input', function() {
+                if (this.value.length > 0) {
+                    clearBtn.style.display = 'block';
+                } else {
+                    clearBtn.style.display = 'none';
+                }
+            });
+        }
+        
+        // ✅ البحث فقط عند اختيار عنصر من الـ Datalist أو الضغط Enter
+        if (searchInput) {
+            let lastSelectedValue = searchInput.value;
+            
+            // ✅ حدث عند الضغط على Enter
+            searchInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    searchForm.submit();
+                }
+            });
+            
+            // ✅ حدث عند تغيير القيمة (بعد اختيار من Datalist)
+            searchInput.addEventListener('change', function(e) {
+                if (e.target.value !== lastSelectedValue) {
+                    lastSelectedValue = e.target.value;
+                    
+                    // ✅ البحث عن الـ option المختار في الـ Datalist
+                    const options = Array.from(companiesList.options);
+                    const selectedOption = options.find(opt => opt.value === e.target.value);
+                    
+                    // ✅ لو موجودة في القائمة نعمل Submit
+                    if (selectedOption && e.target.value.trim() !== '') {
+                        searchForm.submit();
+                    }
+                }
+            });
+        }
+        
+        // ✅ التصفية التلقائية عند تغيير القسم
+        if (sectionSelect) {
+            sectionSelect.addEventListener('change', function() {
+                searchForm.submit();
+            });
+        }
+    });
+</script>

@@ -77,24 +77,7 @@
         box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
     }
 
-    /* ===== ✅ أزرار البحث - متناسقة ===== */
-    .btn-search-main {
-        border-radius: 12px;
-        padding: 0.875rem;
-        font-weight: 600;
-        letter-spacing: 0.5px;
-        box-shadow: 0 4px 12px rgba(13, 110, 253, 0.25);
-        transition: all 0.3s ease;
-        height: 52px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.5rem;
-    }
-    .btn-search-main:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(13, 110, 253, 0.35);
-    }
+    /* ===== زر مسح الكل ===== */
     .btn-reset {
         border-radius: 12px;
         padding: 0.875rem;
@@ -112,19 +95,6 @@
         border-color: #6c757d;
         color: white;
         transform: translateY(-2px);
-    }
-    .btn-hint {
-        font-size: 0.75rem;
-        color: #6c757d;
-        margin-top: 0.5rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.35rem;
-    }
-    .btn-hint i {
-        font-size: 0.7rem;
-        color: #0d6efd;
     }
 
     /* ===== تحسين الـ Cards ===== */
@@ -310,25 +280,17 @@
     .package-card {
         animation: fadeInUp 0.5s ease forwards;
     }
-    {% for package in packages %}
-    .package-card:nth-child({{ forloop.counter }}) {
-        animation-delay: {{ forloop.counter|add:0 }}00ms;
-    }
-    {% endfor %}
 </style>
 
-<!-- ============================================ -->
-<!-- شريط البحث والفلتر -->
-<!-- ============================================ -->
 <!-- ============================================ -->
 <!-- شريط البحث والفلتر -->
 <!-- ============================================ -->
 <div class="card shadow border-0 search-card">
     <div class="card-body">
 
-        <form method="get">
+        <form method="get" id="searchForm">
 
-            <div class="row g-3">
+            <div class="row g-3 align-items-end">
 
                 <!-- البحث -->
                 <div class="col-lg-5 col-md-12">
@@ -345,7 +307,16 @@
                             placeholder="ابحث باسم الباكدج أو الكود..."
                             value="{{ search }}"
                             id="searchInput"
+                            list="packagesList"
+                            autocomplete="off"
                         >
+
+                        <!-- ✅ قائمة الاقتراحات Datalist -->
+                        <datalist id="packagesList">
+                            {% for package in all_packages %}
+                                <option value="{{ package.name }}">{{ package.code }}</option>
+                            {% endfor %}
+                        </datalist>
 
                         {% if search %}
                         <a href="{% url 'cash_packages' %}"
@@ -356,10 +327,7 @@
                         {% endif %}
                     </div>
 
-                    <small class="text-muted mt-2 d-block">
-                        <i class="fas fa-info-circle text-primary"></i>
-                        ابحث بالاسم أو الكود
-                    </small>
+                    
                 </div>
 
                 <!-- التخصص -->
@@ -396,22 +364,13 @@
                     </small>
                 </div>
 
-                <!-- الأزرار -->
+                <!-- ✅ زر مسح الكل فقط -->
                 <div class="col-lg-3 col-md-6">
                     <label class="form-label fw-bold small text-transparent mb-2">
                         .
                     </label>
 
-                    <div class="d-grid gap-2">
-
-                        <button
-                            class="btn btn-primary btn-search-main"
-                            type="submit"
-                        >
-                            <i class="fas fa-search"></i>
-                            بحث
-                        </button>
-
+                    <div class="d-grid">
                         <a
                             href="{% url 'cash_packages' %}"
                             class="btn btn-outline-secondary btn-reset"
@@ -419,9 +378,7 @@
                             <i class="fas fa-undo"></i>
                             مسح الكل
                         </a>
-
                     </div>
-
                 </div>
 
             </div>
@@ -617,29 +574,50 @@
 </div>
 
 <!-- ============================================ -->
-<!-- JavaScript للبحث التلقائي -->
+<!-- ✅ JavaScript - بحث فقط عند اختيار من القائمة أو Enter -->
 <!-- ============================================ -->
 <script>
-    // ✅ البحث التلقائي بعد 300ms من التوقف عن الكتابة
-    let searchTimeout;
-
     document.addEventListener('DOMContentLoaded', function() {
         const searchInput = document.getElementById('searchInput');
-
+        const searchForm = document.getElementById('searchForm');
+        const specialtySelect = document.getElementById('specialtySelect');
+        const packagesList = document.getElementById('packagesList');
+        
+        // ✅ البحث فقط عند اختيار عنصر من الـ Datalist أو الضغط Enter
         if (searchInput) {
-            searchInput.addEventListener('input', function() {
-                clearTimeout(searchTimeout);
-                searchTimeout = setTimeout(function() {
-                    document.querySelector('form').submit();
-                }, 300);
+            // متغير لتخزين آخر قيمة اختارها المستخدم من القائمة
+            let lastSelectedValue = searchInput.value;
+            
+            // ✅ حدث عند الضغط على Enter
+            searchInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    searchForm.submit();
+                }
+            });
+            
+            // ✅ حدث عند تغيير القيمة (بعد اختيار من Datalist أو كتابة يدوي)
+            searchInput.addEventListener('change', function(e) {
+                // ✅ لو القيمة مختلفة عن آخر حاجة اختارها (معناه اختار من القائمة)
+                if (e.target.value !== lastSelectedValue) {
+                    lastSelectedValue = e.target.value;
+                    
+                    // ✅ تحقق إذا كانت القيمة موجودة في الـ Datalist
+                    const options = Array.from(packagesList.options);
+                    const isInList = options.some(opt => opt.value === e.target.value);
+                    
+                    // ✅ لو موجودة في القائمة يبحث فوراً
+                    if (isInList && e.target.value.trim() !== '') {
+                        searchForm.submit();
+                    }
+                }
             });
         }
 
         // ✅ التصفية التلقائية عند تغيير التخصص
-        const specialtySelect = document.getElementById('specialtySelect');
         if (specialtySelect) {
             specialtySelect.addEventListener('change', function() {
-                document.querySelector('form').submit();
+                searchForm.submit();
             });
         }
     });
