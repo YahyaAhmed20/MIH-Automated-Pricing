@@ -4051,7 +4051,6 @@ def patient_search(request):
 
     
     return render(request, 'frontend/patient_search.html', context)
-import threading
 
 import re
 import io
@@ -4117,51 +4116,6 @@ def extract_results_from_logs(logs):
     return results
 
 
-# ✅ ✅ ✅ دالة التشغيل في الخلفية
-def run_update_task():
-    """دالة يتم تشغيلها في الخلفية لتنفيذ التحديث"""
-    global _update_progress
-    output = io.StringIO()
-
-    # ✅ إعادة تعيين التقدم
-    _update_progress["completed"] = 0
-    _update_progress["current_command"] = ""
-    _update_progress["is_running"] = True
-    _update_progress["results"] = []
-
-    try:
-        # ✅ تمرير الـ progress callback
-        def progress_callback(command_name, completed):
-            _update_progress["current_command"] = command_name
-            _update_progress["completed"] = completed
-
-        UpdateAllDataService.run(
-            stdout=output,
-            progress_callback=progress_callback
-        )
-
-        logs = clean_logs(output.getvalue())
-
-        # ✅ استخراج النتائج من الـ logs
-        _update_progress["results"] = extract_results_from_logs(logs)
-
-        _update_progress["is_running"] = False
-        _update_progress["completed"] = _update_progress["total"]
-
-        print("✅ تم تحديث جميع البيانات بنجاح.")
-
-    except Exception as e:
-        logs = clean_logs(output.getvalue())
-        logs += "\n\n"
-        logs += "=" * 70
-        logs += "\n❌ ERROR DETAILS:\n"
-        logs += traceback.format_exc()
-        logs += "=" * 70
-
-        _update_progress["is_running"] = False
-        print(f"❌ حدث خطأ أثناء التحديث: {str(e)}")
-
-
 def system_update(request):
 
     global _update_progress
@@ -4170,18 +4124,54 @@ def system_update(request):
 
     if request.method == "POST":
 
-        # ✅ ✅ ✅ منع تكرار التشغيل إذا كانت المهمة قيد التنفيذ
-        if _update_progress["is_running"]:
-            messages.warning(request, "⚠️ يوجد تحديث قيد التنفيذ بالفعل. يرجى الانتظار.")
-            return redirect('system_update')
+        output = io.StringIO()
 
-        # ✅ ✅ ✅ تشغيل التحديث في Thread جديد (خلفية)
-        thread = threading.Thread(target=run_update_task)
-        thread.daemon = True  # ✅ يسمح بإيقاف الخيط عند إغلاق الخادم
-        thread.start()
+        # ✅ إعادة تعيين التقدم
+        _update_progress["completed"] = 0
+        _update_progress["current_command"] = ""
+        _update_progress["is_running"] = True
+        _update_progress["results"] = []
 
-        messages.success(request, "✅ بدأ تحديث البيانات في الخلفية. تابع التقدم من الشاشة.")
-        return redirect('system_update')
+        try:
+
+            # ✅ تمرير الـ progress callback
+            def progress_callback(command_name, completed):
+                _update_progress["current_command"] = command_name
+                _update_progress["completed"] = completed
+
+            UpdateAllDataService.run(
+                stdout=output,
+                progress_callback=progress_callback
+            )
+
+            logs = clean_logs(output.getvalue())
+
+            # ✅ استخراج النتائج من الـ logs
+            _update_progress["results"] = extract_results_from_logs(logs)
+
+            _update_progress["is_running"] = False
+            _update_progress["completed"] = _update_progress["total"]
+
+            messages.success(
+                request,
+                "تم تحديث جميع البيانات بنجاح."
+            )
+
+        except Exception as e:
+
+            logs = clean_logs(output.getvalue())
+            logs += "\n\n"
+            logs += "=" * 70
+            logs += "\n❌ ERROR DETAILS:\n"
+            logs += traceback.format_exc()
+            logs += "=" * 70
+
+            _update_progress["is_running"] = False
+
+            messages.error(
+                request,
+                f"حدث خطأ أثناء التحديث: {str(e)[:100]}"
+            )
 
     # ✅ حساب النجاح والفشل
     success_count = sum(1 for r in _update_progress["results"] if r.get("status") == "success")
