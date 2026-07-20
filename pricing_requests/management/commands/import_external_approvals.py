@@ -1,8 +1,7 @@
-# pricing_requests/management/commands/import_external_approvals.py
+# imports/management/commands/import_external_approvals.py
 
 from django.core.management.base import BaseCommand
-import pandas as pd
-
+from imports.services.excel_provider import ExcelProvider
 from imports.services.external_approval_import_service import (
     ExternalApprovalImportService,
 )
@@ -10,14 +9,16 @@ from imports.services.external_approval_import_service import (
 
 class Command(BaseCommand):
 
-    help = "Import External Approvals from Excel Sheet 12"
+    help = "Import External Approvals from Sheet 12"
 
     def add_arguments(self, parser):
         parser.add_argument(
-            "excel_file",
-            type=str,
-            help="Path to APP.xlsx"
+            "file_path",
+            nargs="?",
+            default=None,
+            help="Path to Excel file (Optional)"
         )
+
         parser.add_argument(
             "--no-confirm",
             action="store_true",
@@ -25,50 +26,43 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
+
         self.stdout.write("")
         self.stdout.write("=" * 60)
-        self.stdout.write("   📊 External Approvals Import (Sheet 12)")
+        self.stdout.write("   External Approvals Import")
         self.stdout.write("=" * 60)
         self.stdout.write("")
 
-        try:
-            df = pd.read_excel(
-                options["excel_file"],
-                sheet_name="12",
-                header=None,
-            )
-        except Exception as e:
-            self.stdout.write(self.style.ERROR(f"❌ خطأ في قراءة الملف: {e}"))
-            return
+        # ✅ استخدم header=None
+        dataframe = ExcelProvider.read(
+            file_path=options["file_path"],
+            sheet_name="12",  # ✅ شيت 12
+            header=None,      # ✅ مفيش Header
+        )
 
-        print(f"📊 عدد الصفوف: {len(df)}")
-        print(f"📊 عدد الأعمدة: {len(df.columns)}")
-        print("")
+        total_rows = len(dataframe) - 1  # ناقص الصف الأول (العناوين)
 
-        print("📋 أول 5 صفوف:")
-        print(df.head(5).to_string())
-        print("")
-        print("=" * 60)
-
-        if not options["no_confirm"]:
-            confirm = input("⚠️  هل تريد استيراد البيانات؟ (y/n): ")
+        # ✅ ✅ ✅ تأكيد الاستيراد (مع دعم --no-confirm)
+        if options.get("no_confirm", False):
+            # ✅ تخطي التأكيد تلقائياً (من الـ Update All)
+            self.stdout.write(f"✅ Importing {total_rows} External Approvals records (auto-confirmed)")
+        else:
+            # ✅ طلب تأكيد من المستخدم (عند التشغيل اليدوي)
+            confirm = input(f"Import {total_rows} records? (y/n): ")
             if confirm.lower() != "y":
-                self.stdout.write(self.style.WARNING("❌ تم إلغاء الاستيراد"))
+                self.stdout.write(self.style.WARNING("Import cancelled."))
                 return
 
-        print("")
-        print("🔄 جاري الاستيراد...")
-        print("")
-
-        result = ExternalApprovalImportService.import_data(df)
+        result = ExternalApprovalImportService.import_data(dataframe)
 
         self.stdout.write("")
         self.stdout.write("=" * 60)
-        self.stdout.write("✅ انتهى الاستيراد!")
-        self.stdout.write(f"   📊 تمت المعالجة: {result['processed']}")
-        self.stdout.write(f"   ✅ تم الإنشاء: {result['created']}")
-        self.stdout.write(f"   🔄 تم التحديث: {result['updated']}")
-        self.stdout.write(f"   ⏭️ تم التخطي: {result['skipped']}")
-        if result["errors"] > 0:
-            self.stdout.write(self.style.ERROR(f"   ❌ الأخطاء: {result['errors']}"))
+        self.stdout.write("External Approvals Import Completed")
+        self.stdout.write("=" * 60)
+        self.stdout.write(f"Processed : {result['processed']}")
+        self.stdout.write(f"Created   : {result['created']}")
+        self.stdout.write(f"Updated   : {result['updated']}")
+        self.stdout.write(f"Skipped   : {result['skipped']}")
+        if result["errors"]:
+            self.stdout.write(self.style.ERROR(f"Errors    : {result['errors']}"))
         self.stdout.write("=" * 60)

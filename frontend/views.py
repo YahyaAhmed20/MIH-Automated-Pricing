@@ -2835,6 +2835,12 @@ def doctor_detail(request, doctor_name):
     )
 from django.utils import timezone  # ✅ أضف هذا السطر
 
+from django.shortcuts import render
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
+from django.shortcuts import render, get_object_or_404
+from django.core.cache import cache
+from django.utils import timezone
 def credit_package_pricing(request):
 
     company_id = request.GET.get("company")
@@ -2855,41 +2861,85 @@ def credit_package_pricing(request):
     company_search = request.GET.get("company_search", "")
     package_search = request.GET.get("package_search", "")
 
-    # ✅ جلب الشركات مع فلتر البحث
-    companies = (
-        ContractEntity.objects
-        .filter(
-            contracts__contract_packages__is_active=True
+    # ============================================================
+    # ✅ تحسين 1: جلب الشركات مع Cache + فقط الأعمدة المطلوبة
+    # ============================================================
+    companies = cache.get('active_companies_list')
+    if companies is None:
+        companies = list(
+            ContractEntity.objects
+            .filter(
+                contracts__contract_packages__is_active=True
+            )
+            .only("id", "name")  # ✅ يجلب عمودين فقط
+            .distinct()
+            .order_by("name")
         )
-        .distinct()
-        .order_by("name")
-    )
+        cache.set('active_companies_list', companies, 60 * 15)  # 15 دقيقة
 
-    # ✅ تطبيق فلتر البحث على الشركات
+    # ✅ تطبيق فلتر البحث على الشركات (في الذاكرة)
     if company_search:
-        companies = companies.filter(name__icontains=company_search)
+        companies = [
+            c for c in companies 
+            if company_search.lower() in c.name.lower()
+        ]
 
-    packages = ContractPackage.objects.none()
+    packages = []
     selected_package = None
 
     if company_id:
-
-        packages = (
-            ContractPackage.objects
-            .filter(
-                contract__entity_id=company_id,
-                is_active=True,
+        # ============================================================
+        # ✅ تحسين 2: جلب الباكدجات مع Cache
+        # ============================================================
+        cache_key = f'packages_company_{company_id}'
+        cached_packages = cache.get(cache_key)
+        
+        if cached_packages is not None:
+            # ✅ استرجاع من Cache
+            package_ids = [p['id'] for p in cached_packages]
+            packages = list(
+                ContractPackage.objects
+                .filter(id__in=package_ids, is_active=True)
+                .select_related("package", "contract__entity")
+                .order_by("package__name")
             )
-            .select_related("package")
-            .order_by("package__name")
-        )
+        else:
+            # ✅ جلب من قاعدة البيانات
+            packages = list(
+                ContractPackage.objects
+                .filter(
+                    contract__entity_id=company_id,
+                    is_active=True,
+                )
+                .select_related("package", "contract__entity")
+                .order_by("package__name")
+            )
+            
+            # ✅ تخزين نسخة خفيفة في Cache
+            cache_data = [
+                {
+                    'id': p.id,
+                    'package_name': p.package.name,
+                    'package_code': p.package.code,
+                    'package_price': str(p.package_price),
+                    'current_discount_rate': str(p.current_discount_rate) if p.current_discount_rate else None,
+                    'current_discount_text': p.current_discount_text,
+                    'entity_name': p.contract.entity.name,
+                    'is_expired': p.valid_until < timezone.localdate() if p.valid_until else False
+                }
+                for p in packages
+            ]
+            cache.set(cache_key, cache_data, 60 * 10)  # 10 دقائق
 
-        # ✅ تطبيق فلتر البحث على الباكدجات
+        # ✅ تطبيق فلتر البحث على الباكدجات (في الذاكرة)
         if package_search:
-            packages = packages.filter(package__name__icontains=package_search)
+            packages = [
+                p for p in packages 
+                if package_search.lower() in p.package.name.lower()
+            ]
 
         # ============================================================
-        # ✅ Helper functions لتنسيق الأرقام
+        # ✅ Helper functions لتنسيق الأرقام (نفس الكود الأصلي)
         # ============================================================
         def format_price(value):
             if value is None:
@@ -2903,7 +2953,7 @@ def credit_package_pricing(request):
                 return f"{int(value)}%"
             return f"{value:.1f}%"
 
-        # ✅ تنسيق كل باكدج في الـ packages
+        # ✅ تنسيق كل باكدج في الـ packages (نفس الكود الأصلي)
         for cp in packages:
             cp.formatted_price = format_price(cp.package_price)
             # ✅ استخدام current_discount_text لو موجود، وإلا استخدم النسبة المئوية
@@ -2915,6 +2965,9 @@ def credit_package_pricing(request):
                     else "-"
                 )
             )
+            # ✅ إضافة حالة الانتهاء (لأنها قد لا تكون موجودة من Cache)
+            if not hasattr(cp, 'is_expired'):
+                cp.is_expired = cp.valid_until < timezone.localdate() if cp.valid_until else False
 
     if package_id:
 
@@ -3028,12 +3081,12 @@ def credit_package_pricing(request):
             "companies": companies,
             "packages": packages,
             "selected_package": selected_package,
-            # "selected_company": company_id,
             "selected_company": selected_company,
             "company_search": company_search,
             "package_search": package_search,
         }
     )
+
     
 def cash_packages(request):
 
@@ -3503,6 +3556,13 @@ def similar_invoices(request):
         }
     )
     
+# frontend/views.py
+
+from django.db.models import Q
+from django.shortcuts import render
+from medical_catalog.models import Procedure
+
+
 def procedures(request):
 
     search = request.GET.get("search", "").strip()
@@ -3510,41 +3570,58 @@ def procedures(request):
     category = request.GET.get("category", "").strip()
     show_all = request.GET.get("show_all")
 
-    procedures = Procedure.objects.all()
+    # ✅ استخدام select_related للـ Specialty
+    procedures = Procedure.objects.select_related('specialty').all()
 
+    # ==========================================
+    # ✅ Search - باستخدام الحقول الصحيحة
+    # ==========================================
     if search:
         procedures = procedures.filter(
-            Q(operation_name__icontains=search) |
-            Q(code__icontains=search)
+            Q(name_ar__icontains=search) |      # ✅ اسم العملية بالعربي
+            Q(name_en__icontains=search) |      # ✅ اسم العملية بالإنجليزي
+            Q(code__icontains=search)           # ✅ الكود
         )
 
+    # ==========================================
+    # ✅ Specialty Filter - باستخدام specialty_id
+    # ==========================================
     if specialty:
-        procedures = procedures.filter(specialty_name=specialty)
+        procedures = procedures.filter(specialty_id=specialty)
 
+    # ==========================================
+    # ✅ Category Filter - باستخدام classification
+    # ==========================================
     if category:
-        procedures = procedures.filter(category=category)
+        procedures = procedures.filter(classification=category)
 
+    # ==========================================
     # ✅ التخصصات من النتائج المفلترة
+    # ==========================================
     specialties = (
         procedures
-        .values_list("specialty_name", flat=True)
+        .values_list("specialty__name", flat=True)
         .distinct()
-        .order_by("specialty_name")
+        .order_by("specialty__name")
     )
 
+    # ==========================================
     # ✅ التصنيفات من النتائج المفلترة
+    # ==========================================
     categories = (
         procedures
-        .exclude(category="")
-        .values_list("category", flat=True)
+        .exclude(classification="")
+        .values_list("classification", flat=True)
         .distinct()
-        .order_by("category")
+        .order_by("classification")
     )
 
-    # ✅ عدد العمليات لكل تخصص (للعرض في البطاقات)
+    # ==========================================
+    # ✅ عدد العمليات لكل تخصص
+    # ==========================================
     specialties_with_count = []
     for spec in specialties:
-        count = procedures.filter(specialty_name=spec).count()
+        count = procedures.filter(specialty__name=spec).count()
         specialties_with_count.append({
             "name": spec,
             "count": count
@@ -3575,10 +3652,9 @@ def procedures(request):
             "total_count": total_count,
         }
     )
-    
-    
 
 from pricing_requests.models import ProcedureFee
+
 
 def procedure_fees(request):
 
@@ -3598,14 +3674,15 @@ def procedure_fees(request):
     category = request.GET.get("category", "").strip()
 
     # ============================================
-    # ✅ العملية المختارة
+    # ✅ العملية المختارة (باستخدام الحقول الجديدة)
     # ============================================
     selected_procedure = None
     if procedure_search:
         selected_procedure = Procedure.objects.filter(
-            Q(operation_name__icontains=procedure_search) |
-            Q(code__icontains=procedure_search) |
-            Q(category__icontains=procedure_search)
+            Q(name_ar__icontains=procedure_search) |      # ✅ اسم العملية بالعربي
+            Q(name_en__icontains=procedure_search) |      # ✅ اسم العملية بالإنجليزي
+            Q(code__icontains=procedure_search) |         # ✅ الكود
+            Q(classification__icontains=procedure_search)  # ✅ التصنيف
         ).first()
 
     # ============================================
@@ -3688,7 +3765,7 @@ def procedure_fees(request):
         .order_by("category")
     )
 
-    # ✅ قوائم الـ datalist
+    # ✅ قوائم الـ datalist (باستخدام الحقول الجديدة)
     procedures_list = Procedure.objects.all()[:100]
     
     entities_list_for_datalist = (
@@ -3715,7 +3792,7 @@ def procedure_fees(request):
             fees_data = ProcedureFee.objects.filter(
                 entity_name=first_entity["entity_name"],
                 financial_category=first_entity["financial_category"],
-                category=selected_procedure.category
+                category=selected_procedure.classification  # ✅ classification بدلاً من category
             ).first()
 
     return render(
@@ -3737,8 +3814,6 @@ def procedure_fees(request):
             "procedure_search": procedure_search,
         }
     )
-    
-    
 # frontend/views.py
 
 from django.db.models import Q
@@ -3973,4 +4048,144 @@ def patient_search(request):
         'specialties': specialties,
     }
     
+
+    
     return render(request, 'frontend/patient_search.html', context)
+
+import re
+import io
+import traceback
+from django.http import JsonResponse
+from django.contrib import messages
+from django.shortcuts import render
+
+from imports.services.update_all_data_service import UpdateAllDataService
+
+
+def clean_logs(text):
+    """
+    Remove ANSI terminal color codes from command output.
+    """
+    ansi_escape = re.compile(r'\x1B\[[0-?]*[ -/]*[@-~]')
+    return ansi_escape.sub("", text)
+
+
+# ✅ متغير لتتبع التقدم
+_update_progress = {
+    "completed": 0,
+    "current_command": "",
+    "total": 16,
+    "is_running": False,
+    "results": [],
+}
+
+
+def update_progress(request):
+    """API لتحديث التقدم"""
+    return JsonResponse({
+        "completed": _update_progress["completed"],
+        "current_command": _update_progress["current_command"],
+        "total": _update_progress["total"],
+        "is_running": _update_progress["is_running"],
+        "results": _update_progress["results"],
+    })
+
+
+def extract_results_from_logs(logs):
+    """استخراج النتائج من الـ logs"""
+    results = []
+    lines = logs.split('\n')
+    
+    for line in lines:
+        # ✅ البحث عن سطر النتيجة
+        if '✅ END :' in line or '❌ END :' in line:
+            is_success = '✅' in line
+            # استخراج الاسم والوقت
+            parts = line.split('END :')
+            if len(parts) > 1:
+                name_time = parts[1].strip()
+                if '(' in name_time and ')' in name_time:
+                    name = name_time[:name_time.rindex('(')].strip()
+                    time_str = name_time[name_time.rindex('(')+1:name_time.rindex(')')]
+                    results.append({
+                        'name': name,
+                        'time': time_str,
+                        'status': 'success' if is_success else 'error'
+                    })
+    
+    return results
+
+
+def system_update(request):
+
+    global _update_progress
+
+    logs = None
+
+    if request.method == "POST":
+
+        output = io.StringIO()
+
+        # ✅ إعادة تعيين التقدم
+        _update_progress["completed"] = 0
+        _update_progress["current_command"] = ""
+        _update_progress["is_running"] = True
+        _update_progress["results"] = []
+
+        try:
+
+            # ✅ تمرير الـ progress callback
+            def progress_callback(command_name, completed):
+                _update_progress["current_command"] = command_name
+                _update_progress["completed"] = completed
+
+            UpdateAllDataService.run(
+                stdout=output,
+                progress_callback=progress_callback
+            )
+
+            logs = clean_logs(output.getvalue())
+
+            # ✅ استخراج النتائج من الـ logs
+            _update_progress["results"] = extract_results_from_logs(logs)
+
+            _update_progress["is_running"] = False
+            _update_progress["completed"] = _update_progress["total"]
+
+            messages.success(
+                request,
+                "تم تحديث جميع البيانات بنجاح."
+            )
+
+        except Exception as e:
+
+            logs = clean_logs(output.getvalue())
+            logs += "\n\n"
+            logs += "=" * 70
+            logs += "\n❌ ERROR DETAILS:\n"
+            logs += traceback.format_exc()
+            logs += "=" * 70
+
+            _update_progress["is_running"] = False
+
+            messages.error(
+                request,
+                f"حدث خطأ أثناء التحديث: {str(e)[:100]}"
+            )
+
+    # ✅ حساب النجاح والفشل
+    success_count = sum(1 for r in _update_progress["results"] if r.get("status") == "success")
+    error_count = sum(1 for r in _update_progress["results"] if r.get("status") == "error")
+
+    # ✅ تمرير النتائج للـ HTML
+    return render(
+        request,
+        "frontend/system_update.html",
+        {
+            "logs": logs,
+            "results": _update_progress["results"],
+            "total_commands": _update_progress["total"],
+            "success_count": success_count,
+            "error_count": error_count,
+        }
+    )

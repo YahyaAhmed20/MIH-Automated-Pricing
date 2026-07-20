@@ -5,7 +5,11 @@
 SEARCH
 🚀 تعديل HTML - شيل oninput وخلي الفلترة عند اختيار من datalist
 
-ثم شغل:
+Responsive
+
+Counter Animation
+
+UI Polish
 
 احصائيات الموافقات 
 

@@ -1,58 +1,40 @@
+# pricing_requests/management/commands/import_pricing_details.py
+
 from django.core.management.base import BaseCommand
-
-import pandas as pd
-
-from pricing_requests.services.pricing_details_import_service import PricingDetailsImportService
-
+from imports.services.excel_provider import ExcelProvider
+from pricing_requests.services.pricing_details_import_service import (
+    PricingDetailsImportService,
+)
 
 
 class Command(BaseCommand):
 
-    help = "Import Pricing Details from Excel Sheet 7"
+    help = "Import Pricing Details from Sheet 7"
 
     def add_arguments(self, parser):
-
         parser.add_argument(
-            "excel_file",
-            type=str,
-            help="Path to APP.xlsx"
+            "file_path",
+            nargs="?",
+            default=None,
+            help="Path to Excel file (Optional)"
         )
 
     def handle(self, *args, **options):
 
         self.stdout.write("")
-        self.stdout.write(
-            "========== Pricing Details Import =========="
+        self.stdout.write("========== Pricing Details Import ==========")
+
+        # ✅ استخدم header=None
+        dataframe = ExcelProvider.read(
+            file_path=options["file_path"],
+            sheet_name="7",  # شيت 7
+            header=None,     # ✅ مفيش Header
         )
 
-        dataframe = pd.read_excel(
-            options["excel_file"],
-            sheet_name="7",
-        )
+        result = PricingDetailsImportService.import_data(dataframe)
 
-        dataframe.columns = (
-            dataframe.columns
-            .str.strip()
-        )
-
-        result = (
-            PricingDetailsImportService.import_data(dataframe)
-        )
-
-        self.stdout.write(
-            f"Processed : {result['processed']}"
-        )
-
-        self.stdout.write(
-            f"Created   : {result['created']}"
-        )
-
-       
-
-        self.stdout.write(
-            f"Skipped   : {result['skipped']}"
-        )
-
-        self.stdout.write(
-            "==========================================="
-        )
+        self.stdout.write(f"Processed            : {result['processed']}")
+        self.stdout.write(f"Created              : {result['created']}")
+        self.stdout.write(f"Updated              : {result['updated']}")
+        self.stdout.write(f"Skipped              : {result['skipped']}")
+        self.stdout.write("===========================================")

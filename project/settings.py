@@ -25,6 +25,9 @@ SECRET_KEY = 'django-insecure-mbdn9)+91#j^)w^jk4skrz_h_2nx_j&6l)!-=fdj*2sogl^m=h
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+from pathlib import Path
+
+
 ALLOWED_HOSTS = [
     "mih-automated-pricing.up.railway.app",
     "127.0.0.1",
@@ -121,13 +124,28 @@ WSGI_APPLICATION = 'project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+# 
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'railway',
+        'USER': 'postgres',
+        'PASSWORD': 'CJNFXTSwAvrlDwSdwqypPizihWhLRdDM',
+        'HOST': 'tokaido.proxy.rlwy.net',
+        'PORT': '16688',
+        'OPTIONS': {
+            'sslmode': 'require',  # ✅ تأمين الاتصال
+            'connect_timeout': 60,  # ✅ زيادة مهلة الاتصال إلى 60 ثانية
+            'keepalives': 1,        # ✅ تفعيل keepalive
+            'keepalives_idle': 30,  # ✅ انتظار 30 ثانية قبل إرسال keepalive
+            'keepalives_interval': 10,  # ✅ إرسال keepalive كل 10 ثواني
+            'keepalives_count': 5,  # ✅ عدد محاولات keepalive
+        },
+        'CONN_MAX_AGE': 60,  # ✅ عدم الاحتفاظ بالاتصالات المفتوحة
+        'CONN_HEALTH_CHECKS': True,  # ✅ التحقق من صحة الاتصال قبل الاستخدام
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -178,3 +196,19 @@ MEDIA_URL = '/media/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# ==========================================================
+# Google Sheets
+# ==========================================================
+
+GOOGLE_SERVICE_ACCOUNT_FILE = (
+    BASE_DIR / "credentials" / "google-drive.json"
+)
+
+GOOGLE_SPREADSHEET_ID = (
+    "1Qab6Psd4yqPJ9SUlz4F4y_6pD510p3A9sM-mXIr90wM"
+)
+
+TEMP_DIR = BASE_DIR / "temp"
+
+TEMP_EXCEL_FILE = TEMP_DIR / "APP.xlsx"

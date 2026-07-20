@@ -45,7 +45,7 @@
             <form method="get" id="searchForm">
                 
                 <!-- ========================================== -->
-                <!-- ✅ مربع البحث الأول: العملية (شيت 13) - جديد -->
+                <!-- ✅ مربع البحث الأول: العملية (شيت 13) -->
                 <!-- ========================================== -->
                 <div class="row g-3 align-items-end mb-3">
                     <div class="col-md-12">
@@ -68,9 +68,9 @@
                                 autocomplete="off">
                             <datalist id="procedureList">
                                 {% for proc in procedures_list %}
-                                    <option value="{{ proc.operation_name }}">
+                                    <option value="{{ proc.name_ar }}">   <!-- ✅ name_ar -->
                                     <option value="{{ proc.code }}">
-                                    <option value="{{ proc.category }}">
+                                    <option value="{{ proc.classification }}">  <!-- ✅ classification -->
                                 {% endfor %}
                             </datalist>
                         </div>
@@ -84,7 +84,7 @@
                 <hr>
 
                 <!-- ========================================== -->
-                <!-- ✅ مربع البحث الثاني: الجهة (شيت 14) - قديم -->
+                <!-- ✅ مربع البحث الثاني: الجهة (شيت 14) -->
                 <!-- ========================================== -->
                 <div class="row g-3 align-items-end">
                     <div class="col-md-5">
@@ -209,7 +209,7 @@
                         </h6>
                         <p class="mb-1">
                             <strong>اسم العملية:</strong>
-                            {{ selected_procedure.operation_name }}
+                            {{ selected_procedure.name_ar }}  <!-- ✅ name_ar -->
                         </p>
                         <p class="mb-1">
                             <strong>الكود:</strong>
@@ -217,7 +217,7 @@
                         </p>
                         <p class="mb-0">
                             <strong>التصنيف:</strong>
-                            <span class="badge bg-info">{{ selected_procedure.category|default:"-" }}</span>
+                            <span class="badge bg-info">{{ selected_procedure.classification|default:"-" }}</span>  <!-- ✅ classification -->
                         </p>
                     </div>
 
@@ -250,7 +250,7 @@
                     <!-- ✅ الأتعاب -->
                     <h6 class="fw-bold text-muted text-center mb-3">
                         <i class="fas fa-money-bill-wave me-1"></i>
-                        الأتعاب حسب التصنيف "{{ selected_procedure.category|default:'غير محدد' }}"
+                        الأتعاب حسب التصنيف "{{ selected_procedure.classification|default:'غير محدد' }}"  <!-- ✅ classification -->
                     </h6>
 
                     {% if fees_data %}
@@ -316,8 +316,8 @@
         <i class="fas fa-info-circle fa-3x d-block mb-3 text-muted"></i>
         <h5 class="text-muted">تم العثور على العملية</h5>
         <p class="text-muted small">
-            <strong>{{ selected_procedure.operation_name }}</strong>
-            ({{ selected_procedure.code }}) - التصنيف: {{ selected_procedure.category|default:"غير محدد" }}
+            <strong>{{ selected_procedure.name_ar }}</strong>  <!-- ✅ name_ar -->
+            ({{ selected_procedure.code }}) - التصنيف: {{ selected_procedure.classification|default:"غير محدد" }}  <!-- ✅ classification -->
         </p>
         <p class="text-muted">يرجى اختيار جهة من البحث أدناه لعرض الأتعاب</p>
     </div>

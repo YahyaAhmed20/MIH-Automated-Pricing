@@ -55,7 +55,7 @@
                                 autocomplete="off">
                             <datalist id="procedureList">
                                 {% for item in procedures %}
-                                    <option value="{{ item.operation_name }}">
+                                    <option value="{{ item.name_ar }}">
                                     <option value="{{ item.code }}">
                                 {% endfor %}
                             </datalist>
@@ -134,9 +134,6 @@
                         <a href="{% url 'procedures' %}" class="btn btn-outline-secondary btn-sm">
                             <i class="fas fa-undo me-1"></i> مسح الكل
                         </a>
-                        {% if search or specialty or category %}
-                       
-                        {% endif %}
                     </div>
                 </div>
             </form>
@@ -199,7 +196,7 @@
                         </div>
                     </div>
                     <h6 class="text-muted mb-1">مسميات إنجليزية</h6>
-                    <h3 class="fw-bold text-info mb-0">{{ procedures|dictsort:"english_name"|length }}</h3>
+                    <h3 class="fw-bold text-info mb-0">{{ procedures|length }}</h3>
                 </div>
             </div>
         </div>
@@ -244,8 +241,8 @@
                 <div class="card-body d-flex flex-column">
 
                     <!-- ✅ اسم العملية مع Tooltip -->
-                    <h5 class="fw-bold text-primary" title="{{ item.operation_name }}">
-                        {{ item.operation_name|truncatechars:55 }}
+                    <h5 class="fw-bold text-primary" title="{{ item.name_ar }}">
+                        {{ item.name_ar|truncatechars:55 }}
                     </h5>
 
                     <hr>
@@ -259,20 +256,20 @@
                     <!-- ✅ التخصص -->
                     <p class="mb-1">
                         <strong>التخصص:</strong>
-                        <span class="badge bg-primary">{{ item.specialty_name }}</span>
+                        <span class="badge bg-primary">{{ item.specialty.name|default:"-" }}</span>
                     </p>
 
                     <!-- ✅ التصنيف -->
                     <p class="mb-1">
                         <strong>التصنيف:</strong>
-                        {{ item.category|default:"-" }}
+                        {{ item.classification|default:"-" }}
                     </p>
 
-                    <!-- ✅ المسمى بالإنجليزية (Card محسنة) -->
+                    <!-- ✅ المسمى بالإنجليزية -->
                     <div class="bg-light rounded p-2 mt-3">
                         <small class="text-muted">English Name</small>
                         <div class="fw-semibold">
-                            {{ item.english_name|default:"-" }}
+                            {{ item.name_en|default:"-" }}
                         </div>
                     </div>
 
@@ -364,7 +361,7 @@
 
                     <td>
 
-                        {{ item.operation_name }}
+                        {{ item.name_ar }}
 
                     </td>
 
@@ -372,7 +369,7 @@
 
                         <span class="badge bg-primary">
 
-                            {{ item.specialty_name }}
+                            {{ item.specialty.name|default:"-" }}
 
                         </span>
 
@@ -380,13 +377,13 @@
 
                     <td>
 
-                        {{ item.category|default:"-" }}
+                        {{ item.classification|default:"-" }}
 
                     </td>
 
                     <td>
 
-                        {{ item.english_name|default:"-" }}
+                        {{ item.name_en|default:"-" }}
 
                     </td>
 

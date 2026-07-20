@@ -1,7 +1,5 @@
 from django.core.management.base import BaseCommand
-
-import pandas as pd
-
+from imports.services.excel_provider import ExcelProvider
 from pricing_requests.services.service_records_import_service import (
     ServiceRecordsImportService,
 )
@@ -9,14 +7,14 @@ from pricing_requests.services.service_records_import_service import (
 
 class Command(BaseCommand):
 
-    help = "Import Service Records from Excel Sheet 6"
+    help = "Import Service Records from Sheet 6"
 
     def add_arguments(self, parser):
-
         parser.add_argument(
             "excel_file",
-            type=str,
-            help="Path to APP.xlsx"
+            nargs="?",
+            default=None,
+            help="Path to APP.xlsx (Optional)"
         )
 
     def handle(self, *args, **options):
@@ -26,38 +24,27 @@ class Command(BaseCommand):
             "========== Service Records Import =========="
         )
 
-        dataframe = pd.read_excel(
-            options["excel_file"],
+        # ✅ استخدم header=None
+        dataframe = ExcelProvider.read(
+            file_path=options["excel_file"],
             sheet_name="6",
+            header=None,  # ✅ مفيش Header
         )
 
-        dataframe.columns = (
-            dataframe.columns
-            .str.strip()
-        )
-
-        result = (
-            ServiceRecordsImportService.import_data(
-                dataframe
-            )
-        )
+        result = ServiceRecordsImportService.import_data(dataframe)
 
         self.stdout.write(
             f"Processed : {result['processed']}"
         )
-
         self.stdout.write(
             f"Created   : {result['created']}"
         )
-
         self.stdout.write(
             f"Updated   : {result['updated']}"
         )
-
         self.stdout.write(
             f"Skipped   : {result['skipped']}"
         )
-
         self.stdout.write(
             "==========================================="
         )

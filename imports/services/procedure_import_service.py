@@ -22,6 +22,7 @@ class ProcedureImportService:
     @staticmethod
     def import_data(dataframe):
 
+        
         created_specialties = 0
         created_procedures = 0
         updated_procedures = 0

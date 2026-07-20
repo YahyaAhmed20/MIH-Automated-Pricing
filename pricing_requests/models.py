@@ -406,7 +406,7 @@ class ServiceRecord(models.Model):
     )
 
     amount = models.DecimalField(
-        max_digits=12,
+        max_digits=15,
         decimal_places=2,
         default=0,
         verbose_name="المبلغ"

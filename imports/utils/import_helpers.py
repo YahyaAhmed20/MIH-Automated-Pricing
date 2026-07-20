@@ -1,6 +1,6 @@
 import re
-
 import pandas as pd
+from decimal import Decimal, ROUND_HALF_UP, InvalidOperation
 
 class ImportHelpers:
 
@@ -23,30 +23,66 @@ class ImportHelpers:
         if pd.isna(value):
             return None
 
+        if value in ("", None):
+            return None
+
         try:
-            return pd.to_datetime(value).date()
+            # محاولة كصيغة MM/DD/YYYY أولاً
+            date = pd.to_datetime(
+                value,
+                format='%m/%d/%Y',
+                errors="coerce",
+            )
+
+            if pd.isna(date):
+                # لو فشلت، جرب صيغة DD/MM/YYYY
+                date = pd.to_datetime(
+                    value,
+                    format='%d/%m/%Y',
+                    errors="coerce",
+                )
+
+            if pd.isna(date):
+                return None
+
+            return date.date()
+
         except Exception:
             return None
 
     @staticmethod
     def clean_decimal(value):
         """
-        تحويل القيمة إلى float مع دعم الفواصل الآلاف
-        مثال: 1,250.50 -> 1250.50
+        تحويل القيمة إلى Decimal مع دعم الفواصل الآلاف
+        ✅ ترجع Decimal بدلاً من float
+        ✅ تدعم الألف العربية والفواصل
+        ✅ تدعم العلامة العشرية العربية
+        ✅ تم إزالة الحد الأقصى للقيمة
         """
         if pd.isna(value):
-            return None
+            return Decimal('0.00')
+
+        if value in ("", None):
+            return Decimal('0.00')
 
         try:
-            # إزالة الفواصل الآلاف قبل التحويل
-            cleaned = str(value).replace(",", "")
-            return float(cleaned)
-        except Exception:
-            return None
-
-    # ============================================================
-    # ✅ Helper: معالجة النسب المئوية
-    # ============================================================
+            cleaned = str(value).strip()
+            cleaned = cleaned.replace(" ", "")
+            cleaned = cleaned.replace(",", "")
+            cleaned = cleaned.replace("٬", "")
+            cleaned = cleaned.replace("٫", ".")
+            
+            decimal_value = Decimal(cleaned)
+            decimal_value = decimal_value.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+            
+            # ✅ تم إزالة الحد الأقصى للقيمة
+            return decimal_value
+            
+        except (ValueError, TypeError, InvalidOperation):
+            return Decimal('0.00')
+        # ============================================================
+        # ✅ Helper: معالجة النسب المئوية
+        # ============================================================
     @staticmethod
     def clean_percentage(value):
         """
@@ -63,8 +99,8 @@ class ImportHelpers:
         if value is None:
             return None
 
-        if 0 < value <= 1:
-            value *= 100
+        if Decimal('0') < value <= Decimal('1'):
+            value *= Decimal('100')
 
         return value
 
@@ -104,8 +140,6 @@ class ImportHelpers:
             if code.strip()
         ]
         
-    
-    
     # ============================================================
     # ✅ Normalize Company Name
     # ============================================================
@@ -114,7 +148,6 @@ class ImportHelpers:
 
         return ImportHelpers.normalize_text(value)
 
-  
     @staticmethod
     def package_lookup_key(
         package_code,
@@ -124,7 +157,6 @@ class ImportHelpers:
             ImportHelpers.normalize_text(package_code),
             ImportHelpers.normalize_text(package_name),
         )
-        
         
     # ============================================================
     # ✅ Get Or Create Specialty
@@ -201,13 +233,13 @@ class ImportHelpers:
         مثال: 1,250.50 -> 1250.50
         """
         if pd.isna(value):
-            return 0
+            return Decimal('0.00')
         
         try:
             if isinstance(value, str):
                 # إزالة الفواصل الآلاف
                 cleaned = value.replace(",", "").strip()
-                return float(cleaned)
-            return float(value)
+                return Decimal(cleaned).quantize(Decimal('0.01'))
+            return Decimal(str(value)).quantize(Decimal('0.01'))
         except Exception:
-            return 0
+            return Decimal('0.00')

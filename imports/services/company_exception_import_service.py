@@ -1,18 +1,18 @@
 # imports/services/company_exception_import_service.py
 
-from django.db import transaction
 import pandas as pd
-
+import time
+from django.db import transaction
 from pricing_requests.models import (
     CompanyExceptionProfile,
     CompanyExceptionItem,
 )
-
 from imports.utils.import_helpers import ImportHelpers
 
 
-# ✅ أعمدة الشيت 9 - تم التعديل
+# ✅ تعريف أعمدة الشيت 9
 COLUMN_MAP = [
+    # (section, service_name, discount_col, details_col, price_col)
     # ------------------ داخلي ------------------
     ("داخلي", "الاشعه التداخليه", 3, 4, None),
     ("داخلي", "خدمات الكلي", 5, 6, 7),
@@ -47,38 +47,75 @@ class CompanyExceptionImportService:
     @staticmethod
     @transaction.atomic
     def import_data(dataframe):
+
+        start_time = time.perf_counter()
+        print("⏳ Starting Company Exceptions import from Sheet 9...")
+
         result = {
             "processed": 0,
             "profiles": 0,
             "items": 0,
+            "updated": 0,
             "skipped": 0,
         }
+
+        # ============================================================
+        # ✅ Cache للـ Profiles
+        # ============================================================
+        print("⏳ Loading existing profiles...")
+        profiles_cache = {}
+        for profile in CompanyExceptionProfile.objects.all():
+            key = ImportHelpers.normalize_text(profile.entity_name)
+            profiles_cache[key] = profile
+        print(f"   ✅ {len(profiles_cache)} profiles loaded")
+
+        # ============================================================
+        # ✅ Cache للـ Items (للتحديث بدلاً من الحذف)
+        # ============================================================
+        print("⏳ Loading existing items...")
+        items_cache = {}
+        for item in CompanyExceptionItem.objects.all():
+            key = (
+                item.profile_id,
+                item.section,
+                item.service_name,
+                item.details,
+            )
+            items_cache[key] = item
+        print(f"   ✅ {len(items_cache)} items loaded")
+
+        # ============================================================
+        # ✅ Loop - استخدام أرقام الأعمدة
+        # ============================================================
+        print("⏳ Processing rows...")
+        total_rows = len(dataframe)
+        processed = 0
 
         i = 0
         while i < len(dataframe):
             row = dataframe.iloc[i]
 
-            # الجهة في العمود 0
+            # ✅ الجهة في العمود 0
             entity_name = None
             if len(row) > 0 and pd.notna(row.iloc[0]):
                 entity_name = ImportHelpers.normalize_text(row.iloc[0])
 
-            # لو لقينا جهة جديدة
+            # ✅ إذا وجدنا جهة جديدة
             if entity_name:
                 print(f"\n{'='*60}")
                 print(f"🏢 معالجة: {entity_name}")
 
-                # الفئة المالية (العمود 1)
+                # ✅ الفئة المالية (العمود 1)
                 financial_category = ""
                 if len(row) > 1 and pd.notna(row.iloc[1]):
                     financial_category = ImportHelpers.normalize_text(row.iloc[1])
 
-                # قائمة الأسعار (العمود 2)
+                # ✅ قائمة الأسعار (العمود 2)
                 price_list = ""
                 if len(row) > 2 and pd.notna(row.iloc[2]):
                     price_list = ImportHelpers.normalize_text(row.iloc[2])
 
-                # المرفقات (العمود 29)
+                # ✅ المرفقات (العمود 29)
                 attachment = ""
                 if len(row) > 29 and pd.notna(row.iloc[29]):
                     attachment = ImportHelpers.normalize_text(row.iloc[29])
@@ -86,39 +123,59 @@ class CompanyExceptionImportService:
                 print(f"   الفئة المالية: {financial_category}")
                 print(f"   قائمة الأسعار: {price_list}")
 
-                # ✅ إنشاء الـ Profile
-                current_profile, created = (
-                    CompanyExceptionProfile.objects.update_or_create(
-                        entity_name=entity_name,
-                        defaults={
-                            "financial_category": financial_category,
-                            "price_list": price_list,
-                            "attachment": attachment,
-                        }
-                    )
-                )
-
-                # ✅ حذف العناصر القديمة
-                deleted_count = current_profile.items.all().delete()
-                print(f"   🗑️ تم حذف {deleted_count[0]} عنصر قديم")
-
                 result["processed"] += 1
+                processed += 1
 
-                if created:
+                # ✅ البحث في Cache
+                key = entity_name
+                existing_profile = profiles_cache.get(key)
+
+                if existing_profile:
+                    # ✅ تحديث الملف الموجود
+                    changed = False
+                    
+                    if existing_profile.financial_category != financial_category:
+                        existing_profile.financial_category = financial_category
+                        changed = True
+                        
+                    if existing_profile.price_list != price_list:
+                        existing_profile.price_list = price_list
+                        changed = True
+                        
+                    if existing_profile.attachment != attachment:
+                        existing_profile.attachment = attachment
+                        changed = True
+
+                    if changed:
+                        existing_profile.save()
+                        result["updated"] += 1
+                        print(f"   ✅ تم تحديث الملف")
+                    else:
+                        print(f"   ✅ الملف موجود بدون تغييرات")
+                    
+                    current_profile = existing_profile
+
+                else:
+                    # ✅ إنشاء ملف جديد
+                    current_profile = CompanyExceptionProfile.objects.create(
+                        entity_name=entity_name,
+                        financial_category=financial_category,
+                        price_list=price_list,
+                        attachment=attachment,
+                    )
+                    profiles_cache[key] = current_profile
                     result["profiles"] += 1
                     print(f"   ✅ تم إنشاء ملف جديد")
-                else:
-                    print(f"   ✅ تم تحديث الملف")
 
                 # ✅ جمع التفاصيل المتعددة من الصفوف التالية
                 detail_rows = []
                 next_idx = i + 1
                 while next_idx < len(dataframe):
                     next_row = dataframe.iloc[next_idx]
-                    # لو لقينا جهة جديدة نوقف
+                    # إذا وجدنا جهة جديدة نوقف
                     if pd.notna(next_row.iloc[0]):
                         break
-                    # لو الصف فارغ تماماً نستمر
+                    # إذا كان الصف فارغاً تماماً نستمر
                     if next_row.isna().all():
                         next_idx += 1
                         continue
@@ -127,11 +184,13 @@ class CompanyExceptionImportService:
 
                 print(f"   📋 عدد صفوف التفاصيل: {len(detail_rows)}")
 
-                # ✅ بناء الـ Items
+                # ✅ بناء العناصر
                 display_order = 1
                 items_count = 0
+                items_to_create = []
+                items_to_update = []
 
-                # ✅ أولاً: نضيف الخدمات الأساسية من الصف الرئيسي
+                # ✅ أولاً: الخدمات الأساسية من الصف الرئيسي
                 for section, service_name, discount_col, details_col, price_col in COLUMN_MAP:
                     # قراءة الخصم
                     discount = None
@@ -153,30 +212,58 @@ class CompanyExceptionImportService:
                         if pd.notna(val):
                             base_price = ImportHelpers.normalize_text(val)
 
-                    # نضيف الخدمة الأساسية لو فيها بيانات
+                    # نضيف الخدمة الأساسية إذا فيها بيانات
                     if discount is not None or base_details or base_price:
-                        CompanyExceptionItem.objects.create(
-                            profile=current_profile,
-                            section=section,
-                            service_name=service_name,
-                            discount_rate=str(discount) if discount is not None else "",
-                            details=base_details,
-                            net_price=base_price,
-                            display_order=display_order,
+                        discount_rate = str(discount) if discount is not None else ""
+                        
+                        # ✅ البحث في Cache للتحديث
+                        item_key = (
+                            current_profile.id,
+                            section,
+                            service_name,
+                            base_details,
                         )
+                        existing_item = items_cache.get(item_key)
+
+                        if existing_item:
+                            # ✅ تحديث العنصر الموجود
+                            changed = False
+                            if existing_item.discount_rate != discount_rate:
+                                existing_item.discount_rate = discount_rate
+                                changed = True
+                            if existing_item.net_price != base_price:
+                                existing_item.net_price = base_price
+                                changed = True
+                            if existing_item.display_order != display_order:
+                                existing_item.display_order = display_order
+                                changed = True
+                            
+                            if changed:
+                                items_to_update.append(existing_item)
+                        else:
+                            # ✅ إنشاء عنصر جديد
+                            items_to_create.append(
+                                CompanyExceptionItem(
+                                    profile=current_profile,
+                                    section=section,
+                                    service_name=service_name,
+                                    discount_rate=discount_rate,
+                                    details=base_details,
+                                    net_price=base_price,
+                                    display_order=display_order,
+                                )
+                            )
+                        
                         display_order += 1
                         items_count += 1
-                        result["items"] += 1
 
                         discount_display = f"{discount}%" if discount is not None else "0%"
                         price_display = base_price or "-"
-                        print(f"   📊 {section} - {service_name}: خصم {discount_display}, تفاصيل: {base_details[:30]}, سعر: {price_display}")
+                        print(f"   📊 {section} - {service_name}: خصم {discount_display}, سعر: {price_display}")
 
-                # ✅ ثانياً: نضيف التفاصيل الإضافية من الصفوف التالية
+                # ✅ ثانياً: التفاصيل الإضافية من الصفوف التالية
                 for detail_row in detail_rows:
-                    # ✅ نمر على كل خدمة في COLUMN_MAP
                     for section, service_name, discount_col, details_col, price_col in COLUMN_MAP:
-                        # ✅ نقرأ التفاصيل من الصف الحالي (detail_row) مش من الصف الرئيسي
                         details = ""
                         if details_col is not None and len(detail_row) > details_col:
                             val = detail_row.iloc[details_col]
@@ -189,44 +276,94 @@ class CompanyExceptionImportService:
                             if pd.notna(val):
                                 net_price = ImportHelpers.normalize_text(val)
 
-                        # ✅ لو مفيش بيانات في هذا العمود، نستمر
                         if not details and not net_price:
                             continue
 
-                        # ✅ نبحث عن الخصم من الصف الرئيسي
                         discount = None
                         if discount_col is not None and len(row) > discount_col:
                             val = row.iloc[discount_col]
                             if pd.notna(val):
                                 discount = CompanyExceptionImportService._get_discount_value(val)
 
-                        # ✅ إنشاء الـ Item مع التفاصيل الإضافية
-                        CompanyExceptionItem.objects.create(
-                            profile=current_profile,
-                            section=section,
-                            service_name=service_name,
-                            discount_rate=str(discount) if discount is not None else "",
-                            details=details,
-                            net_price=net_price,
-                            display_order=display_order,
+                        discount_rate = str(discount) if discount is not None else ""
+                        
+                        # ✅ البحث في Cache للتحديث
+                        item_key = (
+                            current_profile.id,
+                            section,
+                            service_name,
+                            details,
                         )
+                        existing_item = items_cache.get(item_key)
+
+                        if existing_item:
+                            # ✅ تحديث العنصر الموجود
+                            changed = False
+                            if existing_item.discount_rate != discount_rate:
+                                existing_item.discount_rate = discount_rate
+                                changed = True
+                            if existing_item.net_price != net_price:
+                                existing_item.net_price = net_price
+                                changed = True
+                            if existing_item.display_order != display_order:
+                                existing_item.display_order = display_order
+                                changed = True
+                            
+                            if changed:
+                                items_to_update.append(existing_item)
+                        else:
+                            # ✅ إنشاء عنصر جديد
+                            items_to_create.append(
+                                CompanyExceptionItem(
+                                    profile=current_profile,
+                                    section=section,
+                                    service_name=service_name,
+                                    discount_rate=discount_rate,
+                                    details=details,
+                                    net_price=net_price,
+                                    display_order=display_order,
+                                )
+                            )
 
                         display_order += 1
                         items_count += 1
-                        result["items"] += 1
+                        print(f"      ➕ {section} - {service_name}: تفاصيل: {details[:30]}, سعر: {net_price}")
 
-                        discount_display = f"{discount}%" if discount is not None else "0%"
-                        price_display = net_price or "-"
-                        print(f"      ➕ {section} - {service_name}: خصم {discount_display}, تفاصيل: {details}, سعر: {price_display}")
+                # ✅ Bulk Create للعناصر الجديدة
+                if items_to_create:
+                    CompanyExceptionItem.objects.bulk_create(items_to_create, batch_size=1000)
+                    result["items"] += len(items_to_create)
+                    print(f"   ✅ تم إنشاء {len(items_to_create)} عنصر جديد")
+
+                # ✅ Bulk Update للعناصر المحدثة
+                if items_to_update:
+                    CompanyExceptionItem.objects.bulk_update(
+                        items_to_update,
+                        fields=["discount_rate", "net_price", "display_order"],
+                        batch_size=1000,
+                    )
+                    result["items"] += len(items_to_update)
+                    print(f"   ✅ تم تحديث {len(items_to_update)} عنصر")
 
                 print(f"   ✅ تمت معالجة {items_count} خدمة")
                 i = next_idx
+
             else:
                 i += 1
 
+            if processed % 100 == 0 and processed > 0:
+                print(f"   📊 Processed {processed}/{total_rows} rows...")
+
+        # ============================================================
+        # ✅ النتائج النهائية
+        # ============================================================
         print("\n" + "="*80)
         print("✅ انتهى الاستيراد بنجاح!")
-        print(f"📊 الملفات: {result['profiles']}, العناصر: {result['items']}, المتخطي: {result['skipped']}")
+        print(f"📊 الملفات: {result['profiles']}, العناصر: {result['items']}")
+        print(f"📊 Updated: {result['updated']}, Skipped: {result['skipped']}")
         print("="*80)
+
+        elapsed = time.perf_counter() - start_time
+        print(f"⏱️ Completed in {elapsed:.2f} seconds")
 
         return result

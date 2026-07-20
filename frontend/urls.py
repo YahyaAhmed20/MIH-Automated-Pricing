@@ -43,6 +43,8 @@ urlpatterns = [
         name="service_search",
     ),
     
+    path('api/update-progress/', views.update_progress, name='update_progress'),  # ✅ أضف هذا
+
     path(
         "external-approvals/",
         views.external_approvals,
@@ -178,5 +180,12 @@ path(
     "credit-package-pricing/",
     views.credit_package_pricing,
     name="credit_package_pricing"
+),
+
+
+path(
+    "system/update/",
+    views.system_update,
+    name="system_update",
 ),
 ]

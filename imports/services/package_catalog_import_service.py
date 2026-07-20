@@ -1,30 +1,32 @@
-import pandas as pd
+# imports/services/package_catalog_import_service.py
 
+import pandas as pd
+import time
 from django.db import transaction
+from medical_catalog.models import Package, Specialty
 from imports.utils.import_helpers import ImportHelpers
-from medical_catalog.models import (
-    Package,
-    Specialty,
-)
 
 
 class PackageCatalogImportService:
 
-    # ❌ 2) حذف الدالة normalize_text بالكامل
-    # @staticmethod
-    # def normalize_text(value):
-    #     ...
+    @staticmethod
+    def truncate_text(value, max_length=255):
+        """تقليص النص إذا تجاوز الحد الأقصى"""
+        if not value:
+            return value
+        # تنظيف النص أولاً
+        cleaned = ImportHelpers.normalize_text(value)
+        if len(cleaned) > max_length:
+            print(f"⚠️ تم تقليص نص طويل من {len(cleaned)} إلى {max_length} حرف")
+            return cleaned[:max_length]
+        return cleaned
 
-    # ============================================================
-    # ✅ Helper: جلب أو إنشاء التخصص
-    # ============================================================
-    
-    # ============================================================
-    # ✅ Import Data (مع الـ Result)
-    # ============================================================
     @staticmethod
     @transaction.atomic
     def import_data(dataframe):
+
+        start_time = time.perf_counter()
+        print("⏳ Starting Package Catalog import from Sheet 1...")
 
         result = {
             "processed": 0,
@@ -34,103 +36,165 @@ class PackageCatalogImportService:
             "missing_specialty": 0,
         }
 
-        # ✅ جيب كل التخصصات في Cache
-        specialties_cache = {
-            s.name: s
-            for s in Specialty.objects.all()
-        }
+        # ============================================================
+        # ✅ Cache للـ Specialties
+        # ============================================================
+        print("⏳ Loading specialties...")
+        specialties_cache = {}
+        for s in Specialty.objects.all():
+            specialties_cache[ImportHelpers.normalize_text(s.name)] = s
+        print(f"   ✅ {len(specialties_cache)} specialties loaded")
 
-        # ✅ 3) تعديل packages_cache بالمفتاح المركب (code, name)
-        packages_cache = {
-            (
-                ImportHelpers.normalize_text(p.code),  # ✅ code
-                ImportHelpers.normalize_text(p.name),  # ✅ name
-            ): p
-            for p in Package.objects.exclude(
-                code__isnull=True
+        # ============================================================
+        # ✅ Cache للـ Packages
+        # ============================================================
+        print("⏳ Loading packages...")
+        packages_cache = {}
+        for p in Package.objects.exclude(code__isnull=True):
+            key = (
+                ImportHelpers.normalize_text(p.code),
+                ImportHelpers.normalize_text(p.name),
             )
-        }
+            packages_cache[key] = p
+        print(f"   ✅ {len(packages_cache)} packages loaded")
 
-        for _, row in dataframe.iterrows():
+        # ============================================================
+        # ✅ قوائم التجميع للـ Bulk Operations
+        # ============================================================
+        packages_to_create = []
+        packages_to_update = []
 
-            # ✅ 4) استخدام ImportHelpers.normalize_text لكل القراءات
-            package_code = (
-                ImportHelpers.normalize_text(  # ✅
-                    row.get("الكود")
-                )
-            )
+        # ============================================================
+        # ✅ Loop - استخدام أرقام الأعمدة (بدون Header)
+        # ============================================================
+        print("⏳ Processing rows...")
+        total_rows = len(dataframe)
+        processed = 0
 
-            package_name = (
-                ImportHelpers.normalize_text(  # ✅
-                    row.get("اسم الباكدج")
-                )
-            )
+        for index, row in enumerate(dataframe.to_dict("records"), start=1):
 
-            specialty_name = (
-                ImportHelpers.normalize_text(  # ✅
-                    row.get("التخصص")
-                )
-            )
+            # ✅ أرقام الأعمدة حسب ترتيب شيت 1
+            # العمود 0: الكود
+            package_code = ImportHelpers.normalize_text(row.get(0, ""))
+            
+            # العمود 1: اسم الباكدج
+            package_name = ImportHelpers.normalize_text(row.get(1, ""))
+            package_name = PackageCatalogImportService.truncate_text(package_name, 255)
+            
+            # العمود 2: التخصص
+            specialty_name = ImportHelpers.normalize_text(row.get(2, ""))
+            specialty_name = PackageCatalogImportService.truncate_text(specialty_name, 255)
+            
+            # العمود 3: مدة الاقامه
+            stay_duration = ImportHelpers.normalize_text(row.get(3, ""))
+            
+            # العمود 4: ملاحظات الباكدج
+            package_note = ImportHelpers.normalize_text(row.get(4, ""))
+            package_note = PackageCatalogImportService.truncate_text(package_note, 255)
 
-            stay_duration = (
-                ImportHelpers.normalize_text(  # ✅
-                    row.get("مدة الاقامه")
-                )
-            )
+            # ✅ قيم افتراضية
+            if not package_code:
+                package_code = f"UNKNOWN_CODE_{index}"
+                print(f"⚠️ صف {index}: الكود مفقود - تم استخدام كود افتراضي")
 
-            package_note = (
-                ImportHelpers.normalize_text(  # ✅
-                    row.get("ملاحظات الباكدج")
-                )
-            )
+            if not package_name:
+                package_name = f"UNKNOWN_PACKAGE_{index}"
+                print(f"⚠️ صف {index}: اسم الباكدج مفقود - تم استخدام اسم افتراضي")
 
-            if not package_code or not package_name:
+            # ✅ تخطي الصفوف الفارغة
+            if not package_code and not package_name:
+                result["skipped"] = result.get("skipped", 0) + 1
                 continue
 
             result["processed"] += 1
+            processed = result["processed"]
 
-            specialty = (
-                ImportHelpers.get_or_create_specialty(
-                    specialty_name,
-                    specialties_cache,
-                    result
-                )
-            )
+            # ✅ الحصول على التخصص (أو إنشاؤه)
+            specialty = None
+            if specialty_name:
+                specialty = specialties_cache.get(specialty_name)
+                if not specialty:
+                    specialty = Specialty.objects.create(
+                        name=specialty_name,
+                        is_active=True,
+                    )
+                    specialties_cache[specialty_name] = specialty
+                    result["created_specialties"] += 1
 
-            # ✅ 5) البحث بالمفتاح المركب (code, name)
-            package_key = (
-                package_code,
-                package_name,
-            )
+            # ✅ البحث في Cache
+            package_key = (package_code, package_name)
+            existing_package = packages_cache.get(package_key)
 
-            package = packages_cache.get(package_key)
+            if existing_package:
+                # ✅ تحديث البيانات
+                changed = False
 
-            if package:
+                if existing_package.name != package_name:
+                    existing_package.name = package_name
+                    changed = True
 
-                package.name = package_name
-                package.specialty = specialty
-                package.stay_duration = stay_duration
-                package.package_note = package_note
-                package.is_active = True
+                if existing_package.specialty_id != (specialty.id if specialty else None):
+                    existing_package.specialty = specialty
+                    changed = True
 
-                package.save()
+                if existing_package.stay_duration != stay_duration:
+                    existing_package.stay_duration = stay_duration
+                    changed = True
 
-                result["updated"] += 1
+                if existing_package.package_note != package_note:
+                    existing_package.package_note = package_note
+                    changed = True
+
+                if existing_package.is_active is not True:
+                    existing_package.is_active = True
+                    changed = True
+
+                if changed:
+                    packages_to_update.append(existing_package)
+                    result["updated"] += 1
 
             else:
-
-                package = Package.objects.create(
+                # ✅ إنشاء جديد
+                new_package = Package(
                     code=package_code,
                     name=package_name,
                     specialty=specialty,
                     stay_duration=stay_duration,
                     package_note=package_note,
-                    is_active=True
+                    is_active=True,
                 )
-
-                # ✅ 6) التخزين في cache بالمفتاح المركب
-                packages_cache[package_key] = package
-
+                packages_to_create.append(new_package)
+                packages_cache[package_key] = new_package
                 result["created"] += 1
+
+            if processed % 1000 == 0:
+                print(f"   📊 Processed {processed}/{total_rows} rows...")
+
+        print(f"   ✅ Processed {processed}/{total_rows} rows")
+
+        # ============================================================
+        # ✅ تنفيذ الـ Bulk Operations
+        # ============================================================
+        print(f"💾 Creating {len(packages_to_create)} packages...")
+        print(f"💾 Updating {len(packages_to_update)} packages...")
+
+        if packages_to_create:
+            Package.objects.bulk_create(packages_to_create, batch_size=1000)
+
+        if packages_to_update:
+            Package.objects.bulk_update(
+                packages_to_update,
+                fields=[
+                    "name",
+                    "specialty",
+                    "stay_duration",
+                    "package_note",
+                    "is_active",
+                ],
+                batch_size=1000,
+            )
+
+        elapsed = time.perf_counter() - start_time
+        print(f"✅ Completed in {elapsed:.2f} seconds")
 
         return result

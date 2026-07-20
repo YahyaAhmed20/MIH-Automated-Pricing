@@ -1,0 +1,134 @@
+# imports/services/update_all_data_service.py
+
+from time import perf_counter
+
+from django.core.management import call_command
+from django.core.management.base import CommandError
+
+from imports.services.excel_provider import ExcelProvider
+
+
+# ✅ الأوامر اللي بتدعم --no-confirm
+COMMANDS_WITH_NO_CONFIRM = [
+    "import_report_statistics",
+    "import_external_approvals",
+]
+
+IMPORT_COMMANDS = [
+
+    ("Package Catalog", "import_package_catalog"),
+
+    ("Cash Packages", "import_cash_packages"),
+
+    ("Contract Migration", "migrate_contract_entities"),
+
+    ("Company Contracts", "import_company_contracts"),
+
+    ("Company Discounts", "import_company_discounts"),
+
+    ("Special Offers", "import_special_offers"),
+
+    ("Service Records", "import_service_records"),
+
+    ("Pricing Details", "import_pricing_details"),
+
+    ("Similar Invoices", "import_similar_invoices"),
+
+    ("Procedures", "import_procedures"),
+
+    ("Medical Procedures", "import_medical_procedures"),
+
+    ("Procedure Fees", "import_procedure_fees"),
+
+    ("Company Discount Rank", "import_company_discount_rank"),
+
+    ("Company Exceptions", "import_company_exceptions"),
+
+    ("Report Statistics", "import_report_statistics"),
+
+    ("External Approvals", "import_external_approvals"),
+]
+
+
+class UpdateAllDataService:
+
+    @classmethod
+    def run(cls, stdout, progress_callback=None):
+
+        stdout.write("")
+        stdout.write("=" * 70)
+        stdout.write("      MIH Automated Pricing System")
+        stdout.write("        Update All Data")
+        stdout.write("=" * 70)
+
+        total_start = perf_counter()
+
+        ExcelProvider.clear_cache()
+
+        results = []
+        total_commands = len(IMPORT_COMMANDS)
+
+        try:
+
+            for idx, (title, command_name) in enumerate(IMPORT_COMMANDS):
+
+                # ✅ تحديث التقدم
+                if progress_callback:
+                    progress_callback(title, idx)
+
+                stdout.write("")
+                stdout.write("-" * 70)
+                stdout.write(f"▶ START : {title}")
+                stdout.flush()
+
+                start = perf_counter()
+
+                try:
+
+                    if command_name in COMMANDS_WITH_NO_CONFIRM:
+                        call_command(
+                            command_name,
+                            stdout=stdout,
+                            no_confirm=True,
+                        )
+                    else:
+                        call_command(
+                            command_name,
+                            stdout=stdout,
+                        )
+
+                    elapsed = perf_counter() - start
+                    results.append({"title": title, "status": "✅", "time": elapsed})
+                    stdout.write(f"✅ END : {title} ({elapsed:.2f} sec)")
+
+                except Exception as exc:
+
+                    elapsed = perf_counter() - start
+                    results.append({"title": title, "status": "❌", "time": elapsed})
+                    stdout.write(f"❌ {title} Failed")
+
+                    raise CommandError(str(exc))
+
+                stdout.flush()
+
+        finally:
+
+            ExcelProvider.clear_cache()
+
+            if progress_callback:
+                progress_callback("✅ تم الانتهاء", total_commands)
+
+        total_elapsed = perf_counter() - total_start
+
+        stdout.write("")
+        stdout.write("=" * 70)
+        stdout.write("✓ ALL IMPORTS COMPLETED SUCCESSFULLY")
+        stdout.write(f"Total Time : {total_elapsed:.2f} sec")
+        stdout.write("=" * 70)
+
+        stdout.write("")
+        stdout.write("📊 SUMMARY:")
+        for r in results:
+            stdout.write(f"   {r['status']} {r['title']} ({r['time']:.2f}s)")
+        stdout.write("=" * 70)
+        stdout.write("")
