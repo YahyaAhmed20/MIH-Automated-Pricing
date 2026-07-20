@@ -1,3 +1,5 @@
+# project/settings.py
+
 """
 Django settings for project project.
 
@@ -12,6 +14,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from datetime import timedelta
 from pathlib import Path
 import os
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -22,17 +25,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-mbdn9)+91#j^)w^jk4skrz_h_2nx_j&6l)!-=fdj*2sogl^m=h'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-from pathlib import Path
-
+# ✅ SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = False  # ⚠️ خليها False في production
 
 ALLOWED_HOSTS = [
     "mih-automated-pricing.up.railway.app",
     "127.0.0.1",
     "localhost",
-    ".railway.app",  # يسمح بكل النطاقات الفرعية
+    ".railway.app",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
@@ -66,12 +66,9 @@ INSTALLED_APPS = [
     'pricing_engine',
     'dashboard',
     'frontend',
-
-    
 ]
 
 AUTH_USER_MODEL = 'accounts.User'
-
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
@@ -92,7 +89,6 @@ SIMPLE_JWT = {
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
-
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -122,10 +118,6 @@ WSGI_APPLICATION = 'project.wsgi.application'
 
 
 # Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
-# 
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -135,21 +127,68 @@ DATABASES = {
         'HOST': 'tokaido.proxy.rlwy.net',
         'PORT': '16688',
         'OPTIONS': {
-            'sslmode': 'require',  # ✅ تأمين الاتصال
-            'connect_timeout': 60,  # ✅ زيادة مهلة الاتصال إلى 60 ثانية
-            'keepalives': 1,        # ✅ تفعيل keepalive
-            'keepalives_idle': 30,  # ✅ انتظار 30 ثانية قبل إرسال keepalive
-            'keepalives_interval': 10,  # ✅ إرسال keepalive كل 10 ثواني
-            'keepalives_count': 5,  # ✅ عدد محاولات keepalive
+            'sslmode': 'require',
+            'connect_timeout': 60,
+            'keepalives': 1,
+            'keepalives_idle': 30,
+            'keepalives_interval': 10,
+            'keepalives_count': 5,
         },
-        'CONN_MAX_AGE': 60,  # ✅ عدم الاحتفاظ بالاتصالات المفتوحة
-        'CONN_HEALTH_CHECKS': True,  # ✅ التحقق من صحة الاتصال قبل الاستخدام
+        'CONN_MAX_AGE': 60,
+        'CONN_HEALTH_CHECKS': True,
     }
 }
 
-# Password validation
-# https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 
+# ✅ ==========================================================
+# ✅ إعدادات منع Internal Server Error
+# ✅ ==========================================================
+
+# ✅ زيادة حجم البيانات المسموح بها
+DATA_UPLOAD_MAX_MEMORY_SIZE = 1024 * 1024 * 100  # 100 MB
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 10000
+
+# ✅ زيادة مهلة الطلبات (لعمليات التحديث الطويلة)
+# ✅ ملحوظة: في Railway، المهلة الافتراضية 60 ثانية
+# ✅ الحل الأفضل هو تشغيل التحديث في الخلفية (Background Task)
+
+# ✅ إعدادات Logging
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+        'file': {
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'logs', 'django.log'),
+        },
+    },
+    'root': {
+        'handlers': ['console', 'file'],
+        'level': 'INFO',
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console', 'file'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'django.db.backends': {
+            'handlers': ['console'],
+            'level': 'ERROR',
+        },
+    },
+}
+
+# ✅ إنشاء مجلد logs إذا لم يكن موجوداً
+LOG_DIR = os.path.join(BASE_DIR, 'logs')
+if not os.path.exists(LOG_DIR):
+    os.makedirs(LOG_DIR)
+
+
+# Password validation
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -167,48 +206,34 @@ AUTH_PASSWORD_VALIDATORS = [
 
 
 # Internationalization
-# https://docs.djangoproject.com/en/5.2/topics/i18n/
-
 LANGUAGE_CODE = 'ar'
-
 TIME_ZONE = 'Africa/Cairo'
-
 USE_I18N = True
-
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.2/howto/static-files/
-
-STATIC_ROOT=os.path.join(BASE_DIR,'static')
+# Static files
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = 'static/'
-STATICFILES_DIRS=[
-    os.path.join(BASE_DIR,'project/static')
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'project/static')
 ]
-
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = '/media/'
 
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
 
 # ==========================================================
 # Google Sheets
 # ==========================================================
-
 GOOGLE_SERVICE_ACCOUNT_FILE = (
     BASE_DIR / "credentials" / "google-drive.json"
 )
-
 GOOGLE_SPREADSHEET_ID = (
     "1Qab6Psd4yqPJ9SUlz4F4y_6pD510p3A9sM-mXIr90wM"
 )
-
 TEMP_DIR = BASE_DIR / "temp"
-
 TEMP_EXCEL_FILE = TEMP_DIR / "APP.xlsx"
