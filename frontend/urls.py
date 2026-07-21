@@ -16,6 +16,8 @@ urlpatterns = [
     views.cash_packages,
     name="cash_packages"
     ),
+    path('packages-price-list/', views.packages_price_list, name='packages_price_list'),  # ✅ أضف هذا السطر
+
     
     path('packages/create/', views.package_create, name='package_create'),
 

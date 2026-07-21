@@ -2036,6 +2036,14 @@ def report_statistic_detail(request, pk):
     }
     
     return render(request, 'frontend/report_statistic_detail.html', context)
+# frontend/views.py
+
+from django.shortcuts import render, get_object_or_404
+from django.db.models import Q, Prefetch
+from contracts.models import CompanyDiscountProfile, CompanyDiscount
+from pricing_requests.models import CompanyDiscountRank, CompanyException, CompanyExceptionProfile, CompanyExceptionItem
+
+
 def company_discounts(request):
 
     search = request.GET.get("search", "")
@@ -2057,16 +2065,21 @@ def company_discounts(request):
         selected_company = get_object_or_404(ContractEntity, pk=entity_id)
         search = selected_company.name
 
+    # ============================================
+    # ✅ جلب الشركات مع الخصومات - مع منع التكرار
+    # ============================================
     companies = (
-        CompanyDiscountProfile.objects.prefetch_related(
+        CompanyDiscountProfile.objects
+        .prefetch_related(
             Prefetch(
                 "discounts",
-                queryset=CompanyDiscount.objects.order_by(
-                    "section",
-                    "display_order",
-                ),
+                queryset=CompanyDiscount.objects
+                    .order_by("section", "display_order")
+                    .distinct(),
             )
-        ).order_by("company_name")
+        )
+        .order_by("company_name")
+        .distinct()
     )
 
     if search:
@@ -2075,13 +2088,28 @@ def company_discounts(request):
             Q(financial_category__icontains=search)
         )
 
+    # ============================================
+    # ✅ تجميع البيانات مع منع التكرار
+    # ============================================
     company_cards = []
+    seen_companies = set()
 
     for company in companies:
+        company_key = (company.company_name, company.financial_category)
+        if company_key in seen_companies:
+            continue
+        seen_companies.add(company_key)
+        
         internal = []
         external = []
+        seen_discounts = set()
 
         for discount in company.discounts.all():
+            discount_key = (discount.section, discount.item_name)
+            if discount_key in seen_discounts:
+                continue
+            seen_discounts.add(discount_key)
+            
             if section == "internal":
                 if discount.section != "داخلي":
                     continue
@@ -2120,10 +2148,9 @@ def company_discounts(request):
             .prefetch_related(
                 Prefetch(
                     "discounts",
-                    queryset=CompanyDiscount.objects.order_by(
-                        "section",
-                        "display_order",
-                    ),
+                    queryset=CompanyDiscount.objects
+                        .order_by("section", "display_order")
+                        .distinct(),
                 )
             )
             .filter(company_name=compare_company_1)
@@ -2136,10 +2163,9 @@ def company_discounts(request):
             .prefetch_related(
                 Prefetch(
                     "discounts",
-                    queryset=CompanyDiscount.objects.order_by(
-                        "section",
-                        "display_order",
-                    ),
+                    queryset=CompanyDiscount.objects
+                        .order_by("section", "display_order")
+                        .distinct(),
                 )
             )
             .filter(company_name=compare_company_2)
@@ -2160,38 +2186,30 @@ def company_discounts(request):
     # ============================================
     # ✅ Tab 3: الأعلى والأقل خصماً
     # ============================================
-    from pricing_requests.models import CompanyDiscountRank
-
     rankings = CompanyDiscountRank.objects.all()
 
     # ============================================
     # ✅ Tab 4: الاستثناءات (موديل قديم)
     # ============================================
-    from pricing_requests.models import CompanyException
-
     exceptions = CompanyException.objects.all()
     
     # ============================================
     # ✅ Tab 4: الاستثناءات (موديل جديد - CompanyExceptionProfile)
     # ============================================
-    from pricing_requests.models import CompanyExceptionProfile, CompanyExceptionItem
-    
-    # جلب جميع ملفات الاستثناءات مع عناصرها
     exception_profiles = (
         CompanyExceptionProfile.objects
         .prefetch_related(
             Prefetch(
                 "items",
-                queryset=CompanyExceptionItem.objects.order_by(
-                    "section",
-                    "display_order",
-                ),
+                queryset=CompanyExceptionItem.objects
+                    .order_by("section", "display_order")
+                    .distinct(),
             )
         )
         .order_by("entity_name")
+        .distinct()
     )
     
-    # تنظيم البيانات للعرض وحساب الإحصائيات
     exceptions_data = []
     total_internal = 0
     total_external = 0
@@ -2200,8 +2218,15 @@ def company_discounts(request):
     for profile in exception_profiles:
         internal_items = []
         external_items = []
+        seen_items = set()  # ✅ لمنع التكرار
         
         for item in profile.items.all():
+            # ✅ استخدم service_name (الحقل الصحيح)
+            item_key = (item.section, item.service_name)
+            if item_key in seen_items:
+                continue
+            seen_items.add(item_key)
+            
             if item.section == "داخلي":
                 internal_items.append(item)
                 total_internal += 1
@@ -2252,10 +2277,8 @@ def company_discounts(request):
             "entity_id": entity_id,
             "active_tab": active_tab,
 
-            # ✅ قائمة الشركات للـ Datalist
             "all_companies": all_companies,
 
-            # ✅ Tab 2: مقارنة بين جهتين
             "company_names": all_companies,
             "compare_company_1": compare_company_1,
             "compare_company_2": compare_company_2,
@@ -2264,19 +2287,12 @@ def company_discounts(request):
             "company_2": company_2,
             "comparison_rows": comparison_rows,
 
-            # ✅ Tab 3: الأعلى والأقل خصماً
             "rankings": rankings,
 
-            # ✅ Tab 4: الاستثناءات (موديل قديم)
             "exceptions": exceptions,
-            
-            # ✅ Tab 4: الاستثناءات (موديل جديد)
             "exceptions_data": exceptions_data,
-            
-            # ✅ القائمة الثابتة للخدمات غير الخاضعة للخصم
             "exceptions_list": EXCEPTIONS_LIST,
             
-            # ✅ الإحصائيات
             "total_internal": total_internal,
             "total_external": total_external,
             "total_services": total_services,
@@ -2841,28 +2857,32 @@ from django.shortcuts import get_object_or_404
 from django.shortcuts import render, get_object_or_404
 from django.core.cache import cache
 from django.utils import timezone
-def credit_package_pricing(request):
 
+def credit_package_pricing(request):
+    # ============================================================
+    # ✅ جلب المعاملات من الطلب
+    # ============================================================
     company_id = request.GET.get("company")
     entity_id = request.GET.get("entity")
-
+    
     if entity_id:
         company_id = entity_id
-        
-        
+    
+    package_id = request.GET.get("package")
+    company_search = request.GET.get("company_search", "")
+    package_search = request.GET.get("package_search", "")
+    specialty_id = request.GET.get("specialty", "")
+    
     selected_company = None
-
+    
     if company_id:
         selected_company = get_object_or_404(
             ContractEntity,
             pk=company_id
         )
-    package_id = request.GET.get("package")
-    company_search = request.GET.get("company_search", "")
-    package_search = request.GET.get("package_search", "")
-
+    
     # ============================================================
-    # ✅ تحسين 1: جلب الشركات مع Cache + فقط الأعمدة المطلوبة
+    # ✅ جلب الشركات مع Cache
     # ============================================================
     companies = cache.get('active_companies_list')
     if companies is None:
@@ -2871,36 +2891,74 @@ def credit_package_pricing(request):
             .filter(
                 contracts__contract_packages__is_active=True
             )
-            .only("id", "name")  # ✅ يجلب عمودين فقط
+            .only("id", "name")
             .distinct()
             .order_by("name")
         )
-        cache.set('active_companies_list', companies, 60 * 15)  # 15 دقيقة
-
-    # ✅ تطبيق فلتر البحث على الشركات (في الذاكرة)
+        cache.set('active_companies_list', companies, 60 * 15)
+    
+    # ✅ فلترة الشركات حسب البحث
     if company_search:
         companies = [
             c for c in companies 
             if company_search.lower() in c.name.lower()
         ]
-
+    
+    # ============================================================
+    # ✅ جلب التخصصات (حسب الشركة المختارة)
+    # ============================================================
+    specialties = []
+    
+    if company_id:
+        # ✅ جلب التخصصات الخاصة بالشركة فقط
+        cache_key = f'specialties_company_{company_id}'
+        specialties = cache.get(cache_key)
+        
+        if specialties is None:
+            # ✅ جلب الـ Package IDs النشطة للشركة
+            active_package_ids = ContractPackage.objects.filter(
+                contract__entity_id=company_id,
+                is_active=True
+            ).values_list('package_id', flat=True).distinct()
+            
+            # ✅ جلب التخصصات المرتبطة بهذه الـ Packages
+            specialties = list(
+                Specialty.objects
+                .filter(
+                    packages__id__in=active_package_ids
+                )
+                .only("id", "name")
+                .distinct()
+                .order_by("name")
+            )
+            cache.set(cache_key, specialties, 60 * 15)
+    else:
+        # ✅ إذا لم يتم اختيار شركة، نرجع قائمة فارغة
+        specialties = []
+    
     packages = []
     selected_package = None
-
+    
     if company_id:
         # ============================================================
-        # ✅ تحسين 2: جلب الباكدجات مع Cache
+        # ✅ جلب الباكدجات مع Cache
         # ============================================================
         cache_key = f'packages_company_{company_id}'
         cached_packages = cache.get(cache_key)
         
         if cached_packages is not None:
-            # ✅ استرجاع من Cache
             package_ids = [p['id'] for p in cached_packages]
             packages = list(
                 ContractPackage.objects
-                .filter(id__in=package_ids, is_active=True)
-                .select_related("package", "contract__entity")
+                .filter(
+                    id__in=package_ids,
+                    is_active=True
+                )
+                .select_related(
+                    "package",
+                    "contract__entity",
+                    "package__specialty"
+                )
                 .order_by("package__name")
             )
         else:
@@ -2911,11 +2969,15 @@ def credit_package_pricing(request):
                     contract__entity_id=company_id,
                     is_active=True,
                 )
-                .select_related("package", "contract__entity")
+                .select_related(
+                    "package",
+                    "contract__entity",
+                    "package__specialty"
+                )
                 .order_by("package__name")
             )
             
-            # ✅ تخزين نسخة خفيفة في Cache
+            # ✅ تخزين في Cache
             cache_data = [
                 {
                     'id': p.id,
@@ -2925,38 +2987,50 @@ def credit_package_pricing(request):
                     'current_discount_rate': str(p.current_discount_rate) if p.current_discount_rate else None,
                     'current_discount_text': p.current_discount_text,
                     'entity_name': p.contract.entity.name,
+                    'specialty_id': p.package.specialty_id if p.package else None,
+                    'specialty_name': p.package.specialty.name if p.package and p.package.specialty else None,
                     'is_expired': p.valid_until < timezone.localdate() if p.valid_until else False
                 }
                 for p in packages
             ]
-            cache.set(cache_key, cache_data, 60 * 10)  # 10 دقائق
-
-        # ✅ تطبيق فلتر البحث على الباكدجات (في الذاكرة)
+            cache.set(cache_key, cache_data, 60 * 10)
+        
+        # ✅ تطبيق فلتر البحث على الباكدجات
         if package_search:
             packages = [
                 p for p in packages 
                 if package_search.lower() in p.package.name.lower()
             ]
-
+        
+        # ✅ تطبيق فلتر التخصص
+        if specialty_id:
+            try:
+                specialty_id = int(specialty_id)
+                packages = [
+                    p for p in packages
+                    if p.package and p.package.specialty_id == specialty_id
+                ]
+            except (ValueError, TypeError):
+                pass
+        
         # ============================================================
-        # ✅ Helper functions لتنسيق الأرقام (نفس الكود الأصلي)
+        # ✅ Helper functions لتنسيق الأرقام
         # ============================================================
         def format_price(value):
             if value is None:
                 return "-"
             return f"{int(float(value)):,}"
-
+        
         def format_percentage(value):
             if value is None:
                 return "-"
             if value == int(value):
                 return f"{int(value)}%"
             return f"{value:.1f}%"
-
-        # ✅ تنسيق كل باكدج في الـ packages (نفس الكود الأصلي)
+        
+        # ✅ تنسيق الباكدجات مع إضافة التخصص
         for cp in packages:
             cp.formatted_price = format_price(cp.package_price)
-            # ✅ استخدام current_discount_text لو موجود، وإلا استخدم النسبة المئوية
             cp.formatted_discount = (
                 (cp.current_discount_text or "").strip()
                 or (
@@ -2965,13 +3039,21 @@ def credit_package_pricing(request):
                     else "-"
                 )
             )
-            # ✅ إضافة حالة الانتهاء (لأنها قد لا تكون موجودة من Cache)
+            
+            # ✅ إضافة معلومات التخصص للباكدج
+            if cp.package and hasattr(cp.package, 'specialty') and cp.package.specialty:
+                cp.specialty_name = cp.package.specialty.name
+                cp.specialty_id = cp.package.specialty.id
+            else:
+                cp.specialty_name = "غير محدد"
+                cp.specialty_id = None
+            
+            # ✅ إضافة حالة الانتهاء
             if not hasattr(cp, 'is_expired'):
                 cp.is_expired = cp.valid_until < timezone.localdate() if cp.valid_until else False
-
+    
     if package_id:
-
-        # ✅ إضافة is_active=True في get_object_or_404
+        # ✅ جلب الباكدج المحدد مع التخصص
         selected_package = get_object_or_404(
             ContractPackage.objects.select_related(
                 "package",
@@ -2981,89 +3063,85 @@ def credit_package_pricing(request):
             id=package_id,
             is_active=True,
         )
-
-        # ✅ تنسيق الأرقام للـ selected_package
+        
         if selected_package:
-
             # ============================================================
-            # ✅ Helper functions (معرفة هنا أيضاً للتأكد)
+            # ✅ Helper functions
             # ============================================================
             def format_price(value):
                 if value is None:
                     return "-"
                 return f"{int(float(value)):,}"
-
+            
             def format_percentage(value):
                 if value is None:
                     return "-"
                 if value == int(value):
                     return f"{int(value)}%"
                 return f"{value:.1f}%"
-
+            
             # ============================================================
-            # ✅ تنسيق الأسعار (بدون أصفار زائدة)
+            # ✅ تنسيق الأسعار
             # ============================================================
             selected_package.formatted_price = format_price(selected_package.package_price)
             selected_package.formatted_cash = format_price(selected_package.cash_price) if selected_package.cash_price else "-"
             selected_package.formatted_total_before = format_price(selected_package.total_before_discount) if selected_package.total_before_discount else "0"
             selected_package.formatted_special_offer = format_price(selected_package.special_offer_price) if selected_package.special_offer_price else "-"
             selected_package.formatted_current_price = format_price(selected_package.package_price)
-
-            # ============================================================
-            # ✅ تنسيق الخصومات (بدون أصفار زائدة)
-            # ============================================================
-            selected_package.formatted_discount = format_percentage(selected_package.current_discount_rate) if selected_package.current_discount_rate else "0%"
             
             # ============================================================
-            # ✅ النص المعروض للخصم الحالي
+            # ✅ تنسيق الخصومات
             # ============================================================
+            selected_package.formatted_discount = format_percentage(selected_package.current_discount_rate) if selected_package.current_discount_rate else "0%"
             selected_package.current_discount_label = (
                 (selected_package.current_discount_text or "").strip()
                 or selected_package.formatted_discount
             )
-
+            
             # ============================================================
-            # ✅ السعر المقترح
+            # ✅ السعر المقترح والخصومات المقترحة
             # ============================================================
             selected_package.formatted_suggested_price = (
                 format_price(selected_package.suggested_price)
                 if selected_package.suggested_price
                 else "-"
             )
-
-            # ============================================================
-            # ✅ نسبة الخصم المقترحة
-            # ============================================================
+            
             selected_package.formatted_suggested_discount = (
                 format_percentage(selected_package.suggested_discount_rate)
                 if selected_package.suggested_discount_rate
                 else "-"
             )
-
+            
             # ============================================================
-            # ✅ قيمة التخفيض
+            # ✅ حساب التوفير وأفضل سعر
             # ============================================================
             discount_value = PricingEngine.calculate_savings(
                 selected_package.package_price,
                 selected_package.suggested_price
             )
-
-            discount_percentage = (
-                PricingEngine.calculate_savings_percentage(
-                    selected_package.package_price,
-                    selected_package.suggested_price
-                )
+            
+            discount_percentage = PricingEngine.calculate_savings_percentage(
+                selected_package.package_price,
+                selected_package.suggested_price
             )
-
-            best_price = PricingEngine.get_best_price(
-                selected_package
-            )
-
+            
+            best_price = PricingEngine.get_best_price(selected_package)
+            
             selected_package.formatted_discount_value = format_price(discount_value)
             selected_package.formatted_discount_percentage = format_percentage(discount_percentage)
-
             selected_package.best_price = best_price
-
+            
+            # ============================================================
+            # ✅ إضافة معلومات التخصص للباكدج المحدد
+            # ============================================================
+            if selected_package.package and hasattr(selected_package.package, 'specialty') and selected_package.package.specialty:
+                selected_package.specialty_name = selected_package.package.specialty.name
+                selected_package.specialty_id = selected_package.package.specialty.id
+            else:
+                selected_package.specialty_name = "غير محدد"
+                selected_package.specialty_id = None
+            
             # ============================================================
             # ✅ التحقق من انتهاء الصلاحية
             # ============================================================
@@ -3073,7 +3151,7 @@ def credit_package_pricing(request):
                 and
                 selected_package.valid_until < today
             )
-
+    
     return render(
         request,
         "frontend/credit_package_pricing.html",
@@ -3084,10 +3162,11 @@ def credit_package_pricing(request):
             "selected_company": selected_company,
             "company_search": company_search,
             "package_search": package_search,
+            "specialties": specialties,  # ✅ الآن التخصصات حسب الشركة
+            "selected_specialty": specialty_id,
         }
     )
 
-    
 def cash_packages(request):
 
     search = request.GET.get("search", "")
@@ -3134,6 +3213,101 @@ def cash_packages(request):
         }
     )
     
+    
+def packages_price_list(request):
+    """
+    عرض الباكدجات بقائمة الأسعار (اسم الباكدج والسعر فقط)
+    مع فلتر الشركة + التخصص + بحث الباكدج
+    """
+    company_id = request.GET.get('company')
+    company_search = request.GET.get('company_search', '')
+    specialty_id = request.GET.get('specialty', '')
+    package_search = request.GET.get('package_search', '')
+    
+    packages = []
+    selected_company = None
+    companies = []
+    specialties = []
+    
+    # ✅ جلب الشركات
+    companies = list(
+        ContractEntity.objects
+        .filter(
+            contracts__contract_packages__is_active=True
+        )
+        .only("id", "name")
+        .distinct()
+        .order_by("name")
+    )
+    
+    # ✅ فلترة الشركات حسب البحث
+    if company_search:
+        companies = [
+            c for c in companies 
+            if company_search.lower() in c.name.lower()
+        ]
+    
+    # ✅ جلب التخصصات (حسب الشركة المختارة)
+    if company_id:
+        selected_company = get_object_or_404(ContractEntity, id=company_id)
+        
+        # جلب التخصصات الخاصة بالشركة
+        active_package_ids = ContractPackage.objects.filter(
+            contract__entity_id=company_id,
+            is_active=True
+        ).values_list('package_id', flat=True).distinct()
+        
+        specialties = list(
+            Specialty.objects
+            .filter(
+                packages__id__in=active_package_ids
+            )
+            .only("id", "name")
+            .distinct()
+            .order_by("name")
+        )
+        
+        # ✅ جلب الباكدجات
+        packages_query = ContractPackage.objects.filter(
+            contract__entity_id=company_id,
+            is_active=True
+        ).select_related('package', 'contract__entity', 'package__specialty')
+        
+        # ✅ فلترة التخصص
+        if specialty_id:
+            try:
+                specialty_id = int(specialty_id)
+                packages_query = packages_query.filter(package__specialty_id=specialty_id)
+            except (ValueError, TypeError):
+                pass
+        
+        packages = list(packages_query.order_by('package__name'))
+        
+        # ✅ فلترة الباكدجات حسب البحث (في الذاكرة)
+        if package_search:
+            packages = [
+                p for p in packages 
+                if package_search.lower() in p.package.name.lower()
+            ]
+        
+        # ✅ تنسيق الأسعار
+        def format_price(value):
+            if value is None:
+                return "-"
+            return f"{int(float(value)):,}"
+        
+        for cp in packages:
+            cp.formatted_price = format_price(cp.package_price)
+    
+    return render(request, 'frontend/packages_price_list.html', {
+        'companies': companies,
+        'packages': packages,
+        'selected_company': selected_company,
+        'company_search': company_search,
+        'specialties': specialties,
+        'selected_specialty': specialty_id,
+        'package_search': package_search,
+    })
 def special_offers(request):
 
     search = request.GET.get("search", "").strip()

@@ -1,0 +1,619 @@
+{% extends 'frontend/base.html' %}
+
+{% block page_title %}
+قائمة أسعار الباكدجات
+{% endblock %}
+
+{% block content %}
+<style>
+    /* ===== Filter Card ===== */
+    .filter-card {
+        border-radius: 16px;
+        border: none;
+        background: #fff;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+        margin-bottom: 1.5rem;
+    }
+    
+    .filter-card .card-body {
+        padding: 1.25rem;
+    }
+    
+    .filter-card .form-label {
+        font-size: 0.7rem;
+        font-weight: 700;
+        color: #495057;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.3rem;
+    }
+    
+    .filter-card .form-select,
+    .filter-card .form-control {
+        border-radius: 10px;
+        border: 2px solid #e9ecef;
+        font-size: 0.85rem;
+        padding: 0.4rem 0.8rem;
+        transition: all 0.3s ease;
+        background: #fff;
+    }
+    
+    .filter-card .form-select:focus,
+    .filter-card .form-control:focus {
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.1);
+    }
+    
+    .filter-card .btn-filter {
+        border-radius: 10px;
+        padding: 0.4rem 1.2rem;
+        font-weight: 600;
+        font-size: 0.85rem;
+        transition: all 0.3s ease;
+    }
+    
+    .filter-card .btn-filter:hover {
+        transform: translateY(-2px);
+    }
+    
+    /* ===== Search Box ===== */
+    .search-wrapper {
+        position: relative;
+    }
+    .search-wrapper .form-control {
+        padding-right: 45px;
+    }
+    .search-wrapper .search-icon {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #adb5bd;
+        font-size: 1.1rem;
+        pointer-events: none;
+    }
+    
+    /* ===== Results Count ===== */
+    .results-count {
+        background: #f8f9fa;
+        border-radius: 12px;
+        padding: 0.6rem 1.2rem;
+        border: 1px solid #e9ecef;
+    }
+    
+    .results-count .count-badge {
+        background: #0d6efd;
+        color: #fff;
+        padding: 0.2rem 0.8rem;
+        border-radius: 20px;
+        font-weight: 700;
+        font-size: 0.9rem;
+    }
+    
+    /* ===== Custom Table ===== */
+    .custom-table {
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+    }
+    
+    .custom-table thead {
+        background: linear-gradient(135deg, #1a237e, #0d47a1);
+        color: #fff;
+    }
+    
+    .custom-table thead th {
+        padding: 0.75rem 1rem;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border: none;
+        white-space: nowrap;
+    }
+    
+    .custom-table tbody td {
+        padding: 0.75rem 1rem;
+        font-size: 0.85rem;
+        vertical-align: middle;
+        border-bottom: 1px solid #f1f3f5;
+    }
+    
+    .custom-table tbody tr {
+        transition: all 0.3s ease;
+    }
+    
+    .custom-table tbody tr:hover {
+        background: #f8f9fa;
+    }
+    
+    .custom-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+    
+    .package-name {
+        font-weight: 600;
+        color: #1a1a2e;
+    }
+    .package-price {
+        font-weight: 700;
+        color: #0d6efd;
+        font-size: 1.05rem;
+    }
+    
+    /* ===== Badges ===== */
+    .badge-code {
+        background: linear-gradient(135deg, #0dcaf0, #0d6efd) !important;
+        padding: 0.3rem 0.6rem;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.7rem;
+        color: white !important;
+    }
+    .badge-specialty {
+        background: linear-gradient(135deg, #0dcaf0, #0d6efd) !important;
+        padding: 0.3rem 0.6rem;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.7rem;
+        color: white !important;
+    }
+    .specialty-badge {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        margin: 2px;
+        background: #e3f2fd;
+        color: #0d6efd;
+    }
+    
+    /* ===== Alert ===== */
+    .alert-custom {
+        border-radius: 12px;
+        border: none;
+        padding: 0.75rem 1rem;
+    }
+    
+    .alert-custom .badge {
+        font-size: 0.75rem;
+    }
+    
+    /* ===== No Results ===== */
+    .no-results {
+        text-align: center;
+        padding: 4rem 1rem;
+        background: #f8f9fa;
+        border-radius: 16px;
+    }
+    
+    .no-results i {
+        font-size: 4rem;
+        color: #dee2e6;
+        margin-bottom: 1rem;
+    }
+    
+    /* ============================================ */
+    /* ✅ Mobile Responsive */
+    /* ============================================ */
+    @media (max-width: 768px) {
+        .custom-table {
+            font-size: 0.75rem;
+        }
+        
+        .custom-table thead th,
+        .custom-table tbody td {
+            padding: 0.5rem 0.5rem;
+        }
+        
+        .package-price {
+            font-size: 0.9rem;
+        }
+        
+        .badge-code,
+        .badge-specialty {
+            font-size: 0.6rem;
+            padding: 0.2rem 0.5rem;
+        }
+        
+        .filter-card .card-body {
+            padding: 1rem;
+        }
+        
+        .filter-card .form-select,
+        .filter-card .form-control {
+            font-size: 0.8rem;
+            padding: 0.3rem 0.6rem;
+        }
+        
+        .results-count {
+            flex-direction: column;
+            align-items: flex-start !important;
+            gap: 0.5rem;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .custom-table {
+            font-size: 0.65rem;
+        }
+        
+        .custom-table thead th,
+        .custom-table tbody td {
+            padding: 4px 3px;
+        }
+        
+        .package-price {
+            font-size: 0.8rem;
+        }
+        
+        .package-name {
+            font-size: 0.75rem;
+        }
+        
+        .badge-code,
+        .badge-specialty {
+            font-size: 0.5rem;
+            padding: 0.15rem 0.35rem;
+        }
+        
+        .filter-card .card-body {
+            padding: 0.75rem;
+        }
+        
+        .filter-card .form-select,
+        .filter-card .form-control {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+        }
+    }
+</style>
+
+<div class="card shadow border-0 price-card">
+    <div class="card-header bg-gradient-primary text-white">
+        <div class="d-flex justify-content-between align-items-center">
+            <h4 class="mb-0 d-flex align-items-center">
+                <i class="bi bi-list-ul me-2"></i>
+                قائمة أسعار الباكدجات
+            </h4>
+            <a href="{% url 'credit_package_pricing' %}" class="btn btn-light">
+                <i class="bi bi-box me-2"></i>
+                الباكدجات الآجل
+            </a>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <!-- ✅ فلتر الشركة -->
+        <form id="search-form" method="get" action="{% url 'packages_price_list' %}">
+            <div class="filter-card">
+                <div class="card-body">
+                    <div class="row g-3">
+                        <!-- ✅ الشركة -->
+                        <div class="col-md-3">
+                            <label class="form-label">
+                                <i class="bi bi-building"></i>
+                                الشركة
+                            </label>
+                            <div class="search-wrapper">
+                                <input
+                                    type="text"
+                                    name="company_search"
+                                    id="company-search-input"
+                                    class="form-control"
+                                    placeholder="ابحث عن شركة..."
+                                    autocomplete="off"
+                                    list="company-list"
+                                    value="{{ company_search }}"
+                                    onchange="handleCompanySearch(this)"
+                                >
+                                <i class="bi bi-search search-icon"></i>
+                                <datalist id="company-list">
+                                    {% for company in companies %}
+                                        <option value="{{ company.name }}" data-id="{{ company.id }}">
+                                    {% endfor %}
+                                </datalist>
+                                <input type="hidden" name="company" id="selected-company-id" value="{{ selected_company.id|default:'' }}">
+                            </div>
+                            {% if selected_company %}
+                                <small class="text-success mt-1 d-block">
+                                    <i class="bi bi-check-circle-fill"></i>
+                                    {{ selected_company.name }}
+                                </small>
+                            {% endif %}
+                        </div>
+
+                        <!-- ✅ التخصص -->
+                        <div class="col-md-3">
+                            <label class="form-label">
+                                <i class="bi bi-star"></i>
+                                التخصص
+                            </label>
+                            <select
+                                name="specialty"
+                                id="specialty-select"
+                                class="form-select"
+                                onchange="this.form.submit()"
+                                {% if not selected_company %}disabled{% endif %}
+                            >
+                                <option value="">
+                                    {% if selected_company %}
+                                        جميع التخصصات
+                                    {% else %}
+                                        اختر الشركة أولاً
+                                    {% endif %}
+                                </option>
+                                {% for specialty in specialties %}
+                                <option
+                                    value="{{ specialty.id }}"
+                                    {% if selected_specialty|stringformat:"s" == specialty.id|stringformat:"s" %}
+                                    selected
+                                    {% endif %}
+                                >
+                                    {{ specialty.name }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                            {% if selected_company and specialties %}
+                                <small class="text-muted mt-1 d-block">
+                                    <i class="bi bi-info-circle"></i>
+                                    {{ specialties|length }} تخصص
+                                </small>
+                            {% endif %}
+                        </div>
+
+                        <!-- ✅ الباكدج (بحث) -->
+                        <div class="col-md-3">
+                            <label class="form-label">
+                                <i class="bi bi-box"></i>
+                                الباكدج
+                            </label>
+                            <div class="search-wrapper">
+                                <input
+                                    type="text"
+                                    name="package_search"
+                                    id="package-search-input"
+                                    class="form-control"
+                                    placeholder="ابحث عن باكدج..."
+                                    autocomplete="off"
+                                    list="package-list"
+                                    value="{{ package_search }}"
+                                    {% if not selected_company %}disabled{% endif %}
+                                    onchange="this.form.submit()"
+                                >
+                                <i class="bi bi-search search-icon"></i>
+                                <datalist id="package-list">
+                                    {% for cp in packages %}
+                                        <option value="{{ cp.package.name }}" data-id="{{ cp.id }}">
+                                    {% endfor %}
+                                </datalist>
+                            </div>
+                            {% if selected_company and packages %}
+                                <small class="text-muted mt-1 d-block">
+                                    <i class="bi bi-info-circle"></i>
+                                    {{ packages|length }} باكدج
+                                </small>
+                            {% endif %}
+                        </div>
+
+                        <!-- ✅ أزرار -->
+                        <div class="col-md-3">
+                            <label class="form-label">
+                                &nbsp;
+                            </label>
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-primary flex-grow-1 btn-filter" type="submit">
+                                    <i class="bi bi-search me-1"></i>
+                                    بحث
+                                </button>
+                                <a href="{% url 'packages_price_list' %}" class="btn btn-outline-secondary btn-filter">
+                                    <i class="bi bi-arrow-counterclockwise"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <!-- ✅ عرض التخصصات المتاحة -->
+        {% if selected_company and specialties %}
+        <div class="filter-card" style="background: #f8f9fc; border: 1px solid #e9ecef;">
+            <div class="card-body py-2">
+                <div class="d-flex flex-wrap align-items-center gap-2">
+                    <span class="fw-bold text-muted small">
+                        <i class="bi bi-tags"></i>
+                        التخصصات المتاحة:
+                    </span>
+                    {% for specialty in specialties %}
+                        <span class="specialty-badge">
+                            <i class="bi bi-star-fill" style="font-size: 0.6rem;"></i>
+                            {{ specialty.name }}
+                        </span>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- ✅ عرض معلومات الشركة المختارة -->
+        {% if selected_company %}
+        <div class="alert alert-success alert-custom mt-3 mb-0">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <i class="bi bi-building me-2"></i>
+                    <strong>{{ selected_company.name }}</strong>
+                    {% if selected_specialty %}
+                        {% for specialty in specialties %}
+                            {% if specialty.id|stringformat:"s" == selected_specialty|stringformat:"s" %}
+                                <span class="badge bg-warning text-dark ms-2">
+                                    <i class="bi bi-star"></i>
+                                    {{ specialty.name }}
+                                </span>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <span class="badge bg-primary">
+                    <i class="bi bi-boxes"></i>
+                    {{ packages|length }} باكدج
+                </span>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- ✅ عرض الباكدجات -->
+        <div class="mt-4">
+            {% if packages %}
+            <!-- ✅ عدد النتائج -->
+            <div class="results-count d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <span class="count-badge">{{ packages|length }}</span>
+                    <span class="text-muted small ms-1">باكدج</span>
+                </div>
+                <div>
+                    <span class="text-muted small">
+                        إجمالي الباكدجات
+                    </span>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-hover mb-0 custom-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 50px;">#</th>
+                            <th>اسم الباكدج</th>
+                            <th>الكود</th>
+                            <th>التخصص</th>
+                            <th class="text-end">السعر (ج.م)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for cp in packages %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td class="package-name">{{ cp.package.name }}</td>
+                            <td>
+                                <span class="badge badge-code">{{ cp.package.code|default:"-" }}</span>
+                            </td>
+                            <td>
+                                {% if cp.package.specialty %}
+                                    <span class="badge badge-specialty">{{ cp.package.specialty.name }}</span>
+                                {% else %}
+                                    <span class="badge badge-code">-</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-end package-price">
+                                {{ cp.formatted_price }} ج.م
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <tr class="fw-bold">
+                            <td colspan="4" class="text-end">إجمالي عدد الباكدجات:</td>
+                            <td class="text-end text-primary">{{ packages|length }}</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            {% else %}
+            <div class="no-results">
+                <i class="bi bi-box"></i>
+                <h5 class="text-muted">
+                    {% if selected_company %}
+                        {% if package_search or selected_specialty %}
+                            لا توجد باكدجات تطابق الفلتر المحدد
+                        {% else %}
+                            لا توجد باكدجات لهذه الشركة
+                        {% endif %}
+                    {% else %}
+                        اختر شركة لعرض الباكدجات
+                    {% endif %}
+                </h5>
+                <p class="text-muted small">استخدم الفلاتر أعلاه للبحث</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- ============================================ -->
+<!-- ✅ JavaScript -->
+<!-- ============================================ -->
+<script>
+// ============================================================
+// ✅ معالجة بحث الشركة
+// ============================================================
+function handleCompanySearch(input) {
+    const filter = input.value.toLowerCase().trim();
+    const options = document.querySelectorAll('#company-list option');
+    const hiddenId = document.getElementById('selected-company-id');
+    const specialtySelect = document.getElementById('specialty-select');
+    const packageInput = document.getElementById('package-search-input');
+
+    let matchedId = null;
+    let matchedName = '';
+
+    options.forEach(opt => {
+        const text = opt.value.toLowerCase();
+        if (text === filter) {
+            matchedId = opt.dataset.id;
+            matchedName = opt.value;
+        }
+    });
+
+    if (matchedId) {
+        hiddenId.value = matchedId;
+        input.value = matchedName;
+        
+        // تفعيل الحقول التابعة
+        if (specialtySelect) specialtySelect.disabled = false;
+        if (packageInput) packageInput.disabled = false;
+        
+        document.getElementById('search-form').submit();
+    } else {
+        if (filter === '') {
+            hiddenId.value = '';
+            if (specialtySelect) {
+                specialtySelect.disabled = true;
+                specialtySelect.value = '';
+            }
+            if (packageInput) {
+                packageInput.disabled = true;
+                packageInput.value = '';
+            }
+        }
+    }
+}
+
+// ============================================================
+// ✅ Enter يروح للبحث
+// ============================================================
+document.addEventListener('DOMContentLoaded', function() {
+    const companyInput = document.getElementById('company-search-input');
+    const packageInput = document.getElementById('package-search-input');
+    
+    if (companyInput) {
+        companyInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                handleCompanySearch(this);
+            }
+        });
+    }
+    
+    if (packageInput) {
+        packageInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                this.form.submit();
+            }
+        });
+    }
+});
+</script>
+
+{% endblock %}

@@ -5,151 +5,511 @@
 {% endblock %}
 
 {% block content %}
-
-{% if selected_company %}
-    {% include "frontend/includes/company_tabs.html" %}
-{% endif %}
-
 <!-- ============================================ -->
-<!-- ✅ Tabs للخصومات -->
+<!-- ✅ Tabs متطورة مع أنيمشنات - ألوان #d6efd9 & #0dcaf0 -->
 <!-- ============================================ -->
-<div class="card shadow-sm border-0 mb-4">
-
-    <div class="card-body py-2">
-
-        <ul class="nav nav-tabs">
-
-            <li class="nav-item">
-                <a class="nav-link {% if active_tab == 'discounts' or not active_tab %}active{% endif %}"
-                   href="?tab=discounts{% if entity_id %}&entity={{ entity_id }}{% endif %}{% if search %}&search={{ search }}{% endif %}{% if selected_section %}&section={{ selected_section }}{% endif %}">
-                    خصومات الشركات
+<div class="card shadow-sm border-0 mb-4 animated-card">
+    <div class="card-body py-3">
+        <ul class="nav nav-tabs nav-fill custom-tabs" id="discountTabs" role="tablist">
+            
+            <!-- Tab 1: خصومات الشركات -->
+            <li class="nav-item" role="presentation">
+                <a class="nav-link custom-tab-link {% if active_tab == 'discounts' or not active_tab %}active{% endif %}"
+                   href="?tab=discounts{% if entity_id %}&entity={{ entity_id }}{% endif %}{% if search %}&search={{ search }}{% endif %}{% if selected_section %}&section={{ selected_section }}{% endif %}"
+                   data-tab="discounts">
+                    <span class="tab-icon">🏢</span>
+                    <span class="tab-label">خصومات الشركات</span>
+                    <span class="tab-badge">جديد</span>
                 </a>
             </li>
 
-            <li class="nav-item">
-                <a class="nav-link {% if active_tab == 'compare' %}active{% endif %}"
-                   href="?tab=compare{% if entity_id %}&entity={{ entity_id }}{% endif %}{% if search %}&search={{ search }}{% endif %}{% if selected_section %}&section={{ selected_section }}{% endif %}">
-                    مقارنة بين جهتين
+            <!-- Tab 2: مقارنة -->
+            <li class="nav-item" role="presentation">
+                <a class="nav-link custom-tab-link {% if active_tab == 'compare' %}active{% endif %}"
+                   href="?tab=compare{% if entity_id %}&entity={{ entity_id }}{% endif %}{% if search %}&search={{ search }}{% endif %}{% if selected_section %}&section={{ selected_section }}{% endif %}"
+                   data-tab="compare">
+                    <span class="tab-icon">⚖️</span>
+                    <span class="tab-label">مقارنة بين جهتين</span>
+                    <span class="tab-badge">مميز</span>
                 </a>
             </li>
 
-            <li class="nav-item">
-                <a class="nav-link {% if active_tab == 'ranking' %}active{% endif %}"
-                   href="?tab=ranking{% if entity_id %}&entity={{ entity_id }}{% endif %}{% if search %}&search={{ search }}{% endif %}{% if selected_section %}&section={{ selected_section }}{% endif %}">
-                    الأعلى والأقل خصماً
+            <!-- Tab 3: الأعلى والأقل خصماً -->
+            <li class="nav-item" role="presentation">
+                <a class="nav-link custom-tab-link {% if active_tab == 'ranking' %}active{% endif %}"
+                   href="?tab=ranking{% if entity_id %}&entity={{ entity_id }}{% endif %}{% if search %}&search={{ search }}{% endif %}{% if selected_section %}&section={{ selected_section }}{% endif %}"
+                   data-tab="ranking">
+                    <span class="tab-icon">📊</span>
+                    <span class="tab-label">الأعلى والأقل خصماً</span>
+                    <span class="tab-badge">ترند</span>
                 </a>
             </li>
 
-            <li class="nav-item">
-                <a class="nav-link {% if active_tab == 'exceptions' %}active{% endif %}"
-                   href="?tab=exceptions{% if entity_id %}&entity={{ entity_id }}{% endif %}{% if search %}&search={{ search }}{% endif %}{% if selected_section %}&section={{ selected_section }}{% endif %}">
-                    الاستثناءات
+            <!-- Tab 4: الاستثناءات -->
+            <li class="nav-item" role="presentation">
+                <a class="nav-link custom-tab-link {% if active_tab == 'exceptions' %}active{% endif %}"
+                   href="?tab=exceptions{% if entity_id %}&entity={{ entity_id }}{% endif %}{% if search %}&search={{ search }}{% endif %}{% if selected_section %}&section={{ selected_section }}{% endif %}"
+                   data-tab="exceptions">
+                    <span class="tab-icon">⚠️</span>
+                    <span class="tab-label">الاستثناءات</span>
+                    <span class="tab-badge">خاص</span>
                 </a>
             </li>
 
         </ul>
-
     </div>
-
 </div>
 
 <!-- ============================================ -->
-<!-- ✅ الـ Tabs (كل Tab في ملف مستقل) -->
+<!-- ✅ محتوى الـ Tabs مع أنيمشن ظهور -->
 <!-- ============================================ -->
-
-{% if active_tab == "discounts" or not active_tab %}
-
-    {% include "frontend/company_discounts/_discounts_tab.html" %}
-
-{% elif active_tab == "compare" %}
-
-    {% include "frontend/company_discounts/_compare_tab.html" %}
-
-{% elif active_tab == "ranking" %}
-
-    {% include "frontend/company_discounts/_ranking_tab.html" %}
-
-{% elif active_tab == "exceptions" %}
-
-    {% include "frontend/company_discounts/_exceptions_tab.html" %}
-
-{% endif %}
+<div class="tab-content-wrapper">
+    {% if active_tab == "discounts" or not active_tab %}
+        <div class="tab-pane fade-in">
+            {% include "frontend/company_discounts/_discounts_tab.html" %}
+        </div>
+    {% elif active_tab == "compare" %}
+        <div class="tab-pane fade-in">
+            {% include "frontend/company_discounts/_compare_tab.html" %}
+        </div>
+    {% elif active_tab == "ranking" %}
+        <div class="tab-pane fade-in">
+            {% include "frontend/company_discounts/_ranking_tab.html" %}
+        </div>
+    {% elif active_tab == "exceptions" %}
+        <div class="tab-pane fade-in">
+            {% include "frontend/company_discounts/_exceptions_tab.html" %}
+        </div>
+    {% endif %}
+</div>
 
 <!-- ============================================ -->
-<!-- ✅ CSS تحسينات -->
+<!-- ✅ CSS و أنيمشنات - ألوان #d6efd9 & #0dcaf0 -->
 <!-- ============================================ -->
 <style>
-    .bg-gradient-primary {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    /* ===== التنسيق الأساسي ===== */
+    :root {
+        --tab-primary: #0dcaf0;
+        --tab-secondary: #0bb5d8;
+        --tab-gradient: linear-gradient(135deg, #d6efd9 0%, #0dcaf0 100%);
+        --tab-shadow: 0 8px 32px rgba(13, 202, 240, 0.35);
+        --tab-radius: 16px;
+        --tab-bg-light: #d6efd9;
+        --tab-bg-dark: #0dcaf0;
     }
 
-    .hover-shadow {
-        transition: box-shadow 0.3s ease;
+    .animated-card {
+        animation: slideDown 0.6s ease-out;
+        border-radius: var(--tab-radius) !important;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 10px 40px rgba(13, 202, 240, 0.12) !important;
+        border: 2px solid rgba(214, 239, 217, 0.5);
     }
 
-    .hover-shadow:hover {
-        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+    /* ===== تنسيق الـ Tabs ===== */
+    .custom-tabs {
+        border-bottom: none !important;
+        gap: 8px;
+        flex-wrap: wrap;
+        justify-content: center;
     }
 
-    .card {
-        border-radius: 1rem;
+    .custom-tab-link {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 14px 24px;
+        border: none !important;
+        border-radius: 12px !important;
+        background: transparent;
+        color: #2c3e50 !important;
+        font-weight: 600;
+        font-size: 0.95rem;
+        transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         overflow: hidden;
-        transition: 0.25s ease;
+        cursor: pointer;
+        border: 2px solid transparent !important;
     }
 
-    .card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 0.75rem 1.5rem rgba(0, 0, 0, 0.12) !important;
+    .custom-tab-link::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: var(--tab-gradient);
+        opacity: 0;
+        transition: opacity 0.4s ease;
+        border-radius: 12px;
+        z-index: 0;
     }
 
-    .card-header {
-        border-radius: 0 !important;
+    .custom-tab-link:hover {
+        transform: translateY(-3px) scale(1.02);
+        color: #1a2a3a !important;
+        box-shadow: 0 4px 20px rgba(13, 202, 240, 0.25);
+        border-color: #0dcaf0 !important;
+        background: rgba(214, 239, 217, 0.3);
     }
 
-    .badge {
-        font-weight: 500;
+    .custom-tab-link:hover::before {
+        opacity: 0.15;
     }
 
-    .alert-warning {
-        background: #fff3cd;
-        border-color: #ffc107;
+    .custom-tab-link.active {
+        color: #1a2a3a !important;
+        background: linear-gradient(135deg, #d6efd9 0%, #b8e6d0 100%) !important;
+        border-color: #0dcaf0 !important;
+        box-shadow: var(--tab-shadow);
+        transform: translateY(-4px) scale(1.05);
+        animation: tabPulse 2s ease-in-out infinite;
+        border-width: 2px !important;
     }
 
-    .border-success {
-        border-color: #28a745 !important;
+    .custom-tab-link.active::before {
+        opacity: 0.3;
+        background: linear-gradient(135deg, #d6efd9, #0dcaf0);
     }
 
-    .border-primary {
-        border-color: #007bff !important;
+    .custom-tab-link .tab-icon {
+        position: relative;
+        z-index: 1;
+        font-size: 1.2rem;
+        transition: transform 0.4s ease;
     }
 
-    .border-warning {
-        border-color: #ffc107 !important;
+    .custom-tab-link:hover .tab-icon {
+        transform: rotate(10deg) scale(1.2);
     }
 
+    .custom-tab-link.active .tab-icon {
+        animation: iconBounce 1s ease infinite;
+        color: #0dcaf0;
+    }
+
+    .custom-tab-link .tab-label {
+        position: relative;
+        z-index: 1;
+        white-space: nowrap;
+        font-weight: 700;
+    }
+
+    .custom-tab-link .tab-badge {
+        position: relative;
+        z-index: 1;
+        font-size: 0.65rem;
+        background: rgba(13, 202, 240, 0.2);
+        padding: 2px 12px;
+        border-radius: 20px;
+        color: #0dcaf0;
+        font-weight: 700;
+        transition: all 0.3s ease;
+        border: 1px solid rgba(13, 202, 240, 0.3);
+    }
+
+    .custom-tab-link.active .tab-badge {
+        background: rgba(13, 202, 240, 0.25);
+        color: #0b8fa8;
+        animation: badgePulse 2s ease-in-out infinite;
+        border-color: #0dcaf0;
+    }
+
+    .custom-tab-link:not(.active) .tab-badge {
+        background: #e8f5e9;
+        color: #4caf50;
+        border-color: #d6efd9;
+    }
+
+    /* ===== أنيمشن المحتوى ===== */
+    .tab-content-wrapper {
+        animation: contentFadeIn 0.6s ease-out;
+    }
+
+    .tab-pane {
+        animation: slideUp 0.5s ease-out;
+    }
+
+    /* ===== أنيمشنات ===== */
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: scale(0.95);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    @keyframes tabPulse {
+        0%, 100% {
+            box-shadow: 0 8px 32px rgba(13, 202, 240, 0.25);
+            border-color: #0dcaf0;
+        }
+        50% {
+            box-shadow: 0 8px 50px rgba(13, 202, 240, 0.45);
+            border-color: #0bb5d8;
+        }
+    }
+
+    @keyframes iconBounce {
+        0%, 100% {
+            transform: translateY(0) scale(1);
+        }
+        50% {
+            transform: translateY(-5px) scale(1.1);
+        }
+    }
+
+    @keyframes badgePulse {
+        0%, 100% {
+            opacity: 1;
+            transform: scale(1);
+        }
+        50% {
+            opacity: 0.7;
+            transform: scale(0.95);
+        }
+    }
+
+    /* ===== تأثيرات إضافية ===== */
+    .custom-tab-link::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        width: 0;
+        height: 3px;
+        background: linear-gradient(135deg, #d6efd9, #0dcaf0);
+        transition: all 0.4s ease;
+        transform: translateX(-50%);
+        border-radius: 10px;
+    }
+
+    .custom-tab-link.active::after {
+        width: 70%;
+        background: #0dcaf0;
+    }
+
+    .custom-tab-link:hover::after {
+        width: 50%;
+    }
+
+    /* ===== تحسين للـ Mobile ===== */
+    @media (max-width: 768px) {
+        .custom-tab-link {
+            padding: 10px 16px;
+            font-size: 0.85rem;
+            flex: 1 1 auto;
+            min-width: 120px;
+            justify-content: center;
+        }
+
+        .custom-tab-link .tab-label {
+            font-size: 0.8rem;
+        }
+
+        .custom-tab-link .tab-badge {
+            font-size: 0.55rem;
+            padding: 1px 8px;
+        }
+
+        .custom-tabs {
+            gap: 4px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .custom-tab-link {
+            padding: 8px 12px;
+            min-width: 70px;
+            font-size: 0.7rem;
+            gap: 4px;
+        }
+
+        .custom-tab-link .tab-icon {
+            font-size: 0.9rem;
+        }
+
+        .custom-tab-link .tab-label {
+            font-size: 0.65rem;
+        }
+
+        .custom-tab-link .tab-badge {
+            display: none;
+        }
+    }
+
+    /* ===== سكرول بار ===== */
     ::-webkit-scrollbar {
         width: 8px;
         height: 8px;
     }
 
     ::-webkit-scrollbar-track {
-        background: #f1f1f1;
+        background: #d6efd9;
         border-radius: 10px;
     }
 
     ::-webkit-scrollbar-thumb {
-        background: #667eea;
+        background: #0dcaf0;
         border-radius: 10px;
     }
 
     ::-webkit-scrollbar-thumb:hover {
-        background: #5a67d8;
+        background: #0bb5d8;
     }
 
-    .clear-search-btn {
-        border-radius: 0 0.5rem 0.5rem 0;
-        border-left: none;
+    /* ===== تأثير تحويلة إضافية ===== */
+    .custom-tab-link:active {
+        transform: scale(0.95);
+    }
+
+    /* ===== تحسين البطاقات ===== */
+    .card {
+        border-radius: var(--tab-radius) !important;
+        overflow: hidden;
+        transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        border: 1px solid rgba(214, 239, 217, 0.3);
+    }
+
+    .card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 20px 60px rgba(13, 202, 240, 0.15) !important;
+        border-color: #0dcaf0;
+    }
+
+    /* ===== ألوان إضافية للعناصر ===== */
+    .bg-gradient-custom {
+        background: linear-gradient(135deg, #d6efd9 0%, #0dcaf0 100%);
+    }
+
+    .text-gradient-custom {
+        background: linear-gradient(135deg, #d6efd9, #0dcaf0);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .btn-custom {
+        background: linear-gradient(135deg, #d6efd9, #0dcaf0);
+        border: none;
+        color: #1a2a3a;
+        font-weight: 700;
+        transition: all 0.3s ease;
+    }
+
+    .btn-custom:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(13, 202, 240, 0.3);
+        color: #1a2a3a;
+    }
+
+    /* ===== تحسين العناوين ===== */
+    .section-title {
+        color: #1a2a3a;
+        border-bottom: 3px solid #0dcaf0;
+        padding-bottom: 8px;
+        display: inline-block;
+    }
+
+    .badge-custom {
+        background: #d6efd9;
+        color: #0b8fa8;
+        border: 1px solid #0dcaf0;
+    }
+
+    /* ===== تأثيرات Glassmorphism ===== */
+    .glass-effect {
+        background: rgba(214, 239, 217, 0.15);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(13, 202, 240, 0.2);
+        border-radius: 16px;
     }
 </style>
+
+<!-- ============================================ -->
+<!-- ✅ JavaScript لإضافة تفاعل إضافي -->
+<!-- ============================================ -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // إضافة تأثير عند النقر على التاب
+        const tabs = document.querySelectorAll('.custom-tab-link');
+        
+        tabs.forEach(tab => {
+            tab.addEventListener('click', function(e) {
+                // إزالة الكلاس active من كل التابات
+                tabs.forEach(t => t.classList.remove('active'));
+                
+                // إضافة الكلاس active للتاب المضغوط
+                this.classList.add('active');
+                
+                // تأثير اهتزاز خفيف
+                this.style.animation = 'none';
+                setTimeout(() => {
+                    this.style.animation = 'tabPulse 2s ease-in-out infinite';
+                }, 10);
+
+                // تأثير صوتي بصري - إضافة موجة
+                const ripple = document.createElement('span');
+                ripple.style.position = 'absolute';
+                ripple.style.borderRadius = '50%';
+                ripple.style.background = 'rgba(13, 202, 240, 0.3)';
+                ripple.style.width = '100px';
+                ripple.style.height = '100px';
+                ripple.style.left = '50%';
+                ripple.style.top = '50%';
+                ripple.style.transform = 'translate(-50%, -50%) scale(0)';
+                ripple.style.animation = 'rippleEffect 0.6s ease-out';
+                ripple.style.pointerEvents = 'none';
+                this.appendChild(ripple);
+                
+                setTimeout(() => {
+                    ripple.remove();
+                }, 600);
+            });
+        });
+
+        // إضافة أنيمشن Ripple
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes rippleEffect {
+                to {
+                    transform: translate(-50%, -50%) scale(4);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // تأثير عند تمرير الماوس
+        document.querySelectorAll('.custom-tab-link').forEach(tab => {
+            tab.addEventListener('mouseenter', function() {
+                this.style.transition = 'all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
+            });
+        });
+    });
+</script>
 
 {% endblock %}

@@ -1,34 +1,445 @@
 <!-- ============================================ -->
-<!-- ✅ مقارنة بين جهتين -->
+<!-- ✅ مقارنة بين جهتين - نسخة محسنة ومتجاوبة -->
 <!-- ============================================ -->
 
-<div class="card shadow-sm border-0 mb-4">
+<style>
+    /* تحسينات عامة للشكل */
+    .compare-card {
+        border-radius: 20px !important;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        background: linear-gradient(145deg, #ffffff, #f8f9fa);
+        box-shadow: 0 10px 30px rgba(13, 202, 240, 0.1) !important;
+        border: 1px solid rgba(13, 202, 240, 0.1) !important;
+    }
+    
+    .compare-card:hover {
+        box-shadow: 0 15px 40px rgba(13, 202, 240, 0.2) !important;
+        transform: translateY(-2px);
+        border-color: rgba(13, 202, 240, 0.3) !important;
+    }
+    
+    .card-header-gradient {
+        background: linear-gradient(135deg, #d6efd 0%, #0dcaf0 100%) !important;
+        padding: 1.2rem 1.5rem !important;
+        border-radius: 20px 20px 0 0 !important;
+        border-bottom: 3px solid rgba(13, 202, 240, 0.3) !important;
+    }
+    
+    .card-header-gradient h5 {
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        animation: fadeInDown 0.6s ease;
+        color: #1a2a3a;
+        text-shadow: 0 1px 2px rgba(255,255,255,0.3);
+    }
+    
+    /* أنيميشن للعناصر */
+    @keyframes fadeInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.02); }
+        100% { transform: scale(1); }
+    }
+    
+    @keyframes shimmer {
+        0% { background-position: -200% center; }
+        100% { background-position: 200% center; }
+    }
+    
+    .animate-fade-in {
+        animation: fadeInUp 0.6s ease forwards;
+    }
+    
+    .animate-delay-1 { animation-delay: 0.1s; }
+    .animate-delay-2 { animation-delay: 0.2s; }
+    .animate-delay-3 { animation-delay: 0.3s; }
+    .animate-delay-4 { animation-delay: 0.4s; }
+    
+    /* تحسين شكل الفورم */
+    .form-select-custom {
+        border: 2px solid #e9ecef;
+        border-radius: 14px !important;
+        padding: 0.75rem 1rem !important;
+        transition: all 0.3s ease;
+        background-color: #ffffff;
+        font-size: 0.95rem !important;
+        min-height: 50px;
+    }
+    
+    .form-select-custom:focus {
+        border-color: #0dcaf0;
+        box-shadow: 0 0 0 4px rgba(13, 202, 240, 0.15);
+        transform: scale(1.01);
+        border-color: #0dcaf0 !important;
+    }
+    
+    .form-select-custom:hover {
+        border-color: #d6efd;
+        box-shadow: 0 4px 15px rgba(13, 202, 240, 0.1);
+    }
+    
+    .form-select-custom option {
+        padding: 8px;
+    }
+    
+    /* زر المقارنة المحسن */
+    .btn-compare {
+        background: linear-gradient(135deg, #d6efd 0%, #0dcaf0 100%) !important;
+        border: none !important;
+        border-radius: 14px !important;
+        padding: 0.75rem !important;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+        min-height: 50px;
+        color: #1a2a3a !important;
+        box-shadow: 0 4px 15px rgba(13, 202, 240, 0.3);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .btn-compare::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -200%;
+        width: 200%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+        transition: all 0.6s ease;
+    }
+    
+    .btn-compare:hover::before {
+        left: 200%;
+    }
+    
+    .btn-compare:hover {
+        transform: translateY(-2px) scale(1.02);
+        box-shadow: 0 8px 25px rgba(13, 202, 240, 0.5);
+        color: #1a2a3a !important;
+        background: linear-gradient(135deg, #c5dfc5 0%, #0ab8dc 100%) !important;
+    }
+    
+    .btn-compare:active {
+        transform: scale(0.95);
+    }
+    
+    /* تحسين الجداول للأجهزة المحمولة */
+    .table-compare {
+        border-radius: 14px;
+        overflow: hidden;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        border: 1px solid rgba(13, 202, 240, 0.1);
+    }
+    
+    .table-compare thead th {
+        background: linear-gradient(135deg, #d6efd 0%, #0dcaf0 100%) !important;
+        border: none;
+        padding: 1rem 0.75rem;
+        font-weight: 700;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #1a2a3a;
+    }
+    
+    .table-compare thead th:first-child {
+        border-radius: 14px 0 0 0;
+    }
+    
+    .table-compare thead th:last-child {
+        border-radius: 0 14px 0 0;
+    }
+    
+    .table-compare tbody td {
+        padding: 0.75rem;
+        vertical-align: middle;
+        border-color: #f1f3f5;
+        transition: all 0.3s ease;
+    }
+    
+    .table-compare tbody tr {
+        transition: all 0.3s ease;
+    }
+    
+    .table-compare tbody tr:hover {
+        background: linear-gradient(90deg, rgba(214, 239, 221, 0.3), rgba(13, 202, 240, 0.1));
+        transform: scale(1.002);
+    }
+    
+    .table-compare tbody tr:nth-child(even) {
+        background-color: rgba(214, 239, 221, 0.2);
+    }
+    
+    /* تحسين شكل البادجات */
+    .badge-compare {
+        padding: 0.6rem 1.2rem;
+        border-radius: 50px !important;
+        font-weight: 600;
+        font-size: 0.85rem;
+        transition: all 0.3s ease;
+        display: inline-block;
+        min-width: 60px;
+        border: 2px solid transparent;
+    }
+    
+    .badge-compare:hover {
+        transform: scale(1.05);
+    }
+    
+    .badge-success-custom {
+        background: linear-gradient(135deg, #d6efd 0%, #0dcaf0 100%) !important;
+        color: #1a2a3a !important;
+        box-shadow: 0 2px 10px rgba(13, 202, 240, 0.2);
+        border-color: rgba(13, 202, 240, 0.3);
+    }
+    
+    .badge-warning-custom {
+        background: linear-gradient(135deg, #ffeaa7, #fdcb6e) !important;
+        color: #2d3436 !important;
+        box-shadow: 0 2px 10px rgba(253, 203, 110, 0.3);
+        border-color: rgba(253, 203, 110, 0.3);
+    }
+    
+    .badge-primary-custom {
+        background: linear-gradient(135deg, #0dcaf0, #0ab8dc) !important;
+        color: #ffffff !important;
+        box-shadow: 0 2px 10px rgba(13, 202, 240, 0.3);
+    }
+    
+    /* تحسين البطاقات */
+    .card-exception {
+        border: 2px solid transparent !important;
+        border-radius: 16px !important;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+        background: #ffffff;
+    }
+    
+    .card-exception:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(13, 202, 240, 0.15);
+        border-color: #0dcaf0 !important;
+    }
+    
+    .card-exception .card-header {
+        border: none !important;
+        padding: 1rem 1.25rem !important;
+        font-weight: 600;
+        border-bottom: 2px solid rgba(13, 202, 240, 0.2) !important;
+    }
+    
+    .card-exception .card-body {
+        padding: 1.25rem !important;
+    }
+    
+    .card-exception.border-warning {
+        border-color: rgba(13, 202, 240, 0.2) !important;
+    }
+    
+    .card-exception.border-warning .card-header {
+        background: linear-gradient(135deg, #d6efd 0%, #0dcaf0 100%) !important;
+        color: #1a2a3a !important;
+    }
+    
+    .card-exception.border-info .card-header {
+        background: linear-gradient(135deg, #0dcaf0 0%, #0ab8dc 100%) !important;
+        color: #ffffff !important;
+    }
+    
+    /* تحسين التنبيهات */
+    .alert-custom {
+        border: 2px solid rgba(13, 202, 240, 0.2) !important;
+        border-radius: 14px !important;
+        padding: 1.25rem !important;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        background: linear-gradient(135deg, rgba(214, 239, 221, 0.2), rgba(13, 202, 240, 0.05)) !important;
+    }
+    
+    .alert-custom.alert-info {
+        background: linear-gradient(135deg, rgba(214, 239, 221, 0.3), rgba(13, 202, 240, 0.1)) !important;
+        border-color: #0dcaf0 !important;
+        color: #1a2a3a;
+    }
+    
+    .alert-custom.alert-warning {
+        background: linear-gradient(135deg, rgba(255, 234, 167, 0.3), rgba(253, 203, 110, 0.1)) !important;
+        border-color: #fdcb6e !important;
+        color: #2d3436;
+    }
+    
+    .alert-custom.alert-success {
+        background: linear-gradient(135deg, rgba(214, 239, 221, 0.4), rgba(13, 202, 240, 0.1)) !important;
+        border-color: #d6efd !important;
+        color: #1a2a3a;
+    }
+    
+    /* تحسين الأزرار الصغيرة */
+    .btn-outline-info-custom {
+        color: #0dcaf0;
+        border: 2px solid #0dcaf0;
+        border-radius: 50px !important;
+        padding: 0.4rem 1rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        background: transparent;
+    }
+    
+    .btn-outline-info-custom:hover {
+        background: linear-gradient(135deg, #d6efd 0%, #0dcaf0 100%);
+        color: #1a2a3a;
+        transform: scale(1.05);
+        box-shadow: 0 4px 15px rgba(13, 202, 240, 0.3);
+        border-color: #0dcaf0;
+    }
+    
+    /* تحسين للشاشات الصغيرة جداً */
+    @media (max-width: 576px) {
+        .compare-card {
+            border-radius: 14px !important;
+        }
+        
+        .card-header-gradient {
+            padding: 1rem !important;
+        }
+        
+        .card-header-gradient h5 {
+            font-size: 1.1rem !important;
+        }
+        
+        .form-select-custom {
+            font-size: 0.9rem !important;
+            padding: 0.6rem 0.8rem !important;
+            min-height: 44px;
+        }
+        
+        .btn-compare {
+            font-size: 0.95rem !important;
+            padding: 0.6rem !important;
+            min-height: 44px;
+            margin-top: 0.5rem;
+        }
+        
+        .table-compare {
+            font-size: 0.85rem !important;
+        }
+        
+        .table-compare thead th {
+            font-size: 0.75rem !important;
+            padding: 0.6rem 0.4rem !important;
+        }
+        
+        .table-compare tbody td {
+            padding: 0.5rem 0.4rem !important;
+        }
+        
+        .badge-compare {
+            padding: 0.4rem 0.8rem !important;
+            font-size: 0.75rem !important;
+            min-width: 40px;
+        }
+        
+        .card-exception .card-header {
+            font-size: 0.9rem !important;
+            padding: 0.8rem 1rem !important;
+        }
+        
+        .card-exception .card-body {
+            padding: 1rem !important;
+            font-size: 0.9rem !important;
+        }
+        
+        .alert-custom {
+            padding: 1rem !important;
+            font-size: 0.9rem !important;
+        }
+    }
+    
+    /* تحسين للشاشات المتوسطة */
+    @media (min-width: 577px) and (max-width: 768px) {
+        .compare-card {
+            border-radius: 16px !important;
+        }
+        
+        .form-select-custom {
+            font-size: 0.9rem !important;
+            min-height: 46px;
+        }
+        
+        .btn-compare {
+            font-size: 0.95rem !important;
+            min-height: 46px;
+        }
+    }
+    
+    /* تحسين للطباعة */
+    @media print {
+        .compare-card {
+            box-shadow: none !important;
+            border: 1px solid #ddd !important;
+        }
+        
+        .btn-compare {
+            display: none !important;
+        }
+        
+        .card-header-gradient {
+            background: #ddd !important;
+            color: #000 !important;
+        }
+    }
+</style>
 
-    <div class="card-header bg-gradient-primary text-white">
+<div class="card shadow-sm border-0 mb-4 compare-card">
+    
+    <div class="card-header card-header-gradient text-white">
         <h5 class="mb-0">
-            <i class="fas fa-balance-scale"></i>
+            <i class="fas fa-balance-scale me-2"></i>
             مقارنة بين جهتين
         </h5>
     </div>
-
-    <div class="card-body">
-
-        <form method="get" class="mb-4">
-
-            <!-- ✅ الحفاظ على الـ Tab والـ Entity -->
+    
+    <div class="card-body p-3 p-md-4">
+        
+        <form method="get" class="mb-4 animate-fade-in">
+            
+            <!-- الحفاظ على الـ Tab والـ Entity -->
             <input type="hidden" name="tab" value="compare">
             {% if entity_id %}
                 <input type="hidden" name="entity" value="{{ entity_id }}">
             {% endif %}
-
-            <div class="row g-3">
-
-                <div class="col-md-5">
-                    <label class="form-label fw-bold small text-muted">
-                        <i class="fas fa-building"></i>
+            
+            <div class="row g-3 g-md-4">
+                
+                <div class="col-12 col-md-5 animate-fade-in animate-delay-1">
+                    <label class="form-label fw-bold small text-muted" style="color: #1a2a3a !important;">
+                        <i class="fas fa-building me-1" style="color: #0dcaf0;"></i>
                         الجهة الأولى
                     </label>
-                    <select name="company1" class="form-select form-select-lg shadow-sm">
+                    <select name="company1" class="form-select form-select-custom">
                         <option value="">اختر الجهة الأولى</option>
                         {% for item in company_names %}
                             <option value="{{ item }}" {% if compare_company_1 == item %}selected{% endif %}>
@@ -37,13 +448,13 @@
                         {% endfor %}
                     </select>
                 </div>
-
-                <div class="col-md-5">
-                    <label class="form-label fw-bold small text-muted">
-                        <i class="fas fa-building"></i>
+                
+                <div class="col-12 col-md-5 animate-fade-in animate-delay-2">
+                    <label class="form-label fw-bold small text-muted" style="color: #1a2a3a !important;">
+                        <i class="fas fa-building me-1" style="color: #0dcaf0;"></i>
                         الجهة الثانية
                     </label>
-                    <select name="company2" class="form-select form-select-lg shadow-sm">
+                    <select name="company2" class="form-select form-select-custom">
                         <option value="">اختر الجهة الثانية</option>
                         {% for item in company_names %}
                             <option value="{{ item }}" {% if compare_company_2 == item %}selected{% endif %}>
@@ -52,24 +463,24 @@
                         {% endfor %}
                     </select>
                 </div>
-
-                <div class="col-md-2">
-                    <label class="form-label fw-bold small text-muted">&nbsp;</label>
-                    <button class="btn btn-primary btn-lg w-100 shadow-sm" type="submit">
-                        <i class="fas fa-balance-scale"></i>
+                
+                <div class="col-12 col-md-2 animate-fade-in animate-delay-3">
+                    <label class="form-label fw-bold small text-muted d-none d-md-block" style="color: #1a2a3a !important;">&nbsp;</label>
+                    <button class="btn btn-compare w-100" type="submit">
+                        <i class="fas fa-balance-scale me-2"></i>
                         مقارنة
                     </button>
                 </div>
-
+                
             </div>
-
-            <div class="row mt-3">
-                <div class="col-md-4">
-                    <label class="form-label fw-bold small text-muted">
-                        <i class="fas fa-filter"></i>
+            
+            <div class="row mt-3 mt-md-4 animate-fade-in animate-delay-4">
+                <div class="col-12 col-md-4">
+                    <label class="form-label fw-bold small text-muted" style="color: #1a2a3a !important;">
+                        <i class="fas fa-filter me-1" style="color: #0dcaf0;"></i>
                         القسم
                     </label>
-                    <select name="compare_section" class="form-select form-select-lg shadow-sm">
+                    <select name="compare_section" class="form-select form-select-custom">
                         <option value="all" {% if compare_section == "all" %}selected{% endif %}>
                             الكل
                         </option>
@@ -82,15 +493,15 @@
                     </select>
                 </div>
             </div>
-
+            
         </form>
-
-        <!-- ✅ عرض النتائج -->
+        
+        <!-- عرض النتائج -->
         {% if company_1 and company_2 %}
-
-        <!-- ✅ عنوان القسم المختار -->
-        <div class="alert alert-info mb-3">
-            <i class="fas fa-info-circle me-1"></i>
+        
+        <!-- عنوان القسم المختار -->
+        <div class="alert alert-custom alert-info mb-3 animate-fade-in">
+            <i class="fas fa-info-circle me-2" style="color: #0dcaf0;"></i>
             <strong>نتيجة المقارنة</strong>
             {% if compare_section == "internal" %}
                 (القسم: داخلي 🏥)
@@ -100,20 +511,20 @@
                 (القسم: الكل)
             {% endif %}
         </div>
-
-        <!-- ✅ جدول المقارنة -->
-        <div class="table-responsive mb-4">
-            <table class="table table-bordered table-hover align-middle">
-                <thead class="table-light">
+        
+        <!-- جدول المقارنة -->
+        <div class="table-responsive mb-4 animate-fade-in">
+            <table class="table table-compare table-bordered align-middle">
+                <thead>
                     <tr>
-                        <th style="width:40%">البند</th>
-                        <th style="width:30%" class="text-center">
-                            <span class="badge bg-success fs-6 px-3 py-2">
+                        <th style="width:40%; min-width: 120px;">البند</th>
+                        <th style="width:30%; min-width: 100px;" class="text-center">
+                            <span class="badge badge-primary-custom badge-compare">
                                 🏦 {{ company_1.company_name }}
                             </span>
                         </th>
-                        <th style="width:30%" class="text-center">
-                            <span class="badge bg-primary fs-6 px-3 py-2">
+                        <th style="width:30%; min-width: 100px;" class="text-center">
+                            <span class="badge badge-primary-custom badge-compare">
                                 🏛️ {{ company_2.company_name }}
                             </span>
                         </th>
@@ -126,9 +537,9 @@
                         <td class="text-center">
                             {% if row.company1 %}
                                 {% if row.company1 == row.company2 %}
-                                    <span class="badge bg-success rounded-pill">{{ row.company1 }}</span>
+                                    <span class="badge badge-success-custom badge-compare">{{ row.company1 }}</span>
                                 {% else %}
-                                    <span class="badge bg-warning text-dark rounded-pill">{{ row.company1 }}</span>
+                                    <span class="badge badge-warning-custom badge-compare">{{ row.company1 }}</span>
                                 {% endif %}
                             {% else %}
                                 <span class="text-muted">-</span>
@@ -137,9 +548,9 @@
                         <td class="text-center">
                             {% if row.company2 %}
                                 {% if row.company1 == row.company2 %}
-                                    <span class="badge bg-success rounded-pill">{{ row.company2 }}</span>
+                                    <span class="badge badge-success-custom badge-compare">{{ row.company2 }}</span>
                                 {% else %}
-                                    <span class="badge bg-warning text-dark rounded-pill">{{ row.company2 }}</span>
+                                    <span class="badge badge-warning-custom badge-compare">{{ row.company2 }}</span>
                                 {% endif %}
                             {% else %}
                                 <span class="text-muted">-</span>
@@ -148,7 +559,8 @@
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="3" class="text-center text-muted py-3">
+                        <td colspan="3" class="text-center text-muted py-4">
+                            <i class="fas fa-info-circle me-2" style="color: #0dcaf0;"></i>
                             لا توجد بنود للمقارنة
                         </td>
                     </tr>
@@ -156,24 +568,24 @@
                 </tbody>
             </table>
         </div>
-
-        <!-- ✅ الاستثناءات -->
-        <div class="row mt-4">
-
-            <div class="col-md-6">
-                <div class="card border-warning h-100">
-                    <div class="card-header bg-warning text-dark">
-                        <i class="fas fa-exclamation-triangle me-1"></i>
+        
+        <!-- الاستثناءات -->
+        <div class="row g-3 g-md-4 mt-2">
+            
+            <div class="col-12 col-md-6 animate-fade-in">
+                <div class="card border-warning card-exception">
+                    <div class="card-header">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
                         استثناءات {{ company_1.company_name }}
                     </div>
                     <div class="card-body">
                         {% with has_exceptions=False %}
                             {% for item in company_1.internal_discounts %}
                                 {% if item.item_name == "الاستثناءات" and item.details %}
-                                    <div class="alert alert-warning mb-0">
-                                        <i class="fas fa-exclamation-triangle me-1"></i>
+                                    <div class="alert alert-warning alert-custom mb-0">
+                                        <i class="fas fa-exclamation-triangle me-2" style="color: #fdcb6e;"></i>
                                         ⚠ يوجد استثناءات
-                                        <hr>
+                                        <hr class="my-2">
                                         {{ item.details|linebreaksbr }}
                                     </div>
                                     {% with has_exceptions=True %}{% endwith %}
@@ -181,7 +593,7 @@
                             {% endfor %}
                             {% if not has_exceptions %}
                                 <div class="text-center text-muted py-3">
-                                    <i class="fas fa-check-circle text-success me-1"></i>
+                                    <i class="fas fa-check-circle me-2" style="color: #d6efd;"></i>
                                     ✓ لا توجد استثناءات
                                 </div>
                             {% endif %}
@@ -189,21 +601,21 @@
                     </div>
                 </div>
             </div>
-
-            <div class="col-md-6">
-                <div class="card border-warning h-100">
-                    <div class="card-header bg-warning text-dark">
-                        <i class="fas fa-exclamation-triangle me-1"></i>
+            
+            <div class="col-12 col-md-6 animate-fade-in animate-delay-1">
+                <div class="card border-warning card-exception">
+                    <div class="card-header">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
                         استثناءات {{ company_2.company_name }}
                     </div>
                     <div class="card-body">
                         {% with has_exceptions=False %}
                             {% for item in company_2.internal_discounts %}
                                 {% if item.item_name == "الاستثناءات" and item.details %}
-                                    <div class="alert alert-warning mb-0">
-                                        <i class="fas fa-exclamation-triangle me-1"></i>
+                                    <div class="alert alert-warning alert-custom mb-0">
+                                        <i class="fas fa-exclamation-triangle me-2" style="color: #fdcb6e;"></i>
                                         ⚠ يوجد استثناءات
-                                        <hr>
+                                        <hr class="my-2">
                                         {{ item.details|linebreaksbr }}
                                     </div>
                                     {% with has_exceptions=True %}{% endwith %}
@@ -211,7 +623,7 @@
                             {% endfor %}
                             {% if not has_exceptions %}
                                 <div class="text-center text-muted py-3">
-                                    <i class="fas fa-check-circle text-success me-1"></i>
+                                    <i class="fas fa-check-circle me-2" style="color: #d6efd;"></i>
                                     ✓ لا توجد استثناءات
                                 </div>
                             {% endif %}
@@ -219,84 +631,84 @@
                     </div>
                 </div>
             </div>
-
+            
         </div>
-
-        <!-- ✅ تعليمات التشغيل -->
-        <div class="row mt-4">
-
-            <div class="col-md-6">
-                <div class="card border-info h-100">
-                    <div class="card-header bg-info text-white">
-                        <i class="fas fa-file-pdf me-1"></i>
+        
+        <!-- تعليمات التشغيل -->
+        <div class="row g-3 g-md-4 mt-2">
+            
+            <div class="col-12 col-md-6 animate-fade-in">
+                <div class="card border-info card-exception">
+                    <div class="card-header">
+                        <i class="fas fa-file-pdf me-2"></i>
                         تعليمات التشغيل - {{ company_1.company_name }}
                     </div>
                     <div class="card-body">
                         {% if company_1.operating_pdf %}
-                            <div class="alert alert-success mb-0">
-                                <i class="fas fa-check-circle me-1"></i>
+                            <div class="alert alert-success alert-custom mb-0">
+                                <i class="fas fa-check-circle me-2" style="color: #d6efd;"></i>
                                 توجد تعليمات تشغيل
-                                <hr>
-                                <a href="{{ company_1.operating_pdf }}" target="_blank" class="btn btn-outline-info btn-sm">
-                                    <i class="fas fa-file-pdf me-1"></i>
+                                <hr class="my-2">
+                                <a href="{{ company_1.operating_pdf }}" target="_blank" class="btn btn-outline-info-custom btn-sm">
+                                    <i class="fas fa-file-pdf me-2"></i>
                                     فتح PDF
                                 </a>
                             </div>
                         {% else %}
                             <div class="text-center text-muted py-3">
-                                <i class="fas fa-info-circle me-1"></i>
+                                <i class="fas fa-info-circle me-2" style="color: #0dcaf0;"></i>
                                 لا توجد تعليمات تشغيل لهذه الجهة
                             </div>
                         {% endif %}
                     </div>
                 </div>
             </div>
-
-            <div class="col-md-6">
-                <div class="card border-info h-100">
-                    <div class="card-header bg-info text-white">
-                        <i class="fas fa-file-pdf me-1"></i>
+            
+            <div class="col-12 col-md-6 animate-fade-in animate-delay-1">
+                <div class="card border-info card-exception">
+                    <div class="card-header">
+                        <i class="fas fa-file-pdf me-2"></i>
                         تعليمات التشغيل - {{ company_2.company_name }}
                     </div>
                     <div class="card-body">
                         {% if company_2.operating_pdf %}
-                            <div class="alert alert-success mb-0">
-                                <i class="fas fa-check-circle me-1"></i>
+                            <div class="alert alert-success alert-custom mb-0">
+                                <i class="fas fa-check-circle me-2" style="color: #d6efd;"></i>
                                 توجد تعليمات تشغيل
-                                <hr>
-                                <a href="{{ company_2.operating_pdf }}" target="_blank" class="btn btn-outline-info btn-sm">
-                                    <i class="fas fa-file-pdf me-1"></i>
+                                <hr class="my-2">
+                                <a href="{{ company_2.operating_pdf }}" target="_blank" class="btn btn-outline-info-custom btn-sm">
+                                    <i class="fas fa-file-pdf me-2"></i>
                                     فتح PDF
                                 </a>
                             </div>
                         {% else %}
                             <div class="text-center text-muted py-3">
-                                <i class="fas fa-info-circle me-1"></i>
+                                <i class="fas fa-info-circle me-2" style="color: #0dcaf0;"></i>
                                 لا توجد تعليمات تشغيل لهذه الجهة
                             </div>
                         {% endif %}
                     </div>
                 </div>
             </div>
-
+            
         </div>
-
+        
         {% elif compare_company_1 or compare_company_2 %}
-
-        <div class="alert alert-warning text-center py-4">
-            <i class="fas fa-exclamation-triangle me-2"></i>
+        
+        <div class="alert alert-warning alert-custom text-center py-4 animate-fade-in">
+            <i class="fas fa-exclamation-triangle me-3 fs-4" style="color: #fdcb6e;"></i>
             يرجى اختيار جهتين للمقارنة
         </div>
-
+        
         {% else %}
-
-        <div class="alert alert-info text-center py-4">
-            <i class="fas fa-info-circle me-2"></i>
+        
+        <div class="alert alert-info alert-custom text-center py-4 animate-fade-in">
+            <i class="fas fa-info-circle me-3 fs-4" style="color: #0dcaf0;"></i>
             اختر جهتين للمقارنة بين خصوماتهما
         </div>
-
+        
         {% endif %}
-
+        
     </div>
-
+    
 </div>

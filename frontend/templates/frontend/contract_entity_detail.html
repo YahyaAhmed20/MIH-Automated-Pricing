@@ -9,6 +9,300 @@
     {% include "frontend/includes/company_tabs.html" %}
 {% endif %}
 
+<style>
+    /* ============================================ */
+    /* ✅ تحسينات UI من الصفحات الموحدة */
+    /* ============================================ */
+    
+    /* ===== Breadcrumb ===== */
+    .breadcrumb-custom {
+        background: transparent;
+        padding: 0;
+        margin: 0;
+    }
+    
+    .breadcrumb-custom .breadcrumb-item + .breadcrumb-item::before {
+        content: "\f053";
+        font-family: "Font Awesome 5 Free";
+        font-weight: 900;
+        color: #6c757d;
+    }
+    
+    .breadcrumb-custom .breadcrumb-item a {
+        color: #0d6efd;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+    
+    .breadcrumb-custom .breadcrumb-item a:hover {
+        color: #0b5ed7;
+        text-decoration: underline;
+    }
+    
+    .breadcrumb-custom .breadcrumb-item.active {
+        color: #6c757d;
+        font-weight: 600;
+    }
+    
+    /* ===== Info Cards ===== */
+    .info-card-detail {
+        border-radius: 16px;
+        padding: 1.25rem;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 1px solid #e9ecef;
+        height: 100%;
+        background: #fff;
+        position: relative;
+        overflow: hidden;
+        animation: fadeInUp 0.5s ease forwards;
+    }
+    
+    .info-card-detail::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #0d6efd, #0dcaf0);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    
+    .info-card-detail:hover::before {
+        opacity: 1;
+    }
+    
+    .info-card-detail:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 40px rgba(0,0,0,0.08);
+        border-color: #0d6efd;
+    }
+    
+    .info-card-detail .card-icon {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 12px;
+        font-size: 1.1rem;
+        margin-bottom: 0.75rem;
+    }
+    
+    .info-card-detail .card-icon.bg-primary-soft {
+        background: rgba(13, 110, 253, 0.1);
+        color: #0d6efd;
+    }
+    
+    .info-card-detail .card-icon.bg-info-soft {
+        background: rgba(13, 202, 240, 0.1);
+        color: #0dcaf0;
+    }
+    
+    .info-card-detail .card-icon.bg-success-soft {
+        background: rgba(25, 135, 84, 0.1);
+        color: #198754;
+    }
+    
+    .info-card-detail .card-icon.bg-warning-soft {
+        background: rgba(255, 193, 7, 0.1);
+        color: #ffc107;
+    }
+    
+    .info-card-detail .card-icon.bg-danger-soft {
+        background: rgba(220, 53, 69, 0.1);
+        color: #dc3545;
+    }
+    
+    .info-card-detail .card-icon.bg-secondary-soft {
+        background: rgba(108, 117, 125, 0.1);
+        color: #6c757d;
+    }
+    
+    .info-card-detail .card-icon.bg-dark-soft {
+        background: rgba(33, 37, 41, 0.1);
+        color: #212529;
+    }
+    
+    .info-card-detail .label {
+        font-size: 0.7rem;
+        font-weight: 700;
+        color: #6c757d;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        display: block;
+        margin-bottom: 0.3rem;
+    }
+    
+    .info-card-detail .value {
+        font-size: 1.05rem;
+        font-weight: 600;
+        color: #1a1a2e;
+    }
+    
+    .info-card-detail .value .badge {
+        font-size: 0.85rem;
+        padding: 0.3rem 0.8rem;
+    }
+    
+    /* ===== Operating Instructions ===== */
+    .instructions-box {
+        background: #f8f9fa;
+        border-radius: 12px;
+        padding: 1rem;
+        border: 1px solid #e9ecef;
+        margin-top: 0.5rem;
+        min-height: 60px;
+    }
+    
+    .instructions-box .instructions-text {
+        white-space: pre-line;
+        line-height: 1.8;
+        color: #1a1a2e;
+        margin: 0;
+        font-size: 0.95rem;
+    }
+    
+    /* ===== Badges ===== */
+    .badge-contract {
+        background: linear-gradient(135deg, #0dcaf0, #0d6efd) !important;
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.75rem;
+        color: white !important;
+    }
+    
+    .badge-financial {
+        background: linear-gradient(135deg, #198754, #20c997) !important;
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.75rem;
+        color: white !important;
+    }
+    
+    .badge-status {
+        padding: 0.4rem 1rem;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.8rem;
+    }
+    
+    .badge-status.active {
+        background: #d4edda;
+        color: #155724;
+    }
+    
+    .badge-status.inactive {
+        background: #f8d7da;
+        color: #721c24;
+    }
+    
+    /* ===== Buttons ===== */
+    .btn-back {
+        border-radius: 12px;
+        padding: 0.5rem 1.2rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border: 2px solid #e9ecef;
+        color: #6c757d;
+    }
+    
+    .btn-back:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(108, 117, 125, 0.15);
+        background: #f8f9fa;
+        border-color: #6c757d;
+    }
+    
+    .btn-print {
+        border-radius: 12px;
+        padding: 0.4rem 1rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-print:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(13, 110, 253, 0.3);
+    }
+    
+    /* ===== Animation ===== */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .info-card-detail:nth-child(1) { animation-delay: 0.1s; }
+    .info-card-detail:nth-child(2) { animation-delay: 0.15s; }
+    .info-card-detail:nth-child(3) { animation-delay: 0.2s; }
+    .info-card-detail:nth-child(4) { animation-delay: 0.25s; }
+    .info-card-detail:nth-child(5) { animation-delay: 0.3s; }
+    .info-card-detail:nth-child(6) { animation-delay: 0.35s; }
+    .info-card-detail:nth-child(7) { animation-delay: 0.4s; }
+    
+    /* ============================================ */
+    /* ✅ تحسينات الموبايل */
+    /* ============================================ */
+    @media (max-width: 768px) {
+        .d-flex.justify-content-between.align-items-center {
+            flex-direction: column;
+            align-items: flex-start !important;
+            gap: 1rem;
+        }
+        
+        .info-card-detail {
+            padding: 1rem;
+        }
+        
+        .info-card-detail .value {
+            font-size: 0.95rem;
+        }
+        
+        .card-body {
+            padding: 1rem !important;
+        }
+        
+        .instructions-box .instructions-text {
+            font-size: 0.85rem;
+        }
+        
+        .badge-status {
+            font-size: 0.7rem;
+            padding: 0.3rem 0.8rem;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .info-card-detail .value {
+            font-size: 0.85rem;
+        }
+        
+        .info-card-detail .label {
+            font-size: 0.6rem;
+        }
+        
+        .info-card-detail .card-icon {
+            width: 32px;
+            height: 32px;
+            font-size: 0.9rem;
+        }
+        
+        .btn-back {
+            font-size: 0.85rem;
+            padding: 0.4rem 0.8rem;
+        }
+    }
+</style>
+
 <!-- ============================================ -->
 <!-- هيدر الصفحة -->
 <!-- ============================================ -->
@@ -19,13 +313,18 @@
             {{ entity.name }}
         </h2>
         <nav aria-label="breadcrumb">
-            <ol class="breadcrumb mb-0">
-                <li class="breadcrumb-item"><a href="{% url 'contract_entities' %}" class="text-decoration-none">الجهات المتعاقدة</a></li>
+            <ol class="breadcrumb breadcrumb-custom">
+                <li class="breadcrumb-item">
+                    <a href="{% url 'contract_entities' %}">
+                        <i class="fas fa-building me-1"></i>
+                        الجهات المتعاقدة
+                    </a>
+                </li>
                 <li class="breadcrumb-item active">{{ entity.name }}</li>
             </ol>
         </nav>
     </div>
-    <a href="{% url 'contract_entities' %}" class="btn btn-outline-secondary">
+    <a href="{% url 'contract_entities' %}" class="btn btn-back">
         <i class="fas fa-arrow-right me-2"></i> العودة للجهات
     </a>
 </div>
@@ -46,7 +345,7 @@
                 <small class="text-white-50">تفاصيل العقد والخدمات الطبية</small>
             </div>
             <div class="ms-auto">
-                <span class="badge bg-white text-primary rounded-pill px-3 py-2">
+                <span class="badge-status active">
                     <i class="fas fa-check-circle me-1"></i>
                     عقد نشط
                 </span>
@@ -61,136 +360,126 @@
 
             <!-- الجهة -->
             <div class="col-lg-4 col-md-6">
-                <div class="info-card bg-light rounded-3 p-3 h-100 border-start border-4 border-primary">
-                    <div class="d-flex align-items-center mb-2">
-                        <div class="icon-sm bg-primary bg-opacity-10 rounded-circle p-2 me-2">
-                            <i class="fas fa-building text-primary"></i>
-                        </div>
-                        <label class="text-muted small fw-bold mb-0">الجهة</label>
+                <div class="info-card-detail">
+                    <div class="card-icon bg-primary-soft">
+                        <i class="fas fa-building"></i>
                     </div>
-                    <h6 class="fw-bold mb-0">{{ entity.name }}</h6>
+                    <span class="label">الجهة</span>
+                    <div class="value">{{ entity.name }}</div>
                 </div>
             </div>
 
             <!-- نوع التعاقد -->
             <div class="col-lg-4 col-md-6">
-                <div class="info-card bg-light rounded-3 p-3 h-100 border-start border-4 border-info">
-                    <div class="d-flex align-items-center mb-2">
-                        <div class="icon-sm bg-info bg-opacity-10 rounded-circle p-2 me-2">
-                            <i class="fas fa-handshake text-info"></i>
-                        </div>
-                        <label class="text-muted small fw-bold mb-0">نوع التعاقد</label>
+                <div class="info-card-detail">
+                    <div class="card-icon bg-info-soft">
+                        <i class="fas fa-handshake"></i>
                     </div>
-                    {% if contract.contract_type %}
-                        <span class="badge bg-info rounded-pill px-3 py-2">
-                            <i class="fas fa-tag me-1"></i>
-                            {{ contract.contract_type }}
-                        </span>
-                    {% else %}
-                        <span class="text-muted">-</span>
-                    {% endif %}
+                    <span class="label">نوع التعاقد</span>
+                    <div class="value">
+                        {% if contract.contract_type %}
+                            <span class="badge badge-contract">
+                                <i class="fas fa-tag me-1"></i>
+                                {{ contract.contract_type }}
+                            </span>
+                        {% else %}
+                            <span class="text-muted">-</span>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
 
             <!-- الفئة المالية -->
             <div class="col-lg-4 col-md-6">
-                <div class="info-card bg-light rounded-3 p-3 h-100 border-start border-4 border-success">
-                    <div class="d-flex align-items-center mb-2">
-                        <div class="icon-sm bg-success bg-opacity-10 rounded-circle p-2 me-2">
-                            <i class="fas fa-coins text-success"></i>
-                        </div>
-                        <label class="text-muted small fw-bold mb-0">الفئة المالية</label>
+                <div class="info-card-detail">
+                    <div class="card-icon bg-success-soft">
+                        <i class="fas fa-coins"></i>
                     </div>
-                    {% if contract.financial_category.code %}
-                        <span class="badge bg-success rounded-pill px-3 py-2">
-                            <i class="fas fa-layer-group me-1"></i>
-                            {{ contract.financial_category.code }}
-                        </span>
-                    {% else %}
-                        <span class="text-muted">-</span>
-                    {% endif %}
+                    <span class="label">الفئة المالية</span>
+                    <div class="value">
+                        {% if contract.financial_category.code %}
+                            <span class="badge badge-financial">
+                                <i class="fas fa-layer-group me-1"></i>
+                                {{ contract.financial_category.code }}
+                            </span>
+                        {% else %}
+                            <span class="text-muted">-</span>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
 
             <!-- قائمة الأسعار -->
             <div class="col-lg-4 col-md-6">
-                <div class="info-card bg-light rounded-3 p-3 h-100 border-start border-4 border-warning">
-                    <div class="d-flex align-items-center mb-2">
-                        <div class="icon-sm bg-warning bg-opacity-10 rounded-circle p-2 me-2">
-                            <i class="fas fa-list-ul text-warning"></i>
-                        </div>
-                        <label class="text-muted small fw-bold mb-0">قائمة الأسعار</label>
+                <div class="info-card-detail">
+                    <div class="card-icon bg-warning-soft">
+                        <i class="fas fa-list-ul"></i>
                     </div>
-                    <h6 class="fw-bold mb-0">
+                    <span class="label">قائمة الأسعار</span>
+                    <div class="value">
                         {% if contract.price_list.name %}
                             <i class="fas fa-file-invoice text-warning me-1"></i>
                             {{ contract.price_list.name }}
                         {% else %}
                             <span class="text-muted">-</span>
                         {% endif %}
-                    </h6>
+                    </div>
                 </div>
             </div>
 
             <!-- الخدمة الطبية -->
             <div class="col-lg-4 col-md-6">
-                <div class="info-card bg-light rounded-3 p-3 h-100 border-start border-4 border-danger">
-                    <div class="d-flex align-items-center mb-2">
-                        <div class="icon-sm bg-danger bg-opacity-10 rounded-circle p-2 me-2">
-                            <i class="fas fa-stethoscope text-danger"></i>
-                        </div>
-                        <label class="text-muted small fw-bold mb-0">الخدمة الطبية</label>
+                <div class="info-card-detail">
+                    <div class="card-icon bg-danger-soft">
+                        <i class="fas fa-stethoscope"></i>
                     </div>
-                    <h6 class="fw-bold mb-0">
+                    <span class="label">الخدمة الطبية</span>
+                    <div class="value">
                         {% if contract.medical_service %}
                             <span class="text-danger">{{ contract.medical_service }}</span>
                         {% else %}
                             <span class="text-muted">-</span>
                         {% endif %}
-                    </h6>
+                    </div>
                 </div>
             </div>
 
             <!-- اعتبارًا من -->
             <div class="col-lg-4 col-md-6">
-                <div class="info-card bg-light rounded-3 p-3 h-100 border-start border-4 border-secondary">
-                    <div class="d-flex align-items-center mb-2">
-                        <div class="icon-sm bg-secondary bg-opacity-10 rounded-circle p-2 me-2">
-                            <i class="fas fa-calendar-check text-secondary"></i>
-                        </div>
-                        <label class="text-muted small fw-bold mb-0">اعتبارًا من</label>
+                <div class="info-card-detail">
+                    <div class="card-icon bg-secondary-soft">
+                        <i class="fas fa-calendar-check"></i>
                     </div>
-                    <h6 class="fw-bold mb-0">
+                    <span class="label">اعتبارًا من</span>
+                    <div class="value">
                         {% if contract.effective_from %}
                             <i class="far fa-calendar-alt text-secondary me-1"></i>
                             {{ contract.effective_from|date:"Y-m-d" }}
                         {% else %}
                             <span class="text-muted">-</span>
                         {% endif %}
-                    </h6>
+                    </div>
                 </div>
             </div>
 
             <!-- تعليمات التشغيل -->
             <div class="col-12">
-                <div class="info-card bg-light rounded-3 p-3 border-start border-4 border-dark">
-                    <div class="d-flex align-items-center mb-2">
-                        <div class="icon-sm bg-dark bg-opacity-10 rounded-circle p-2 me-2">
-                            <i class="fas fa-cogs text-dark"></i>
-                        </div>
-                        <label class="text-muted small fw-bold mb-0">تعليمات التشغيل</label>
+                <div class="info-card-detail">
+                    <div class="card-icon bg-dark-soft">
+                        <i class="fas fa-cogs"></i>
                     </div>
-                    <div class="p-3 bg-white rounded-3 mt-2">
+                    <span class="label">تعليمات التشغيل</span>
+                    <div class="instructions-box">
                         {% if contract.operating_instructions %}
-                            <div class="text-dark" style="white-space: pre-line; line-height: 1.8;">
+                            <p class="instructions-text">
                                 <i class="fas fa-info-circle text-primary me-1"></i>
                                 {{ contract.operating_instructions }}
-                            </div>
+                            </p>
                         {% else %}
-                            <span class="text-muted">
+                            <p class="text-muted mb-0">
                                 <i class="fas fa-minus-circle me-1"></i>
                                 لا توجد تعليمات تشغيل
-                            </span>
+                            </p>
                         {% endif %}
                     </div>
                 </div>
@@ -206,7 +495,7 @@
             <i class="fas fa-sync-alt me-1"></i>
             آخر تحديث: {{ contract.updated_at|date:"Y-m-d H:i"|default:"-" }}
         </small>
-        <button class="btn btn-outline-primary btn-sm">
+        <button class="btn btn-outline-primary btn-print" onclick="window.print()">
             <i class="fas fa-print me-1"></i>
             طباعة
         </button>
@@ -215,7 +504,7 @@
 </div>
 
 <!-- ============================================ -->
-<!-- CSS للتنسيقات -->
+<!-- CSS للتنسيقات الإضافية -->
 <!-- ============================================ -->
 <style>
     /* ===== تدرج لوني للهيدر ===== */
@@ -234,42 +523,6 @@
         font-size: 1.2rem;
     }
 
-    .icon-sm {
-        width: 35px;
-        height: 35px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    /* ===== بطاقات المعلومات ===== */
-    .info-card {
-        transition: all 0.3s ease;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .info-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08) !important;
-        background: white !important;
-    }
-
-    .info-card::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        right: 0;
-        width: 4px;
-        height: 0;
-        background: inherit;
-        transition: height 0.3s ease;
-    }
-
-    .info-card:hover::after {
-        height: 100%;
-    }
-
     /* ===== البطاقة الرئيسية ===== */
     .card {
         border-radius: 1rem;
@@ -282,65 +535,6 @@
 
     .card-footer {
         border-radius: 0 0 1rem 1rem !important;
-    }
-
-    /* ===== أنيميشن ===== */
-    @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    .info-card {
-        animation: fadeInUp 0.5s ease forwards;
-    }
-
-    .info-card:nth-child(1) { animation-delay: 0.1s; }
-    .info-card:nth-child(2) { animation-delay: 0.2s; }
-    .info-card:nth-child(3) { animation-delay: 0.3s; }
-    .info-card:nth-child(4) { animation-delay: 0.4s; }
-    .info-card:nth-child(5) { animation-delay: 0.5s; }
-    .info-card:nth-child(6) { animation-delay: 0.6s; }
-    .info-card:nth-child(7) { animation-delay: 0.7s; }
-
-    /* ===== Breadcrumb ===== */
-    .breadcrumb {
-        background: transparent;
-        padding: 0;
-    }
-
-    .breadcrumb-item + .breadcrumb-item::before {
-        content: "\f053";
-        font-family: "Font Awesome 5 Free";
-        font-weight: 900;
-        color: #6c757d;
-    }
-
-    /* ===== زر الطباعة ===== */
-    .btn-outline-primary:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(78, 115, 223, 0.3);
-    }
-
-    /* ===== تحسين الموبايل ===== */
-    @media (max-width: 768px) {
-        .card-header .d-flex {
-            flex-direction: column;
-            text-align: center;
-        }
-        
-        .card-header .ms-auto {
-            margin: 1rem auto 0 auto;
-        }
-        
-        .info-card {
-            margin-bottom: 0.5rem;
-        }
     }
 </style>
 

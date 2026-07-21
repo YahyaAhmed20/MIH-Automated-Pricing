@@ -1,26 +1,267 @@
 <!-- ============================================ -->
-<!-- ✅ الأعلى والأقل خصماً -->
+<!-- ✅ الأعلى والأقل خصماً - نسخة محسّنة -->
 <!-- ============================================ -->
 
-<div class="card shadow-sm border-0 mb-4">
+<style>
+    /* 🎨 تنسيقات عامة للبطاقة */
+    .discount-card {
+        border-radius: 20px;
+        overflow: hidden;
+        background: #ffffff;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border: none;
+    }
 
-    <div class="card-header bg-gradient-primary text-white">
+    .discount-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.12);
+    }
+
+    /* 🎨 رأس البطاقة */
+    .card-header-gradient {
+        background: linear-gradient(145deg, #1e3a5f, #0d6efd);
+        padding: 18px 25px;
+        border-bottom: 4px solid #ffc107;
+    }
+
+    .card-header-gradient h5 {
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        color: #fff;
+    }
+
+    .card-header-gradient i {
+        margin-left: 10px;
+        animation: pulse-icon 2s infinite;
+    }
+
+    @keyframes pulse-icon {
+        0%,
+        100% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.2);
+            color: #ffeb3b;
+        }
+    }
+
+    /* 📱 تحسينات الجدول للجوال */
+    .table-discounts {
+        font-size: 0.95rem;
+        margin-bottom: 0;
+    }
+
+    .table-discounts thead th {
+        background: #f8faff;
+        color: #1e3a5f;
+        font-weight: 700;
+        padding: 14px 10px;
+        border-bottom: 3px solid #0d6efd;
+        white-space: nowrap;
+        text-align: center;
+    }
+
+    .table-discounts tbody td {
+        padding: 12px 10px;
+        vertical-align: middle;
+        text-align: center;
+    }
+
+    .table-discounts tbody tr {
+        transition: background 0.3s ease, transform 0.2s ease;
+    }
+
+    .table-discounts tbody tr:hover {
+        background: #f0f7ff !important;
+        transform: scale(1.01);
+    }
+
+    /* 🏷️ شارات الخصم */
+    .badge-discount-internal {
+        background: linear-gradient(145deg, #198754, #0b5e2e);
+        color: #fff;
+        padding: 6px 16px;
+        border-radius: 30px;
+        font-size: 0.85rem;
+        font-weight: 700;
+        display: inline-block;
+        box-shadow: 0 4px 10px rgba(25, 135, 84, 0.3);
+    }
+
+    .badge-discount-external {
+        background: linear-gradient(145deg, #0d6efd, #084298);
+        color: #fff;
+        padding: 6px 16px;
+        border-radius: 30px;
+        font-size: 0.85rem;
+        font-weight: 700;
+        display: inline-block;
+        box-shadow: 0 4px 10px rgba(13, 110, 253, 0.3);
+    }
+
+    /* 📎 زر المرفق */
+    .btn-attachment {
+        border-radius: 30px;
+        padding: 4px 14px;
+        font-size: 0.8rem;
+        background: #e9f0ff;
+        border: 1px solid #0d6efd;
+        color: #0d6efd;
+        transition: all 0.3s ease;
+    }
+
+    .btn-attachment:hover {
+        background: #0d6efd;
+        color: #fff;
+        box-shadow: 0 4px 15px rgba(13, 110, 253, 0.4);
+        transform: scale(1.05);
+    }
+
+    /* 📱 الـ Mobile View - تحويل الجدول إلى بطاقات */
+    @media (max-width: 767.98px) {
+        .table-discounts thead {
+            display: none;
+        }
+
+        .table-discounts tbody tr {
+            display: block;
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 18px 15px;
+            margin-bottom: 18px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+            border: 1px solid #f0f0f0;
+            transition: all 0.3s ease;
+            animation: slideUp 0.6s ease forwards;
+            opacity: 0;
+        }
+
+        .table-discounts tbody tr:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+        .table-discounts tbody tr:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        .table-discounts tbody tr:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+        .table-discounts tbody tr:nth-child(4) {
+            animation-delay: 0.4s;
+        }
+        .table-discounts tbody tr:nth-child(5) {
+            animation-delay: 0.5s;
+        }
+        .table-discounts tbody tr:nth-child(6) {
+            animation-delay: 0.6s;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .table-discounts tbody tr:hover {
+            transform: translateY(-3px) scale(1.01);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .table-discounts tbody td {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px dashed #eee;
+            text-align: right;
+        }
+
+        .table-discounts tbody td:last-child {
+            border-bottom: none;
+        }
+
+        .table-discounts tbody td::before {
+            content: attr(data-label);
+            font-weight: 700;
+            color: #1e3a5f;
+            font-size: 0.85rem;
+            margin-left: 10px;
+        }
+
+        /* إخفاء العمود رقم # في الجوال */
+        .table-discounts tbody td:first-child {
+            display: none;
+        }
+
+        .badge-discount-internal,
+        .badge-discount-external {
+            font-size: 0.8rem;
+            padding: 4px 14px;
+        }
+
+        .btn-attachment {
+            font-size: 0.75rem;
+            padding: 3px 12px;
+        }
+    }
+
+    /* 🎨 تحسينات إضافية */
+    .alert-custom {
+        background: linear-gradient(145deg, #e3f2fd, #bbdefb);
+        border: none;
+        border-radius: 16px;
+        color: #0d3c6b;
+        font-weight: 500;
+        padding: 12px 20px;
+    }
+
+    .alert-custom i {
+        font-size: 1.2rem;
+        margin-left: 8px;
+        color: #0d6efd;
+    }
+
+    .empty-state i {
+        color: #adb5bd;
+        font-size: 3rem;
+    }
+
+    .empty-state p {
+        color: #6c757d;
+        font-weight: 500;
+    }
+</style>
+
+<!-- ====== البطاقة الرئيسية ====== -->
+<div class="card discount-card mb-4">
+
+    <!-- رأس البطاقة -->
+    <div class="card-header-gradient">
         <h5 class="mb-0">
             <i class="fas fa-chart-line"></i>
             ترتيب الشركات حسب نسبة الخصم
         </h5>
     </div>
 
+    <!-- جسم البطاقة -->
     <div class="card-body">
 
-        <div class="alert alert-info mb-4">
+        <!-- تنبيه توضيحي -->
+        <div class="alert alert-custom mb-4">
             <i class="fas fa-info-circle me-1"></i>
             ترتيب الشركات من الأعلى إلى الأقل خصماً (القسم الداخلي)
         </div>
 
+        <!-- الجدول -->
         <div class="table-responsive">
-            <table class="table table-hover table-striped align-middle">
-                <thead class="table-light">
+            <table class="table table-discounts">
+                <thead>
                     <tr>
                         <th>#</th>
                         <th>الشركة</th>
@@ -33,24 +274,23 @@
                 <tbody>
                     {% for item in rankings %}
                     <tr>
-                        <td>{{ forloop.counter }}</td>
-                        <td><strong>{{ item.company_name }}</strong></td>
-                        <td>{{ item.financial_category }}</td>
-                        <td>
-                            <span class="badge bg-success rounded-pill">
+                        <td data-label="#">{{ forloop.counter }}</td>
+                        <td data-label="الشركة"><strong>{{ item.company_name }}</strong></td>
+                        <td data-label="الفئة المالية">{{ item.financial_category }}</td>
+                        <td data-label="الخصم الداخلي">
+                            <span class="badge-discount-internal">
                                 {{ item.internal_discount|floatformat:0 }}%
                             </span>
                         </td>
-                        <td>
-                            <span class="badge bg-primary rounded-pill">
+                        <td data-label="الخصم الخارجي">
+                            <span class="badge-discount-external">
                                 {{ item.external_discount|floatformat:0 }}%
                             </span>
                         </td>
-                        <td>
+                        <td data-label="المرفقات">
                             {% if item.attachment %}
-                                <a href="{{ item.attachment }}" target="_blank" class="btn btn-sm btn-outline-info">
-                                    <i class="fas fa-file-pdf"></i>
-                                    فتح
+                                <a href="{{ item.attachment }}" target="_blank" class="btn btn-attachment">
+                                    <i class="fas fa-file-pdf"></i> فتح
                                 </a>
                             {% else %}
                                 <span class="text-muted">-</span>
@@ -59,9 +299,9 @@
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="6" class="text-center text-muted py-5">
-                            <i class="fas fa-inbox fa-2x d-block mb-2"></i>
-                            لا توجد بيانات
+                        <td colspan="6" class="text-center py-5 empty-state">
+                            <i class="fas fa-inbox d-block mb-3"></i>
+                            <p>لا توجد بيانات</p>
                         </td>
                     </tr>
                     {% endfor %}
@@ -70,5 +310,4 @@
         </div>
 
     </div>
-
 </div>

@@ -1,19 +1,215 @@
 <!-- ============================================ -->
+<!-- ✅ شريط البحث والفلتر المحسن - نسخة متجاوبة -->
+<!-- ============================================ -->
+<style>
+    :root {
+        --primary-color: #0d6efd;
+        --secondary-color: #0dcaf0;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)) !important;
+    }
+    
+    .hover-shadow {
+        transition: all 0.3s ease;
+    }
+    
+    .hover-shadow:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 0.5rem 1rem rgba(13, 110, 253, 0.15) !important;
+    }
+    
+    .doctor-fee-toggle {
+        cursor: pointer;
+        transition: all 0.3s ease;
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        border-radius: 12px;
+        padding: 8px 15px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .doctor-fee-toggle:hover {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white !important;
+        transform: scale(1.02);
+        box-shadow: 0 4px 15px rgba(13, 110, 253, 0.3);
+    }
+    
+    .doctor-fee-toggle i {
+        transition: transform 0.3s ease;
+    }
+    
+    .doctor-fee-toggle.active i {
+        transform: rotate(180deg);
+    }
+    
+    .doctor-fee-content {
+        max-height: 0;
+        overflow: hidden;
+        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        background: linear-gradient(135deg, #f0f8ff, #e3f2fd);
+        border-radius: 12px;
+        margin-top: 10px;
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    
+    .doctor-fee-content.show {
+        max-height: 500px;
+        opacity: 1;
+        transform: translateY(0);
+        padding: 20px;
+    }
+    
+    .fee-badge {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: bold;
+    }
+    
+    /* تحسينات الموبايل */
+    @media (max-width: 768px) {
+        .input-group-lg .form-control,
+        .input-group-lg .input-group-text {
+            font-size: 0.9rem;
+            padding: 0.5rem 0.75rem;
+        }
+        
+        .btn-lg {
+            font-size: 0.95rem;
+            padding: 0.5rem 1rem;
+        }
+        
+        .form-select-lg {
+            font-size: 0.95rem;
+            padding: 0.5rem 2rem 0.5rem 0.75rem;
+        }
+        
+        .card-header h5 {
+            font-size: 1rem;
+        }
+        
+        .doctor-fee-toggle {
+            font-size: 0.85rem;
+            padding: 6px 12px;
+        }
+        
+        .doctor-fee-content.show {
+            padding: 15px;
+        }
+        
+        .fee-badge {
+            font-size: 0.75rem;
+            padding: 3px 10px;
+        }
+        
+        /* تحسين عرض البطاقات في الموبايل */
+        .company-card {
+            padding: 12px !important;
+        }
+        
+        .company-card .row > div {
+            margin-bottom: 8px;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .card-body {
+            padding: 12px;
+        }
+        
+        .alert {
+            padding: 10px 15px;
+            font-size: 0.9rem;
+        }
+        
+        .badge.fs-5 {
+            font-size: 1rem !important;
+            padding: 6px 15px !important;
+        }
+        
+        .doctor-fee-content.show {
+            padding: 12px;
+        }
+    }
+    
+    /* أنيميشن للبطاقات */
+    .company-card {
+        transition: all 0.3s ease;
+        border-radius: 15px;
+        border: 1px solid rgba(13, 110, 253, 0.1);
+    }
+    
+    .company-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(13, 110, 253, 0.12);
+        border-color: var(--primary-color);
+    }
+    
+    /* تحسينات الـ UI */
+    .search-wrapper {
+        position: relative;
+    }
+    
+    .search-wrapper .form-control {
+        padding-right: 45px;
+        border-radius: 12px 0 0 12px;
+    }
+    
+    .clear-search-btn {
+        border-radius: 0 12px 12px 0;
+        padding: 0 15px;
+        background: white;
+        border: 1px solid #dee2e6;
+        border-left: none;
+    }
+    
+    .clear-search-btn:hover {
+        background: #f8f9fa;
+    }
+    
+    .section-select-wrapper {
+        position: relative;
+    }
+    
+    .section-select-wrapper::after {
+        content: '\f078';
+        font-family: 'Font Awesome 6 Free';
+        font-weight: 900;
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--primary-color);
+        pointer-events: none;
+    }
+    
+    .section-select-wrapper select {
+        padding-right: 35px;
+        appearance: none;
+        border-radius: 12px;
+    }
+</style>
+
+<!-- ============================================ -->
 <!-- ✅ شريط البحث والفلتر المحسن -->
 <!-- ============================================ -->
-<div class="card shadow border-0 hover-shadow mb-4">
-
-    <div class="card-header bg-gradient-primary text-white">
-        <h5 class="mb-0">
-            <i class="fas fa-search"></i>
+<div class="card shadow-sm border-0 hover-shadow mb-4">
+    <div class="card-header bg-gradient-primary text-white py-3">
+        <h5 class="mb-0 fw-bold">
+            <i class="fas fa-search me-2"></i>
             البحث في خصومات الشركات
         </h5>
     </div>
 
-    <div class="card-body">
-
+    <div class="card-body p-3 p-md-4">
         <form method="get" id="searchForm">
-
             <!-- ✅ الحفاظ على التبويب النشط -->
             <input type="hidden" name="tab" value="{{ active_tab }}">
             
@@ -22,17 +218,15 @@
             <input type="hidden" name="entity" value="{{ entity_id }}">
             {% endif %}
 
-            <div class="row g-3 align-items-end">
-
-                <div class="col-md-6">
-
-                    <label class="form-label fw-bold text-muted small">
-                        <i class="fas fa-building"></i>
+            <div class="row g-2 g-md-3 align-items-end">
+                <div class="col-12 col-md-6">
+                    <label class="form-label fw-bold text-muted small mb-1">
+                        <i class="fas fa-building me-1"></i>
                         بحث
                     </label>
 
-                    <div class="input-group input-group-lg">
-                        <span class="input-group-text bg-light border-0">
+                    <div class="search-wrapper input-group">
+                        <span class="input-group-text bg-light border-0 rounded-start-3">
                             <i class="fas fa-search text-primary"></i>
                         </span>
                         
@@ -69,106 +263,150 @@
                         {% endif %}
                     </div>
                     
-                    <small class="text-muted mt-2 d-block">
+                    <small class="text-muted mt-1 d-none d-md-block">
                         <i class="fas fa-info-circle text-primary"></i>
-                        اختار من القايمة أو اضغط Enter للبحث
+                        اختار من القائمة أو اضغط Enter للبحث
                     </small>
-
                 </div>
 
-                <div class="col-md-3">
-
-                    <label class="form-label fw-bold text-muted small">
-                        <i class="fas fa-filter"></i>
+                <div class="col-6 col-md-3">
+                    <label class="form-label fw-bold text-muted small mb-1">
+                        <i class="fas fa-filter me-1"></i>
                         القسم
                     </label>
 
-                    <select
-                        name="section"
-                        class="form-select form-select-lg shadow-sm"
-                        id="sectionSelect">
-
-                        <option value="">
-                            <i class="fas fa-asterisk"></i> الكل
-                        </option>
-
-                        <option
-                            value="internal"
-                            {% if selected_section == "internal" %}selected{% endif %}
+                    <div class="section-select-wrapper">
+                        <select
+                            name="section"
+                            class="form-select shadow-sm"
+                            id="sectionSelect"
+                            style="border-radius: 12px;"
                         >
-                            🏥 داخلي
-                        </option>
-
-                        <option
-                            value="external"
-                            {% if selected_section == "external" %}selected{% endif %}
-                        >
-                            🚑 خارجي
-                        </option>
-
-                    </select>
-
+                            <option value="">
+                                <i class="fas fa-asterisk"></i> الكل
+                            </option>
+                            <option
+                                value="internal"
+                                {% if selected_section == "internal" %}selected{% endif %}
+                            >
+                                🏥 داخلي
+                            </option>
+                            <option
+                                value="external"
+                                {% if selected_section == "external" %}selected{% endif %}
+                            >
+                                🚑 خارجي
+                            </option>
+                        </select>
+                    </div>
                 </div>
 
-                <div class="col-md-3">
-
+                <div class="col-6 col-md-3">
                     <button
-                        class="btn btn-primary btn-lg w-100 shadow-sm"
-                        type="submit">
-
-                        <i class="fas fa-search"></i>
-
+                        class="btn btn-primary w-100 shadow-sm"
+                        type="submit"
+                        style="border-radius: 12px; padding: 10px 15px;"
+                    >
+                        <i class="fas fa-search me-1"></i>
                         بحث
-
                     </button>
-
                 </div>
-
             </div>
-
         </form>
-
     </div>
-
 </div>
 
 <!-- ============================================ -->
 <!-- ✅ إحصائيات النتائج -->
 <!-- ============================================ -->
-<div class="alert alert-info d-flex justify-content-between align-items-center shadow-sm">
-
-    <span>
-        <i class="fas fa-list"></i>
+<div class="alert alert-info d-flex flex-wrap justify-content-between align-items-center shadow-sm rounded-3 p-2 p-md-3">
+    <span class="fw-bold">
+        <i class="fas fa-list me-2"></i>
         عدد النتائج
     </span>
-
-    <span class="badge bg-primary rounded-pill fs-5 px-4 py-2">
-
+    <span class="badge bg-primary rounded-pill fs-6 fs-md-5 px-3 px-md-4 py-2">
         {{ results_count }}
-
     </span>
-
 </div>
 
 <!-- ============================================ -->
 <!-- ✅ عرض بيانات الشركات (باستخدام الـ Include) -->
 <!-- ============================================ -->
 {% for company in companies %}
-
-    {% include "frontend/company_discounts/_company_discount_card.html" with company=company %}
-
+    <div class="company-card card shadow-sm border-0 mb-3 p-2 p-md-3">
+        {% include "frontend/company_discounts/_company_discount_card.html" with company=company %}
+        
+        <!-- ✅ إضافة قسم إتعاب الأطباء -->
+        <div class="mt-3 pt-3 border-top">
+            <div class="doctor-fee-toggle" onclick="toggleDoctorFee(this)">
+                <i class="fas fa-stethoscope me-2"></i>
+                <span class="fw-bold">إتعاب الأطباء</span>
+                <i class="fas fa-chevron-down ms-2"></i>
+            </div>
+            
+            <div class="doctor-fee-content">
+                <div class="row g-2 g-md-3">
+                    <div class="col-12 col-md-6">
+                        <div class="p-2 p-md-3 bg-white rounded-3 shadow-sm">
+                            <h6 class="fw-bold text-primary mb-2">
+                                <i class="fas fa-syringe me-2"></i>
+                                فتح غرفة العمليات
+                            </h6>
+                            <div class="d-flex flex-wrap align-items-center gap-2">
+                                <span class="fee-badge">
+                                    <i class="fas fa-dollar-sign me-1"></i>
+                                    1,500 ج.م
+                                </span>
+                                <span class="text-muted small">(إتعاب الطبيب)</span>
+                            </div>
+                            <p class="text-muted small mt-2 mb-0">
+                                <i class="fas fa-clock me-1"></i>
+                                يشمل التخدير والمتابعة
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div class="p-2 p-md-3 bg-white rounded-3 shadow-sm">
+                            <h6 class="fw-bold text-primary mb-2">
+                                <i class="fas fa-procedures me-2"></i>
+                                الإقامة
+                            </h6>
+                            <div class="d-flex flex-wrap align-items-center gap-2">
+                                <span class="fee-badge">
+                                    <i class="fas fa-dollar-sign me-1"></i>
+                                    800 ج.م
+                                </span>
+                                <span class="text-muted small">(ليلة/سرير)</span>
+                            </div>
+                            <p class="text-muted small mt-2 mb-0">
+                                <i class="fas fa-bed me-1"></i>
+                                شامل التمريض والتغذية
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- ✅ ملاحظات إضافية -->
+                <div class="mt-3 p-2 p-md-3 bg-white rounded-3 shadow-sm">
+                    <div class="d-flex align-items-start gap-2">
+                        <i class="fas fa-info-circle text-primary mt-1"></i>
+                        <div>
+                            <span class="fw-bold text-primary">ملاحظة:</span>
+                            <span class="text-muted small">
+                                إتعاب الأطباء يشمل جميع التخصصات ويتم حسابه بناءً على نوع العملية ومدة الإقامة.
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% empty %}
-
-<div class="alert alert-warning text-center py-5">
-
-    <i class="fas fa-inbox fa-3x d-block mb-3 text-muted"></i>
-
-    <h5 class="text-muted">لا توجد بيانات</h5>
-
-    <p class="text-muted small">حاول تغيير كلمات البحث</p>
-
-</div>
-
+    <div class="alert alert-warning text-center py-4 py-md-5 rounded-3">
+        <i class="fas fa-inbox fa-2x fa-3x-md d-block mb-3 text-muted"></i>
+        <h5 class="text-muted">لا توجد بيانات</h5>
+        <p class="text-muted small">حاول تغيير كلمات البحث</p>
+    </div>
 {% endfor %}
 
 <!-- ============================================ -->
@@ -197,7 +435,6 @@
         if (searchInput) {
             let lastSelectedValue = searchInput.value;
             
-            // ✅ حدث عند الضغط على Enter
             searchInput.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter') {
                     e.preventDefault();
@@ -205,16 +442,13 @@
                 }
             });
             
-            // ✅ حدث عند تغيير القيمة (بعد اختيار من Datalist)
             searchInput.addEventListener('change', function(e) {
                 if (e.target.value !== lastSelectedValue) {
                     lastSelectedValue = e.target.value;
                     
-                    // ✅ البحث عن الـ option المختار في الـ Datalist
                     const options = Array.from(companiesList.options);
                     const selectedOption = options.find(opt => opt.value === e.target.value);
                     
-                    // ✅ لو موجودة في القائمة نعمل Submit
                     if (selectedOption && e.target.value.trim() !== '') {
                         searchForm.submit();
                     }
@@ -229,4 +463,21 @@
             });
         }
     });
+    
+    // ✅ دالة toggle لإظهار/إخفاء إتعاب الأطباء
+    function toggleDoctorFee(element) {
+        element.classList.toggle('active');
+        const content = element.nextElementSibling;
+        content.classList.toggle('show');
+        
+        // تغيير أيقونة السهم
+        const chevron = element.querySelector('.fa-chevron-down');
+        if (chevron) {
+            if (element.classList.contains('active')) {
+                chevron.style.transform = 'rotate(180deg)';
+            } else {
+                chevron.style.transform = 'rotate(0deg)';
+            }
+        }
+    }
 </script>
