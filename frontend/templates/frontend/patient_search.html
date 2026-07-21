@@ -797,6 +797,15 @@
                                                 </span>
                                             </span>
                                         </div>
+                                        <!-- ✅ NEW: Status as Note -->
+        <div class="info-item" style="border-top: 2px dashed #dee2e6; margin-top: 8px; padding-top: 10px;">
+            <span class="label" style="color: #6c757d; font-size: 0.7rem;">
+                <i class="fas fa-info-circle me-1"></i> الحالة
+            </span>
+            <span class="value" style="font-size: 0.8rem; color: #495057; font-weight: 400;">
+                {{ patient.status|default:"-" }}
+            </span>
+        </div>
                                         <div class="info-item">
                                             <span class="label">صوره الموافقه</span>
                                             <span class="value">

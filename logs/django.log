@@ -18,3 +18,22 @@ D:\desktop\rphospital\src\frontend\views.py changed, reloading.
 Watching for file changes with StatReloader
 "GET /procedures/?search=&specialty=%D8%A7%D9%84%D8%AC%D8%B1%D8%A7%D8%AD%D8%A9+%D8%A7%D9%84%D8%B9%D8%A7%D9%85%D8%A9&category= HTTP/1.1" 200 87122
 "GET /procedures/?search=&specialty=%D8%A7%D9%84%D8%AC%D8%B1%D8%A7%D8%AD%D8%A9%20%D8%A7%D9%84%D8%B9%D8%A7%D9%85%D8%A9&category=&show_all=1 HTTP/1.1" 200 910117
+Watching for file changes with StatReloader
+"GET /contract-entities/ HTTP/1.1" 200 43772
+- Broken pipe from ('127.0.0.1', 61969)
+"GET /company-discounts/ HTTP/1.1" 200 112217
+"GET /company-discounts/ HTTP/1.1" 200 112217
+"GET /company-discounts/?tab=exceptions HTTP/1.1" 200 109967
+"GET /service-search/ HTTP/1.1" 200 187126
+- Broken pipe from ('127.0.0.1', 59550)
+"GET /procedure-fees/ HTTP/1.1" 200 68183
+"GET /procedure-fees/?procedure_search=&search=&category=%D8%B7%D8%A7%D8%A8%D8%B9+%D8%AE%D8%A7%D8%B5 HTTP/1.1" 200 71880
+"GET /procedure-fees/?procedure_search=&search=&category=%D9%83%D8%A8%D8%B1%D9%89 HTTP/1.1" 200 71857
+"GET /procedure-fees/?procedure_search=&search=%D8%A8%D9%86%D9%83+%D9%85%D8%B5%D8%B1&category=%D9%83%D8%A8%D8%B1%D9%89 HTTP/1.1" 200 68648
+"GET /procedure-fees/?procedure_search=ES-001&search=%D8%A8%D9%86%D9%83+%D9%85%D8%B5%D8%B1&category=%D9%83%D8%A8%D8%B1%D9%89 HTTP/1.1" 200 68857
+"GET /procedure-fees/ HTTP/1.1" 200 68183
+"GET /pricing-details/ HTTP/1.1" 200 250453
+"GET /external-approvals/ HTTP/1.1" 200 36353
+"GET /external-approvals/coordinator/ HTTP/1.1" 200 538706
+"GET /patient-search/ HTTP/1.1" 200 833122
+"GET /patient-search/ HTTP/1.1" 200 858506
