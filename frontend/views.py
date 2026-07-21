@@ -3563,10 +3563,12 @@ from django.shortcuts import render
 from medical_catalog.models import Procedure
 
 
+# frontend/views.py
+
 def procedures(request):
 
     search = request.GET.get("search", "").strip()
-    specialty = request.GET.get("specialty", "").strip()
+    specialty = request.GET.get("specialty", "").strip()  # ✅ اسم التخصص (نص)
     category = request.GET.get("category", "").strip()
     show_all = request.GET.get("show_all")
 
@@ -3584,10 +3586,10 @@ def procedures(request):
         )
 
     # ==========================================
-    # ✅ Specialty Filter - باستخدام specialty_id
+    # ✅ ✅ ✅ Specialty Filter - باستخدام specialty__name (النص)
     # ==========================================
     if specialty:
-        procedures = procedures.filter(specialty_id=specialty)
+        procedures = procedures.filter(specialty__name=specialty)  # ✅ بدلاً من specialty_id
 
     # ==========================================
     # ✅ Category Filter - باستخدام classification
@@ -3646,13 +3648,12 @@ def procedures(request):
             "categories": categories,
             "specialties_with_count": specialties_with_count,
             "search": search,
-            "specialty": specialty,
+            "specialty": specialty,  # ✅ اسم التخصص (نص)
             "category": category,
             "show_all": show_all,
             "total_count": total_count,
         }
     )
-
 from pricing_requests.models import ProcedureFee
 
 

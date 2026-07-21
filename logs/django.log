@@ -1,1 +1,20 @@
 Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET /credit-package-pricing/ HTTP/1.1" 200 105457
+"GET /credit-package-pricing/?company_search=%D8%A7%D9%84%D8%AA%D8%B9%D8%A7%D9%88%D9%86+%D9%84%D9%84%D8%A8%D8%AA%D8%B1%D9%88%D9%84&company=40&package_search=&package= HTTP/1.1" 200 221613
+"GET /credit-package-pricing/?entity=40&package=2506&company_search=%D8%A7%D9%84%D8%AA%D8%B9%D8%A7%D9%88%D9%86%20%D9%84%D9%84%D8%A8%D8%AA%D8%B1%D9%88%D9%84&package_search= HTTP/1.1" 200 111514
+- Broken pipe from ('127.0.0.1', 61066)
+- Broken pipe from ('127.0.0.1', 61894)
+"GET /credit-package-pricing/?company_search=%D8%A7%D9%84%D8%AA%D8%B9%D8%A7%D9%88%D9%86+%D9%84%D9%84%D8%A8%D8%AA%D8%B1%D9%88%D9%84&company=&package_search=%D8%A7%D8%B3%D8%AA%D8%A6%D8%B5%D8%A7%D9%84+%D8%A7%D9%84%D8%BA%D8%B6%D8%B1%D9%88%D9%81+%D8%A7%D9%84%D8%B9%D9%86%D9%82%D9%8A+%D9%85%D8%B9+%D8%A7%D9%84%D8%AA%D8%AB%D8%A8%D9%8A%D8%AA+-+%D9%85%D8%B3%D8%AA%D9%88%D9%8A+%D9%88%D8%A7%D8%AD%D8%AF&package=2536 HTTP/1.1" 200 59109
+"GET /credit-package-pricing/ HTTP/1.1" 200 105457
+"GET /credit-package-pricing/?company_search=&company=75&package_search=&package= HTTP/1.1" 200 283747
+"GET /pricing-details/ HTTP/1.1" 200 250453
+"GET /pricing-details/ HTTP/1.1" 200 250453
+"GET /service-search/ HTTP/1.1" 200 187118
+"GET /procedures/ HTTP/1.1" 200 93885
+"GET /procedures/?search=&specialty=&category=&show_all=1 HTTP/1.1" 200 4458789
+"GET /procedures/?search=&specialty=%D8%A7%D9%84%D8%AC%D8%B1%D8%A7%D8%AD%D8%A9+%D8%A7%D9%84%D8%B9%D8%A7%D9%85%D8%A9&category= HTTP/1.1" 500 145
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /procedures/?search=&specialty=%D8%A7%D9%84%D8%AC%D8%B1%D8%A7%D8%AD%D8%A9+%D8%A7%D9%84%D8%B9%D8%A7%D9%85%D8%A9&category= HTTP/1.1" 200 87122
+"GET /procedures/?search=&specialty=%D8%A7%D9%84%D8%AC%D8%B1%D8%A7%D8%AD%D8%A9%20%D8%A7%D9%84%D8%B9%D8%A7%D9%85%D8%A9&category=&show_all=1 HTTP/1.1" 200 910117
