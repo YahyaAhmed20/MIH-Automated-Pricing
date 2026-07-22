@@ -1,5 +1,5 @@
 <!-- ============================================ -->
-<!-- ✅ CSS المخصص للـ Tabs -->
+<!-- ✅ CSS المخصص للـ Tabs (الحل الأمثل) -->
 <!-- ============================================ -->
 <style>
     /* ✅ Color Variables */
@@ -56,11 +56,15 @@
         padding: 0.5rem 0.5rem 0;
         gap: 0.25rem;
         flex-wrap: wrap;
+        margin: 0;
+        list-style: none;
+        display: flex;
     }
     
     .nav-tabs-custom .nav-item {
         margin-bottom: 0;
         position: relative;
+        flex: 0 1 auto;
     }
     
     .nav-tabs-custom .nav-link {
@@ -78,11 +82,21 @@
         gap: 8px;
         cursor: pointer;
         overflow: hidden;
+        text-decoration: none;
+        white-space: nowrap;
     }
     
     .nav-tabs-custom .nav-link i {
         font-size: 1.1rem;
         transition: all 0.4s ease;
+        flex-shrink: 0;
+    }
+    
+    /* ✅ النص يظهر دائماً */
+    .nav-tabs-custom .nav-link .nav-label {
+        display: inline-block;
+        transition: all 0.3s ease;
+        font-size: 0.9rem;
     }
     
     /* ✅ Shine Effect on Hover */
@@ -199,6 +213,7 @@
         font-weight: 700;
         transition: all 0.3s ease;
         margin-left: 4px;
+        flex-shrink: 0;
     }
     
     .nav-tabs-custom .nav-link.active .tab-badge {
@@ -233,7 +248,11 @@
         }
     }
     
-    /* ✅ Mobile Responsive */
+    /* ========================================== */
+    /* ✅ RESPONSIVE - الحل الأمثل للموبايل */
+    /* ========================================== */
+    
+    /* ✅ للتابلت والأجهزة المتوسطة */
     @media (max-width: 768px) {
         .tabs-container {
             border-radius: 12px;
@@ -246,21 +265,23 @@
         }
         
         .nav-tabs-custom .nav-link {
-            padding: 0.5rem 0.8rem;
-            font-size: 0.75rem;
-            border-radius: 8px;
-            flex: 1 1 auto;
-            justify-content: center;
-            min-width: 60px;
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+            border-radius: 10px;
+            gap: 6px;
         }
         
         .nav-tabs-custom .nav-link i {
-            font-size: 0.9rem;
+            font-size: 1rem;
+        }
+        
+        .nav-tabs-custom .nav-link .nav-label {
+            font-size: 0.8rem;
         }
         
         .nav-tabs-custom .nav-link .tab-badge {
-            font-size: 0.55rem;
-            padding: 0.1rem 0.4rem;
+            font-size: 0.6rem;
+            padding: 0.1rem 0.5rem;
         }
         
         .nav-tabs-custom .nav-link.active::after {
@@ -269,36 +290,112 @@
         }
     }
     
+    /* ✅ للجوال - النص يظهر بوضوح مع الأيقونة */
     @media (max-width: 576px) {
+        .tabs-container {
+            border-radius: 10px;
+            padding: 0.1rem;
+            overflow-x: auto; /* سكرول أفقي لو التابات كتير */
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        /* إخفاء السكرول بار */
+        .tabs-container::-webkit-scrollbar {
+            height: 0;
+            display: none;
+        }
+        
+        .tabs-container {
+            scrollbar-width: none; /* فايرفوكس */
+        }
+        
+        .nav-tabs-custom {
+            padding: 0.2rem;
+            gap: 0.1rem;
+            flex-wrap: nowrap; /* منع النزول لسطر جديد */
+            width: max-content;
+            min-width: 100%;
+        }
+        
+        .nav-tabs-custom .nav-item {
+            flex: 0 0 auto; /* منع التمدد */
+        }
+        
         .nav-tabs-custom .nav-link {
-            padding: 0.4rem 0.5rem;
+            padding: 0.4rem 0.7rem;
             font-size: 0.65rem;
+            border-radius: 8px;
             gap: 4px;
+            white-space: nowrap;
+            min-height: 36px; /* مساحة كافية للضغط */
         }
         
         .nav-tabs-custom .nav-link i {
-            font-size: 0.8rem;
+            font-size: 0.85rem;
         }
         
+        /* ✅ النص يظهر دائماً مع تصغير حجمه */
         .nav-tabs-custom .nav-link .nav-label {
-            display: none;
+            display: inline-block !important; /* منع الإخفاء */
+            font-size: 0.6rem;
+            font-weight: 600;
+        }
+        
+        .nav-tabs-custom .nav-link .tab-badge {
+            font-size: 0.5rem;
+            padding: 0.05rem 0.35rem;
+            margin-left: 2px;
         }
         
         .nav-tabs-custom .nav-link.active::after {
             width: 12px;
             height: 2px;
+            bottom: -1px;
+        }
+        
+        /* تأثير اللمس للجوال */
+        .nav-tabs-custom .nav-link:active {
+            transform: scale(0.95);
         }
     }
     
+    /* ✅ للجوالات الصغيرة جداً */
     @media (max-width: 400px) {
         .nav-tabs-custom .nav-link {
-            padding: 0.3rem 0.4rem;
-            font-size: 0.6rem;
-            min-width: 45px;
+            padding: 0.3rem 0.5rem;
+            font-size: 0.55rem;
+            gap: 3px;
+            min-height: 32px;
         }
         
         .nav-tabs-custom .nav-link i {
             font-size: 0.7rem;
+        }
+        
+        .nav-tabs-custom .nav-link .nav-label {
+            font-size: 0.5rem;
+        }
+        
+        .nav-tabs-custom .nav-link .tab-badge {
+            font-size: 0.4rem;
+            padding: 0.05rem 0.25rem;
+        }
+    }
+    
+    /* ✅ للجوالات في وضع الأفقي */
+    @media (max-width: 576px) and (orientation: landscape) {
+        .nav-tabs-custom .nav-link {
+            padding: 0.3rem 0.6rem;
+            font-size: 0.6rem;
+            min-height: 30px;
+        }
+        
+        .nav-tabs-custom .nav-link i {
+            font-size: 0.75rem;
+        }
+        
+        .nav-tabs-custom .nav-link .nav-label {
+            font-size: 0.55rem;
         }
     }
     
@@ -363,6 +460,11 @@
         .nav-tabs-custom .nav-link .tab-badge {
             background: rgba(13, 110, 253, 0.2);
             color: #0dcaf0;
+        }
+        
+        .nav-tabs-custom .nav-link.active .tab-badge {
+            background: rgba(255, 255, 255, 0.25);
+            color: #fff;
         }
     }
 </style>
@@ -433,7 +535,7 @@
 </div>
 
 <!-- ============================================ -->
-<!-- ✅ JavaScript للـ Ripple Effect -->
+<!-- ✅ JavaScript للـ Ripple Effect والتحسينات -->
 <!-- ============================================ -->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -522,6 +624,22 @@
                     inline: 'center'
                 });
             }, 500);
+        }
+        
+        // ==========================================
+        // ✅ Touch feedback for mobile
+        // ==========================================
+        if ('ontouchstart' in window) {
+            document.querySelectorAll('.nav-tabs-custom .nav-link').forEach(function(link) {
+                link.addEventListener('touchstart', function() {
+                    this.style.transition = 'transform 0.1s ease';
+                    this.style.transform = 'scale(0.97)';
+                }, { passive: true });
+                
+                link.addEventListener('touchend', function() {
+                    this.style.transform = '';
+                }, { passive: true });
+            });
         }
         
         console.log('✅ Tabs component initialized successfully!');

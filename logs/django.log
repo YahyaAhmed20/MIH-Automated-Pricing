@@ -3073,3 +3073,50 @@ Not Found: /.well-known/appspecific/com.chrome.devtools.json
 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
 "GET /special-offers/ HTTP/1.1" 200 233585
 "GET /static/images/logo.jpeg HTTP/1.1" 304 0
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 34045
+"GET /static/images/logo.jpeg HTTP/1.1" 200 68755
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 13579
+"GET /special-offers/ HTTP/1.1" 200 233295
+"GET /company-discounts/ HTTP/1.1" 200 103119
+"GET /contract-entities/ HTTP/1.1" 200 49054
+"GET /contract-entities/88/ HTTP/1.1" 200 54274
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+"GET /contract-entities/88/ HTTP/1.1" 200 58163
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+"GET /company-discounts/?entity=88 HTTP/1.1" 200 51759
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+"GET /company-discounts/?tab=compare&entity=88&search=%D8%A7%D9%84%D8%A8%D9%86%D9%83%20%D8%A7%D9%84%D8%B9%D9%82%D8%A7%D8%B1%D9%89%20%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%89%20%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%89 HTTP/1.1" 200 54122
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+"GET /company-discounts/?tab=ranking&entity=88&search=%D8%A7%D9%84%D8%A8%D9%86%D9%83%20%D8%A7%D9%84%D8%B9%D9%82%D8%A7%D8%B1%D9%89%20%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%89%20%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%89 HTTP/1.1" 200 49401
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+"GET /company-discounts/?tab=exceptions&entity=88&search=%D8%A7%D9%84%D8%A8%D9%86%D9%83%20%D8%A7%D9%84%D8%B9%D9%82%D8%A7%D8%B1%D9%89%20%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%89%20%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%89 HTTP/1.1" 200 121713
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+"GET /company-discounts/?tab=discounts&entity=88&search=%D8%A7%D9%84%D8%A8%D9%86%D9%83%20%D8%A7%D9%84%D8%B9%D9%82%D8%A7%D8%B1%D9%89%20%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%89%20%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%89 HTTP/1.1" 200 51759
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+"GET /contract-entities/ HTTP/1.1" 200 49054
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+"GET /contract-entities/88/ HTTP/1.1" 200 58163
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+"GET /special-offers/ HTTP/1.1" 200 233295
+Watching for file changes with StatReloader
+"GET /special-offers/ HTTP/1.1" 200 282004
+"GET /special-offers/ HTTP/1.1" 200 324768
+"GET /special-offers/ HTTP/1.1" 200 350201
+"GET /special-offers/?company=%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%8A%D9%87%20%D9%84%D9%84%D8%A7%D8%AA%D8%B5%D8%A7%D9%84%D8%A7%D8%AA HTTP/1.1" 200 60677
+"GET /special-offers/?company=%D9%85%D8%B5%D8%B1%20%D9%84%D9%84%D8%AA%D8%A3%D9%85%D9%8A%D9%86 HTTP/1.1" 200 267311
+"GET /special-offers/?company=%D9%86%D9%83%D8%B3%D8%AA%20%D9%83%D9%8A%D8%B1 HTTP/1.1" 200 121419
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
