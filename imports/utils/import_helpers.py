@@ -1,3 +1,5 @@
+# imports/utils/import_helpers.py
+
 import re
 import pandas as pd
 from decimal import Decimal, ROUND_HALF_UP, InvalidOperation
@@ -80,9 +82,10 @@ class ImportHelpers:
             
         except (ValueError, TypeError, InvalidOperation):
             return Decimal('0.00')
-        # ============================================================
-        # ✅ Helper: معالجة النسب المئوية
-        # ============================================================
+
+    # ============================================================
+    # ✅ Helper: معالجة النسب المئوية
+    # ============================================================
     @staticmethod
     def clean_percentage(value):
         """
@@ -243,3 +246,68 @@ class ImportHelpers:
             return Decimal(str(value)).quantize(Decimal('0.01'))
         except Exception:
             return Decimal('0.00')
+
+    # ============================================================
+    # ✅ ✅ ✅ NEW: دالة توحيد التصنيفات
+    # ============================================================
+    @staticmethod
+    def normalize_category(category):
+        """
+        توحيد التصنيفات لتطابق التصنيفات في جدول Procedure
+        """
+        if not category:
+            return category
+        
+        # ✅ تنظيف النص
+        cleaned = str(category).strip()
+        
+        # ✅ خريطة التحويل
+        mapping = {
+            'صغرى': 'صغـــرى',
+            'كبرى': 'كــبرى',
+            'طابع خاص': 'ذات طابع خاص',
+            'صغرى ': 'صغـــرى',
+            'كبرى ': 'كــبرى',
+            'طابع خاص ': 'ذات طابع خاص',
+            'صغرى\t': 'صغـــرى',
+            'كبرى\t': 'كــبرى',
+            'طابع خاص\t': 'ذات طابع خاص',
+        }
+        
+        # ✅ التحويل
+        return mapping.get(cleaned, cleaned)
+
+    # ============================================================
+    # ✅ ✅ ✅ NEW: دالة التحقق من وجود التصنيف
+    # ============================================================
+    @staticmethod
+    def validate_category_exists(category):
+        """
+        التحقق من وجود التصنيف في جدول Procedure
+        """
+        if not category:
+            return True
+        
+        try:
+            from contracts.models import Procedure
+            # ✅ توحيد التصنيف أولاً
+            normalized = ImportHelpers.normalize_category(category)
+            return Procedure.objects.filter(classification=normalized).exists()
+        except Exception:
+            return False
+
+    # ============================================================
+    # ✅ ✅ ✅ NEW: دالة الحصول على التصنيف الموحد من Procedure
+    # ============================================================
+    @staticmethod
+    def get_procedure_category(procedure):
+        """
+        الحصول على التصنيف الموحد من كائن Procedure
+        """
+        if not procedure:
+            return None
+        
+        if hasattr(procedure, 'classification'):
+            return ImportHelpers.normalize_category(procedure.classification)
+        
+        return None

@@ -49,6 +49,11 @@ IMPORT_COMMANDS = [
     ("External Approvals", "import_external_approvals"),
 ]
 
+# ✅ ✅ ✅ أوامر إضافية لتوحيد البيانات بعد الاستيراد
+POST_IMPORT_COMMANDS = [
+    ("Normalize Categories", "normalize_categories"),  # ✅ توحيد التصنيفات
+]
+
 
 class UpdateAllDataService:
 
@@ -66,10 +71,13 @@ class UpdateAllDataService:
         ExcelProvider.clear_cache()
 
         results = []
-        total_commands = len(IMPORT_COMMANDS)
+        total_commands = len(IMPORT_COMMANDS) + len(POST_IMPORT_COMMANDS)
 
         try:
 
+            # ============================================================
+            # ✅ 1. تنفيذ أوامر الاستيراد
+            # ============================================================
             for idx, (title, command_name) in enumerate(IMPORT_COMMANDS):
 
                 # ✅ تحديث التقدم
@@ -108,6 +116,49 @@ class UpdateAllDataService:
                     stdout.write(f"❌ {title} Failed")
 
                     raise CommandError(str(exc))
+
+                stdout.flush()
+
+            # ============================================================
+            # ✅ ✅ ✅ 2. تنفيذ أوامر ما بعد الاستيراد (توحيد البيانات)
+            # ============================================================
+            stdout.write("")
+            stdout.write("=" * 70)
+            stdout.write("📋 POST-IMPORT: توحيد البيانات...")
+            stdout.write("=" * 70)
+
+            for idx, (title, command_name) in enumerate(POST_IMPORT_COMMANDS):
+
+                # ✅ تحديث التقدم
+                if progress_callback:
+                    progress_callback(title, len(IMPORT_COMMANDS) + idx)
+
+                stdout.write("")
+                stdout.write("-" * 70)
+                stdout.write(f"▶ START : {title}")
+                stdout.flush()
+
+                start = perf_counter()
+
+                try:
+                    call_command(
+                        command_name,
+                        stdout=stdout,
+                    )
+
+                    elapsed = perf_counter() - start
+                    results.append({"title": title, "status": "✅", "time": elapsed})
+                    stdout.write(f"✅ END : {title} ({elapsed:.2f} sec)")
+
+                except Exception as exc:
+
+                    elapsed = perf_counter() - start
+                    results.append({"title": title, "status": "⚠️", "time": elapsed})
+                    stdout.write(f"⚠️ {title} Failed (skipping)")
+
+                    # ✅ لا نوقف العملية إذا فشل توحيد التصنيفات
+                    stdout.write(f"   Error: {str(exc)}")
+                    stdout.write("   Continuing with remaining commands...")
 
                 stdout.flush()
 

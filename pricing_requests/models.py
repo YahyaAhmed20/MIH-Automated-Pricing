@@ -831,6 +831,40 @@ class Procedure(models.Model):
         return f"{self.code} - {self.operation_name}" 
     
     
+
+
+# ✅ ✅ ✅ دالة التحقق من صحة التصنيف
+def validate_category(value):
+    """
+    التحقق من صحة التصنيف ومنع إدخال تصنيفات خاطئة
+    """
+    if not value:
+        return
+    
+    # ✅ التصنيفات الصحيحة (من جدول Procedure)
+    valid_categories = ['صغـــرى', 'كــبرى', 'متوسطة', 'متقدمة', 'مهارة', 'ذات طابع خاص']
+    
+    # ✅ توحيد التصنيف قبل التحقق
+    mapping = {
+        'صغرى': 'صغـــرى',
+        'كبرى': 'كــبرى',
+        'طابع خاص': 'ذات طابع خاص',
+        'صغرى ': 'صغـــرى',
+        'كبرى ': 'كــبرى',
+        'طابع خاص ': 'ذات طابع خاص',
+    }
+    normalized = mapping.get(value.strip(), value.strip())
+    
+    if normalized not in valid_categories:
+        raise ValidationError(
+            f"التصنيف '{value}' غير صالح. "
+            f"التصنيفات المسموحة: {', '.join(valid_categories)}"
+        )
+
+from django.db import models
+from django.core.exceptions import ValidationError
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
 class ProcedureFee(models.Model):
 
     entity_name = models.CharField(
@@ -855,7 +889,8 @@ class ProcedureFee(models.Model):
     category = models.CharField(
         max_length=100,
         db_index=True,
-        verbose_name="التصنيف"
+        verbose_name="التصنيف",
+        validators=[validate_category]  # ✅ إضافة الـ Validator
     )
 
     surgeon_fee = models.DecimalField(
@@ -887,7 +922,8 @@ class ProcedureFee(models.Model):
         blank=True,
         null=True,
         verbose_name="معدل الخصم"
-        )
+    )
+    
     created_at = models.DateTimeField(
         auto_now_add=True
     )
@@ -915,8 +951,24 @@ class ProcedureFee(models.Model):
 
     def __str__(self):
         return f"{self.entity_name} - {self.category}"
-    
-    
+
+
+# ✅ ✅ ✅ Signal لتوحيد التصنيف تلقائياً قبل الحفظ
+@receiver(pre_save, sender=ProcedureFee)
+def normalize_procedure_fee_category(sender, instance, **kwargs):
+    """
+    توحيد التصنيف تلقائياً قبل حفظ أي سجل جديد أو تحديث
+    """
+    if instance.category:
+        mapping = {
+            'صغرى': 'صغـــرى',
+            'كبرى': 'كــبرى',
+            'طابع خاص': 'ذات طابع خاص',
+            'صغرى ': 'صغـــرى',
+            'كبرى ': 'كــبرى',
+            'طابع خاص ': 'ذات طابع خاص',
+        }
+        instance.category = mapping.get(instance.category.strip(), instance.category.strip())
 class CompanyDiscountRank(models.Model):
 
     company_name = models.CharField(

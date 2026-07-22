@@ -7,10 +7,353 @@
 
 {% block content %}
 
-<div class="container-fluid">
+<style>
+    /* ========================================== */
+    /* ✅ نفس التصميم من الكود الأول */
+    /* ========================================== */
+    
+    /* ✅ Filter Card */
+    .filter-card {
+        border-radius: 16px;
+        border: none;
+        background: #fff;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+        margin-bottom: 1.5rem;
+    }
+    
+    .filter-card .card-body {
+        padding: 1.25rem;
+    }
+    
+    .filter-card .form-label {
+        font-size: 0.7rem;
+        font-weight: 700;
+        color: #495057;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.3rem;
+    }
+    
+    .filter-card .form-select,
+    .filter-card .form-control {
+        border-radius: 10px;
+        border: 2px solid #e9ecef;
+        font-size: 0.85rem;
+        padding: 0.4rem 0.8rem;
+        transition: all 0.3s ease;
+        background: #fff;
+    }
+    
+    .filter-card .form-select:focus,
+    .filter-card .form-control:focus {
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.1);
+    }
+    
+    /* ✅ Search Box مثل الكود الأول */
+    .search-wrapper {
+        max-width: 100%;
+        margin: 0 auto 1.5rem;
+    }
+    
+    .search-wrapper .input-group {
+        border-radius: 50px;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+        transition: box-shadow 0.3s ease;
+    }
+    
+    .search-wrapper .input-group:focus-within {
+        box-shadow: 0 4px 30px rgba(13, 110, 253, 0.15);
+    }
+    
+    .search-wrapper .input-group .form-control {
+        border: 2px solid #e9ecef;
+        padding: 0.8rem 1.5rem;
+        font-size: 1rem;
+        border-right: none;
+        background: #fff;
+    }
+    
+    .search-wrapper .input-group .form-control:focus {
+        border-color: #0d6efd;
+        box-shadow: none;
+    }
+    
+    .search-wrapper .input-group .btn-search {
+        padding: 0.8rem 2.5rem;
+        border-radius: 0 50px 50px 0;
+        background: linear-gradient(135deg, #0d6efd, #0b5ed7);
+        color: #fff;
+        border: 2px solid #0d6efd;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .search-wrapper .input-group .btn-search:hover {
+        background: linear-gradient(135deg, #0b5ed7, #0a58ca);
+        transform: scale(1.02);
+    }
+    
+    /* ✅ Results Count */
+    .results-count {
+        background: #f8f9fa;
+        border-radius: 12px;
+        padding: 0.6rem 1.2rem;
+        border: 1px solid #e9ecef;
+    }
+    
+    .results-count .count-badge {
+        background: #0d6efd;
+        color: #fff;
+        padding: 0.2rem 0.8rem;
+        border-radius: 20px;
+        font-weight: 700;
+        font-size: 0.9rem;
+    }
+    
+    /* ✅ Info Cards (للمظهر الداخلي) - نفس الكود الأول */
+    .info-card {
+        border-radius: 16px;
+        padding: 1.25rem;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 1px solid #e9ecef;
+        height: 100%;
+        background: #fff;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .info-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #0d6efd, #0dcaf0);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    
+    .info-card:hover::before {
+        opacity: 1;
+    }
+    
+    .info-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 12px 40px rgba(0,0,0,0.1);
+        border-color: #0d6efd;
+    }
+    
+    .info-card .card-title {
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: #495057;
+        margin-bottom: 0.75rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .info-card .card-title i {
+        font-size: 1.1rem;
+        width: 24px;
+        text-align: center;
+    }
+    
+    .info-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 6px 0;
+        border-bottom: 1px solid #f1f3f5;
+        font-size: 0.85rem;
+        transition: background 0.2s ease;
+        border-radius: 4px;
+        padding: 6px 8px;
+    }
+    
+    .info-item:hover {
+        background: #f8f9fa;
+    }
+    
+    .info-item:last-child {
+        border-bottom: none;
+    }
+    
+    .info-item .label {
+        color: #6c757d;
+        font-weight: 500;
+        font-size: 0.8rem;
+    }
+    
+    .info-item .value {
+        font-weight: 600;
+        color: #212529;
+        text-align: left;
+        word-break: break-word;
+        max-width: 60%;
+        font-size: 0.85rem;
+    }
+    
+    /* ✅ Status Badge - نفس الكود الأول */
+    .status-badge {
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        display: inline-block;
+    }
+    
+    .status-badge.primary {
+        background: #cce5ff;
+        color: #004085;
+    }
+    
+    .status-badge.success {
+        background: #d4edda;
+        color: #155724;
+    }
+    
+    .status-badge.warning {
+        background: #fff3cd;
+        color: #856404;
+    }
+    
+    .status-badge.secondary {
+        background: #e9ecef;
+        color: #495057;
+    }
+    
+    /* ✅ Fee Cards - تصميم جديد */
+    .fee-card {
+        border-radius: 16px;
+        border: none;
+        background: #fff;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+        transition: all 0.3s ease;
+    }
+    
+    .fee-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 40px rgba(0,0,0,0.08);
+    }
+    
+    .fee-card .card-header {
+        border-radius: 16px 16px 0 0;
+        padding: 1rem 1.25rem;
+    }
+    
+    .fee-card .card-body {
+        padding: 1.25rem;
+    }
+    
+    /* ✅ Fee Table */
+    .fee-table {
+        border-radius: 12px;
+        overflow: hidden;
+    }
+    
+    .fee-table thead {
+        background: #f8f9fa;
+    }
+    
+    .fee-table thead th {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        padding: 0.5rem 1rem;
+        border-bottom: 2px solid #e9ecef;
+    }
+    
+    .fee-table tbody td {
+        padding: 0.5rem 1rem;
+        font-size: 0.85rem;
+        vertical-align: middle;
+    }
+    
+    .fee-table .total-row {
+        background: #f8f9fa;
+        font-weight: 700;
+    }
+    
+    /* ✅ No Results */
+    .no-results {
+        text-align: center;
+        padding: 4rem 1rem;
+        background: #f8f9fa;
+        border-radius: 16px;
+    }
+    
+    .no-results i {
+        font-size: 4rem;
+        color: #dee2e6;
+        margin-bottom: 1rem;
+    }
+    
+    /* ✅ Mobile Responsive - نفس الكود الأول */
+    @media (max-width: 768px) {
+        .search-wrapper .input-group .form-control {
+            font-size: 0.8rem;
+            padding: 0.5rem 1rem;
+        }
+        
+        .search-wrapper .input-group .btn-search {
+            padding: 0.5rem 1.2rem;
+            font-size: 0.8rem;
+        }
+        
+        .info-item {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 2px;
+            padding: 4px 6px;
+        }
+        
+        .info-item .value {
+            max-width: 100%;
+            width: 100%;
+        }
+        
+        .fee-card .card-body {
+            padding: 0.75rem;
+        }
+        
+        .fee-table thead th,
+        .fee-table tbody td {
+            padding: 0.3rem 0.5rem;
+            font-size: 0.7rem;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .search-wrapper .input-group .form-control {
+            font-size: 0.7rem;
+            padding: 0.4rem 0.8rem;
+        }
+        
+        .search-wrapper .input-group .btn-search {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.7rem;
+        }
+        
+        .fee-table thead th,
+        .fee-table tbody td {
+            font-size: 0.6rem;
+            padding: 0.2rem 0.3rem;
+        }
+    }
+</style>
 
-    <!-- ✅ Header -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
+<!-- ============================================ -->
+<!-- ✅ Header - نفس تصميم الكود الأول -->
+<!-- ============================================ -->
+<div class="container-fluid py-4">
+    
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
         <div>
             <h4 class="fw-bold mb-0">
                 <i class="fas fa-calculator text-primary me-2"></i>
@@ -30,234 +373,221 @@
     </div>
 
     <!-- ============================================ -->
-    <!-- ✅ شريط البحث والفلاتر -->
+    <!-- ✅ شريط البحث والفلاتر - نفس تصميم الكود الأول -->
     <!-- ============================================ -->
-    <div class="card shadow-sm border-0 mb-4 hover-shadow">
-
-        <div class="card-header bg-gradient-primary text-white">
-            <h5 class="mb-0">
-                <i class="fas fa-sliders-h"></i>
-                البحث والفلاتر
-            </h5>
-        </div>
-
+    <div class="card filter-card">
         <div class="card-body">
             <form method="get" id="searchForm">
                 
-                <!-- ========================================== -->
-                <!-- ✅ مربع البحث الأول: العملية (شيت 13) -->
-                <!-- ========================================== -->
-                <div class="row g-3 align-items-end mb-3">
-                    <div class="col-md-12">
-                        <label class="form-label fw-bold small text-muted">
-                            <i class="fas fa-procedures text-primary"></i> البحث عن العملية
+                <!-- ✅ البحث عن العملية (شيت 13) -->
+                <div class="row g-3 align-items-end">
+                    <div class="col-12 col-md-6">
+                        <label class="form-label">
+                            <i class="fas fa-procedures text-primary me-1"></i>
+                            البحث عن العملية
                         </label>
-                        <div class="input-group">
-                            <span class="input-group-text bg-light border-0">
-                                <i class="fas fa-search text-primary"></i>
-                            </span>
-                            <input
-                                id="procedure_search"
-                                name="procedure_search"
-                                class="form-control form-control-lg border-0 shadow-sm"
-                                list="procedureList"
-                                value="{{ procedure_search }}"
-                                onchange="this.form.submit()"
-                                onkeydown="if(event.key === 'Enter') this.form.submit()"
-                                placeholder="ابحث باسم العملية أو الكود أو التصنيف..."
-                                autocomplete="off">
-                            <datalist id="procedureList">
-                                {% for proc in procedures_list %}
-                                    <option value="{{ proc.name_ar }}">   <!-- ✅ name_ar -->
-                                    <option value="{{ proc.code }}">
-                                    <option value="{{ proc.classification }}">  <!-- ✅ classification -->
-                                {% endfor %}
-                            </datalist>
+                        <div class="search-wrapper" style="max-width: 100%; margin: 0;">
+                            <div class="input-group">
+                                <input
+                                    id="procedure_search"
+                                    name="procedure_search"
+                                    class="form-control"
+                                    list="procedureList"
+                                    value="{{ procedure_search }}"
+                                    onchange="this.form.submit()"
+                                    onkeydown="if(event.key === 'Enter') this.form.submit()"
+                                    placeholder="🔍 ابحث باسم العملية أو الكود أو التصنيف..."
+                                    autocomplete="off">
+                                <button class="btn btn-search" type="submit" style="border-radius: 0 50px 50px 0;">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                                <datalist id="procedureList">
+                                    {% for proc in procedures_list %}
+                                        <option value="{{ proc.operation_name }}">
+                                        <option value="{{ proc.code }}">
+                                        <option value="{{ proc.category }}">
+                                    {% endfor %}
+                                </datalist>
+                            </div>
                         </div>
-                        <small class="text-muted">
-                            <i class="fas fa-info-circle"></i>
-                            يمكنك البحث باسم العملية، الكود، أو التصنيف
-                        </small>
+                    </div>
+                    
+                    <!-- ✅ البحث عن الجهة (شيت 14) -->
+                    <div class="col-12 col-md-6">
+                        <label class="form-label">
+                            <i class="fas fa-building text-success me-1"></i>
+                            البحث عن الجهة
+                        </label>
+                        <div class="search-wrapper" style="max-width: 100%; margin: 0;">
+                            <div class="input-group">
+                                <input
+                                    id="search"
+                                    name="search"
+                                    class="form-control"
+                                    list="entityList"
+                                    value="{{ search }}"
+                                    onchange="this.form.submit()"
+                                    onkeydown="if(event.key === 'Enter') this.form.submit()"
+                                    placeholder="🔍 ابحث باسم الجهة أو الفئة المالية..."
+                                    autocomplete="off">
+                                <button class="btn btn-search" type="submit" style="border-radius: 0 50px 50px 0;">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                                <datalist id="entityList">
+                                    {% for entity in entities_list_for_datalist %}
+                                        <option value="{{ entity.entity_name }}">
+                                        <option value="{{ entity.financial_category }}">
+                                    {% endfor %}
+                                </datalist>
+                            </div>
+                        </div>
                     </div>
                 </div>
-
-                <hr>
-
-                <!-- ========================================== -->
-                <!-- ✅ مربع البحث الثاني: الجهة (شيت 14) -->
-                <!-- ========================================== -->
-                <div class="row g-3 align-items-end">
-                    <div class="col-md-5">
-                        <label class="form-label fw-bold small text-muted">
-                            <i class="fas fa-building"></i> الجهة
+                
+                <!-- ✅ الفلاتر الإضافية -->
+                <div class="row g-3 align-items-end mt-2">
+                    <div class="col-12 col-md-4">
+                        <label class="form-label">
+                            <i class="fas fa-layer-group text-warning me-1"></i>
+                            التصنيف
                         </label>
-                        <div class="input-group">
-                            <span class="input-group-text bg-light border-0">
-                                <i class="fas fa-search text-primary"></i>
-                            </span>
-                            <input
-                                id="search"
-                                name="search"
-                                class="form-control form-control-lg border-0 shadow-sm"
-                                list="entityList"
-                                value="{{ search }}"
-                                onchange="this.form.submit()"
-                                onkeydown="if(event.key === 'Enter') this.form.submit()"
-                                placeholder="ابحث باسم الجهة أو الفئة المالية..."
-                                autocomplete="off">
-                            <datalist id="entityList">
-                                {% for entity in entities_list_for_datalist %}
-                                    <option value="{{ entity.entity_name }}">
-                                    <option value="{{ entity.financial_category }}">
-                                {% endfor %}
-                            </datalist>
-                        </div>
+                        <select
+                            name="category"
+                            class="form-select"
+                            onchange="this.form.submit()">
+                            <option value="">كل التصنيفات</option>
+                            {% for cat in categories %}
+                                <option
+                                    value="{{ cat }}"
+                                    {% if selected_category == cat %}selected{% endif %}>
+                                    {{ cat }}
+                                </option>
+                            {% endfor %}
+                        </select>
                     </div>
-
-                    <!-- ✅ فلتر التصنيف -->
-                    <div class="col-md-4">
-                        <label class="form-label fw-bold small text-muted">
-                            <i class="fas fa-layer-group"></i> التصنيف
-                        </label>
-                        <div class="input-group">
-                            <span class="input-group-text bg-light border-0">
-                                <i class="fas fa-layer-group text-primary"></i>
-                            </span>
-                            <select
-                                name="category"
-                                class="form-select form-select-lg border-0 shadow-sm"
-                                onchange="this.form.submit()">
-                                <option value="">كل التصنيفات</option>
-                                {% for cat in categories %}
-                                    <option
-                                        value="{{ cat }}"
-                                        {% if selected_category == cat %}selected{% endif %}>
-                                        {{ cat }}
-                                    </option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="col-md-3">
-                        <label class="form-label fw-bold small text-muted">&nbsp;</label>
-                        <a href="{% url 'procedure_fees' %}" class="btn btn-outline-secondary btn-lg w-100 shadow-sm">
-                            <i class="fas fa-undo me-1"></i> مسح الكل
+                    
+                    <div class="col-12 col-md-8 d-flex justify-content-end gap-2">
+                        <button type="submit" class="btn btn-primary btn-filter">
+                            <i class="fas fa-filter me-1"></i> تطبيق الفلاتر
+                        </button>
+                        <a href="{% url 'procedure_fees' %}" class="btn btn-secondary btn-filter">
+                            <i class="fas fa-undo me-1"></i> إعادة تعيين
                         </a>
                     </div>
                 </div>
-
-                <!-- ✅ الفلاتر النشطة -->
+                
+                <!-- ✅ الفلاتر النشطة - نفس الكود الأول -->
+                {% if procedure_search or search or selected_category %}
                 <div class="row mt-3">
                     <div class="col-12">
-                        {% if procedure_search or search or selected_category %}
-                        <span class="badge bg-info text-dark ms-2 fs-6 px-3 py-2">
-                            <i class="fas fa-filter me-1"></i>
-                            فلاتر نشطة
-                        </span>
-                        {% endif %}
-                        {% if procedure_search %}
-                        <span class="badge bg-primary ms-2 px-3 py-2">
-                            العملية: {{ procedure_search }}
-                        </span>
-                        {% endif %}
-                        {% if search %}
-                        <span class="badge bg-secondary ms-2 px-3 py-2">
-                            الجهة: {{ search }}
-                        </span>
-                        {% endif %}
-                        {% if selected_category %}
-                        <span class="badge bg-success ms-2 px-3 py-2">
-                            التصنيف: {{ selected_category }}
-                        </span>
-                        {% endif %}
+                        <div class="alert alert-info mb-0 d-flex justify-content-between align-items-center">
+                            <div class="d-flex flex-wrap gap-1">
+                                <i class="fas fa-filter me-2"></i>
+                                <strong>الفلاتر النشطة:</strong>
+                                {% if procedure_search %}
+                                <span class="badge bg-primary ms-1">{{ procedure_search }}</span>
+                                {% endif %}
+                                {% if search %}
+                                <span class="badge bg-secondary ms-1">{{ search }}</span>
+                                {% endif %}
+                                {% if selected_category %}
+                                <span class="badge bg-success ms-1">{{ selected_category }}</span>
+                                {% endif %}
+                            </div>
+                            <a href="{% url 'procedure_fees' %}" class="text-decoration-none fw-bold text-danger">
+                                <i class="fas fa-times me-1"></i> إلغاء الكل
+                            </a>
+                        </div>
                     </div>
                 </div>
+                {% endif %}
+                
             </form>
         </div>
     </div>
 
     <!-- ============================================ -->
-    <!-- ✅ عرض النتيجة حسب الوضع -->
+    <!-- ✅ عرض النتيجة حسب الوضع - بنفس تصميم الكود الأول -->
     <!-- ============================================ -->
     
     <!-- ✅ إذا تم اختيار عملية وجهة (الوضع الجديد) -->
     {% if selected_procedure and selected_entity %}
 
     <div class="row justify-content-center">
-
         <div class="col-md-8 col-lg-6">
-
-            <div class="card shadow-lg border-0 hover-shadow">
-
-                <div class="card-header bg-primary text-white text-center">
-
+            <div class="fee-card">
+                <div class="card-header bg-primary text-white">
                     <h5 class="mb-0">
                         <i class="fas fa-calculator me-2"></i>
                         أتعاب العملية
                     </h5>
-
                 </div>
-
                 <div class="card-body">
-
-                    <!-- ✅ معلومات العملية (شيت 13) -->
-                    <div class="mb-3 p-3 bg-light rounded">
-                        <h6 class="fw-bold text-primary">
-                            <i class="fas fa-procedures me-1"></i>
+                    
+                    <!-- ✅ معلومات العملية -->
+                    <div class="info-card mb-3">
+                        <div class="card-title">
+                            <i class="fas fa-procedures text-primary"></i>
                             العملية المختارة
-                        </h6>
-                        <p class="mb-1">
-                            <strong>اسم العملية:</strong>
-                            {{ selected_procedure.name_ar }}  <!-- ✅ name_ar -->
-                        </p>
-                        <p class="mb-1">
-                            <strong>الكود:</strong>
-                            <span class="badge bg-secondary">{{ selected_procedure.code }}</span>
-                        </p>
-                        <p class="mb-0">
-                            <strong>التصنيف:</strong>
-                            <span class="badge bg-info">{{ selected_procedure.classification|default:"-" }}</span>  <!-- ✅ classification -->
-                        </p>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">اسم العملية</span>
+                            <span class="value">{{ selected_procedure.operation_name }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">الكود</span>
+                            <span class="value">
+                                <span class="status-badge primary">{{ selected_procedure.code }}</span>
+                            </span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">التصنيف</span>
+                            <span class="value">
+                                <span class="status-badge warning">{{ selected_procedure.category|default:"-" }}</span>
+                            </span>
+                        </div>
                     </div>
-
-                    <!-- ✅ معلومات الجهة (شيت 14) -->
-                    <div class="mb-3 p-3 bg-light rounded">
-                        <h6 class="fw-bold text-success">
-                            <i class="fas fa-building me-1"></i>
+                    
+                    <!-- ✅ معلومات الجهة -->
+                    <div class="info-card mb-3">
+                        <div class="card-title">
+                            <i class="fas fa-building text-success"></i>
                             الجهة المختارة
-                        </h6>
-                        <p class="mb-1">
-                            <strong>اسم الجهة:</strong>
-                            {{ selected_entity.entity_name }}
-                        </p>
-                        <p class="mb-1">
-                            <strong>الفئة المالية:</strong>
-                            <span class="badge bg-secondary">{{ selected_entity.financial_category }}</span>
-                        </p>
-                        <p class="mb-1">
-                            <strong>قائمة الأسعار:</strong>
-                            {{ selected_entity.price_list|default:"-" }}
-                        </p>
-                        <p class="mb-0">
-                            <strong>معدل الخصم:</strong>
-                            <span class="badge bg-success">{{ selected_entity.discount_rate|default:"-" }}</span>
-                        </p>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">اسم الجهة</span>
+                            <span class="value">{{ selected_entity.entity_name }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">الفئة المالية</span>
+                            <span class="value">
+                                <span class="status-badge secondary">{{ selected_entity.financial_category }}</span>
+                            </span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">قائمة الأسعار</span>
+                            <span class="value">{{ selected_entity.price_list|default:"-" }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">معدل الخصم</span>
+                            <span class="value">
+                                <span class="status-badge success">{{ selected_entity.discount_rate|default:"-" }}</span>
+                            </span>
+                        </div>
                     </div>
-
+                    
                     <hr>
-
+                    
                     <!-- ✅ الأتعاب -->
                     <h6 class="fw-bold text-muted text-center mb-3">
                         <i class="fas fa-money-bill-wave me-1"></i>
-                        الأتعاب حسب التصنيف "{{ selected_procedure.classification|default:'غير محدد' }}"  <!-- ✅ classification -->
+                        الأتعاب حسب التصنيف "{{ selected_procedure.category|default:'غير محدد' }}"
                     </h6>
-
+                    
                     {% if fees_data %}
-
                     <div class="table-responsive">
-                        <table class="table table-bordered">
-                            <thead class="table-light">
+                        <table class="table fee-table">
+                            <thead>
                                 <tr>
                                     <th>النوع</th>
                                     <th class="text-end">القيمة</th>
@@ -265,25 +595,39 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>جراح</td>
+                                    <td>
+                                        <i class="fas fa-user-md text-primary me-1"></i>
+                                        جراح
+                                    </td>
                                     <td class="text-end fw-bold">
                                         {{ fees_data.surgeon_fee|floatformat:0|default:"-" }}
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>تخدير</td>
+                                    <td>
+                                        <i class="fas fa-bed text-info me-1"></i>
+                                        تخدير
+                                    </td>
                                     <td class="text-end fw-bold">
                                         {{ fees_data.anesthesia_fee|floatformat:0|default:"-" }}
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>مساعد</td>
+                                    <td>
+                                        <i class="fas fa-user-nurse text-secondary me-1"></i>
+                                        مساعد
+                                    </td>
                                     <td class="text-end fw-bold">
                                         {{ fees_data.assistant_fee|floatformat:0|default:"-" }}
                                     </td>
                                 </tr>
-                                <tr class="table-success">
-                                    <td><strong>الإجمالي</strong></td>
+                                <tr class="total-row">
+                                    <td>
+                                        <strong>
+                                            <i class="fas fa-calculator text-success me-1"></i>
+                                            الإجمالي
+                                        </strong>
+                                    </td>
                                     <td class="text-end fw-bold text-success">
                                         {{ fees_data.total_fee|floatformat:0|default:"-" }}
                                     </td>
@@ -291,217 +635,277 @@
                             </tbody>
                         </table>
                     </div>
-
                     {% else %}
-
                     <div class="alert alert-warning text-center">
                         <i class="fas fa-exclamation-triangle me-1"></i>
                         لا توجد أتعاب لهذا التصنيف لدى هذه الجهة
                     </div>
-
                     {% endif %}
-
+                    
                 </div>
-
             </div>
-
         </div>
-
     </div>
 
-    <!-- ✅ إذا تم البحث عن عملية فقط -->
-    {% elif selected_procedure and not selected_entity %}
+    <!-- ✅ ✅ ✅ إذا تم البحث عن عملية وهناك جهات متاحة -->
+    {% elif selected_procedure and entities %}
 
-    <div class="alert alert-info text-center py-5">
-        <i class="fas fa-info-circle fa-3x d-block mb-3 text-muted"></i>
-        <h5 class="text-muted">تم العثور على العملية</h5>
+    <div class="row">
+        <div class="col-12">
+            <div class="alert alert-success text-center py-3">
+                <i class="fas fa-check-circle fa-2x d-block mb-2 text-success"></i>
+                <h5 class="text-success">تم العثور على العملية</h5>
+                <p class="text-muted small">
+                    <strong>{{ selected_procedure.operation_name }}</strong>
+                    ({{ selected_procedure.code }}) - التصنيف: 
+                    <span class="status-badge warning">{{ selected_procedure.category|default:"غير محدد" }}</span>
+                </p>
+                <p class="text-muted">اختر جهة من البطاقات أدناه لعرض الأتعاب</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ✅ عرض الجهات المتاحة للعملية - بنفس تصميم info-card -->
+    <div class="row g-4">
+        {% for entity in entities %}
+        <div class="col-md-6 col-lg-4">
+            <div class="info-card 
+                {% if forloop.first %}border-primary border-2{% endif %}"
+                style="cursor: pointer;"
+                onclick="window.location.href='?procedure_search={{ procedure_search }}&entity={{ entity.id }}&category={{ selected_category }}'">
+                
+                <div class="card-title">
+                    <i class="fas fa-building text-primary"></i>
+                    {{ entity.entity_name|default:"غير محدد" }}
+                </div>
+                
+                <div class="info-item">
+                    <span class="label">الفئة المالية</span>
+                    <span class="value">
+                        <span class="status-badge secondary">{{ entity.financial_category|default:"-" }}</span>
+                    </span>
+                </div>
+                <div class="info-item">
+                    <span class="label">قائمة الأسعار</span>
+                    <span class="value">{{ entity.price_list|default:"-" }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">معدل الخصم</span>
+                    <span class="value">
+                        <span class="status-badge success">{{ entity.discount_rate|default:"-" }}</span>
+                    </span>
+                </div>
+                
+                <hr>
+                
+                <!-- ✅ عرض الأتعاب لهذه الجهة -->
+                {% if selected_category and selected_category in entity.fees %}
+                <div class="table-responsive">
+                    <table class="table fee-table mb-0">
+                        <thead>
+                            <tr>
+                                <th>النوع</th>
+                                <th class="text-end">القيمة</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>جراح</td>
+                                <td class="text-end fw-bold">
+                                    {{ entity.selected_surgeon_fee|floatformat:0|default:"-" }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>تخدير</td>
+                                <td class="text-end fw-bold">
+                                    {{ entity.selected_anesthesia_fee|floatformat:0|default:"-" }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>مساعد</td>
+                                <td class="text-end fw-bold">
+                                    {{ entity.selected_assistant_fee|floatformat:0|default:"-" }}
+                                </td>
+                            </tr>
+                            <tr class="total-row">
+                                <td><strong>الإجمالي</strong></td>
+                                <td class="text-end fw-bold text-success">
+                                    {{ entity.selected_total_fee|floatformat:0|default:"-" }}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="alert alert-info text-center small mb-0">
+                    <i class="fas fa-info-circle me-1"></i>
+                    اختر تصنيفاً لعرض الأتعاب
+                </div>
+                {% endif %}
+                
+                <div class="mt-2 text-center">
+                    <span class="badge bg-primary">اضغط للاختيار</span>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- ✅ إذا تم البحث عن عملية فقط (ولا يوجد جهات) -->
+    {% elif selected_procedure and not entities %}
+
+    <div class="no-results">
+        <i class="fas fa-building"></i>
+        <h5 class="text-muted">لا توجد جهات متاحة</h5>
         <p class="text-muted small">
-            <strong>{{ selected_procedure.name_ar }}</strong>  <!-- ✅ name_ar -->
-            ({{ selected_procedure.code }}) - التصنيف: {{ selected_procedure.classification|default:"غير محدد" }}  <!-- ✅ classification -->
+            <strong>{{ selected_procedure.operation_name }}</strong>
+            ({{ selected_procedure.code }}) - التصنيف: 
+            <span class="status-badge warning">{{ selected_procedure.category|default:"غير محدد" }}</span>
         </p>
-        <p class="text-muted">يرجى اختيار جهة من البحث أدناه لعرض الأتعاب</p>
+        <p class="text-muted">لا توجد أتعاب مسجلة لهذا التصنيف لدى أي جهة</p>
+        <a href="{% url 'procedure_fees' %}" class="btn btn-outline-primary btn-sm mt-2">
+            <i class="fas fa-undo me-1"></i> بحث جديد
+        </a>
     </div>
 
-    <!-- ✅ عرض البطاقات القديمة (عند البحث عن جهة) -->
+    <!-- ✅ عرض البطاقات القديمة (عند البحث عن جهة فقط) -->
     {% elif entities %}
 
     <div class="row g-4">
-
         {% for entity in entities %}
-
         <div class="col-md-6 col-lg-4">
-
-            <div class="card shadow-sm border-0 hover-shadow h-100">
-
-                <div class="card-header bg-primary text-white">
-
-                    <h5 class="mb-0">
-                        <i class="fas fa-building me-2"></i>
-                        {{ entity.entity_name|default:"غير محدد" }}
-                    </h5>
-
+            <div class="info-card">
+                <div class="card-title">
+                    <i class="fas fa-building text-primary"></i>
+                    {{ entity.entity_name|default:"غير محدد" }}
                 </div>
-
-                <div class="card-body">
-
-                    <!-- ✅ معلومات الجهة -->
-                    <div class="mb-3">
-                        <p class="mb-1">
-                            <strong>الفئة المالية:</strong>
-                            <span class="badge bg-secondary">{{ entity.financial_category|default:"-" }}</span>
-                        </p>
-                        <p class="mb-1">
-                            <strong>قائمة الأسعار:</strong>
-                            {{ entity.price_list|default:"-" }}
-                        </p>
-                        <p class="mb-0">
-                            <strong>معدل الخصم:</strong>
-                            <span class="badge bg-success">{{ entity.discount_rate|default:"-" }}</span>
-                        </p>
-                    </div>
-
-                    <hr>
-
-                    <!-- ✅ الأتعاب حسب التصنيف -->
-                    <h6 class="fw-bold text-muted mb-3">
-                        <i class="fas fa-money-bill-wave me-1"></i>
-                        الأتعاب
-                        {% if selected_category %}
-                        <span class="badge bg-info">{{ selected_category }}</span>
-                        {% endif %}
-                    </h6>
-
+                
+                <div class="info-item">
+                    <span class="label">الفئة المالية</span>
+                    <span class="value">
+                        <span class="status-badge secondary">{{ entity.financial_category|default:"-" }}</span>
+                    </span>
+                </div>
+                <div class="info-item">
+                    <span class="label">قائمة الأسعار</span>
+                    <span class="value">{{ entity.price_list|default:"-" }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">معدل الخصم</span>
+                    <span class="value">
+                        <span class="status-badge success">{{ entity.discount_rate|default:"-" }}</span>
+                    </span>
+                </div>
+                
+                <hr>
+                
+                <!-- ✅ الأتعاب حسب التصنيف -->
+                <h6 class="fw-bold text-muted mb-3">
+                    <i class="fas fa-money-bill-wave me-1"></i>
+                    الأتعاب
                     {% if selected_category %}
-
-                    <div class="table-responsive">
-                        <table class="table table-sm table-bordered mb-0">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>النوع</th>
-                                    <th class="text-end">القيمة</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>جراح</td>
-                                    <td class="text-end fw-bold">
-                                        {{ entity.selected_surgeon_fee|floatformat:0|default:"-" }}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>تخدير</td>
-                                    <td class="text-end fw-bold">
-                                        {{ entity.selected_anesthesia_fee|floatformat:0|default:"-" }}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>مساعد</td>
-                                    <td class="text-end fw-bold">
-                                        {{ entity.selected_assistant_fee|floatformat:0|default:"-" }}
-                                    </td>
-                                </tr>
-                                <tr class="table-success">
-                                    <td><strong>الإجمالي</strong></td>
-                                    <td class="text-end fw-bold text-success">
-                                        {{ entity.selected_total_fee|floatformat:0|default:"-" }}
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    {% else %}
-
-                    <div class="alert alert-info text-center">
-                        <i class="fas fa-info-circle me-1"></i>
-                        اختر تصنيفاً لعرض الأتعاب
-                    </div>
-
+                    <span class="status-badge warning">{{ selected_category }}</span>
                     {% endif %}
-
+                </h6>
+                
+                {% if selected_category %}
+                <div class="table-responsive">
+                    <table class="table fee-table mb-0">
+                        <thead>
+                            <tr>
+                                <th>النوع</th>
+                                <th class="text-end">القيمة</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>جراح</td>
+                                <td class="text-end fw-bold">
+                                    {{ entity.selected_surgeon_fee|floatformat:0|default:"-" }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>تخدير</td>
+                                <td class="text-end fw-bold">
+                                    {{ entity.selected_anesthesia_fee|floatformat:0|default:"-" }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>مساعد</td>
+                                <td class="text-end fw-bold">
+                                    {{ entity.selected_assistant_fee|floatformat:0|default:"-" }}
+                                </td>
+                            </tr>
+                            <tr class="total-row">
+                                <td><strong>الإجمالي</strong></td>
+                                <td class="text-end fw-bold text-success">
+                                    {{ entity.selected_total_fee|floatformat:0|default:"-" }}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-
+                {% else %}
+                <div class="alert alert-info text-center">
+                    <i class="fas fa-info-circle me-1"></i>
+                    اختر تصنيفاً لعرض الأتعاب
+                </div>
+                {% endif %}
+                
             </div>
-
         </div>
-
         {% endfor %}
-
     </div>
 
     {% else %}
 
-    <!-- ✅ رسالة ترحيبية -->
-    <div class="alert alert-info text-center py-5">
-        <i class="fas fa-search fa-3x d-block mb-3 text-muted"></i>
+    <!-- ✅ رسالة ترحيبية - نفس تصميم الكود الأول -->
+    <div class="no-results">
+        <i class="fas fa-search"></i>
         <h5 class="text-muted">ابحث عن عملية أو جهة</h5>
         <p class="text-muted small">
             استخدم مربع البحث عن العملية (شيت 13) أو مربع البحث عن الجهة (شيت 14)
         </p>
-        <p class="text-muted small">
-            <span class="badge bg-primary">شيت 13</span> توصيف العمليات
-            <span class="badge bg-success mx-2">شيت 14</span> أتعاب العمليات
-        </p>
+        <div class="d-flex justify-content-center gap-3 flex-wrap mt-3">
+            <span class="badge bg-primary px-3 py-2">
+                <i class="fas fa-procedures me-1"></i> شيت 13 - توصيف العمليات
+            </span>
+            <span class="badge bg-success px-3 py-2">
+                <i class="fas fa-building me-1"></i> شيت 14 - أتعاب العمليات
+            </span>
+        </div>
     </div>
 
     {% endif %}
 
 </div>
 
-<!-- ============================================ -->
-<!-- ✅ CSS تحسينات -->
-<!-- ============================================ -->
-<style>
-    .bg-gradient-primary {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    }
+<script>
+// ============================================
+// ✅ تشغيل البحث عند الضغط على Enter
+// ============================================
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInputs = document.querySelectorAll('input[list]');
+    searchInputs.forEach(input => {
+        input.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                this.form.submit();
+            }
+        });
+    });
+});
 
-    .hover-shadow {
-        transition: all 0.3s ease;
+// ============================================
+// ✅ Auto Submit للفلاتر
+// ============================================
+document.addEventListener('DOMContentLoaded', function() {
+    const select = document.querySelector('select[name="category"]');
+    if (select) {
+        select.addEventListener('change', function() {
+            this.form.submit();
+        });
     }
-
-    .hover-shadow:hover {
-        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
-        transform: translateY(-2px);
-    }
-
-    .card {
-        border-radius: 1rem;
-        overflow: hidden;
-    }
-
-    .card-header {
-        border-radius: 0 !important;
-    }
-
-    .badge {
-        font-weight: 500;
-    }
-
-    .input-group-text {
-        border-radius: 0.5rem 0 0 0.5rem;
-        background: #f8f9fa;
-    }
-
-    .form-control,
-    .form-select {
-        border-radius: 0 0.5rem 0.5rem 0;
-    }
-
-    .form-control:focus,
-    .form-select:focus {
-        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
-        border-color: #667eea;
-    }
-
-    @media (max-width: 768px) {
-        .card-body {
-            padding: 1rem;
-        }
-        .badge.fs-6 {
-            font-size: 0.85rem !important;
-        }
-    }
-</style>
+});
+</script>
 
 {% endblock %}
