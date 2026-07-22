@@ -7,95 +7,563 @@
 
 {% block content %}
 
+<!-- ✅ CSS في البداية مباشرة لمنع الـ FOUC -->
+<style>
+    /* ===== Reset and Base ===== */
+    .filter-card {
+        background: #ffffff !important;
+        border-radius: 16px !important;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06) !important;
+        border: 1px solid #e9ecef !important;
+        overflow: hidden !important;
+        transition: all 0.3s ease !important;
+    }
+
+    .filter-header {
+        padding: 16px 24px !important;
+        background: #f8f9fa !important;
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+    }
+
+    .filter-body {
+        padding: 24px !important;
+    }
+
+    .filter-label {
+        font-size: 13px !important;
+        font-weight: 600 !important;
+        color: #495057 !important;
+        margin-bottom: 6px !important;
+        display: block !important;
+    }
+
+    .filter-control {
+        width: 100% !important;
+        padding: 10px 16px !important;
+        border: 2px solid #e9ecef !important;
+        border-radius: 12px !important;
+        font-size: 14px !important;
+        transition: all 0.3s ease !important;
+        background: #fff !important;
+        color: #2d3748 !important;
+        outline: none !important;
+    }
+
+    .filter-control:focus {
+        border-color: #0d6efd !important;
+        box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.12) !important;
+    }
+
+    .filter-control:hover {
+        border-color: #0d6efd !important;
+    }
+
+    .btn-filter {
+        background: #0d6efd !important;
+        color: white !important;
+        border: none !important;
+        padding: 10px 24px !important;
+        border-radius: 12px !important;
+        font-weight: 600 !important;
+        font-size: 14px !important;
+        cursor: pointer !important;
+        transition: all 0.3s ease !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+        width: 100% !important;
+        justify-content: center !important;
+    }
+
+    .btn-filter:hover {
+        background: #0b5ed7 !important;
+        transform: translateY(-2px) !important;
+        box-shadow: 0 4px 15px rgba(13, 110, 253, 0.3) !important;
+    }
+
+    /* ===== Search Box ===== */
+    .search-section {
+        width: 100% !important;
+    }
+
+    .search-wrapper {
+        display: flex !important;
+        align-items: center !important;
+        gap: 12px !important;
+        background: #fff !important;
+        border-radius: 50px !important;
+        box-shadow: 0 4px 20px rgba(13, 110, 253, 0.12) !important;
+        padding: 4px !important;
+        transition: all 0.3s ease !important;
+        border: 2px solid transparent !important;
+    }
+
+    .search-wrapper:focus-within {
+        box-shadow: 0 4px 30px rgba(13, 110, 253, 0.25) !important;
+        border-color: #0d6efd !important;
+        transform: translateY(-2px) !important;
+    }
+
+    .search-wrapper:hover {
+        box-shadow: 0 4px 25px rgba(13, 110, 253, 0.18) !important;
+    }
+
+    .search-input-group {
+        display: flex !important;
+        align-items: center !important;
+        flex: 1 !important;
+        background: transparent !important;
+        border-radius: 50px !important;
+    }
+
+    .search-input {
+        flex: 1 !important;
+        border: none !important;
+        padding: 16px 24px !important;
+        font-size: 16px !important;
+        background: transparent !important;
+        outline: none !important;
+        color: #2d3748 !important;
+        border-radius: 50px !important;
+        min-width: 200px !important;
+    }
+
+    .search-input::placeholder {
+        color: #a0aec0 !important;
+        font-weight: 400 !important;
+    }
+
+    .btn-search {
+        background: #0d6efd !important;
+        color: white !important;
+        border: none !important;
+        padding: 12px 32px !important;
+        border-radius: 50px !important;
+        font-weight: 600 !important;
+        font-size: 15px !important;
+        cursor: pointer !important;
+        transition: all 0.3s ease !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+        white-space: nowrap !important;
+        margin: 4px !important;
+    }
+
+    .btn-search:hover {
+        background: #0b5ed7 !important;
+        transform: scale(1.02) !important;
+        box-shadow: 0 4px 15px rgba(13, 110, 253, 0.4) !important;
+    }
+
+    .btn-search:active {
+        transform: scale(0.98) !important;
+    }
+
+    .btn-search-clear {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 48px !important;
+        height: 48px !important;
+        border-radius: 50% !important;
+        background: #f8f9fa !important;
+        color: #6c757d !important;
+        text-decoration: none !important;
+        transition: all 0.3s ease !important;
+        flex-shrink: 0 !important;
+        margin-right: 4px !important;
+    }
+
+    .btn-search-clear:hover {
+        background: #e9ecef !important;
+        color: #0d6efd !important;
+        transform: rotate(180deg) !important;
+    }
+
+    /* ===== Stats Cards ===== */
+    .stat-card {
+        background: #ffffff !important;
+        border-radius: 16px !important;
+        padding: 20px 24px !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 16px !important;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06) !important;
+        border: 1px solid #e9ecef !important;
+        transition: all 0.3s ease !important;
+        height: 100% !important;
+    }
+
+    .stat-card:hover {
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08) !important;
+        transform: translateY(-3px) !important;
+    }
+
+    .stat-icon {
+        width: 48px !important;
+        height: 48px !important;
+        border-radius: 12px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        font-size: 20px !important;
+        color: white !important;
+        flex-shrink: 0 !important;
+    }
+
+    .stat-icon.bg-primary { background: #0d6efd !important; }
+    .stat-icon.bg-success { background: #198754 !important; }
+    .stat-icon.bg-warning { background: #ffc107 !important; color: #212529 !important; }
+    .stat-icon.bg-info { background: #0dcaf0 !important; color: #212529 !important; }
+
+    .stat-content {
+        flex: 1 !important;
+        min-width: 0 !important;
+    }
+
+    .stat-value {
+        font-size: 22px !important;
+        font-weight: 700 !important;
+        color: #1a202c !important;
+        line-height: 1.2 !important;
+    }
+
+    .stat-label {
+        font-size: 13px !important;
+        color: #6c757d !important;
+        font-weight: 500 !important;
+        margin-top: 2px !important;
+    }
+
+    /* ===== Table Styles ===== */
+    .table-container {
+        background: #ffffff !important;
+        border-radius: 16px !important;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06) !important;
+        border: 1px solid #e9ecef !important;
+        overflow: hidden !important;
+        transition: all 0.3s ease !important;
+    }
+
+    .table-container:hover {
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08) !important;
+    }
+
+    .table-wrapper {
+        padding: 0 !important;
+        overflow: hidden !important;
+    }
+
+    .table-responsive {
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+    }
+
+    .table {
+        margin-bottom: 0 !important;
+        font-size: 14px !important;
+        min-width: 100% !important;
+    }
+
+    /* ===== Table Header - أسود Bold ===== */
+    .table thead {
+        background: #f8f9fa !important;
+        border-bottom: 2px solid #dee2e6 !important;
+    }
+
+    .table thead th {
+        padding: 14px 16px !important;
+        font-weight: 700 !important;
+        font-size: 13px !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.5px !important;
+        border: none !important;
+        white-space: nowrap !important;
+        color: #000000 !important;
+        background: #f8f9fa !important;
+        position: sticky !important;
+        top: 0 !important;
+        z-index: 10 !important;
+    }
+
+    .table thead th i {
+        opacity: 0.7 !important;
+        color: #000000 !important;
+    }
+
+    /* ===== Table Body - أسود ===== */
+    .table tbody tr {
+        transition: all 0.2s ease !important;
+        border-bottom: 1px solid #f1f3f5 !important;
+    }
+
+    .table tbody tr:last-child {
+        border-bottom: none !important;
+    }
+
+    .table tbody tr:hover {
+        background-color: #f8f9fa !important;
+        transform: scale(1.001) !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04) !important;
+    }
+
+    .table tbody td {
+        padding: 12px 16px !important;
+        vertical-align: middle !important;
+        color: #000000 !important;
+        font-weight: 400 !important;
+    }
+
+    /* ===== Badges ===== */
+    .badge {
+        font-weight: 500 !important;
+        padding: 4px 12px !important;
+        border-radius: 8px !important;
+        font-size: 12px !important;
+    }
+
+    .badge.bg-primary { 
+        background: #0d6efd !important; 
+        color: white !important;
+    }
+    .badge.bg-success { 
+        background: #198754 !important; 
+        color: white !important;
+    }
+    .badge.bg-warning { 
+        background: #ffc107 !important; 
+        color: #212529 !important; 
+    }
+    .badge.bg-info { 
+        background: #0dcaf0 !important; 
+        color: #000000 !important; 
+    }
+    .badge.bg-secondary { 
+        background: #6c757d !important; 
+        color: white !important;
+    }
+
+    /* ===== Buttons ===== */
+    .btn-details {
+        background: #0d6efd !important;
+        color: white !important;
+        border: none !important;
+        padding: 6px 16px !important;
+        border-radius: 8px !important;
+        font-size: 13px !important;
+        font-weight: 500 !important;
+        cursor: pointer !important;
+        transition: all 0.3s ease !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+    }
+
+    .btn-details:hover {
+        background: #0b5ed7 !important;
+        transform: translateY(-2px) !important;
+        box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3) !important;
+    }
+
+    .btn-details:active {
+        transform: translateY(0) !important;
+    }
+
+    /* ===== Text Colors ===== */
+    .text-muted {
+        color: #000000 !important;
+        opacity: 0.8 !important;
+    }
+
+    .text-success {
+        color: #000000 !important;
+        font-weight: 700 !important;
+    }
+
+    .fw-bold {
+        font-weight: 700 !important;
+        color: #000000 !important;
+    }
+
+    .text-primary {
+        color: #0d6efd !important;
+    }
+
+    /* ===== Strong and Bold ===== */
+    strong {
+        color: #000000 !important;
+        font-weight: 700 !important;
+    }
+
+    /* ===== Table Data with Badge ===== */
+    .table tbody td .badge {
+        color: #000000 !important;
+    }
+
+    .table tbody td .badge.bg-primary,
+    .table tbody td .badge.bg-success,
+    .table tbody td .badge.bg-secondary {
+        color: white !important;
+    }
+
+    .table tbody td .badge.bg-warning {
+        color: #000000 !important;
+    }
+
+    .table tbody td .badge.bg-info {
+        color: #000000 !important;
+    }
+</style>
+
 <div class="container-fluid">
 
+    <!-- ============================================ -->
     <!-- ✅ Header محسن -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h4 class="fw-bold mb-0">
-                <i class="fas fa-search text-primary me-2"></i>
-                تفاصيل التسعير
-            </h4>
-            <p class="text-muted small mt-1">
-                <i class="fas fa-arrow-left me-1"></i>
-                عرض وتحليل تفاصيل التسعير من شيت رقم 7
-            </p>
-        </div>
-        <div>
-            <span class="badge bg-primary rounded-pill fs-6 px-3 py-2">
-                <i class="fas fa-calendar-alt me-1"></i>
-                آخر تحديث: {% now "Y-m-d" %}
-            </span>
+    <!-- ============================================ -->
+    <div class="header-wrapper mb-4">
+        <div class="d-flex flex-wrap justify-content-between align-items-start gap-2">
+            <div>
+                <h4 class="fw-bold mb-0 fs-5 fs-md-4">
+                    <i class="fas fa-search text-primary me-2"></i>
+                    تفاصيل التسعير
+                </h4>
+                <p class="text-muted small mt-1 mb-0">
+                    <i class="fas fa-arrow-left me-1"></i>
+                    عرض وتحليل تفاصيل التسعير من شيت رقم 7
+                </p>
+            </div>
+            <div class="flex-shrink-0">
+                <span class="badge bg-primary rounded-pill fs-6 px-3 py-2 d-inline-flex align-items-center gap-1">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span class="d-none d-sm-inline">آخر تحديث:</span>
+                    {% now "Y-m-d" %}
+                </span>
+            </div>
         </div>
     </div>
 
     <!-- ============================================ -->
-    <!-- ✅ Script للبحث -->
+    <!-- ✅ Script للبحث الفوري -->
     <!-- ============================================ -->
     <script>
-        // ✅ منع الإرسال المتكرر
         let isSubmitting = false;
+        let searchTimeout = null;
         
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('searchForm');
+            const searchInput = document.getElementById('searchInput');
+            
             if (form) {
-                form.addEventListener('submit', function() {
-                    isSubmitting = true;
-                    setTimeout(function() {
-                        isSubmitting = false;
-                    }, 2000);
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    if (!isSubmitting) {
+                        isSubmitting = true;
+                        this.submit();
+                        setTimeout(function() {
+                            isSubmitting = false;
+                        }, 2000);
+                    }
+                });
+            }
+            
+            // ✅ البحث الفوري عند اختيار اقتراح من datalist
+            if (searchInput) {
+                searchInput.addEventListener('change', function() {
+                    if (this.value.trim() !== '') {
+                        clearTimeout(searchTimeout);
+                        searchTimeout = setTimeout(function() {
+                            if (!isSubmitting) {
+                                isSubmitting = true;
+                                document.getElementById('searchForm').submit();
+                                setTimeout(function() {
+                                    isSubmitting = false;
+                                }, 2000);
+                            }
+                        }, 300);
+                    }
+                });
+                
+                // ✅ البحث الفوري عند الضغط على Enter
+                searchInput.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        if (this.value.trim() !== '' && !isSubmitting) {
+                            isSubmitting = true;
+                            document.getElementById('searchForm').submit();
+                            setTimeout(function() {
+                                isSubmitting = false;
+                            }, 2000);
+                        }
+                    }
                 });
             }
         });
     </script>
 
     <!-- ============================================ -->
-    <!-- ✅ شريط البحث والفلاتر المحسن -->
+    <!-- ✅ شريط البحث -->
     <!-- ============================================ -->
-    <div class="card shadow-sm border-0 mb-4 hover-shadow">
+    <div class="search-section mb-4">
+        <form method="get" id="searchForm">
+            <div class="search-wrapper">
+                <div class="search-input-group">
+                    <input type="text" 
+                           id="searchInput"
+                           name="search" 
+                           list="search-suggestions"
+                           class="search-input" 
+                           placeholder="ابحث باسم المريض، الإجراء، الشركة، رقم الكارنية..." 
+                           value="{{ search }}"
+                           autocomplete="off">
+                    <datalist id="search-suggestions">
+                        {% for item in page_obj %}
+                            <option value="{{ item.patient_name }}">{{ item.patient_name }}</option>
+                            <option value="{{ item.procedure_name }}">{{ item.procedure_name }}</option>
+                            <option value="{{ item.company_name }}">{{ item.company_name }}</option>
+                            <option value="{{ item.card_number }}">{{ item.card_number }}</option>
+                        {% endfor %}
+                    </datalist>
+                    <button class="btn-search" type="submit">
+                        <i class="fas fa-search"></i>
+                        <span class="d-none d-sm-inline">بحث</span>
+                    </button>
+                </div>
+                <a href="{% url 'pricing_details' %}" class="btn-search-clear" title="مسح البحث">
+                    <i class="fas fa-undo"></i>
+                </a>
+            </div>
+        </form>
+    </div>
 
-        <div class="card-header bg-gradient-primary text-white">
-            <h5 class="mb-0">
-                <i class="fas fa-sliders-h"></i>
-                الفلاتر والبحث
-            </h5>
+    <!-- ============================================ -->
+    <!-- ✅ كارت الفلاتر -->
+    <!-- ============================================ -->
+    <div class="filter-card mb-4">
+        <div class="filter-header">
+            <div class="d-flex align-items-center flex-wrap gap-2">
+                <i class="fas fa-sliders-h me-2"></i>
+                <span class="fw-bold">فلاتر البحث المتقدم</span>
+                <span class="badge bg-primary rounded-pill">
+                    <i class="fas fa-filter me-1"></i>
+                    {{ results_count }} نتيجة
+                </span>
+            </div>
         </div>
-
-        <div class="card-body">
-            <form method="get" id="searchForm">
+        
+        <div class="filter-body">
+            <form method="get" id="filterForm">
                 <div class="row g-3">
-                    <!-- ✅ حقل البحث مع datalist (مضاف إليه رقم الكارنية) -->
-                    <div class="col-md-3">
-                        <label class="form-label fw-bold small text-muted">
-                            <i class="fas fa-search"></i> بحث
-                        </label>
-                        <input type="text" 
-                               name="search" 
-                               list="search-suggestions"
-                               class="form-control form-control-lg" 
-                               placeholder="ابحث باسم المريض أو الإجراء أو الشركة أو رقم الكارنية..." 
-                               value="{{ search }}" 
-                               onchange="this.form.submit()"
-                               autocomplete="off">
-                        <datalist id="search-suggestions">
-                            {% for item in page_obj %}
-                                <option value="{{ item.patient_name }}">{{ item.patient_name }}</option>
-                                <option value="{{ item.procedure_name }}">{{ item.procedure_name }}</option>
-                                <option value="{{ item.company_name }}">{{ item.company_name }}</option>
-                                <option value="{{ item.card_number }}">{{ item.card_number }}</option>
-                            {% endfor %}
-                        </datalist>
-                    </div>
-                    
-                    <!-- ✅ فلتر الجروب مع datalist -->
-                    <div class="col-md-2">
-                        <label class="form-label fw-bold small text-muted">
-                            <i class="fas fa-layer-group"></i> الجروب
+                    <div class="col-6 col-md-3">
+                        <label class="filter-label">
+                            <i class="fas fa-layer-group me-1"></i> الجروب
                         </label>
                         <input type="text" 
                                name="group" 
                                list="group-suggestions"
-                               class="form-control form-control-lg" 
+                               class="filter-control" 
                                placeholder="ابحث عن جروب..." 
                                value="{{ group }}" 
                                onchange="this.form.submit()"
@@ -107,15 +575,14 @@
                         </datalist>
                     </div>
 
-                    <!-- ✅ فلتر الشركة مع datalist -->
-                    <div class="col-md-2">
-                        <label class="form-label fw-bold small text-muted">
-                            <i class="fas fa-building"></i> الشركة
+                    <div class="col-6 col-md-3">
+                        <label class="filter-label">
+                            <i class="fas fa-building me-1"></i> الشركة
                         </label>
                         <input type="text" 
                                name="company" 
                                list="company-suggestions"
-                               class="form-control form-control-lg" 
+                               class="filter-control" 
                                placeholder="ابحث عن شركة..." 
                                value="{{ company }}" 
                                onchange="this.form.submit()"
@@ -127,15 +594,14 @@
                         </datalist>
                     </div>
 
-                    <!-- ✅ فلتر الطبيب مع datalist -->
-                    <div class="col-md-2">
-                        <label class="form-label fw-bold small text-muted">
-                            <i class="fas fa-user-md"></i> الطبيب
+                    <div class="col-6 col-md-3">
+                        <label class="filter-label">
+                            <i class="fas fa-user-md me-1"></i> الطبيب
                         </label>
                         <input type="text" 
                                name="doctor" 
                                list="doctor-suggestions"
-                               class="form-control form-control-lg" 
+                               class="filter-control" 
                                placeholder="ابحث عن طبيب..." 
                                value="{{ doctor }}" 
                                onchange="this.form.submit()"
@@ -147,15 +613,14 @@
                         </datalist>
                     </div>
 
-                    <!-- ✅ فلتر التخصص مع datalist -->
-                    <div class="col-md-2">
-                        <label class="form-label fw-bold small text-muted">
-                            <i class="fas fa-stethoscope"></i> التخصص
+                    <div class="col-6 col-md-3">
+                        <label class="filter-label">
+                            <i class="fas fa-stethoscope me-1"></i> التخصص
                         </label>
                         <input type="text" 
                                name="specialty" 
                                list="specialty-suggestions"
-                               class="form-control form-control-lg" 
+                               class="filter-control" 
                                placeholder="ابحث عن تخصص..." 
                                value="{{ specialty }}" 
                                onchange="this.form.submit()"
@@ -169,15 +634,14 @@
                 </div>
 
                 <div class="row g-3 mt-2">
-                    <!-- ✅ فلتر المحاسب مع datalist -->
-                    <div class="col-md-2">
-                        <label class="form-label fw-bold small text-muted">
-                            <i class="fas fa-user-tie"></i> المحاسب
+                    <div class="col-6 col-md-3">
+                        <label class="filter-label">
+                            <i class="fas fa-user-tie me-1"></i> المحاسب
                         </label>
                         <input type="text" 
                                name="accountant" 
                                list="accountant-suggestions"
-                               class="form-control form-control-lg" 
+                               class="filter-control" 
                                placeholder="ابحث عن محاسب..." 
                                value="{{ accountant }}" 
                                onchange="this.form.submit()"
@@ -189,30 +653,26 @@
                         </datalist>
                     </div>
 
-                    <!-- ✅ فلتر الفترة -->
-                    <div class="col-md-2">
-                        <label class="form-label fw-bold small text-muted">
-                            <i class="fas fa-calendar-alt"></i> من تاريخ
+                    <div class="col-6 col-md-3">
+                        <label class="filter-label">
+                            <i class="fas fa-calendar-alt me-1"></i> من تاريخ
                         </label>
-                        <input type="date" name="date_from" class="form-control form-control-lg" value="{{ date_from }}" onchange="this.form.submit()">
-                    </div>
-                    <div class="col-md-2">
-                        <label class="form-label fw-bold small text-muted">
-                            <i class="fas fa-calendar-alt"></i> إلى تاريخ
-                        </label>
-                        <input type="date" name="date_to" class="form-control form-control-lg" value="{{ date_to }}" onchange="this.form.submit()">
+                        <input type="date" name="date_from" class="filter-control" value="{{ date_from }}" onchange="this.form.submit()">
                     </div>
 
-                    <div class="col-md-6 d-flex gap-2 align-items-end">
-                        <button class="btn btn-primary btn-lg shadow-sm" type="submit">
-                            <i class="fas fa-search me-1"></i> بحث
+                    <div class="col-6 col-md-3">
+                        <label class="filter-label">
+                            <i class="fas fa-calendar-alt me-1"></i> إلى تاريخ
+                        </label>
+                        <input type="date" name="date_to" class="filter-control" value="{{ date_to }}" onchange="this.form.submit()">
+                    </div>
+
+                    <div class="col-6 col-md-3">
+                        <button class="btn-filter" type="submit" form="filterForm">
+                            <i class="fas fa-search me-1"></i> 
+                            <span class="d-none d-sm-inline">تطبيق الفلاتر</span>
+                            <span class="d-inline d-sm-none">فلتر</span>
                         </button>
-                        <a href="{% url 'pricing_details' %}" class="btn btn-outline-secondary btn-lg shadow-sm">
-                            <i class="fas fa-undo me-1"></i> مسح الكل
-                        </a>
-                        {% if search or group or company or doctor or specialty or accountant or date_from or date_to %}
-                       
-                        {% endif %}
                     </div>
                 </div>
             </form>
@@ -220,206 +680,202 @@
     </div>
 
     <!-- ============================================ -->
-    <!-- ✅ إحصائيات النتائج المحسنة -->
+    <!-- ✅ إحصائيات النتائج -->
     <!-- ============================================ -->
-    <div class="row g-3 mb-4">
-
-        <div class="col-md-3">
-            <div class="card shadow-sm border-0 hover-shadow h-100">
-                <div class="card-body text-center py-3">
-                    <div class="d-flex align-items-center justify-content-center mb-2">
-                        <div class="rounded-circle bg-primary bg-opacity-10 p-2">
-                            <i class="fas fa-list text-primary fs-4"></i>
-                        </div>
-                    </div>
-                    <h6 class="text-muted mb-1">عدد النتائج</h6>
-                    <h3 class="fw-bold text-primary mb-0">{{ results_count }}</h3>
+    <div class="row g-2 g-md-3 mb-4">
+        <div class="col-6 col-md-3">
+            <div class="stat-card">
+                <div class="stat-icon bg-primary">
+                    <i class="fas fa-list"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-value">{{ results_count }}</div>
+                    <div class="stat-label">عدد النتائج</div>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-3">
-            <div class="card shadow-sm border-0 hover-shadow h-100">
-                <div class="card-body text-center py-3">
-                    <div class="d-flex align-items-center justify-content-center mb-2">
-                        <div class="rounded-circle bg-success bg-opacity-10 p-2">
-                            <i class="fas fa-money-bill-wave text-success fs-4"></i>
-                        </div>
-                    </div>
-                    <h6 class="text-muted mb-1">إجمالى التكلفة</h6>
-                    <h3 class="fw-bold text-success mb-0">{{ total_cost }} ج.م</h3>
+        <div class="col-6 col-md-3">
+            <div class="stat-card">
+                <div class="stat-icon bg-success">
+                    <i class="fas fa-money-bill-wave"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-value">{{ total_cost }}</div>
+                    <div class="stat-label">إجمالى التكلفة</div>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-3">
-            <div class="card shadow-sm border-0 hover-shadow h-100">
-                <div class="card-body text-center py-3">
-                    <div class="d-flex align-items-center justify-content-center mb-2">
-                        <div class="rounded-circle bg-warning bg-opacity-10 p-2">
-                            <i class="fas fa-calculator text-warning fs-4"></i>
-                        </div>
-                    </div>
-                    <h6 class="text-muted mb-1">متوسط التكلفة</h6>
-                    <h3 class="fw-bold text-warning mb-0">{{ average_cost }} ج.م</h3>
+        <div class="col-6 col-md-3">
+            <div class="stat-card">
+                <div class="stat-icon bg-warning">
+                    <i class="fas fa-calculator"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-value">{{ average_cost }}</div>
+                    <div class="stat-label">متوسط التكلفة</div>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-3">
-            <div class="card shadow-sm border-0 hover-shadow h-100">
-                <div class="card-body text-center py-3">
-                    <div class="d-flex align-items-center justify-content-center mb-2">
-                        <div class="rounded-circle bg-info bg-opacity-10 p-2">
-                            <i class="fas fa-user-md text-info fs-4"></i>
-                        </div>
-                    </div>
-                    <h6 class="text-muted mb-1">عدد الأطباء</h6>
-                    <h3 class="fw-bold text-info mb-0">{{ doctors|length }}</h3>
+        <div class="col-6 col-md-3">
+            <div class="stat-card">
+                <div class="stat-icon bg-info">
+                    <i class="fas fa-user-md"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-value">{{ doctors|length }}</div>
+                    <div class="stat-label">عدد الأطباء</div>
                 </div>
             </div>
-        </div>
-
-    </div>
-
-    <!-- ============================================ -->
-    <!-- ✅ جدول النتائج المحسن (مع إضافة رقم الكارنية) -->
-    <!-- ============================================ -->
-    <div class="card shadow-sm border-0 hover-shadow">
-        <div class="card-header bg-gradient-info text-white d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">
-                <i class="fas fa-table me-2"></i>
-                قائمة التسعيرات
-            </h5>
-            <span class="badge bg-light text-dark rounded-pill px-3 py-2">
-                <i class="fas fa-list me-1"></i>
-                {{ results_count }} سجل
-            </span>
-        </div>
-
-        <div class="card-body table-responsive">
-            <table class="table table-hover align-middle">
-                <thead class="table-light">
-                    <tr>
-                        <th><i class="fas fa-calendar-alt me-1"></i> التاريخ</th>
-                        <th><i class="fas fa-user me-1"></i> المريض</th>
-                        <th><i class="fas fa-building me-1"></i> الشركة</th>
-                        <th><i class="fas fa-user-md me-1"></i> الطبيب</th>
-                        <th><i class="fas fa-user-tie me-1"></i> المحاسب</th>
-                        <th><i class="fas fa-id-card me-1"></i> رقم الكارنية</th>
-                        <th><i class="fas fa-procedures me-1"></i> الإجراء</th>
-                        <th><i class="fas fa-stethoscope me-1"></i> التخصص</th>
-                        <th><i class="fas fa-tag me-1"></i> نوع التسعير</th>
-                        <th class="text-end"><i class="fas fa-money-bill-wave me-1"></i> التكلفة</th>
-                        <th class="text-center"><i class="fas fa-ellipsis-v me-1"></i> الإجراءات</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for item in page_obj %}
-                    <tr class="table-row-hover">
-                        <td><span class="text-muted">{{ item.pricing_date|date:"Y-m-d" }}</span></td>
-                        <td><strong>{{ item.patient_name }}</strong></td>
-                        <td>
-                            <span class="badge bg-primary">
-                                {{ item.company_name|default:"-" }}
-                            </span>
-                        </td>
-                        <td>{{ item.doctor_name|default:"-" }}</td>
-                        <td>{{ item.accountant_name|default:"-" }}</td>
-                        <td><span class="badge bg-secondary">{{ item.card_number|default:"-" }}</span></td>
-                        <td title="{{ item.procedure_name }}">
-                            {{ item.procedure_name|truncatechars:30 }}
-                        </td>
-                        <td><span class="badge bg-info">{{ item.specialty_name|default:"-" }}</span></td>
-                        <td>
-                            {% if item.pricing_type == "نقدي" %}
-                                <span class="badge bg-success">{{ item.pricing_type|default:"-" }}</span>
-                            {% elif item.pricing_type == "باكدج" %}
-                                <span class="badge bg-warning text-dark">{{ item.pricing_type|default:"-" }}</span>
-                            {% else %}
-                                <span class="badge bg-secondary">{{ item.pricing_type|default:"-" }}</span>
-                            {% endif %}
-                        </td>
-                        <td class="text-end fw-bold text-success">
-                            {% if item.cost %}
-                                {{ item.cost|floatformat:0|intcomma }} ج.م
-                            {% else %}
-                                <span class="text-muted">-</span>
-                            {% endif %}
-                        </td>
-                        <td class="text-center">
-                            <button class="btn btn-sm btn-outline-primary btn-details" 
-                                    data-bs-toggle="modal" 
-                                    data-bs-target="#detailsModal"
-                                    data-patient="{{ item.patient_name }}"
-                                    data-company="{{ item.company_name|default:'-' }}"
-                                    data-doctor="{{ item.doctor_name|default:'-' }}"
-                                    data-accountant="{{ item.accountant_name|default:'-' }}"
-                                    data-card="{{ item.card_number|default:'-' }}"
-                                    data-specialty="{{ item.specialty_name|default:'-' }}"
-                                    data-pricing-type="{{ item.pricing_type|default:'-' }}"
-                                    data-report="{{ item.report_name|default:'-' }}"
-                                    data-details="{{ item.details|default:'-' }}"
-                                    data-cost-notes="{{ item.cost_notes|default:'-' }}">
-                                <i class="fas fa-eye"></i> عرض
-                            </button>
-                        </td>
-                    </tr>
-                    {% empty %}
-                    <tr>
-                        <td colspan="11" class="text-center py-5">
-                            <i class="fas fa-inbox fa-4x d-block mb-3 text-muted"></i>
-                            <h5 class="text-muted">لا توجد نتائج</h5>
-                            <p class="text-muted small">حاول تغيير كلمات البحث أو الفلاتر</p>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
         </div>
     </div>
 
     <!-- ============================================ -->
-    <!-- ✅ Modal للتفاصيل (مع إضافة رقم الكارنية) -->
+    <!-- ✅ جدول النتائج - جميع الأعمدة ظاهرة -->
+    <!-- ============================================ -->
+    <div class="table-container">
+        <div class="table-wrapper">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th><i class="fas fa-calendar-alt me-1"></i> التاريخ</th>
+                            <th><i class="fas fa-user me-1"></i> المريض</th>
+                            <th><i class="fas fa-building me-1"></i> الشركة</th>
+                            <th><i class="fas fa-user-md me-1"></i> الطبيب</th>
+                            <th><i class="fas fa-user-tie me-1"></i> المحاسب</th>
+                            <th><i class="fas fa-id-card me-1"></i> رقم الكارنية</th>
+                            <th><i class="fas fa-procedures me-1"></i> الإجراء</th>
+                            <th><i class="fas fa-stethoscope me-1"></i> التخصص</th>
+                            <th><i class="fas fa-tag me-1"></i> نوع التسعير</th>
+                            <th class="text-end"><i class="fas fa-money-bill-wave me-1"></i> التكلفة</th>
+                            <th class="text-center"><i class="fas fa-ellipsis-v me-1"></i> الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in page_obj %}
+                        <tr>
+                            <td>{{ item.pricing_date|date:"Y-m-d" }}</td>
+                            <td><strong>{{ item.patient_name }}</strong></td>
+                            <td>
+                                <span class="badge bg-primary">
+                                    {{ item.company_name|default:"-" }}
+                                </span>
+                            </td>
+                            <td>{{ item.doctor_name|default:"-" }}</td>
+                            <td>{{ item.accountant_name|default:"-" }}</td>
+                            <td><span class="badge bg-secondary">{{ item.card_number|default:"-" }}</span></td>
+                            <td title="{{ item.procedure_name }}">
+                                {{ item.procedure_name|truncatechars:30 }}
+                            </td>
+                            <td><span class="badge bg-info">{{ item.specialty_name|default:"-" }}</span></td>
+                            <td>
+                                {% if item.pricing_type == "نقدي" %}
+                                    <span class="badge bg-success">{{ item.pricing_type|default:"-" }}</span>
+                                {% elif item.pricing_type == "باكدج" %}
+                                    <span class="badge bg-warning">{{ item.pricing_type|default:"-" }}</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">{{ item.pricing_type|default:"-" }}</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-end fw-bold">
+                                {% if item.cost %}
+                                    {{ item.cost|floatformat:0|intcomma }} ج.م
+                                {% else %}
+                                    <span class="text-muted">-</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-center">
+                                <button class="btn-details" 
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#detailsModal"
+                                        data-patient="{{ item.patient_name }}"
+                                        data-company="{{ item.company_name|default:'-' }}"
+                                        data-doctor="{{ item.doctor_name|default:'-' }}"
+                                        data-accountant="{{ item.accountant_name|default:'-' }}"
+                                        data-card="{{ item.card_number|default:'-' }}"
+                                        data-specialty="{{ item.specialty_name|default:'-' }}"
+                                        data-pricing-type="{{ item.pricing_type|default:'-' }}"
+                                        data-report="{{ item.report_name|default:'-' }}"
+                                        data-details="{{ item.details|default:'-' }}"
+                                        data-cost-notes="{{ item.cost_notes|default:'-' }}"
+                                        data-procedure="{{ item.procedure_name|default:'-' }}"
+                                        data-procedure-name="{{ item.procedure_name|default:'' }}">
+                                    <i class="fas fa-eye"></i> عرض
+                                </button>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="11" class="text-center py-5">
+                                <i class="fas fa-inbox fa-4x d-block mb-3 text-muted"></i>
+                                <h5 class="text-muted">لا توجد نتائج</h5>
+                                <p class="text-muted small">حاول تغيير كلمات البحث أو الفلاتر</p>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- ✅ Modal للتفاصيل -->
     <!-- ============================================ -->
     <div class="modal fade" id="detailsModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
-                <div class="modal-header bg-gradient-primary text-white">
-                    <h5 class="modal-title">
+                <div class="modal-header" style="background: linear-gradient(135deg, #1a237e, #0d47a1);">
+                    <h5 class="modal-title text-white">
                         <i class="fas fa-info-circle me-2"></i> تفاصيل التسعير
                     </h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="row g-3">
-                        <div class="col-md-6">
+                        <div class="col-12 col-md-6">
                             <label class="text-muted small fw-bold">اسم المريض</label>
                             <p class="fw-bold" id="modal-patient">-</p>
                         </div>
-                        <div class="col-md-6">
+                        
+                        <div class="col-12 col-md-6">
                             <label class="text-muted small fw-bold">رقم الكارنية</label>
                             <p class="fw-bold text-primary" id="modal-card">-</p>
                         </div>
-                        <div class="col-md-6">
+                        
+                        <div class="col-12 col-md-6">
                             <label class="text-muted small fw-bold">الشركة</label>
                             <p id="modal-company">-</p>
                         </div>
-                        <div class="col-md-6">
+                        
+                        <div class="col-12 col-md-6">
                             <label class="text-muted small fw-bold">الطبيب</label>
                             <p id="modal-doctor">-</p>
                         </div>
-                        <div class="col-md-6">
+                        
+                        <div class="col-12 col-md-6">
                             <label class="text-muted small fw-bold">المحاسب</label>
                             <p id="modal-accountant">-</p>
                         </div>
-                        <div class="col-md-6">
+                        
+                        <div class="col-12 col-md-6">
                             <label class="text-muted small fw-bold">التخصص</label>
                             <p id="modal-specialty">-</p>
                         </div>
-                        <div class="col-md-6">
+                        
+                        <div class="col-12 col-md-6">
                             <label class="text-muted small fw-bold">نوع التسعير</label>
                             <p id="modal-pricing-type">-</p>
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                            <label class="text-muted small fw-bold">
+                                <i class="fas fa-procedures me-1"></i> الإجراء
+                            </label>
+                            <p class="fw-bold text-primary" id="modal-procedure">-</p>
                         </div>
                         
                         <div class="col-12">
@@ -445,8 +901,11 @@
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                <div class="modal-footer flex-wrap gap-2">
+                    <a id="modal-credit-link" href="{% url 'credit_package_pricing' %}" class="btn btn-primary flex-grow-1 flex-md-grow-0">
+                        <i class="fas fa-box me-1"></i> الباكدجات الآجل
+                    </a>
+                    <button type="button" class="btn btn-secondary flex-grow-1 flex-md-grow-0" data-bs-dismiss="modal">
                         <i class="fas fa-times me-1"></i> إغلاق
                     </button>
                 </div>
@@ -467,32 +926,46 @@
                     document.getElementById('modal-accountant').textContent = button.getAttribute('data-accountant') || '-';
                     document.getElementById('modal-specialty').textContent = button.getAttribute('data-specialty') || '-';
                     document.getElementById('modal-pricing-type').textContent = button.getAttribute('data-pricing-type') || '-';
+                    
+                    document.getElementById('modal-procedure').textContent = button.getAttribute('data-procedure') || '-';
+                    
                     document.getElementById('modal-report').textContent = button.getAttribute('data-report') || '-';
                     document.getElementById('modal-details').textContent = button.getAttribute('data-details') || '-';
                     document.getElementById('modal-cost-notes').textContent = button.getAttribute('data-cost-notes') || '-';
+                    
+                    const procedureName = button.getAttribute('data-procedure-name') || '';
+                    const creditLink = document.getElementById('modal-credit-link');
+                    if (creditLink) {
+                        const baseUrl = "{% url 'credit_package_pricing' %}";
+                        creditLink.href = `${baseUrl}?procedure_search=${encodeURIComponent(procedureName)}`;
+                    }
                 });
             }
         });
     </script>
 
     <!-- ============================================ -->
-    <!-- ✅ Pagination المحسنة -->
+    <!-- ✅ Pagination -->
     <!-- ============================================ -->
     {% if page_obj.has_other_pages %}
     <nav class="mt-4">
-        <ul class="pagination justify-content-center">
+        <ul class="pagination justify-content-center flex-wrap gap-1">
             {% if page_obj.has_previous %}
             <li class="page-item">
                 <a class="page-link" href="?page={{ page_obj.previous_page_number }}&search={{ search }}&group={{ group }}&company={{ company }}&doctor={{ doctor }}&specialty={{ specialty }}&accountant={{ accountant }}&date_from={{ date_from }}&date_to={{ date_to }}">
-                    <i class="fas fa-chevron-right"></i> السابق
+                    <i class="fas fa-chevron-right"></i>
+                    <span class="d-none d-sm-inline">السابق</span>
                 </a>
             </li>
             {% endif %}
-            <li class="page-item active"><span class="page-link">{{ page_obj.number }}</span></li>
+            <li class="page-item active">
+                <span class="page-link">{{ page_obj.number }}</span>
+            </li>
             {% if page_obj.has_next %}
             <li class="page-item">
                 <a class="page-link" href="?page={{ page_obj.next_page_number }}&search={{ search }}&group={{ group }}&company={{ company }}&doctor={{ doctor }}&specialty={{ specialty }}&accountant={{ accountant }}&date_from={{ date_from }}&date_to={{ date_to }}">
-                    التالي <i class="fas fa-chevron-left"></i>
+                    <span class="d-none d-sm-inline">التالي</span>
+                    <i class="fas fa-chevron-left"></i>
                 </a>
             </li>
             {% endif %}
@@ -502,85 +975,212 @@
 
 </div>
 
-<!-- ============================================ -->
-<!-- ✅ CSS تحسينات -->
-<!-- ============================================ -->
+<!-- ✅ CSS إضافي للـ Mobile -->
 <style>
-    .bg-gradient-primary {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    /* ===== تحسينات الـ Mobile ===== */
+    
+    .header-wrapper {
+        padding: 0 4px;
     }
-
-    .bg-gradient-info {
-        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-    }
-
-    .hover-shadow {
-        transition: all 0.3s ease;
-    }
-
-    .hover-shadow:hover {
-        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
-        transform: translateY(-2px);
-    }
-
-    .table-row-hover {
-        transition: all 0.2s ease;
-    }
-
-    .table-row-hover:hover {
-        background-color: #f8f9fa !important;
-        transform: scale(1.002);
-        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    }
-
-    .table-row-hover:hover td {
-        color: #333;
-    }
-
-    .card {
-        border-radius: 1rem;
-        overflow: hidden;
-    }
-
-    .card-header {
-        border-radius: 0 !important;
-    }
-
-    .badge {
-        font-weight: 500;
-    }
-
-    .form-control:focus {
-        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
-        border-color: #667eea;
-    }
-
-    ::-webkit-scrollbar {
-        width: 8px;
-        height: 8px;
-    }
-
-    ::-webkit-scrollbar-track {
-        background: #f1f1f1;
-        border-radius: 10px;
-    }
-
-    ::-webkit-scrollbar-thumb {
-        background: #667eea;
-        border-radius: 10px;
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-        background: #5a67d8;
-    }
-
-    @media (max-width: 768px) {
-        .table-responsive {
-            font-size: 0.85rem;
+    
+    /* تحسين الـ Search على الموبايل */
+    @media (max-width: 576px) {
+        .search-wrapper {
+            border-radius: 16px !important;
+            padding: 8px !important;
+            gap: 8px !important;
         }
-        .table-responsive td,
-        .table-responsive th {
-            padding: 0.5rem;
+        
+        .search-input-group {
+            flex-wrap: wrap !important;
+        }
+        
+        .search-input {
+            padding: 12px 16px !important;
+            font-size: 14px !important;
+            border: 2px solid #e9ecef !important;
+            border-radius: 12px !important;
+            background: #f8f9fa !important;
+            min-width: unset !important;
+            width: 100% !important;
+        }
+        
+        .btn-search {
+            padding: 10px 16px !important;
+            font-size: 14px !important;
+            margin: 0 !important;
+            flex: 1 !important;
+        }
+        
+        .btn-search-clear {
+            width: 42px !important;
+            height: 42px !important;
+            margin: 0 !important;
+        }
+    }
+    
+    /* تحسين الفلاتر على الموبايل */
+    @media (max-width: 576px) {
+        .filter-header {
+            padding: 12px 16px !important;
+        }
+        
+        .filter-header .badge {
+            font-size: 11px !important;
+            padding: 4px 8px !important;
+        }
+        
+        .filter-body {
+            padding: 12px !important;
+        }
+        
+        .filter-label {
+            font-size: 12px !important;
+        }
+        
+        .filter-control {
+            padding: 8px 12px !important;
+            font-size: 13px !important;
+        }
+        
+        .btn-filter {
+            padding: 8px 12px !important;
+            font-size: 13px !important;
+        }
+    }
+    
+    /* تحسين الإحصائيات على الموبايل */
+    @media (max-width: 576px) {
+        .stat-card {
+            padding: 12px 14px !important;
+            gap: 10px !important;
+        }
+        
+        .stat-icon {
+            width: 36px !important;
+            height: 36px !important;
+            font-size: 16px !important;
+        }
+        
+        .stat-value {
+            font-size: 16px !important;
+        }
+        
+        .stat-label {
+            font-size: 11px !important;
+        }
+    }
+    
+    /* تحسين الجدول على الموبايل */
+    @media (max-width: 768px) {
+        .table-container {
+            border-radius: 12px !important;
+        }
+        
+        .table {
+            font-size: 12px !important;
+            min-width: 900px !important;
+        }
+        
+        .table thead th {
+            padding: 8px 10px !important;
+            font-size: 11px !important;
+        }
+        
+        .table tbody td {
+            padding: 8px 10px !important;
+            font-size: 12px !important;
+        }
+        
+        .table .badge {
+            font-size: 10px !important;
+            padding: 2px 8px !important;
+        }
+        
+        .btn-details {
+            padding: 4px 10px !important;
+            font-size: 11px !important;
+        }
+        
+        .table-responsive::after {
+            content: '⇄ اسحب للتمرير لعرض جميع الأعمدة' !important;
+            display: block !important;
+            text-align: center !important;
+            font-size: 11px !important;
+            color: #6c757d !important;
+            padding: 8px !important;
+            background: #f8f9fa !important;
+            border-top: 1px solid #e9ecef !important;
+        }
+    }
+    
+    @media (min-width: 769px) {
+        .table-responsive::after {
+            display: none !important;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .pagination .page-link {
+            padding: 6px 12px !important;
+            font-size: 13px !important;
+            margin: 0 2px !important;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .modal-dialog {
+            margin: 8px !important;
+        }
+        
+        .modal-header {
+            padding: 12px 16px !important;
+        }
+        
+        .modal-header h5 {
+            font-size: 16px !important;
+        }
+        
+        .modal-body {
+            padding: 12px 16px !important;
+        }
+        
+        .modal-footer {
+            padding: 12px 16px !important;
+        }
+        
+        .modal-footer .btn {
+            font-size: 13px !important;
+            padding: 8px 12px !important;
+        }
+    }
+    
+    .table-responsive {
+        -webkit-overflow-scrolling: touch;
+        scroll-behavior: smooth;
+    }
+    
+    .table-responsive::-webkit-scrollbar {
+        height: 8px !important;
+    }
+    
+    .table-responsive::-webkit-scrollbar-track {
+        background: #f1f1f1 !important;
+        border-radius: 10px !important;
+    }
+    
+    .table-responsive::-webkit-scrollbar-thumb {
+        background: #0d6efd !important;
+        border-radius: 10px !important;
+    }
+    
+    .table-responsive::-webkit-scrollbar-thumb:hover {
+        background: #0b5ed7 !important;
+    }
+    
+    @media (max-width: 768px) {
+        .stat-card, .filter-card, .table-container {
+            animation: none !important;
         }
     }
 </style>

@@ -3464,3 +3464,146 @@ Watching for file changes with StatReloader
 "GET /procedure-fees/?procedure_search=ES-001&search=%D9%88%D8%B2%D8%A7%D8%B1%D8%A9+%D8%A7%D9%84%D8%B9%D8%AF%D9%84&category=%D8%B5%D8%BA%D9%80%D9%80%D9%80%D8%B1%D9%89 HTTP/1.1" 200 69629
 Not Found: /.well-known/appspecific/com.chrome.devtools.json
 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+Watching for file changes with StatReloader
+- Broken pipe from ('127.0.0.1', 64805)
+"GET /pricing-details/ HTTP/1.1" 200 250453
+"GET /pricing-details/ HTTP/1.1" 200 250453
+"GET /pricing-details/ HTTP/1.1" 200 250453
+"GET /pricing-details/ HTTP/1.1" 200 253927
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+"GET /pricing-details/ HTTP/1.1" 200 260625
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+"GET /pricing-details/ HTTP/1.1" 200 263932
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+"GET /pricing-details/ HTTP/1.1" 200 250453
+"GET /pricing-details/ HTTP/1.1" 200 256921
+"GET /credit-package-pricing/ HTTP/1.1" 200 66003
+"GET /credit-package-pricing/ HTTP/1.1" 200 66003
+"GET /pricing-details/ HTTP/1.1" 200 263124
+"GET /credit-package-pricing/?procedure_search=%D8%A7%D8%B3%D8%AA%D8%A6%D8%B5%D8%A7%D9%84%20%D9%88%D8%B1%D9%85%20%D8%A8%D8%A7%D9%84%D8%AD%D8%AC%D8%B1%D9%87%20%D8%A7%D9%84%D8%AE%D9%84%D9%81%D9%8A%D9%87%20%D9%84%D9%84%D9%85%D8%AE HTTP/1.1" 200 66003
+"GET /pricing-details/ HTTP/1.1" 200 263124
+"GET /pricing-details/ HTTP/1.1" 200 655792
+"GET /pricing-details/?search=%D9%88%D9%84%D8%A7%D8%A1+%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D9%86%D8%A8%D9%8A HTTP/1.1" 200 56425
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+"GET /pricing-details/ HTTP/1.1" 200 655792
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+"GET /pricing-details/ HTTP/1.1" 200 656700
+"GET /pricing-details/ HTTP/1.1" 200 656700
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+"GET /pricing-details/ HTTP/1.1" 200 663867
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+"GET /pricing-details/ HTTP/1.1" 200 655488
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+"GET /pricing-details/ HTTP/1.1" 200 656348
+"GET /pricing-details/ HTTP/1.1" 200 656348
+"GET /pricing-details/ HTTP/1.1" 200 263124
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+"GET /pricing-details/ HTTP/1.1" 200 273653
+"GET /pricing-details/ HTTP/1.1" 200 273653
+"GET /pricing-details/ HTTP/1.1" 200 245303
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+"GET /pricing-details/ HTTP/1.1" 200 273653
+"GET /pricing-details/ HTTP/1.1" 200 273653
+"GET /pricing-details/ HTTP/1.1" 200 280165
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+"GET /pricing-details/?search=%D9%88%D9%84%D8%A7%D8%A1+%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D9%86%D8%A8%D9%8A HTTP/1.1" 200 59216
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+"GET /pricing-details/?group=&company=CASH&doctor=&specialty=&accountant=&date_from=&date_to= HTTP/1.1" 200 59195
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+"GET /credit-package-pricing/?procedure_search=%D8%A7%D8%B3%D8%AA%D8%A6%D8%B5%D8%A7%D9%84%20%D9%88%D8%B1%D9%85%20%D8%A8%D8%A7%D9%84%D8%AD%D8%AC%D8%B1%D9%87%20%D8%A7%D9%84%D8%AE%D9%84%D9%81%D9%8A%D9%87%20%D9%84%D9%84%D9%85%D8%AE HTTP/1.1" 200 66003
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+"GET /pricing-details/ HTTP/1.1" 200 280165
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+- Broken pipe from ('127.0.0.1', 60707)
+"GET /pricing-details/ HTTP/1.1" 200 280165
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+"GET /similar-invoices/ HTTP/1.1" 200 337070
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+"GET /pricing-details/ HTTP/1.1" 200 280165
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+"GET /pricing-details/ HTTP/1.1" 200 276097
+"GET /pricing-details/ HTTP/1.1" 200 276097
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+"GET /pricing-details/ HTTP/1.1" 200 276097
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+"GET /pricing-details/ HTTP/1.1" 200 277073
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+"GET /pricing-details/ HTTP/1.1" 200 277073
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+"GET /pricing-details/ HTTP/1.1" 200 292186
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+"GET /pricing-details/?search=%D9%88%D9%84%D8%A7%D8%A1+%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D9%86%D8%A8%D9%8A HTTP/1.1" 200 62962
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+"GET /pricing-details/?search=%D9%88%D9%84%D8%A7%D8%A1+%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D9%86%D8%A8%D9%8A HTTP/1.1" 200 59308
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+"GET /pricing-details/ HTTP/1.1" 200 277073
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+"GET /pricing-details/ HTTP/1.1" 200 276097
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+"GET /pricing-details/ HTTP/1.1" 200 292186
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+"GET /pricing-details/ HTTP/1.1" 200 282824
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+"GET /pricing-details/?search=%D9%85 HTTP/1.1" 200 282426
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+"GET /pricing-details/?search=%D9%81%D8%A7%D8%B7%D9%85%D8%A9+%D8%B2%D9%83%D8%B1%D9%8A%D8%A7+%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D8%B9%D8%B2%D9%8A%D8%B2+%D8%A7%D8%A8%D8%B1%D8%A7%D9%87%D9%8A%D9%85 HTTP/1.1" 200 64858
+"GET /pricing-details/ HTTP/1.1" 200 282824
+"GET /pricing-details/?search=%D9%81%D8%A7%D8%B7%D9%85%D8%A9+%D8%B2%D9%83%D8%B1%D9%8A%D8%A7+%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D8%B9%D8%B2%D9%8A%D8%B2+%D8%A7%D8%A8%D8%B1%D8%A7%D9%87%D9%8A%D9%85 HTTP/1.1" 200 64858
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+"GET /pricing-details/?group=&company=&doctor=%D8%AF+%D9%8A%D8%AD%D9%8A%D9%89+%D9%85%D8%AD%D9%85%D8%AF&specialty=&accountant=&date_from=&date_to= HTTP/1.1" 200 64823
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+"GET /pricing-details/?group=&company=&doctor=%D8%AF+%D9%8A%D8%AD%D9%8A%D9%89+%D9%85%D8%AD%D9%85%D8%AF&specialty=&accountant=&date_from=&date_to= HTTP/1.1" 200 65617
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+- Broken pipe from ('127.0.0.1', 56436)
+"GET /pricing-details/?search=%D9%81%D8%A7%D8%B7%D9%85%D8%A9+%D8%B2%D9%83%D8%B1%D9%8A%D8%A7+%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D8%B9%D8%B2%D9%8A%D8%B2+%D8%A7%D8%A8%D8%B1%D8%A7%D9%87%D9%8A%D9%85 HTTP/1.1" 200 65652
+"GET /pricing-details/ HTTP/1.1" 200 281323
+"GET /pricing-details/?group=&company=&doctor=&specialty=&accountant=%D9%87%D8%A7%D9%86%D9%89&date_from=&date_to= HTTP/1.1" 200 65757
