@@ -8,114 +8,132 @@
 
 <div class="container-fluid">
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h4 class="fw-bold">
-            <i class="fas fa-search text-primary"></i>
-            البحث عن خدمة
-        </h4>
+    <!-- ============================================ -->
+    <!-- ✅ العنوان مع الملاحظة -->
+    <!-- ============================================ -->
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+        <div>
+            <h4 class="fw-bold mb-1">
+                <i class="fas fa-search text-primary me-2"></i>
+                البحث عن خدمة
+            </h4>
+            <!-- ✅ الملاحظة أسفل العنوان -->
+            <small class="text-muted d-block mt-1" style="font-size: 0.75rem; border-right: 3px solid #0d6efd; padding-right: 10px;">
+                <i class="fas fa-info-circle text-primary me-1"></i>
+                <span style="font-style: italic;">
+                    علماً بأن سعر الخدمة لا يشمل أي أتعاب أو مستلزمات خاصة
+                </span>
+            </small>
+        </div>
     </div>
 
     <!-- ============================================ -->
-    <!-- ✅ Script للبحث التلقائي -->
+    <!-- ✅ Search Box (في الأعلى) -->
     <!-- ============================================ -->
-    <script>
-        let searchTimeout;
-        function searchDelay() {
-            clearTimeout(searchTimeout);
-            searchTimeout = setTimeout(function() {
-                document.getElementById('searchForm').submit();
-            }, 500);
-        }
-    </script>
+    <div class="search-wrapper">
+        <form method="GET" id="searchForm" class="input-group">
+            <!-- ✅ الحفاظ على الفلاتر في البحث -->
+            {% if patient_type %}
+            <input type="hidden" name="patient_type" value="{{ patient_type }}">
+            {% endif %}
+            {% if department %}
+            <input type="hidden" name="department" value="{{ department }}">
+            {% endif %}
+            {% if insurance_company %}
+            <input type="hidden" name="insurance_company" value="{{ insurance_company }}">
+            {% endif %}
+            {% if date_from %}
+            <input type="hidden" name="date_from" value="{{ date_from }}">
+            {% endif %}
+            {% if date_to %}
+            <input type="hidden" name="date_to" value="{{ date_to }}">
+            {% endif %}
+            
+            <input type="text" 
+                   name="search" 
+                   class="form-control" 
+                   placeholder="🔍 ابحث باسم الخدمة أو الكود أو القسم..." 
+                   value="{{ search }}"
+                   list="search-suggestions"
+                   autocomplete="off"
+                   onchange="this.form.submit()">
+            
+            <!-- ✅ قائمة الاقتراحات -->
+            <datalist id="search-suggestions">
+                <optgroup label="🏥 أسماء الخدمات">
+                    {% for name in service_names %}
+                    <option value="{{ name }}">{{ name }}</option>
+                    {% endfor %}
+                </optgroup>
+                <optgroup label="🔢 الأكواد">
+                    {% for code in service_codes %}
+                    <option value="{{ code }}">{{ code }}</option>
+                    {% endfor %}
+                </optgroup>
+                <optgroup label="🏢 الأقسام">
+                    {% for dept in department_names %}
+                    <option value="{{ dept }}">{{ dept }}</option>
+                    {% endfor %}
+                </optgroup>
+            </datalist>
+            
+            <button class="btn btn-search" type="submit">
+                <i class="fas fa-search me-2"></i>بحث
+            </button>
+        </form>
+        
+        {% if search %}
+        <div class="text-center mt-2">
+            <small class="text-muted">
+                نتائج البحث عن: <strong>"{{ search }}"</strong>
+                <a href="?{% for key, value in request.GET.items %}{% if key != 'search' %}{{ key }}={{ value }}&{% endif %}{% endfor %}" class="ms-2 text-danger text-decoration-none">
+                    <i class="fas fa-times"></i> إلغاء
+                </a>
+            </small>
+        </div>
+        {% endif %}
+    </div>
 
     <!-- ============================================ -->
-    <!-- ✅ شريط البحث والفلاتر -->
+    <!-- ✅ الفلاتر -->
     <!-- ============================================ -->
-    <!-- ============================================ -->
-<!-- ✅ شريط البحث والفلاتر -->
-<!-- ============================================ -->
-<div class="card shadow-sm border-0 mb-4">
-    <div class="card-body">
-        <form method="get" id="searchForm">
-            <div class="row g-3">
-                <!-- ✅ حقل البحث مع الاقتراحات (بدون بحث تلقائي) -->
-                <div class="col-md-4">
-                    <label class="form-label fw-bold small text-muted">
-                        <i class="fas fa-search"></i> بحث
-                    </label>
-                    <input type="text" 
-                           name="search" 
-                           list="search-suggestions" 
-                           class="form-control form-control-lg" 
-                           placeholder="ابحث باسم الخدمة أو الكود أو القسم" 
-                           value="{{ search }}" 
-                           autocomplete="off">
-                    
-                    <!-- ✅ قائمة الاقتراحات -->
-                    <datalist id="search-suggestions">
-                        <!-- الاقتراحات من أسماء الخدمات -->
-                        <optgroup label="🏥 أسماء الخدمات">
-                            {% for name in service_names %}
-                            <option value="{{ name }}">{{ name }}</option>
-                            {% endfor %}
-                        </optgroup>
-                        
-                        <!-- الاقتراحات من الأكواد -->
-                        <optgroup label="🔢 الأكواد">
-                            {% for code in service_codes %}
-                            <option value="{{ code }}">{{ code }}</option>
-                            {% endfor %}
-                        </optgroup>
-                        
-                        <!-- الاقتراحات من الأقسام -->
-                        <optgroup label="🏢 الأقسام">
-                            {% for dept in department_names %}
-                            <option value="{{ dept }}">{{ dept }}</option>
-                            {% endfor %}
-                        </optgroup>
-                    </datalist>
-                </div>
+    <div class="card filter-card">
+        <div class="card-body">
+            <form method="GET" class="row g-3 align-items-end" id="filterForm">
                 
+                <!-- ✅ فلتر 1: نوع المريض -->
                 <div class="col-md-2">
-                    <label class="form-label fw-bold small text-muted">
-                        <i class="fas fa-user"></i> نوع المريض
-                    </label>
-                    <select name="patient_type" class="form-select form-select-lg" onchange="document.getElementById('searchForm').submit()">
+                    <label class="form-label">👤 نوع المريض</label>
+                    <select name="patient_type" class="form-select" onchange="this.form.submit()">
                         <option value="">الكل</option>
                         <option value="داخلي" {% if patient_type == "داخلي" %}selected{% endif %}>داخلي</option>
                         <option value="خارجي" {% if patient_type == "خارجي" %}selected{% endif %}>خارجي</option>
                     </select>
                 </div>
                 
-                <!-- ✅ فلتر القسم مع البحث -->
-               <!-- ✅ فلتر القسم - Dropdown List -->
-<div class="col-md-2">
-    <label class="form-label fw-bold">
-        <i class="fas fa-building text-primary me-1"></i>
-        القسم
-    </label>
-    <select name="department" class="form-select form-select-lg" onchange="document.getElementById('searchForm').submit()">
-        <option value="">الكل</option>
-        {% for dept in departments %}
-        <option value="{{ dept }}" {% if department == dept %}selected{% endif %}>
-            {{ dept }}
-        </option>
-        {% endfor %}
-    </select>
-</div>
+                <!-- ✅ فلتر 2: القسم -->
+                <div class="col-md-3">
+                    <label class="form-label">🏢 القسم</label>
+                    <select name="department" class="form-select" onchange="this.form.submit()">
+                        <option value="">الكل</option>
+                        {% for dept in departments %}
+                        <option value="{{ dept }}" {% if department == dept %}selected{% endif %}>
+                            {{ dept }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
                 
-                <!-- ✅ فلتر الشركة مع البحث -->
-                <div class="col-md-2">
-                    <label class="form-label fw-bold small text-muted">
-                        <i class="fas fa-shield-alt"></i> شركة التأمين
-                    </label>
+                <!-- ✅ فلتر 3: شركة التأمين -->
+                <div class="col-md-3">
+                    <label class="form-label">🛡️ شركة التأمين</label>
                     <input type="text" 
                            name="insurance_company" 
                            list="insurance-list" 
-                           class="form-control form-control-lg" 
+                           class="form-control" 
                            placeholder="ابحث أو اختر" 
                            value="{{ insurance_company }}"
-                           onchange="document.getElementById('searchForm').submit()">
+                           onchange="this.form.submit()">
                     <datalist id="insurance-list">
                         <option value="">الكل</option>
                         {% for company in insurance_companies %}
@@ -124,210 +142,924 @@
                     </datalist>
                 </div>
                 
-                <div class="col-md-1">
-                    <label class="form-label fw-bold small text-muted">
-                        <i class="fas fa-calendar-alt"></i> من
-                    </label>
-                    <input type="date" name="date_from" class="form-control form-control-lg" value="{{ date_from }}" onchange="document.getElementById('searchForm').submit()">
+                <!-- ✅ فلتر 4: التاريخ من - إلى -->
+                <div class="col-md-2">
+                    <label class="form-label">📅 من</label>
+                    <input type="date" name="date_from" class="form-control" value="{{ date_from }}" onchange="this.form.submit()">
                 </div>
-                <div class="col-md-1">
-                    <label class="form-label fw-bold small text-muted">
-                        <i class="fas fa-calendar-alt"></i> إلى
-                    </label>
-                    <input type="date" name="date_to" class="form-control form-control-lg" value="{{ date_to }}" onchange="document.getElementById('searchForm').submit()">
+                <div class="col-md-2">
+                    <label class="form-label">📅 إلى</label>
+                    <input type="date" name="date_to" class="form-control" value="{{ date_to }}" onchange="this.form.submit()">
                 </div>
-            </div>
-            <div class="mt-3 d-flex gap-2">
-                <button class="btn btn-primary btn-lg" type="submit"><i class="fas fa-search"></i> بحث</button>
-                <a href="{% url 'service_search' %}" class="btn btn-outline-secondary btn-lg"><i class="fas fa-undo"></i> مسح الكل</a>
-            </div>
-        </form>
+                
+                <!-- ✅ أزرار الفلاتر -->
+                <div class="col-12 mt-3 d-flex gap-2">
+                    <a href="{% url 'service_search' %}" class="btn btn-secondary btn-filter">
+                        <i class="fas fa-undo me-1"></i> إعادة تعيين
+                    </a>
+                </div>
+                
+            </form>
+        </div>
     </div>
-</div>
+
+    <!-- ============================================ -->
+    <!-- ✅ الفلاتر النشطة -->
+    <!-- ============================================ -->
+    {% if search or patient_type or department or insurance_company or date_from or date_to %}
+    <div class="alert alert-info mb-3 d-flex justify-content-between align-items-center flex-wrap">
+        <div class="d-flex flex-wrap gap-1 align-items-center">
+            <i class="fas fa-filter me-2"></i>
+            <strong>الفلاتر النشطة:</strong>
+            {% if search %}
+            <span class="badge bg-primary ms-1">🔍 {{ search }}</span>
+            {% endif %}
+            {% if patient_type %}
+            <span class="badge bg-success ms-1">👤 {{ patient_type }}</span>
+            {% endif %}
+            {% if department %}
+            <span class="badge bg-info text-dark ms-1">🏢 {{ department }}</span>
+            {% endif %}
+            {% if insurance_company %}
+            <span class="badge bg-warning text-dark ms-1">🛡️ {{ insurance_company }}</span>
+            {% endif %}
+            {% if date_from %}
+            <span class="badge bg-secondary ms-1">📅 من: {{ date_from }}</span>
+            {% endif %}
+            {% if date_to %}
+            <span class="badge bg-secondary ms-1">📅 إلى: {{ date_to }}</span>
+            {% endif %}
+            <span class="badge bg-dark ms-2 rounded-pill">{{ results_count }}</span>
+        </div>
+        <a href="{% url 'service_search' %}" class="text-decoration-none fw-bold text-danger">
+            <i class="fas fa-times me-1"></i> إلغاء الكل
+        </a>
+    </div>
+    {% endif %}
 
     <!-- ============================================ -->
     <!-- ✅ إحصائيات النتائج -->
     <!-- ============================================ -->
     <div class="row mb-4">
-        <div class="col-md-6">
-            <div class="card shadow-sm border-0">
-                <div class="card-body">
-                    <h6 class="text-muted"><i class="fas fa-list me-1"></i> عدد النتائج</h6>
-                    <h3 class="fw-bold text-primary">{{ results_count }}</h3>
+        <div class="col-md-4">
+            <div class="info-card stats-card">
+                <div class="card-title">
+                    <i class="fas fa-list text-primary"></i>
+                    عدد النتائج
                 </div>
+                <h3 class="fw-bold text-primary mb-0">{{ results_count }}</h3>
             </div>
         </div>
-        <div class="col-md-6">
-            <div class="card shadow-sm border-0">
-                <div class="card-body">
-                    <h6 class="text-muted"><i class="fas fa-money-bill-wave me-1"></i> إجمالى المبلغ</h6>
-                    <h3 class="fw-bold text-success">{{ total_amount }} ج.م</h3>
+        <div class="col-md-4">
+            <div class="info-card stats-card">
+                <div class="card-title">
+                    <i class="fas fa-money-bill-wave text-success"></i>
+                    إجمالى المبلغ
                 </div>
+                <h3 class="fw-bold text-success mb-0">{{ total_amount }} ج.م</h3>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="info-card stats-card">
+                <div class="card-title">
+                    <i class="fas fa-receipt text-info"></i>
+                    إجمالي الفواتير
+                </div>
+                <h3 class="fw-bold text-info mb-0">{{ total_invoice }} ج.م</h3>
             </div>
         </div>
     </div>
 
     <!-- ============================================ -->
-    <!-- ✅ جدول النتائج -->
+    <!-- ✅ عدد النتائج مع الترقيم -->
     <!-- ============================================ -->
-    <div class="card shadow-sm border-0">
-        <div class="card-body table-responsive">
-            <table class="table table-hover align-middle">
-                <thead class="table-light">
-                    <tr>
-                        <th>الكود</th>
-                        <th>اسم الخدمة</th>
-                        <th>القسم</th>
-                        <th>نوع المريض</th>
-                        <th>شركة التأمين</th>
-                        <th>التاريخ</th>
-                        <th class="text-end">سعر الخدمه </th>
-                        <th class="text-center">التفاصيل</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for service in page_obj %}
-                    <tr>
-                        <td><span class="badge bg-secondary">{{ service.service_code }}</span></td>
-                        <td><strong>{{ service.service_name }}</strong></td>
-                        <td>{{ service.department_name }}</td>
-                        <td>
-                            {% if service.patient_type == "داخلي" %}
-                                <span class="badge bg-primary rounded-pill"><i class="fas fa-hospital me-1"></i> داخلي</span>
-                            {% elif service.patient_type == "خارجي" %}
-                                <span class="badge bg-success rounded-pill"><i class="fas fa-user me-1"></i> خارجي</span>
-                            {% else %}
-                                {{ service.patient_type }}
-                            {% endif %}
-                        </td>
-                        <td>{{ service.insurance_company|default:"-" }}</td>
-                        <td><span class="text-muted"><i class="fas fa-calendar-alt me-1"></i> {{ service.service_date|date:"Y-m-d" }}</span></td>
-                        <td class="text-end fw-bold text-success">{{ service.formatted_amount }} ج.م</td>
-                        
-                        <!-- ✅ زر عرض التفاصيل -->
-                        <td class="text-center">
-                            <button type="button" 
-                                    class="btn btn-sm btn-outline-primary btn-details" 
-                                    data-bs-toggle="modal" 
-                                    data-bs-target="#serviceDetailsModal"
-                                    data-patient="{{ service.patient_name|default:'-' }}"
-                                    data-account="{{ service.account_number|default:'-' }}"
-                                    data-admission="{{ service.admission_date|date:'Y-m-d' }}"
-                                    data-discharge="{{ service.discharge_date|date:'Y-m-d' }}"
-                                    data-duration="{{ service.duration_of_stay }}"
-                                    data-company="{{ service.sub_company|default:'-' }}">
-                                <i class="fas fa-eye"></i> عرض
-                            </button>
-                        </td>
-                    </tr>
-                    {% empty %}
-                    <tr>
-                        <td colspan="8" class="text-center py-5">
-                            <i class="fas fa-inbox fa-3x d-block mb-3 text-muted"></i>
-                            <h5 class="text-muted">لا توجد نتائج</h5>
-                            <p class="text-muted small">حاول تغيير كلمات البحث أو الفلاتر</p>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+    {% if page_obj %}
+    <div class="results-count d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <span class="count-badge">{{ results_count }}</span>
+            <span class="text-muted small ms-1">نتيجة</span>
+            {% if search %}
+            <span class="text-muted small ms-2">للبحث: <strong>"{{ search }}"</strong></span>
+            {% endif %}
         </div>
+        <div>
+            <span class="text-muted small">
+                عرض {{ page_obj.start_index }} - {{ page_obj.end_index }}
+                <i class="fas fa-arrow-left mx-1"></i>
+                {{ results_count }}
+            </span>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- ============================================ -->
+    <!-- ✅ جدول النتائج - مع دعم السكرول الأفقي للموبايل مع تقليل المسافات -->
+    <!-- ============================================ -->
+    {% if page_obj %}
+
+    <!-- ✅ إضافة تحذير للموبايل -->
+    <div class="d-block d-sm-none mb-2 text-muted small">
+        <i class="fas fa-arrows-alt-h me-1"></i>
+        اسحب يساراً لرؤية باقي الأعمدة
+    </div>
+
+    <div class="table-responsive patients-table" style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
+        <table class="table table-hover mb-0" id="servicesTable" style="min-width: 700px;">
+            <thead>
+                <tr>
+                    <th style="width: 35px; min-width: 35px; padding: 0.5rem 0.3rem;">#</th>
+                    <th style="min-width: 60px; padding: 0.5rem 0.3rem;">🔢 الكود</th>
+                    <th style="min-width: 100px; padding: 0.5rem 0.3rem;">🏥 اسم الخدمة</th>
+                    <th style="min-width: 80px; padding: 0.5rem 0.3rem;">🏢 القسم</th>
+                    <th style="min-width: 80px; padding: 0.5rem 0.3rem;">👤 نوع المريض</th>
+                    <th style="min-width: 100px; padding: 0.5rem 0.3rem;">🛡️ شركة التأمين</th>
+                    <th style="min-width: 80px; padding: 0.5rem 0.3rem;">📅 التاريخ</th>
+                    <th style="min-width: 90px; padding: 0.5rem 0.3rem;" class="text-end">💰 السعر</th>
+                    <th style="min-width: 100px; padding: 0.5rem 0.3rem;" class="text-end">🧾 الفاتورة</th>
+                    <th style="min-width: 75px; padding: 0.5rem 0.3rem;">⚡ الإجراء</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for service in page_obj %}
+                <!-- ✅ صف الخدمة الرئيسي -->
+                <tr class="service-row" data-service-id="{{ service.id }}">
+                    <td style="padding: 0.4rem 0.3rem; font-size: 0.75rem;">{{ forloop.counter0|add:page_obj.start_index }}</td>
+                    <td style="padding: 0.4rem 0.3rem;"><span class="badge bg-secondary" style="font-size: 0.6rem;">{{ service.service_code }}</span></td>
+                    <td style="padding: 0.4rem 0.3rem;">
+                        <span class="service-name-link" onclick="toggleDetails({{ service.id }})" style="font-size: 0.75rem;">
+                            {{ service.service_name }}
+                        </span>
+                    </td>
+                    <td style="padding: 0.4rem 0.3rem; font-size: 0.7rem;">{{ service.department_name|default:"-" }}</td>
+                    <td style="padding: 0.4rem 0.3rem;">
+                        {% if service.patient_type == "داخلي" %}
+                            <span class="badge bg-primary rounded-pill" style="font-size: 0.55rem;"><i class="fas fa-hospital me-1"></i> داخلي</span>
+                        {% elif service.patient_type == "خارجي" %}
+                            <span class="badge bg-success rounded-pill" style="font-size: 0.55rem;"><i class="fas fa-user me-1"></i> خارجي</span>
+                        {% else %}
+                            <span style="font-size: 0.7rem;">{{ service.patient_type|default:"-" }}</span>
+                        {% endif %}
+                    </td>
+                    <td style="padding: 0.4rem 0.3rem; font-size: 0.7rem;">{{ service.insurance_company|default:"-" }}</td>
+                    <td style="padding: 0.4rem 0.3rem; font-size: 0.7rem;"><span class="text-muted"><i class="fas fa-calendar-alt me-1"></i> {{ service.service_date|date:"Y-m-d" }}</span></td>
+                    <td style="padding: 0.4rem 0.3rem; font-size: 0.7rem;" class="text-end fw-bold text-success">{{ service.formatted_amount }}</td>
+                    <td style="padding: 0.4rem 0.3rem;" class="text-end">
+                        {% if service.total_invoice %}
+                            <span class="badge bg-info text-dark" style="font-size: 0.6rem; padding: 0.2rem 0.4rem;">
+                                {{ service.formatted_total_invoice }}
+                            </span>
+                        {% else %}
+                            <span style="font-size: 0.7rem;">-</span>
+                        {% endif %}
+                    </td>
+                    <td style="padding: 0.4rem 0.3rem;">
+                        <button class="btn-view-details" onclick="toggleDetails({{ service.id }})" style="font-size: 0.6rem; padding: 0.15rem 0.4rem;">
+                            <i class="fas fa-chevron-down me-1"></i> عرض
+                        </button>
+                    </td>
+                </tr>
+                
+                <!-- ✅ صف التفاصيل (يظهر عند الضغط على عرض) -->
+                <tr class="details-expand-row" id="details-{{ service.id }}" style="display: none;">
+                    <td colspan="10">
+                        <div class="details-container" style="padding: 0.75rem;">
+                            <div class="row g-2">
+                                
+                                <!-- ✅ 1/ بيانات الخدمة -->
+                                <div class="col-6 col-md-6 col-xl-3">
+                                    <div class="info-card" style="padding: 0.6rem;">
+                                        <div class="card-title" style="font-size: 0.6rem; margin-bottom: 0.3rem;">
+                                            <i class="fas fa-info-circle text-primary"></i>
+                                            بيانات الخدمة
+                                        </div>
+                                        <div class="info-item" style="padding: 2px 4px; font-size: 0.65rem;">
+                                            <span class="label" style="font-size: 0.6rem;">الكود</span>
+                                            <span class="value" style="font-size: 0.65rem;">{{ service.service_code|default:"-" }}</span>
+                                        </div>
+                                        <div class="info-item" style="padding: 2px 4px; font-size: 0.65rem;">
+                                            <span class="label" style="font-size: 0.6rem;">اسم الخدمة</span>
+                                            <span class="value" style="font-size: 0.65rem;">{{ service.service_name|default:"-" }}</span>
+                                        </div>
+                                        <div class="info-item" style="padding: 2px 4px; font-size: 0.65rem;">
+                                            <span class="label" style="font-size: 0.6rem;">القسم</span>
+                                            <span class="value" style="font-size: 0.65rem;">{{ service.department_name|default:"-" }}</span>
+                                        </div>
+                                        <div class="info-item" style="padding: 2px 4px; font-size: 0.65rem;">
+                                            <span class="label" style="font-size: 0.6rem;">نوع المريض</span>
+                                            <span class="value" style="font-size: 0.65rem;">{{ service.patient_type|default:"-" }}</span>
+                                        </div>
+                                        <div class="info-item" style="padding: 2px 4px; font-size: 0.65rem;">
+                                            <span class="label" style="font-size: 0.6rem;">تاريخ الخدمة</span>
+                                            <span class="value" style="font-size: 0.65rem;">{{ service.service_date|date:"Y-m-d"|default:"-" }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- ✅ 2/ بيانات المالية -->
+                                <div class="col-6 col-md-6 col-xl-3">
+                                    <div class="info-card" style="padding: 0.6rem;">
+                                        <div class="card-title" style="font-size: 0.6rem; margin-bottom: 0.3rem;">
+                                            <i class="fas fa-coins text-success"></i>
+                                            البيانات المالية
+                                        </div>
+                                        <div class="info-item" style="padding: 2px 4px; font-size: 0.65rem;">
+                                            <span class="label" style="font-size: 0.6rem;">سعر الخدمة</span>
+                                            <span class="value text-success fw-bold" style="font-size: 0.65rem;">{{ service.formatted_amount }} ج.م</span>
+                                        </div>
+                                        <div class="info-item" style="padding: 2px 4px; font-size: 0.65rem;">
+                                            <span class="label" style="font-size: 0.6rem;">اجمالي الفاتورة</span>
+                                            <span class="value text-info fw-bold" style="font-size: 0.65rem;">
+                                                {% if service.total_invoice %}
+                                                    {{ service.formatted_total_invoice }} ج.م
+                                                {% else %}
+                                                    -
+                                                {% endif %}
+                                            </span>
+                                        </div>
+                                        <div class="info-item" style="padding: 2px 4px; font-size: 0.65rem;">
+                                            <span class="label" style="font-size: 0.6rem;">شركة التأمين</span>
+                                            <span class="value" style="font-size: 0.65rem;">{{ service.insurance_company|default:"-" }}</span>
+                                        </div>
+                                        <div class="info-item" style="padding: 2px 4px; font-size: 0.65rem;">
+                                            <span class="label" style="font-size: 0.6rem;">الشركة الفرعية</span>
+                                            <span class="value" style="font-size: 0.65rem;">{{ service.sub_company|default:"-" }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- ✅ 3/ بيانات المريض -->
+                                <div class="col-6 col-md-6 col-xl-3">
+                                    <div class="info-card" style="padding: 0.6rem;">
+                                        <div class="card-title" style="font-size: 0.6rem; margin-bottom: 0.3rem;">
+                                            <i class="fas fa-user-circle text-warning"></i>
+                                            بيانات المريض
+                                        </div>
+                                        <div class="info-item" style="padding: 2px 4px; font-size: 0.65rem;">
+                                            <span class="label" style="font-size: 0.6rem;">اسم المريض</span>
+                                            <span class="value" style="font-size: 0.65rem;">{{ service.patient_name|default:"-" }}</span>
+                                        </div>
+                                        <div class="info-item" style="padding: 2px 4px; font-size: 0.65rem;">
+                                            <span class="label" style="font-size: 0.6rem;">الرقم الحسابي</span>
+                                            <span class="value" style="font-size: 0.65rem;">{{ service.account_number|default:"-" }}</span>
+                                        </div>
+                                        <div class="info-item" style="padding: 2px 4px; font-size: 0.65rem;">
+                                            <span class="label" style="font-size: 0.6rem;">تاريخ الدخول</span>
+                                            <span class="value" style="font-size: 0.65rem;">{{ service.admission_date|date:"Y-m-d"|default:"-" }}</span>
+                                        </div>
+                                        <div class="info-item" style="padding: 2px 4px; font-size: 0.65rem;">
+                                            <span class="label" style="font-size: 0.6rem;">تاريخ الخروج</span>
+                                            <span class="value" style="font-size: 0.65rem;">{{ service.discharge_date|date:"Y-m-d"|default:"-" }}</span>
+                                        </div>
+                                        <div class="info-item" style="padding: 2px 4px; font-size: 0.65rem;">
+                                            <span class="label" style="font-size: 0.6rem;">مدة الإقامة</span>
+                                            <span class="value" style="font-size: 0.65rem;">
+                                                <span class="badge bg-success rounded-pill" style="font-size: 0.55rem;">{{ service.duration_of_stay|default:"-" }}</span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- ✅ 4/ ملاحظات -->
+                                <div class="col-6 col-md-6 col-xl-3">
+                                    <div class="info-card" style="padding: 0.6rem;">
+                                        <div class="card-title" style="font-size: 0.6rem; margin-bottom: 0.3rem;">
+                                            <i class="fas fa-sticky-note text-info"></i>
+                                            ملاحظات
+                                        </div>
+                                        <div class="info-item" style="padding: 2px 4px; font-size: 0.65rem;">
+                                            <span class="label" style="font-size: 0.6rem;">ملاحظات الخدمة</span>
+                                            <span class="value" style="font-size: 0.65rem;">{{ service.notes|default:"-" }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- ✅ زر إغلاق التفاصيل -->
+                                <div class="col-12 text-center mt-2">
+                                    <button class="btn btn-sm btn-outline-danger" onclick="toggleDetails({{ service.id }})" style="font-size: 0.6rem; padding: 0.15rem 0.6rem;">
+                                        <i class="fas fa-times me-1"></i> إغلاق
+                                    </button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 
     <!-- ============================================ -->
     <!-- ✅ Pagination -->
     <!-- ============================================ -->
     {% if page_obj.has_other_pages %}
-    <nav class="mt-4">
-        <ul class="pagination justify-content-center">
-            {% if page_obj.has_previous %}
-            <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.previous_page_number }}&search={{ search }}&patient_type={{ patient_type }}&department={{ department }}&insurance_company={{ insurance_company }}&date_from={{ date_from }}&date_to={{ date_to }}">
-                    <i class="fas fa-chevron-right"></i> السابق
-                </a>
-            </li>
-            {% endif %}
-            <li class="page-item active"><span class="page-link">{{ page_obj.number }}</span></li>
-            {% if page_obj.has_next %}
-            <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.next_page_number }}&search={{ search }}&patient_type={{ patient_type }}&department={{ department }}&insurance_company={{ insurance_company }}&date_from={{ date_from }}&date_to={{ date_to }}">
-                    التالي <i class="fas fa-chevron-left"></i>
-                </a>
-            </li>
-            {% endif %}
-        </ul>
-    </nav>
+    <div class="d-flex justify-content-center mt-4">
+        <nav>
+            <ul class="pagination pagination-sm">
+                {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if search %}&search={{ search }}{% endif %}{% if patient_type %}&patient_type={{ patient_type }}{% endif %}{% if department %}&department={{ department }}{% endif %}{% if insurance_company %}&insurance_company={{ insurance_company }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}">
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                </li>
+                {% endif %}
+                
+                {% for num in page_obj.paginator.page_range %}
+                    {% if num >= page_obj.number|add:'-2' and num <= page_obj.number|add:'2' %}
+                    <li class="page-item {% if num == page_obj.number %}active{% endif %}">
+                        <a class="page-link" href="?page={{ num }}{% if search %}&search={{ search }}{% endif %}{% if patient_type %}&patient_type={{ patient_type }}{% endif %}{% if department %}&department={{ department }}{% endif %}{% if insurance_company %}&insurance_company={{ insurance_company }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}">
+                            {{ num }}
+                        </a>
+                    </li>
+                    {% endif %}
+                {% endfor %}
+                
+                {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if search %}&search={{ search }}{% endif %}{% if patient_type %}&patient_type={{ patient_type }}{% endif %}{% if department %}&department={{ department }}{% endif %}{% if insurance_company %}&insurance_company={{ insurance_company }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}">
+                        <i class="fas fa-chevron-left"></i>
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+    {% endif %}
+
+    <!-- ============================================ -->
+    <!-- ✅ لو مفيش نتائج -->
+    <!-- ============================================ -->
+    {% elif search %}
+
+    <div class="no-results">
+        <i class="fas fa-search-slash"></i>
+        <h5 class="text-muted">لا توجد نتائج</h5>
+        <p class="text-muted small">
+            لم يتم العثور على خدمات تطابق <strong>"{{ search }}"</strong>
+        </p>
+        <a href="{% url 'service_search' %}" class="btn btn-outline-primary btn-sm mt-2">
+            <i class="fas fa-undo me-1"></i> بحث جديد
+        </a>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- ✅ الصفحة الرئيسية (قبل البحث) -->
+    <!-- ============================================ -->
+    {% else %}
+
+    <div class="text-center py-5">
+        <i class="fas fa-search-plus fa-4x text-muted opacity-25 mb-3"></i>
+        <h5 class="text-muted">ابحث عن خدمة</h5>
+        <p class="text-muted small">
+            ابحث باسم الخدمة أو الكود أو القسم
+        </p>
+        <div class="d-flex justify-content-center gap-3 flex-wrap mt-3">
+            <span class="badge bg-light text-dark px-3 py-2">
+                <i class="fas fa-stethoscope me-1"></i> اسم الخدمة
+            </span>
+            <span class="badge bg-light text-dark px-3 py-2">
+                <i class="fas fa-code me-1"></i> الكود
+            </span>
+            <span class="badge bg-light text-dark px-3 py-2">
+                <i class="fas fa-building me-1"></i> القسم
+            </span>
+        </div>
+    </div>
+
     {% endif %}
 
 </div>
 
 <!-- ============================================ -->
-<!-- ✅ Modal لعرض التفاصيل -->
+<!-- ✅ CSS - تحسينات الموبايل مع تقليل المسافات -->
 <!-- ============================================ -->
-<div class="modal fade" id="serviceDetailsModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title">
-                    <i class="fas fa-info-circle me-2"></i> تفاصيل الخدمة
-                </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <strong class="text-muted">اسم المريض:</strong>
-                        <span id="modal-patient" class="fw-bold"></span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <strong class="text-muted">الرقم الحسابي:</strong>
-                        <span id="modal-account" class="fw-bold"></span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <strong class="text-muted">تاريخ الدخول:</strong>
-                        <span id="modal-admission" class="fw-bold"></span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <strong class="text-muted">تاريخ الخروج:</strong>
-                        <span id="modal-discharge" class="fw-bold"></span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <strong class="text-muted">مدة الإقامة:</strong>
-                        <span id="modal-duration" class="badge bg-success rounded-pill fs-6"></span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <strong class="text-muted">الشركة الفرعية:</strong>
-                        <span id="modal-company" class="fw-bold"></span>
-                    </li>
-                </ul>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                    <i class="fas fa-times"></i> إغلاق
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
+<style>
+    /* ✅ Filter Card */
+    .filter-card {
+        border-radius: 16px;
+        border: none;
+        background: #fff;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+        margin-bottom: 1.5rem;
+    }
+    
+    .filter-card .card-body {
+        padding: 1.25rem;
+    }
+    
+    .filter-card .form-label {
+        font-size: 0.7rem;
+        font-weight: 700;
+        color: #495057;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.3rem;
+    }
+    
+    .filter-card .form-select,
+    .filter-card .form-control {
+        border-radius: 10px;
+        border: 2px solid #e9ecef;
+        font-size: 0.85rem;
+        padding: 0.4rem 0.8rem;
+        transition: all 0.3s ease;
+        background: #fff;
+    }
+    
+    .filter-card .form-select:focus,
+    .filter-card .form-control:focus {
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.1);
+    }
+    
+    .filter-card .btn-filter {
+        border-radius: 10px;
+        padding: 0.4rem 1.2rem;
+        font-weight: 600;
+        font-size: 0.85rem;
+        transition: all 0.3s ease;
+    }
+    
+    .filter-card .btn-filter:hover {
+        transform: translateY(-2px);
+    }
+    
+    /* ✅ Search Box */
+    .search-wrapper {
+        max-width: 750px;
+        margin: 0 auto 2rem;
+    }
+    
+    .search-wrapper .input-group {
+        border-radius: 50px;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+        transition: box-shadow 0.3s ease;
+    }
+    
+    .search-wrapper .input-group:focus-within {
+        box-shadow: 0 4px 30px rgba(13, 110, 253, 0.15);
+    }
+    
+    .search-wrapper .input-group .form-control {
+        border: 2px solid #e9ecef;
+        padding: 0.8rem 1.5rem;
+        font-size: 1rem;
+        border-right: none;
+        background: #fff;
+    }
+    
+    .search-wrapper .input-group .form-control:focus {
+        border-color: #0d6efd;
+        box-shadow: none;
+    }
+    
+    .search-wrapper .input-group .btn-search {
+        padding: 0.8rem 2.5rem;
+        border-radius: 0 50px 50px 0;
+        background: linear-gradient(135deg, #0d6efd, #0b5ed7);
+        color: #fff;
+        border: 2px solid #0d6efd;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .search-wrapper .input-group .btn-search:hover {
+        background: linear-gradient(135deg, #0b5ed7, #0a58ca);
+        transform: scale(1.02);
+    }
+    
+    /* ✅ Results Count */
+    .results-count {
+        background: #f8f9fa;
+        border-radius: 12px;
+        padding: 0.6rem 1.2rem;
+        border: 1px solid #e9ecef;
+    }
+    
+    .results-count .count-badge {
+        background: #0d6efd;
+        color: #fff;
+        padding: 0.2rem 0.8rem;
+        border-radius: 20px;
+        font-weight: 700;
+        font-size: 0.9rem;
+    }
+    
+    /* ✅ Patients Table */
+    .patients-table {
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+    }
+    
+    /* ✅ دعم السكرول الأفقي في الموبايل */
+    .patients-table {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scroll-behavior: smooth;
+    }
+    
+    /* ✅ تخصيص شريط السكرول */
+    .patients-table::-webkit-scrollbar {
+        height: 4px;
+    }
+    
+    .patients-table::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+    }
+    
+    .patients-table::-webkit-scrollbar-thumb {
+        background: linear-gradient(135deg, #0d6efd, #0dcaf0);
+        border-radius: 10px;
+    }
+    
+    .patients-table::-webkit-scrollbar-thumb:hover {
+        background: #0b5ed7;
+    }
+    
+    .patients-table thead {
+        background: linear-gradient(135deg, #1a237e, #0d47a1);
+        color: #fff;
+    }
+    
+    .patients-table thead th {
+        padding: 0.5rem 0.3rem;
+        font-size: 0.65rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+        border: none;
+        white-space: nowrap;
+    }
+    
+    .patients-table tbody td {
+        padding: 0.4rem 0.3rem;
+        font-size: 0.75rem;
+        vertical-align: middle;
+        border-bottom: 1px solid #f1f3f5;
+    }
+    
+    .patients-table tbody tr {
+        transition: all 0.3s ease;
+    }
+    
+    .patients-table tbody tr:hover {
+        background: #f8f9fa;
+    }
+    
+    .patients-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+    
+    .patients-table .service-name-link {
+        color: #1a237e;
+        font-weight: 600;
+        text-decoration: none;
+        cursor: pointer;
+        font-size: 0.75rem;
+    }
+    
+    .patients-table .service-name-link:hover {
+        color: #0d6efd;
+        text-decoration: underline;
+    }
+    
+    .btn-view-details {
+        padding: 0.15rem 0.4rem;
+        border-radius: 20px;
+        font-size: 0.6rem;
+        font-weight: 600;
+        background: #0d6efd;
+        color: #fff;
+        border: none;
+        transition: all 0.3s ease;
+        white-space: nowrap;
+    }
+    
+    .btn-view-details:hover {
+        background: #0b5ed7;
+        transform: scale(1.05);
+        color: #fff;
+    }
+    
+    /* ✅ Info Cards */
+    .info-card {
+        border-radius: 12px;
+        padding: 0.6rem;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 1px solid #e9ecef;
+        height: 100%;
+        background: #fff;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .info-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, #0d6efd, #0dcaf0);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    
+    .info-card:hover::before {
+        opacity: 1;
+    }
+    
+    .info-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+        border-color: #0d6efd;
+    }
+    
+    .info-card .card-title {
+        font-size: 0.6rem;
+        font-weight: 700;
+        color: #495057;
+        margin-bottom: 0.3rem;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+    }
+    
+    .info-card .card-title i {
+        font-size: 0.8rem;
+        width: 18px;
+        text-align: center;
+    }
+    
+    /* ✅ Stats Cards */
+    .stats-card {
+        padding: 0.8rem 1rem;
+        border-radius: 16px;
+        border: 1px solid #e9ecef;
+        transition: all 0.3s ease;
+        cursor: default;
+    }
+    
+    .stats-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+    }
+    
+    .stats-card .card-title {
+        font-size: 0.65rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #6c757d;
+        margin-bottom: 0.3rem;
+    }
+    
+    .stats-card h3 {
+        font-size: 1.2rem;
+        font-weight: 700;
+    }
+    
+    /* ✅ Info Items */
+    .info-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 2px 4px;
+        border-bottom: 1px solid #f1f3f5;
+        font-size: 0.65rem;
+        transition: background 0.2s ease;
+        border-radius: 3px;
+    }
+    
+    .info-item:hover {
+        background: #f8f9fa;
+    }
+    
+    .info-item:last-child {
+        border-bottom: none;
+    }
+    
+    .info-item .label {
+        color: #6c757d;
+        font-weight: 500;
+        font-size: 0.6rem;
+    }
+    
+    .info-item .value {
+        font-weight: 600;
+        color: #212529;
+        text-align: left;
+        word-break: break-word;
+        max-width: 60%;
+        font-size: 0.65rem;
+    }
+    
+    /* ✅ Details Expand Row */
+    .details-expand-row {
+        background: #f8f9fa;
+    }
+    
+    .details-expand-row td {
+        padding: 0 !important;
+        border-bottom: none !important;
+    }
+    
+    .details-container {
+        padding: 0.75rem;
+        background: #f8f9fa;
+        border-top: 2px solid #0d6efd;
+        border-bottom: 2px solid #0d6efd;
+        animation: slideDown 0.3s ease;
+    }
+    
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    /* ✅ No Results */
+    .no-results {
+        text-align: center;
+        padding: 4rem 1rem;
+        background: #f8f9fa;
+        border-radius: 16px;
+    }
+    
+    .no-results i {
+        font-size: 4rem;
+        color: #dee2e6;
+        margin-bottom: 1rem;
+    }
+    
+    /* ✅ تحسينات الموبايل مع تقليل المسافات */
+    @media (max-width: 768px) {
+        .patients-table {
+            font-size: 0.7rem;
+            border-radius: 10px;
+        }
+        
+        .patients-table thead th {
+            padding: 0.3rem 0.2rem;
+            font-size: 0.55rem;
+        }
+        
+        .patients-table tbody td {
+            padding: 0.25rem 0.2rem;
+            font-size: 0.65rem;
+        }
+        
+        .patients-table tbody td {
+            white-space: nowrap;
+        }
+        
+        .patients-table tbody td:nth-child(3) {
+            white-space: normal;
+            min-width: 80px;
+            max-width: 120px;
+        }
+        
+        .btn-view-details {
+            font-size: 0.5rem;
+            padding: 0.1rem 0.3rem;
+        }
+        
+        .info-item {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1px;
+            padding: 2px 4px;
+        }
+        
+        .info-item .value {
+            max-width: 100%;
+            width: 100%;
+            font-size: 0.6rem;
+        }
+        
+        .search-wrapper .input-group .btn-search {
+            padding: 0.5rem 0.8rem;
+            font-size: 0.7rem;
+        }
+        
+        .search-wrapper .input-group .form-control {
+            padding: 0.5rem 0.8rem;
+            font-size: 0.8rem;
+        }
+        
+        .stats-card h3 {
+            font-size: 1rem;
+        }
+        
+        .stats-card .card-title {
+            font-size: 0.55rem;
+        }
+        
+        .details-container {
+            padding: 0.5rem;
+        }
+        
+        .info-card {
+            padding: 0.4rem;
+        }
+        
+        .info-card .card-title {
+            font-size: 0.5rem;
+        }
+        
+        .badge {
+            font-size: 0.5rem !important;
+            padding: 0.1rem 0.3rem !important;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .patients-table thead th {
+            padding: 0.2rem 0.15rem;
+            font-size: 0.5rem;
+        }
+        
+        .patients-table tbody td {
+            padding: 0.2rem 0.15rem;
+            font-size: 0.55rem;
+        }
+        
+        .patients-table tbody td:nth-child(3) {
+            min-width: 60px;
+            max-width: 90px;
+        }
+        
+        .btn-view-details {
+            font-size: 0.45rem;
+            padding: 0.08rem 0.25rem;
+        }
+        
+        .info-item .label {
+            font-size: 0.5rem;
+        }
+        
+        .info-item .value {
+            font-size: 0.55rem;
+        }
+        
+        .stats-card h3 {
+            font-size: 0.9rem;
+        }
+    }
+</style>
 
 <!-- ============================================ -->
-<!-- ✅ Script لتحديث بيانات الـ Modal -->
+<!-- ✅ JavaScript -->
 <!-- ============================================ -->
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var detailsModal = document.getElementById('serviceDetailsModal');
-        if (detailsModal) {
-            detailsModal.addEventListener('show.bs.modal', function (event) {
-                var button = event.relatedTarget;
-                document.getElementById('modal-patient').innerText = button.getAttribute('data-patient') || '-';
-                document.getElementById('modal-account').innerText = button.getAttribute('data-account') || '-';
-                document.getElementById('modal-admission').innerText = button.getAttribute('data-admission') || '-';
-                document.getElementById('modal-discharge').innerText = button.getAttribute('data-discharge') || '-';
-                document.getElementById('modal-duration').innerText = button.getAttribute('data-duration') || '-';
-                document.getElementById('modal-company').innerText = button.getAttribute('data-company') || '-';
-            });
+    // ============================================
+    // ✅ Toggle Details - فتح/غلق التاب
+    // ============================================
+    function toggleDetails(serviceId) {
+        const detailsRow = document.getElementById('details-' + serviceId);
+        const btn = document.querySelector(`.btn-view-details[onclick="toggleDetails(${serviceId})"]`);
+        
+        if (detailsRow) {
+            if (detailsRow.style.display === 'none' || detailsRow.style.display === '') {
+                // ✅ إغلاق أي تفاصيل مفتوحة أخرى
+                document.querySelectorAll('.details-expand-row').forEach(function(row) {
+                    if (row.id !== 'details-' + serviceId) {
+                        row.style.display = 'none';
+                        const otherBtn = document.querySelector(`.btn-view-details[onclick="toggleDetails(${row.id.replace('details-', '')})"]`);
+                        if (otherBtn) {
+                            otherBtn.innerHTML = '<i class="fas fa-chevron-down me-1"></i> عرض';
+                        }
+                    }
+                });
+                
+                // ✅ فتح التفاصيل المطلوبة
+                detailsRow.style.display = 'table-row';
+                if (btn) {
+                    btn.innerHTML = '<i class="fas fa-chevron-up me-1"></i> إخفاء';
+                }
+                
+                // ✅ تمرير الصفحة إلى التفاصيل مع تأثير سلس
+                setTimeout(function() {
+                    detailsRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 100);
+                
+            } else {
+                // ✅ إغلاق التفاصيل
+                detailsRow.style.display = 'none';
+                if (btn) {
+                    btn.innerHTML = '<i class="fas fa-chevron-down me-1"></i> عرض';
+                }
+            }
         }
-    });
+    }
 </script>
 
 {% endblock %}

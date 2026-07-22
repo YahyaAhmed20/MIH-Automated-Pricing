@@ -411,6 +411,13 @@ class ServiceRecord(models.Model):
         default=0,
         verbose_name="المبلغ"
     )
+    total_invoice = models.DecimalField(
+        max_digits=15,
+        decimal_places=2,
+        null=True,
+        blank=True,
+        verbose_name="اجمالي الفاتورة"
+    )
 
     created_at = models.DateTimeField(
         auto_now_add=True

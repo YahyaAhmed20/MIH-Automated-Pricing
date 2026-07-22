@@ -15,7 +15,6 @@ class ServiceRecordsImportService:
     def import_data(dataframe):
 
         start_time = time.perf_counter()
-        print("⏳ Starting Service Records import...")
 
         result = {
             "processed": 0,
@@ -27,7 +26,6 @@ class ServiceRecordsImportService:
         # ============================================================
         # ✅ Cache للـ Service Records
         # ============================================================
-        print("⏳ Loading existing service records...")
         records_cache = {}
         for r in ServiceRecord.objects.all():
             key = (
@@ -35,7 +33,6 @@ class ServiceRecordsImportService:
                 ImportHelpers.normalize_text(r.service_code),
             )
             records_cache[key] = r
-        print(f"   ✅ {len(records_cache)} records loaded")
 
         # ============================================================
         # ✅ قوائم التجميع للـ Bulk Operations
@@ -44,15 +41,9 @@ class ServiceRecordsImportService:
         records_to_update = []
 
         # ============================================================
-        # ✅ متغير لتتبع التغييرات (للتحليل)
-        # ============================================================
-        change_log = []
-
-        # ============================================================
         # ✅ Loop - استخدام أرقام الأعمدة (بدون Header)
         # ============================================================
 
-        print("⏳ Processing rows...")
         total_rows = len(dataframe)
         processed = 0
 
@@ -133,81 +124,70 @@ class ServiceRecordsImportService:
             if amount is None:
                 amount = Decimal('0.00')
 
-            # ✅ Debugging للسجل 4250/3794997
-            if account_number == "4250" and service_code == "3794997":
-                print("=" * 60)
-                print("🔍 DEBUG - Found target record:")
-                print(f"   account_number: {account_number}")
-                print(f"   service_code: {service_code}")
-                print(f"   patient_name: {patient_name}")
-                print(f"   service_date (col 10): {service_date}")
-                print(f"   insurance_company (col 11): {insurance_company}")
-                print(f"   sub_company (col 12): {sub_company}")
-                print(f"   amount (col 13): {amount}")
-                print("=" * 60)
+            # ✅ العمود 14: اجمالي الفاتورة (total_invoice)
+            total_invoice = ImportHelpers.clean_decimal(
+                row.get(14, None)
+            )
+            if total_invoice is None:
+                total_invoice = Decimal('0.00')
 
             # ✅ البحث في Cache
             key = (account_number, service_code)
             record = records_cache.get(key)
 
             if record:
-                # ✅ تحديث البيانات مع تتبع التغييرات
-                changes = []
+                # ✅ تحديث البيانات
+                changed = False
                 
                 if record.patient_type != patient_type:
-                    changes.append(f"patient_type: '{record.patient_type}' -> '{patient_type}'")
                     record.patient_type = patient_type
+                    changed = True
                     
                 if record.patient_name != patient_name:
-                    changes.append(f"patient_name: '{record.patient_name}' -> '{patient_name}'")
                     record.patient_name = patient_name
+                    changed = True
                     
                 if record.admission_date != admission_date:
-                    changes.append(f"admission_date: {record.admission_date} -> {admission_date}")
                     record.admission_date = admission_date
+                    changed = True
                     
                 if record.discharge_date != discharge_date:
-                    changes.append(f"discharge_date: {record.discharge_date} -> {discharge_date}")
                     record.discharge_date = discharge_date
+                    changed = True
                     
                 if record.stay_duration != stay_duration:
-                    changes.append(f"stay_duration: '{record.stay_duration}' -> '{stay_duration}'")
                     record.stay_duration = stay_duration
+                    changed = True
                     
                 if record.department_name != department_name:
-                    changes.append(f"department_name: '{record.department_name}' -> '{department_name}'")
                     record.department_name = department_name
+                    changed = True
                     
                 if record.service_name != service_name:
-                    changes.append(f"service_name: '{record.service_name}' -> '{service_name}'")
                     record.service_name = service_name
+                    changed = True
                     
                 if record.service_date != service_date:
-                    changes.append(
-                        f"service_date: {record.service_date} (type: {type(record.service_date)}) -> "
-                        f"{service_date} (type: {type(service_date)})"
-                    )
                     record.service_date = service_date
+                    changed = True
                     
                 if record.insurance_company != insurance_company:
-                    changes.append(f"insurance_company: '{record.insurance_company}' -> '{insurance_company}'")
                     record.insurance_company = insurance_company
+                    changed = True
                     
                 if record.sub_company != sub_company:
-                    changes.append(f"sub_company: '{record.sub_company}' -> '{sub_company}'")
                     record.sub_company = sub_company
+                    changed = True
                     
                 if record.amount != amount:
-                    changes.append(f"amount: {record.amount} (type: {type(record.amount)}) -> {amount} (type: {type(amount)})")
                     record.amount = amount
+                    changed = True
 
-                if changes:
-                    change_log.append({
-                        "account_number": account_number,
-                        "service_code": service_code,
-                        "changes": changes
-                    })
-                    
+                if record.total_invoice != total_invoice:
+                    record.total_invoice = total_invoice
+                    changed = True
+
+                if changed:
                     records_to_update.append(record)
                     result["updated"] += 1
 
@@ -227,6 +207,7 @@ class ServiceRecordsImportService:
                     insurance_company=insurance_company,
                     sub_company=sub_company,
                     amount=amount,
+                    total_invoice=total_invoice,
                 )
                 records_to_create.append(record)
                 records_cache[key] = record
@@ -236,22 +217,6 @@ class ServiceRecordsImportService:
                 print(f"   📊 Processed {processed}/{total_rows} rows...")
 
         print(f"   ✅ Processed {processed}/{total_rows} rows")
-
-        # ============================================================
-        # ✅ عرض التغييرات للتحليل
-        # ============================================================
-        if change_log:
-            print("\n" + "="*80)
-            print("🔍 DETAILED CHANGE LOG (First 10 changes only):")
-            print("="*80)
-            for i, log in enumerate(change_log[:10]):
-                print(f"\n📝 Change #{i+1}:")
-                print(f"   Account: {log['account_number']}")
-                print(f"   Service Code: {log['service_code']}")
-                for change in log['changes']:
-                    print(f"   • {change}")
-            print(f"\n... and {len(change_log) - 10} more changes" if len(change_log) > 10 else "")
-            print("="*80 + "\n")
 
         # ============================================================
         # ✅ تنفيذ الـ Bulk Operations
@@ -283,6 +248,7 @@ class ServiceRecordsImportService:
                         "insurance_company",
                         "sub_company",
                         "amount",
+                        "total_invoice",
                     ],
                     batch_size=100,
                 )

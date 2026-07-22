@@ -3358,6 +3358,8 @@ from django.core.paginator import Paginator
 from django.db.models.functions import Coalesce
 # ... باقي الـ Imports ...
 
+# pricing_requests/views.py
+
 def service_search(request):
 
     search = request.GET.get("search", "").strip()
@@ -3405,9 +3407,13 @@ def service_search(request):
     if insurance_company:
         services = services.filter(insurance_company=insurance_company)
 
+    # ✅ إجمالي المبلغ (amount)
     total_amount = services.aggregate(total=Sum("amount"))["total"] or 0
+    
+    # ✅ ✅ إجمالي الفواتير (total_invoice) - الجديد
+    total_invoice = services.aggregate(total=Sum("total_invoice"))["total"] or 0
 
-    # ✅ جلب الفلاتر من النتائج المفلترة فقط (مش من كل البيانات)
+    # ✅ جلب الفلاتر من النتائج المفلترة فقط
     departments = (
         services
         .values_list("department_name", flat=True)
@@ -3457,6 +3463,13 @@ def service_search(request):
             if service.amount is not None
             else "-"
         )
+        
+        # ✅ ✅ تنسيق total_invoice
+        service.formatted_total_invoice = (
+            f"{service.total_invoice:,.0f}"
+            if service.total_invoice is not None
+            else "-"
+        )
 
         if service.stay_duration:
             service.duration_of_stay = service.stay_duration
@@ -3470,6 +3483,7 @@ def service_search(request):
                 service.duration_of_stay = "-"
 
     formatted_total_amount = f"{total_amount:,.0f}"
+    formatted_total_invoice = f"{total_invoice:,.0f}"  # ✅ ✅ الجديد
 
     return render(
         request,
@@ -3478,6 +3492,7 @@ def service_search(request):
             "page_obj": page_obj,
             "results_count": services.count(),
             "total_amount": formatted_total_amount,
+            "total_invoice": formatted_total_invoice,  # ✅ ✅ الجديد
             "search": search,
             "patient_type": patient_type,
             "date_from": date_from,
@@ -3491,7 +3506,6 @@ def service_search(request):
             "department_names": department_names,
         }
     )
-    
 def pricing_details(request):
 
     search = request.GET.get("search", "").strip()
