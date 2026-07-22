@@ -7,11 +7,20 @@
 
 {% block content %}
 
-<div class="container-fluid">
+<div class="container-fluid py-4">
 
     <!-- ✅ Header -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-      
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+        <div>
+            <h4 class="mb-0 fw-bold">
+                <i class="fas fa-stethoscope text-primary me-2"></i>
+                توصيف العمليات
+            </h4>
+            <p class="text-muted small mb-0">
+                <i class="fas fa-database me-1"></i>
+                <strong class="text-dark">{{ total_count }}</strong> عملية
+            </p>
+        </div>
         <div>
             <span class="badge bg-primary rounded-pill fs-6 px-3 py-2">
                 <i class="fas fa-calendar-alt me-1"></i>
@@ -21,203 +30,200 @@
     </div>
 
     <!-- ============================================ -->
-    <!-- ✅ شريط البحث والفلاتر -->
+    <!-- ✅ Search Box (في الأعلى) -->
     <!-- ============================================ -->
-    <div class="card shadow-sm border-0 mb-4 hover-shadow">
-
-        <div class="card-header bg-gradient-primary text-white">
-            <h5 class="mb-0">
-                <i class="fas fa-sliders-h"></i>
-                البحث والفلاتر
-            </h5>
+    <div class="search-wrapper">
+        <form method="GET" id="searchForm" class="input-group">
+            <!-- ✅ الحفاظ على الفلاتر في البحث -->
+            {% if specialty %}
+            <input type="hidden" name="specialty" value="{{ specialty }}">
+            {% endif %}
+            {% if category %}
+            <input type="hidden" name="category" value="{{ category }}">
+            {% endif %}
+            {% if show_all %}
+            <input type="hidden" name="show_all" value="{{ show_all }}">
+            {% endif %}
+            
+            <input type="text" 
+                   name="search" 
+                   class="form-control" 
+                   placeholder="🔍 ابحث باسم العملية أو الكود..." 
+                   value="{{ search }}"
+                   list="procedureList"
+                   autocomplete="off"
+                   onchange="this.form.submit()">
+            
+            <!-- ✅ قائمة الاقتراحات -->
+            <datalist id="procedureList">
+                {% for item in procedures %}
+                    <option value="{{ item.name_ar }}">
+                    <option value="{{ item.code }}">
+                {% endfor %}
+            </datalist>
+            
+            <button class="btn btn-search" type="submit">
+                <i class="fas fa-search me-2"></i>بحث
+            </button>
+        </form>
+        
+        {% if search %}
+        <div class="text-center mt-2">
+            <small class="text-muted">
+                نتائج البحث عن: <strong>"{{ search }}"</strong>
+                <a href="?{% for key, value in request.GET.items %}{% if key != 'search' %}{{ key }}={{ value }}&{% endif %}{% endfor %}" class="ms-2 text-danger text-decoration-none">
+                    <i class="fas fa-times"></i> إلغاء
+                </a>
+            </small>
         </div>
+        {% endif %}
+    </div>
 
+    <!-- ============================================ -->
+    <!-- ✅ الفلاتر -->
+    <!-- ============================================ -->
+    <div class="card filter-card">
         <div class="card-body">
-            <form method="get" id="searchForm">
-                <div class="row g-3 align-items-end">
-                    <div class="col-md-5">
-                        <label class="form-label fw-bold small text-muted">
-                            <i class="fas fa-search"></i> اسم العملية أو الكود
-                        </label>
-                        <div class="input-group">
-                            <span class="input-group-text bg-light border-0">
-                                <i class="fas fa-search text-primary"></i>
-                            </span>
-                            <input
-                                id="search"
-                                name="search"
-                                class="form-control form-control-lg border-0 shadow-sm"
-                                list="procedureList"
-                                value="{{ search }}"
-                                onchange="this.form.submit()"
-                                onkeydown="if(event.key === 'Enter') this.form.submit()"
-                                placeholder="ابحث باسم العملية أو الكود..."
-                                autocomplete="off">
-                            <datalist id="procedureList">
-                                {% for item in procedures %}
-                                    <option value="{{ item.name_ar }}">
-                                    <option value="{{ item.code }}">
-                                {% endfor %}
-                            </datalist>
-                        </div>
-                    </div>
-
-                    <div class="col-md-3">
-                        <label class="form-label fw-bold small text-muted">
-                            <i class="fas fa-stethoscope"></i> التخصص
-                        </label>
-                        <div class="input-group">
-                            <span class="input-group-text bg-light border-0">
-                                <i class="fas fa-stethoscope text-primary"></i>
-                            </span>
-                            <select
-                                name="specialty"
-                                class="form-select form-select-lg border-0 shadow-sm"
-                                onchange="this.form.submit()">
-                                <option value="">كل التخصصات</option>
-                                {% for item in specialties %}
-                                    <option
-                                        value="{{ item }}"
-                                        {% if specialty == item %}selected{% endif %}>
-                                        {{ item }}
-                                    </option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                    </div>
-
-                    <!-- ✅ فلتر التصنيف -->
-                    <div class="col-md-2">
-                        <label class="form-label fw-bold small text-muted">
-                            <i class="fas fa-layer-group"></i> التصنيف
-                        </label>
-                        <div class="input-group">
-                            <span class="input-group-text bg-light border-0">
-                                <i class="fas fa-layer-group text-primary"></i>
-                            </span>
-                            <select
-                                name="category"
-                                class="form-select form-select-lg border-0 shadow-sm"
-                                onchange="this.form.submit()">
-                                <option value="">كل التصنيفات</option>
-                                {% for cat in categories %}
-                                    <option
-                                        value="{{ cat }}"
-                                        {% if category == cat %}selected{% endif %}>
-                                        {{ cat }}
-                                    </option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="col-md-2">
-                        <label class="form-label fw-bold small text-muted">&nbsp;</label>
+            <form method="GET" class="row g-3 align-items-end" id="filterForm">
+                
+                <!-- ✅ فلتر 1: التخصص -->
+                <div class="col-md-3">
+                    <label class="form-label">📚 التخصص</label>
+                    <select name="specialty" class="form-select" onchange="this.form.submit()">
+                        <option value="">كل التخصصات</option>
+                        {% for item in specialties %}
+                        <option value="{{ item }}" {% if specialty == item %}selected{% endif %}>
+                            {{ item }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <!-- ✅ فلتر 2: التصنيف -->
+                <div class="col-md-3">
+                    <label class="form-label">📂 التصنيف</label>
+                    <select name="category" class="form-select" onchange="this.form.submit()">
+                        <option value="">كل التصنيفات</option>
+                        {% for cat in categories %}
+                        <option value="{{ cat }}" {% if category == cat %}selected{% endif %}>
+                            {{ cat }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <!-- ✅ أزرار الفلاتر -->
+                <div class="col-md-6">
+                    <label class="form-label">&nbsp;</label>
+                    <div class="d-flex gap-2">
                         {% if show_all %}
                         <a
                             href="?search={{ search }}&specialty={{ specialty }}&category={{ category }}"
-                            class="btn btn-outline-danger btn-lg w-100 shadow-sm">
+                            class="btn btn-outline-danger btn-filter flex-fill">
                             <i class="fas fa-eye-slash me-1"></i> إخفاء الجدول
                         </a>
                         {% else %}
                         <a
                             href="?search={{ search }}&specialty={{ specialty }}&category={{ category }}&show_all=1"
-                            class="btn btn-outline-primary btn-lg w-100 shadow-sm">
+                            class="btn btn-outline-primary btn-filter flex-fill">
                             <i class="fas fa-eye me-1"></i> عرض التوصيفات كلها
                         </a>
                         {% endif %}
-                    </div>
-                </div>
-
-                <div class="row mt-3">
-                    <div class="col-12">
-                        <a href="{% url 'procedures' %}" class="btn btn-outline-secondary btn-sm">
-                            <i class="fas fa-undo me-1"></i> مسح الكل
+                        <a href="{% url 'procedures' %}" class="btn btn-secondary btn-filter">
+                            <i class="fas fa-undo me-1"></i> إعادة تعيين
                         </a>
                     </div>
                 </div>
+                
             </form>
         </div>
     </div>
 
+    <!-- ✅ الفلاتر النشطة -->
+    {% if search or specialty or category %}
+    <div class="alert alert-info mb-3 d-flex justify-content-between align-items-center flex-wrap">
+        <div class="d-flex flex-wrap gap-1 align-items-center">
+            <i class="fas fa-filter me-2"></i>
+            <strong>الفلاتر النشطة:</strong>
+            {% if search %}
+            <span class="badge bg-primary ms-1">🔍 {{ search }}</span>
+            {% endif %}
+            {% if specialty %}
+            <span class="badge bg-success ms-1">📚 {{ specialty }}</span>
+            {% endif %}
+            {% if category %}
+            <span class="badge bg-warning text-dark ms-1">📂 {{ category }}</span>
+            {% endif %}
+            <span class="badge bg-dark ms-2 rounded-pill"><strong>{{ total_count }}</strong></span>
+        </div>
+        <a href="{% url 'procedures' %}" class="text-decoration-none fw-bold text-danger">
+            <i class="fas fa-times me-1"></i> إلغاء الكل
+        </a>
+    </div>
+    {% endif %}
+
     <!-- ============================================ -->
-    <!-- ✅ إحصائيات النتائج المحسنة -->
+    <!-- ✅ إحصائيات النتائج -->
     <!-- ============================================ -->
     <div class="row g-3 mb-4">
 
-        <div class="col-md-3">
-            <div class="card shadow-sm border-0 hover-shadow h-100">
-                <div class="card-body text-center py-3">
-                    <div class="d-flex align-items-center justify-content-center mb-2">
-                        <div class="rounded-circle bg-primary bg-opacity-10 p-2">
-                            <i class="fas fa-list text-primary fs-4"></i>
-                        </div>
-                    </div>
-                    <h6 class="text-muted mb-1">عدد النتائج</h6>
-                    <h3 class="fw-bold text-primary mb-0">{{ total_count }}</h3>
+        <div class="col-6 col-md-3">
+            <div class="info-card stats-card">
+                <div class="card-title">
+                    <i class="fas fa-list text-primary"></i>
+                    عدد النتائج
                 </div>
+                <h3 class="fw-bold text-primary mb-0"><strong>{{ total_count }}</strong></h3>
             </div>
         </div>
 
-        <div class="col-md-3">
-            <div class="card shadow-sm border-0 hover-shadow h-100">
-                <div class="card-body text-center py-3">
-                    <div class="d-flex align-items-center justify-content-center mb-2">
-                        <div class="rounded-circle bg-success bg-opacity-10 p-2">
-                            <i class="fas fa-tags text-success fs-4"></i>
-                        </div>
-                    </div>
-                    <h6 class="text-muted mb-1">عدد التخصصات</h6>
-                    <h3 class="fw-bold text-success mb-0">{{ specialties|length }}</h3>
+        <div class="col-6 col-md-3">
+            <div class="info-card stats-card">
+                <div class="card-title">
+                    <i class="fas fa-tags text-success"></i>
+                    عدد التخصصات
                 </div>
+                <h3 class="fw-bold text-success mb-0"><strong>{{ specialties|length }}</strong></h3>
             </div>
         </div>
 
-        <div class="col-md-3">
-            <div class="card shadow-sm border-0 hover-shadow h-100">
-                <div class="card-body text-center py-3">
-                    <div class="d-flex align-items-center justify-content-center mb-2">
-                        <div class="rounded-circle bg-warning bg-opacity-10 p-2">
-                            <i class="fas fa-layer-group text-warning fs-4"></i>
-                        </div>
-                    </div>
-                    <h6 class="text-muted mb-1">التصنيفات</h6>
-                    <h3 class="fw-bold text-warning mb-0">{{ categories|length }}</h3>
+        <div class="col-6 col-md-3">
+            <div class="info-card stats-card">
+                <div class="card-title">
+                    <i class="fas fa-layer-group text-warning"></i>
+                    التصنيفات
                 </div>
+                <h3 class="fw-bold text-warning mb-0"><strong>{{ categories|length }}</strong></h3>
             </div>
         </div>
 
-        <div class="col-md-3">
-            <div class="card shadow-sm border-0 hover-shadow h-100">
-                <div class="card-body text-center py-3">
-                    <div class="d-flex align-items-center justify-content-center mb-2">
-                        <div class="rounded-circle bg-info bg-opacity-10 p-2">
-                            <i class="fas fa-language text-info fs-4"></i>
-                        </div>
-                    </div>
-                    <h6 class="text-muted mb-1">مسميات إنجليزية</h6>
-                    <h3 class="fw-bold text-info mb-0">{{ procedures|length }}</h3>
+        <div class="col-6 col-md-3">
+            <div class="info-card stats-card">
+                <div class="card-title">
+                    <i class="fas fa-language text-info"></i>
+                    مسميات إنجليزية
                 </div>
+                <h3 class="fw-bold text-info mb-0"><strong>{{ procedures|length }}</strong></h3>
             </div>
         </div>
 
     </div>
 
-    <!-- ✅ إحصائيات التخصصات -->
+    <!-- ✅ إحصائيات التخصصات - مع Bold -->
     <div class="row g-2 mb-4">
         <div class="col-12">
             <div class="card shadow-sm border-0">
-                <div class="card-body">
-                    <h6 class="text-muted mb-2">
+                <div class="card-body" style="padding: 0.75rem;">
+                    <h6 class="text-muted mb-2" style="font-size: 0.7rem;">
                         <i class="fas fa-chart-pie me-1"></i>
                         توزيع العمليات حسب التخصص
                     </h6>
-                    <div class="d-flex flex-wrap gap-2">
+                    <div class="d-flex flex-wrap gap-1">
                         {% for spec in specialties_with_count %}
-                        <span class="badge bg-primary rounded-pill px-3 py-2">
-                            {{ spec.name }}
-                            <span class="badge bg-light text-dark ms-1 rounded-pill">
-                                {{ spec.count }}
+                        <span class="badge bg-primary rounded-pill px-2 py-1" style="font-size: 0.6rem;">
+                            <strong>{{ spec.name }}</strong>
+                            <span class="badge bg-light text-dark ms-1 rounded-pill" style="font-size: 0.55rem; font-weight: 700;">
+                                <strong>{{ spec.count }}</strong>
                             </span>
                         </span>
                         {% endfor %}
@@ -230,53 +236,54 @@
     <!-- ============================================ -->
     <!-- ✅ عرض البطاقات -->
     <!-- ============================================ -->
-    <div class="row g-4">
+    <div class="row g-3">
 
         {% for item in procedures %}
 
-        <div class="col-lg-4 col-md-6">
+        <div class="col-12 col-sm-6 col-lg-4">
 
             <div class="card shadow-sm border-0 hover-shadow h-100">
 
-                <div class="card-body d-flex flex-column">
+                <div class="card-body d-flex flex-column" style="padding: 0.75rem;">
 
                     <!-- ✅ اسم العملية مع Tooltip -->
-                    <h5 class="fw-bold text-primary" title="{{ item.name_ar }}">
-                        {{ item.name_ar|truncatechars:55 }}
+                    <h5 class="fw-bold text-primary" title="{{ item.name_ar }}" style="font-size: 0.85rem;">
+                        <strong>{{ item.name_ar|truncatechars:55 }}</strong>
                     </h5>
 
-                    <hr>
+                    <hr style="margin: 0.3rem 0;">
 
                     <!-- ✅ الكود -->
-                    <p class="mb-1">
+                    <p class="mb-1" style="font-size: 0.75rem;">
                         <strong>الكود:</strong>
-                        <span class="badge bg-secondary">{{ item.code }}</span>
+                        <span class="badge bg-secondary" style="font-size: 0.6rem; font-weight: 700;">{{ item.code }}</span>
                     </p>
 
                     <!-- ✅ التخصص -->
-                    <p class="mb-1">
+                    <p class="mb-1" style="font-size: 0.75rem;">
                         <strong>التخصص:</strong>
-                        <span class="badge bg-primary">{{ item.specialty.name|default:"-" }}</span>
+                        <span class="badge bg-primary" style="font-size: 0.6rem; font-weight: 700;">{{ item.specialty.name|default:"-" }}</span>
                     </p>
 
                     <!-- ✅ التصنيف -->
-                    <p class="mb-1">
+                    <p class="mb-1" style="font-size: 0.75rem;">
                         <strong>التصنيف:</strong>
-                        {{ item.classification|default:"-" }}
+                        <strong>{{ item.classification|default:"-" }}</strong>
                     </p>
 
                     <!-- ✅ المسمى بالإنجليزية -->
-                    <div class="bg-light rounded p-2 mt-3">
-                        <small class="text-muted">English Name</small>
-                        <div class="fw-semibold">
-                            {{ item.name_en|default:"-" }}
+                    <div class="bg-light rounded p-2 mt-2" style="padding: 0.3rem 0.5rem !important;">
+                        <small class="text-muted" style="font-size: 0.55rem;">English Name</small>
+                        <div class="fw-semibold" style="font-size: 0.7rem;">
+                            <strong>{{ item.name_en|default:"-" }}</strong>
                         </div>
                     </div>
 
                     <!-- ✅ زر نسخ الكود -->
                     <button
-                        class="btn btn-outline-secondary btn-sm mt-3 copy-code"
-                        data-code="{{ item.code }}">
+                        class="btn btn-outline-secondary btn-sm mt-2 copy-code"
+                        data-code="{{ item.code }}"
+                        style="font-size: 0.6rem; padding: 0.15rem 0.5rem;">
 
                         <i class="fas fa-copy me-1"></i>
                         نسخ الكود
@@ -292,8 +299,8 @@
         {% empty %}
 
         <div class="col-12">
-            <div class="alert alert-info text-center py-5">
-                <i class="fas fa-inbox fa-3x d-block mb-3 text-muted"></i>
+            <div class="no-results">
+                <i class="fas fa-inbox"></i>
                 <h5 class="text-muted">لا توجد عمليات تطابق معايير البحث</h5>
                 <p class="text-muted small">حاول تغيير كلمات البحث أو اختيار تخصص آخر</p>
             </div>
@@ -304,205 +311,541 @@
     </div>
 
     <!-- ============================================ -->
-    <!-- ✅ جدول جميع العمليات (عند عرض الكل) -->
+    <!-- ✅ جدول جميع العمليات (عند عرض الكل) مع دعم الموبايل -->
     <!-- ============================================ -->
     {% if show_all %}
 
     <div class="card shadow border-0 mt-4">
 
-        <div class="card-header bg-primary text-white">
-
-            <h5 class="mb-0">
-
+        <div class="card-header bg-gradient-primary text-white" style="padding: 0.5rem 0.75rem;">
+            <h5 class="mb-0" style="font-size: 0.9rem;">
                 <i class="fas fa-table me-2"></i>
                 جميع العمليات
-
             </h5>
-
         </div>
 
-        <div class="table-responsive">
+        <!-- ✅ تحذير للموبايل -->
+        <div class="d-block d-sm-none text-center text-muted small p-1">
+            <i class="fas fa-arrows-alt-h me-1"></i>
+            اسحب يساراً لرؤية باقي الأعمدة
+        </div>
 
-            <table class="table table-hover align-middle mb-0">
-
+        <div class="table-responsive" style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
+            <table class="table table-hover align-middle mb-0" style="min-width: 500px;">
                 <thead class="table-light">
-
-                <tr>
-
-                    <th>الكود</th>
-
-                    <th>اسم العملية</th>
-
-                    <th>التخصص</th>
-
-                    <th>التصنيف</th>
-
-                    <th>الاسم الإنجليزي</th>
-
-                </tr>
-
+                    <tr>
+                        <th style="padding: 0.4rem 0.5rem; font-size: 0.65rem;"><strong>الكود</strong></th>
+                        <th style="padding: 0.4rem 0.5rem; font-size: 0.65rem;"><strong>اسم العملية</strong></th>
+                        <th style="padding: 0.4rem 0.5rem; font-size: 0.65rem;"><strong>التخصص</strong></th>
+                        <th style="padding: 0.4rem 0.5rem; font-size: 0.65rem;"><strong>التصنيف</strong></th>
+                        <th style="padding: 0.4rem 0.5rem; font-size: 0.65rem;"><strong>الاسم الإنجليزي</strong></th>
+                    </tr>
                 </thead>
-
                 <tbody>
-
-                {% for item in all_procedures %}
-
-                <tr>
-
-                    <td>
-
-                        <span class="badge bg-dark">
-
-                            {{ item.code }}
-
-                        </span>
-
-                    </td>
-
-                    <td>
-
-                        {{ item.name_ar }}
-
-                    </td>
-
-                    <td>
-
-                        <span class="badge bg-primary">
-
-                            {{ item.specialty.name|default:"-" }}
-
-                        </span>
-
-                    </td>
-
-                    <td>
-
-                        {{ item.classification|default:"-" }}
-
-                    </td>
-
-                    <td>
-
-                        {{ item.name_en|default:"-" }}
-
-                    </td>
-
-                </tr>
-
-                {% empty %}
-
-                <tr>
-
-                    <td colspan="5" class="text-center py-5">
-
-                        لا توجد بيانات
-
-                    </td>
-
-                </tr>
-
-                {% endfor %}
-
+                    {% for item in all_procedures %}
+                    <tr>
+                        <td style="padding: 0.3rem 0.5rem; font-size: 0.7rem;">
+                            <span class="badge bg-dark" style="font-size: 0.6rem; font-weight: 700;">
+                                {{ item.code }}
+                            </span>
+                        </td>
+                        <td style="padding: 0.3rem 0.5rem; font-size: 0.7rem;">
+                            <strong>{{ item.name_ar }}</strong>
+                        </td>
+                        <td style="padding: 0.3rem 0.5rem; font-size: 0.7rem;">
+                            <span class="badge bg-primary" style="font-size: 0.6rem; font-weight: 700;">
+                                {{ item.specialty.name|default:"-" }}
+                            </span>
+                        </td>
+                        <td style="padding: 0.3rem 0.5rem; font-size: 0.7rem;">
+                            <strong>{{ item.classification|default:"-" }}</strong>
+                        </td>
+                        <td style="padding: 0.3rem 0.5rem; font-size: 0.7rem;">
+                            <strong>{{ item.name_en|default:"-" }}</strong>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center py-5">
+                            لا توجد بيانات
+                        </td>
+                    </tr>
+                    {% endfor %}
                 </tbody>
-
             </table>
-
         </div>
 
     </div>
 
     {% endif %}
 
-    <!-- ============================================ -->
-    <!-- ✅ زر نسخ الكود Script -->
-    <!-- ============================================ -->
-    <script>
-        document.querySelectorAll(".copy-code").forEach(function(button) {
-            button.addEventListener("click", function() {
-                navigator.clipboard.writeText(this.dataset.code);
-                this.innerHTML = "✅ تم النسخ";
-                setTimeout(() => {
-                    this.innerHTML = '<i class="fas fa-copy me-1"></i> نسخ الكود';
-                }, 1500);
-            });
-        });
-    </script>
-
 </div>
 
 <!-- ============================================ -->
-<!-- ✅ CSS تحسينات -->
+<!-- ✅ زر نسخ الكود Script -->
+<!-- ============================================ -->
+<script>
+    document.querySelectorAll(".copy-code").forEach(function(button) {
+        button.addEventListener("click", function() {
+            navigator.clipboard.writeText(this.dataset.code);
+            const originalText = this.innerHTML;
+            this.innerHTML = "✅ تم النسخ";
+            setTimeout(() => {
+                this.innerHTML = originalText;
+            }, 1500);
+        });
+    });
+
+    // ============================================
+    // ✅ تحسين تجربة المستخدم - Auto Submit للفلاتر
+    // ============================================
+    document.addEventListener('DOMContentLoaded', function() {
+        const filterSelects = document.querySelectorAll('.filter-card select');
+        filterSelects.forEach(select => {
+            select.addEventListener('change', function() {
+                this.closest('form').submit();
+            });
+        });
+    });
+</script>
+
+<!-- ============================================ -->
+<!-- ✅ CSS - متكامل مع التصميم الجميل -->
 <!-- ============================================ -->
 <style>
-    .bg-gradient-primary {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    /* ✅ Filter Card */
+    .filter-card {
+        border-radius: 16px;
+        border: none;
+        background: #fff;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+        margin-bottom: 1.5rem;
     }
-
-    .hover-shadow {
+    
+    .filter-card .card-body {
+        padding: 1.25rem;
+    }
+    
+    .filter-card .form-label {
+        font-size: 0.7rem;
+        font-weight: 700;
+        color: #495057;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.3rem;
+    }
+    
+    .filter-card .form-select,
+    .filter-card .form-control {
+        border-radius: 10px;
+        border: 2px solid #e9ecef;
+        font-size: 0.85rem;
+        padding: 0.4rem 0.8rem;
+        transition: all 0.3s ease;
+        background: #fff;
+    }
+    
+    .filter-card .form-select:focus,
+    .filter-card .form-control:focus {
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.1);
+    }
+    
+    .filter-card .btn-filter {
+        border-radius: 10px;
+        padding: 0.4rem 1.2rem;
+        font-weight: 600;
+        font-size: 0.85rem;
         transition: all 0.3s ease;
     }
-
-    .hover-shadow:hover {
-        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+    
+    .filter-card .btn-filter:hover {
         transform: translateY(-2px);
     }
-
-    .card {
+    
+    /* ✅ Search Box */
+    .search-wrapper {
+        max-width: 750px;
+        margin: 0 auto 2rem;
+    }
+    
+    .search-wrapper .input-group {
+        border-radius: 50px;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+        transition: box-shadow 0.3s ease;
+    }
+    
+    .search-wrapper .input-group:focus-within {
+        box-shadow: 0 4px 30px rgba(13, 110, 253, 0.15);
+    }
+    
+    .search-wrapper .input-group .form-control {
+        border: 2px solid #e9ecef;
+        padding: 0.8rem 1.5rem;
+        font-size: 1rem;
+        border-right: none;
+        background: #fff;
+    }
+    
+    .search-wrapper .input-group .form-control:focus {
+        border-color: #0d6efd;
+        box-shadow: none;
+    }
+    
+    .search-wrapper .input-group .btn-search {
+        padding: 0.8rem 2.5rem;
+        border-radius: 0 50px 50px 0;
+        background: linear-gradient(135deg, #0d6efd, #0b5ed7);
+        color: #fff;
+        border: 2px solid #0d6efd;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .search-wrapper .input-group .btn-search:hover {
+        background: linear-gradient(135deg, #0b5ed7, #0a58ca);
+        transform: scale(1.02);
+    }
+    
+    /* ✅ Info Cards */
+    .info-card {
+        border-radius: 16px;
+        padding: 1rem 1.25rem;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 1px solid #e9ecef;
+        height: 100%;
+        background: #fff;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .info-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #0d6efd, #0dcaf0);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    
+    .info-card:hover::before {
+        opacity: 1;
+    }
+    
+    .info-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 12px 40px rgba(0,0,0,0.1);
+        border-color: #0d6efd;
+    }
+    
+    .info-card .card-title {
+        font-size: 0.7rem;
+        font-weight: 700;
+        color: #495057;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .info-card .card-title i {
+        font-size: 1rem;
+        width: 24px;
+        text-align: center;
+    }
+    
+    .info-card h3 {
+        font-size: 1.5rem;
+        font-weight: 700;
+    }
+    
+    /* ✅ Stats Cards */
+    .stats-card {
+        padding: 0.8rem 1rem;
+        border-radius: 16px;
+        border: 1px solid #e9ecef;
+        transition: all 0.3s ease;
+        cursor: default;
+    }
+    
+    .stats-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+    }
+    
+    .stats-card .card-title {
+        font-size: 0.65rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #6c757d;
+        margin-bottom: 0.3rem;
+    }
+    
+    .stats-card h3 {
+        font-size: 1.2rem;
+        font-weight: 700;
+    }
+    
+    /* ✅ No Results */
+    .no-results {
+        text-align: center;
+        padding: 4rem 1rem;
+        background: #f8f9fa;
+        border-radius: 16px;
+    }
+    
+    .no-results i {
+        font-size: 4rem;
+        color: #dee2e6;
+        margin-bottom: 1rem;
+    }
+    
+    /* ✅ Cards */
+    .hover-shadow {
+        transition: all 0.3s ease;
         border-radius: 1rem;
         overflow: hidden;
     }
-
-    .card-header {
-        border-radius: 0 !important;
+    
+    .hover-shadow:hover {
+        box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.12) !important;
+        transform: translateY(-4px);
     }
-
+    
+    .bg-gradient-primary {
+        background: linear-gradient(135deg, #0d6efd, #0b5ed7);
+    }
+    
+    /* ✅ Badge */
     .badge {
         font-weight: 500;
     }
-
-    .input-group-text {
-        border-radius: 0.5rem 0 0 0.5rem;
-        background: #f8f9fa;
-    }
-
-    .form-control,
-    .form-select {
-        border-radius: 0 0.5rem 0.5rem 0;
-    }
-
-    .form-control:focus,
-    .form-select:focus {
-        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
-        border-color: #667eea;
-    }
-
+    
     /* ✅ تخصيص شريط التمرير */
     ::-webkit-scrollbar {
-        width: 8px;
-        height: 8px;
+        width: 6px;
+        height: 6px;
     }
-
+    
     ::-webkit-scrollbar-track {
         background: #f1f1f1;
         border-radius: 10px;
     }
-
+    
     ::-webkit-scrollbar-thumb {
-        background: #667eea;
+        background: linear-gradient(135deg, #0d6efd, #0dcaf0);
         border-radius: 10px;
     }
-
+    
     ::-webkit-scrollbar-thumb:hover {
-        background: #5a67d8;
+        background: #0b5ed7;
     }
-
-    /* ✅ Responsive */
+    
+    /* ✅ تحسينات الموبايل */
     @media (max-width: 768px) {
         .card-body {
-            padding: 1rem;
+            padding: 0.75rem !important;
         }
+        
         .badge.fs-6 {
-            font-size: 0.85rem !important;
+            font-size: 0.7rem !important;
+            padding: 0.2rem 0.6rem !important;
+        }
+        
+        .form-control-lg,
+        .form-select-lg {
+            font-size: 0.8rem !important;
+            padding: 0.3rem 0.6rem !important;
+        }
+        
+        .input-group-text {
+            padding: 0.3rem 0.5rem !important;
+            font-size: 0.8rem !important;
+        }
+        
+        /* ✅ تحسين عرض البطاقات في الموبايل */
+        .row.g-3 {
+            --bs-gutter-y: 0.5rem;
+        }
+        
+        .col-12.col-sm-6.col-lg-4 {
+            padding-left: 0.4rem;
+            padding-right: 0.4rem;
+        }
+        
+        .card .card-body {
+            padding: 0.6rem !important;
+        }
+        
+        .card .card-body h5 {
+            font-size: 0.75rem !important;
+        }
+        
+        .card .card-body p {
+            font-size: 0.65rem !important;
+            margin-bottom: 0.2rem !important;
+        }
+        
+        .card .card-body .badge {
+            font-size: 0.5rem !important;
+            padding: 0.1rem 0.4rem !important;
+        }
+        
+        .card .card-body .bg-light {
+            padding: 0.2rem 0.4rem !important;
+        }
+        
+        .card .card-body .bg-light .text-muted {
+            font-size: 0.45rem !important;
+        }
+        
+        .card .card-body .bg-light .fw-semibold {
+            font-size: 0.6rem !important;
+        }
+        
+        .copy-code {
+            font-size: 0.55rem !important;
+            padding: 0.1rem 0.4rem !important;
+        }
+        
+        /* ✅ تحسين الاحصائيات */
+        .col-6 .card-body {
+            padding: 0.5rem !important;
+        }
+        
+        .col-6 .card-body .rounded-circle {
+            padding: 0.3rem !important;
+        }
+        
+        .col-6 .card-body .rounded-circle i {
+            font-size: 0.8rem !important;
+        }
+        
+        .col-6 .card-body h6 {
+            font-size: 0.5rem !important;
+            margin-bottom: 0.1rem !important;
+        }
+        
+        .col-6 .card-body h3 {
+            font-size: 0.9rem !important;
+        }
+        
+        /* ✅ تحسين الفلاتر */
+        .row.g-3 {
+            --bs-gutter-y: 0.3rem;
+        }
+        
+        .col-6 {
+            padding-left: 0.3rem;
+            padding-right: 0.3rem;
+        }
+        
+        .col-12 {
+            padding-left: 0.3rem;
+            padding-right: 0.3rem;
+        }
+        
+        .col-md-3,
+        .col-md-6 {
+            padding-left: 0.3rem;
+            padding-right: 0.3rem;
+        }
+        
+        .form-label {
+            font-size: 0.55rem !important;
+            margin-bottom: 0.1rem !important;
+        }
+        
+        .btn-filter {
+            font-size: 0.7rem !important;
+            padding: 0.3rem 0.5rem !important;
+        }
+        
+        /* ✅ تحسين الجدول في الموبايل */
+        .table-responsive {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .table-responsive::-webkit-scrollbar {
+            height: 4px;
+        }
+        
+        .table-responsive::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #0d6efd, #0dcaf0);
+            border-radius: 10px;
+        }
+        
+        .table th,
+        .table td {
+            padding: 0.25rem 0.3rem !important;
+            font-size: 0.6rem !important;
+        }
+        
+        .table .badge {
+            font-size: 0.5rem !important;
+            padding: 0.1rem 0.3rem !important;
+        }
+        
+        /* ✅ تحسين البحث */
+        .search-wrapper .input-group .btn-search {
+            padding: 0.5rem 0.8rem;
+            font-size: 0.7rem;
+        }
+        
+        .search-wrapper .input-group .form-control {
+            padding: 0.5rem 0.8rem;
+            font-size: 0.8rem;
+        }
+        
+        .search-wrapper {
+            margin-bottom: 1rem;
+        }
+    }
+    
+    /* ✅ للأجهزة الصغيرة جداً */
+    @media (max-width: 480px) {
+        .col-6 .card-body h3 {
+            font-size: 0.8rem !important;
+        }
+        
+        .col-6 .card-body .rounded-circle {
+            width: 28px !important;
+            height: 28px !important;
+        }
+        
+        .col-6 .card-body .rounded-circle i {
+            font-size: 0.7rem !important;
+        }
+        
+        .card .card-body h5 {
+            font-size: 0.65rem !important;
+        }
+        
+        .card .card-body p {
+            font-size: 0.55rem !important;
+        }
+        
+        .form-control-lg,
+        .form-select-lg {
+            font-size: 0.7rem !important;
+            padding: 0.25rem 0.4rem !important;
+        }
+        
+        .input-group-text {
+            padding: 0.25rem 0.4rem !important;
+            font-size: 0.7rem !important;
+        }
+        
+        .btn-filter {
+            font-size: 0.6rem !important;
+            padding: 0.2rem 0.4rem !important;
         }
     }
 </style>

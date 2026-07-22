@@ -3166,3 +3166,124 @@ Not Found: /.well-known/appspecific/com.chrome.devtools.json
 "GET /service-search/?patient_type=&department=%D9%88%D8%AD%D8%AF%D8%A9+%D8%A7%D9%84%D9%83%D9%84%D9%89&insurance_company=%D9%86%D9%82%D8%A7%D8%A8%D8%A9+%D8%A7%D9%84%D8%A7%D8%B7%D8%A8%D8%A7%D8%A1&date_from=&date_to= HTTP/1.1" 200 655052
 Not Found: /.well-known/appspecific/com.chrome.devtools.json
 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+Watching for file changes with StatReloader
+"GET /procedures/ HTTP/1.1" 200 93885
+"GET /service-search/ HTTP/1.1" 200 753259
+"GET /service-search/ HTTP/1.1" 200 753259
+"GET /procedures/ HTTP/1.1" 200 109049
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+"GET /procedures/?search=%D8%A5%D8%B2%D8%A7%D9%84%D8%A9+%D8%AD%D8%B4%D9%88+%D8%A7%D9%86%D9%81&specialty=&category= HTTP/1.1" 200 42978
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+"GET /procedures/?search=%D8%A5%D8%B2%D8%A7%D9%84%D8%A9+%D8%AD%D8%B4%D9%88+%D8%A7%D9%86%D9%81&specialty=&category= HTTP/1.1" 200 46180
+"GET /procedures/?search=%D8%A5%D8%B2%D8%A7%D9%84%D8%A9%20%D8%AD%D8%B4%D9%88%20%D8%A7%D9%86%D9%81&specialty=&category=&show_all=1 HTTP/1.1" 200 48921
+"GET /procedures/?search=%D8%A5%D8%B2%D8%A7%D9%84%D8%A9%20%D8%AD%D8%B4%D9%88%20%D8%A7%D9%86%D9%81&specialty=&category= HTTP/1.1" 200 46180
+"GET /procedures/ HTTP/1.1" 200 108362
+"GET /procedures/?search=&specialty=&category=&show_all=1 HTTP/1.1" 200 5566946
+"GET /procedures/?search=&specialty=&category= HTTP/1.1" 200 108362
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+"GET /procedures/?search=&specialty=&category= HTTP/1.1" 200 111085
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+"GET /procedures/?search=%D8%A3%D8%B3%D8%AA%D8%AE%D8%B1%D8%A7%D8%AC+%D8%A3%D9%86%D8%A8%D9%88%D8%A8%D8%A9+%D8%AA%D8%AD%D8%AA+%D9%85%D8%AE%D8%AF%D8%B1 HTTP/1.1" 200 46554
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+"GET /procedures/?specialty=%D8%AC%D8%B1%D8%A7%D8%AD%D8%A9+%D8%A7%D9%84%D8%A3%D9%86%D9%81+%D9%88%D8%A7%D9%84%D8%A3%D8%B0%D9%86+%D9%88%D8%A7%D9%84%D8%AD%D9%86%D8%AC%D8%B1%D8%A9&category= HTTP/1.1" 200 106084
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+"GET /procedures/?specialty=%D8%AC%D8%B1%D8%A7%D8%AD%D8%A9+%D8%A7%D9%84%D8%A3%D9%86%D9%81+%D9%88%D8%A7%D9%84%D8%A3%D8%B0%D9%86+%D9%88%D8%A7%D9%84%D8%AD%D9%86%D8%AC%D8%B1%D8%A9&category=%D9%85%D9%87%D8%A7%D8%B1%D8%A9 HTTP/1.1" 200 107210
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+"GET /procedures/?specialty=%D8%AC%D8%B1%D8%A7%D8%AD%D8%A9+%D8%A7%D9%84%D8%A3%D9%86%D9%81+%D9%88%D8%A7%D9%84%D8%A3%D8%B0%D9%86+%D9%88%D8%A7%D9%84%D8%AD%D9%86%D8%AC%D8%B1%D8%A9&category= HTTP/1.1" 200 106084
+"GET /procedures/?specialty=%D8%AC%D8%B1%D8%A7%D8%AD%D8%A9+%D8%A7%D9%84%D8%A3%D9%86%D9%81+%D9%88%D8%A7%D9%84%D8%A3%D8%B0%D9%86+%D9%88%D8%A7%D9%84%D8%AD%D9%86%D8%AC%D8%B1%D8%A9&category=%D8%B0%D8%A7%D8%AA+%D8%B7%D8%A7%D8%A8%D8%B9+%D8%AE%D8%A7%D8%B5 HTTP/1.1" 200 102221
+"GET /procedures/?specialty=%D8%AC%D8%B1%D8%A7%D8%AD%D8%A9+%D8%A7%D9%84%D8%A3%D9%86%D9%81+%D9%88%D8%A7%D9%84%D8%A3%D8%B0%D9%86+%D9%88%D8%A7%D9%84%D8%AD%D9%86%D8%AC%D8%B1%D8%A9&category= HTTP/1.1" 200 106084
+Internal Server Error: /procedures/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 279, in ensure_connection
+    self.connect()
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\postgresql\base.py", line 332, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\psycopg2\__init__.py", line 135, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.OperationalError: connection to server at "tokaido.proxy.rlwy.net" (66.33.22.222), port 16688 failed: server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 3813, in procedures
+    for spec in specialties:
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 386, in __iter__
+    self._fetch_all()
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 1954, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 273, in __iter__
+    for row in compiler.results_iter(
+               ^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\sql\compiler.py", line 1572, in results_iter
+    results = self.execute_sql(
+              ^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\sql\compiler.py", line 1621, in execute_sql
+    cursor = self.connection.cursor()
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 320, in cursor
+    return self._cursor()
+           ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 296, in _cursor
+    self.ensure_connection()
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 278, in ensure_connection
+    with self.wrap_database_errors:
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 279, in ensure_connection
+    self.connect()
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\postgresql\base.py", line 332, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\psycopg2\__init__.py", line 135, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: connection to server at "tokaido.proxy.rlwy.net" (66.33.22.222), port 16688 failed: server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+
+"GET /procedures/?specialty=%D8%AC%D8%B1%D8%A7%D8%AD%D8%A9+%D8%A7%D9%84%D8%A3%D9%86%D9%81+%D9%88%D8%A7%D9%84%D8%A3%D8%B0%D9%86+%D9%88%D8%A7%D9%84%D8%AD%D9%86%D8%AC%D8%B1%D8%A9&category=%D9%85%D8%AA%D9%82%D8%AF%D9%85%D8%A9 HTTP/1.1" 500 178541
+"GET /procedures/?specialty=%D8%AC%D8%B1%D8%A7%D8%AD%D8%A9+%D8%A7%D9%84%D8%A3%D9%86%D9%81+%D9%88%D8%A7%D9%84%D8%A3%D8%B0%D9%86+%D9%88%D8%A7%D9%84%D8%AD%D9%86%D8%AC%D8%B1%D8%A9&category=%D9%85%D8%AA%D9%82%D8%AF%D9%85%D8%A9 HTTP/1.1" 200 67278
+"GET /procedures/ HTTP/1.1" 200 111085
