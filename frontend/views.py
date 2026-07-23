@@ -4279,17 +4279,17 @@ from django.contrib import messages
 from django.shortcuts import render
 
 from imports.services.update_all_data_service import UpdateAllDataService
-import threading
+from background_task import background
 
 
-# ✅ متغير لتتبع التقدم
+# ✅ متغير لتتبع التقدم (نفسه)
 _update_progress = {
     "completed": 0,
     "current_command": "",
     "total": 16,
     "is_running": False,
     "results": [],
-    "logs": "",  # ← إضافة تخزين الـ logs
+    "logs": "",
 }
 
 def clean_logs(text):
@@ -4303,7 +4303,7 @@ def extract_results_from_logs(logs):
     lines = logs.split('\n')
     
     for line in lines:
-        if '✅ END :' in line or '❌ END :' in line:
+        if '✅ END :' in line or '❌ END :' in line or '⚠️ END :' in line:
             is_success = '✅' in line
             parts = line.split('END :')
             if len(parts) > 1:
@@ -4319,9 +4319,10 @@ def extract_results_from_logs(logs):
     
     return results
 
-# ✅ ✅ ✅ الدالة اللي بتشتغل في الخلفية
+# ✅ ✅ ✅ دالة الخلفية باستخدام background_task
+@background(schedule=0)
 def run_update_background():
-    """تشغيل التحديث في Thread منفصل"""
+    """تشغيل التحديث في الخلفية"""
     global _update_progress
     
     try:
@@ -4332,17 +4333,13 @@ def run_update_background():
         _update_progress["results"] = []
         _update_progress["logs"] = ""
         
-        # ✅ إنشاء كائن لتخزين الـ output
         output = io.StringIO()
         
-        # ✅ تعريف دالة التقدم
         def progress_callback(command_name, completed):
             _update_progress["current_command"] = command_name
             _update_progress["completed"] = completed
-            
             # ✅ حفظ الـ logs بشكل مستمر
-            current_logs = output.getvalue()
-            _update_progress["logs"] = clean_logs(current_logs)
+            _update_progress["logs"] = clean_logs(output.getvalue())
         
         # ✅ تشغيل الخدمة
         UpdateAllDataService.run(
@@ -4373,7 +4370,7 @@ def update_progress(request):
         "total": _update_progress["total"],
         "is_running": _update_progress["is_running"],
         "results": _update_progress["results"],
-        "logs": _update_progress.get("logs", ""),  # ← إضافة الـ logs
+        "logs": _update_progress.get("logs", ""),
     })
 
 def system_update(request):
@@ -4386,14 +4383,10 @@ def system_update(request):
         # ✅ منع بدء تحديث جديد إذا كان واحد شغال بالفعل
         if _update_progress["is_running"]:
             messages.warning(request, "⚠️ عملية تحديث جارية بالفعل. يرجى الانتظار.")
-            return redirect('system_update')  # غير اسم الـ URL حسب مشروعك
+            return redirect('system_update')
         
-        # ✅ تشغيل التحديث في Thread منفصل
-        thread = threading.Thread(
-            target=run_update_background,
-            daemon=True  # ← عشان يموت لما السيرفر يموت
-        )
-        thread.start()
+        # ✅ ✅ ✅ تشغيل التحديث باستخدام background_task (مش بنستنى)
+        run_update_background()
         
         messages.success(
             request,
@@ -4417,5 +4410,7 @@ def system_update(request):
             "error_count": error_count,
             "is_running": _update_progress["is_running"],
             "completed": _update_progress["completed"],
+            "current_command": _update_progress["current_command"],
+            "elapsed_time": 0,
         }
     )
