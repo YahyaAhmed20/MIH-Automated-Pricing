@@ -3706,3 +3706,52 @@ Watching for file changes with StatReloader
 "GET /api/update-progress/ HTTP/1.1" 200 102
 "GET /api/update-progress/ HTTP/1.1" 200 102
 "GET / HTTP/1.1" 200 34045
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 34045
+"GET /system/update/ HTTP/1.1" 200 37216
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 100
+"GET /api/update-progress/ HTTP/1.1" 200 105
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 34045
+"GET /static/images/logo.jpeg HTTP/1.1" 200 68755
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 13579
+"GET /special-offers/ HTTP/1.1" 200 350225
+"GET /special-offers/?company=%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%8A%D9%87%20%D9%84%D9%84%D8%A7%D8%AA%D8%B5%D8%A7%D9%84%D8%A7%D8%AA HTTP/1.1" 200 60695
+"GET /contract-entities/ HTTP/1.1" 200 49054
+"GET /contract-entities/88/ HTTP/1.1" 200 58163
+"GET /special-offers/ HTTP/1.1" 200 350225
+"GET /service-search/ HTTP/1.1" 200 753259
+"GET /special-offers/ HTTP/1.1" 200 350225
+"GET /company-discounts/ HTTP/1.1" 200 103119
+"GET /contract-entities/ HTTP/1.1" 200 49054
+"GET /contract-entities/88/ HTTP/1.1" 200 58163
+"GET /contract-entities/88/ HTTP/1.1" 200 58163
+"GET /contract-entities/ HTTP/1.1" 200 49024
+"GET /contract-entities/ HTTP/1.1" 200 48553
+"GET /company-discounts/ HTTP/1.1" 200 103119
+"GET /company-discounts/?tab=compare HTTP/1.1" 200 53770
+"GET /company-discounts/?tab=compare&company1=%D8%A8%D9%86%D9%83+%D9%85%D8%B5%D8%B1&company2=%D9%88%D8%B2%D8%A7%D8%B1%D8%A9+%D8%A7%D9%84%D8%B9%D8%AF%D9%84&compare_section=all HTTP/1.1" 200 69579
+"GET /company-discounts/?tab=compare&company1=%D8%A8%D9%86%D9%83+%D9%85%D8%B5%D8%B1&company2=%D9%88%D8%B2%D8%A7%D8%B1%D8%A9+%D8%A7%D9%84%D8%B9%D8%AF%D9%84&compare_section=external HTTP/1.1" 200 65028
+"GET /company-discounts/?tab=exceptions HTTP/1.1" 200 121437
+"GET /service-search/ HTTP/1.1" 200 753269
+"GET /service-search/?search=%D8%A7%D9%84%D9%86%D9%88%D9%85 HTTP/1.1" 200 133144
+"GET /service-search/?search=%D9%85%D8%B9%D9%85%D9%84 HTTP/1.1" 200 133136
+- Broken pipe from ('127.0.0.1', 56011)
+"GET /service-search/?search=opr-53 HTTP/1.1" 200 60285
+- Broken pipe from ('127.0.0.1', 57940)
+"GET /service-search/?search=opr-53 HTTP/1.1" 200 60285
+"GET /service-search/?search=opr- HTTP/1.1" 200 45762
+"GET /service-search/?search=opr-54 HTTP/1.1" 200 60494
