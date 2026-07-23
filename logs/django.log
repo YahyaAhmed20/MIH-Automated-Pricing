@@ -3695,3 +3695,14 @@ Running frontend.views.run_update_background
 Ran task and deleting frontend.views.run_update_background
 Running frontend.views.run_update_background
 Ran task and deleting frontend.views.run_update_background
+Watching for file changes with StatReloader
+"GET /system/update/ HTTP/1.1" 200 37216
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET / HTTP/1.1" 200 34045

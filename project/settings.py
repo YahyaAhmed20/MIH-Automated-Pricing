@@ -66,8 +66,6 @@ INSTALLED_APPS = [
     'pricing_engine',
     'dashboard',
     'frontend',
-    'background_task',  # ✅ أضفها هنا
-
 ]
 
 AUTH_USER_MODEL = 'accounts.User'

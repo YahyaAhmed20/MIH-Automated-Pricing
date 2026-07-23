@@ -7,20 +7,206 @@
 {% block content %}
 
 <style>
-    /* ✅ نفس الـ CSS اللي عندك، أضيف عليه بس ده */
+    /* ============================================ */
+    /* ✅ تحسينات UI احترافية */
+    /* ============================================ */
     
-    /* ✅ إضافة style للـ running state */
-    .status-running {
-        animation: pulse 1.5s ease-in-out infinite;
+    .result-card {
+        border-radius: 16px;
+        transition: all 0.3s ease;
+        border: none;
+        overflow: hidden;
     }
-    
-    @keyframes pulse {
-        0% { opacity: 1; }
-        50% { opacity: 0.5; }
-        100% { opacity: 1; }
+
+    .result-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08) !important;
     }
-    
-    /* ✅ تحسين Logs container */
+
+    .result-card .card-header {
+        padding: 15px 20px;
+        font-weight: 600;
+        border: none;
+    }
+
+    .result-card .card-header.bg-success {
+        background: linear-gradient(135deg, #28a745, #20c997) !important;
+    }
+
+    .result-card .card-header.bg-danger {
+        background: linear-gradient(135deg, #dc3545, #fd7e14) !important;
+    }
+
+    .result-item {
+        padding: 12px 15px;
+        border-bottom: 1px solid #f1f3f5;
+        transition: all 0.2s ease;
+    }
+
+    .result-item:hover {
+        background: #f8f9fc;
+    }
+
+    .result-item:last-child {
+        border-bottom: none;
+    }
+
+    .result-item .status-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+    }
+
+    .result-item .status-icon.success {
+        background: #d4edda;
+        color: #155724;
+    }
+
+    .result-item .status-icon.error {
+        background: #f8d7da;
+        color: #721c24;
+    }
+
+    .result-item .status-icon.running {
+        background: #cce5ff;
+        color: #004085;
+    }
+
+    .time-badge {
+        background: #e9ecef;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #495057;
+    }
+
+    /* ✅ Progress Bar محسّن */
+    .progress {
+        border-radius: 12px;
+        height: 25px;
+        background: #e9ecef;
+        overflow: hidden;
+    }
+
+    .progress-bar {
+        font-weight: 600;
+        font-size: 0.85rem;
+        line-height: 25px;
+        transition: width 0.5s ease;
+    }
+
+    .progress-bar.bg-success {
+        background: linear-gradient(90deg, #28a745, #20c997) !important;
+    }
+
+    .progress-bar.bg-danger {
+        background: linear-gradient(90deg, #dc3545, #fd7e14) !important;
+    }
+
+    /* ✅ Summary Cards */
+    .summary-card {
+        background: #f8f9fc;
+        padding: 20px;
+        border-radius: 12px;
+        text-align: center;
+        transition: all 0.3s ease;
+        border: 1px solid rgba(0,0,0,0.04);
+    }
+
+    .summary-card:hover {
+        background: #ffffff;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+        transform: translateY(-2px);
+    }
+
+    .summary-card .number {
+        font-size: 2rem;
+        font-weight: 700;
+    }
+
+    .summary-card .number.text-success {
+        color: #28a745;
+    }
+
+    .summary-card .number.text-danger {
+        color: #dc3545;
+    }
+
+    .summary-card .number.text-primary {
+        color: #0d6efd;
+    }
+
+    .summary-card .label {
+        font-size: 0.85rem;
+        color: #6c757d;
+        margin-top: 5px;
+    }
+
+    /* ✅ تحسين الأزرار */
+    .btn-success {
+        background: linear-gradient(135deg, #28a745, #20c997);
+        border: none;
+        box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+    }
+
+    .btn-success:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 30px rgba(40, 167, 69, 0.4);
+    }
+
+    /* ✅ أنيميشن */
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    .result-item {
+        animation: slideIn 0.3s ease forwards;
+    }
+
+    /* ✅ Scroll للنتائج */
+    .results-scroll {
+        max-height: 500px;
+        overflow-y: auto;
+    }
+
+    .results-scroll::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .results-scroll::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+    }
+
+    .results-scroll::-webkit-scrollbar-thumb {
+        background: #0d6efd;
+        border-radius: 10px;
+    }
+
+    .results-scroll::-webkit-scrollbar-thumb:hover {
+        background: #0a58ca;
+    }
+
+    /* ✅ Responsive */
+    @media (max-width: 768px) {
+        .summary-card .number {
+            font-size: 1.5rem;
+        }
+    }
+
+    /* ✅ Logs styling */
     .logs-content {
         background: #1a1a2e;
         color: #00ff88;
@@ -32,21 +218,20 @@
         overflow-y: auto;
         white-space: pre-wrap;
         word-wrap: break-word;
-        line-height: 1.6;
     }
-    
-    /* ✅ Highlight للـ errors في الـ logs */
-    .logs-content .error-line {
-        color: #ff6b6b;
-        background: rgba(255, 0, 0, 0.1);
-        display: block;
-        padding: 2px 8px;
-        border-radius: 4px;
-        margin: 2px 0;
+
+    .logs-content::-webkit-scrollbar {
+        width: 6px;
     }
-    
-    .logs-content .success-line {
-        color: #00ff88;
+
+    .logs-content::-webkit-scrollbar-track {
+        background: #2d2d44;
+        border-radius: 10px;
+    }
+
+    .logs-content::-webkit-scrollbar-thumb {
+        background: #00ff88;
+        border-radius: 10px;
     }
 </style>
 
@@ -96,15 +281,8 @@
 
                     <div class="col-md-3">
 
-                        <!-- ✅ ✅ ✅ تم التعديل هنا ✅ ✅ ✅ -->
-                        <h5 id="statusBadge" class="{% if is_running %}status-running{% endif %}">
-                            {% if is_running %}
-                                🔄 جاري التحديث...
-                            {% elif results %}
-                                ✅ مكتمل
-                            {% else %}
-                                ✅ جاهز
-                            {% endif %}
+                        <h5 id="statusBadge">
+                            ✅ جاهز
                         </h5>
 
                         <small class="text-muted">
@@ -129,18 +307,7 @@
 
                 <hr>
 
-                <!-- ✅ ✅ ✅ تم التعديل هنا ✅ ✅ ✅ -->
                 <div class="text-center">
-
-                    <!-- ✅ عرض رسالة إذا كان التحديث شغال -->
-                    {% if is_running %}
-                        <div class="alert alert-info mb-3">
-                            <i class="bi bi-info-circle"></i>
-                            <strong>جاري تحديث البيانات في الخلفية...</strong>
-                            <br>
-                            <small>يمكنك متابعة التقدم أدناه. لا تغلق الصفحة.</small>
-                        </div>
-                    {% endif %}
 
                     <form method="post" id="updateForm">
 
@@ -149,52 +316,25 @@
                         <button
                             id="updateButton"
                             type="submit"
-                            class="btn btn-success btn-lg px-5"
-                            {% if is_running %}disabled{% endif %}>
+                            class="btn btn-success btn-lg px-5">
 
                             <i class="bi bi-arrow-repeat"></i>
 
-                            {% if is_running %}
-                                ⏳ جاري التحديث...
-                            {% else %}
-                                تحديث جميع البيانات
-                            {% endif %}
+                            تحديث جميع البيانات
 
                         </button>
 
                     </form>
 
                     <!-- ✅ Progress Bar -->
-                    <div id="progressContainer" class="mt-3 {% if not is_running and not results %}d-none{% endif %}">
+                    <div id="progressContainer" class="mt-3 d-none">
                         <div class="progress">
-                            <div id="progressBar" 
-                                 class="progress-bar progress-bar-striped {% if is_running %}progress-bar-animated bg-success{% else %}bg-success{% endif %}" 
-                                 style="width: {% if is_running %}{% widthratio completed total_commands 100 %}{% else %}100{% endif %}%;">
-                                {% if is_running %}
-                                    {% widthratio completed total_commands 100 %}%
-                                {% else %}
-                                    100%
-                                {% endif %}
+                            <div id="progressBar" class="progress-bar progress-bar-striped progress-bar-animated bg-success" style="width: 0%;">
+                                0%
                             </div>
                         </div>
-                        <small class="text-muted mt-2 d-block" id="progressText">
-                            {% if is_running %}
-                                ⏳ جاري التنفيذ: {{ current_command }} ({{ completed }}/{{ total_commands }})
-                            {% elif results %}
-                                ✅ تم الانتهاء من جميع الأوامر بنجاح!
-                            {% else %}
-                                ⏳ جاري التحديث...
-                            {% endif %}
-                        </small>
-                        <small class="text-muted d-block" id="progressDetail">
-                            {% if is_running %}
-                                تم تنفيذ {{ completed }} من {{ total_commands }} أمر
-                            {% elif results %}
-                                🎉 اكتمل التحديث
-                            {% else %}
-                                بدء التنفيذ...
-                            {% endif %}
-                        </small>
+                        <small class="text-muted mt-2 d-block" id="progressText">⏳ جاري التحديث...</small>
+                        <small class="text-muted d-block" id="progressDetail">بدء التنفيذ...</small>
                     </div>
 
                 </div>
@@ -206,18 +346,13 @@
         <!-- ✅ عرض النتائج -->
         {% if results %}
         <div class="card shadow-sm border-0 result-card mt-4">
-            <div class="card-header {% if error_count == 0 %}bg-success{% else %}bg-warning{% endif %} text-white">
+            <div class="card-header bg-success text-white">
                 <h5 class="mb-0 d-flex align-items-center">
                     <i class="bi bi-check-circle me-2"></i>
                     نتائج التحديث
                     <span class="badge bg-light text-dark ms-3">
                         {{ results|length }} أمر
                     </span>
-                    {% if error_count > 0 %}
-                    <span class="badge bg-danger ms-2">
-                        {{ error_count }} فشل
-                    </span>
-                    {% endif %}
                 </h5>
             </div>
 
@@ -225,11 +360,13 @@
                 {% for result in results %}
                 <div class="result-item d-flex justify-content-between align-items-center">
                     <div class="d-flex align-items-center">
-                        <span class="status-icon {% if result.status == 'success' %}success{% else %}error{% endif %}">
+                        <span class="status-icon {{ result.status }}">
                             {% if result.status == 'success' %}
                                 <i class="bi bi-check-lg"></i>
-                            {% else %}
+                            {% elif result.status == 'error' %}
                                 <i class="bi bi-x-lg"></i>
+                            {% else %}
+                                <i class="bi bi-arrow-repeat"></i>
                             {% endif %}
                         </span>
                         <span class="fw-bold ms-2">{{ result.name }}</span>
@@ -277,19 +414,11 @@
 
 <div class="card shadow-sm mt-4 border-0 result-card">
 
-    <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+    <div class="card-header bg-dark text-white">
 
         <strong>
-            <i class="bi bi-terminal me-2"></i>
             📋 سجل عملية التحديث
         </strong>
-
-        {% if is_running %}
-        <span class="badge bg-warning text-dark">
-            <i class="bi bi-arrow-repeat spinner-border spinner-border-sm me-1"></i>
-            جاري التحديث...
-        </span>
-        {% endif %}
 
     </div>
 
@@ -303,7 +432,6 @@
 
 {% endif %}
 
-<!-- ✅ ✅ ✅ JavaScript محدث ✅ ✅ ✅ -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
 
@@ -316,13 +444,31 @@ document.addEventListener('DOMContentLoaded', function() {
     const progressDetail = document.getElementById('progressDetail');
     const timeDisplay = document.getElementById('timeDisplay');
 
-    // ✅ عدد الأوامر الكلي
-    const totalCommands = {{ total_commands|default:16 }};
+    // ✅ أسماء الأوامر بالترتيب (16 أمر)
+    const COMMANDS = [
+        'Package Catalog',
+        'Cash Packages',
+        'Contract Migration',
+        'Company Contracts',
+        'Company Discounts',
+        'Special Offers',
+        'Service Records',
+        'Pricing Details',
+        'Similar Invoices',
+        'Procedures',
+        'Medical Procedures',
+        'Procedure Fees',
+        'Company Discount Rank',
+        'Company Exceptions',
+        'Report Statistics',
+        'External Approvals'
+    ];
+
+    const totalCommands = COMMANDS.length;
     let progressInterval = null;
     let checkInterval = null;
     let startTime = null;
     let timerInterval = null;
-    let isRunning = {{ is_running|yesno:"true,false" }};
 
     // ✅ تحديث الوقت
     function updateTimer() {
@@ -354,72 +500,45 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        const currentName = currentCommand || '...';
+        const currentName = currentCommand || COMMANDS[completed] || '...';
         progressText.innerHTML = `⏳ جاري التنفيذ: ${currentName} (${completed}/${totalCommands})`;
         progressDetail.innerHTML = `تم تنفيذ ${completed} من ${totalCommands} أمر`;
     }
 
-    // ✅ التحقق من التقدم من الـ API
+    // ✅ التحقق من التقدم
     function checkProgress() {
         fetch('/api/update-progress/')
             .then(response => response.json())
             .then(data => {
                 const completed = data.completed || 0;
                 const currentCommand = data.current_command || '';
-                const isRunningNow = data.is_running || false;
-                
-                if (!isRunningNow && completed >= totalCommands) {
-                    // ✅ التحديث انتهى
-                    updateProgress(totalCommands, '');
-                    // ✅ إعادة تحميل الصفحة لعرض النتائج الكاملة
-                    setTimeout(() => location.reload(), 2000);
-                    return;
-                }
-                
                 updateProgress(completed, currentCommand);
             })
             .catch(() => {
-                // ✅ لو الـ API مش شغال، نعرض progress وهمي
                 if (progressInterval) return;
-                let fakeProgress = {{ completed|default:0 }};
+                let fakeProgress = 0;
                 progressInterval = setInterval(function() {
-                    fakeProgress = Math.min(fakeProgress + 1, 95);
+                    fakeProgress = Math.min(fakeProgress + 2, 95);
                     progressBar.style.width = fakeProgress + '%';
                     progressBar.innerHTML = fakeProgress + '%';
                     if (fakeProgress >= 95) {
                         clearInterval(progressInterval);
                     }
-                }, 3000);
+                }, 2000);
             });
     }
 
-    // ✅ إذا كان التحديث شغال من البداية، نبدأ المتابعة
-    if (isRunning) {
-        progressContainer.classList.remove('d-none');
-        startTime = Date.now() - ({{ elapsed_time|default:0 }} * 1000);
-        if (timerInterval) clearInterval(timerInterval);
-        timerInterval = setInterval(updateTimer, 1000);
-        
-        // ✅ نبدأ التحقق فورًا
-        setTimeout(checkProgress, 500);
-        if (checkInterval) clearInterval(checkInterval);
-        checkInterval = setInterval(checkProgress, 3000);
-    }
-
-    // ✅ عند إرسال الفورم (بدء تحديث جديد)
+    // ✅ عند إرسال الفورم
     form.addEventListener('submit', function(e) {
         if (button.disabled) {
             e.preventDefault();
             return;
         }
 
-        // ✅ منع إرسال الفورم بشكل تقليدي عشان نعرض الـ progress
-        e.preventDefault();
-        
         button.disabled = true;
         button.innerHTML = '⏳ جاري التحديث...';
         statusBadge.innerHTML = '🔄 جاري التحديث';
-        statusBadge.className = 'text-warning status-running';
+        statusBadge.className = 'text-warning';
         progressContainer.classList.remove('d-none');
         progressBar.style.width = '0%';
         progressBar.innerHTML = '0%';
@@ -432,52 +551,29 @@ document.addEventListener('DOMContentLoaded', function() {
         if (timerInterval) clearInterval(timerInterval);
         timerInterval = setInterval(updateTimer, 1000);
 
-        // ✅ إرسال الفورم عبر AJAX عشان نبدأ التحديث
-        const formData = new FormData(form);
-        fetch(form.action, {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest'
+        if (checkInterval) clearInterval(checkInterval);
+        checkInterval = setInterval(checkProgress, 2000);
+
+        setTimeout(checkProgress, 500);
+
+        setTimeout(function() {
+            if (checkInterval) {
+                clearInterval(checkInterval);
+                checkInterval = null;
             }
-        })
-        .then(response => response.text())
-        .then(() => {
-            // ✅ بدأ التحديث، نبدأ متابعة التقدم
-            if (checkInterval) clearInterval(checkInterval);
-            checkInterval = setInterval(checkProgress, 2000);
-            setTimeout(checkProgress, 500);
-            
-            // ✅ نضبط timeout طويل عشان نمنع الـ interval من التوقف
-            setTimeout(function() {
-                if (checkInterval) {
-                    clearInterval(checkInterval);
-                    checkInterval = null;
-                }
-                if (progressInterval) {
-                    clearInterval(progressInterval);
-                    progressInterval = null;
-                }
-                if (!progressBar.innerHTML.includes('100%')) {
-                    progressText.innerHTML = '⏳ جاري التحديث (قد يستغرق وقتاً أطول)...';
-                    progressDetail.innerHTML = 'العملية ما زالت قيد التنفيذ';
-                }
-            }, 600000);
-        })
-        .catch(() => {
-            // ✅ لو فشل الإرسال، نعرض رسالة خطأ
-            button.disabled = false;
-            button.innerHTML = '<i class="bi bi-arrow-repeat"></i> إعادة المحاولة';
-            statusBadge.innerHTML = '❌ فشل';
-            statusBadge.className = 'text-danger';
-            progressText.innerHTML = '❌ فشل بدء التحديث';
-            progressDetail.innerHTML = 'حدث خطأ، حاول مرة أخرى';
-            if (timerInterval) clearInterval(timerInterval);
-        });
+            if (progressInterval) {
+                clearInterval(progressInterval);
+                progressInterval = null;
+            }
+            if (!progressBar.innerHTML.includes('100%')) {
+                progressText.innerHTML = '⏳ جاري التحديث (قد يستغرق وقتاً أطول)...';
+                progressDetail.innerHTML = 'العملية ما زالت قيد التنفيذ';
+            }
+        }, 600000);
     });
 
-    // ✅ لو في Logs بعد التحديث (صفحة محملة بالنتائج)
-    {% if logs and not is_running %}
+    // ✅ لو في Logs بعد التحديث
+    {% if logs %}
     setTimeout(function() {
         if (checkInterval) {
             clearInterval(checkInterval);
@@ -491,20 +587,16 @@ document.addEventListener('DOMContentLoaded', function() {
             clearInterval(timerInterval);
             timerInterval = null;
         }
-        
-        const hasError = '{{ logs|slice:":100" }}'.includes('ERROR') || 
-                        '{{ logs|slice:":100" }}'.includes('❌') ||
-                        {{ error_count|default:0 }} > 0;
-                        
+        const hasError = '{{ logs|slice:":100" }}'.includes('ERROR') || '{{ logs|slice:":100" }}'.includes('❌');
         if (hasError) {
             progressBar.style.width = '100%';
             progressBar.innerHTML = '❌ خطأ';
             progressBar.classList.remove('bg-success', 'progress-bar-animated');
             progressBar.classList.add('bg-danger');
-            progressText.innerHTML = '⚠️ تم التحديث مع بعض الأخطاء';
+            progressText.innerHTML = '❌ حدث خطأ أثناء التحديث';
             progressDetail.innerHTML = 'راجع سجل الأخطاء أعلاه';
-            statusBadge.innerHTML = '⚠️ مكتمل مع أخطاء';
-            statusBadge.className = 'text-warning';
+            statusBadge.innerHTML = '❌ فشل';
+            statusBadge.className = 'text-danger';
             button.disabled = false;
             button.innerHTML = '<i class="bi bi-arrow-repeat"></i> إعادة المحاولة';
         } else {
