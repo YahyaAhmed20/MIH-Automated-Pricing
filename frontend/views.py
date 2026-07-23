@@ -4279,14 +4279,7 @@ from django.contrib import messages
 from django.shortcuts import render
 
 from imports.services.update_all_data_service import UpdateAllDataService
-
-
-def clean_logs(text):
-    """
-    Remove ANSI terminal color codes from command output.
-    """
-    ansi_escape = re.compile(r'\x1B\[[0-?]*[ -/]*[@-~]')
-    return ansi_escape.sub("", text)
+import threading
 
 
 # ✅ متغير لتتبع التقدم
@@ -4296,19 +4289,13 @@ _update_progress = {
     "total": 16,
     "is_running": False,
     "results": [],
+    "logs": "",  # ← إضافة تخزين الـ logs
 }
 
-
-def update_progress(request):
-    """API لتحديث التقدم"""
-    return JsonResponse({
-        "completed": _update_progress["completed"],
-        "current_command": _update_progress["current_command"],
-        "total": _update_progress["total"],
-        "is_running": _update_progress["is_running"],
-        "results": _update_progress["results"],
-    })
-
+def clean_logs(text):
+    """Remove ANSI terminal color codes from command output."""
+    ansi_escape = re.compile(r'\x1B\[[0-?]*[ -/]*[@-~]')
+    return ansi_escape.sub("", text)
 
 def extract_results_from_logs(logs):
     """استخراج النتائج من الـ logs"""
@@ -4316,10 +4303,8 @@ def extract_results_from_logs(logs):
     lines = logs.split('\n')
     
     for line in lines:
-        # ✅ البحث عن سطر النتيجة
         if '✅ END :' in line or '❌ END :' in line:
             is_success = '✅' in line
-            # استخراج الاسم والوقت
             parts = line.split('END :')
             if len(parts) > 1:
                 name_time = parts[1].strip()
@@ -4334,77 +4319,103 @@ def extract_results_from_logs(logs):
     
     return results
 
-
-def system_update(request):
-
+# ✅ ✅ ✅ الدالة اللي بتشتغل في الخلفية
+def run_update_background():
+    """تشغيل التحديث في Thread منفصل"""
     global _update_progress
-
-    logs = None
-
-    if request.method == "POST":
-
-        output = io.StringIO()
-
+    
+    try:
         # ✅ إعادة تعيين التقدم
         _update_progress["completed"] = 0
         _update_progress["current_command"] = ""
         _update_progress["is_running"] = True
         _update_progress["results"] = []
+        _update_progress["logs"] = ""
+        
+        # ✅ إنشاء كائن لتخزين الـ output
+        output = io.StringIO()
+        
+        # ✅ تعريف دالة التقدم
+        def progress_callback(command_name, completed):
+            _update_progress["current_command"] = command_name
+            _update_progress["completed"] = completed
+            
+            # ✅ حفظ الـ logs بشكل مستمر
+            current_logs = output.getvalue()
+            _update_progress["logs"] = clean_logs(current_logs)
+        
+        # ✅ تشغيل الخدمة
+        UpdateAllDataService.run(
+            stdout=output,
+            progress_callback=progress_callback
+        )
+        
+        # ✅ حفظ الـ logs النهائية
+        _update_progress["logs"] = clean_logs(output.getvalue())
+        
+        # ✅ استخراج النتائج
+        _update_progress["results"] = extract_results_from_logs(_update_progress["logs"])
+        
+        # ✅ تحديث الحالة
+        _update_progress["is_running"] = False
+        _update_progress["completed"] = _update_progress["total"]
+        
+    except Exception as e:
+        # ✅ في حالة الخطأ
+        _update_progress["is_running"] = False
+        _update_progress["logs"] += f"\n\n❌ ERROR: {str(e)}\n{traceback.format_exc()}"
 
-        try:
+def update_progress(request):
+    """API لتحديث التقدم"""
+    return JsonResponse({
+        "completed": _update_progress["completed"],
+        "current_command": _update_progress["current_command"],
+        "total": _update_progress["total"],
+        "is_running": _update_progress["is_running"],
+        "results": _update_progress["results"],
+        "logs": _update_progress.get("logs", ""),  # ← إضافة الـ logs
+    })
 
-            # ✅ تمرير الـ progress callback
-            def progress_callback(command_name, completed):
-                _update_progress["current_command"] = command_name
-                _update_progress["completed"] = completed
-
-            UpdateAllDataService.run(
-                stdout=output,
-                progress_callback=progress_callback
-            )
-
-            logs = clean_logs(output.getvalue())
-
-            # ✅ استخراج النتائج من الـ logs
-            _update_progress["results"] = extract_results_from_logs(logs)
-
-            _update_progress["is_running"] = False
-            _update_progress["completed"] = _update_progress["total"]
-
-            messages.success(
-                request,
-                "تم تحديث جميع البيانات بنجاح."
-            )
-
-        except Exception as e:
-
-            logs = clean_logs(output.getvalue())
-            logs += "\n\n"
-            logs += "=" * 70
-            logs += "\n❌ ERROR DETAILS:\n"
-            logs += traceback.format_exc()
-            logs += "=" * 70
-
-            _update_progress["is_running"] = False
-
-            messages.error(
-                request,
-                f"حدث خطأ أثناء التحديث: {str(e)[:100]}"
-            )
-
-    # ✅ حساب النجاح والفشل
+def system_update(request):
+    """صفحة تحديث البيانات الرئيسية"""
+    global _update_progress
+    
+    # ✅ إذا كان طلب POST => ابدأ التحديث
+    if request.method == "POST":
+        
+        # ✅ منع بدء تحديث جديد إذا كان واحد شغال بالفعل
+        if _update_progress["is_running"]:
+            messages.warning(request, "⚠️ عملية تحديث جارية بالفعل. يرجى الانتظار.")
+            return redirect('system_update')  # غير اسم الـ URL حسب مشروعك
+        
+        # ✅ تشغيل التحديث في Thread منفصل
+        thread = threading.Thread(
+            target=run_update_background,
+            daemon=True  # ← عشان يموت لما السيرفر يموت
+        )
+        thread.start()
+        
+        messages.success(
+            request,
+            "✅ بدأ تحديث البيانات في الخلفية. تابع التقدم من هنا."
+        )
+        
+        return redirect('system_update')
+    
+    # ✅ إذا كان طلب GET => اعرض الصفحة مع التقدم
     success_count = sum(1 for r in _update_progress["results"] if r.get("status") == "success")
     error_count = sum(1 for r in _update_progress["results"] if r.get("status") == "error")
-
-    # ✅ تمرير النتائج للـ HTML
+    
     return render(
         request,
         "frontend/system_update.html",
         {
-            "logs": logs,
+            "logs": _update_progress.get("logs", ""),
             "results": _update_progress["results"],
             "total_commands": _update_progress["total"],
             "success_count": success_count,
             "error_count": error_count,
+            "is_running": _update_progress["is_running"],
+            "completed": _update_progress["completed"],
         }
     )
