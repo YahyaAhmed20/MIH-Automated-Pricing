@@ -3687,3 +3687,11 @@ Not Found: /favicon.ico
 "GET /api/update-progress/ HTTP/1.1" 200 6330
 "GET /api/update-progress/ HTTP/1.1" 200 10886
 "GET /system/update/ HTTP/1.1" 200 61710
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 34045
+"GET /static/images/logo.jpeg HTTP/1.1" 200 68755
+"GET /system/update/ HTTP/1.1" 200 36155
+Running frontend.views.run_update_background
+Ran task and deleting frontend.views.run_update_background
+Running frontend.views.run_update_background
+Ran task and deleting frontend.views.run_update_background
