@@ -73,6 +73,13 @@
         border: 1px solid #e9ecef;
         border-radius: 10px;
         overflow: hidden;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .service-group:hover {
+        border-color: #0d6efd;
+        box-shadow: 0 4px 12px rgba(13, 110, 253, 0.15);
     }
 
     .service-group-header {
@@ -636,7 +643,7 @@
                                 {{ data.profile.entity_name }}
                             </h5>
                             <span class="badge bg-secondary rounded-pill">
-                                {{ data.profile.items.count }}
+                                {{ data.internal_count|add:data.external_count|default:data.profile.items.count }}
                             </span>
                         </div>
                         <small style="color: #6c757d; font-size: 0.75rem;">
@@ -647,8 +654,8 @@
 
                     <div class="card-body">
 
-                        <!-- ✅ القسم الداخلي مع تجميع الخدمات -->
-                        {% if data.internal_items %}
+                        <!-- ✅ ✅ ✅ القسم الداخلي - باستخدام internal_groups -->
+                        {% if data.internal_groups %}
                         <div class="mb-3">
                             <div class="d-flex align-items-center mb-2">
                                 <span class="badge badge-internal">
@@ -659,25 +666,31 @@
                                 </span>
                             </div>
                             
-                            <!-- ✅ تجميع الخدمات حسب الاسم -->
-                            {% regroup data.internal_items by service_name as internal_groups %}
-                            {% for group in internal_groups %}
-                            <div class="service-group"
-                                 data-service="{{ group.grouper|lower }}"
-                                 data-service-original="{{ group.grouper }}"
+                            <!-- ✅ تجميع الخدمات حسب الاسم (مجمعة بالفعل من الـ View) -->
+                            {% for group in data.internal_groups %}
+                            <div class="service-group clickable-service"
+                                 data-service="{{ group.service_name }}"
                                  data-section="داخلي"
-                                 data-discount="{{ group.list.0.discount_rate }}">
+                                 data-discount="{{ group.discount_rate }}%"
+                                 data-items='[
+                                    {% for item in group.items %}
+                                    {"details": "{{ item.details|escapejs }}", "net_price": "{{ item.net_price }}"}
+                                    {% if not forloop.last %},{% endif %}
+                                    {% endfor %}
+                                 ]'
+                                 onclick="openServiceModal(this)">
                                 <div class="service-group-header">
-                                    <span class="fw-bold">{{ group.grouper }}</span>
+                                    <span class="fw-bold">{{ group.service_name }}</span>
                                     <span class="badge" style="background: var(--internal-color); color: #fff;">
-                                        {{ group.list.0.discount_rate }}%
+                                        {{ group.discount_rate }}
                                     </span>
+                                    <i class="fas fa-chevron-left text-muted" style="font-size: 0.7rem;"></i>
                                 </div>
                                 <div class="service-group-body">
-                                    {% for item in group.list %}
+                                    {% for item in group.items %}
                                     <div class="service-detail-item">
                                         <span class="detail-text">
-                                            {% if item.details %}
+                                            {% if item.details and item.details != '-' %}
                                             <i class="fas fa-circle text-muted me-2" style="font-size: 0.4rem;"></i>
                                             {{ item.details }}
                                             {% else %}
@@ -685,7 +698,7 @@
                                             {% endif %}
                                         </span>
                                         <span class="detail-price">
-                                            {% if item.net_price %}
+                                            {% if item.net_price and item.net_price != '-' %}
                                             {{ item.net_price }}
                                             {% else %}
                                             <span class="text-muted">-</span>
@@ -699,8 +712,8 @@
                         </div>
                         {% endif %}
 
-                        <!-- ✅ القسم الخارجي مع تجميع الخدمات -->
-                        {% if data.external_items %}
+                        <!-- ✅ ✅ ✅ القسم الخارجي - باستخدام external_groups -->
+                        {% if data.external_groups %}
                         <div class="mb-3">
                             <div class="d-flex align-items-center mb-2">
                                 <span class="badge badge-external">
@@ -711,25 +724,31 @@
                                 </span>
                             </div>
                             
-                            <!-- ✅ تجميع الخدمات حسب الاسم -->
-                            {% regroup data.external_items by service_name as external_groups %}
-                            {% for group in external_groups %}
-                            <div class="service-group"
-                                 data-service="{{ group.grouper|lower }}"
-                                 data-service-original="{{ group.grouper }}"
+                            <!-- ✅ تجميع الخدمات حسب الاسم (مجمعة بالفعل من الـ View) -->
+                            {% for group in data.external_groups %}
+                            <div class="service-group clickable-service"
+                                 data-service="{{ group.service_name }}"
                                  data-section="خارجي"
-                                 data-discount="{{ group.list.0.discount_rate }}">
+                                 data-discount="{{ group.discount_rate }}%"
+                                 data-items='[
+                                    {% for item in group.items %}
+                                    {"details": "{{ item.details|escapejs }}", "net_price": "{{ item.net_price }}"}
+                                    {% if not forloop.last %},{% endif %}
+                                    {% endfor %}
+                                 ]'
+                                 onclick="openServiceModal(this)">
                                 <div class="service-group-header">
-                                    <span class="fw-bold">{{ group.grouper }}</span>
+                                    <span class="fw-bold">{{ group.service_name }}</span>
                                     <span class="badge" style="background: var(--external-color); color: #fff;">
-                                        {{ group.list.0.discount_rate }}%
+                                        {{ group.discount_rate }}
                                     </span>
+                                    <i class="fas fa-chevron-left text-muted" style="font-size: 0.7rem;"></i>
                                 </div>
                                 <div class="service-group-body">
-                                    {% for item in group.list %}
+                                    {% for item in group.items %}
                                     <div class="service-detail-item">
                                         <span class="detail-text">
-                                            {% if item.details %}
+                                            {% if item.details and item.details != '-' %}
                                             <i class="fas fa-circle text-muted me-2" style="font-size: 0.4rem;"></i>
                                             {{ item.details }}
                                             {% else %}
@@ -737,7 +756,7 @@
                                             {% endif %}
                                         </span>
                                         <span class="detail-price">
-                                            {% if item.net_price %}
+                                            {% if item.net_price and item.net_price != '-' %}
                                             {{ item.net_price }}
                                             {% else %}
                                             <span class="text-muted">-</span>
@@ -752,7 +771,7 @@
                         {% endif %}
 
                         <!-- ✅ لو مفيش خدمات -->
-                        {% if not data.internal_items and not data.external_items %}
+                        {% if not data.internal_groups and not data.external_groups %}
                         <div class="alert alert-light text-center py-3 mb-0">
                             <i class="fas fa-info-circle text-muted"></i>
                             <span class="text-muted small d-block">لا توجد خدمات مسجلة</span>
@@ -906,18 +925,18 @@
 </div>
 
 <!-- ✅ Modal لعرض التفاصيل -->
-<div class="modal fade" id="serviceModal" tabindex="-1" aria-labelledby="serviceModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+<div class="modal fade" id="serviceDetailsModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="serviceModalLabel">
+            <div class="modal-header" style="background: linear-gradient(135deg, #1a237e, #0d47a1); color: #fff; border: none;">
+                <h5 class="modal-title" id="serviceModalTitle">
                     <i class="fas fa-info-circle me-2"></i>
                     تفاصيل الخدمة
                 </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body" id="modalBody">
-                <!-- المحتوى يتم تحميله ديناميكياً -->
+            <div class="modal-body" id="serviceModalBody">
+                <!-- يتم ملؤها بواسطة JavaScript -->
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
@@ -929,6 +948,115 @@
 </div>
 
 <script>
+// ============================================================
+// ✅ فتح Modal بعرض كل التفاصيل
+// ============================================================
+function openServiceModal(element) {
+    const serviceName = element.dataset.service;
+    const section = element.dataset.section;
+    const discount = element.dataset.discount;
+    const items = JSON.parse(element.dataset.items);
+    
+    const badgeColor = section === 'داخلي' ? '#2e7d32' : '#e65100';
+    const badgeIcon = section === 'داخلي' ? 'fa-home' : 'fa-globe';
+    const sectionName = section === 'داخلي' ? 'داخلي' : 'خارجي';
+    
+    // ✅ بناء جدول التفاصيل
+    let detailsHtml = '';
+    let hasValidDetails = false;
+    
+    items.forEach(item => {
+        if (item.details && item.details !== '-' && item.details.trim() !== '') {
+            hasValidDetails = true;
+        }
+    });
+    
+    if (hasValidDetails) {
+        detailsHtml = `
+            <table class="table table-hover table-bordered mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th style="width: 70%;">التفاصيل</th>
+                        <th class="text-center" style="width: 30%;">السعر</th>
+                    </tr>
+                </thead>
+                <tbody>
+        `;
+        
+        items.forEach(item => {
+            const detailText = item.details || '-';
+            const priceText = item.net_price || '-';
+            if (detailText !== '-' && detailText.trim() !== '') {
+                detailsHtml += `
+                    <tr>
+                        <td>
+                            <i class="fas fa-circle text-muted me-2" style="font-size: 0.35rem;"></i>
+                            ${detailText}
+                        </td>
+                        <td class="text-center fw-bold">
+                            ${priceText !== '-' ? priceText : '—'}
+                        </td>
+                    </tr>
+                `;
+            }
+        });
+        
+        detailsHtml += `
+                </tbody>
+            </table>
+        `;
+    } else {
+        detailsHtml = `
+            <div class="text-center py-4">
+                <i class="fas fa-info-circle fa-2x text-muted mb-2"></i>
+                <p class="text-muted mb-0">لا توجد تفاصيل إضافية لهذه الخدمة</p>
+            </div>
+        `;
+    }
+    
+    // ✅ تحديث الـ Modal
+    document.getElementById('serviceModalTitle').innerHTML = `
+        <i class="fas ${badgeIcon} me-2"></i>
+        ${serviceName}
+        <span class="badge ms-2" style="background: ${badgeColor}; color: #fff; padding: 4px 14px; border-radius: 20px;">
+            ${sectionName}
+        </span>
+        <span class="badge ms-1" style="background: #ffc107; color: #212529; padding: 4px 12px; border-radius: 20px;">
+            ${discount}
+        </span>
+    `;
+    
+    document.getElementById('serviceModalBody').innerHTML = `
+        <div class="mb-3">
+            <div class="d-flex justify-content-between align-items-center p-3 bg-light rounded-3">
+                <div>
+                    <small class="text-muted d-block">القسم</small>
+                    <span class="fw-bold">${sectionName}</span>
+                </div>
+                <div>
+                    <small class="text-muted d-block">نسبة الخصم</small>
+                    <span class="fw-bold" style="color: ${badgeColor};">${discount}</span>
+                </div>
+                <div>
+                    <small class="text-muted d-block">عدد الخدمات</small>
+                    <span class="fw-bold">${items.length}</span>
+                </div>
+            </div>
+        </div>
+        <div class="p-2 bg-light rounded-3">
+            <small class="text-muted d-block mb-2">
+                <i class="fas fa-list-ul me-1"></i>
+                تفاصيل الخدمات
+            </small>
+            ${detailsHtml}
+        </div>
+    `;
+    
+    // ✅ عرض الـ Modal
+    const modal = new bootstrap.Modal(document.getElementById('serviceDetailsModal'));
+    modal.show();
+}
+
 // ✅ جمع كل أسماء الخدمات والجهات للـ datalist
 function buildSuggestions() {
     const suggestions = new Set();
@@ -941,9 +1069,9 @@ function buildSuggestions() {
         }
     });
     
-    // ✅ إضافة أسماء الخدمات (من data-service-original)
-    document.querySelectorAll('.service-group').forEach(group => {
-        const serviceName = group.dataset.serviceOriginal;
+    // ✅ إضافة أسماء الخدمات (من data-service)
+    document.querySelectorAll('.clickable-service').forEach(service => {
+        const serviceName = service.dataset.service;
         if (serviceName) {
             suggestions.add(serviceName);
         }
@@ -959,78 +1087,6 @@ function buildSuggestions() {
     });
 }
 
-// ✅ Modal Functions - تعرض كل التفاصيل المجمعة
-function showGroupModal(serviceName, section, discount, details) {
-    const badgeColor = section === 'داخلي' ? '#2e7d32' : '#e65100';
-    const badgeIcon = section === 'داخلي' ? 'fa-home' : 'fa-globe';
-    const sectionName = section === 'داخلي' ? 'داخلي' : 'خارجي';
-    
-    // بناء جدول التفاصيل
-    let detailsHtml = '';
-    const hasValidDetails = details.some(item => item.details && item.details !== '-' && item.details.trim() !== '');
-    
-    if (hasValidDetails) {
-        details.forEach(item => {
-            const detailText = item.details || '-';
-            const priceText = item.net_price || '-';
-            const hasPrice = priceText !== '-' && priceText.trim() !== '';
-            detailsHtml += `
-                <div class="detail-row">
-                    <span class="detail-text">
-                        <i class="fas fa-circle text-muted me-2" style="font-size: 0.35rem;"></i>
-                        ${detailText}
-                    </span>
-                    <span class="detail-price">${hasPrice ? priceText : '—'}</span>
-                </div>
-            `;
-        });
-    } else {
-        detailsHtml = `
-            <div class="text-muted text-center py-3">
-                <i class="fas fa-info-circle me-2"></i>
-                لا توجد تفاصيل إضافية لهذه الخدمة
-            </div>
-        `;
-    }
-    
-    document.getElementById('serviceModalLabel').textContent = serviceName;
-    document.getElementById('modalBody').innerHTML = `
-        <div class="row g-3">
-            <div class="col-md-6">
-                <div class="p-3 bg-light rounded-3 text-center">
-                    <i class="fas ${badgeIcon} fa-2x mb-2" style="color: ${badgeColor};"></i>
-                    <div>
-                        <small class="text-muted d-block">القسم</small>
-                        <span class="fw-bold">${sectionName}</span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="p-3 bg-light rounded-3 text-center">
-                    <i class="fas fa-percent fa-2x mb-2" style="color: ${badgeColor};"></i>
-                    <div>
-                        <small class="text-muted d-block">نسبة الخصم</small>
-                        <span class="fw-bold" style="font-size: 1.5rem; color: ${badgeColor};">${discount}</span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-12">
-                <div class="p-3 bg-light rounded-3">
-                    <small class="text-muted d-block mb-2">
-                        <i class="fas fa-list-ul me-1"></i>
-                        تفاصيل الخدمة
-                    </small>
-                    <div class="details-list">
-                        ${detailsHtml}
-                    </div>
-                </div>
-            </div>
-        </div>
-    `;
-    
-    new bootstrap.Modal(document.getElementById('serviceModal')).show();
-}
-
 // ✅ Filter Functions
 function filterExceptions() {
     const search = document.getElementById('exceptionSearch').value.toLowerCase().trim();
@@ -1040,11 +1096,11 @@ function filterExceptions() {
     
     wrappers.forEach(wrapper => {
         const entityName = wrapper.dataset.entity || '';
-        const serviceGroups = wrapper.querySelectorAll('.service-group');
+        const serviceGroups = wrapper.querySelectorAll('.clickable-service');
         let hasVisibleService = false;
         
         serviceGroups.forEach(group => {
-            const groupName = group.dataset.service || '';
+            const groupName = group.dataset.service?.toLowerCase() || '';
             const groupSection = group.dataset.section || '';
             let showGroup = true;
             
@@ -1074,7 +1130,7 @@ function filterExceptions() {
         const internalSection = wrapper.querySelector('.badge-internal');
         if (internalSection) {
             const parentDiv = internalSection.closest('.mb-3');
-            const hasVisibleInternal = parentDiv.querySelector('.service-group[style*="display: block"]');
+            const hasVisibleInternal = parentDiv.querySelector('.clickable-service[style*="display: block"]');
             if (parentDiv) {
                 parentDiv.style.display = hasVisibleInternal ? 'block' : 'none';
             }
@@ -1083,7 +1139,7 @@ function filterExceptions() {
         const externalSection = wrapper.querySelector('.badge-external');
         if (externalSection) {
             const parentDiv = externalSection.closest('.mb-3');
-            const hasVisibleExternal = parentDiv.querySelector('.service-group[style*="display: block"]');
+            const hasVisibleExternal = parentDiv.querySelector('.clickable-service[style*="display: block"]');
             if (parentDiv) {
                 parentDiv.style.display = hasVisibleExternal ? 'block' : 'none';
             }
@@ -1130,31 +1186,16 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('totalCount').textContent = wrappers.length;
     filterExceptions();
     
-    // ✅ كل service-group-header بقى يفتح Modal
-    document.querySelectorAll('.service-group-header').forEach(header => {
-        header.style.cursor = 'pointer';
-        header.addEventListener('click', function(e) {
-            e.stopPropagation();
-            
-            const group = this.closest('.service-group');
-            const serviceName = group.dataset.serviceOriginal || 'خدمة';
-            const section = group.dataset.section || 'داخلي';
-            const discount = group.dataset.discount || '0%';
-            
-            // جلب كل التفاصيل من service-detail-item
-            const details = [];
-            const detailItems = group.querySelectorAll('.service-detail-item');
-            detailItems.forEach(item => {
-                const detailText = item.querySelector('.detail-text')?.textContent?.trim() || '';
-                const detailPrice = item.querySelector('.detail-price')?.textContent?.trim() || '';
-                details.push({
-                    details: detailText,
-                    net_price: detailPrice,
-                });
-            });
-            
-            // فتح الـ Modal
-            showGroupModal(serviceName, section, discount, details);
+    // ✅ تحسين ظهور الخدمات القابلة للضغط
+    document.querySelectorAll('.clickable-service').forEach(el => {
+        el.style.cursor = 'pointer';
+        el.addEventListener('mouseenter', function() {
+            this.style.borderColor = '#0d6efd';
+            this.style.boxShadow = '0 4px 12px rgba(13, 110, 253, 0.15)';
+        });
+        el.addEventListener('mouseleave', function() {
+            this.style.borderColor = '#e9ecef';
+            this.style.boxShadow = 'none';
         });
     });
 });

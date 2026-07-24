@@ -88,51 +88,36 @@ class CompanyDiscountImportService:
         return ImportHelpers.clean_decimal(raw)
 
     @staticmethod
-    def get_group_details(group, start_col, value_cols, headers=None):
+    def extract_details_from_group(group, details_col, price_col, discount_col=None):
         """
-        تجميع التفاصيل من عدة صفوف داخل نفس الشركة.
-        
-        Args:
-            group: قائمة الصفوف التابعة لنفس الشركة
-            start_col: رقم العمود الذي يحتوي على العنوان الرئيسي
-            value_cols: قائمة بأرقام الأعمدة التي تحتوي على القيم
-            headers: قائمة العناوين (اختياري)
-        
-        Returns:
-            str: النص المجمع للتفاصيل
+        استخراج التفاصيل من مجموعة الصفوف التابعة لنفس الشركة
         """
         lines = []
-
-        for row in group[1:]:  # تخطي الصف الأول (رأس الشركة)
-            title = ImportHelpers.normalize_text(row.get(start_col, ""))
-
-            if not title:
-                continue
-
-            values = []
-
-            for col in value_cols:
-                value = ImportHelpers.normalize_text(row.get(col, ""))
-
-                if value:
-                    values.append(value)
-
-            if values:
-                if headers:
-                    line_parts = [title]
-                    for i, value in enumerate(values):
-                        if i < len(headers) and headers[i]:
-                            line_parts.append(f"{headers[i]} : {value}")
-                        else:
-                            line_parts.append(value)
-                    lines.append("\n".join(line_parts))
-                else:
-                    lines.append(
-                        f"{title}\n"
-                        + "\n".join(values)
-                    )
-
-        return "\n\n".join(lines)
+        
+        # ✅ تخطي الصف الأول (الرئيسي)
+        for row in group[1:]:
+            # ✅ استخراج التفاصيل من العمود المحدد
+            detail = ""
+            if details_col is not None and len(row) > details_col:
+                val = row.get(details_col, "")
+                if pd.notna(val) and val:
+                    detail = ImportHelpers.normalize_text(str(val))
+            
+            # ✅ استخراج السعر من العمود المحدد
+            price = ""
+            if price_col is not None and len(row) > price_col:
+                val = row.get(price_col, "")
+                if pd.notna(val) and val:
+                    price = ImportHelpers.normalize_text(str(val))
+            
+            # ✅ لو في تفاصيل، نضيفها
+            if detail:
+                line = detail
+                if price:
+                    line += f" : {price}"
+                lines.append(line)
+        
+        return "\n".join(lines)
 
     @staticmethod
     @transaction.atomic
@@ -192,13 +177,8 @@ class CompanyDiscountImportService:
         rows = dataframe.to_dict("records")
 
         # ✅ تخطي الصفوف الأولى (العناوين)
-        # Row 0 و Row 1 هما عناوين
         start_row = 2
         rows = rows[start_row:]
-
-        # ✅ حفظ صف العناوين (Row 2) لاستخدامه لاحقاً
-        all_rows = dataframe.to_dict("records")
-        header_row = all_rows[2] if len(all_rows) > 2 else None  # ✅ تغيير من 1 إلى 2
 
         groups = []
         current_group = None
@@ -275,55 +255,21 @@ class CompanyDiscountImportService:
                     result["existing_profiles"] += 1
 
             else:
-                # ✅ التحقق من وجود الـ Profile في قاعدة البيانات (تأكد إضافي)
-                existing_profile = CompanyDiscountProfile.objects.filter(
+                # ✅ إنشاء جديد
+                profile = CompanyDiscountProfile(
                     company_name=company_name,
-                    financial_category=financial_code
-                ).first()
-                
-                if existing_profile:
-                    # ✅ استخدم الموجود
-                    profile = existing_profile
-                    profiles_cache[profile_key] = profile
-                    result["existing_profiles"] += 1
-                    
-                    # ✅ تحديث البيانات إذا تغيرت
-                    changed = False
-                    if profile.contract_type != contract_type:
-                        profile.contract_type = contract_type
-                        changed = True
-                    if profile.price_list != price_list:
-                        profile.price_list = price_list
-                        changed = True
-                    if profile.operating_pdf != operating_pdf:
-                        profile.operating_pdf = operating_pdf
-                        changed = True
-                    if profile.is_active is not True:
-                        profile.is_active = True
-                        changed = True
-                    
-                    if changed:
-                        profiles_to_update.append(profile)
-                        result["updated_profiles"] += 1
-                else:
-                    # ✅ إنشاء جديد
-                    profile = CompanyDiscountProfile(
-                        company_name=company_name,
-                        financial_category=financial_code,
-                        contract_type=contract_type,
-                        price_list=price_list,
-                        operating_pdf=operating_pdf,
-                        is_active=True,
-                    )
-                    profiles_to_create.append(profile)
-                    profiles_cache[profile_key] = profile
-                    result["created_profiles"] += 1
+                    financial_category=financial_code,
+                    contract_type=contract_type,
+                    price_list=price_list,
+                    operating_pdf=operating_pdf,
+                    is_active=True,
+                )
+                profiles_to_create.append(profile)
+                profiles_cache[profile_key] = profile
+                result["created_profiles"] += 1
 
             # ✅ تحديد المفتاح المناسب للـ Cache
-            if profile.id:
-                profile_cache_id = profile.id
-            else:
-                profile_cache_id = profile_key
+            profile_cache_id = profile.id if profile.id else profile_key
 
             # ==========================================
             # ✅ تجميع الخصومات - القسم الداخلي
@@ -333,53 +279,37 @@ class CompanyDiscountImportService:
             for item in CompanyDiscountImportService.INTERNAL_ITEMS:
                 discount = CompanyDiscountImportService.get_discount_value(row, item["discount_col"], item["is_percentage"])
                 
-                # ===== التفاصيل =====
-                if item["name"] == "اتعاب الاطباء":
-                    # ✅ استخراج العناوين من صف العناوين
-                    headers = []
-                    if header_row:
-                        for col in [15, 16, 17, 18]:
-                            header = ImportHelpers.normalize_text(header_row.get(col, ""))
-                            if header:
-                                headers.append(header)
-                            else:
-                                headers.append("")
-                    
-                    details = CompanyDiscountImportService.get_group_details(
+                # ✅ استخراج التفاصيل الأساسية من الصف الرئيسي
+                base_details = CompanyDiscountImportService.get_details(row, item["details_col"])
+                net_price = CompanyDiscountImportService.get_net_price(row, item["net_price_col"])
+                
+                # ✅ ✅ ✅ استخراج التفاصيل الإضافية من الصفوف التابعة
+                extra_details = ""
+                if item["details_col"] is not None and item["net_price_col"] is not None:
+                    extra_details = CompanyDiscountImportService.extract_details_from_group(
                         group,
-                        14,
-                        [15, 16, 17, 18],
-                        headers
-                    )
-
-                elif item["name"] == "فتح غرفة العمليات":
-                    details = CompanyDiscountImportService.get_group_details(
-                        group,
-                        22,
-                        [23],
-                    )
-
-                elif item["name"] == "الاقامه":
-                    details = CompanyDiscountImportService.get_group_details(
-                        group,
-                        7,
-                        [8],
-                    )
-
-                else:
-                    details = CompanyDiscountImportService.get_details(
-                        row,
                         item["details_col"],
+                        item["net_price_col"],
+                        item["discount_col"]
                     )
                 
-                net_price = CompanyDiscountImportService.get_net_price(row, item["net_price_col"])
+                # ✅ دمج التفاصيل الأساسية والإضافية
+                if base_details and extra_details:
+                    details = base_details + "\n" + extra_details
+                elif extra_details:
+                    details = extra_details
+                else:
+                    details = base_details
 
-                # ✅ استخدام profile_cache_id
+                # ✅ تشخيص للتحقق
+                if item["name"] == "خدمات الكلي" and company_name == "الاهلى للخدمات الطبية":
+                    print(f"   🔍 خدمات الكلي - extra_details: {extra_details[:100] if extra_details else 'None'}")
+
+                # ✅ البحث في Cache
                 discount_key = (profile_cache_id, "داخلي", item["name"])
 
                 if discount_key in discounts_cache:
                     existing_discount = discounts_cache[discount_key]
-                    # تحديث
                     changed = False
                     if existing_discount.discount != discount:
                         existing_discount.discount = discount
@@ -393,7 +323,6 @@ class CompanyDiscountImportService:
                     if changed:
                         discounts_to_update.append(existing_discount)
                 else:
-                    # ✅ إنشاء جديد مع ربط الـ profile بشكل صحيح
                     discount_obj = CompanyDiscount(
                         profile=profile,
                         section="داخلي",
@@ -406,8 +335,6 @@ class CompanyDiscountImportService:
                     )
                     discounts_to_create.append(discount_obj)
                     result["created_discounts"] += 1
-                    
-                    # ✅ إضافة الـ discount الجديد للـ Cache
                     discounts_cache[discount_key] = discount_obj
 
                 order += 1
@@ -442,10 +369,27 @@ class CompanyDiscountImportService:
 
             for item in CompanyDiscountImportService.EXTERNAL_ITEMS:
                 discount = CompanyDiscountImportService.get_discount_value(row, item["discount_col"], item["is_percentage"])
-                details = CompanyDiscountImportService.get_details(row, item["details_col"])
+                base_details = CompanyDiscountImportService.get_details(row, item["details_col"])
                 net_price = CompanyDiscountImportService.get_net_price(row, item["net_price_col"])
+                
+                # ✅ استخراج التفاصيل الإضافية من الصفوف التابعة
+                extra_details = ""
+                if item["details_col"] is not None and item["net_price_col"] is not None:
+                    extra_details = CompanyDiscountImportService.extract_details_from_group(
+                        group,
+                        item["details_col"],
+                        item["net_price_col"],
+                        item["discount_col"]
+                    )
+                
+                # ✅ دمج التفاصيل
+                if base_details and extra_details:
+                    details = base_details + "\n" + extra_details
+                elif extra_details:
+                    details = extra_details
+                else:
+                    details = base_details
 
-                # ✅ استخدام profile_cache_id
                 discount_key = (profile_cache_id, "خارجي", item["name"])
 
                 if discount_key in discounts_cache:
@@ -475,8 +419,6 @@ class CompanyDiscountImportService:
                     )
                     discounts_to_create.append(discount_obj)
                     result["created_discounts"] += 1
-                    
-                    # ✅ إضافة الـ discount الجديد للـ Cache
                     discounts_cache[discount_key] = discount_obj
 
                 order += 1
@@ -504,10 +446,10 @@ class CompanyDiscountImportService:
                 result["created_discounts"] += 1
                 discounts_cache[discount_key] = discount_obj
 
-            if processed % 1000 == 0:
-                print(f"   📊 Processed {processed}/{total_rows} rows...")
+            if processed % 10 == 0:
+                print(f"   📊 Processed {processed}/{total_rows} companies...")
 
-        print(f"   ✅ Processed {processed}/{total_rows} rows")
+        print(f"   ✅ Processed {processed}/{total_rows} companies")
 
         # ============================================================
         # ✅ تنفيذ الـ Bulk Operations

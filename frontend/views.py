@@ -2044,6 +2044,19 @@ from contracts.models import CompanyDiscountProfile, CompanyDiscount
 from pricing_requests.models import CompanyDiscountRank, CompanyException, CompanyExceptionProfile, CompanyExceptionItem
 
 
+# frontend/views.py
+
+# frontend/views.py
+
+# frontend/views.py
+
+from django.db.models import Q, Prefetch
+from django.shortcuts import render, get_object_or_404
+from django.db.models import Count
+
+
+
+
 def company_discounts(request):
 
     search = request.GET.get("search", "")
@@ -2061,12 +2074,11 @@ def company_discounts(request):
     selected_company = None
 
     if entity_id:
-        from contracts.models import ContractEntity
         selected_company = get_object_or_404(ContractEntity, pk=entity_id)
         search = selected_company.name
 
     # ============================================
-    # ✅ جلب الشركات مع الخصومات - مع منع التكرار
+    # ✅ جلب الشركات مع الخصومات (للتبويبات الأخرى)
     # ============================================
     companies = (
         CompanyDiscountProfile.objects
@@ -2089,7 +2101,7 @@ def company_discounts(request):
         )
 
     # ============================================
-    # ✅ تجميع البيانات مع منع التكرار
+    # ✅ تجميع البيانات للخصومات
     # ============================================
     company_cards = []
     seen_companies = set()
@@ -2117,6 +2129,15 @@ def company_discounts(request):
                 if discount.section != "خارجي":
                     continue
 
+            if discount.details:
+                discount.details_list = discount.details.split('\n') if '\n' in discount.details else [discount.details]
+            else:
+                discount.details_list = []
+
+            discount.service_name = discount.item_name
+            discount.discount_rate = discount.discount
+            discount.items = []
+
             if discount.section == "داخلي":
                 internal.append(discount)
             else:
@@ -2125,6 +2146,59 @@ def company_discounts(request):
         company.internal_discounts = internal
         company.external_discounts = external
         company_cards.append(company)
+
+    # ============================================
+    # ✅ تجميع التفاصيل للخصومات
+    # ============================================
+    for company in company_cards:
+        internal_groups = {}
+        for discount in company.internal_discounts:
+            key = discount.item_name
+            if key not in internal_groups:
+                internal_groups[key] = {
+                    'service_name': discount.item_name,
+                    'discount_rate': discount.discount,
+                    'section': 'داخلي',
+                    'items': []
+                }
+            if discount.details_list:
+                for detail in discount.details_list:
+                    if detail and detail.strip():
+                        internal_groups[key]['items'].append({
+                            'details': detail,
+                            'net_price': discount.net_price if discount.net_price else '-'
+                        })
+            else:
+                internal_groups[key]['items'].append({
+                    'details': discount.details or '-',
+                    'net_price': discount.net_price if discount.net_price else '-'
+                })
+        
+        external_groups = {}
+        for discount in company.external_discounts:
+            key = discount.item_name
+            if key not in external_groups:
+                external_groups[key] = {
+                    'service_name': discount.item_name,
+                    'discount_rate': discount.discount,
+                    'section': 'خارجي',
+                    'items': []
+                }
+            if discount.details_list:
+                for detail in discount.details_list:
+                    if detail and detail.strip():
+                        external_groups[key]['items'].append({
+                            'details': detail,
+                            'net_price': discount.net_price if discount.net_price else '-'
+                        })
+            else:
+                external_groups[key]['items'].append({
+                    'details': discount.details or '-',
+                    'net_price': discount.net_price if discount.net_price else '-'
+                })
+        
+        company.internal_groups = list(internal_groups.values())
+        company.external_groups = list(external_groups.values())
 
     # ============================================
     # ✅ قائمة الشركات للـ Datalist
@@ -2193,8 +2267,8 @@ def company_discounts(request):
     # ============================================
     exceptions = CompanyException.objects.all()
     
-    # ============================================
-    # ✅ Tab 4: الاستثناءات (موديل جديد - CompanyExceptionProfile)
+          # ============================================
+    # ✅ ✅ ✅ الاستثناءات (موديل جديد - CompanyExceptionProfile)
     # ============================================
     exception_profiles = (
         CompanyExceptionProfile.objects
@@ -2209,39 +2283,78 @@ def company_discounts(request):
         .order_by("entity_name")
         .distinct()
     )
-    
+
+    if search:
+        exception_profiles = exception_profiles.filter(
+            Q(entity_name__icontains=search) |
+            Q(financial_category__icontains=search)
+        )
+
     exceptions_data = []
     total_internal = 0
     total_external = 0
     total_services = 0
-    
+
     for profile in exception_profiles:
         internal_items = []
         external_items = []
-        seen_items = set()  # ✅ لمنع التكرار
-        
+
+        # ✅ ✅ ✅ إزالة seen_items - نضيف كل العناصر بدون تكرار
         for item in profile.items.all():
-            # ✅ استخدم service_name (الحقل الصحيح)
-            item_key = (item.section, item.service_name)
-            if item_key in seen_items:
-                continue
-            seen_items.add(item_key)
-            
             if item.section == "داخلي":
                 internal_items.append(item)
                 total_internal += 1
             else:
                 external_items.append(item)
                 total_external += 1
-        
+
         total_services = total_internal + total_external
-        
+
+        # ✅ تجميع الخدمات الداخلية (internal_groups)
+        internal_groups = {}
+        for item in internal_items:
+            key = item.service_name
+            if key not in internal_groups:
+                internal_groups[key] = {
+                    'service_name': item.service_name,
+                    'discount_rate': item.discount_rate,
+                    'section': 'داخلي',
+                    'items': []
+                }
+            internal_groups[key]['items'].append({
+                'details': item.details or '-',
+                'net_price': item.net_price if item.net_price else '-'
+            })
+
+        # ✅ تجميع الخدمات الخارجية (external_groups)
+        external_groups = {}
+        for item in external_items:
+            key = item.service_name
+            if key not in external_groups:
+                external_groups[key] = {
+                    'service_name': item.service_name,
+                    'discount_rate': item.discount_rate,
+                    'section': 'خارجي',
+                    'items': []
+                }
+            external_groups[key]['items'].append({
+                'details': item.details or '-',
+                'net_price': item.net_price if item.net_price else '-'
+            })
+
         exceptions_data.append({
             'profile': profile,
             'internal_items': internal_items,
             'external_items': external_items,
+            'internal_groups': list(internal_groups.values()),
+            'external_groups': list(external_groups.values()),
+            'internal_count': len(internal_items),
+            'external_count': len(external_items),
+            'total_count': len(internal_items) + len(external_items),
         })
+
     
+
     # ============================================
     # ✅ القائمة الثابتة للخدمات غير الخاضعة للخصم
     # ============================================
@@ -2269,6 +2382,14 @@ def company_discounts(request):
         request,
         "frontend/company_discounts.html",
         {
+            # ✅ ✅ ✅ بيانات الاستثناءات مع internal_groups و external_groups
+            "exceptions_data": exceptions_data,
+            "exceptions_list": EXCEPTIONS_LIST,
+            "total_internal": total_internal,
+            "total_external": total_external,
+            "total_services": total_services,
+            
+            # ✅ بيانات الخصومات (للتبويبات الأخرى)
             "companies": company_cards,
             "search": search,
             "selected_section": section,
@@ -2288,14 +2409,7 @@ def company_discounts(request):
             "comparison_rows": comparison_rows,
 
             "rankings": rankings,
-
             "exceptions": exceptions,
-            "exceptions_data": exceptions_data,
-            "exceptions_list": EXCEPTIONS_LIST,
-            
-            "total_internal": total_internal,
-            "total_external": total_external,
-            "total_services": total_services,
         }
     )
 def contract_entity_detail(request, pk):
