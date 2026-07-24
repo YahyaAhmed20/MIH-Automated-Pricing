@@ -388,6 +388,12 @@ def contract_entities(request):
 from datetime import timedelta
 
 
+import json  # ✅ تأكد من وجودها في أعلى الملف
+from django.shortcuts import render
+from django.db.models import Count, Q
+from django.utils import timezone
+from datetime import timedelta
+
 def external_approvals(request):
     """
     صفحة متابعة موافقات الخارجي - شيت 12
@@ -429,6 +435,16 @@ def external_approvals(request):
         "غير محدد": "#6c757d",
     }
     
+    # ✅ Map لكل حالة
+    status_filter_map = {
+        "Serv. Done": "status_serv_done",
+        "Rejected": "status_rejected",
+        "Pending": "status_pending",
+        "Patient refused": "status_patient_refused",
+        "Approved": "status_approved",
+        "غير محدد": "status_undefined",
+    }
+    
     status_data = []
     for item in status_distribution:
         status_name = item["main_status"] or "غير محدد"
@@ -439,6 +455,7 @@ def external_approvals(request):
             "count": count,
             "percentage": percentage,
             "color": status_colors.get(status_name, "#6c757d"),
+            "filter": status_filter_map.get(status_name, "total"),
         })
     
     if undefined_status > 0:
@@ -448,6 +465,7 @@ def external_approvals(request):
                 item["count"] = undefined_status
                 item["percentage"] = round((undefined_status / total_cases) * 100, 1) if total_cases > 0 else 0
                 item["color"] = status_colors["غير محدد"]
+                item["filter"] = "status_undefined"
                 found = True
                 break
         if not found:
@@ -456,7 +474,13 @@ def external_approvals(request):
                 "count": undefined_status,
                 "percentage": round((undefined_status / total_cases) * 100, 1) if total_cases > 0 else 0,
                 "color": status_colors["غير محدد"],
+                "filter": "status_undefined",
             })
+    
+    # ✅ ✅ ✅ NEW: تحضير بيانات الـ Doughnut Chart
+    status_labels = [item["name"] for item in status_data]
+    status_values = [item["count"] for item in status_data]
+    status_colors_list = [item["color"] for item in status_data]
     
     box_colors = {
         "total": "linear-gradient(135deg, #1a237e, #0d47a1)",
@@ -475,10 +499,12 @@ def external_approvals(request):
         'early_admissions': early_admissions,
         'status_data': status_data,
         'box_colors': box_colors,
+        'status_labels': json.dumps(status_labels, ensure_ascii=False),  # ✅ جديد
+        'status_values': json.dumps(status_values),  # ✅ جديد
+        'status_colors': json.dumps(status_colors_list),  # ✅ جديد
     }
     
     return render(request, 'frontend/external_approvals.html', context)
-
 
 # frontend/views.py
 
@@ -509,6 +535,30 @@ def external_approvals_detail(request, filter_type):
         tomorrow = today + timedelta(days=1)
         patients = all_records.filter(admission_date=tomorrow)
         title = "حالات دخول باكر (غداً)"
+    elif filter_type == "overview":
+        patients = all_records
+        title = "نظرة عامة على موقف الحالات"
+    
+    # ✅ ✅ ✅ NEW: فلتر حسب الـ Main Status
+    elif filter_type == "status_serv_done":
+        patients = all_records.filter(main_status="Serv. Done")
+        title = "حالات Serv. Done"
+    elif filter_type == "status_rejected":
+        patients = all_records.filter(main_status="Rejected")
+        title = "حالات Rejected"
+    elif filter_type == "status_pending":
+        patients = all_records.filter(main_status="Pending")
+        title = "حالات Pending"
+    elif filter_type == "status_patient_refused":
+        patients = all_records.filter(main_status="Patient refused")
+        title = "حالات Patient refused"
+    elif filter_type == "status_approved":
+        patients = all_records.filter(main_status="Approved")
+        title = "حالات Approved"
+    elif filter_type == "status_undefined":
+        patients = all_records.filter(Q(main_status__isnull=True) | Q(main_status=""))
+        title = "حالات غير محددة"
+    
     else:
         patients = all_records
         title = "جميع الحالات"
@@ -520,7 +570,7 @@ def external_approvals_detail(request, filter_type):
     sub_account_filter = request.GET.get("sub_account", "")
     doctor_filter = request.GET.get("doctor", "")
     specialty_filter = request.GET.get("specialty", "")
-    main_status_filter = request.GET.get("main_status", "")  # ✅ NEW
+    main_status_filter = request.GET.get("main_status", "")
     date_from = request.GET.get("date_from", "")
     date_to = request.GET.get("date_to", "")
     
@@ -546,7 +596,7 @@ def external_approvals_detail(request, filter_type):
         patients = patients.filter(doctor_name__icontains=doctor_filter)
     if specialty_filter:
         patients = patients.filter(specialty__icontains=specialty_filter)
-    if main_status_filter:  # ✅ NEW
+    if main_status_filter:
         patients = patients.filter(main_status__icontains=main_status_filter)
     if date_from:
         try:
@@ -618,7 +668,6 @@ def external_approvals_detail(request, filter_type):
         .order_by('specialty')
     )
     
-    # ✅ NEW: قيم Main Status للفلتر
     main_statuses = list(
         filter_queryset
         .values_list('main_status', flat=True)
@@ -638,7 +687,7 @@ def external_approvals_detail(request, filter_type):
         'sub_account_filter': sub_account_filter,
         'doctor_filter': doctor_filter,
         'specialty_filter': specialty_filter,
-        'main_status_filter': main_status_filter,  # ✅ NEW
+        'main_status_filter': main_status_filter,
         'date_from': date_from,
         'date_to': date_to,
         'attachment_types': attachment_types,
@@ -646,7 +695,8 @@ def external_approvals_detail(request, filter_type):
         'sub_accounts': sub_accounts,
         'doctors': doctors,
         'specialties': specialties,
-        'main_statuses': main_statuses,  # ✅ NEW
+        'main_statuses': main_statuses,
+        'filter_type': filter_type,  # ✅ عشان نعرف الفلتر الحالي
     }
     
     return render(request, 'frontend/external_approvals_detail.html', context)

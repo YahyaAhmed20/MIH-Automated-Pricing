@@ -475,6 +475,9 @@
             {% if specialty_filter %}
             <input type="hidden" name="specialty" value="{{ specialty_filter }}">
             {% endif %}
+            {% if main_status_filter %}
+            <input type="hidden" name="main_status" value="{{ main_status_filter }}">
+            {% endif %}
             {% if date_from %}
             <input type="hidden" name="date_from" value="{{ date_from }}">
             {% endif %}
@@ -575,21 +578,20 @@
                     </select>
                 </div>
 
+                <!-- ✅ فلتر 6: حالة الموافقة -->
+                <div class="col-md-2">
+                    <label class="form-label">📌 حالة الموافقة</label>
+                    <select name="main_status" class="form-select">
+                        <option value="">الكل</option>
+                        {% for status in main_statuses %}
+                        <option value="{{ status }}" {% if status == main_status_filter %}selected{% endif %}>
+                            {{ status }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
                 
-<!-- ✅ NEW: فلتر 6: حالة الموافقة -->
-<div class="col-md-2">
-    <label class="form-label">📌 حالة الموافقة</label>
-    <select name="main_status" class="form-select">
-        <option value="">الكل</option>
-        {% for status in main_statuses %}
-        <option value="{{ status }}" {% if status == main_status_filter %}selected{% endif %}>
-            {{ status }}
-        </option>
-        {% endfor %}
-    </select>
-</div>
-                
-                <!-- ✅ فلتر 6: التاريخ من - إلى -->
+                <!-- ✅ فلتر 7: التاريخ من - إلى -->
                 <div class="col-md-2">
                     <label class="form-label">📅 من</label>
                     <input type="date" name="date_from" class="form-control" value="{{ date_from }}">
@@ -614,7 +616,7 @@
     </div>
 
     <!-- ✅ الفلاتر النشطة -->
-    {% if attachment_type or company_filter or sub_account_filter or doctor_filter or specialty_filter or date_from or date_to %}
+    {% if attachment_type or company_filter or sub_account_filter or doctor_filter or specialty_filter or main_status_filter or date_from or date_to %}
     <div class="alert alert-info mb-3 d-flex justify-content-between align-items-center">
         <div class="d-flex flex-wrap gap-1">
             <i class="fas fa-filter me-2"></i>
@@ -633,6 +635,9 @@
             {% endif %}
             {% if specialty_filter %}
             <span class="badge bg-warning ms-1">{{ specialty_filter|truncatechars:15 }}</span>
+            {% endif %}
+            {% if main_status_filter %}
+            <span class="badge bg-primary ms-1">{{ main_status_filter|truncatechars:15 }}</span>
             {% endif %}
             {% if date_from %}
             <span class="badge bg-success ms-1">من: {{ date_from }}</span>
@@ -850,16 +855,15 @@
                                             </span>
                                         </div>
 
-
-                                         <!-- ✅ NEW: Status as Note -->
-        <div class="info-item" style="border-top: 2px dashed #dee2e6; margin-top: 8px; padding-top: 10px;">
-            <span class="label" style="color: #6c757d; font-size: 0.7rem;">
-                <i class="fas fa-info-circle me-1"></i> الحالة
-            </span>
-            <span class="value" style="font-size: 0.8rem; color: #495057; font-weight: 400;">
-                {{ patient.status|default:"-" }}
-            </span>
-        </div>
+                                        <!-- ✅ Status as Note -->
+                                        <div class="info-item" style="border-top: 2px dashed #dee2e6; margin-top: 8px; padding-top: 10px;">
+                                            <span class="label" style="color: #6c757d; font-size: 0.7rem;">
+                                                <i class="fas fa-info-circle me-1"></i> الحالة
+                                            </span>
+                                            <span class="value" style="font-size: 0.8rem; color: #495057; font-weight: 400;">
+                                                {{ patient.status|default:"-" }}
+                                            </span>
+                                        </div>
                                         <div class="info-item">
                                             <span class="label">صوره الموافقه</span>
                                             <span class="value">
@@ -886,7 +890,7 @@
                                             <span class="value">{{ patient.billing_status|default:"-" }}</span>
                                         </div>
                                         <div class="info-item">
-                                            <span class="label">تاريخ  الدخول المحتمل </span>
+                                            <span class="label">تاريخ الدخول المحتمل</span>
                                             <span class="value">{{ patient.admission_date|date:"Y-m-d"|default:"-" }}</span>
                                         </div>
                                     </div>
@@ -943,7 +947,7 @@
             <ul class="pagination pagination-sm">
                 {% if patients.has_previous %}
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ patients.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if attachment_type %}&attachment_type={{ attachment_type }}{% endif %}{% if company_filter %}&company={{ company_filter }}{% endif %}{% if sub_account_filter %}&sub_account={{ sub_account_filter }}{% endif %}{% if doctor_filter %}&doctor={{ doctor_filter }}{% endif %}{% if specialty_filter %}&specialty={{ specialty_filter }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}">
+                    <a class="page-link" href="?page={{ patients.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if attachment_type %}&attachment_type={{ attachment_type }}{% endif %}{% if company_filter %}&company={{ company_filter }}{% endif %}{% if sub_account_filter %}&sub_account={{ sub_account_filter }}{% endif %}{% if doctor_filter %}&doctor={{ doctor_filter }}{% endif %}{% if specialty_filter %}&specialty={{ specialty_filter }}{% endif %}{% if main_status_filter %}&main_status={{ main_status_filter }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}">
                         <i class="fas fa-chevron-right"></i>
                     </a>
                 </li>
@@ -952,7 +956,7 @@
                 {% for num in patients.paginator.page_range %}
                     {% if num >= patients.number|add:'-2' and num <= patients.number|add:'2' %}
                     <li class="page-item {% if num == patients.number %}active{% endif %}">
-                        <a class="page-link" href="?page={{ num }}{% if search_query %}&search={{ search_query }}{% endif %}{% if attachment_type %}&attachment_type={{ attachment_type }}{% endif %}{% if company_filter %}&company={{ company_filter }}{% endif %}{% if sub_account_filter %}&sub_account={{ sub_account_filter }}{% endif %}{% if doctor_filter %}&doctor={{ doctor_filter }}{% endif %}{% if specialty_filter %}&specialty={{ specialty_filter }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}">
+                        <a class="page-link" href="?page={{ num }}{% if search_query %}&search={{ search_query }}{% endif %}{% if attachment_type %}&attachment_type={{ attachment_type }}{% endif %}{% if company_filter %}&company={{ company_filter }}{% endif %}{% if sub_account_filter %}&sub_account={{ sub_account_filter }}{% endif %}{% if doctor_filter %}&doctor={{ doctor_filter }}{% endif %}{% if specialty_filter %}&specialty={{ specialty_filter }}{% endif %}{% if main_status_filter %}&main_status={{ main_status_filter }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}">
                             {{ num }}
                         </a>
                     </li>
@@ -961,7 +965,7 @@
                 
                 {% if patients.has_next %}
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ patients.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if attachment_type %}&attachment_type={{ attachment_type }}{% endif %}{% if company_filter %}&company={{ company_filter }}{% endif %}{% if sub_account_filter %}&sub_account={{ sub_account_filter }}{% endif %}{% if doctor_filter %}&doctor={{ doctor_filter }}{% endif %}{% if specialty_filter %}&specialty={{ specialty_filter }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}">
+                    <a class="page-link" href="?page={{ patients.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if attachment_type %}&attachment_type={{ attachment_type }}{% endif %}{% if company_filter %}&company={{ company_filter }}{% endif %}{% if sub_account_filter %}&sub_account={{ sub_account_filter }}{% endif %}{% if doctor_filter %}&doctor={{ doctor_filter }}{% endif %}{% if specialty_filter %}&specialty={{ specialty_filter }}{% endif %}{% if main_status_filter %}&main_status={{ main_status_filter }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}">
                         <i class="fas fa-chevron-left"></i>
                     </a>
                 </li>
