@@ -50,6 +50,7 @@
         background: rgba(255,255,255,0.05);
         border-radius: 50%;
         transition: var(--transition);
+        pointer-events: none; /* ✅ منع الـ pseudo من منع الضغط */
     }
     
     .stat-card:hover {
@@ -93,6 +94,28 @@
         padding: 2px 10px;
         border-radius: 20px;
         backdrop-filter: blur(4px);
+    }
+    
+    /* ✅ إصلاح زرار عرض التفاصيل */
+    .stat-card .btn-show-details {
+        cursor: pointer !important;
+        pointer-events: auto !important;
+        position: relative;
+        z-index: 10;
+        transition: all 0.3s ease;
+    }
+    
+    .stat-card .btn-show-details:hover {
+        background: rgba(255,255,255,0.35) !important;
+        transform: scale(1.05);
+    }
+    
+    .stat-card a,
+    .stat-card .btn {
+        cursor: pointer !important;
+        pointer-events: auto !important;
+        position: relative;
+        z-index: 5;
     }
     
     /* Card Colors with Gradients */
@@ -422,6 +445,67 @@
             font-size: 0.8rem;
         }
     }
+
+    /* ✅ Status Section Cards */
+    .status-section-card {
+        border-radius: var(--border-radius-md);
+        overflow: hidden;
+        transition: var(--transition);
+    }
+    
+    .status-section-card:hover {
+        box-shadow: 0 12px 40px rgba(0,0,0,0.08);
+        transform: translateY(-2px);
+    }
+    
+    .status-section-card .status-header {
+        padding: 1rem 1.5rem;
+        border-bottom: 2px solid #f1f5f9;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    
+    .status-section-card .status-body {
+        padding: 1.25rem 1.5rem;
+    }
+    
+    .status-list-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 6px 0;
+        border-bottom: 1px solid #f1f5f9;
+        transition: var(--transition);
+    }
+    
+    .status-list-item:last-child {
+        border-bottom: none;
+    }
+    
+    .status-list-item:hover {
+        padding-right: 8px;
+    }
+    
+    .status-list-item .rank-num {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        font-size: 0.6rem;
+        font-weight: 700;
+        color: #fff;
+        flex-shrink: 0;
+    }
+    
+    .status-list-item .rank-num.gold { background: #f59e0b; }
+    .status-list-item .rank-num.silver { background: #94a3b8; }
+    .status-list-item .rank-num.bronze { background: #f97316; }
+    .status-list-item .rank-num.default { background: #cbd5e1; color: #475569; }
 </style>
 
 <!-- ============================================ -->
@@ -434,12 +518,11 @@
         <div>
             <h4 class="mb-0 fw-bold text-dark">
                 <i class="fas fa-chart-pie text-primary me-2"></i>
-احصائيات الموافقات 
+                احصائيات الموافقات 
             </h4>
             <p class="text-muted small mb-0">
                 <i class="fas fa-database me-1"></i>
-                نظرة شاملة على  احصائيات الموافقات 
-
+                نظرة شاملة على احصائيات الموافقات
             </p>
         </div>
         <a href="{% url 'external_approvals' %}" class="btn btn-outline-secondary btn-sm rounded-pill px-4">
@@ -462,65 +545,35 @@
     </div>
 
     <!-- ============================================ -->
-    <!-- ✅ Stat Cards - 8 Cards Grid -->
+    <!-- ✅ Stat Cards - مع أزرار عرض التفاصيل -->
     <!-- ============================================ -->
     <div class="row g-3 g-md-4 mb-4">
         
-        <div class="col-6 col-md-4 col-lg-3 col-xl-1-5">
+        <!-- ✅ إجمالي الحالات -->
+        <div class="col-6 col-md-4 col-lg-2">
             <div class="stat-card warning">
                 <div class="stat-icon"><i class="fas fa-hourglass-half"></i></div>
-                <div class="stat-number">{{ pending_count }}</div>
-                <div class="stat-label">إجمالي المعلقة</div>
+                <div class="stat-number">{{ total_cases|default:0 }}</div>
+                <div class="stat-label">إجمالي الحالات</div>
+                <a href="{% url 'external_approvals_detail' 'total' %}" class="btn btn-sm btn-outline-light mt-2 rounded-pill px-3 btn-show-details" style="font-size: 0.7rem; background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3);">
+                    <i class="fas fa-eye me-1"></i> عرض التفاصيل
+                </a>
             </div>
         </div>
         
-        <div class="col-6 col-md-4 col-lg-3 col-xl-1-5">
-            <div class="stat-card primary">
-                <div class="stat-icon"><i class="fas fa-currency-dollar"></i></div>
-                <div class="stat-number">{{ total_cost }}</div>
-                <div class="stat-label">إجمالي التكلفة</div>
+        <!-- ✅ لكل حالة -->
+        {% for status, data in status_stats.items %}
+        <div class="col-6 col-md-4 col-lg-2">
+            <div class="stat-card" style="background: {{ data.color }};">
+                <div class="stat-icon"><i class="fas fa-circle"></i></div>
+                <div class="stat-number">{{ data.count|default:0 }}</div>
+                <div class="stat-label">{{ status }}</div>
+                <a href="{% url 'external_approvals_detail' data.filter_type %}" class="btn btn-sm btn-outline-light mt-2 rounded-pill px-3 btn-show-details" style="font-size: 0.7rem; background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3);">
+                    <i class="fas fa-eye me-1"></i> عرض التفاصيل
+                </a>
             </div>
         </div>
-        
-        <div class="col-6 col-md-4 col-lg-3 col-xl-1-5">
-            <div class="stat-card info">
-                <div class="stat-icon"><i class="fas fa-building"></i></div>
-                <div class="stat-number">{{ entities_count }}</div>
-                <div class="stat-label">الجهات</div>
-            </div>
-        </div>
-        
-        <div class="col-6 col-md-4 col-lg-3 col-xl-1-5">
-            <div class="stat-card success">
-                <div class="stat-icon"><i class="fas fa-user-md"></i></div>
-                <div class="stat-number">{{ doctors_count }}</div>
-                <div class="stat-label">التخصصات</div>
-            </div>
-        </div>
-        
-        <div class="col-6 col-md-4 col-lg-3 col-xl-1-5">
-            <div class="stat-card danger">
-                <div class="stat-icon"><i class="fas fa-clock"></i></div>
-                <div class="stat-number">{{ avg_cost }}</div>
-                <div class="stat-label">متوسط التكلفة</div>
-            </div>
-        </div>
-        
-        <div class="col-6 col-md-4 col-lg-3 col-xl-1-5">
-            <div class="stat-card purple">
-                <div class="stat-icon"><i class="fas fa-layer-group"></i></div>
-                <div class="stat-number">{{ total_entities }}</div>
-                <div class="stat-label">أعلى الجهات</div>
-            </div>
-        </div>
-        
-        <div class="col-6 col-md-4 col-lg-3 col-xl-1-5 d-xl-none">
-            <div class="stat-card teal">
-                <div class="stat-icon"><i class="fas fa-percent"></i></div>
-                <div class="stat-number">{% widthratio pending_count pending_count 100 %}%</div>
-                <div class="stat-label">النسبة</div>
-            </div>
-        </div>
+        {% endfor %}
         
     </div>
 
@@ -533,9 +586,9 @@
             <div class="chart-container">
                 <div class="chart-title">
                     <i class="fas fa-chart-pie text-warning"></i>
-                    توزيع الجهات
+                    توزيع الحالات
                 </div>
-                <canvas id="entityChart"></canvas>
+                <canvas id="statusChart"></canvas>
             </div>
         </div>
         
@@ -545,7 +598,7 @@
                     <i class="fas fa-chart-bar text-primary"></i>
                     توزيع التخصصات
                 </div>
-                <canvas id="doctorChart"></canvas>
+                <canvas id="specialtyChart"></canvas>
             </div>
         </div>
         
@@ -562,91 +615,147 @@
         <div class="col-md-6 col-xl-3">
             <div class="chart-container">
                 <div class="chart-title">
-                    <i class="fas fa-stethoscope text-success"></i>
-                    التوزيع حسب القطاع
+                    <i class="fas fa-building text-success"></i>
+                    توزيع الشركات
                 </div>
-                <canvas id="specialtyChart"></canvas>
+                <canvas id="companyChart"></canvas>
             </div>
         </div>
         
     </div>
 
     <!-- ============================================ -->
-    <!-- ✅ Top Entities & Specialties -->
+    <!-- ✅ 5 Status Sections with Top 5 Lists -->
     <!-- ============================================ -->
-    <div class="row g-3 g-md-4 mb-4">
-        
-        <div class="col-md-6">
-            <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
-                <div class="card-header bg-white border-0 py-3">
-                    <h6 class="mb-0 fw-bold">
-                        <i class="fas fa-building text-warning me-2"></i>
-                        أعلى الجهات المعلقة
+
+    {% for status, data in status_stats.items %}
+    <div class="card shadow-sm border-0 status-section-card mb-4">
+        <div class="status-header bg-white">
+            <div>
+                <h5 class="mb-0 fw-bold">
+                    <span class="badge" style="background: {{ data.color }}; padding: 0.4rem 1rem; font-size: 0.85rem; color: #fff;">
+                        {{ status }}
+                    </span>
+                    <span class="badge bg-light text-dark ms-2 rounded-pill px-3">
+                        {{ data.count }} حالة
+                    </span>
+                </h5>
+            </div>
+            <a href="{% url 'external_approvals_detail' data.filter_type %}" class="btn btn-outline-primary btn-sm rounded-pill px-4">
+                <i class="fas fa-eye me-1"></i> عرض المزيد
+            </a>
+        </div>
+        <div class="status-body">
+            <div class="row g-3">
+                
+                <!-- ✅ Top 5 Companies -->
+                <div class="col-md-3">
+                    <h6 class="fw-bold text-muted mb-2 small">
+                        <i class="fas fa-building me-1"></i> الشركات
                     </h6>
-                </div>
-                <div class="card-body p-0">
-                    {% for item in top_entities %}
-                    <div class="list-item">
-                        <div class="item-info">
-                            <span class="rank-badge 
-                                {% if forloop.counter == 1 %}gold
-                                {% elif forloop.counter == 2 %}silver
-                                {% elif forloop.counter == 3 %}bronze
-                                {% else %}default{% endif %}">
-                                {{ forloop.counter }}
+                    <div>
+                        {% for item in data.companies %}
+                        <div class="status-list-item">
+                            <span>
+                                <span class="rank-num 
+                                    {% if forloop.counter == 1 %}gold
+                                    {% elif forloop.counter == 2 %}silver
+                                    {% elif forloop.counter == 3 %}bronze
+                                    {% else %}default{% endif %}">
+                                    {{ forloop.counter }}
+                                </span>
+                                <span class="small">{{ item.company|default:"غير محدد" }}</span>
                             </span>
-                            <strong>{{ item.entity_name|default:"غير محدد" }}</strong>
+                            <span class="badge bg-primary rounded-pill">{{ item.total }}</span>
                         </div>
-                        <span class="badge bg-warning bg-opacity-25 text-dark rounded-pill px-3 py-2">
-                            {{ item.total }}
-                        </span>
+                        {% empty %}
+                        <div class="text-muted small py-2">لا توجد شركات</div>
+                        {% endfor %}
                     </div>
-                    {% empty %}
-                    <div class="text-center py-4 text-muted">
-                        <i class="fas fa-inbox fa-2x d-block mb-2 opacity-50"></i>
-                        لا توجد جهات
-                    </div>
-                    {% endfor %}
                 </div>
+                
+                <!-- ✅ Top 5 Specialties -->
+                <div class="col-md-3">
+                    <h6 class="fw-bold text-muted mb-2 small">
+                        <i class="fas fa-stethoscope me-1"></i> التخصصات
+                    </h6>
+                    <div>
+                        {% for item in data.specialties %}
+                        <div class="status-list-item">
+                            <span>
+                                <span class="rank-num 
+                                    {% if forloop.counter == 1 %}gold
+                                    {% elif forloop.counter == 2 %}silver
+                                    {% elif forloop.counter == 3 %}bronze
+                                    {% else %}default{% endif %}">
+                                    {{ forloop.counter }}
+                                </span>
+                                <span class="small">{{ item.specialty|default:"غير محدد" }}</span>
+                            </span>
+                            <span class="badge bg-info rounded-pill">{{ item.total }}</span>
+                        </div>
+                        {% empty %}
+                        <div class="text-muted small py-2">لا توجد تخصصات</div>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <!-- ✅ Top 5 Sub Accounts -->
+                <div class="col-md-3">
+                    <h6 class="fw-bold text-muted mb-2 small">
+                        <i class="fas fa-sitemap me-1"></i> الشركات الفرعية
+                    </h6>
+                    <div>
+                        {% for item in data.sub_accounts %}
+                        <div class="status-list-item">
+                            <span>
+                                <span class="rank-num 
+                                    {% if forloop.counter == 1 %}gold
+                                    {% elif forloop.counter == 2 %}silver
+                                    {% elif forloop.counter == 3 %}bronze
+                                    {% else %}default{% endif %}">
+                                    {{ forloop.counter }}
+                                </span>
+                                <span class="small">{{ item.sub_account|default:"غير محدد" }}</span>
+                            </span>
+                            <span class="badge bg-success rounded-pill">{{ item.total }}</span>
+                        </div>
+                        {% empty %}
+                        <div class="text-muted small py-2">لا توجد شركات فرعية</div>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <!-- ✅ Top 5 Doctors -->
+                <div class="col-md-3">
+                    <h6 class="fw-bold text-muted mb-2 small">
+                        <i class="fas fa-user-md me-1"></i> الأطباء
+                    </h6>
+                    <div>
+                        {% for item in data.doctors %}
+                        <div class="status-list-item">
+                            <span>
+                                <span class="rank-num 
+                                    {% if forloop.counter == 1 %}gold
+                                    {% elif forloop.counter == 2 %}silver
+                                    {% elif forloop.counter == 3 %}bronze
+                                    {% else %}default{% endif %}">
+                                    {{ forloop.counter }}
+                                </span>
+                                <span class="small">{{ item.doctor_name|default:"غير محدد" }}</span>
+                            </span>
+                            <span class="badge bg-warning text-dark rounded-pill">{{ item.total }}</span>
+                        </div>
+                        {% empty %}
+                        <div class="text-muted small py-2">لا يوجد أطباء</div>
+                        {% endfor %}
+                    </div>
+                </div>
+                
             </div>
         </div>
-        
-        <div class="col-md-6">
-            <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
-                <div class="card-header bg-white border-0 py-3">
-                    <h6 class="mb-0 fw-bold">
-                        <i class="fas fa-stethoscope text-info me-2"></i>
-                        أعلى التخصصات
-                    </h6>
-                </div>
-                <div class="card-body p-0">
-                    {% for item in top_doctors %}
-                    <div class="list-item">
-                        <div class="item-info">
-                            <span class="rank-badge 
-                                {% if forloop.counter == 1 %}gold
-                                {% elif forloop.counter == 2 %}silver
-                                {% elif forloop.counter == 3 %}bronze
-                                {% else %}default{% endif %}">
-                                {{ forloop.counter }}
-                            </span>
-                            <strong>{{ item.specialty|default:"غير محدد" }}</strong>
-                        </div>
-                        <span class="badge bg-info bg-opacity-25 text-dark rounded-pill px-3 py-2">
-                            {{ item.total }}
-                        </span>
-                    </div>
-                    {% empty %}
-                    <div class="text-center py-4 text-muted">
-                        <i class="fas fa-inbox fa-2x d-block mb-2 opacity-50"></i>
-                        لا يوجد تخصصات
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
-        </div>
-        
     </div>
+    {% endfor %}
 
     <!-- ============================================ -->
     <!-- ✅ Pending Cases Table -->
@@ -655,7 +764,7 @@
         <div class="card-header bg-white border-0 d-flex flex-wrap justify-content-between align-items-center py-3">
             <h6 class="mb-0 fw-bold">
                 <i class="fas fa-list me-2"></i>
-                الحالات المعلقة
+                جميع الحالات
             </h6>
             <span class="badge bg-warning text-dark rounded-pill px-3 py-2">
                 {{ pending_cases|length }}
@@ -668,10 +777,10 @@
                     <tr>
                         <th>#</th>
                         <th>المريض</th>
+                        <th>الحالة</th>
                         <th>الجهة</th>
                         <th>التخصص</th>
-                        <th>التكلفة</th>
-                        <th>عمر الطلب</th>
+                        <th>الطبيب</th>
                         <th>تاريخ الدخول</th>
                         <th>الإجراء</th>
                     </tr>
@@ -681,28 +790,17 @@
                     <tr>
                         <td class="fw-bold text-muted">{{ forloop.counter }}</td>
                         <td class="fw-bold">{{ item.patient_name|default:"-" }}</td>
-                        <td>{{ item.entity_name|default:"-" }}</td>
+                        <td>
+                            <span class="badge" style="background: {{ item.color|default:'#6c757d' }};">
+                                {{ item.main_status|default:"-" }}
+                            </span>
+                        </td>
+                        <td>{{ item.company|default:"-" }}</td>
                         <td>{{ item.specialty|default:"-" }}</td>
-                        <td>
-                            <span class="fw-bold text-primary">
-                                {{ item.amount|floatformat:0|default:"-" }}
-                            </span>
-                        </td>
-                        <td>
-                            {% if item.age_days %}
-                            <span class="badge-age 
-                                {% if item.age_days > 60 %}old
-                                {% elif item.age_days > 30 %}medium
-                                {% else %}new{% endif %}">
-                                {{ item.age_days }} يوم
-                            </span>
-                            {% else %}
-                            <span class="text-muted">-</span>
-                            {% endif %}
-                        </td>
+                        <td>{{ item.doctor_name|default:"-" }}</td>
                         <td>{{ item.admission_date|date:"Y-m-d"|default:"-" }}</td>
                         <td>
-                            <a href="{% url 'report_statistic_detail' item.id %}" 
+                            <a href="{% url 'external_approvals_detail' 'total' %}" 
                                class="btn btn-sm btn-outline-primary rounded-pill px-3">
                                 <i class="fas fa-eye"></i>
                             </a>
@@ -712,7 +810,7 @@
                     <tr>
                         <td colspan="8" class="text-center text-muted py-5">
                             <i class="fas fa-inbox fa-3x d-block mb-3 opacity-25"></i>
-                            <span class="fw-bold">لا توجد حالات معلقة</span>
+                            <span class="fw-bold">لا توجد حالات</span>
                         </td>
                     </tr>
                     {% endfor %}
@@ -767,7 +865,12 @@
 document.addEventListener('DOMContentLoaded', function() {
     
     // Colors
-    const colors = {{ chart_colors|safe }};
+    const statusColors = {{ status_colors|safe }};
+    const chartColors = [
+        '#4f46e5', '#f59e0b', '#10b981', '#3b82f6', '#ef4444',
+        '#8b5cf6', '#14b8a6', '#ec4899', '#f97316', '#6b7280'
+    ];
+    
     const chartDefaults = {
         responsive: true,
         maintainAspectRatio: true,
@@ -785,90 +888,140 @@ document.addEventListener('DOMContentLoaded', function() {
     };
     
     // ============================================
-    // 1️⃣ Entity Chart - Pie
+    // 1️⃣ Status Chart - Doughnut
     // ============================================
-    new Chart(document.getElementById('entityChart'), {
-        type: 'pie',
-        data: {
-            labels: {{ entity_chart_labels|safe }},
-            datasets: [{
-                data: {{ entity_chart_values|safe }},
-                backgroundColor: colors,
-                borderWidth: 2,
-                borderColor: '#fff'
-            }]
-        },
-        options: chartDefaults
-    });
+    const statusLabels = {{ status_labels|safe }};
+    const statusValues = {{ status_values|safe }};
+    
+    if (statusLabels.length > 0) {
+        new Chart(document.getElementById('statusChart'), {
+            type: 'doughnut',
+            data: {
+                labels: statusLabels,
+                datasets: [{
+                    data: statusValues,
+                    backgroundColor: statusColors,
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }]
+            },
+            options: {
+                ...chartDefaults,
+                cutout: '60%',
+                plugins: {
+                    ...chartDefaults.plugins,
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            font: { size: 9, family: 'system-ui' },
+                            padding: 6,
+                            boxWidth: 10,
+                            usePointStyle: true
+                        }
+                    }
+                }
+            }
+        });
+    }
     
     // ============================================
-    // 2️⃣ Doctor Chart - Bar
+    // 2️⃣ Specialty Chart - Bar
     // ============================================
-    new Chart(document.getElementById('doctorChart'), {
-        type: 'bar',
-        data: {
-            labels: {{ doctor_chart_labels|safe }},
-            datasets: [{
-                label: 'عدد الحالات',
-                data: {{ doctor_chart_values|safe }},
-                backgroundColor: colors.slice(0, 5),
-                borderRadius: 6,
-                borderSkipped: false,
-                maxBarThickness: 40
-            }]
-        },
-        options: {
-            ...chartDefaults,
-            plugins: { legend: { display: false } },
-            scales: {
-                y: { beginAtZero: true, ticks: { stepSize: 1, font: { size: 9 } } },
-                x: { ticks: { font: { size: 9 } } }
+    const specialtyLabels = {{ specialty_labels|safe }};
+    const specialtyValues = {{ specialty_values|safe }};
+    
+    if (specialtyLabels.length > 0) {
+        new Chart(document.getElementById('specialtyChart'), {
+            type: 'bar',
+            data: {
+                labels: specialtyLabels,
+                datasets: [{
+                    label: 'عدد الحالات',
+                    data: specialtyValues,
+                    backgroundColor: chartColors.slice(0, 5),
+                    borderRadius: 6,
+                    borderSkipped: false,
+                    maxBarThickness: 40
+                }]
+            },
+            options: {
+                ...chartDefaults,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { beginAtZero: true, ticks: { stepSize: 1, font: { size: 9 } } },
+                    x: { ticks: { font: { size: 9 } } }
+                }
             }
-        }
-    });
+        });
+    }
     
     // ============================================
     // 3️⃣ Age Chart - Doughnut
     // ============================================
-    new Chart(document.getElementById('ageChart'), {
-        type: 'doughnut',
-        data: {
-            labels: {{ age_labels|safe }},
-            datasets: [{
-                data: {{ age_values|safe }},
-                backgroundColor: ['#10b981', '#f59e0b', '#fb923c', '#ef4444', '#94a3b8'],
-                borderWidth: 2,
-                borderColor: '#fff'
-            }]
-        },
-        options: chartDefaults
-    });
+    const ageLabels = {{ age_labels|safe }};
+    const ageValues = {{ age_values|safe }};
+    
+    if (ageLabels.length > 0) {
+        new Chart(document.getElementById('ageChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ageLabels,
+                datasets: [{
+                    data: ageValues,
+                    backgroundColor: ['#10b981', '#f59e0b', '#fb923c', '#ef4444', '#94a3b8'],
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }]
+            },
+            options: {
+                ...chartDefaults,
+                cutout: '60%',
+                plugins: {
+                    ...chartDefaults.plugins,
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            font: { size: 9, family: 'system-ui' },
+                            padding: 6,
+                            boxWidth: 10,
+                            usePointStyle: true
+                        }
+                    }
+                }
+            }
+        });
+    }
     
     // ============================================
-    // 4️⃣ Specialty Chart - Bar
+    // 4️⃣ Company Chart - Bar
     // ============================================
-    new Chart(document.getElementById('specialtyChart'), {
-        type: 'bar',
-        data: {
-            labels: {{ specialty_labels|safe }},
-            datasets: [{
-                label: 'عدد الحالات',
-                data: {{ specialty_values|safe }},
-                backgroundColor: colors.slice(0, 5),
-                borderRadius: 6,
-                borderSkipped: false,
-                maxBarThickness: 40
-            }]
-        },
-        options: {
-            ...chartDefaults,
-            plugins: { legend: { display: false } },
-            scales: {
-                y: { beginAtZero: true, ticks: { stepSize: 1, font: { size: 9 } } },
-                x: { ticks: { font: { size: 9 } } }
+    const companyLabels = {{ company_labels|safe }};
+    const companyValues = {{ company_values|safe }};
+    
+    if (companyLabels.length > 0) {
+        new Chart(document.getElementById('companyChart'), {
+            type: 'bar',
+            data: {
+                labels: companyLabels,
+                datasets: [{
+                    label: 'عدد الحالات',
+                    data: companyValues,
+                    backgroundColor: chartColors.slice(0, 5),
+                    borderRadius: 6,
+                    borderSkipped: false,
+                    maxBarThickness: 40
+                }]
+            },
+            options: {
+                ...chartDefaults,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { beginAtZero: true, ticks: { stepSize: 1, font: { size: 9 } } },
+                    x: { ticks: { font: { size: 9 } } }
+                }
             }
-        }
-    });
+        });
+    }
     
 });
 </script>

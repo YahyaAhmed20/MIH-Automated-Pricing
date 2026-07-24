@@ -1923,83 +1923,127 @@ def sub_companies_details(request):
 
 def pending_analysis(request):
     """
-    تحليل الحالات المعلقة من شيت 12 (ReportStatistic)
+    تحليل الحالات - ExternalApproval (شيت 12)
+    عرض 5 حالات مع Top 5 لكل: شركة، تخصص، شركة فرعية، طبيب
     """
     
-    from django.db.models import Q, Count, Sum, Avg
+    from django.db.models import Q, Count
     from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
     from datetime import date
     import json
     
-    # ✅ جلب البيانات من ReportStatistic (شيت 12)
-    pending_qs = ReportStatistic.objects.filter(payment_type="اجل")
+    # ✅ جلب البيانات من ExternalApproval
+    all_records = ExternalApproval.objects.all()
     
-    # ✅ البحث
+    # ✅ الفلاتر
     search = request.GET.get("search", "")
     if search:
-        pending_qs = pending_qs.filter(
+        all_records = all_records.filter(
             Q(patient_name__icontains=search) |
-            Q(entity_name__icontains=search) |
-            Q(package_name__icontains=search) |
-            Q(sub_company__icontains=search) |
-            Q(specialty__icontains=search)
+            Q(company__icontains=search) |
+            Q(sub_account__icontains=search) |
+            Q(specialty__icontains=search) |
+            Q(doctor_name__icontains=search) |
+            Q(procedure__icontains=search)
         )
     
-    # ✅ الإحصائيات
-    total_pending = pending_qs.count()
-    total_amount = pending_qs.aggregate(total=Sum('amount'))['total'] or 0
-    avg_amount = pending_qs.aggregate(avg=Avg('amount'))['avg'] or 0
+    # ✅ الحالات المطلوبة
+    statuses = ["Serv. Done", "Rejected", "Pending", "Approved", "Patient refused"]
     
-    # ✅ عدد الجهات
-    entities_count = pending_qs.values('entity_name').distinct().count()
+    # ✅ ألوان الحالات
+    color_map = {
+        "Serv. Done": "#28a745",
+        "Rejected": "#dc3545",
+        "Pending": "#ffc107",
+        "Approved": "#17a2b8",
+        "Patient refused": "#6c757d",
+    }
     
-    # ✅ عدد التخصصات
-    specialties_count = pending_qs.exclude(specialty='').values('specialty').distinct().count()
+    # ✅ Map للحالات مع filter_type
+    status_filter_map = {
+        "Serv. Done": "status_serv_done",
+        "Rejected": "status_rejected",
+        "Pending": "status_pending",
+        "Approved": "status_approved",
+        "Patient refused": "status_patient_refused",
+    }
     
-    # ✅ أعلى الجهات
-    top_entities = (
-        pending_qs
-        .values('entity_name')
+    status_stats = {}
+    status_labels = []
+    status_values = []
+    status_colors = []
+    
+    for status in statuses:
+        # ✅ جلب السجلات لهذه الحالة
+        records = all_records.filter(main_status=status)
+        count = records.count()
+        color = color_map.get(status, "#6c757d")
+        
+        status_stats[status] = {
+            'count': count,
+            'color': color,
+            'filter_type': status_filter_map.get(status, 'total'),  # ✅ جديد
+            'companies': list(
+                records.values('company')
+                .annotate(total=Count('id'))
+                .exclude(company__isnull=True)
+                .exclude(company='')
+                .order_by('-total')[:5]
+            ),
+            'specialties': list(
+                records.values('specialty')
+                .annotate(total=Count('id'))
+                .exclude(specialty__isnull=True)
+                .exclude(specialty='')
+                .order_by('-total')[:5]
+            ),
+            'sub_accounts': list(
+                records.values('sub_account')
+                .annotate(total=Count('id'))
+                .exclude(sub_account__isnull=True)
+                .exclude(sub_account='')
+                .order_by('-total')[:5]
+            ),
+            'doctors': list(
+                records.values('doctor_name')
+                .annotate(total=Count('id'))
+                .exclude(doctor_name__isnull=True)
+                .exclude(doctor_name='')
+                .order_by('-total')[:5]
+            ),
+        }
+        
+        # ✅ للـ Chart
+        status_labels.append(status)
+        status_values.append(count)
+        status_colors.append(color)
+    
+    # ✅ الإحصائيات العامة
+    total_cases = all_records.count()
+    
+    # ✅ Specialty Chart - Top 5 تخصصات
+    top_specialties = list(
+        all_records.values('specialty')
         .annotate(total=Count('id'))
-        .order_by('-total')[:10]
-    )
-    
-    # ✅ أعلى التخصصات
-    top_specialties = (
-        pending_qs
+        .exclude(specialty__isnull=True)
         .exclude(specialty='')
-        .values('specialty')
-        .annotate(total=Count('id'))
-        .order_by('-total')[:10]
+        .order_by('-total')[:5]
     )
+    specialty_labels = [item['specialty'] or 'غير محدد' for item in top_specialties]
+    specialty_values = [item['total'] for item in top_specialties]
     
-    # ✅ أعلى الباكدجات
-    top_packages = (
-        pending_qs
-        .exclude(package_name='')
-        .values('package_name')
+    # ✅ Company Chart - Top 5 شركات
+    top_companies = list(
+        all_records.values('company')
         .annotate(total=Count('id'))
-        .order_by('-total')[:10]
+        .exclude(company__isnull=True)
+        .exclude(company='')
+        .order_by('-total')[:5]
     )
+    company_labels = [item['company'] or 'غير محدد' for item in top_companies]
+    company_values = [item['total'] for item in top_companies]
     
-    # ✅ أعلى القطاعات
-    top_sectors = (
-        pending_qs
-        .exclude(sector='')
-        .values('sector')
-        .annotate(total=Count('id'))
-        .order_by('-total')[:10]
-    )
-    
-    # ✅ CHART 1: توزيع الحالات حسب الجهة (Pie)
-    entity_labels = json.dumps([item['entity_name'] or 'غير محدد' for item in top_entities], ensure_ascii=False)
-    entity_values = json.dumps([item['total'] for item in top_entities])
-    
-    # ✅ CHART 2: توزيع الحالات حسب التخصص (Bar)
-    specialty_labels = json.dumps([item['specialty'] or 'غير محدد' for item in top_specialties], ensure_ascii=False)
-    specialty_values = json.dumps([item['total'] for item in top_specialties])
-    
-    # ✅ CHART 3: عمر الطلبات (Doughnut)
+    # ✅ Age Chart - عمر الطلبات
     today = date.today()
     age_ranges = {
         "0-7 أيام": 0,
@@ -2009,7 +2053,7 @@ def pending_analysis(request):
         "أكثر من 60 يوم": 0,
     }
     
-    for item in pending_qs:
+    for item in all_records:
         if item.admission_date:
             age = (today - item.admission_date).days
             if age <= 7:
@@ -2023,30 +2067,11 @@ def pending_analysis(request):
             else:
                 age_ranges["أكثر من 60 يوم"] += 1
     
-    age_labels = json.dumps(list(age_ranges.keys()), ensure_ascii=False)
-    age_values = json.dumps(list(age_ranges.values()))
+    age_labels = list(age_ranges.keys())
+    age_values = list(age_ranges.values())
     
-    # ✅ CHART 4: توزيع الحالات حسب القطاع (Doughnut)
-    sector_labels = json.dumps([item['sector'] or 'غير محدد' for item in top_sectors], ensure_ascii=False)
-    sector_values = json.dumps([item['total'] for item in top_sectors])
-    
-    # ✅ ألوان الـ Charts
-    chart_colors = json.dumps([
-        "#0d6efd", "#20c997", "#ffc107", "#dc3545", 
-        "#6f42c1", "#fd7e14", "#198754", "#6610f2",
-        "#0dcaf0", "#6c757d"
-    ])
-    
-    # ✅ إضافة عمر الطلب لكل حالة
-    pending_cases = list(pending_qs[:100])
-    for item in pending_cases:
-        if item.admission_date:
-            item.age_days = (today - item.admission_date).days
-        else:
-            item.age_days = None
-    
-    # ✅ Pagination
-    paginator = Paginator(pending_qs, 50)
+    # ✅ Pagination للجدول
+    paginator = Paginator(all_records, 50)
     page_number = request.GET.get('page', 1)
     
     try:
@@ -2057,38 +2082,24 @@ def pending_analysis(request):
         page_obj = paginator.get_page(paginator.num_pages)
     
     context = {
-        # ✅ الإحصائيات
-        'pending_count': f"{total_pending:,}",
-        'total_cost': f"{total_amount:,.0f}",
-        'avg_cost': f"{avg_amount:,.0f}",
-        'entities_count': f"{entities_count:,}",
-        'doctors_count': f"{specialties_count:,}",
-        
-        # ✅ البيانات
+        'total_cases': total_cases,
+        'status_stats': status_stats,
         'pending_cases': page_obj,
         'search': search,
-        'top_entities': top_entities,
-        'top_doctors': top_specialties,
-        'top_specialties': top_specialties,
-        'top_packages': top_packages,
-        'top_sectors': top_sectors,
-        'total_entities': top_entities.count(),
-        'total_doctors': top_specialties.count(),
         
-        # ✅ Charts Data
-        'entity_chart_labels': entity_labels,
-        'entity_chart_values': entity_values,
-        'doctor_chart_labels': specialty_labels,
-        'doctor_chart_values': specialty_values,
-        'age_labels': age_labels,
-        'age_values': age_values,
-        'specialty_labels': sector_labels,
-        'specialty_values': sector_values,
-        'chart_colors': chart_colors,
+        # ✅ بيانات Charts
+        'status_labels': json.dumps(status_labels, ensure_ascii=False),
+        'status_values': json.dumps(status_values),
+        'status_colors': json.dumps(status_colors),
+        'specialty_labels': json.dumps(specialty_labels, ensure_ascii=False),
+        'specialty_values': json.dumps(specialty_values),
+        'company_labels': json.dumps(company_labels, ensure_ascii=False),
+        'company_values': json.dumps(company_values),
+        'age_labels': json.dumps(age_labels, ensure_ascii=False),
+        'age_values': json.dumps(age_values),
     }
     
     return render(request, "frontend/pending_analysis.html", context)
-
 def report_statistic_detail(request, pk):
     """
     صفحة تفاصيل سجل من شيت 12 (ReportStatistic)
