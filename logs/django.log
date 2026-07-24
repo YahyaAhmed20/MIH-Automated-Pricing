@@ -3755,3 +3755,345 @@ Not Found: /favicon.ico
 "GET /service-search/?search=opr-53 HTTP/1.1" 200 60285
 "GET /service-search/?search=opr- HTTP/1.1" 200 45762
 "GET /service-search/?search=opr-54 HTTP/1.1" 200 60494
+Watching for file changes with StatReloader
+"GET /service-search/ HTTP/1.1" 200 753488
+"GET /similar-invoices/ HTTP/1.1" 200 337289
+"GET /pricing-details/ HTTP/1.1" 200 281542
+"GET /patient-search/ HTTP/1.1" 200 858725
+"GET /external-approvals/ HTTP/1.1" 200 36572
+"GET /pending-analysis/ HTTP/1.1" 200 119676
+"GET /report-statistic/1076/ HTTP/1.1" 200 57052
+"GET /pending-analysis/ HTTP/1.1" 200 119676
+"GET /reports/ HTTP/1.1" 200 118483
+"GET /pending-analysis/ HTTP/1.1" 200 119676
+"GET /external-approvals/ HTTP/1.1" 200 36572
+"GET /external-approvals/status/?status=Serv.%20Done HTTP/1.1" 200 861440
+"GET /pending-analysis/ HTTP/1.1" 200 119676
+"GET /external-approvals/ HTTP/1.1" 200 36572
+"GET /quality-dashboard/ HTTP/1.1" 200 27623
+"GET / HTTP/1.1" 200 34264
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 34264
+"GET /static/images/logo.jpeg HTTP/1.1" 200 68755
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 13579
+"GET /credit-package-pricing/ HTTP/1.1" 200 66222
+"GET /credit-package-pricing/?company_search=%D8%A7%D9%84%D8%A8%D9%86%D9%83+%D8%A7%D9%84%D8%B9%D9%82%D8%A7%D8%B1%D9%89+%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%89+%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%89&company=88&specialty=&package_search=&package= HTTP/1.1" 200 216732
+"GET /credit-package-pricing/?company=88&package=7244&company_search=%D8%A7%D9%84%D8%A8%D9%86%D9%83%20%D8%A7%D9%84%D8%B9%D9%82%D8%A7%D8%B1%D9%89%20%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%89%20%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%89&package_search=&specialty= HTTP/1.1" 200 86225
+"GET /credit-package-pricing/ HTTP/1.1" 200 66222
+"GET /credit-package-pricing/?company_search=%D8%A7%D9%84%D8%B4%D8%B1%D9%83%D8%A9+%D8%A7%D9%84%D8%AF%D9%88%D9%84%D9%8A%D8%A9+%D9%84%D9%84%D8%A3%D8%B9%D9%84%D8%A7%D9%81+%D9%88%D8%A7%D9%84%D8%A7%D9%86%D8%AA%D8%A7%D8%AC+%D8%A7%D9%84%D8%AD%D9%8A%D9%88%D8%A7%D9%86%D9%89&company=149&specialty=&package_search=&package= HTTP/1.1" 200 219260
+"GET /credit-package-pricing/?company=149&package=12664&company_search=%D8%A7%D9%84%D8%B4%D8%B1%D9%83%D8%A9%20%D8%A7%D9%84%D8%AF%D9%88%D9%84%D9%8A%D8%A9%20%D9%84%D9%84%D8%A3%D8%B9%D9%84%D8%A7%D9%81%20%D9%88%D8%A7%D9%84%D8%A7%D9%86%D8%AA%D8%A7%D8%AC%20%D8%A7%D9%84%D8%AD%D9%8A%D9%88%D8%A7%D9%86%D9%89&package_search=&specialty= HTTP/1.1" 200 86292
+Internal Server Error: /credit-package-pricing/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\defaulttags.py", line 1035, in find_library
+    return parser.libraries[name]
+           ~~~~~~~~~~~~~~~~^^^^^^
+KeyError: 'custom_filters'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 3155, in credit_package_pricing
+    return render(
+           ^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\loader.py", line 15, in get_template
+    return engine.get_template(template_name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\backends\django.py", line 79, in get_template
+    return Template(self.engine.get_template(template_name), self)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\engine.py", line 177, in get_template
+    template, origin = self.find_template(template_name)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\engine.py", line 159, in find_template
+    template = loader.get_template(name, skip=skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\loaders\cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\loaders\base.py", line 28, in get_template
+    return Template(
+           ^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 155, in __init__
+    self.nodelist = self.compile_nodelist()
+                    ^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 197, in compile_nodelist
+    nodelist = parser.parse()
+               ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 519, in parse
+    raise self.error(token, e)
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 517, in parse
+    compiled_result = compile_func(self, token)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\loader_tags.py", line 299, in do_extends
+    nodelist = parser.parse()
+               ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 519, in parse
+    raise self.error(token, e)
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 517, in parse
+    compiled_result = compile_func(self, token)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\defaulttags.py", line 1097, in load
+    lib = find_library(parser, name)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\defaulttags.py", line 1037, in find_library
+    raise TemplateSyntaxError(
+django.template.exceptions.TemplateSyntaxError: 'custom_filters' is not a registered tag library. Must be one of:
+admin_list
+admin_modify
+admin_urls
+cache
+format_numbers
+humanize
+i18n
+l10n
+log
+rest_framework
+static
+tz
+"GET /credit-package-pricing/?company=149&package=12664&company_search=%D8%A7%D9%84%D8%B4%D8%B1%D9%83%D8%A9%20%D8%A7%D9%84%D8%AF%D9%88%D9%84%D9%8A%D8%A9%20%D9%84%D9%84%D8%A3%D8%B9%D9%84%D8%A7%D9%81%20%D9%88%D8%A7%D9%84%D8%A7%D9%86%D8%AA%D8%A7%D8%AC%20%D8%A7%D9%84%D8%AD%D9%8A%D9%88%D8%A7%D9%86%D9%89&package_search=&specialty= HTTP/1.1" 500 267778
+Internal Server Error: /credit-package-pricing/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\defaulttags.py", line 1035, in find_library
+    return parser.libraries[name]
+           ~~~~~~~~~~~~~~~~^^^^^^
+KeyError: 'frontend/custom_filters'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 3155, in credit_package_pricing
+    return render(
+           ^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\loader.py", line 15, in get_template
+    return engine.get_template(template_name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\backends\django.py", line 79, in get_template
+    return Template(self.engine.get_template(template_name), self)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\engine.py", line 177, in get_template
+    template, origin = self.find_template(template_name)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\engine.py", line 159, in find_template
+    template = loader.get_template(name, skip=skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\loaders\cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\loaders\base.py", line 28, in get_template
+    return Template(
+           ^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 155, in __init__
+    self.nodelist = self.compile_nodelist()
+                    ^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 197, in compile_nodelist
+    nodelist = parser.parse()
+               ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 519, in parse
+    raise self.error(token, e)
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 517, in parse
+    compiled_result = compile_func(self, token)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\loader_tags.py", line 299, in do_extends
+    nodelist = parser.parse()
+               ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 519, in parse
+    raise self.error(token, e)
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 517, in parse
+    compiled_result = compile_func(self, token)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\defaulttags.py", line 1097, in load
+    lib = find_library(parser, name)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\defaulttags.py", line 1037, in find_library
+    raise TemplateSyntaxError(
+django.template.exceptions.TemplateSyntaxError: 'frontend/custom_filters' is not a registered tag library. Must be one of:
+admin_list
+admin_modify
+admin_urls
+cache
+format_numbers
+humanize
+i18n
+l10n
+log
+rest_framework
+static
+tz
+"GET /credit-package-pricing/?company=149&package=12664&company_search=%D8%A7%D9%84%D8%B4%D8%B1%D9%83%D8%A9%20%D8%A7%D9%84%D8%AF%D9%88%D9%84%D9%8A%D8%A9%20%D9%84%D9%84%D8%A3%D8%B9%D9%84%D8%A7%D9%81%20%D9%88%D8%A7%D9%84%D8%A7%D9%86%D8%AA%D8%A7%D8%AC%20%D8%A7%D9%84%D8%AD%D9%8A%D9%88%D8%A7%D9%86%D9%89&package_search=&specialty= HTTP/1.1" 500 267907
+Watching for file changes with StatReloader
+"GET /credit-package-pricing/?company=149&package=12664&company_search=%D8%A7%D9%84%D8%B4%D8%B1%D9%83%D8%A9%20%D8%A7%D9%84%D8%AF%D9%88%D9%84%D9%8A%D8%A9%20%D9%84%D9%84%D8%A3%D8%B9%D9%84%D8%A7%D9%81%20%D9%88%D8%A7%D9%84%D8%A7%D9%86%D8%AA%D8%A7%D8%AC%20%D8%A7%D9%84%D8%AD%D9%8A%D9%88%D8%A7%D9%86%D9%89&package_search=&specialty= HTTP/1.1" 200 86697
+"GET /credit-package-pricing/ HTTP/1.1" 200 66222
+"GET /credit-package-pricing/?company_search=%D8%A7%D9%88%D9%85%D9%8A%D8%AC%D8%A7+%D9%83%D9%8A%D8%B1&company=148&specialty=&package_search=&package= HTTP/1.1" 200 211805
+"GET /credit-package-pricing/?company=148&package=12584&company_search=%D8%A7%D9%88%D9%85%D9%8A%D8%AC%D8%A7%20%D9%83%D9%8A%D8%B1&package_search=&specialty= HTTP/1.1" 200 87805
+"GET /credit-package-pricing/ HTTP/1.1" 200 66222
+"GET /credit-package-pricing/?company_search=%D8%AC%D8%A7%D8%B3%D9%83%D9%88+%28+%D8%A7%D9%84%D8%B4%D8%B1%D9%83%D9%87+%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%8A%D9%87+%D9%84%D9%84%D8%BA%D8%A7%D8%B2%D8%A7%D8%AA+%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%D8%B9%D9%8A%D9%87+%29&company=32&specialty=&package_search=&package= HTTP/1.1" 200 223358
+"GET /credit-package-pricing/?company=32&package=1658&company_search=%D8%AC%D8%A7%D8%B3%D9%83%D9%88%20(%20%D8%A7%D9%84%D8%B4%D8%B1%D9%83%D9%87%20%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%8A%D9%87%20%D9%84%D9%84%D8%BA%D8%A7%D8%B2%D8%A7%D8%AA%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%D8%B9%D9%8A%D9%87%20)&package_search=&specialty= HTTP/1.1" 200 87824
+"GET /credit-package-pricing/?company_search=%D8%AC%D8%A7%D8%B3%D9%83%D9%88+%28+%D8%A7%D9%84%D8%B4%D8%B1%D9%83%D9%87+%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%8A%D9%87+%D9%84%D9%84%D8%BA%D8%A7%D8%B2%D8%A7%D8%AA+%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%D8%B9%D9%8A%D9%87+%29&company=32&specialty=&package_search=%D8%AA%D8%B5%D9%84%D9%8A%D8%AD+%D8%A7%D9%84%D9%81%D8%AA%D9%82+%D8%A7%D9%84%D8%A7%D8%B1%D8%A8%D9%89+%28+%D8%AC%D8%A7%D9%86%D8%A8+%D9%88%D8%A7%D8%AD%D8%AF+%29&package=1627 HTTP/1.1" 200 66670
+Internal Server Error: /credit-package-pricing/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 3155, in credit_package_pricing
+    return render(
+           ^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\loader.py", line 15, in get_template
+    return engine.get_template(template_name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\backends\django.py", line 79, in get_template
+    return Template(self.engine.get_template(template_name), self)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\engine.py", line 177, in get_template
+    template, origin = self.find_template(template_name)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\engine.py", line 159, in find_template
+    template = loader.get_template(name, skip=skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\loaders\cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\loaders\base.py", line 28, in get_template
+    return Template(
+           ^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 155, in __init__
+    self.nodelist = self.compile_nodelist()
+                    ^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 197, in compile_nodelist
+    nodelist = parser.parse()
+               ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 519, in parse
+    raise self.error(token, e)
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 517, in parse
+    compiled_result = compile_func(self, token)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\loader_tags.py", line 299, in do_extends
+    nodelist = parser.parse()
+               ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 519, in parse
+    raise self.error(token, e)
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 517, in parse
+    compiled_result = compile_func(self, token)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\loader_tags.py", line 234, in do_block
+    nodelist = parser.parse(("endblock",))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 519, in parse
+    raise self.error(token, e)
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 517, in parse
+    compiled_result = compile_func(self, token)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\defaulttags.py", line 962, in do_if
+    nodelist = parser.parse(("elif", "else", "endif"))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 519, in parse
+    raise self.error(token, e)
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 517, in parse
+    compiled_result = compile_func(self, token)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\defaulttags.py", line 962, in do_if
+    nodelist = parser.parse(("elif", "else", "endif"))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 519, in parse
+    raise self.error(token, e)
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 517, in parse
+    compiled_result = compile_func(self, token)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\defaulttags.py", line 861, in do_for
+    sequence = parser.compile_filter(bits[in_index + 1])
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 610, in compile_filter
+    return FilterExpression(token, self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 706, in __init__
+    filter_func = parser.find_filter(filter_name)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 616, in find_filter
+    raise TemplateSyntaxError("Invalid filter: '%s'" % filter_name)
+django.template.exceptions.TemplateSyntaxError: Invalid filter: 'split'
+"GET /credit-package-pricing/?company_search=%D8%AC%D8%A7%D8%B3%D9%83%D9%88+%28+%D8%A7%D9%84%D8%B4%D8%B1%D9%83%D9%87+%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%8A%D9%87+%D9%84%D9%84%D8%BA%D8%A7%D8%B2%D8%A7%D8%AA+%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%D8%B9%D9%8A%D9%87+%29&company=32&specialty=&package_search=%D8%AA%D8%B5%D9%84%D9%8A%D8%AD+%D8%A7%D9%84%D9%81%D8%AA%D9%82+%D8%A7%D9%84%D8%A7%D8%B1%D8%A8%D9%89+%28+%D8%AC%D8%A7%D9%86%D8%A8+%D9%88%D8%A7%D8%AD%D8%AF+%29&package=1627 HTTP/1.1" 500 376821
+"GET /credit-package-pricing/?company_search=%D8%AC%D8%A7%D8%B3%D9%83%D9%88+%28+%D8%A7%D9%84%D8%B4%D8%B1%D9%83%D9%87+%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%8A%D9%87+%D9%84%D9%84%D8%BA%D8%A7%D8%B2%D8%A7%D8%AA+%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%D8%B9%D9%8A%D9%87+%29&company=32&specialty=&package_search=%D8%AA%D8%B5%D9%84%D9%8A%D8%AD+%D8%A7%D9%84%D9%81%D8%AA%D9%82+%D8%A7%D9%84%D8%A7%D8%B1%D8%A8%D9%89+%28+%D8%AC%D8%A7%D9%86%D8%A8+%D9%88%D8%A7%D8%AD%D8%AF+%29&package=1627 HTTP/1.1" 200 68835
+"GET /credit-package-pricing/?company_search=%D8%AC%D8%A7%D8%B3%D9%83%D9%88+%28+%D8%A7%D9%84%D8%B4%D8%B1%D9%83%D9%87+%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%8A%D9%87+%D9%84%D9%84%D8%BA%D8%A7%D8%B2%D8%A7%D8%AA+%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%D8%B9%D9%8A%D9%87+%29&company=32&specialty=&package_search=%D8%AA%D8%B5%D9%84%D9%8A%D8%AD+%D8%A7%D9%84%D9%81%D8%AA%D9%82+%D8%A7%D9%84%D8%A7%D8%B1%D8%A8%D9%89+%28+%D8%AC%D8%A7%D9%86%D8%A8+%D9%88%D8%A7%D8%AD%D8%AF+%29&package=1627 HTTP/1.1" 200 68835
+"GET /credit-package-pricing/?company_search=%D8%AC%D8%A7%D8%B3%D9%83%D9%88+%28+%D8%A7%D9%84%D8%B4%D8%B1%D9%83%D9%87+%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%8A%D9%87+%D9%84%D9%84%D8%BA%D8%A7%D8%B2%D8%A7%D8%AA+%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%D8%B9%D9%8A%D9%87+%29&company=32&specialty=&package_search=%D8%AA%D8%B5%D9%84%D9%8A%D8%AD+%D8%A7%D9%84%D9%81%D8%AA%D9%82+%D8%A7%D9%84%D8%A7%D8%B1%D8%A8%D9%89+%28+%D8%AC%D8%A7%D9%86%D8%A8+%D9%88%D8%A7%D8%AD%D8%AF+%29&package=1627 HTTP/1.1" 200 68835
+"GET /credit-package-pricing/?company_search=%D8%AC%D8%A7%D8%B3%D9%83%D9%88+%28+%D8%A7%D9%84%D8%B4%D8%B1%D9%83%D9%87+%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%8A%D9%87+%D9%84%D9%84%D8%BA%D8%A7%D8%B2%D8%A7%D8%AA+%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%D8%B9%D9%8A%D9%87+%29&company=32&specialty=&package_search=%D8%AA%D8%B5%D9%84%D9%8A%D8%AD+%D8%A7%D9%84%D9%81%D8%AA%D9%82+%D8%A7%D9%84%D8%A7%D8%B1%D8%A8%D9%89+%28+%D8%AC%D8%A7%D9%86%D8%A8+%D9%88%D8%A7%D8%AD%D8%AF+%29&package=1627 HTTP/1.1" 200 68639
+"GET /credit-package-pricing/?company_search=%D8%AC%D8%A7%D8%B3%D9%83%D9%88+%28+%D8%A7%D9%84%D8%B4%D8%B1%D9%83%D9%87+%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%8A%D9%87+%D9%84%D9%84%D8%BA%D8%A7%D8%B2%D8%A7%D8%AA+%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%D8%B9%D9%8A%D9%87+%29&company=32&specialty=&package_search=%D8%AA%D8%B5%D9%84%D9%8A%D8%AD+%D8%A7%D9%84%D9%81%D8%AA%D9%82+%D8%A7%D9%84%D8%A7%D8%B1%D8%A8%D9%89+%28+%D8%AC%D8%A7%D9%86%D8%A8+%D9%88%D8%A7%D8%AD%D8%AF+%29&package=1627 HTTP/1.1" 200 68639
+"GET /credit-package-pricing/?company_search=%D8%AC%D8%A7%D8%B3%D9%83%D9%88+%28+%D8%A7%D9%84%D8%B4%D8%B1%D9%83%D9%87+%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%8A%D9%87+%D9%84%D9%84%D8%BA%D8%A7%D8%B2%D8%A7%D8%AA+%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%D8%B9%D9%8A%D9%87+%29&company=32&specialty=&package_search=%D8%AA%D8%B5%D9%84%D9%8A%D8%AD+%D8%A7%D9%84%D9%81%D8%AA%D9%82+%D8%A7%D9%84%D8%A7%D8%B1%D8%A8%D9%89+%28+%D8%AC%D8%A7%D9%86%D8%A8+%D9%88%D8%A7%D8%AD%D8%AF+%29&package=1627 HTTP/1.1" 200 68803
+"GET /credit-package-pricing/ HTTP/1.1" 200 66256
+"GET /credit-package-pricing/?company_search=%D8%AC%D8%A7%D8%B3%D9%83%D9%88+%28+%D8%A7%D9%84%D8%B4%D8%B1%D9%83%D9%87+%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%8A%D9%87+%D9%84%D9%84%D8%BA%D8%A7%D8%B2%D8%A7%D8%AA+%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%D8%B9%D9%8A%D9%87+%29&company=32&specialty=&package_search=&package= HTTP/1.1" 200 223392
+"GET /credit-package-pricing/?company_search=%D8%AC%D8%A7%D8%B3%D9%83%D9%88+%28+%D8%A7%D9%84%D8%B4%D8%B1%D9%83%D9%87+%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%8A%D9%87+%D9%84%D9%84%D8%BA%D8%A7%D8%B2%D8%A7%D8%AA+%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%D8%B9%D9%8A%D9%87+%29&company=32&specialty=&package_search=%D8%A7%D8%B3%D8%AA%D8%A6%D8%B5%D8%A7%D9%84+%D8%A7%D9%84%D8%BA%D8%B6%D8%B1%D9%88%D9%81+%D8%A7%D9%84%D9%82%D8%B7%D9%86%D9%8A+%D9%85%D8%B9+%D8%A7%D9%84%D8%AA%D8%AB%D8%A8%D9%8A%D8%AA+-+%D9%85%D8%B3%D8%AA%D9%88%D9%8A+%D9%88%D8%A7%D8%AD%D8%AF&package=1685 HTTP/1.1" 200 69175
+"GET /credit-package-pricing/ HTTP/1.1" 200 66256
+"GET /credit-package-pricing/?company_search=%D8%AC%D8%A7%D8%B3%D9%83%D9%88+%28+%D8%A7%D9%84%D8%B4%D8%B1%D9%83%D9%87+%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%8A%D9%87+%D9%84%D9%84%D8%BA%D8%A7%D8%B2%D8%A7%D8%AA+%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%D8%B9%D9%8A%D9%87+%29&company=32&specialty=&package_search=&package= HTTP/1.1" 200 223392
+"GET /credit-package-pricing/?company_search=%D8%AC%D8%A7%D8%B3%D9%83%D9%88+%28+%D8%A7%D9%84%D8%B4%D8%B1%D9%83%D9%87+%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%8A%D9%87+%D9%84%D9%84%D8%BA%D8%A7%D8%B2%D8%A7%D8%AA+%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%D8%B9%D9%8A%D9%87+%29&company=32&specialty=&package_search=%D8%AA%D8%B1%D9%83%D9%8A%D8%A8+%D9%85%D9%86%D8%B8%D9%85+%D8%B6%D8%B1%D8%A8%D8%A7%D8%AA+%D9%82%D9%84%D8%A8+%D8%AF%D8%A7%D8%A6%D9%85+%D8%A8%D8%B5%D8%AF%D9%85%D9%87+%D8%AB%D9%86%D8%A7%D8%A6%D9%8A+ICD&package=1719 HTTP/1.1" 200 69326
+"GET /credit-package-pricing/?company_search=%D8%AC%D8%A7%D8%B3%D9%83%D9%88+%28+%D8%A7%D9%84%D8%B4%D8%B1%D9%83%D9%87+%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%8A%D9%87+%D9%84%D9%84%D8%BA%D8%A7%D8%B2%D8%A7%D8%AA+%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%D8%B9%D9%8A%D9%87+%29&company=32&specialty=&package_search=%D8%AA%D8%B1%D9%83%D9%8A%D8%A8+%D9%85%D9%86%D8%B8%D9%85+%D8%B6%D8%B1%D8%A8%D8%A7%D8%AA+%D9%82%D9%84%D8%A8+%D8%AF%D8%A7%D8%A6%D9%85+%D8%A8%D8%B5%D8%AF%D9%85%D9%87+%D8%AB%D9%86%D8%A7%D8%A6%D9%8A+ICD&package=1719 HTTP/1.1" 200 69219
+"GET /company-discounts/ HTTP/1.1" 200 103338
+"GET /contract-entities/ HTTP/1.1" 200 49273
+"GET /special-offers/ HTTP/1.1" 200 350172
+"GET /cash-packages/ HTTP/1.1" 200 408558
+"GET /cash-packages/ HTTP/1.1" 200 577237
+"GET /contract-entities/ HTTP/1.1" 200 49273
+"GET /contract-entities/ HTTP/1.1" 200 46510
+- Broken pipe from ('127.0.0.1', 55785)
+"GET /contract-entities/88/ HTTP/1.1" 200 58382
+"GET /company-discounts/?entity=88 HTTP/1.1" 200 51978
+"GET /company-discounts/?tab=discounts&entity=88&search=&section= HTTP/1.1" 200 51978
+"GET /special-offers/ HTTP/1.1" 200 350172
+"GET /contract-entities/ HTTP/1.1" 200 46510
+"GET /contract-entities/88/ HTTP/1.1" 200 58382
+"GET /company-discounts/?entity=88 HTTP/1.1" 200 51978
+"GET /company-discounts/?entity=88 HTTP/1.1" 200 51978
+"GET /contract-entities/ HTTP/1.1" 200 49273
+"GET /contract-entities/ HTTP/1.1" 200 46510
+"GET /contract-entities/88/ HTTP/1.1" 200 58382
+"GET /contract-entities/ HTTP/1.1" 200 46510
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+"GET /contract-entities/88/ HTTP/1.1" 200 58382
+"GET /contract-entities/ HTTP/1.1" 200 47022
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+"GET /contract-entities/88/ HTTP/1.1" 200 58382
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+"GET /company-discounts/ HTTP/1.1" 200 103338
+"GET /company-discounts/ HTTP/1.1" 200 108964
+"GET /company-discounts/?tab=discounts HTTP/1.1" 200 108964
+"GET /company-discounts/?tab=exceptions HTTP/1.1" 200 121656
+"GET /company-discounts/?tab=compare HTTP/1.1" 200 53989
+"GET /company-discounts/?tab=compare HTTP/1.1" 200 54778
+"GET /company-discounts/?tab=compare&company1=%D8%A8%D9%86%D9%83+%D9%85%D8%B5%D8%B1&company2=%D9%88%D8%B2%D8%A7%D8%B1%D8%A9+%D8%A7%D9%84%D8%B9%D8%AF%D9%84&compare_section=all HTTP/1.1" 200 70587
+"GET /company-discounts/?tab=compare&company1=%D8%A8%D9%86%D9%83+%D9%85%D8%B5%D8%B1&company2=%D9%88%D8%B2%D8%A7%D8%B1%D8%A9+%D8%A7%D9%84%D8%B9%D8%AF%D9%84&compare_section=internal HTTP/1.1" 200 67542
+"GET /company-discounts/?tab=compare&company1=%D8%A8%D9%86%D9%83+%D9%85%D8%B5%D8%B1&company2=%D9%88%D8%B2%D8%A7%D8%B1%D8%A9+%D8%A7%D9%84%D8%B9%D8%AF%D9%84&compare_section=external HTTP/1.1" 200 66036
+"GET /company-discounts/?tab=compare&company1=%D8%A8%D9%86%D9%83+%D9%85%D8%B5%D8%B1&company2=%D9%88%D8%B2%D8%A7%D8%B1%D8%A9+%D8%A7%D9%84%D8%B9%D8%AF%D9%84&compare_section=all HTTP/1.1" 200 70587

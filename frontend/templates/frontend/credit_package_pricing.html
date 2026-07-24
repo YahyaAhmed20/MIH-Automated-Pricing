@@ -1,5 +1,4 @@
 {% extends 'frontend/base.html' %}
-
 {% block page_title %}
 الباكدجات الآجل
 {% endblock %}
@@ -690,13 +689,13 @@
                         </div>
                     </div>
 
-                    <!-- ملاحظات -->
+                    <!-- ملاحظات الباكدج -->
                     <div class="col-md-12">
                         <div class="info-card">
                             <label><i class="bi bi-pencil"></i> ملاحظات الباكدج</label>
-                            <div class="value" style="white-space: pre-line;">
+                            <div id="package-notes" style="padding: 4px 0; white-space: pre-wrap; line-height: 1.8;">
                                 {% if selected_package.package.package_note %}
-                                    {{ selected_package.package.package_note }}
+                                    {{ selected_package.package.package_note|linebreaksbr }}
                                 {% else %}
                                     <span class="text-muted">لا توجد ملاحظات</span>
                                 {% endif %}
@@ -1091,7 +1090,7 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <!-- ============================================ -->
-<!-- ✅ Script تخفيض السعر -->
+<!-- ✅ Script تخفيض السعر ومعالجة الملاحظات -->
 <!-- ============================================ -->
 {% if selected_package %}
 <script>
@@ -1177,12 +1176,65 @@ function updateComparisonTable() {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
+    // ===== تحديث الأسعار =====
     updatePricingPreview();
     updateComparisonTable();
     document.getElementById("discount-select").addEventListener("change", function() {
         updatePricingPreview();
         updateComparisonTable();
     });
+    
+    // ===== معالجة الملاحظات =====
+    const notesDiv = document.getElementById('package-notes');
+    if (notesDiv) {
+        let htmlContent = notesDiv.innerHTML;
+        let tempDiv = document.createElement('div');
+        tempDiv.innerHTML = htmlContent;
+        let text = tempDiv.textContent.trim();
+        
+        if (text && text !== 'لا توجد ملاحظات') {
+            // تقسيم على * أو - أو \n
+            let lines = text.split(/[\*\-\n]+/);
+            let cleanLines = [];
+            let seen = new Set();
+            
+            lines.forEach(line => {
+                line = line.trim();
+                if (!line) return;
+                
+                line = line.replace(/^["']+|["']+$/g, '');
+                line = line.replace(/^[\*\-\s]+/, '');
+                line = line.replace(/^الباكدج\s+/, '');
+                
+                let key = line.toLowerCase().trim();
+                if (seen.has(key)) return;
+                seen.add(key);
+                cleanLines.push(line);
+            });
+            
+            if (cleanLines.length === 1) {
+                notesDiv.innerHTML = `<span style="line-height: 1.8;">${cleanLines[0]}</span>`;
+            } else if (cleanLines.length > 0) {
+                notesDiv.innerHTML = '';
+                cleanLines.forEach(line => {
+                    const div = document.createElement('div');
+                    div.style.cssText = 'display: flex; align-items: flex-start; gap: 10px; padding: 6px 10px; margin-bottom: 6px; background: #f8f9fa; border-radius: 8px; border-right: 3px solid #0d6efd;';
+                    
+                    const bullet = document.createElement('span');
+                    bullet.textContent = '•';
+                    bullet.style.cssText = 'color: #0d6efd; font-weight: 700; min-width: 20px;';
+                    
+                    const textSpan = document.createElement('span');
+                    textSpan.textContent = line;
+                    textSpan.style.cssText = 'flex: 1; word-wrap: break-word; line-height: 1.6;';
+                    
+                    div.appendChild(bullet);
+                    div.appendChild(textSpan);
+                    notesDiv.appendChild(div);
+                });
+            }
+        }
+    }
 });
 </script>
 {% endif %}

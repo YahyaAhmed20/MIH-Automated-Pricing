@@ -115,34 +115,38 @@
 
                         {% if item.details %}
 
-                        {% if item.item_name == "اتعاب الاطباء" %}
+                            {% if item.item_name == "اتعاب الاطباء" or item.item_name == "الاقامه" or item.item_name == "فتح غرفة العمليات" %}
 
-                        <div class="accordion mt-2" id="doctorAccordion{{ forloop.counter }}">
+                            <!-- ✅ Accordion للتفاصيل -->
+                            <div class="accordion mt-2" id="accordion{{ forloop.counter }}">
 
-                            <div class="accordion-item border-0">
+                                <div class="accordion-item border-0">
 
-                                <h2 class="accordion-header">
+                                    <h2 class="accordion-header">
 
-                                    <button
-                                        class="accordion-button collapsed py-2"
-                                        type="button"
-                                        data-bs-toggle="collapse"
-                                        data-bs-target="#doctorCollapse{{ forloop.counter }}">
+                                        <button
+                                            class="accordion-button collapsed py-2"
+                                            type="button"
+                                            data-bs-toggle="collapse"
+                                            data-bs-target="#collapse{{ forloop.counter }}">
 
-                                        عرض تفاصيل الأتعاب
-                                    </button>
+                                            <i class="fas fa-info-circle me-2"></i>
+                                            عرض التفاصيل
+                                        </button>
 
-                                </h2>
-
-                                <div
-                                    id="doctorCollapse{{ forloop.counter }}"
-                                    class="accordion-collapse collapse">
+                                    </h2>
 
                                     <div
-                                        class="accordion-body small"
-                                        style="white-space: pre-line;">
+                                        id="collapse{{ forloop.counter }}"
+                                        class="accordion-collapse collapse">
 
-                                        {{ item.details|linebreaksbr }}
+                                        <div
+                                            class="accordion-body small"
+                                            style="white-space: pre-line;">
+
+                                            {{ item.details|linebreaksbr }}
+
+                                        </div>
 
                                     </div>
 
@@ -150,17 +154,15 @@
 
                             </div>
 
-                        </div>
+                            {% else %}
 
-                        {% else %}
+                            <div class="small text-muted mb-2" style="white-space: pre-line;">
 
-                        <div class="small text-muted mb-2" style="white-space: pre-line;">
+                                {{ item.details|linebreaksbr }}
 
-                            {{ item.details|linebreaksbr }}
+                            </div>
 
-                        </div>
-
-                        {% endif %}
+                            {% endif %}
 
                         {% endif %}
 

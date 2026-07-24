@@ -201,14 +201,16 @@
         padding: 0.75rem;
         font-weight: 600;
         letter-spacing: 0.5px;
-        background: linear-gradient(135deg, #0d6efd, #0dcaf0);
-        border: none;
         transition: all 0.3s ease;
+        border: none;
     }
-    .btn-details:hover {
+    .btn-details:hover:not(:disabled) {
         transform: translateY(-2px);
         box-shadow: 0 8px 20px rgba(13, 110, 253, 0.3);
-        background: linear-gradient(135deg, #0b5ed7, #0aa2c0);
+    }
+    .btn-details:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
     }
 
     /* ===== تحسين الـ Modal ===== */
@@ -219,7 +221,6 @@
         box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
     }
     .modal-header {
-        background: linear-gradient(135deg, #0d6efd, #0dcaf0) !important;
         padding: 1.25rem 1.5rem;
         border: none;
     }
@@ -232,28 +233,19 @@
     }
     
     /* ===== الملاحظات في الـ Modal ===== */
-    .notes-section {
-        background: #f8f9fa;
-        border-radius: 12px;
-        padding: 1.5rem;
-        border: 1px solid #e9ecef;
-        min-height: 100px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+    .notes-content {
+        min-height: 80px;
     }
-    .notes-section .notes-text {
+    .notes-display {
+        animation: fadeInUp 0.4s ease;
+    }
+    .notes-text {
         color: #1a1a2e;
         font-size: 1rem;
         line-height: 1.8;
-        margin: 0;
         white-space: pre-wrap;
         word-wrap: break-word;
-        text-align: center;
         width: 100%;
-    }
-    .notes-section .notes-text.text-muted {
-        color: #6c757d !important;
     }
     
     .modal-footer {
@@ -332,12 +324,7 @@
             padding: 1rem;
         }
         
-        .notes-section {
-            padding: 1rem;
-            min-height: 80px;
-        }
-        
-        .notes-section .notes-text {
+        .notes-text {
             font-size: 0.9rem;
         }
         
@@ -390,7 +377,7 @@
             margin: 0.5rem;
         }
         
-        .notes-section .notes-text {
+        .notes-text {
             font-size: 0.85rem;
         }
     }
@@ -517,6 +504,16 @@
 
             <div class="card-body d-flex flex-column">
 
+                <!-- ✅ Badge الملاحظات - يظهر لو في ملاحظات -->
+                {% if package.notes and package.notes|length > 0 %}
+                    <div class="text-start mb-2">
+                        <span class="badge bg-warning text-dark">
+                            <i class="fas fa-sticky-note me-1"></i>
+                            ملاحظات
+                        </span>
+                    </div>
+                {% endif %}
+
                 <!-- ✅ اسم الباكدج في الأعلى -->
                 <h5 class="card-title package-title">
                     {{ package.name }}
@@ -556,14 +553,24 @@
                 </div>
 
                 <!-- زر عرض التفاصيل -->
-                <button 
-                    class="btn btn-primary w-100 btn-details"
-                    data-bs-toggle="modal"
-                    data-bs-target="#packageModal{{ package.id }}"
-                >
-                    <i class="fas fa-eye"></i>
-                    عرض التفاصيل
-                </button>
+                {% if package.notes and package.notes|length > 0 %}
+                    <button 
+                        class="btn btn-warning w-100 btn-details"
+                        data-bs-toggle="modal"
+                        data-bs-target="#packageModal{{ package.id }}"
+                    >
+                        <i class="fas fa-sticky-note me-2"></i>
+                        عرض الملاحظات
+                    </button>
+                {% else %}
+                    <button 
+                        class="btn btn-secondary w-100 btn-details"
+                        disabled
+                    >
+                        <i class="fas fa-eye me-2"></i>
+                        لا توجد ملاحظات
+                    </button>
+                {% endif %}
 
             </div>
 
@@ -572,38 +579,72 @@
     </div>
 
     <!-- ============================================ -->
-    <!-- ✅ Modal عرض التفاصيل - فقط الملاحظات -->
+    <!-- ✅ Modal عرض الملاحظات بشكل أنيق -->
     <!-- ============================================ -->
-    <div class="modal fade" id="packageModal{{ package.id }}" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
+    <div class="modal fade" id="packageModal{{ package.id }}" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content border-0 shadow-lg">
 
-                <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title">
-                        <i class="fas fa-file-alt"></i>
-                        ملاحظات الباكدج
-                    </h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                <div class="modal-header bg-warning bg-opacity-10 border-bottom-0">
+                    <div class="d-flex align-items-center">
+                        <div class="rounded-circle bg-warning p-2 me-2">
+                            <i class="fas fa-sticky-note text-dark"></i>
+                        </div>
+                        <div>
+                            <h5 class="modal-title fw-bold">
+                                <i class="fas fa-sticky-note me-2"></i>
+                                ملاحظات الباكدج
+                            </h5>
+                            <small class="text-muted d-block">
+                                <i class="fas fa-box me-1"></i>
+                                {{ package.name }}
+                                <span class="mx-1">|</span>
+                                <i class="fas fa-stethoscope me-1"></i>
+                                {{ package.specialty.name }}
+                                <span class="mx-1">|</span>
+                                <i class="fas fa-money-bill-wave me-1"></i>
+                                {{ package.cash_price|floatformat:0 }} جنيه
+                            </small>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 
-                <div class="modal-body">
-                    <!-- ✅ الملاحظات فقط -->
-                    <div class="notes-section">
+                <div class="modal-body p-4">
+                    <div id="notesContent{{ package.id }}" class="notes-content">
                         {% if package.notes %}
-                            <p class="notes-text">{{ package.notes }}</p>
+                            <div class="notes-display">
+                                <div class="p-3 bg-warning bg-opacity-10 rounded-3 border-end border-warning border-4">
+                                    <div class="d-flex align-items-start">
+                                        <div class="flex-shrink-0">
+                                            <i class="fas fa-quote-right text-warning me-2 mt-1 fs-4"></i>
+                                        </div>
+                                        <div class="flex-grow-1 notes-text">
+                                            {{ package.notes }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         {% else %}
-                            <p class="notes-text text-muted text-center py-3">
-                                <i class="fas fa-info-circle"></i>
-                                لا توجد ملاحظات لهذا الباكدج
-                            </p>
+                            <div class="text-center py-4 text-muted">
+                                <i class="fas fa-info-circle fa-2x d-block mb-3"></i>
+                                <p>لا توجد ملاحظات لهذا الباكدج</p>
+                            </div>
                         {% endif %}
                     </div>
                 </div>
 
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        <i class="fas fa-times"></i> إغلاق
+                <div class="modal-footer border-0 flex-wrap gap-2">
+                    <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-2"></i>
+                        إغلاق
                     </button>
+                    {% if package.notes %}
+                    <button type="button" class="btn btn-warning rounded-pill px-4 copy-notes-btn" data-notes="{{ package.notes|escape }}">
+                        <i class="fas fa-copy me-2"></i>
+                        نسخ الملاحظات
+                    </button>
+                    {% endif %}
                 </div>
 
             </div>
@@ -636,10 +677,8 @@
         
         // ✅ البحث فقط عند اختيار عنصر من الـ Datalist أو الضغط Enter
         if (searchInput) {
-            // متغير لتخزين آخر قيمة اختارها المستخدم من القائمة
             let lastSelectedValue = searchInput.value;
             
-            // ✅ حدث عند الضغط على Enter
             searchInput.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter') {
                     e.preventDefault();
@@ -647,17 +686,13 @@
                 }
             });
             
-            // ✅ حدث عند تغيير القيمة (بعد اختيار من Datalist أو كتابة يدوي)
             searchInput.addEventListener('change', function(e) {
-                // ✅ لو القيمة مختلفة عن آخر حاجة اختارها (معناه اختار من القائمة)
                 if (e.target.value !== lastSelectedValue) {
                     lastSelectedValue = e.target.value;
                     
-                    // ✅ تحقق إذا كانت القيمة موجودة في الـ Datalist
                     const options = Array.from(packagesList.options);
                     const isInList = options.some(opt => opt.value === e.target.value);
                     
-                    // ✅ لو موجودة في القائمة يبحث فوراً
                     if (isInList && e.target.value.trim() !== '') {
                         searchForm.submit();
                     }
@@ -665,12 +700,53 @@
             });
         }
 
-        // ✅ التصفية التلقائية عند تغيير التخصص
         if (specialtySelect) {
             specialtySelect.addEventListener('change', function() {
                 searchForm.submit();
             });
         }
+
+        // ============================================ -->
+        // ✅ نسخ الملاحظات -->
+        // ============================================ -->
+        document.querySelectorAll('.copy-notes-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                const notes = this.getAttribute('data-notes');
+                
+                if (notes) {
+                    navigator.clipboard.writeText(notes).then(function() {
+                        const originalText = btn.innerHTML;
+                        btn.innerHTML = '<i class="fas fa-check me-2"></i> تم النسخ!';
+                        btn.classList.add('btn-success');
+                        btn.classList.remove('btn-warning');
+                        
+                        setTimeout(function() {
+                            btn.innerHTML = originalText;
+                            btn.classList.remove('btn-success');
+                            btn.classList.add('btn-warning');
+                        }, 2000);
+                    }).catch(function() {
+                        const textArea = document.createElement('textarea');
+                        textArea.value = notes;
+                        document.body.appendChild(textArea);
+                        textArea.select();
+                        document.execCommand('copy');
+                        document.body.removeChild(textArea);
+                        
+                        const originalText = btn.innerHTML;
+                        btn.innerHTML = '<i class="fas fa-check me-2"></i> تم النسخ!';
+                        btn.classList.add('btn-success');
+                        btn.classList.remove('btn-warning');
+                        
+                        setTimeout(function() {
+                            btn.innerHTML = originalText;
+                            btn.classList.remove('btn-success');
+                            btn.classList.add('btn-warning');
+                        }, 2000);
+                    });
+                }
+            });
+        });
     });
 </script>
 
