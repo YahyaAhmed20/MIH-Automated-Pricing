@@ -3751,6 +3751,8 @@ def pricing_details(request):
         }
     )
     
+# frontend/views.py
+
 def similar_invoices(request):
 
     search = request.GET.get("search", "").strip()
@@ -3761,6 +3763,9 @@ def similar_invoices(request):
     status = request.GET.get("status", "").strip()
     date_from = request.GET.get("date_from", "").strip()
     date_to = request.GET.get("date_to", "").strip()
+    
+    # ✅ ✅ ✅ فلتر النطاق السعري (جديد)
+    price_range = request.GET.get("price_range", "").strip()
 
     invoices = SimilarInvoice.objects.all().order_by("-admission_date")
 
@@ -3789,6 +3794,27 @@ def similar_invoices(request):
     if date_to:
         invoices = invoices.filter(admission_date__lte=date_to)
 
+    # ✅ ✅ ✅ تطبيق فلتر النطاق السعري
+    if price_range:
+        try:
+            parts = price_range.split('-')
+            if len(parts) == 2:
+                # ✅ نطاق بين قيمتين
+                min_price = float(parts[0].strip())
+                max_price = float(parts[1].strip())
+                invoices = invoices.filter(
+                    net_invoice__gte=min_price,
+                    net_invoice__lte=max_price
+                )
+            elif price_range == "500000+":
+                # ✅ أكثر من 500,000
+                invoices = invoices.filter(net_invoice__gte=500000)
+            elif price_range == "1000000+":
+                # ✅ أكثر من 1,000,000
+                invoices = invoices.filter(net_invoice__gte=1000000)
+        except (ValueError, TypeError):
+            pass
+
     # ✅ الإحصائيات
     total_net_invoice = invoices.aggregate(total=Sum("net_invoice"))["total"] or 0
     total_company_share = invoices.aggregate(total=Sum("company_share"))["total"] or 0
@@ -3802,7 +3828,7 @@ def similar_invoices(request):
         invoice.formatted_net_invoice = f"{invoice.net_invoice:,.0f}" if invoice.net_invoice else "-"
         invoice.formatted_company_share = f"{invoice.company_share:,.0f}" if invoice.company_share else "-"
 
-    # ✅ ✅ ✅ الفلاتر من النتائج (وليس من كل البيانات)
+    # ✅ ✅ ✅ الفلاتر من النتائج
     specialties = (
         invoices
         .exclude(specialty_name="")
@@ -3835,6 +3861,16 @@ def similar_invoices(request):
         .order_by("invoice_status")
     )
 
+    # ✅ ✅ ✅ نطاقات الأسعار المحددة مسبقاً
+    PRICE_RANGES = [
+        {"label": "أقل من 50,000", "value": "0-49999"},
+        {"label": "50,000 - 100,000", "value": "50000-100000"},
+        {"label": "100,000 - 200,000", "value": "100000-200000"},
+        {"label": "200,000 - 500,000", "value": "200000-500000"},
+        {"label": "500,000 - 1,000,000", "value": "500000-1000000"},
+        {"label": "أكثر من 1,000,000", "value": "1000000+"},
+    ]
+
     return render(
         request,
         "frontend/similar_invoices.html",
@@ -3851,13 +3887,14 @@ def similar_invoices(request):
             "status": status,
             "date_from": date_from,
             "date_to": date_to,
+            "price_range": price_range,  # ✅ جديد
+            "price_ranges": PRICE_RANGES,  # ✅ جديد
             "specialties": specialties,
             "entities": entities,
             "doctors": doctors,
             "statuses": statuses,
         }
     )
-    
 # frontend/views.py
 
 from django.db.models import Q

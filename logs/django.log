@@ -4441,3 +4441,57 @@ Watching for file changes with StatReloader
 "GET /pricing-details/ HTTP/1.1" 200 263002
 "GET /pricing-details/ HTTP/1.1" 200 281542
 "GET /pricing-details/ HTTP/1.1" 200 263002
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 34264
+"GET /static/images/logo.jpeg HTTP/1.1" 200 68755
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 13579
+"GET /similar-invoices/ HTTP/1.1" 200 337289
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /similar-invoices/ HTTP/1.1" 200 339561
+"GET /similar-invoices/?search=&patient_name=&specialty=&entity=&doctor=&price_range=0-49999&date_from=&date_to=&status= HTTP/1.1" 200 323880
+"GET /similar-invoices/?search=&patient_name=&specialty=&entity=&doctor=&price_range=1000000%2B&date_from=&date_to=&status= HTTP/1.1" 200 171416
+"GET /similar-invoices/?search=&patient_name=&specialty=&entity=&doctor=&price_range=200000-500000&date_from=&date_to=&status= HTTP/1.1" 200 260228
+"GET /similar-invoices/?search=&patient_name=&specialty=&entity=&doctor=&price_range=200000-500000&date_from=&date_to=&status= HTTP/1.1" 200 232751
+"GET /similar-invoices/?search=&patient_name=&specialty=&entity=&doctor=&price_range=200000-500000&date_from=&date_to=&status= HTTP/1.1" 200 260228
+"GET /similar-invoices/?search=&patient_name=&specialty=&entity=&doctor=&price_range=200000-500000&date_from=&date_to=&status= HTTP/1.1" 200 232751
+"GET /similar-invoices/?search=&patient_name=&specialty=&entity=&doctor=&price_range=200000-500000&date_from=&date_to=&status= HTTP/1.1" 200 232751
+"GET /similar-invoices/?patient_name=&specialty=&entity=&doctor=&status=&price_range=&date_from=&date_to= HTTP/1.1" 200 324280
+"GET /similar-invoices/?patient_name=&specialty=&entity=&doctor=&status=&price_range=&date_from=&date_to= HTTP/1.1" 200 336436
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+"GET /similar-invoices/?patient_name=&specialty=&entity=&doctor=&status=&price_range=&date_from=&date_to= HTTP/1.1" 200 337716
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+"GET /similar-invoices/?patient_name=&specialty=&entity=&doctor=&status=&price_range=&date_from=&date_to= HTTP/1.1" 200 336436
+"GET /similar-invoices/?patient_name=&specialty=&entity=&doctor=&status=&price_range=&date_from=&date_to= HTTP/1.1" 200 340450
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+"GET /similar-invoices/?patient_name=&specialty=&entity=&doctor=&status=&price_range=&date_from=&date_to= HTTP/1.1" 200 340442
+"GET /similar-invoices/?patient_name=&specialty=&entity=&doctor=&status=&price_range=&date_from=&date_to= HTTP/1.1" 200 340441
+"GET /similar-invoices/?patient_name=&specialty=&entity=&doctor=&status=&price_range=&date_from=&date_to= HTTP/1.1" 200 340441
+"GET /similar-invoices/?patient_name=&specialty=&entity=&doctor=&status=&price_range=&date_from=&date_to= HTTP/1.1" 200 340646
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+"GET /similar-invoices/?patient_name=&specialty=&entity=&doctor=&status=&price_range=&date_from=&date_to= HTTP/1.1" 200 340646
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 34264
+"GET /static/images/logo.jpeg HTTP/1.1" 200 68755
+"GET /similar-invoices/ HTTP/1.1" 200 340646
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+"GET /similar-invoices/ HTTP/1.1" 200 340570
+"GET /similar-invoices/ HTTP/1.1" 200 340568
+"GET /similar-invoices/ HTTP/1.1" 200 340525
+"GET /similar-invoices/ HTTP/1.1" 200 338804
+"GET /similar-invoices/ HTTP/1.1" 200 338804
+"GET /similar-invoices/ HTTP/1.1" 200 340704
+"GET /similar-invoices/ HTTP/1.1" 200 338631
+"GET /similar-invoices/ HTTP/1.1" 200 340704
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
