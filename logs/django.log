@@ -4397,3 +4397,47 @@ Watching for file changes with StatReloader
 "GET /company-discounts/?tab=discounts HTTP/1.1" 200 108964
 "GET /contract-entities/ HTTP/1.1" 200 47022
 "GET /company-discounts/ HTTP/1.1" 200 108964
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 34264
+"GET /static/images/logo.jpeg HTTP/1.1" 200 68755
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 13579
+"GET /procedure-fees/ HTTP/1.1" 200 65753
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /procedure-fees/ HTTP/1.1" 200 68587
+"GET /procedures/ HTTP/1.1" 200 111304
+"GET /procedure-fees/ HTTP/1.1" 200 68587
+"GET /procedure-fees/?procedure_search=%D8%AC%D8%B1%D8%A7%D8%AD%D8%A9+%D8%A7%D9%84%D8%A3%D9%86%D9%81+%D9%88%D8%A7%D9%84%D8%A3%D8%B0%D9%86+%D9%88%D8%A7%D9%84%D8%AD%D9%86%D8%AC%D8%B1%D8%A9&specialty_search=&classification_search=&search=&category= HTTP/1.1" 200 69720
+"GET /procedure-fees/?procedure_search=%D8%AC%D8%B1%D8%A7%D8%AD%D8%A9+%D8%A7%D9%84%D8%A3%D9%86%D9%81+%D9%88%D8%A7%D9%84%D8%A3%D8%B0%D9%86+%D9%88%D8%A7%D9%84%D8%AD%D9%86%D8%AC%D8%B1%D8%A9&specialty_search=&classification_search=%D8%B5%D8%BA%D9%80%D9%80%D9%80%D8%B1%D9%89&search=&category= HTTP/1.1" 200 72814
+"GET /procedure-fees/?procedure_search=%D8%AC%D8%B1%D8%A7%D8%AD%D8%A9+%D8%A7%D9%84%D8%A3%D9%86%D9%81+%D9%88%D8%A7%D9%84%D8%A3%D8%B0%D9%86+%D9%88%D8%A7%D9%84%D8%AD%D9%86%D8%AC%D8%B1%D8%A9&specialty_search=%D8%AC%D8%B1%D8%A7%D8%AD%D8%A9+%D8%A7%D9%84%D9%85%D8%AE+%D9%88%D8%A7%D9%84%D8%A3%D8%B9%D8%B5%D8%A7%D8%A8&classification_search=%D8%B5%D8%BA%D9%80%D9%80%D9%80%D8%B1%D9%89&search=&category=%D8%B5%D8%BA%D9%80%D9%80%D9%80%D8%B1%D9%89 HTTP/1.1" 200 72992
+"GET /procedure-fees/?procedure_search=%D8%AC%D8%B1%D8%A7%D8%AD%D8%A9+%D8%A7%D9%84%D8%A3%D9%86%D9%81+%D9%88%D8%A7%D9%84%D8%A3%D8%B0%D9%86+%D9%88%D8%A7%D9%84%D8%AD%D9%86%D8%AC%D8%B1%D8%A9&specialty_search=%D8%AC%D8%B1%D8%A7%D8%AD%D8%A9+%D8%A7%D9%84%D9%85%D8%AE+%D9%88%D8%A7%D9%84%D8%A3%D8%B9%D8%B5%D8%A7%D8%A8&classification_search=%D8%B5%D8%BA%D9%80%D9%80%D9%80%D8%B1%D9%89&search=&category=%D8%B5%D8%BA%D9%80%D9%80%D9%80%D8%B1%D9%89 HTTP/1.1" 200 72784
+"GET /procedure-fees/?procedure_search=%D8%AC%D8%B1%D8%A7%D8%AD%D8%A9+%D8%A7%D9%84%D8%A3%D9%86%D9%81+%D9%88%D8%A7%D9%84%D8%A3%D8%B0%D9%86+%D9%88%D8%A7%D9%84%D8%AD%D9%86%D8%AC%D8%B1%D8%A9&specialty_search=%D8%AC%D8%B1%D8%A7%D8%AD%D8%A9+%D8%A7%D9%84%D9%85%D8%AE+%D9%88%D8%A7%D9%84%D8%A3%D8%B9%D8%B5%D8%A7%D8%A8&classification_search=%D8%B5%D8%BA%D9%80%D9%80%D9%80%D8%B1%D9%89&search=&category=%D8%B5%D8%BA%D9%80%D9%80%D9%80%D8%B1%D9%89 HTTP/1.1" 200 72784
+"GET /procedure-fees/?procedure_search=%D8%AC%D8%B1%D8%A7%D8%AD%D8%A9+%D8%A7%D9%84%D8%A3%D9%86%D9%81+%D9%88%D8%A7%D9%84%D8%A3%D8%B0%D9%86+%D9%88%D8%A7%D9%84%D8%AD%D9%86%D8%AC%D8%B1%D8%A9&specialty_search=%D8%AC%D8%B1%D8%A7%D8%AD%D8%A9+%D8%A7%D9%84%D9%85%D8%AE+%D9%88%D8%A7%D9%84%D8%A3%D8%B9%D8%B5%D8%A7%D8%A8&classification_search=%D8%B5%D8%BA%D9%80%D9%80%D9%80%D8%B1%D9%89&search=&category=%D8%B5%D8%BA%D9%80%D9%80%D9%80%D8%B1%D9%89 HTTP/1.1" 200 70927
+"GET /procedure-fees/?procedure_search=%D8%AC%D8%B1%D8%A7%D8%AD%D8%A9+%D8%A7%D9%84%D8%A3%D9%86%D9%81+%D9%88%D8%A7%D9%84%D8%A3%D8%B0%D9%86+%D9%88%D8%A7%D9%84%D8%AD%D9%86%D8%AC%D8%B1%D8%A9&specialty_search=%D8%AC%D8%B1%D8%A7%D8%AD%D8%A9+%D8%A7%D9%84%D9%85%D8%AE+%D9%88%D8%A7%D9%84%D8%A3%D8%B9%D8%B5%D8%A7%D8%A8&classification_search=%D8%B5%D8%BA%D9%80%D9%80%D9%80%D8%B1%D9%89&search=&category=%D8%B5%D8%BA%D9%80%D9%80%D9%80%D8%B1%D9%89 HTTP/1.1" 200 70927
+"GET /procedure-fees/ HTTP/1.1" 200 66530
+Watching for file changes with StatReloader
+"GET /procedure-fees/ HTTP/1.1" 200 66530
+"GET /procedures/ HTTP/1.1" 200 111304
+"GET /procedure-fees/ HTTP/1.1" 200 66530
+"GET /procedure-fees/?procedure_search=%D8%A7%D8%B3%D8%AA%D8%AE%D8%B1%D8%A7%D8%AC+%D8%AC%D8%B3%D9%85+%D8%BA%D8%B1%D9%8A%D8%A8+%D9%85%D9%86+%D8%A7%D9%84%D8%A7%D8%B0%D9%86+%D8%A7%D9%84%D8%AE%D8%A7%D8%B1%D8%AC%D9%8A%D8%A9&specialty_search=&classification_search=&search= HTTP/1.1" 200 70636
+"GET /procedure-fees/ HTTP/1.1" 200 66530
+"GET /procedure-fees/ HTTP/1.1" 200 66913
+"GET /procedure-fees/?procedure_search=ES-001&specialty_search=&classification_search=&search= HTTP/1.1" 200 70163
+"GET /procedure-fees/?procedure_search=&specialty_search=&classification_search=&search= HTTP/1.1" 200 66913
+"GET /procedure-fees/?procedure_search=&specialty_search=&classification_search=&search=%D8%A8%D9%86%D9%83+%D9%85%D8%B5%D8%B1 HTTP/1.1" 200 66030
+"GET /procedure-fees/?procedure_search=&specialty_search=%D8%AC%D8%B1%D8%A7%D8%AD%D8%A9+%D8%A7%D9%84%D9%86%D8%B3%D8%A7%D8%A1+%D9%88%D8%A7%D9%84%D8%AA%D9%88%D9%84%D9%8A%D8%AF&classification_search=&search=%D8%A8%D9%86%D9%83+%D9%85%D8%B5%D8%B1 HTTP/1.1" 200 65116
+"GET /procedure-fees/ HTTP/1.1" 200 66913
+"GET /procedure-fees/?procedure_search=&specialty_search=%D8%AC%D8%B1%D8%A7%D8%AD%D8%A9+%D8%A7%D9%84%D8%AA%D8%AC%D9%85%D9%8A%D9%84&classification_search=&search= HTTP/1.1" 200 70152
+"GET /procedure-fees/ HTTP/1.1" 200 66913
+"GET /procedure-fees/ HTTP/1.1" 200 66913
+- Broken pipe from ('127.0.0.1', 53330)
+"GET /procedures/ HTTP/1.1" 200 111304
+"GET /procedures/?search=&specialty=&category=&show_all=1 HTTP/1.1" 200 5831843
+"GET /procedures/?search=&specialty=&category= HTTP/1.1" 200 111304
+"GET /pricing-details/ HTTP/1.1" 200 281542
+"GET /procedure-fees/ HTTP/1.1" 200 66913
+"GET /pricing-details/ HTTP/1.1" 200 281542
+"GET /pricing-details/ HTTP/1.1" 200 263002
+"GET /pricing-details/ HTTP/1.1" 200 281542
+"GET /pricing-details/ HTTP/1.1" 200 263002

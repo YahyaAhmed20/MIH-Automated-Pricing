@@ -268,7 +268,6 @@
         min-width: 100% !important;
     }
 
-    /* ===== Table Header - أسود Bold ===== */
     .table thead {
         background: #f8f9fa !important;
         border-bottom: 2px solid #dee2e6 !important;
@@ -294,7 +293,6 @@
         color: #000000 !important;
     }
 
-    /* ===== Table Body - أسود ===== */
     .table tbody tr {
         transition: all 0.2s ease !important;
         border-bottom: 1px solid #f1f3f5 !important;
@@ -398,11 +396,6 @@
         font-weight: 700 !important;
     }
 
-    /* ===== Table Data with Badge ===== */
-    .table tbody td .badge {
-        color: #000000 !important;
-    }
-
     .table tbody td .badge.bg-primary,
     .table tbody td .badge.bg-success,
     .table tbody td .badge.bg-secondary {
@@ -415,6 +408,15 @@
 
     .table tbody td .badge.bg-info {
         color: #000000 !important;
+    }
+
+    /* ===== Modal ===== */
+    .modal-header {
+        background: linear-gradient(135deg, #1a237e, #0d47a1) !important;
+    }
+
+    .modal-header .modal-title {
+        color: white !important;
     }
 </style>
 
@@ -469,7 +471,6 @@
                 });
             }
             
-            // ✅ البحث الفوري عند اختيار اقتراح من datalist
             if (searchInput) {
                 searchInput.addEventListener('change', function() {
                     if (this.value.trim() !== '') {
@@ -486,7 +487,6 @@
                     }
                 });
                 
-                // ✅ البحث الفوري عند الضغط على Enter
                 searchInput.addEventListener('keydown', function(e) {
                     if (e.key === 'Enter') {
                         e.preventDefault();
@@ -733,7 +733,7 @@
     </div>
 
     <!-- ============================================ -->
-    <!-- ✅ جدول النتائج - جميع الأعمدة ظاهرة -->
+    <!-- ✅ جدول النتائج - بدون المحاسب، رقم الكارنية، نوع التسعير -->
     <!-- ============================================ -->
     <div class="table-container">
         <div class="table-wrapper">
@@ -745,11 +745,8 @@
                             <th><i class="fas fa-user me-1"></i> المريض</th>
                             <th><i class="fas fa-building me-1"></i> الشركة</th>
                             <th><i class="fas fa-user-md me-1"></i> الطبيب</th>
-                            <th><i class="fas fa-user-tie me-1"></i> المحاسب</th>
-                            <th><i class="fas fa-id-card me-1"></i> رقم الكارنية</th>
                             <th><i class="fas fa-procedures me-1"></i> الإجراء</th>
                             <th><i class="fas fa-stethoscope me-1"></i> التخصص</th>
-                            <th><i class="fas fa-tag me-1"></i> نوع التسعير</th>
                             <th class="text-end"><i class="fas fa-money-bill-wave me-1"></i> التكلفة</th>
                             <th class="text-center"><i class="fas fa-ellipsis-v me-1"></i> الإجراءات</th>
                         </tr>
@@ -765,21 +762,10 @@
                                 </span>
                             </td>
                             <td>{{ item.doctor_name|default:"-" }}</td>
-                            <td>{{ item.accountant_name|default:"-" }}</td>
-                            <td><span class="badge bg-secondary">{{ item.card_number|default:"-" }}</span></td>
                             <td title="{{ item.procedure_name }}">
                                 {{ item.procedure_name|truncatechars:30 }}
                             </td>
                             <td><span class="badge bg-info">{{ item.specialty_name|default:"-" }}</span></td>
-                            <td>
-                                {% if item.pricing_type == "نقدي" %}
-                                    <span class="badge bg-success">{{ item.pricing_type|default:"-" }}</span>
-                                {% elif item.pricing_type == "باكدج" %}
-                                    <span class="badge bg-warning">{{ item.pricing_type|default:"-" }}</span>
-                                {% else %}
-                                    <span class="badge bg-secondary">{{ item.pricing_type|default:"-" }}</span>
-                                {% endif %}
-                            </td>
                             <td class="text-end fw-bold">
                                 {% if item.cost %}
                                     {{ item.cost|floatformat:0|intcomma }} ج.م
@@ -809,7 +795,7 @@
                         </tr>
                         {% empty %}
                         <tr>
-                            <td colspan="11" class="text-center py-5">
+                            <td colspan="8" class="text-center py-5">
                                 <i class="fas fa-inbox fa-4x d-block mb-3 text-muted"></i>
                                 <h5 class="text-muted">لا توجد نتائج</h5>
                                 <p class="text-muted small">حاول تغيير كلمات البحث أو الفلاتر</p>
@@ -823,12 +809,12 @@
     </div>
 
     <!-- ============================================ -->
-    <!-- ✅ Modal للتفاصيل -->
+    <!-- ✅ Modal للتفاصيل (كل الأعمدة موجودة هنا) -->
     <!-- ============================================ -->
     <div class="modal fade" id="detailsModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
-                <div class="modal-header" style="background: linear-gradient(135deg, #1a237e, #0d47a1);">
+                <div class="modal-header">
                     <h5 class="modal-title text-white">
                         <i class="fas fa-info-circle me-2"></i> تفاصيل التسعير
                     </h5>
@@ -977,13 +963,10 @@
 
 <!-- ✅ CSS إضافي للـ Mobile -->
 <style>
-    /* ===== تحسينات الـ Mobile ===== */
-    
     .header-wrapper {
         padding: 0 4px;
     }
     
-    /* تحسين الـ Search على الموبايل */
     @media (max-width: 576px) {
         .search-wrapper {
             border-radius: 16px !important;
@@ -1019,7 +1002,6 @@
         }
     }
     
-    /* تحسين الفلاتر على الموبايل */
     @media (max-width: 576px) {
         .filter-header {
             padding: 12px 16px !important;
@@ -1049,7 +1031,6 @@
         }
     }
     
-    /* تحسين الإحصائيات على الموبايل */
     @media (max-width: 576px) {
         .stat-card {
             padding: 12px 14px !important;
@@ -1071,7 +1052,6 @@
         }
     }
     
-    /* تحسين الجدول على الموبايل */
     @media (max-width: 768px) {
         .table-container {
             border-radius: 12px !important;
@@ -1079,7 +1059,7 @@
         
         .table {
             font-size: 12px !important;
-            min-width: 900px !important;
+            min-width: 700px !important;
         }
         
         .table thead th {
@@ -1176,12 +1156,6 @@
     
     .table-responsive::-webkit-scrollbar-thumb:hover {
         background: #0b5ed7 !important;
-    }
-    
-    @media (max-width: 768px) {
-        .stat-card, .filter-card, .table-container {
-            animation: none !important;
-        }
     }
 </style>
 

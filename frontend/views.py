@@ -3963,18 +3963,16 @@ from pricing_requests.models import ProcedureFee
 
 # frontend/views.py - procedure_fees
 
+# frontend/views.py - procedure_fees
+
 def procedure_fees(request):
 
     # ============================================
-    # ✅ ✅ ✅ دالة توحيد التصنيفات في العرض
+    # ✅ دالة توحيد التصنيفات في العرض
     # ============================================
     def normalize_category_for_display(category):
-        """
-        توحيد التصنيفات عند العرض
-        """
         if not category:
             return category
-        
         mapping = {
             'صغرى': 'صغـــرى',
             'كبرى': 'كــبرى',
@@ -3986,9 +3984,15 @@ def procedure_fees(request):
         return mapping.get(category.strip(), category.strip())
 
     # ============================================
-    # ✅ البحث عن العملية (شيت 13) - باستخدام الحقول الصحيحة
+    # ✅ البحث عن العملية (شيت 13)
     # ============================================
     procedure_search = request.GET.get("procedure_search", "").strip()
+    
+    # ✅ ✅ ✅ البحث عن التخصص
+    specialty_search = request.GET.get("specialty_search", "").strip()
+    
+    # ✅ ✅ ✅ البحث عن التصنيف
+    classification_search = request.GET.get("classification_search", "").strip()
     
     # ============================================
     # ✅ البحث عن الجهة (شيت 14)
@@ -3996,43 +4000,50 @@ def procedure_fees(request):
     search = request.GET.get("search", "").strip()
     
     # ============================================
-    # ✅ فلتر التصنيف - مع التوحيد
+    # ✅ فلتر التصنيف
     # ============================================
     category = request.GET.get("category", "").strip()
     if category:
         category = normalize_category_for_display(category)
 
     # ============================================
-    # ✅ العملية المختارة - باستخدام الحقول الصحيحة
+    # ✅ العملية المختارة - مع دعم البحث بالتخصص والتصنيف
     # ============================================
     selected_procedure = None
-    if procedure_search:
-        selected_procedure = Procedure.objects.filter(
-            Q(name_ar__icontains=procedure_search) |      # ✅ name_ar
-            Q(name_en__icontains=procedure_search) |      # ✅ name_en
-            Q(code__icontains=procedure_search) |
-            Q(classification__icontains=procedure_search) # ✅ classification
-        ).first()
+    if procedure_search or specialty_search or classification_search:
+        # ✅ بناء الـ Query مع البحث في التخصص والتصنيف
+        query = Q()
+        
+        if procedure_search:
+            query |= Q(name_ar__icontains=procedure_search)
+            query |= Q(name_en__icontains=procedure_search)
+            query |= Q(code__icontains=procedure_search)
+            query |= Q(classification__icontains=procedure_search)
+        
+        if specialty_search:
+            query |= Q(specialty__name__icontains=specialty_search)
+        
+        if classification_search:
+            query |= Q(classification__icontains=classification_search)
+        
+        selected_procedure = Procedure.objects.filter(query).first()
 
     # ============================================
     # ✅ الأتعاب (شيت 14)
     # ============================================
     fees = ProcedureFee.objects.all()
 
-    # ✅ ✅ ✅ إذا تم اختيار عملية، نفلتر الأتعاب بناءً على تصنيفها
-    if selected_procedure and selected_procedure.classification:  # ✅ classification
+    if selected_procedure and selected_procedure.classification:
         proc_category = selected_procedure.classification
         fees = fees.filter(category=proc_category)
         category = proc_category
 
-    # ✅ فلتر الجهة (إذا كان هناك بحث عن جهة)
     if search:
         fees = fees.filter(
             Q(entity_name__icontains=search) |
             Q(financial_category__icontains=search)
         )
 
-    # ✅ تصفية حسب التصنيف (إذا لم يتم اختيار عملية)
     if category and not selected_procedure:
         fees = fees.filter(category=category)
 
@@ -4042,7 +4053,6 @@ def procedure_fees(request):
     
     for fee in all_fees:
         key = f"{fee.entity_name}_{fee.financial_category}"
-        
         if key not in entities:
             entities[key] = {
                 "entity_name": fee.entity_name,
@@ -4050,6 +4060,7 @@ def procedure_fees(request):
                 "price_list": fee.price_list,
                 "discount_rate": fee.discount_rate,
                 "fees": {},
+                "id": fee.id,
             }
         if fee.category:
             entities[key]["fees"][fee.category] = {
@@ -4066,7 +4077,6 @@ def procedure_fees(request):
                 entity_name=entity["entity_name"],
                 financial_category=entity["financial_category"]
             ).exclude(discount_rate__in=["0", "", None]).first()
-            
             if correct_fee:
                 entity["discount_rate"] = correct_fee.discount_rate
 
@@ -4083,6 +4093,7 @@ def procedure_fees(request):
             "price_list": entity["price_list"],
             "discount_rate": entity["discount_rate"],
             "fees": entity["fees"],
+            "id": entity.get("id"),
         }
         if current_category and current_category in entity["fees"]:
             fee_data = entity["fees"][current_category]
@@ -4092,7 +4103,7 @@ def procedure_fees(request):
             entity_data["selected_total_fee"] = fee_data["total_fee"]
         entities_list.append(entity_data)
 
-    # ✅ التصنيفات للـ Dropdown - مع التوحيد
+    # ✅ التصنيفات للـ Dropdown
     categories = (
         ProcedureFee.objects
         .exclude(category="")
@@ -4102,8 +4113,26 @@ def procedure_fees(request):
     )
     categories = [normalize_category_for_display(cat) for cat in categories]
 
-    # ✅ قوائم الـ datalist
+    # ✅ ✅ ✅ قوائم الـ datalist (مع التخصصات والتصنيفات)
     procedures_list = Procedure.objects.all()[:100]
+    
+    # ✅ جلب التخصصات الفريدة
+    specialties_list = (
+        Procedure.objects
+        .exclude(specialty__name="")
+        .values_list("specialty__name", flat=True)
+        .distinct()
+        .order_by("specialty__name")[:50]
+    )
+    
+    # ✅ جلب التصنيفات الفريدة
+    classifications_list = (
+        Procedure.objects
+        .exclude(classification="")
+        .values_list("classification", flat=True)
+        .distinct()
+        .order_by("classification")[:50]
+    )
     
     entities_list_for_datalist = (
         ProcedureFee.objects
@@ -4112,7 +4141,7 @@ def procedure_fees(request):
         .order_by("entity_name")[:100]
     )
 
-    # ✅ ✅ ✅ اختيار أول جهة تلقائياً عند البحث عن عملية
+    # ✅ اختيار أول جهة تلقائياً عند البحث عن عملية
     selected_entity = None
     fees_data = None
     
@@ -4125,12 +4154,6 @@ def procedure_fees(request):
                 category=selected_procedure.classification
             ).first()
 
-    # ✅ Debug
-    print(f"🔍 Selected Procedure: {selected_procedure}")
-    print(f"🔍 Classification: {selected_procedure.classification if selected_procedure else 'None'}")
-    print(f"🔍 Entities List Count: {len(entities_list)}")
-    print(f"🔍 Selected Entity: {selected_entity}")
-
     return render(
         request,
         "frontend/procedure_fees.html",
@@ -4140,11 +4163,15 @@ def procedure_fees(request):
             "selected_category": category,
             "search": search,
             "procedures_list": procedures_list,
+            "specialties_list": specialties_list,      # ✅ جديد
+            "classifications_list": classifications_list,  # ✅ جديد
             "entities_list_for_datalist": entities_list_for_datalist,
             "selected_procedure": selected_procedure,
             "selected_entity": selected_entity,
             "fees_data": fees_data,
             "procedure_search": procedure_search,
+            "specialty_search": specialty_search,      # ✅ جديد
+            "classification_search": classification_search,  # ✅ جديد
         }
     )
 # frontend/views.py
