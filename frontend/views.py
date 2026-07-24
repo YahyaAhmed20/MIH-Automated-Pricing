@@ -673,7 +673,9 @@ from django.db.models import Count, Q
 from django.shortcuts import render
 from pricing_requests.models import ReportStatistic
 import json
-
+# ============================================
+# ✅ قائمة التخصصات الطبية
+# ============================================
 SPECIALTIES = [
     "الانف والاذن",
     "الجراحه",          
@@ -685,33 +687,43 @@ SPECIALTIES = [
     "جراحة المخ والاعصاب",
 ]
 
-
+# ============================================
+# ✅ أيقونات طبية - نهائية وواضحة
+# ============================================
 SPECIALTY_ICONS = {
-    "الانف والاذن": "fas fa-ear",
-    "الجراحه": "fas fa-scalpel",  # ✅ أضف
-
-    "العظام": "fas fa-bone",
-    "القسطره وجراحات القلب": "fas fa-heart-pulse",
-    "القلب المفتوح": "fas fa-heartbeat",
-    "الكلي و المسالك البوليه": "fas fa-kidney",
-    "النساء والتوليد": "fas fa-person-pregnant",
-    "جراحة المخ والاعصاب": "fas fa-brain",
+    "الانف والاذن": "fas fa-head-side-virus",     # ✅ وجه مع أذن
+    "الجراحه": "fas fa-syringe",                  # ✅ سرنجة
+    "العظام": "fas fa-person-walking",            # ✅ شخص يمشي
+    "القسطره وجراحات القلب": "fas fa-heart-pulse", # ✅ قلب ينبض
+    "القلب المفتوح": "fas fa-heart",              # ✅ قلب
+    "الكلي و المسالك البوليه": "fas fa-droplet",  # 💧 قطرة ماء (واضحة)
+    "النساء والتوليد": "fas fa-female",           # ✅ أنثى
+    "جراحة المخ والاعصاب": "fas fa-brain",        # ✅ مخ
+    
+    # ✅ أيقونات احتياطية
+    "default": "fas fa-stethoscope",
 }
 
-
+# ============================================
+# ✅ ألوان طبية متناسقة
+# ============================================
 SPECIALTY_COLORS = {
-    "الانف والاذن": "#6f42c1",
-    "الجراحه": "#0d6efd",  # ✅ أضف (أزرق)
-
-    "العظام": "#fd7e14",
-    "القسطره وجراحات القلب": "#dc3545",
-    "القلب المفتوح": "#e83e8c",
-    "الكلي و المسالك البوليه": "#20c997",
-    "النساء والتوليد": "#ff6b6b",
-    "جراحة المخ والاعصاب": "#4dabf7",
+    "الانف والاذن": "#6f42c1",        # بنفسجي
+    "الجراحه": "#0d6efd",             # أزرق
+    "العظام": "#fd7e14",              # برتقالي
+    "القسطره وجراحات القلب": "#dc3545", # أحمر
+    "القلب المفتوح": "#e83e8c",        # وردي
+    "الكلي و المسالك البوليه": "#20c997", # فيروزي
+    "النساء والتوليد": "#ff6b6b",      # أحمر فاتح
+    "جراحة المخ والاعصاب": "#4dabf7",  # أزرق فاتح
+    
+    # ✅ ألوان احتياطية
+    "default": "#6c757d",
 }
 
-
+# ============================================
+# ✅ قائمة الشهور مرتبة
+# ============================================
 MONTH_ORDER = [
     "يناير",
     "فبراير",
@@ -725,6 +737,22 @@ MONTH_ORDER = [
     "اكتوبر",
     "نوفمبر",
     "ديسمبر",
+]
+
+# ============================================
+# ✅ قائمة الألوان المخصصة للقطاعات
+# ============================================
+SECTOR_COLORS = [
+    "#0d6efd",   # أزرق
+    "#20c997",   # فيروزي
+    "#ffc107",   # أصفر
+    "#dc3545",   # أحمر
+    "#6f42c1",   # بنفسجي
+    "#fd7e14",   # برتقالي
+    "#198754",   # أخضر
+    "#6610f2",   # بنفسجي غامق
+    "#0dcaf0",   # سماوي
+    "#6c757d",   # رمادي
 ]
 
 
@@ -791,8 +819,8 @@ def reports_statistics(request):
     )
     
     sector_data = []
-    
-    for row in sector_statistics:
+
+    for index, row in enumerate(sector_statistics):
         
         percentage = 0
         
@@ -803,6 +831,9 @@ def reports_statistics(request):
                 1
             )
         
+        # ✅ أضف اللون لكل قطاع
+        color = SECTOR_COLORS[index % len(SECTOR_COLORS)]
+        
         sector_data.append({
             
             "name": row["sector"],
@@ -810,6 +841,8 @@ def reports_statistics(request):
             "total": row["total"],
             
             "percentage": percentage,
+            
+            "color": color,  # ✅ اللون الخاص بكل قطاع
             
         })
 
@@ -826,18 +859,10 @@ def reports_statistics(request):
         [item["total"] for item in sector_data]
     )
     
-    sector_colors = json.dumps([
-        "#0d6efd",
-        "#20c997",
-        "#ffc107",
-        "#dc3545",
-        "#6f42c1",
-        "#fd7e14",
-        "#198754",
-        "#6610f2",
-        "#0dcaf0",
-        "#6c757d",
-    ])
+    # ✅ الألوان من sector_data مباشرة
+    sector_colors = json.dumps(
+        [item["color"] for item in sector_data]
+    )
 
     # ============================================
     # Top & Bottom 5 Entities (Credit Only)
@@ -1098,7 +1123,7 @@ def reports_statistics(request):
 
         monthly = (
             statistics
-            .filter(specialty__icontains=specialty)  # ✅ استخدم __icontains
+            .filter(specialty__icontains=specialty)
             .values("month")
             .annotate(total=Count("id"))
             .order_by()
@@ -1121,7 +1146,7 @@ def reports_statistics(request):
             if month in chart_data.get(specialty, {}):
                 chart_sorted[month] = chart_data[specialty][month]
 
-        # ✅ ✅ ✅ جلب السجلات التفصيلية لكل تخصص
+        # ✅ جلب السجلات التفصيلية لكل تخصص
         specialty_records = statistics.filter(specialty__icontains=specialty)
         
         records_list = specialty_records.values(
@@ -1134,7 +1159,7 @@ def reports_statistics(request):
             'sub_company',
             'amount',
             'month',
-        ).order_by('-admission_date')  # ✅ حد أقصى 50 سجل
+        ).order_by('-admission_date')[:50]
 
         specialties.append({
 
@@ -1142,12 +1167,12 @@ def reports_statistics(request):
 
             "icon": SPECIALTY_ICONS.get(
                 specialty,
-                "fas fa-stethoscope"
+                SPECIALTY_ICONS["default"]
             ),
 
             "color": SPECIALTY_COLORS.get(
                 specialty,
-                "#6c757d"
+                SPECIALTY_COLORS["default"]
             ),
 
             "total": row.get("total", 0),
@@ -1165,7 +1190,7 @@ def reports_statistics(request):
                 list(chart_sorted.values())
             ),
 
-            "records": list(records_list),  # ✅ السجلات التفصيلية
+            "records": list(records_list),
 
         })
 
@@ -1195,8 +1220,6 @@ def reports_statistics(request):
             "specialties": specialties,
         },
     )
-    
-    
 from django.db.models import Count, Q
 from django.shortcuts import render, get_object_or_404
 from pricing_requests.models import ReportStatistic

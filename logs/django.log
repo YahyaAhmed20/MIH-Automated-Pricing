@@ -4495,3 +4495,49 @@ Not Found: /.well-known/appspecific/com.chrome.devtools.json
 "GET /similar-invoices/ HTTP/1.1" 200 340704
 Not Found: /.well-known/appspecific/com.chrome.devtools.json
 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+Watching for file changes with StatReloader
+"GET /reports/ HTTP/1.1" 200 118483
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /reports/ HTTP/1.1" 200 118485
+"GET /reports/ HTTP/1.1" 200 127505
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /reports/ HTTP/1.1" 200 127484
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /reports/ HTTP/1.1" 200 127497
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /reports/ HTTP/1.1" 200 127507
+"GET /reports/specialty/%D8%A7%D9%84%D9%82%D9%84%D8%A8%20%D8%A7%D9%84%D9%85%D9%81%D8%AA%D9%88%D8%AD/?month= HTTP/1.1" 200 62934
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /reports/ HTTP/1.1" 200 127506
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /reports/ HTTP/1.1" 200 127505
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /reports/ HTTP/1.1" 200 127506
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /reports/ HTTP/1.1" 200 127506
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /reports/ HTTP/1.1" 200 127507
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /reports/ HTTP/1.1" 200 129398
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+"GET /reports/entities-details/ HTTP/1.1" 200 129779
+"GET /reports/entities-details/ HTTP/1.1" 200 129779
+"GET /reports/sector-details/ HTTP/1.1" 200 455301
+"GET /reports/sector-details/?date_from=2026-03-01&date_to=2026-03-31 HTTP/1.1" 200 258934
+"GET /company-discounts/ HTTP/1.1" 200 108964
+"GET /company-discounts/?tab=compare HTTP/1.1" 200 54778
+"GET /company-discounts/?tab=ranking HTTP/1.1" 200 49344
+"GET /reports/ HTTP/1.1" 200 129398
+"GET /reports/specialty/%D8%A7%D9%84%D8%A7%D9%86%D9%81%20%D9%88%D8%A7%D9%84%D8%A7%D8%B0%D9%86/?month= HTTP/1.1" 200 137976
+- Broken pipe from ('127.0.0.1', 52888)
