@@ -42,3 +42,6 @@ class SystemUpdateJob(models.Model):
 
     def __str__(self):
         return f"{self.started_at} - {self.status}"
+    
+    
+    

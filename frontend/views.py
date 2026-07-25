@@ -2963,120 +2963,314 @@ def patient_detail(request, pk):
         context
     )
     
-    
+    from django.db.models import Count, Sum, Q
+from django.shortcuts import render, get_object_or_404
+from pricing_requests.models import ExternalApproval
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
 def doctors_list(request):
-
-    doctors = (
-        PricingRequest.objects
-        .exclude(doctor_name="")
-        .values("doctor_name")
-        .annotate(
-            total_requests=Count("id"),
-            total_cost=Sum("requested_cost")
-        )
-        .order_by("-total_requests")
-    )
-
-    return render(
-        request,
-        "frontend/doctors_list.html",
-        {
-            "doctors": doctors
-        }
-    )
+    """صفحة الأطباء - عرض جميع الأطباء مع إحصائياتهم"""
     
+    # 🔍 الفلترة (اختياري)
+    search_query = request.GET.get('search', '').strip()
+    specialty_filter = request.GET.get('specialty', '').strip()
+    date_from = request.GET.get('date_from', '')
+    date_to = request.GET.get('date_to', '')
     
-def doctor_detail(request, doctor_name):
-
-    requests = (
-        PricingRequest.objects
-        .filter(
-            doctor_name=doctor_name
+    # 📊 الاستعلام الأساسي
+    queryset = ExternalApproval.objects.all()
+    
+    # تطبيق الفلاتر
+    if search_query:
+        queryset = queryset.filter(
+            Q(doctor_name__icontains=search_query) |
+            Q(specialty__icontains=search_query)
         )
-        .select_related(
-            "patient",
-            "entity",
-            "specialty"
-        )
-    )
-
-    total_requests = requests.count()
-
-    total_cost = (
-        requests.aggregate(
-            total=Sum("requested_cost")
-        )["total"] or 0
-    )
-
-    approved = requests.filter(
-        status="approved"
-    ).count()
-
-    pending = requests.filter(
-        status="pending"
-    ).count()
-
-    rejected = requests.filter(
-        status="rejected"
-    ).count()
-
-    service_done = requests.filter(
-        status="service_done"
-    ).count()
-
-    top_entities = (
-        requests
-        .values("entity__name")
-        .annotate(
-            total=Count("id"),
-            total_cost=Sum("requested_cost")
-        )
-        .order_by("-total")[:10]
-    )
-
-    top_patients = (
-        requests
-        .values("patient__full_name")
-        .annotate(
-            total=Count("id"),
-            total_cost=Sum("requested_cost")
-        )
-        .order_by("-total")[:10]
-    )
-
-    top_specialties = (
-        requests
-        .values("specialty__name")
-        .annotate(
-            total=Count("id")
-        )
-        .order_by("-total")[:10]
-    )
-
-    latest_requests = (
-        requests
-        .order_by("-id")[:20]
-    )
-
+    
+    if specialty_filter:
+        queryset = queryset.filter(specialty__icontains=specialty_filter)
+    
+    if date_from:
+        queryset = queryset.filter(date__gte=date_from)
+    
+    if date_to:
+        queryset = queryset.filter(date__lte=date_to)
+    
+    # 📊 تجميع البيانات حسب الطبيب
+    doctors_data = queryset.values('doctor_name', 'specialty').annotate(
+        total_cases=Count('id'),
+        total_cost=Sum('initial_cost')
+    ).filter(
+        doctor_name__isnull=False
+    ).exclude(
+        doctor_name=''
+    ).order_by('-total_cases')
+    
+    # 📈 إجمالي الكل
+    total_cases_all = doctors_data.aggregate(total=Sum('total_cases'))['total'] or 0
+    total_cost_all = doctors_data.aggregate(total=Sum('total_cost'))['total'] or 0
+    
+    # 🏷️ قائمة التخصصات للفلتر
+    specialties = ExternalApproval.objects.exclude(
+        specialty__isnull=True
+    ).exclude(
+        specialty=''
+    ).values_list('specialty', flat=True).distinct().order_by('specialty')
+    
     context = {
-        "doctor_name": doctor_name,
-        "total_requests": total_requests,
-        "total_cost": total_cost,
-        "approved": approved,
-        "pending": pending,
-        "rejected": rejected,
-        "service_done": service_done,
-        "top_entities": top_entities,
-        "top_patients": top_patients,
-        "top_specialties": top_specialties,
-        "latest_requests": latest_requests,
+        'doctors': doctors_data,
+        'total_cases_all': total_cases_all,
+        'total_cost_all': total_cost_all,
+        'specialties': specialties,
+        'search_query': search_query,
+        'specialty_filter': specialty_filter,
+        'date_from': date_from,
+        'date_to': date_to,
     }
+    
+    return render(request, 'frontend/doctors.html', context)
 
-    return render(
-        request,
-        "frontend/doctor_detail.html",
-        context
+
+def doctor_detail(request, doctor_name):
+    """صفحة تفاصيل الطبيب"""
+    
+    # 🔍 جلب جميع حالات الطبيب
+    doctor_cases = ExternalApproval.objects.filter(
+        doctor_name__iexact=doctor_name
     )
+    
+    if not doctor_cases.exists():
+        return render(request, 'frontend/doctor_detail.html', {
+            'doctor_name': doctor_name,
+            'error': 'لا توجد حالات لهذا الطبيب'
+        })
+    
+    # 📊 إحصائيات الحالات (8 بوكسات - شامل Serv. Done)
+    total_cases = doctor_cases.count()
+    
+    # ✅ الحالات حسب main_status (مع handling للـ None)
+    status_stats = {
+        'approved': doctor_cases.filter(main_status__iexact='approved').count(),
+        'cancelled': doctor_cases.filter(main_status__iexact='cancelled').count(),
+        'patient refused': doctor_cases.filter(main_status__iexact='patient refused').count(),
+        'pending': doctor_cases.filter(main_status__iexact='pending').count(),
+        'bending by patient': doctor_cases.filter(main_status__iexact='bending by patient').count(),
+        'rejected': doctor_cases.filter(main_status__iexact='rejected').count(),
+        'serv done': doctor_cases.filter(main_status__iexact='serv. done').count(),
+    }
+    
+    # 💰 التكلفة الإجمالية
+    total_cost = doctor_cases.aggregate(total=Sum('initial_cost'))['total'] or 0
+    
+    # 📋 جلب بيانات الطبيب (أول سجل)
+    doctor_info = doctor_cases.first()
+    
+    # 🎯 فلتر الحالات حسب main_status (من الـ URL)
+    status_filter = request.GET.get('status', '')
+    
+    if status_filter:
+        # لو في فلتر، نفلتر الحالات
+        cases_list = doctor_cases.filter(main_status__iexact=status_filter).order_by('-date', '-id')
+    else:
+        # لو مفيش فلتر، نعرض الكل
+        cases_list = doctor_cases.order_by('-date', '-id')
+    
+    # Pagination (10 حالات في الصفحة)
+    paginator = Paginator(cases_list, 10)
+    page = request.GET.get('page', 1)
+    
+    try:
+        cases = paginator.page(page)
+    except PageNotAnInteger:
+        cases = paginator.page(1)
+    except EmptyPage:
+        cases = paginator.page(paginator.num_pages)
+    
+    context = {
+        'doctor_name': doctor_name,
+        'doctor_info': doctor_info,
+        'total_cases': total_cases,
+        'total_cost': total_cost,
+        'status_stats': status_stats,
+        'cases': cases,
+        'paginator': paginator,
+        'status_filter': status_filter,  # ✅ الفلتر الحالي
+    }
+    
+    return render(request, 'frontend/doctor_detail.html', context)
+
+
+
+# في src/frontend/views.py
+
+def package_performance_comparison(request):
+    """مقارنة أداء الباكدجات بين فترتين - تدعم شيت 11 و شيت 15"""
+    
+    from django.db.models import Sum, Count, Q
+    from decimal import Decimal
+    from frontend.models import  ReportStatisticSheet15
+    
+    # 📅 الفلاتر - الفترة الأولى
+    year1 = request.GET.get('year1', '2025')
+    month1 = request.GET.get('month1', '')
+    quarter1 = request.GET.get('quarter1', '')
+    sector1 = request.GET.get('sector1', '')
+    entity1 = request.GET.get('entity1', '')
+    sub_company1 = request.GET.get('sub_company1', '')
+    specialty1 = request.GET.get('specialty1', '')
+    package_type1 = request.GET.get('package_type1', '')
+    
+    # 📅 الفلاتر - الفترة الثانية
+    year2 = request.GET.get('year2', '2025')
+    month2 = request.GET.get('month2', '')
+    quarter2 = request.GET.get('quarter2', '')
+    sector2 = request.GET.get('sector2', '')
+    entity2 = request.GET.get('entity2', '')
+    sub_company2 = request.GET.get('sub_company2', '')
+    specialty2 = request.GET.get('specialty2', '')
+    package_type2 = request.GET.get('package_type2', '')
+    
+    # 📊 اختيار المصدر
+    source = request.GET.get('source', 'sheet15')
+    
+    if source == 'sheet11':
+        Model = ReportStatistic
+        price_field = 'amount'
+    else:
+        Model = ReportStatisticSheet15
+        price_field = 'service_price'
+    
+    # 📊 بناء الفلاتر - المعدل
+    def build_filters(year, month, quarter, sector, entity, sub_company, specialty, package_type):
+        filters = Q()
+        if year:
+            filters &= Q(admission_date__year=year)
+        if month:
+            # ✅ استخدام حقل month النصي
+            filters &= Q(month=month)
+        if quarter:
+            quarter_months = {
+                'الاول': ['يناير', 'فبراير', 'مارس'],
+                'الثاني': ['أبريل', 'مايو', 'يونيو'],
+                'الثالث': ['يوليو', 'أغسطس', 'سبتمبر'],
+                'الرابع': ['أكتوبر', 'نوفمبر', 'ديسمبر'],
+            }
+            if quarter in quarter_months:
+                filters &= Q(month__in=quarter_months[quarter])
+        if sector:
+            filters &= Q(sector__icontains=sector)
+        if entity:
+            filters &= Q(entity_name__icontains=entity)
+        if sub_company:
+            filters &= Q(sub_company__icontains=sub_company)
+        if specialty:
+            filters &= Q(specialty__icontains=specialty)
+        if package_type:
+            filters &= Q(package_name__icontains=package_type)
+        return filters
+    
+    filters1 = build_filters(year1, month1, quarter1, sector1, entity1, sub_company1, specialty1, package_type1)
+    filters2 = build_filters(year2, month2, quarter2, sector2, entity2, sub_company2, specialty2, package_type2)
+    
+    # 📊 جلب البيانات
+    queryset1 = Model.objects.filter(filters1)
+    queryset2 = Model.objects.filter(filters2)
+    
+    # 📊 تجميع البيانات حسب الباكدج
+    def aggregate_packages(queryset):
+        packages = {}
+        for stat in queryset:
+            pkg_name = stat.package_name or 'غير محدد'
+            if pkg_name not in packages:
+                packages[pkg_name] = {
+                    'count': 0,
+                    'total_amount': Decimal('0.00'),
+                }
+            packages[pkg_name]['count'] += 1
+            amount = getattr(stat, price_field) or Decimal('0.00')
+            packages[pkg_name]['total_amount'] += amount
+        return packages
+    
+    packages1 = aggregate_packages(queryset1)
+    packages2 = aggregate_packages(queryset2)
+    
+    # 📊 دمج البيانات للمقارنة
+    all_packages = set(packages1.keys()) | set(packages2.keys())
+    comparison_data = []
+    
+    for pkg in all_packages:
+        data1 = packages1.get(pkg, {'count': 0, 'total_amount': Decimal('0.00')})
+        data2 = packages2.get(pkg, {'count': 0, 'total_amount': Decimal('0.00')})
+        
+        change_percent = 0
+        if data1['total_amount'] > 0:
+            change = data2['total_amount'] - data1['total_amount']
+            change_percent = (change / data1['total_amount']) * 100
+        
+        comparison_data.append({
+            'package_name': pkg,
+            'count1': data1['count'],
+            'amount1': data1['total_amount'],
+            'count2': data2['count'],
+            'amount2': data2['total_amount'],
+            'change_percent': round(change_percent, 1),
+            'change_direction': 'up' if change_percent > 0 else 'down' if change_percent < 0 else 'same',
+        })
+    
+    comparison_data.sort(key=lambda x: abs(x['change_percent']), reverse=True)
+    
+    # 📋 قيم الفلاتر
+    sectors = Model.objects.values_list('sector', flat=True).distinct().exclude(sector__isnull=True).exclude(sector='')
+    entities = Model.objects.values_list('entity_name', flat=True).distinct().exclude(entity_name__isnull=True).exclude(entity_name='')
+    sub_companies = Model.objects.values_list('sub_company', flat=True).distinct().exclude(sub_company__isnull=True).exclude(sub_company='')
+    specialties = Model.objects.values_list('specialty', flat=True).distinct().exclude(specialty__isnull=True).exclude(specialty='')
+    
+    # استخراج أنواع الباكدجات
+    package_types = []
+    for pkg in Model.objects.exclude(package_name__isnull=True).exclude(package_name='').values_list('package_name', flat=True).distinct():
+        parts = pkg.split()
+        if len(parts) >= 2:
+            package_types.append(' '.join(parts[:2]))
+        else:
+            package_types.append(pkg)
+    package_types = sorted(list(set(package_types)))
+    
+    years = ['2024', '2025', '2026', '2027']
+    months = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 
+              'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر']
+    quarters = ['الاول', 'الثاني', 'الثالث', 'الرابع']
+    
+    context = {
+        'comparison_data': comparison_data,
+        'years': years,
+        'months': months,
+        'quarters': quarters,
+        'sectors': sectors,
+        'entities': entities,
+        'sub_companies': sub_companies,
+        'specialties': specialties,
+        'package_types': package_types,
+        'source': source,
+        # القيم المحددة
+        'year1': year1,
+        'year2': year2,
+        'quarter1': quarter1,
+        'quarter2': quarter2,
+        'month1': month1,
+        'month2': month2,
+        'sector1': sector1,
+        'sector2': sector2,
+        'entity1': entity1,
+        'entity2': entity2,
+        'sub_company1': sub_company1,
+        'sub_company2': sub_company2,
+        'specialty1': specialty1,
+        'specialty2': specialty2,
+        'package_type1': package_type1,
+        'package_type2': package_type2,
+    }
+    
+    return render(request, 'frontend/package_performance_comparison.html', context)
 from django.utils import timezone  # ✅ أضف هذا السطر
 
 from django.shortcuts import render

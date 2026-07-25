@@ -12,6 +12,7 @@ from imports.services.excel_provider import ExcelProvider
 COMMANDS_WITH_NO_CONFIRM = [
     "import_report_statistics",
     "import_external_approvals",
+    "import_report_statistics_sheet15",  # ✅ جديد
 ]
 
 IMPORT_COMMANDS = [
@@ -47,6 +48,9 @@ IMPORT_COMMANDS = [
     ("Report Statistics", "import_report_statistics"),
 
     ("External Approvals", "import_external_approvals"),
+
+    # ✅ جديد - شيت 15
+    ("Report Statistics Sheet 15", "import_report_statistics_sheet15"),
 ]
 
 # ✅ ✅ ✅ أوامر إضافية لتوحيد البيانات بعد الاستيراد

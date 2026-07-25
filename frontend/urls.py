@@ -166,11 +166,11 @@ urlpatterns = [
     name="patient_detail"
 ),
     
-    path(
-    "doctors/",
-    views.doctors_list,
-    name="doctors_list"
-),
+    path('doctors/', views.doctors_list, name='doctors_list'),
+
+    path('doctor/<str:doctor_name>/', views.doctor_detail, name='doctor_detail'),
+    path('package-comparison/', views.package_performance_comparison, name='package_comparison'),
+
 
 path(
     "doctors/<path:doctor_name>/",

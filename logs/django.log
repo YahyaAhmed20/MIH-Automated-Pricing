@@ -807,3 +807,243 @@ Watching for file changes with StatReloader
 "GET /external-approvals/ HTTP/1.1" 200 53298
 - Broken pipe from ('127.0.0.1', 59881)
 "GET /pending-analysis/ HTTP/1.1" 200 183878
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 34264
+"GET /static/images/logo.jpeg HTTP/1.1" 200 68755
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 13579
+"GET /doctors/ HTTP/1.1" 200 24136
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\urls.py changed, reloading.
+Watching for file changes with StatReloader
+Internal Server Error: /doctors/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 172, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 164, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\loader_tags.py", line 134, in render
+    compiled_parent = self.get_parent(context)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\loader_tags.py", line 131, in get_parent
+    return self.find_template(parent, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\loader_tags.py", line 109, in find_template
+    template, origin = context.template.engine.find_template(
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\engine.py", line 163, in find_template
+    raise TemplateDoesNotExist(name, tried=tried)
+django.template.exceptions.TemplateDoesNotExist: base.html
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 3031, in doctors_list
+    return render(request, 'frontend/doctors.html', context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\backends\django.py", line 109, in render
+    reraise(exc, self.backend)
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\backends\django.py", line 130, in reraise
+    raise new from exc
+django.template.exceptions.TemplateDoesNotExist: base.html
+"GET /doctors/ HTTP/1.1" 500 217788
+Internal Server Error: /doctors/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 172, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 164, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\loader_tags.py", line 134, in render
+    compiled_parent = self.get_parent(context)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\loader_tags.py", line 131, in get_parent
+    return self.find_template(parent, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\loader_tags.py", line 109, in find_template
+    template, origin = context.template.engine.find_template(
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\engine.py", line 163, in find_template
+    raise TemplateDoesNotExist(name, tried=tried)
+django.template.exceptions.TemplateDoesNotExist: fronted/base.html
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 3031, in doctors_list
+    return render(request, 'frontend/doctors.html', context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\backends\django.py", line 109, in render
+    reraise(exc, self.backend)
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\backends\django.py", line 130, in reraise
+    raise new from exc
+django.template.exceptions.TemplateDoesNotExist: fronted/base.html
+"GET /doctors/ HTTP/1.1" 500 218106
+"GET /doctors/ HTTP/1.1" 200 223159
+"GET /doctors/%D8%AF/%20%D9%85%D8%AD%D9%85%D8%AF%20%D8%B9%D8%A8%D8%AF%20%D8%A7%D9%84%D8%AD%D9%85%D9%8A%D8%AF%20%D8%AD%D9%81%D9%86%D9%89/ HTTP/1.1" 200 70158
+"GET /doctors/ HTTP/1.1" 200 223159
+"GET /doctors/?search=&specialty=&date_from=2026-07-16&date_to=2026-07-29 HTTP/1.1" 200 33512
+"GET /doctors/ HTTP/1.1" 200 223159
+"GET /doctors/?search=%D9%85%D8%AD%D9%85%D8%AF&specialty=&date_from=&date_to= HTTP/1.1" 200 100285
+"GET /doctors/?search=%D9%85%D8%AD%D9%85%D8%AF&specialty=%D8%A3%D9%86%D9%81+%D9%88%D8%A3%D8%B0%D9%86+%D9%88%D8%AD%D9%86%D8%AC%D8%B1%D8%A9&date_from=&date_to= HTTP/1.1" 200 37068
+"GET /doctors/%D8%A7%D8%AD%D9%85%D8%AF%20%D8%B4%D8%AD%D8%AA%D9%87%20%D8%B9%D9%84%D9%8A%D9%88%D9%87%20%D9%85%D8%AD%D9%85%D8%AF/ HTTP/1.1" 200 46389
+"GET /doctors/ HTTP/1.1" 200 223159
+"GET /doctors/ HTTP/1.1" 200 223159
+"GET /doctors/%D8%AF/%20%D9%85%D8%AD%D9%85%D8%AF%20%D8%B9%D8%A8%D8%AF%20%D8%A7%D9%84%D8%AD%D9%85%D9%8A%D8%AF%20%D8%AD%D9%81%D9%86%D9%89/ HTTP/1.1" 200 70158
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /doctors/%D8%AF/%20%D9%85%D8%AD%D9%85%D8%AF%20%D8%B9%D8%A8%D8%AF%20%D8%A7%D9%84%D8%AD%D9%85%D9%8A%D8%AF%20%D8%AD%D9%81%D9%86%D9%89/ HTTP/1.1" 200 70856
+"GET /doctors/%D8%AF/%20%D9%85%D8%AD%D9%85%D8%AF%20%D8%B9%D8%A8%D8%AF%20%D8%A7%D9%84%D8%AD%D9%85%D9%8A%D8%AF%20%D8%AD%D9%81%D9%86%D9%89/?page=2 HTTP/1.1" 200 70833
+"GET /doctors/%D8%AF/%20%D9%85%D8%AD%D9%85%D8%AF%20%D8%B9%D8%A8%D8%AF%20%D8%A7%D9%84%D8%AD%D9%85%D9%8A%D8%AF%20%D8%AD%D9%81%D9%86%D9%89/?page=1 HTTP/1.1" 200 70856
+"GET /doctors/ HTTP/1.1" 200 223159
+"GET /doctors/%D8%A7.%D8%AF%20/%20%D9%88%D8%A7%D8%A6%D9%84%20%D8%A7%D8%A8%D9%88%20%D8%A7%D9%84%D9%88%D9%81%D8%A7/ HTTP/1.1" 200 38628
+"GET /doctors/ HTTP/1.1" 200 223159
+"GET /doctors/%D8%A7%20%D8%AF/%20%D9%87%D8%B4%D8%A7%D9%85%20%D8%A7%D8%AD%D9%85%D8%AF%20%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D9%87%D8%A7%D8%AF%D9%89%20%D9%85%D8%AD%D9%85%D9%88%D8%AF/ HTTP/1.1" 200 54023
+Watching for file changes with StatReloader
+"GET /doctors/ HTTP/1.1" 200 223159
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /doctors/ HTTP/1.1" 200 223159
+"GET /doctors/%D8%AF/%20%D9%85%D8%AD%D9%85%D8%AF%20%D8%B9%D8%A8%D8%AF%20%D8%A7%D9%84%D8%AD%D9%85%D9%8A%D8%AF%20%D8%AD%D9%81%D9%86%D9%89/ HTTP/1.1" 200 73077
+"GET /doctors/%D8%AF/%20%D9%85%D8%AD%D9%85%D8%AF%20%D8%B9%D8%A8%D8%AF%20%D8%A7%D9%84%D8%AD%D9%85%D9%8A%D8%AF%20%D8%AD%D9%81%D9%86%D9%89/?status=rejected HTTP/1.1" 200 53377
+"GET /doctors/%D8%AF/%20%D9%85%D8%AD%D9%85%D8%AF%20%D8%B9%D8%A8%D8%AF%20%D8%A7%D9%84%D8%AD%D9%85%D9%8A%D8%AF%20%D8%AD%D9%81%D9%86%D9%89/?status=rejected HTTP/1.1" 200 53377
+"GET /doctors/%D8%AF/%20%D9%85%D8%AD%D9%85%D8%AF%20%D8%B9%D8%A8%D8%AF%20%D8%A7%D9%84%D8%AD%D9%85%D9%8A%D8%AF%20%D8%AD%D9%81%D9%86%D9%89/?status=rejected HTTP/1.1" 200 53377
+"GET /doctors/%D8%AF/%20%D9%85%D8%AD%D9%85%D8%AF%20%D8%B9%D8%A8%D8%AF%20%D8%A7%D9%84%D8%AD%D9%85%D9%8A%D8%AF%20%D8%AD%D9%81%D9%86%D9%89/?status=approved HTTP/1.1" 200 46396
+"GET /doctors/%D8%AF/%20%D9%85%D8%AD%D9%85%D8%AF%20%D8%B9%D8%A8%D8%AF%20%D8%A7%D9%84%D8%AD%D9%85%D9%8A%D8%AF%20%D8%AD%D9%81%D9%86%D9%89/ HTTP/1.1" 200 73077
+"GET /doctors/ HTTP/1.1" 200 223159
+"GET /doctors/%D8%A7.%D8%AF%20/%20%D9%85%D8%AD%D9%85%D8%AF%20%D9%81%D9%83%D8%B1%D9%89%20%D9%8A%D9%88%D8%B3%D9%81%20%D9%82%D8%A7%D8%B3%D9%85/ HTTP/1.1" 200 71661
+"GET /doctors/%D8%A7.%D8%AF%20/%20%D9%85%D8%AD%D9%85%D8%AF%20%D9%81%D9%83%D8%B1%D9%89%20%D9%8A%D9%88%D8%B3%D9%81%20%D9%82%D8%A7%D8%B3%D9%85/?status=pending HTTP/1.1" 200 38074
+"GET /doctors/%D8%A7.%D8%AF%20/%20%D9%85%D8%AD%D9%85%D8%AF%20%D9%81%D9%83%D8%B1%D9%89%20%D9%8A%D9%88%D8%B3%D9%81%20%D9%82%D8%A7%D8%B3%D9%85/?status=pending HTTP/1.1" 200 38074
+- Broken pipe from ('127.0.0.1', 58947)
+"GET /doctors/ HTTP/1.1" 200 223159
+"GET /doctors/?search=&specialty=&date_from=&date_to= HTTP/1.1" 200 223159
+D:\desktop\rphospital\src\frontend\models.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\urls.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /doctors/?search=&specialty=&date_from=&date_to= HTTP/1.1" 200 223159
+"GET /doctors/ HTTP/1.1" 200 223159
+"GET /doctors/%D8%A7.%D8%AF/%20%D9%8A%D8%AD%D9%8A%D9%89%20%D9%85%D8%AD%D9%85%D8%AF%20%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D8%B9%D8%B2%D9%8A%D8%B2/ HTTP/1.1" 200 73809
+"GET /doctors/%D8%A7.%D8%AF/%20%D9%8A%D8%AD%D9%8A%D9%89%20%D9%85%D8%AD%D9%85%D8%AF%20%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D8%B9%D8%B2%D9%8A%D8%B2/?status=rejected HTTP/1.1" 200 42627
+"GET /doctors/%D8%A7.%D8%AF/%20%D9%8A%D8%AD%D9%8A%D9%89%20%D9%85%D8%AD%D9%85%D8%AF%20%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D8%B9%D8%B2%D9%8A%D8%B2/ HTTP/1.1" 200 73809
+"GET /doctors/%D8%A7.%D8%AF/%20%D9%8A%D8%AD%D9%8A%D9%89%20%D9%85%D8%AD%D9%85%D8%AF%20%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D8%B9%D8%B2%D9%8A%D8%B2/?status=rejected HTTP/1.1" 200 42627
+"GET /doctors/ HTTP/1.1" 200 223159
+"GET /doctors/ HTTP/1.1" 200 223420
+"GET /doctors/ HTTP/1.1" 200 223420
+Internal Server Error: /package-comparison/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 3111, in package_performance_comparison
+    from frontend.models import ReportStatistic, ReportStatisticSheet15
+ImportError: cannot import name 'ReportStatistic' from 'frontend.models' (D:\desktop\rphospital\src\frontend\models.py)
+"GET /package-comparison/ HTTP/1.1" 500 72653
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /package-comparison/ HTTP/1.1" 200 2166735
+"GET /package-comparison/?source=sheet11 HTTP/1.1" 200 2249584
+"GET /package-comparison/?year1=2027&quarter1=&month1=&sector1=&entity1=&sub_company1=&specialty1=&package_type1=&year2=2026&quarter2=&month2=&sector2=&entity2=&sub_company2=&specialty2=&package_type2=&source=sheet11 HTTP/1.1" 200 2249584
+"GET /package-comparison/?year1=2026&quarter1=&month1=&sector1=&entity1=&sub_company1=&specialty1=&package_type1=&year2=2026&quarter2=&month2=&sector2=&entity2=&sub_company2=&specialty2=&package_type2=&source=sheet11 HTTP/1.1" 200 2249967
+"GET /package-comparison/?year1=2026&quarter1=&month1=&sector1=&entity1=&sub_company1=&specialty1=&package_type1=&year2=2025&quarter2=&month2=&sector2=&entity2=&sub_company2=&specialty2=&package_type2=&source=sheet11 HTTP/1.1" 200 2251143
+"GET /package-comparison/?source=sheet15 HTTP/1.1" 200 2166735
+"GET /package-comparison/?year1=2025&quarter1=&month1=&sector1=&entity1=&sub_company1=&specialty1=&package_type1=&year2=2026&quarter2=&month2=&sector2=&entity2=&sub_company2=&specialty2=&package_type2=&source=sheet15 HTTP/1.1" 200 2166735
+"GET /package-comparison/?year1=2025&quarter1=%D8%A7%D9%84%D8%A7%D9%88%D9%84&month1=&sector1=&entity1=&sub_company1=&specialty1=&package_type1=&year2=2026&quarter2=&month2=&sector2=&entity2=&sub_company2=&specialty2=&package_type2=&source=sheet15 HTTP/1.1" 200 2166743
+"GET /package-comparison/?year1=2025&quarter1=%D8%A7%D9%84%D8%A7%D9%88%D9%84&month1=%D8%AF%D9%8A%D8%B3%D9%85%D8%A8%D8%B1&sector1=&entity1=&sub_company1=&specialty1=&package_type1=&year2=2026&quarter2=&month2=&sector2=&entity2=&sub_company2=&specialty2=&package_type2=&source=sheet15 HTTP/1.1" 200 1999321
+"GET /package-comparison/?year1=2025&quarter1=%D8%A7%D9%84%D8%A7%D9%88%D9%84&month1=%D8%AF%D9%8A%D8%B3%D9%85%D8%A8%D8%B1&sector1=%D8%B4%D8%B1%D9%83%D8%A7%D8%AA+%D8%A7%D9%84%D8%AA%D8%A3%D9%85%D9%8A%D9%86&entity1=&sub_company1=&specialty1=&package_type1=&year2=2026&quarter2=&month2=&sector2=&entity2=&sub_company2=&specialty2=&package_type2=&source=sheet15 HTTP/1.1" 200 2004897
+"GET /package-comparison/?year1=2025&quarter1=%D8%A7%D9%84%D8%A7%D9%88%D9%84&month1=%D8%AF%D9%8A%D8%B3%D9%85%D8%A8%D8%B1&sector1=%D8%B4%D8%B1%D9%83%D8%A7%D8%AA+%D8%A7%D9%84%D8%AA%D8%A3%D9%85%D9%8A%D9%86&entity1=%D9%86%D9%82%D8%A7%D8%A8%D8%A9+%D8%A7%D9%84%D9%85%D9%87%D9%86%D8%AF%D8%B3%D9%8A%D9%86+%D8%A7%D9%84%D8%B9%D8%B6%D9%88+%D9%86%D9%81%D8%B3%D8%A920%25&sub_company1=&specialty1=&package_type1=&year2=2026&quarter2=&month2=&sector2=&entity2=&sub_company2=&specialty2=&package_type2=&source=sheet15 HTTP/1.1" 200 2004921
+"GET /package-comparison/?year1=2025&quarter1=%D8%A7%D9%84%D8%A7%D9%88%D9%84&month1=%D8%AF%D9%8A%D8%B3%D9%85%D8%A8%D8%B1&sector1=%D8%B4%D8%B1%D9%83%D8%A7%D8%AA+%D8%A7%D9%84%D8%AA%D8%A3%D9%85%D9%8A%D9%86&entity1=%D9%86%D9%82%D8%A7%D8%A8%D8%A9+%D8%A7%D9%84%D9%85%D9%87%D9%86%D8%AF%D8%B3%D9%8A%D9%86+%D8%A7%D9%84%D8%B9%D8%B6%D9%88+%D9%86%D9%81%D8%B3%D8%A920%25&sub_company1=ETHICS&specialty1=&package_type1=&year2=2026&quarter2=&month2=&sector2=&entity2=&sub_company2=&specialty2=&package_type2=&source=sheet15 HTTP/1.1" 200 2004929
+"GET /package-comparison/?year1=2025&quarter1=%D8%A7%D9%84%D8%A7%D9%88%D9%84&month1=%D8%AF%D9%8A%D8%B3%D9%85%D8%A8%D8%B1&sector1=%D8%B4%D8%B1%D9%83%D8%A7%D8%AA+%D8%A7%D9%84%D8%AA%D8%A3%D9%85%D9%8A%D9%86&entity1=%D9%86%D9%82%D8%A7%D8%A8%D8%A9+%D8%A7%D9%84%D9%85%D9%87%D9%86%D8%AF%D8%B3%D9%8A%D9%86+%D8%A7%D9%84%D8%B9%D8%B6%D9%88+%D9%86%D9%81%D8%B3%D8%A920%25&sub_company1=ETHICS&specialty1=%D8%A7%D9%84%D8%AC%D8%B1%D8%A7%D8%AD%D9%87&package_type1=&year2=2026&quarter2=&month2=&sector2=&entity2=&sub_company2=&specialty2=&package_type2=&source=sheet15 HTTP/1.1" 200 2008641
+"GET /package-comparison/?year1=2025&quarter1=%D8%A7%D9%84%D8%A7%D9%88%D9%84&month1=%D8%AF%D9%8A%D8%B3%D9%85%D8%A8%D8%B1&sector1=%D8%B4%D8%B1%D9%83%D8%A7%D8%AA+%D8%A7%D9%84%D8%AA%D8%A3%D9%85%D9%8A%D9%86&entity1=%D9%86%D9%82%D8%A7%D8%A8%D8%A9+%D8%A7%D9%84%D9%85%D9%87%D9%86%D8%AF%D8%B3%D9%8A%D9%86+%D8%A7%D9%84%D8%B9%D8%B6%D9%88+%D9%86%D9%81%D8%B3%D8%A920%25&sub_company1=ETHICS&specialty1=%D8%A7%D9%84%D8%AC%D8%B1%D8%A7%D8%AD%D9%87&package_type1=%D8%A8%D8%A7%D9%83%D8%AF%D8%AC+%D9%85%D9%86%D8%B8%D8%A7%D8%B1&year2=2026&quarter2=&month2=&sector2=&entity2=&sub_company2=&specialty2=&package_type2=&source=sheet15 HTTP/1.1" 200 2008649
+"GET /package-comparison/?source=sheet15 HTTP/1.1" 200 2166735
+"GET /package-comparison/?year1=2025&quarter1=&month1=&sector1=&entity1=&sub_company1=&specialty1=&package_type1=&year2=2025&quarter2=&month2=&sector2=&entity2=&sub_company2=&specialty2=&package_type2=&source=sheet15 HTTP/1.1" 200 2165559
+"GET /package-comparison/?source=sheet11 HTTP/1.1" 200 2249584
+"GET /package-comparison/?year1=2025&quarter1=&month1=&sector1=&entity1=&sub_company1=&specialty1=&package_type1=&year2=2025&quarter2=&month2=&sector2=&entity2=&sub_company2=&specialty2=&package_type2=&source=sheet11 HTTP/1.1" 200 2083715
+Watching for file changes with StatReloader
+"GET /package-comparison/?source=sheet11 HTTP/1.1" 200 2249584
+"GET /package-comparison/?source=sheet15 HTTP/1.1" 200 2166735
+"GET /package-comparison/?year1=2025&quarter1=%D8%A7%D9%84%D8%A7%D9%88%D9%84&month1=&sector1=&entity1=&sub_company1=&specialty1=&package_type1=&year2=2026&quarter2=&month2=&sector2=&entity2=&sub_company2=&specialty2=&package_type2=&source=sheet15 HTTP/1.1" 200 2166743
+"GET /package-comparison/?year1=2025&quarter1=%D8%A7%D9%84%D8%A7%D9%88%D9%84&month1=%D9%8A%D9%86%D8%A7%D9%8A%D8%B1&sector1=&entity1=&sub_company1=&specialty1=&package_type1=&year2=2026&quarter2=&month2=&sector2=&entity2=&sub_company2=&specialty2=&package_type2=&source=sheet15 HTTP/1.1" 200 2166751
+"GET /package-comparison/?year1=2025&quarter1=%D8%A7%D9%84%D8%A7%D9%88%D9%84&month1=%D9%8A%D9%86%D8%A7%D9%8A%D8%B1&sector1=&entity1=&sub_company1=&specialty1=&package_type1=&year2=2025&quarter2=&month2=&sector2=&entity2=&sub_company2=&specialty2=&package_type2=&source=sheet15 HTTP/1.1" 200 2165575
+"GET /package-comparison/?year1=2025&quarter1=%D8%A7%D9%84%D8%A7%D9%88%D9%84&month1=%D9%8A%D9%86%D8%A7%D9%8A%D8%B1&sector1=&entity1=&sub_company1=&specialty1=&package_type1=&year2=2025&quarter2=%D8%A7%D9%84%D8%A7%D9%88%D9%84&month2=&sector2=&entity2=&sub_company2=&specialty2=&package_type2=&source=sheet15 HTTP/1.1" 200 2165583
+"GET /package-comparison/?year1=2025&quarter1=%D8%A7%D9%84%D8%A7%D9%88%D9%84&month1=%D9%8A%D9%86%D8%A7%D9%8A%D8%B1&sector1=&entity1=&sub_company1=&specialty1=&package_type1=&year2=2025&quarter2=%D8%A7%D9%84%D8%AB%D8%A7%D9%86%D9%8A&month2=&sector2=&entity2=&sub_company2=&specialty2=&package_type2=&source=sheet15 HTTP/1.1" 200 2166759
+"GET /package-comparison/?year1=2025&quarter1=%D8%A7%D9%84%D8%A7%D9%88%D9%84&month1=%D9%8A%D9%86%D8%A7%D9%8A%D8%B1&sector1=&entity1=&sub_company1=&specialty1=&package_type1=&year2=2025&quarter2=%D8%A7%D9%84%D8%AB%D8%A7%D9%86%D9%8A&month2=%D8%A3%D8%A8%D8%B1%D9%8A%D9%84&sector2=&entity2=&sub_company2=&specialty2=&package_type2=&source=sheet15 HTTP/1.1" 200 2166767
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+Internal Server Error: /package-comparison/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 3111, in package_performance_comparison
+    from frontend.models import ReportStatistic, ReportStatisticSheet15
+ImportError: cannot import name 'ReportStatistic' from 'frontend.models' (D:\desktop\rphospital\src\frontend\models.py)
+"GET /package-comparison/?year1=2025&quarter1=%D8%A7%D9%84%D8%A7%D9%88%D9%84&month1=%D9%8A%D9%86%D8%A7%D9%8A%D8%B1&sector1=&entity1=&sub_company1=&specialty1=&package_type1=&year2=2025&quarter2=%D8%A7%D9%84%D8%AB%D8%A7%D9%86%D9%8A&month2=%D8%A3%D8%A8%D8%B1%D9%8A%D9%84&sector2=&entity2=&sub_company2=&specialty2=&package_type2=&source=sheet15 HTTP/1.1" 500 77861
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /package-comparison/?year1=2025&quarter1=%D8%A7%D9%84%D8%A7%D9%88%D9%84&month1=%D9%8A%D9%86%D8%A7%D9%8A%D8%B1&sector1=&entity1=&sub_company1=&specialty1=&package_type1=&year2=2025&quarter2=%D8%A7%D9%84%D8%AB%D8%A7%D9%86%D9%8A&month2=%D8%A3%D8%A8%D8%B1%D9%8A%D9%84&sector2=&entity2=&sub_company2=&specialty2=&package_type2=&source=sheet15 HTTP/1.1" 200 2133631
+"GET /package-comparison/?year1=2025&quarter1=%D8%A7%D9%84%D8%A7%D9%88%D9%84&month1=%D9%8A%D9%86%D8%A7%D9%8A%D8%B1&sector1=&entity1=&sub_company1=&specialty1=&package_type1=&year2=2025&quarter2=%D8%A7%D9%84%D8%AB%D8%A7%D9%86%D9%8A&month2=%D8%A3%D8%A8%D8%B1%D9%8A%D9%84&sector2=&entity2=&sub_company2=&specialty2=&package_type2=&source=sheet15 HTTP/1.1" 200 2133631
+D:\desktop\rphospital\src\imports\services\update_all_data_service.py changed, reloading.
+Watching for file changes with StatReloader

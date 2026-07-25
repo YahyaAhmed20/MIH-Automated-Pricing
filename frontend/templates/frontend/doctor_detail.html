@@ -1,310 +1,403 @@
 {% extends 'frontend/base.html' %}
+{% load static %}
 
-{% block page_title %}
-{{ doctor_name }}
-{% endblock %}
+{% block title %}تفاصيل الطبيب - {{ doctor_name }}{% endblock %}
 
 {% block content %}
+<div class="container-fluid mt-3">
+    <!-- 🔙 زر العودة -->
+    <div class="row mb-3">
+        <div class="col-12">
+            <a href="{% url 'doctors_list' %}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-right"></i> العودة إلى الأطباء
+            </a>
+            <h3 class="d-inline-block ms-3 fw-bold" style="color: #0d6efd;">
+                <i class="fas fa-user-md"></i> {{ doctor_name }}
+            </h3>
+            <span class="badge bg-info">{{ doctor_info.specialty|default:"بدون تخصص" }}</span>
+        </div>
+    </div>
 
-<!-- ============================================ -->
-<!-- عنوان الطبيب -->
-<!-- ============================================ -->
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h3>
-        <i class="bi bi-person-badge"></i>
-        {{ doctor_name }}
-    </h3>
-    
-</div>
+    {% if error %}
+    <div class="alert alert-warning">{{ error }}</div>
+    {% else %}
 
-<!-- ============================================ -->
-<!-- كروت الإحصائيات -->
-<!-- ============================================ -->
-<div class="row g-3 mb-4">
-
-    <div class="col-md-3">
-        <div class="card border-primary shadow-sm h-100 hover-shadow">
-            <div class="card-body text-center">
-                <div class="icon-circle bg-primary bg-opacity-10 mb-2 mx-auto">
-                    <i class="bi bi-file-medical text-primary"></i>
+    <!-- 📊 البوكسات العلوية (8 بوكسات متحركة) مع زر عرض المزيد -->
+    <div class="row mb-4 g-2">
+        <!-- 1. إجمالي الحالات -->
+        <div class="col-md-3 col-sm-6">
+            <div class="card text-white bg-primary h-100">
+                <div class="card-body text-center">
+                    <h6 class="card-title"><i class="fas fa-users"></i> إجمالي الحالات</h6>
+                    <h3 class="card-text counter" data-target="{{ total_cases }}">0</h3>
+                    <a href="{% url 'doctor_detail' doctor_name %}" class="btn btn-light btn-sm mt-2 w-100">
+                        <i class="fas fa-chevron-down"></i> عرض المزيد
+                    </a>
                 </div>
-                <h6 class="text-muted">عدد الطلبات</h6>
-                <h3 class="text-primary">{{ total_requests }}</h3>
             </div>
         </div>
-    </div>
-
-    <div class="col-md-3">
-        <div class="card border-success shadow-sm h-100 hover-shadow">
-            <div class="card-body text-center">
-                <div class="icon-circle bg-success bg-opacity-10 mb-2 mx-auto">
-                    <i class="bi bi-coin text-success"></i>
+        
+        <!-- 2. تمت الموافقة -->
+        <div class="col-md-3 col-sm-6">
+            <div class="card text-white bg-success h-100">
+                <div class="card-body text-center">
+                    <h6 class="card-title"><i class="fas fa-check-circle"></i> تمت الموافقة</h6>
+                    <h3 class="card-text counter" data-target="{{ status_stats.approved }}">0</h3>
+                    {% if status_stats.approved > 0 %}
+                    <a href="{% url 'doctor_detail' doctor_name %}?status=approved" class="btn btn-light btn-sm mt-2 w-100">
+                        <i class="fas fa-chevron-down"></i> عرض المزيد
+                    </a>
+                    {% else %}
+                    <button class="btn btn-light btn-sm mt-2 w-100" disabled>
+                        <i class="fas fa-minus"></i> لا توجد حالات
+                    </button>
+                    {% endif %}
                 </div>
-                <h6 class="text-muted">إجمالي التكلفة</h6>
-                <h3 class="text-success">{{ total_cost|floatformat:0 }} <small>ج.م</small></h3>
             </div>
         </div>
-    </div>
-
-    <div class="col-md-2">
-        <div class="card border-success shadow-sm h-100 hover-shadow">
-            <div class="card-body text-center">
-                <div class="icon-circle bg-success bg-opacity-10 mb-2 mx-auto">
-                    <i class="bi bi-check-circle text-success"></i>
+        
+        <!-- 3. ملغاه -->
+        <div class="col-md-3 col-sm-6">
+            <div class="card text-white bg-secondary h-100">
+                <div class="card-body text-center">
+                    <h6 class="card-title"><i class="fas fa-times-circle"></i> ملغاه</h6>
+                    <h3 class="card-text counter" data-target="{{ status_stats.cancelled }}">0</h3>
+                    {% if status_stats.cancelled > 0 %}
+                    <a href="{% url 'doctor_detail' doctor_name %}?status=cancelled" class="btn btn-light btn-sm mt-2 w-100">
+                        <i class="fas fa-chevron-down"></i> عرض المزيد
+                    </a>
+                    {% else %}
+                    <button class="btn btn-light btn-sm mt-2 w-100" disabled>
+                        <i class="fas fa-minus"></i> لا توجد حالات
+                    </button>
+                    {% endif %}
                 </div>
-                <h6 class="text-muted">تمت الموافقة</h6>
-                <h3 class="text-success">{{ approved }}</h3>
             </div>
         </div>
-    </div>
-
-    <div class="col-md-2">
-        <div class="card border-warning shadow-sm h-100 hover-shadow">
-            <div class="card-body text-center">
-                <div class="icon-circle bg-warning bg-opacity-10 mb-2 mx-auto">
-                    <i class="bi bi-clock text-warning"></i>
+        
+        <!-- 4. رفض المريض -->
+        <div class="col-md-3 col-sm-6">
+            <div class="card text-white bg-danger h-100">
+                <div class="card-body text-center">
+                    <h6 class="card-title"><i class="fas fa-user-slash"></i> رفض المريض</h6>
+                    <h3 class="card-text counter" data-target="{{ status_stats.patient_refused }}">0</h3>
+                    {% if status_stats.patient_refused > 0 %}
+                    <a href="{% url 'doctor_detail' doctor_name %}?status=patient refused" class="btn btn-light btn-sm mt-2 w-100">
+                        <i class="fas fa-chevron-down"></i> عرض المزيد
+                    </a>
+                    {% else %}
+                    <button class="btn btn-light btn-sm mt-2 w-100" disabled>
+                        <i class="fas fa-minus"></i> لا توجد حالات
+                    </button>
+                    {% endif %}
                 </div>
-                <h6 class="text-muted">قيد الانتظار</h6>
-                <h3 class="text-warning">{{ pending }}</h3>
             </div>
         </div>
-    </div>
-
-    <div class="col-md-2">
-        <div class="card border-primary shadow-sm h-100 hover-shadow">
-            <div class="card-body text-center">
-                <div class="icon-circle bg-primary bg-opacity-10 mb-2 mx-auto">
-                    <i class="bi bi-check2-all text-primary"></i>
+        
+        <!-- 5. قيد الانتظار -->
+        <div class="col-md-3 col-sm-6">
+            <div class="card text-white bg-warning h-100">
+                <div class="card-body text-center">
+                    <h6 class="card-title"><i class="fas fa-clock"></i> قيد الانتظار</h6>
+                    <h3 class="card-text counter" data-target="{{ status_stats.pending }}">0</h3>
+                    {% if status_stats.pending > 0 %}
+                    <a href="{% url 'doctor_detail' doctor_name %}?status=pending" class="btn btn-light btn-sm mt-2 w-100">
+                        <i class="fas fa-chevron-down"></i> عرض المزيد
+                    </a>
+                    {% else %}
+                    <button class="btn btn-light btn-sm mt-2 w-100" disabled>
+                        <i class="fas fa-minus"></i> لا توجد حالات
+                    </button>
+                    {% endif %}
                 </div>
-                <h6 class="text-muted">تم التنفيذ</h6>
-                <h3 class="text-primary">{{ service_done }}</h3>
+            </div>
+        </div>
+        
+        <!-- 6. مؤجل بمعرفة المريض -->
+        <div class="col-md-3 col-sm-6">
+            <div class="card text-white bg-info h-100">
+                <div class="card-body text-center">
+                    <h6 class="card-title"><i class="fas fa-pause-circle"></i> مؤجل بمعرفة المريض</h6>
+                    <h3 class="card-text counter" data-target="{{ status_stats.bending_by_patient }}">0</h3>
+                    {% if status_stats.bending_by_patient > 0 %}
+                    <a href="{% url 'doctor_detail' doctor_name %}?status=bending by patient" class="btn btn-light btn-sm mt-2 w-100">
+                        <i class="fas fa-chevron-down"></i> عرض المزيد
+                    </a>
+                    {% else %}
+                    <button class="btn btn-light btn-sm mt-2 w-100" disabled>
+                        <i class="fas fa-minus"></i> لا توجد حالات
+                    </button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- 7. مرفوضه -->
+        <div class="col-md-3 col-sm-6">
+            <div class="card text-white bg-dark h-100">
+                <div class="card-body text-center">
+                    <h6 class="card-title"><i class="fas fa-ban"></i> مرفوضه</h6>
+                    <h3 class="card-text counter" data-target="{{ status_stats.rejected }}">0</h3>
+                    {% if status_stats.rejected > 0 %}
+                    <a href="{% url 'doctor_detail' doctor_name %}?status=rejected" class="btn btn-light btn-sm mt-2 w-100">
+                        <i class="fas fa-chevron-down"></i> عرض المزيد
+                    </a>
+                    {% else %}
+                    <button class="btn btn-light btn-sm mt-2 w-100" disabled>
+                        <i class="fas fa-minus"></i> لا توجد حالات
+                    </button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- 8. خدمة منتهية -->
+        <div class="col-md-3 col-sm-6">
+            <div class="card text-white" style="background: linear-gradient(135deg, #0dcaf0, #0d6efd);">
+                <div class="card-body text-center">
+                    <h6 class="card-title"><i class="fas fa-check-double"></i> خدمة منتهية</h6>
+                    <h3 class="card-text counter" data-target="{{ status_stats.serv_done }}">0</h3>
+                    {% if status_stats.serv_done > 0 %}
+                    <a href="{% url 'doctor_detail' doctor_name %}?status=serv. done" class="btn btn-light btn-sm mt-2 w-100">
+                        <i class="fas fa-chevron-down"></i> عرض المزيد
+                    </a>
+                    {% else %}
+                    <button class="btn btn-light btn-sm mt-2 w-100" disabled>
+                        <i class="fas fa-minus"></i> لا توجد حالات
+                    </button>
+                    {% endif %}
+                </div>
             </div>
         </div>
     </div>
 
-</div>
-
-<hr>
-
-<!-- ============================================ -->
-<!-- أعلى الجهات -->
-<!-- ============================================ -->
-<h4 class="mb-3">
-    <i class="bi bi-building"></i>
-    أعلى الجهات
-</h4>
-
-<div class="card shadow mb-4 hover-shadow">
-    <div class="card-body p-0">
-        <div class="list-group list-group-flush">
-            {% for item in top_entities %}
-            <div class="list-group-item d-flex justify-content-between align-items-center">
+    <!-- 📊 شريط الفلتر الحالي -->
+    {% if status_filter %}
+    <div class="row mb-3">
+        <div class="col-12">
+            <div class="alert alert-info d-flex justify-content-between align-items-center">
                 <span>
-                    <span class="badge bg-primary rounded-circle me-2">
-                        {{ forloop.counter }}
+                    <i class="fas fa-filter"></i> 
+                    <strong>عرض الحالات:</strong> 
+                    <span class="badge 
+                        {% if status_filter == 'approved' %}bg-success
+                        {% elif status_filter == 'cancelled' %}bg-secondary
+                        {% elif status_filter == 'patient refused' %}bg-danger
+                        {% elif status_filter == 'pending' %}bg-warning
+                        {% elif status_filter == 'bending by patient' %}bg-info
+                        {% elif status_filter == 'rejected' %}bg-dark
+                        {% elif status_filter == 'serv. done' %}" style="background: linear-gradient(135deg, #0dcaf0, #0d6efd); color: white;"
+                        {% else %}bg-primary{% endif %}">
+                        {{ status_filter }}
                     </span>
-                    <strong>{{ item.entity__name }}</strong>
-                </span>
-                <span>
-                    <span class="badge bg-info rounded-pill me-1">
-                        {{ item.total }} طلب
-                    </span>
-                    <span class="badge bg-success rounded-pill">
-                        {{ item.total_cost|floatformat:0 }} ج.م
+                    <span class="badge bg-light text-dark ms-2">
+                        {{ cases|length }} حالة
                     </span>
                 </span>
+                <a href="{% url 'doctor_detail' doctor_name %}" class="btn btn-sm btn-outline-secondary">
+                    <i class="fas fa-times"></i> إلغاء الفلتر
+                </a>
             </div>
-            {% empty %}
-            <div class="list-group-item text-center text-muted py-4">
-                <i class="bi bi-inbox"></i>
-                لا توجد بيانات
-            </div>
-            {% endfor %}
         </div>
     </div>
-</div>
+    {% endif %}
 
-<hr>
-
-<!-- ============================================ -->
-<!-- أعلى المرضى -->
-<!-- ============================================ -->
-<h4 class="mb-3">
-    <i class="bi bi-people"></i>
-    أعلى المرضى
-</h4>
-
-<div class="card shadow mb-4 hover-shadow">
-    <div class="card-body p-0">
-        <div class="list-group list-group-flush">
-            {% for item in top_patients %}
-            <div class="list-group-item d-flex justify-content-between align-items-center">
-                <span>
-                    <span class="badge bg-success rounded-circle me-2">
-                        {{ forloop.counter }}
-                    </span>
-                    <strong>{{ item.patient__full_name }}</strong>
-                </span>
-                <span>
-                    <span class="badge bg-info rounded-pill me-1">
-                        {{ item.total }} طلب
-                    </span>
-                    <span class="badge bg-success rounded-pill">
-                        {{ item.total_cost|floatformat:0 }} ج.م
-                    </span>
-                </span>
-            </div>
-            {% empty %}
-            <div class="list-group-item text-center text-muted py-4">
-                <i class="bi bi-inbox"></i>
-                لا توجد بيانات
-            </div>
-            {% endfor %}
-        </div>
-    </div>
-</div>
-
-<hr>
-
-<!-- ============================================ -->
-<!-- أعلى التخصصات -->
-<!-- ============================================ -->
-<h4 class="mb-3">
-    <i class="bi bi-tags"></i>
-    أعلى التخصصات
-</h4>
-
-<div class="card shadow mb-4 hover-shadow">
-    <div class="card-body p-0">
-        <div class="list-group list-group-flush">
-            {% for item in top_specialties %}
-            <div class="list-group-item d-flex justify-content-between align-items-center">
-                <span>
-                    <span class="badge bg-danger rounded-circle me-2">
-                        {{ forloop.counter }}
-                    </span>
-                    <strong>{{ item.specialty__name|default:"غير محدد" }}</strong>
-                </span>
-                <span class="badge bg-danger rounded-pill">
-                    {{ item.total }}
-                </span>
-            </div>
-            {% empty %}
-            <div class="list-group-item text-center text-muted py-4">
-                <i class="bi bi-inbox"></i>
-                لا توجد بيانات
-            </div>
-            {% endfor %}
-        </div>
-    </div>
-</div>
-
-<hr>
-
-<!-- ============================================ -->
-<!-- آخر الطلبات -->
-<!-- ============================================ -->
-<h4 class="mb-3">
-    <i class="bi bi-clock-history"></i>
-    آخر الطلبات
-</h4>
-
-<div class="card shadow hover-shadow">
-    <div class="card-body">
-
-        <div class="table-responsive">
-
-            <table class="table table-hover table-striped align-middle">
-
-                <thead class="table-light">
-                    <tr>
-                        <th>#</th>
-                        <th>المريض</th>
-                        <th>الجهة</th>
-                        <th>التكلفة</th>
-                        <th>الحالة</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-
-                {% for item in latest_requests %}
-
-                    <tr>
-
-                        <td>
-                            <span class="badge bg-secondary rounded-circle">
-                                {{ item.id }}
+    <!-- 📋 جدول تفاصيل الحالات -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-list"></i> 
+                        تفاصيل الحالات
+                        {% if status_filter %}
+                            <span class="badge bg-light text-primary ms-2">
+                                {{ status_filter }}
                             </span>
-                        </td>
+                        {% endif %}
+                        <span class="badge bg-light text-primary ms-2">{{ cases|length }}</span>
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover" id="casesTable">
+                            <thead class="table-primary">
+                                <tr>
+                                    <th>#</th>
+                                    <th>اسم المريض</th>
+                                    <th>الإجراء</th>
+                                    <th>الجهة</th>
+                                    <th>الطبيب</th>
+                                    <th>حالة الموافقة</th>
+                                    <th>تاريخ الدخول</th>
+                                    <th>التكلفة</th>
+                                    <th>عرض المزيد</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for case in cases %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td class="fw-bold">{{ case.patient_name|default:"-" }}</td>
+                                    <td>{{ case.procedure|truncatechars:30|default:"-" }}</td>
+                                    <td>{{ case.company|default:"-" }}</td>
+                                    <td>{{ case.doctor_name|default:"-" }}</td>
+                                    <td>
+                                        <span class="badge 
+                                            {% if case.main_status == 'approved' %}bg-success
+                                            {% elif case.main_status == 'cancelled' %}bg-secondary
+                                            {% elif case.main_status == 'patient refused' %}bg-danger
+                                            {% elif case.main_status == 'pending' %}bg-warning
+                                            {% elif case.main_status == 'bending by patient' %}bg-info
+                                            {% elif case.main_status == 'rejected' %}bg-dark
+                                            {% elif case.main_status == 'serv. done' %}" style="background: linear-gradient(135deg, #0dcaf0, #0d6efd); color: white;"
+                                            {% else %}bg-light text-dark{% endif %}">
+                                            {{ case.main_status|default:"-" }}
+                                        </span>
+                                    </td>
+                                    <td>{{ case.admission_date|date:"Y-m-d"|default:"-" }}</td>
+                                    <td>{{ case.initial_cost|floatformat:0 }}</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-primary" 
+                                                data-bs-toggle="modal" 
+                                                data-bs-target="#caseModal{{ case.id }}">
+                                            <i class="fas fa-chevron-down"></i> عرض
+                                        </button>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="9" class="text-center text-muted">
+                                        <i class="fas fa-info-circle"></i> لا توجد حالات
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                            <tfoot class="table-secondary fw-bold">
+                                <tr>
+                                    <td colspan="7" class="text-center">الإجمالي</td>
+                                    <td>{{ total_cost|floatformat:0 }}</td>
+                                    <td></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
 
-                        <td>
-                            <a href="{% url 'patient_detail' item.patient.id %}">
-    {{ item.patient.full_name }}
-</a>
-                        </td>
-
-                        <td>
-                            <a href="{% url 'contract_entity_detail' item.entity.id %}">
-    {{ item.entity.name }}
-</a>
-                        </td>
-
-                        <td>
-                            <span class="text-primary fw-bold">
-                                {{ item.requested_cost|floatformat:0|default:"-" }} ج.م
-                            </span>
-                        </td>
-
-                        <!-- ✅ ترجمة الحالة -->
-                        <td>
-                            {% if item.status == "approved" %}
-                                <span class="badge bg-success rounded-pill">
-                                    <i class="bi bi-check-circle"></i> تمت الموافقة
-                                </span>
-                            {% elif item.status == "pending" %}
-                                <span class="badge bg-warning text-dark rounded-pill">
-                                    <i class="bi bi-clock"></i> قيد الانتظار
-                                </span>
-                            {% elif item.status == "rejected" %}
-                                <span class="badge bg-danger rounded-pill">
-                                    <i class="bi bi-x-circle"></i> مرفوض
-                                </span>
-                            {% elif item.status == "service_done" %}
-                                <span class="badge bg-primary rounded-pill">
-                                    <i class="bi bi-check2-all"></i> تم التنفيذ
-                                </span>
-                            {% elif item.status == "patient_refused" %}
-                                <span class="badge bg-secondary rounded-pill">
-                                    <i class="bi bi-person-x"></i> رفض المريض
-                                </span>
-                            {% else %}
-                                <span class="badge bg-dark rounded-pill">
-                                    {{ item.status }}
-                                </span>
+                    <!-- Pagination -->
+                    {% if cases.has_other_pages %}
+                    <nav aria-label="Page navigation" class="mt-3">
+                        <ul class="pagination justify-content-center">
+                            {% if cases.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page=1">&laquo; الأولى</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ cases.previous_page_number }}">السابق</a>
+                            </li>
                             {% endif %}
-                        </td>
 
-                    </tr>
+                            <li class="page-item active">
+                                <span class="page-link">{{ cases.number }}</span>
+                            </li>
 
-                {% empty %}
-
-                    <tr>
-                        <td colspan="5" class="text-center text-muted py-4">
-                            <i class="bi bi-inbox fa-3x d-block mb-3"></i>
-                            لا توجد طلبات لهذا الطبيب
-                        </td>
-                    </tr>
-
-                {% endfor %}
-
-                </tbody>
-
-            </table>
-
+                            {% if cases.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ cases.next_page_number }}">التالي</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ cases.paginator.num_pages }}">الأخيرة &raquo;</a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                    {% endif %}
+                </div>
+            </div>
         </div>
-
     </div>
+
+    <!-- 🎯 Modals لكل حالة -->
+    {% for case in cases %}
+    <div class="modal fade" id="caseModal{{ case.id }}" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">
+                        <i class="fas fa-file-medical"></i> تفاصيل الحالة
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>👤 المريض:</strong> {{ case.patient_name|default:"-" }}</p>
+                            <p><strong>🆔 الرقم الطبي:</strong> {{ case.medical_number|default:"-" }}</p>
+                            <p><strong>🏥 الجهة:</strong> {{ case.company|default:"-" }}</p>
+                            <p><strong>👨‍⚕️ الطبيب:</strong> {{ case.doctor_name|default:"-" }}</p>
+                            <p><strong>📋 التخصص:</strong> {{ case.specialty|default:"-" }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>📝 الإجراء:</strong> {{ case.procedure|default:"-" }}</p>
+                            <p><strong>💰 التكلفة:</strong> {{ case.initial_cost|floatformat:0 }}</p>
+                            <p><strong>📅 تاريخ الدخول:</strong> {{ case.admission_date|date:"Y-m-d"|default:"-" }}</p>
+                            <p><strong>✅ الحالة:</strong> 
+                                <span class="badge 
+                                    {% if case.main_status == 'approved' %}bg-success
+                                    {% elif case.main_status == 'cancelled' %}bg-secondary
+                                    {% elif case.main_status == 'patient refused' %}bg-danger
+                                    {% elif case.main_status == 'pending' %}bg-warning
+                                    {% elif case.main_status == 'bending by patient' %}bg-info
+                                    {% elif case.main_status == 'rejected' %}bg-dark
+                                    {% elif case.main_status == 'serv. done' %}" style="background: linear-gradient(135deg, #0dcaf0, #0d6efd); color: white;"
+                                    {% else %}bg-light text-dark{% endif %}">
+                                    {{ case.main_status|default:"-" }}
+                                </span>
+                            </p>
+                            <p><strong>📝 ملاحظات:</strong> {{ case.notes|default:"-" }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إغلاق</button>
+                    <button type="button" class="btn btn-success" onclick="window.print()">
+                        <i class="fas fa-file-pdf"></i> PDF
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+    {% endif %}
 </div>
 
+<!-- 🎯 JavaScript -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // عدادات متحركة للبوكسات - مع التعامل مع NaN
+    const counters = document.querySelectorAll('.counter');
+    counters.forEach(counter => {
+        let target = parseFloat(counter.getAttribute('data-target'));
+        if (isNaN(target) || target === undefined) {
+            target = 0;
+        }
+        
+        const duration = 1000;
+        const step = target / (duration / 16);
+        let current = 0;
+        
+        const updateCounter = () => {
+            current += step;
+            if (current < target) {
+                counter.textContent = Math.round(current).toLocaleString();
+                requestAnimationFrame(updateCounter);
+            } else {
+                counter.textContent = target.toLocaleString();
+            }
+        };
+        
+        updateCounter();
+    });
+});
+</script>
 {% endblock %}
