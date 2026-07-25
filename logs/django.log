@@ -655,3 +655,155 @@ Watching for file changes with StatReloader
 "GET /external-approvals/status_rejected/ HTTP/1.1" 200 799334
 "GET /external-approvals/status_approved/ HTTP/1.1" 200 741916
 "GET /external-approvals/ HTTP/1.1" 200 49738
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 34264
+"GET /static/images/logo.jpeg HTTP/1.1" 200 68755
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 13579
+"GET /reports/ HTTP/1.1" 200 129398
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 34264
+"GET /static/images/logo.jpeg HTTP/1.1" 200 68755
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 13579
+"GET /quality-dashboard/ HTTP/1.1" 200 27623
+"GET /doctors/ HTTP/1.1" 200 24136
+"GET /credit-package-pricing/ HTTP/1.1" 200 66256
+"GET /credit-package-pricing/?company_search=%D8%A7%D8%A8%D8%A7%D8%AA%D8%B4%D9%89+%D9%85%D8%B5%D8%B1&company=152&specialty=&package_search=&package= HTTP/1.1" 200 211839
+"GET /credit-package-pricing/?company_search=%D8%A7%D8%A8%D8%A7%D8%AA%D8%B4%D9%89+%D9%85%D8%B5%D8%B1&company=152&specialty=44&package_search=&package= HTTP/1.1" 200 57914
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+"GET /credit-package-pricing/?company=152&package=12902&company_search=%D8%A7%D8%A8%D8%A7%D8%AA%D8%B4%D9%89%20%D9%85%D8%B5%D8%B1&package_search=&specialty=44 HTTP/1.1" 200 69110
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+"GET /credit-package-pricing/?company=152&package=12903&company_search=%D8%A7%D8%A8%D8%A7%D8%AA%D8%B4%D9%89%20%D9%85%D8%B5%D8%B1&package_search=&specialty=44 HTTP/1.1" 200 69135
+"GET /credit-package-pricing/?company=152&package=12903&company_search=%D8%A7%D8%A8%D8%A7%D8%AA%D8%B4%D9%89%20%D9%85%D8%B5%D8%B1&package_search=&specialty=44 HTTP/1.1" 200 69180
+"GET /credit-package-pricing/?company=152&package=12903&company_search=%D8%A7%D8%A8%D8%A7%D8%AA%D8%B4%D9%89%20%D9%85%D8%B5%D8%B1&package_search=&specialty=44 HTTP/1.1" 200 69135
+"GET /credit-package-pricing/?company=152&package=12903&company_search=%D8%A7%D8%A8%D8%A7%D8%AA%D8%B4%D9%89%20%D9%85%D8%B5%D8%B1&package_search=&specialty=44 HTTP/1.1" 200 69225
+"GET /credit-package-pricing/?company=152&package=12903&company_search=%D8%A7%D8%A8%D8%A7%D8%AA%D8%B4%D9%89%20%D9%85%D8%B5%D8%B1&package_search=&specialty=44 HTTP/1.1" 200 69266
+"GET /credit-package-pricing/?company=152&package=12903&company_search=%D8%A7%D8%A8%D8%A7%D8%AA%D8%B4%D9%89%20%D9%85%D8%B5%D8%B1&package_search=&specialty=44 HTTP/1.1" 200 69311
+"GET /credit-package-pricing/?company=152&package=12903&company_search=%D8%A7%D8%A8%D8%A7%D8%AA%D8%B4%D9%89%20%D9%85%D8%B5%D8%B1&package_search=&specialty=44 HTTP/1.1" 200 69359
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+"GET /credit-package-pricing/?company=152&package=12903&company_search=%D8%A7%D8%A8%D8%A7%D8%AA%D8%B4%D9%89%20%D9%85%D8%B5%D8%B1&package_search=&specialty=44 HTTP/1.1" 200 69359
+"GET /reports/ HTTP/1.1" 200 129398
+"GET /reports/ HTTP/1.1" 200 129009
+"GET /reports/ HTTP/1.1" 200 129398
+"GET /reports/ HTTP/1.1" 200 123563
+"GET /reports/ HTTP/1.1" 200 123563
+"GET /reports/ HTTP/1.1" 200 123563
+"GET /reports/ HTTP/1.1" 200 129398
+"GET /reports/ HTTP/1.1" 200 125143
+"GET /reports/ HTTP/1.1" 200 123706
+"GET /reports/specialty/%D8%A7%D9%84%D8%AC%D8%B1%D8%A7%D8%AD%D9%87/?month= HTTP/1.1" 200 175492
+"GET /reports/specialty/%D8%A7%D9%84%D8%A7%D9%86%D9%81%20%D9%88%D8%A7%D9%84%D8%A7%D8%B0%D9%86/?month= HTTP/1.1" 200 137976
+"GET /reports/specialty/%D8%A7%D9%84%D8%A7%D9%86%D9%81%20%D9%88%D8%A7%D9%84%D8%A7%D8%B0%D9%86/?month= HTTP/1.1" 200 137974
+"GET /reports/specialty/%D8%A7%D9%84%D8%A7%D9%86%D9%81%20%D9%88%D8%A7%D9%84%D8%A7%D8%B0%D9%86/?month= HTTP/1.1" 200 139737
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+"GET /contract-entities/ HTTP/1.1" 200 47022
+"GET /contract-entities/ HTTP/1.1" 200 47004
+"GET /contract-entities/ HTTP/1.1" 200 47004
+"GET /company-discounts/ HTTP/1.1" 200 108964
+"GET /company-discounts/?tab=discounts HTTP/1.1" 200 108964
+"GET /company-discounts/?tab=discounts HTTP/1.1" 200 108304
+"GET /company-discounts/?tab=discounts HTTP/1.1" 200 107696
+"GET /company-discounts/?tab=discounts HTTP/1.1" 200 102320
+"GET /company-discounts/?tab=discounts HTTP/1.1" 200 102320
+"GET /company-discounts/?tab=discounts&search=&section=internal HTTP/1.1" 200 87979
+"GET /company-discounts/?tab=discounts&search=&section=external HTTP/1.1" 200 72558
+"GET /company-discounts/?tab=exceptions&section=external HTTP/1.1" 200 135502
+"GET /company-discounts/?tab=discounts&section=external HTTP/1.1" 200 72558
+"GET /company-discounts/?tab=discounts&section=external HTTP/1.1" 200 72558
+"GET /company-discounts/ HTTP/1.1" 200 102320
+"GET /company-discounts/?tab=discounts HTTP/1.1" 200 102320
+"GET /company-discounts/?tab=discounts HTTP/1.1" 200 102320
+"GET /company-discounts/?tab=discounts HTTP/1.1" 200 108964
+"GET /company-discounts/?tab=discounts HTTP/1.1" 200 108920
+"GET /company-discounts/?tab=discounts HTTP/1.1" 200 108964
+"GET /credit-package-pricing/ HTTP/1.1" 200 66301
+"GET /credit-package-pricing/?company_search=%D8%A7%D9%84%D8%A8%D9%86%D9%83+%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%89+%D8%A7%D9%84%D8%A7%D9%81%D8%B1%D9%8A%D9%82%D9%89&company=161&specialty=&package_search=&package= HTTP/1.1" 200 216408
+"GET /credit-package-pricing/?company=161&package=13824&company_search=%D8%A7%D9%84%D8%A8%D9%86%D9%83%20%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%89%20%D8%A7%D9%84%D8%A7%D9%81%D8%B1%D9%8A%D9%82%D9%89&package_search=&specialty= HTTP/1.1" 200 89242
+"GET /company-discounts/ HTTP/1.1" 200 114702
+"GET /company-discounts/ HTTP/1.1" 200 114702
+"GET /company-discounts/ HTTP/1.1" 200 108964
+"GET /company-discounts/ HTTP/1.1" 200 114702
+"GET /company-discounts/ HTTP/1.1" 200 116642
+"GET /company-discounts/ HTTP/1.1" 200 117724
+"GET /company-discounts/ HTTP/1.1" 200 109132
+"GET /company-discounts/ HTTP/1.1" 200 115642
+"GET /company-discounts/ HTTP/1.1" 200 118774
+"GET /company-discounts/ HTTP/1.1" 200 118774
+"GET /company-discounts/ HTTP/1.1" 200 109560
+"GET /company-discounts/ HTTP/1.1" 200 109132
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /company-discounts/ HTTP/1.1" 200 117052
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /company-discounts/ HTTP/1.1" 200 117068
+"GET /company-discounts/ HTTP/1.1" 200 108964
+"GET /company-discounts/ HTTP/1.1" 200 109146
+"GET /company-discounts/ HTTP/1.1" 200 117024
+"GET /company-discounts/ HTTP/1.1" 200 117316
+"GET /company-discounts/ HTTP/1.1" 200 116998
+"GET /company-discounts/ HTTP/1.1" 200 108964
+"GET /company-discounts/ HTTP/1.1" 200 99568
+Not Found: /company-discounts/13%
+"GET /company-discounts/13% HTTP/1.1" 404 13611
+"GET /company-discounts/?tab=discounts&search=%D8%A8%D9%86%D9%83+%D9%85%D8%B5%D8%B1&section= HTTP/1.1" 200 74534
+"GET /company-discounts/?tab=discounts&search=%D9%88%D8%B2%D8%A7%D8%B1%D8%A9+%D8%A7%D9%84%D8%B9%D8%AF%D9%84&section= HTTP/1.1" 200 74454
+Watching for file changes with StatReloader
+"GET /similar-invoices/ HTTP/1.1" 200 340704
+"GET /similar-invoices/ HTTP/1.1" 200 314372
+"GET /similar-invoices/ HTTP/1.1" 200 311336
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+"GET /similar-invoices/ HTTP/1.1" 200 313198
+Watching for file changes with StatReloader
+"GET /external-approvals/ HTTP/1.1" 200 49738
+"GET /external-approvals/ HTTP/1.1" 200 51506
+"GET /external-approvals/ HTTP/1.1" 200 51506
+"GET /external-approvals/coordinator/ HTTP/1.1" 200 547451
+"GET /external-approvals/ HTTP/1.1" 200 53298
+"GET /external-approvals/ HTTP/1.1" 200 53298
+"GET /pending-analysis/ HTTP/1.1" 200 169422
+"GET /pending-analysis/ HTTP/1.1" 200 171444
+- Broken pipe from ('127.0.0.1', 62210)
+"GET /pending-analysis/ HTTP/1.1" 200 171444
+"GET /pending-analysis/ HTTP/1.1" 200 171444
+"GET /pending-analysis/ HTTP/1.1" 200 171556
+"GET /pending-analysis/ HTTP/1.1" 200 172704
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 13690
+"GET /external-approvals/status_approved/ HTTP/1.1" 200 741916
+"GET /pending-analysis/ HTTP/1.1" 200 171556
+"GET /pending-analysis/ HTTP/1.1" 200 172704
+"GET /pending-analysis/ HTTP/1.1" 200 172691
+"GET /external-approvals/status_serv_done/ HTTP/1.1" 200 837438
+"GET /pending-analysis/ HTTP/1.1" 200 180914
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /pending-analysis/ HTTP/1.1" 200 183878
+"GET /external-approvals/status_pending/ HTTP/1.1" 200 795507
+"GET /external-approvals/status_patient_refused/ HTTP/1.1" 200 795954
+"GET /external-approvals/status_rejected/ HTTP/1.1" 200 799334
+- Broken pipe from ('127.0.0.1', 58340)
+"GET /external-approvals/status_serv_done/ HTTP/1.1" 200 837438
+"GET /external-approvals/status_patient_refused/ HTTP/1.1" 200 795954
+"GET /external-approvals/total/ HTTP/1.1" 200 874263
+"GET /external-approvals/ HTTP/1.1" 200 53298
+"GET /external-approvals/coordinator/ HTTP/1.1" 200 547451
+"GET /external-approvals/status_undefined/ HTTP/1.1" 200 139833
+"GET /pending-analysis/ HTTP/1.1" 200 183878
+"GET /external-approvals/total/ HTTP/1.1" 200 874263
+"GET /external-approvals/total/ HTTP/1.1" 200 874263
+"GET /external-approvals/total/?search=%D8%B5%D9%81%D8%A7%D8%A1 HTTP/1.1" 200 90554
+"GET /external-approvals/total/?search=%D8%B5%D9%81%D8%A7%D8%A1 HTTP/1.1" 200 90554
+"GET /external-approvals/ HTTP/1.1" 200 53298
+"GET /pending-analysis/ HTTP/1.1" 200 169422
+"GET /external-approvals/total/ HTTP/1.1" 200 874263
+- Broken pipe from ('127.0.0.1', 58520)
+"GET /external-approvals/ HTTP/1.1" 200 53298
+- Broken pipe from ('127.0.0.1', 59881)
+"GET /pending-analysis/ HTTP/1.1" 200 183878

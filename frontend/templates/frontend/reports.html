@@ -365,39 +365,28 @@
         
     </div>
 
-    <!-- ============================================ -->
-    <!-- ✅ التخصصات - محسّن -->
-    <!-- ============================================ -->
-    <div class="row g-4">
-        {% for specialty in specialties %}
-        
-        <div class="col-xl-4 col-lg-6">
-            <div class="card specialty-card h-100">
-                
-                <div class="specialty-header">
-                    <div class="specialty-icon-wrapper" style="background: {{ specialty.color }};">
-                        <i class="{{ specialty.icon }}"></i>
-                    </div>
-                    <div class="specialty-info">
-                        <h5 class="specialty-name" style="color: {{ specialty.color }};">
-                            {{ specialty.name }}
-                        </h5>
-                        <div class="specialty-stats">
-                            <span>
-                                <i class="fas fa-box text-primary"></i>
-                                <span class="stat-total">{{ specialty.total }}</span> باكج
-                            </span>
-                            <span>
-                                <i class="fas fa-money-bill-wave text-success"></i>
-                                <span class="stat-cash">{{ specialty.cash }}</span> نقدي
-                            </span>
-                            <span>
-                                <i class="fas fa-clock text-warning"></i>
-                                <span class="stat-credit">{{ specialty.credit }}</span> آجل
-                            </span>
-                        </div>
+   <!-- ============================================ -->
+<!-- ✅ التخصصات - محسّن -->
+<!-- ============================================ -->
+<div class="row g-4">
+    {% for specialty in specialties %}
+    
+    <div class="col-xl-4 col-lg-6">
+        <div class="card specialty-card h-100">
+            
+            <div class="specialty-header">
+                <div class="specialty-icon-wrapper" style="background: {{ specialty.color }};">
+                    <i class="{{ specialty.icon }}"></i>
+                </div>
+                <div class="specialty-info">
+                    <h5 class="specialty-name" style="color: {{ specialty.color }};">
+                        {{ specialty.name }}
+                    </h5>
+                    <div class="specialty-stats">
+                       
                     </div>
                 </div>
+            </div>
                 
                 <div class="card-body">
                     

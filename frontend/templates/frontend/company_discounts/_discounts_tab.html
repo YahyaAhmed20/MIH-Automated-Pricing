@@ -20,59 +20,6 @@
         box-shadow: 0 0.5rem 1rem rgba(13, 110, 253, 0.15) !important;
     }
     
-    .doctor-fee-toggle {
-        cursor: pointer;
-        transition: all 0.3s ease;
-        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-        border-radius: 12px;
-        padding: 8px 15px;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-    }
-    
-    .doctor-fee-toggle:hover {
-        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-        color: white !important;
-        transform: scale(1.02);
-        box-shadow: 0 4px 15px rgba(13, 110, 253, 0.3);
-    }
-    
-    .doctor-fee-toggle i {
-        transition: transform 0.3s ease;
-    }
-    
-    .doctor-fee-toggle.active i {
-        transform: rotate(180deg);
-    }
-    
-    .doctor-fee-content {
-        max-height: 0;
-        overflow: hidden;
-        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        background: linear-gradient(135deg, #f0f8ff, #e3f2fd);
-        border-radius: 12px;
-        margin-top: 10px;
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    
-    .doctor-fee-content.show {
-        max-height: 500px;
-        opacity: 1;
-        transform: translateY(0);
-        padding: 20px;
-    }
-    
-    .fee-badge {
-        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-        color: white;
-        padding: 4px 12px;
-        border-radius: 20px;
-        font-size: 0.85rem;
-        font-weight: bold;
-    }
-    
     /* تحسينات الموبايل */
     @media (max-width: 768px) {
         .input-group-lg .form-control,
@@ -93,20 +40,6 @@
         
         .card-header h5 {
             font-size: 1rem;
-        }
-        
-        .doctor-fee-toggle {
-            font-size: 0.85rem;
-            padding: 6px 12px;
-        }
-        
-        .doctor-fee-content.show {
-            padding: 15px;
-        }
-        
-        .fee-badge {
-            font-size: 0.75rem;
-            padding: 3px 10px;
         }
         
         /* تحسين عرض البطاقات في الموبايل */
@@ -132,10 +65,6 @@
         .badge.fs-5 {
             font-size: 1rem !important;
             padding: 6px 15px !important;
-        }
-        
-        .doctor-fee-content.show {
-            padding: 12px;
         }
     }
     
@@ -335,71 +264,6 @@
 {% for company in companies %}
     <div class="company-card card shadow-sm border-0 mb-3 p-2 p-md-3">
         {% include "frontend/company_discounts/_company_discount_card.html" with company=company %}
-        
-        <!-- ✅ إضافة قسم إتعاب الأطباء -->
-        <div class="mt-3 pt-3 border-top">
-            <div class="doctor-fee-toggle" onclick="toggleDoctorFee(this)">
-                <i class="fas fa-stethoscope me-2"></i>
-                <span class="fw-bold">إتعاب الأطباء</span>
-                <i class="fas fa-chevron-down ms-2"></i>
-            </div>
-            
-            <div class="doctor-fee-content">
-                <div class="row g-2 g-md-3">
-                    <div class="col-12 col-md-6">
-                        <div class="p-2 p-md-3 bg-white rounded-3 shadow-sm">
-                            <h6 class="fw-bold text-primary mb-2">
-                                <i class="fas fa-syringe me-2"></i>
-                                فتح غرفة العمليات
-                            </h6>
-                            <div class="d-flex flex-wrap align-items-center gap-2">
-                                <span class="fee-badge">
-                                    <i class="fas fa-dollar-sign me-1"></i>
-                                    1,500 ج.م
-                                </span>
-                                <span class="text-muted small">(إتعاب الطبيب)</span>
-                            </div>
-                            <p class="text-muted small mt-2 mb-0">
-                                <i class="fas fa-clock me-1"></i>
-                                يشمل التخدير والمتابعة
-                            </p>
-                        </div>
-                    </div>
-                    <div class="col-12 col-md-6">
-                        <div class="p-2 p-md-3 bg-white rounded-3 shadow-sm">
-                            <h6 class="fw-bold text-primary mb-2">
-                                <i class="fas fa-procedures me-2"></i>
-                                الإقامة
-                            </h6>
-                            <div class="d-flex flex-wrap align-items-center gap-2">
-                                <span class="fee-badge">
-                                    <i class="fas fa-dollar-sign me-1"></i>
-                                    800 ج.م
-                                </span>
-                                <span class="text-muted small">(ليلة/سرير)</span>
-                            </div>
-                            <p class="text-muted small mt-2 mb-0">
-                                <i class="fas fa-bed me-1"></i>
-                                شامل التمريض والتغذية
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- ✅ ملاحظات إضافية -->
-                <div class="mt-3 p-2 p-md-3 bg-white rounded-3 shadow-sm">
-                    <div class="d-flex align-items-start gap-2">
-                        <i class="fas fa-info-circle text-primary mt-1"></i>
-                        <div>
-                            <span class="fw-bold text-primary">ملاحظة:</span>
-                            <span class="text-muted small">
-                                إتعاب الأطباء يشمل جميع التخصصات ويتم حسابه بناءً على نوع العملية ومدة الإقامة.
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 {% empty %}
     <div class="alert alert-warning text-center py-4 py-md-5 rounded-3">
@@ -463,21 +327,4 @@
             });
         }
     });
-    
-    // ✅ دالة toggle لإظهار/إخفاء إتعاب الأطباء
-    function toggleDoctorFee(element) {
-        element.classList.toggle('active');
-        const content = element.nextElementSibling;
-        content.classList.toggle('show');
-        
-        // تغيير أيقونة السهم
-        const chevron = element.querySelector('.fa-chevron-down');
-        if (chevron) {
-            if (element.classList.contains('active')) {
-                chevron.style.transform = 'rotate(180deg)';
-            } else {
-                chevron.style.transform = 'rotate(0deg)';
-            }
-        }
-    }
 </script>

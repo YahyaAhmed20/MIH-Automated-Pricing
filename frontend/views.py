@@ -1982,7 +1982,7 @@ def pending_analysis(request):
         status_stats[status] = {
             'count': count,
             'color': color,
-            'filter_type': status_filter_map.get(status, 'total'),  # ✅ جديد
+            'filter_type': status_filter_map.get(status, 'total'),
             'companies': list(
                 records.values('company')
                 .annotate(total=Count('id'))
@@ -2070,6 +2070,28 @@ def pending_analysis(request):
     age_labels = list(age_ranges.keys())
     age_values = list(age_ranges.values())
     
+    # ✅ ✅ ✅ جميع التخصصات (لـ "عرض المزيد")
+    all_specialties = list(
+        all_records.values('specialty')
+        .annotate(total=Count('id'))
+        .exclude(specialty__isnull=True)
+        .exclude(specialty='')
+        .order_by('-total')
+    )
+    all_specialty_labels = [item['specialty'] or 'غير محدد' for item in all_specialties]
+    all_specialty_values = [item['total'] for item in all_specialties]
+    
+    # ✅ ✅ ✅ جميع الشركات (لـ "عرض المزيد")
+    all_companies = list(
+        all_records.values('company')
+        .annotate(total=Count('id'))
+        .exclude(company__isnull=True)
+        .exclude(company='')
+        .order_by('-total')
+    )
+    all_company_labels = [item['company'] or 'غير محدد' for item in all_companies]
+    all_company_values = [item['total'] for item in all_companies]
+    
     # ✅ Pagination للجدول
     paginator = Paginator(all_records, 50)
     page_number = request.GET.get('page', 1)
@@ -2097,6 +2119,14 @@ def pending_analysis(request):
         'company_values': json.dumps(company_values),
         'age_labels': json.dumps(age_labels, ensure_ascii=False),
         'age_values': json.dumps(age_values),
+        
+        # ✅ ✅ ✅ جديد - جميع التخصصات والشركات
+        'all_specialty_labels': json.dumps(all_specialty_labels, ensure_ascii=False),
+        'all_specialty_values': json.dumps(all_specialty_values),
+        'all_company_labels': json.dumps(all_company_labels, ensure_ascii=False),
+        'all_company_values': json.dumps(all_company_values),
+        'all_specialties_count': len(all_specialties),
+        'all_companies_count': len(all_companies),
     }
     
     return render(request, "frontend/pending_analysis.html", context)

@@ -582,6 +582,37 @@
             font-size: 0.7rem !important;
         }
     }
+
+
+    /* ✅ جعل النص في سطرين مع تحديد الحد الأقصى للعرض */
+.text-wrap-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    word-break: break-word;
+    line-height: 1.3;
+    max-height: 2.6em; /* 2 lines */
+}
+
+/* ✅ تحسين عرض البادجات في الجدول */
+.patients-table .badge {
+    max-width: 100%;
+    white-space: normal;
+    word-break: break-word;
+    display: inline-block;
+    line-height: 1.3;
+    padding: 0.3rem 0.5rem;
+}
+
+/* ✅ ضبط عرض أعمدة التخصص والجهة */
+.patients-table tbody td:nth-child(5),
+.patients-table tbody td:nth-child(6) {
+    max-width: 95px;
+    word-break: break-word;
+}
 </style>
 
 <!-- ============================================ -->
@@ -887,89 +918,84 @@
     </div>
     {% endif %}
 
-    <!-- ============================================ -->
-    <!-- ✅ الجدول الرئيسي -->
-    <!-- ============================================ -->
-    {% if page_obj %}
+   <!-- ============================================ -->
+<!-- ✅ الجدول الرئيسي -->
+<!-- ============================================ -->
+{% if page_obj %}
 
-    <!-- ✅ ✅ ✅ حاوية الجدول مع التمرير -->
-    <div class="table-responsive patients-table">
-        <table class="table table-hover mb-0">
-            <thead>
-                <tr>
-                    <th style="width: 50px; min-width: 50px; position: sticky; left: 0; background: linear-gradient(135deg, #1a237e, #0d47a1); z-index: 3;">#</th>
-                    <th style="min-width: 120px;">📅 تاريخ الدخول</th>
-                    <th style="min-width: 140px;">👤 اسم المريض</th>
-                    <th style="min-width: 180px;">📋 اسم العملية</th>
-                    <th style="min-width: 120px;">📚 التخصص</th>
-                    <th style="min-width: 120px;">🏢 الجهة</th>
-                    <th style="min-width: 130px;">👨‍⚕️ الطبيب</th>
-                    <th style="min-width: 140px;" class="text-end">💰 صافي الفاتورة</th>
-                    <th style="min-width: 140px;" class="text-end">🏢 حصة الشركة</th>
-                    <th style="min-width: 110px;">📌 الحالة</th>
-                    <th style="min-width: 110px; position: sticky; right: 0; background: linear-gradient(135deg, #1a237e, #0d47a1); z-index: 5;">⚡ الإجراء</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for invoice in page_obj %}
-                <tr>
-                    <td style="position: sticky; left: 0; background: inherit; z-index: 1;">{{ forloop.counter0|add:page_obj.start_index }}</td>
-                    <td>{{ invoice.admission_date|date:"Y-m-d"|default:"-" }}</td>
-                    <td>
-                        <span class="fw-bold">{{ invoice.patient_name }}</span>
-                    </td>
-                    <td title="{{ invoice.operation_name }}">
-                        {{ invoice.operation_name|truncatechars:40 }}
-                    </td>
-                    <td><span class="badge bg-info">{{ invoice.specialty_name|default:"-" }}</span></td>
-                    <td><span class="badge bg-primary">{{ invoice.entity_name|default:"-" }}</span></td>
-                    <td>{{ invoice.doctor_name|default:"-" }}</td>
-                    <td class="text-end fw-bold text-success">
-                        {{ invoice.formatted_net_invoice }} ج.م
-                    </td>
-                    <td class="text-end fw-bold text-info">
-                        {{ invoice.formatted_company_share }} ج.م
-                    </td>
-                    <td>
-                        <span class="status-badge 
-                            {% if invoice.invoice_status == 'Final' %}final
-                            {% elif invoice.invoice_status == 'Pending' %}pending
-                            {% else %}default{% endif %}">
-                            {{ invoice.invoice_status|default:"-" }}
-                        </span>
-                    </td>
-                    <td style="position: sticky; right: 0; background: inherit; z-index: 2; box-shadow: -4px 0 12px rgba(0,0,0,0.08);">
-                        <button class="btn-view-details" 
-                                data-bs-toggle="modal" 
-                                data-bs-target="#detailsModal"
-                                data-account="{{ invoice.account_number|default:'-' }}"
-                                data-medical="{{ invoice.medical_number|default:'-' }}"
-                                data-patient="{{ invoice.patient_name }}"
-                                data-entity="{{ invoice.entity_name|default:'-' }}"
-                                data-doctor="{{ invoice.doctor_name|default:'-' }}"
-                                data-specialty="{{ invoice.specialty_name|default:'-' }}"
-                                data-operation="{{ invoice.operation_name }}"
-                                data-admission="{{ invoice.admission_date|date:'Y-m-d' }}"
-                                data-discharge="{{ invoice.discharge_date|date:'Y-m-d' }}"
-                                data-stay="{{ invoice.stay_duration|default:'-' }}"
-                                data-total="{{ invoice.total_invoice|floatformat:0 }}"
-                                data-discount="{{ invoice.discount|floatformat:0 }}"
-                                data-net="{{ invoice.net_invoice|floatformat:0 }}"
-                                data-company-share="{{ invoice.company_share|floatformat:0 }}"
-                                data-patient-share="{{ invoice.patient_share|floatformat:0 }}"
-                                data-payments="{{ invoice.payments|floatformat:0 }}"
-                                data-status="{{ invoice.invoice_status|default:'-' }}"
-                                data-closed-date="{{ invoice.invoice_closed_date|date:'Y-m-d'|default:'-' }}"
-                                data-notes="{{ invoice.notes|default:'-' }}">
-                            <i class="fas fa-eye me-1"></i> عرض
-                        </button>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+<!-- ✅ ✅ ✅ حاوية الجدول مع التمرير -->
+<div class="table-responsive patients-table">
+    <table class="table table-hover mb-0">
+        <thead>
+            <tr>
+                <th style="width: 50px; min-width: 50px; position: sticky; left: 0; background: linear-gradient(135deg, #1a237e, #0d47a1); z-index: 3;">#</th>
+                <th style="min-width: 120px;">📅 تاريخ الدخول</th>
+                <th style="min-width: 140px;">👤 اسم المريض</th>
+                <th style="min-width: 180px;">📋 اسم العملية</th>
+                <th style="min-width: 120px;">📚 التخصص</th>
+                <th style="min-width: 120px;">🏢 الجهة</th>
+                <th style="min-width: 130px;">👨‍⚕️ الطبيب</th>
+                <th style="min-width: 140px;" class="text-end">💰 صافي الفاتورة</th>
+                <th style="min-width: 110px; position: sticky; right: 0; background: linear-gradient(135deg, #1a237e, #0d47a1); z-index: 5;">⚡ الإجراء</th>
+            </tr>
+        </thead>
+       <tbody>
+    <tbody>
+    {% for invoice in page_obj %}
+    <tr>
+        <td style="position: sticky; left: 0; background: inherit; z-index: 1;">{{ forloop.counter0|add:page_obj.start_index }}</td>
+        <td>{{ invoice.admission_date|date:"Y-m-d"|default:"-" }}</td>
+        <td>
+            <span class="fw-bold">{{ invoice.patient_name }}</span>
+        </td>
+        <td title="{{ invoice.operation_name }}">
+            {{ invoice.operation_name|truncatechars:40 }}
+        </td>
+        <td>
+            <span class="text-wrap-2" style="white-space: normal; word-break: break-word; max-width: 95px; color: #212529; font-weight: 500;">
+                {{ invoice.specialty_name|default:"-" }}
+            </span>
+        </td>
+        <td>
+            <span class="text-wrap-2" style="white-space: normal; word-break: break-word; max-width: 95px; color: #212529; font-weight: 500;">
+                {{ invoice.entity_name|default:"-" }}
+            </span>
+        </td>
+        <td>{{ invoice.doctor_name|default:"-" }}</td>
+        <td class="text-end fw-bold text-success">
+            {{ invoice.formatted_net_invoice }} ج.م
+        </td>
+        <td style="position: sticky; right: 0; background: inherit; z-index: 2; box-shadow: -4px 0 12px rgba(0,0,0,0.08);">
+            <button class="btn-view-details" 
+                    data-bs-toggle="modal" 
+                    data-bs-target="#detailsModal"
+                    data-account="{{ invoice.account_number|default:'-' }}"
+                    data-medical="{{ invoice.medical_number|default:'-' }}"
+                    data-patient="{{ invoice.patient_name }}"
+                    data-entity="{{ invoice.entity_name|default:'-' }}"
+                    data-doctor="{{ invoice.doctor_name|default:'-' }}"
+                    data-specialty="{{ invoice.specialty_name|default:'-' }}"
+                    data-operation="{{ invoice.operation_name }}"
+                    data-admission="{{ invoice.admission_date|date:'Y-m-d' }}"
+                    data-discharge="{{ invoice.discharge_date|date:'Y-m-d' }}"
+                    data-stay="{{ invoice.stay_duration|default:'-' }}"
+                    data-total="{{ invoice.total_invoice|floatformat:0 }}"
+                    data-discount="{{ invoice.discount|floatformat:0 }}"
+                    data-net="{{ invoice.net_invoice|floatformat:0 }}"
+                    data-company-share="{{ invoice.company_share|floatformat:0 }}"
+                    data-patient-share="{{ invoice.patient_share|floatformat:0 }}"
+                    data-payments="{{ invoice.payments|floatformat:0 }}"
+                    data-status="{{ invoice.invoice_status|default:'-' }}"
+                    data-closed-date="{{ invoice.invoice_closed_date|date:'Y-m-d'|default:'-' }}"
+                    data-notes="{{ invoice.notes|default:'-' }}">
+                <i class="fas fa-eye me-1"></i> عرض
+            </button>
+        </td>
+    </tr>
+    {% endfor %}
+</tbody>
 
+</div>
     <!-- ✅ مؤشر التمرير -->
     <div class="d-flex justify-content-between align-items-center mt-2 text-muted small bg-light p-2 rounded">
         <div>

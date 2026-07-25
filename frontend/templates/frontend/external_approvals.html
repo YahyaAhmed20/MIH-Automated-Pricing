@@ -34,6 +34,17 @@
         font-weight: 800;
         text-shadow: 0 2px 10px rgba(0,0,0,0.2);
         line-height: 1.2;
+        transition: all 0.3s ease;
+    }
+    
+    .stats-box .stats-number.counting {
+        animation: pulse 0.5s ease;
+    }
+    
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); }
     }
     
     .stats-box .stats-label {
@@ -165,6 +176,22 @@
             padding: 0.2rem 0.8rem;
         }
     }
+
+    /* ✅ Counter animation for status numbers */
+    .counter-status {
+        display: inline-block;
+        transition: all 0.3s ease;
+    }
+    
+    .counter-status.counting {
+        animation: statusPulse 0.4s ease;
+    }
+    
+    @keyframes statusPulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.15); }
+        100% { transform: scale(1); }
+    }
 </style>
 
 <div class="container-fluid py-4">
@@ -183,14 +210,14 @@
     </div>
 
     <!-- ============================================ -->
-    <!-- ✅ البوكسات الإحصائية -->
+    <!-- ✅ البوكسات الإحصائية - مع كاونتر -->
     <!-- ============================================ -->
     <div class="row g-4 mb-4">
         
         <div class="col-md-2-4 col-lg-2 col-md-4 col-sm-6">
             <div class="stats-box" style="background: {{ box_colors.total }};">
                 <div class="stats-icon"><i class="fas fa-file-medical-alt"></i></div>
-                <div class="stats-number">{{ total_cases|intcomma }}</div>
+                <div class="stats-number counter" data-target="{{ total_cases }}">0</div>
                 <div class="stats-label">إجمالي الحالات المرسلة للتسعير</div>
                 <a href="{% url 'external_approvals_detail' 'total' %}" class="btn-show-details">
                     <i class="fas fa-eye me-1"></i> عرض المزيد
@@ -201,7 +228,7 @@
         <div class="col-md-2-4 col-lg-2 col-md-4 col-sm-6">
             <div class="stats-box" style="background: {{ box_colors.accounts }};">
                 <div class="stats-icon"><i class="fas fa-exclamation-triangle"></i></div>
-                <div class="stats-number">{{ pending_accounts|intcomma }}</div>
+                <div class="stats-number counter" data-target="{{ pending_accounts }}">0</div>
                 <div class="stats-label">الحالات المعطلة طرف الحسابات</div>
                 <a href="{% url 'external_approvals_detail' 'accounts' %}" class="btn-show-details">
                     <i class="fas fa-eye me-1"></i> عرض المزيد
@@ -212,7 +239,7 @@
         <div class="col-md-2-4 col-lg-2 col-md-4 col-sm-6">
             <div class="stats-box" style="background: {{ box_colors.coordinator }};">
                 <div class="stats-icon"><i class="fas fa-user-md"></i></div>
-                <div class="stats-number">{{ pending_coordinator|intcomma }}</div>
+                <div class="stats-number counter" data-target="{{ pending_coordinator }}">0</div>
                 <div class="stats-label">الحالات المعطلة طرف منسق العيادات</div>
                 <a href="{% url 'external_approvals_detail' 'coordinator' %}" class="btn-show-details">
                     <i class="fas fa-eye me-1"></i> عرض المزيد
@@ -223,7 +250,7 @@
         <div class="col-md-2-4 col-lg-2 col-md-4 col-sm-6">
             <div class="stats-box" style="background: {{ box_colors.without_approval }};">
                 <div class="stats-icon"><i class="fas fa-file-circle-xmark"></i></div>
-                <div class="stats-number">{{ cases_without_approval|intcomma }}</div>
+                <div class="stats-number counter" data-target="{{ cases_without_approval }}">0</div>
                 <div class="stats-label">حالات بدون موافقة</div>
                 <a href="{% url 'external_approvals_detail' 'without_approval' %}" class="btn-show-details">
                     <i class="fas fa-eye me-1"></i> عرض المزيد
@@ -234,7 +261,7 @@
         <div class="col-md-2-4 col-lg-2 col-md-4 col-sm-6">
             <div class="stats-box" style="background: {{ box_colors.early }};">
                 <div class="stats-icon"><i class="fas fa-calendar-check"></i></div>
-                <div class="stats-number">{{ early_admissions|intcomma }}</div>
+                <div class="stats-number counter" data-target="{{ early_admissions }}">0</div>
                 <div class="stats-label">حالات دخول باكر (غداً)</div>
                 <a href="{% url 'external_approvals_detail' 'early' %}" class="btn-show-details">
                     <i class="fas fa-eye me-1"></i> عرض المزيد
@@ -245,7 +272,7 @@
         <div class="col-md-2-4 col-lg-2 col-md-4 col-sm-6">
             <div class="stats-box" style="background: {{ box_colors.overview }};">
                 <div class="stats-icon"><i class="fas fa-chart-pie"></i></div>
-                <div class="stats-number">{{ total_cases|intcomma }}</div>
+                <div class="stats-number counter" data-target="{{ total_cases }}">0</div>
                 <div class="stats-label">نظرة عامة على موقف الحالات</div>
                 <a href="{% url 'external_approvals_detail' 'total' %}" class="btn-show-details">
                     <i class="fas fa-eye me-1"></i> عرض المزيد
@@ -256,7 +283,7 @@
     </div>
 
     <!-- ============================================ -->
-    <!-- ✅ توزيع الحالات حسب الحالة - مع Doughnut Chart -->
+    <!-- ✅ توزيع الحالات حسب الحالة - مع Doughnut Chart + Counters -->
     <!-- ============================================ -->
     <div class="card shadow-sm border-0">
         <div class="card-header bg-white d-flex justify-content-between align-items-center">
@@ -300,7 +327,7 @@
                                         </div>
                                     </div>
                                     <div class="text-end">
-                                        <span class="fw-bold fs-5" style="color: {{ status.color }};">{{ status.count }}</span>
+                                        <span class="fw-bold fs-5 counter-status" style="color: {{ status.color }};" data-target="{{ status.count }}">0</span>
                                         <br>
                                         <small class="text-muted">{{ status.percentage }}%</small>
                                     </div>
@@ -339,6 +366,74 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    
+    // ============================================
+    // ✅ الكاونترات المتحركة - للكروت الكبيرة
+    // ============================================
+    const counters = document.querySelectorAll('.stats-box .counter');
+    
+    counters.forEach(counter => {
+        const target = parseInt(counter.getAttribute('data-target'));
+        let current = 0;
+        const increment = Math.max(1, Math.ceil(target / 60));
+        
+        const updateCounter = () => {
+            if (current < target) {
+                current += increment;
+                if (current > target) current = target;
+                counter.textContent = current.toLocaleString('en-US');
+                requestAnimationFrame(updateCounter);
+            } else {
+                counter.textContent = target.toLocaleString('en-US');
+                counter.classList.add('counting');
+            }
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    updateCounter();
+                    observer.unobserve(entry.target);
+                }
+            });
+        });
+        
+        observer.observe(counter);
+    });
+    
+    // ============================================
+    // ✅ الكاونترات المتحركة - للحالات (status)
+    // ============================================
+    const statusCounters = document.querySelectorAll('.counter-status');
+    
+    statusCounters.forEach(counter => {
+        const target = parseInt(counter.getAttribute('data-target'));
+        let current = 0;
+        const increment = Math.max(1, Math.ceil(target / 50));
+        
+        const updateCounter = () => {
+            if (current < target) {
+                current += increment;
+                if (current > target) current = target;
+                counter.textContent = current.toLocaleString('en-US');
+                requestAnimationFrame(updateCounter);
+            } else {
+                counter.textContent = target.toLocaleString('en-US');
+                counter.classList.add('counting');
+            }
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    updateCounter();
+                    observer.unobserve(entry.target);
+                }
+            });
+        });
+        
+        observer.observe(counter);
+    });
     
     // ============================================
     // ✅ Status Doughnut Chart
