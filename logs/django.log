@@ -1047,3 +1047,8 @@ Watching for file changes with StatReloader
 "GET /package-comparison/?year1=2025&quarter1=%D8%A7%D9%84%D8%A7%D9%88%D9%84&month1=%D9%8A%D9%86%D8%A7%D9%8A%D8%B1&sector1=&entity1=&sub_company1=&specialty1=&package_type1=&year2=2025&quarter2=%D8%A7%D9%84%D8%AB%D8%A7%D9%86%D9%8A&month2=%D8%A3%D8%A8%D8%B1%D9%8A%D9%84&sector2=&entity2=&sub_company2=&specialty2=&package_type2=&source=sheet15 HTTP/1.1" 200 2133631
 D:\desktop\rphospital\src\imports\services\update_all_data_service.py changed, reloading.
 Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET /doctors/ HTTP/1.1" 200 223420
+"GET /doctors/ HTTP/1.1" 200 223351
+"GET /doctors/ HTTP/1.1" 200 223351
+"GET /doctors/ HTTP/1.1" 200 223309
