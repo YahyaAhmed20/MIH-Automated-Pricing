@@ -7,366 +7,398 @@
 {% block content %}
 
 <style>
-    /* ============================================ */
-    /* ✅ تحسينات UI من الصفحات الموحدة */
-    /* ============================================ */
-    
-    /* ===== Filter Card ===== */
-    .filter-card {
-        border-radius: 16px;
-        border: none;
-        background: #fff;
-        box-shadow: 0 4px 16px rgba(0,0,0,0.04);
-        margin-bottom: 1.5rem;
-    }
-    
+   /* ============================================ */
+/* ✅ تحسينات UI من الصفحات الموحدة */
+/* ============================================ */
+
+/* ===== Card Header Gradient ===== */
+.bg-gradient-primary {
+    background: linear-gradient(135deg, #0dcaf0, #0d6efd) !important;
+    border-radius: 16px 16px 0 0 !important;
+    padding: 1rem 1.5rem !important;
+}
+
+/* ✅ تحسين شكل الـ Card */
+.card.shadow {
+    border-radius: 16px !important;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08) !important;
+}
+
+.card-header .badge {
+    background: rgba(255,255,255,0.2) !important;
+    color: #fff !important;
+    border: 1px solid rgba(255,255,255,0.3);
+}
+
+.card-header .badge i {
+    color: #fff !important;
+}
+
+.card-header h5 {
+    color: #fff !important;
+    font-weight: 700;
+}
+
+.card-header h5 i {
+    color: #fff !important;
+}
+
+/* ===== Filter Card ===== */
+.filter-card {
+    border-radius: 16px;
+    border: none;
+    background: #fff;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+    margin-bottom: 1.5rem;
+}
+
+.filter-card .card-body {
+    padding: 1.25rem;
+}
+
+.filter-card .form-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #495057;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.3rem;
+}
+
+.filter-card .form-control {
+    border-radius: 10px;
+    border: 2px solid #e9ecef;
+    font-size: 0.85rem;
+    padding: 0.4rem 0.8rem;
+    transition: all 0.3s ease;
+    background: #fff;
+}
+
+.filter-card .form-control:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.1);
+}
+
+.filter-card .btn-filter {
+    border-radius: 10px;
+    padding: 0.4rem 1.2rem;
+    font-weight: 600;
+    font-size: 0.85rem;
+    transition: all 0.3s ease;
+}
+
+.filter-card .btn-filter:hover {
+    transform: translateY(-2px);
+}
+
+/* ===== Tabs المحسنة ===== */
+.nav-tabs-custom {
+    border-bottom: none;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.nav-tabs-custom .nav-link {
+    border: none;
+    border-radius: 12px;
+    padding: 0.6rem 1.5rem;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: #6c757d;
+    background: #f8f9fa;
+    transition: all 0.3s ease;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.nav-tabs-custom .nav-link:hover {
+    background: #e9ecef;
+    color: #0d6efd;
+    transform: translateY(-2px);
+}
+
+.nav-tabs-custom .nav-link.active {
+    background: linear-gradient(135deg, #0d6efd, #0dcaf0);
+    color: #fff !important;
+    box-shadow: 0 4px 15px rgba(13, 110, 253, 0.3);
+}
+
+.nav-tabs-custom .nav-link.active i {
+    color: #fff !important;
+}
+
+.nav-tabs-custom .nav-link .badge-tab {
+    background: rgba(255,255,255,0.2);
+    color: #fff;
+    padding: 0.1rem 0.6rem;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 600;
+}
+
+.nav-tabs-custom .nav-link.active .badge-tab {
+    background: rgba(255,255,255,0.3);
+}
+
+.nav-tabs-custom .nav-link:not(.active) .badge-tab {
+    background: #e9ecef;
+    color: #6c757d;
+}
+
+/* ===== Results Count ===== */
+.results-count {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 0.6rem 1.2rem;
+    border: 1px solid #e9ecef;
+    margin-bottom: 1.5rem;
+}
+
+.results-count .count-badge {
+    background: #0d6efd;
+    color: #fff;
+    padding: 0.2rem 0.8rem;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+/* ===== Custom Table ===== */
+.custom-table {
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+}
+
+.custom-table thead {
+    background: linear-gradient(135deg, #1a237e, #0d47a1);
+    color: #fff;
+}
+
+.custom-table thead th {
+    padding: 0.75rem 1rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border: none;
+    white-space: nowrap;
+}
+
+.custom-table tbody td {
+    padding: 0.75rem 1rem;
+    font-size: 0.85rem;
+    vertical-align: middle;
+    border-bottom: 1px solid #f1f3f5;
+}
+
+.custom-table tbody tr {
+    transition: all 0.3s ease;
+    cursor: default;
+}
+
+.custom-table tbody tr:hover {
+    background: #f8f9fa;
+}
+
+.custom-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* ===== Badges ===== */
+.badge-contract {
+    background: linear-gradient(135deg, #0dcaf0, #0d6efd) !important;
+    padding: 0.3rem 0.6rem;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.7rem;
+    color: white !important;
+}
+
+/* ===== Info Cards ===== */
+.info-card-stats {
+    border-radius: 16px;
+    padding: 1rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid #e9ecef;
+    height: 100%;
+    background: #fff;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.info-card-stats::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(135deg, #0dcaf0, #0d6efd);
+    opacity: 1;
+    transition: height 0.3s ease;
+}
+
+.info-card-stats:hover::before {
+    height: 6px;
+}
+
+.info-card-stats:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+    border-color: #0d6efd;
+}
+
+.info-card-stats .stats-number {
+    font-size: 1.75rem;
+    font-weight: 800;
+    margin: 0.25rem 0;
+}
+
+.info-card-stats .stats-label {
+    font-size: 0.75rem;
+    color: #6c757d;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* ===== No Results ===== */
+.no-results {
+    text-align: center;
+    padding: 4rem 1rem;
+    background: #f8f9fa;
+    border-radius: 16px;
+}
+
+.no-results i {
+    font-size: 4rem;
+    color: #dee2e6;
+    margin-bottom: 1rem;
+}
+
+/* ===== زر لوحة البيانات ===== */
+.btn-view-details {
+    border-radius: 10px;
+    padding: 0.4rem 1rem;
+    font-weight: 600;
+    font-size: 0.8rem;
+    transition: all 0.3s ease;
+    background: linear-gradient(135deg, #0d6efd, #0dcaf0);
+    border: none;
+    color: white;
+}
+
+.btn-view-details:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(13, 110, 253, 0.3);
+    color: white;
+}
+
+/* ===== تحسين عرض أسماء الجهات ===== */
+.entity-name-cell {
+    white-space: nowrap;
+}
+
+.entity-name-cell a {
+    white-space: nowrap;
+}
+
+/* ============================================ */
+/* ✅ تحسينات الموبايل */
+/* ============================================ */
+@media (max-width: 768px) {
     .filter-card .card-body {
-        padding: 1.25rem;
-    }
-    
-    .filter-card .form-label {
-        font-size: 0.7rem;
-        font-weight: 700;
-        color: #495057;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        margin-bottom: 0.3rem;
+        padding: 1rem;
     }
     
     .filter-card .form-control {
-        border-radius: 10px;
-        border: 2px solid #e9ecef;
-        font-size: 0.85rem;
-        padding: 0.4rem 0.8rem;
-        transition: all 0.3s ease;
-        background: #fff;
-    }
-    
-    .filter-card .form-control:focus {
-        border-color: #0d6efd;
-        box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.1);
-    }
-    
-    .filter-card .btn-filter {
-        border-radius: 10px;
-        padding: 0.4rem 1.2rem;
-        font-weight: 600;
-        font-size: 0.85rem;
-        transition: all 0.3s ease;
-    }
-    
-    .filter-card .btn-filter:hover {
-        transform: translateY(-2px);
-    }
-    
-    /* ===== Tabs المحسنة ===== */
-    .nav-tabs-custom {
-        border-bottom: none;
-        gap: 0.5rem;
-        margin-bottom: 1.5rem;
-        flex-wrap: wrap;
-    }
-    
-    .nav-tabs-custom .nav-link {
-        border: none;
-        border-radius: 12px;
-        padding: 0.6rem 1.5rem;
-        font-weight: 600;
-        font-size: 0.85rem;
-        color: #6c757d;
-        background: #f8f9fa;
-        transition: all 0.3s ease;
-        position: relative;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-    
-    .nav-tabs-custom .nav-link:hover {
-        background: #e9ecef;
-        color: #0d6efd;
-        transform: translateY(-2px);
-    }
-    
-    .nav-tabs-custom .nav-link.active {
-        background: linear-gradient(135deg, #0d6efd, #0dcaf0);
-        color: #fff !important;
-        box-shadow: 0 4px 15px rgba(13, 110, 253, 0.3);
-    }
-    
-    .nav-tabs-custom .nav-link.active i {
-        color: #fff !important;
-    }
-    
-    .nav-tabs-custom .nav-link .badge-tab {
-        background: rgba(255,255,255,0.2);
-        color: #fff;
-        padding: 0.1rem 0.6rem;
-        border-radius: 20px;
-        font-size: 0.7rem;
-        font-weight: 600;
-    }
-    
-    .nav-tabs-custom .nav-link.active .badge-tab {
-        background: rgba(255,255,255,0.3);
-    }
-    
-    .nav-tabs-custom .nav-link:not(.active) .badge-tab {
-        background: #e9ecef;
-        color: #6c757d;
-    }
-    
-    /* ===== Results Count ===== */
-    .results-count {
-        background: #f8f9fa;
-        border-radius: 12px;
-        padding: 0.6rem 1.2rem;
-        border: 1px solid #e9ecef;
-        margin-bottom: 1.5rem;
-    }
-    
-    .results-count .count-badge {
-        background: #0d6efd;
-        color: #fff;
-        padding: 0.2rem 0.8rem;
-        border-radius: 20px;
-        font-weight: 700;
-        font-size: 0.9rem;
-    }
-    
-    /* ===== Custom Table ===== */
-    .custom-table {
-        border-radius: 16px;
-        overflow: hidden;
-        box-shadow: 0 4px 16px rgba(0,0,0,0.04);
-    }
-    
-    .custom-table thead {
-        background: linear-gradient(135deg, #1a237e, #0d47a1);
-        color: #fff;
-    }
-    
-    .custom-table thead th {
-        padding: 0.75rem 1rem;
-        font-size: 0.75rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        border: none;
-        white-space: nowrap;
-    }
-    
-    .custom-table tbody td {
-        padding: 0.75rem 1rem;
-        font-size: 0.85rem;
-        vertical-align: middle;
-        border-bottom: 1px solid #f1f3f5;
-    }
-    
-    .custom-table tbody tr {
-        transition: all 0.3s ease;
-        cursor: default;
-    }
-    
-    .custom-table tbody tr:hover {
-        background: #f8f9fa;
-    }
-    
-    .custom-table tbody tr:last-child td {
-        border-bottom: none;
-    }
-    
-    /* ===== Badges ===== */
-    .badge-contract {
-        background: linear-gradient(135deg, #0dcaf0, #0d6efd) !important;
+        font-size: 0.8rem;
         padding: 0.3rem 0.6rem;
-        border-radius: 20px;
-        font-weight: 600;
-        font-size: 0.7rem;
-        color: white !important;
     }
     
-    /* ===== Info Cards ===== */
-    .info-card-stats {
-        border-radius: 16px;
-        padding: 1rem;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        border: 1px solid #e9ecef;
-        height: 100%;
-        background: #fff;
-        text-align: center;
-        position: relative;
-        overflow: hidden;
+    .custom-table {
+        font-size: 0.75rem;
     }
     
-    .info-card-stats::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 3px;
-        background: linear-gradient(90deg, #0d6efd, #0dcaf0);
-        opacity: 0;
-        transition: opacity 0.3s ease;
-    }
-    
-    .info-card-stats:hover::before {
-        opacity: 1;
-    }
-    
-    .info-card-stats:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 8px 30px rgba(0,0,0,0.08);
-        border-color: #0d6efd;
+    .custom-table thead th,
+    .custom-table tbody td {
+        padding: 0.5rem 0.5rem;
     }
     
     .info-card-stats .stats-number {
-        font-size: 1.75rem;
-        font-weight: 800;
-        margin: 0.25rem 0;
+        font-size: 1.25rem;
+    }
+    
+    .nav-tabs-custom .nav-link {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.75rem;
+    }
+    
+    .results-count {
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: 0.5rem;
+    }
+    
+    .btn-view-details {
+        font-size: 0.65rem;
+        padding: 0.25rem 0.6rem;
+    }
+    
+    .entity-name-cell {
+        font-size: 0.75rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .custom-table {
+        font-size: 0.6rem;
+    }
+    
+    .custom-table thead th,
+    .custom-table tbody td {
+        padding: 3px 2px;
+    }
+    
+    .info-card-stats .stats-number {
+        font-size: 1rem;
     }
     
     .info-card-stats .stats-label {
-        font-size: 0.75rem;
-        color: #6c757d;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
+        font-size: 0.6rem;
     }
     
-    /* ===== No Results ===== */
-    .no-results {
-        text-align: center;
-        padding: 4rem 1rem;
-        background: #f8f9fa;
-        border-radius: 16px;
+    .nav-tabs-custom .nav-link {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.65rem;
+        gap: 0.2rem;
     }
     
-    .no-results i {
-        font-size: 4rem;
-        color: #dee2e6;
-        margin-bottom: 1rem;
+    .nav-tabs-custom .nav-link .badge-tab {
+        font-size: 0.5rem;
+        padding: 0.05rem 0.3rem;
     }
     
-    /* ===== زر لوحة البيانات ===== */
     .btn-view-details {
-        border-radius: 10px;
-        padding: 0.4rem 1rem;
-        font-weight: 600;
-        font-size: 0.8rem;
-        transition: all 0.3s ease;
-        background: linear-gradient(135deg, #0d6efd, #0dcaf0);
-        border: none;
-        color: white;
+        font-size: 0.55rem;
+        padding: 0.2rem 0.4rem;
     }
     
-    .btn-view-details:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 20px rgba(13, 110, 253, 0.3);
-        color: white;
+    .badge-contract {
+        font-size: 0.55rem;
+        padding: 0.15rem 0.4rem;
     }
     
-    /* ===== تحسين عرض أسماء الجهات ===== */
     .entity-name-cell {
-        white-space: nowrap;
+        font-size: 0.65rem;
     }
-    
-    .entity-name-cell a {
-        white-space: nowrap;
-    }
-    
-    /* ============================================ */
-    /* ✅ تحسينات الموبايل */
-    /* ============================================ */
-    @media (max-width: 768px) {
-        .filter-card .card-body {
-            padding: 1rem;
-        }
-        
-        .filter-card .form-control {
-            font-size: 0.8rem;
-            padding: 0.3rem 0.6rem;
-        }
-        
-        .custom-table {
-            font-size: 0.75rem;
-        }
-        
-        .custom-table thead th,
-        .custom-table tbody td {
-            padding: 0.5rem 0.5rem;
-        }
-        
-        .info-card-stats .stats-number {
-            font-size: 1.25rem;
-        }
-        
-        .nav-tabs-custom .nav-link {
-            padding: 0.4rem 0.8rem;
-            font-size: 0.75rem;
-        }
-        
-        .results-count {
-            flex-direction: column;
-            align-items: flex-start !important;
-            gap: 0.5rem;
-        }
-        
-        .btn-view-details {
-            font-size: 0.65rem;
-            padding: 0.25rem 0.6rem;
-        }
-        
-        /* ✅ تصغير حجم الخط في الموبايل عشان الأسماء تظهر */
-        .entity-name-cell {
-            font-size: 0.75rem;
-        }
-    }
-    
-    @media (max-width: 576px) {
-        .custom-table {
-            font-size: 0.6rem;
-        }
-        
-        .custom-table thead th,
-        .custom-table tbody td {
-            padding: 3px 2px;
-        }
-        
-        .info-card-stats .stats-number {
-            font-size: 1rem;
-        }
-        
-        .info-card-stats .stats-label {
-            font-size: 0.6rem;
-        }
-        
-        .nav-tabs-custom .nav-link {
-            padding: 0.25rem 0.5rem;
-            font-size: 0.65rem;
-            gap: 0.2rem;
-        }
-        
-        .nav-tabs-custom .nav-link .badge-tab {
-            font-size: 0.5rem;
-            padding: 0.05rem 0.3rem;
-        }
-        
-        .btn-view-details {
-            font-size: 0.55rem;
-            padding: 0.2rem 0.4rem;
-        }
-        
-        .badge-contract {
-            font-size: 0.55rem;
-            padding: 0.15rem 0.4rem;
-        }
-        
-        .entity-name-cell {
-            font-size: 0.65rem;
-        }
-    }
+}
 </style>
 
 <!-- ============================================ -->

@@ -198,38 +198,62 @@
         margin-bottom: 1rem;
     }
     
-    /* ===== Info Cards ===== */
+    /* ============================================ */
+    /* ✅ Info Cards - تصميم بارز عند hover */
+    /* ============================================ */
     .info-card {
         border-radius: 16px;
         padding: 1.25rem;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        border: 1px solid #e9ecef;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 2px solid #e9ecef;
         height: 100%;
         background: #fff;
         position: relative;
         overflow: hidden;
+        cursor: pointer;
     }
     
+    /* ✅ الشريط العلوي المتدرج */
     .info-card::before {
         content: '';
         position: absolute;
         top: 0;
         left: 0;
         right: 0;
-        height: 3px;
+        height: 4px;
         background: linear-gradient(90deg, #0d6efd, #0dcaf0);
         opacity: 0;
-        transition: opacity 0.3s ease;
+        transition: opacity 0.4s ease;
     }
     
+    /* ✅ تأثير إضاءة خلفية عند hover */
+    .info-card::after {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(13, 110, 253, 0.03), transparent 70%);
+        opacity: 0;
+        transition: opacity 0.4s ease;
+        pointer-events: none;
+    }
+    
+    /* ✅ عند hover - كل التأثيرات تظهر بقوة */
     .info-card:hover::before {
         opacity: 1;
     }
     
+    .info-card:hover::after {
+        opacity: 1;
+    }
+    
     .info-card:hover {
-        transform: translateY(-6px);
-        box-shadow: 0 12px 40px rgba(0,0,0,0.1);
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: 0 16px 48px rgba(13, 110, 253, 0.2);
         border-color: #0d6efd;
+        background: #f8fcff;
     }
     
     .info-card .card-title {
@@ -298,6 +322,26 @@
 
     .fade-in {
         animation: fadeInUp 0.6s ease forwards;
+    }
+
+    /* ===== Accordion Header ===== */
+    .accordion-header-custom {
+        cursor: pointer;
+        transition: all 0.3s ease;
+        user-select: none;
+    }
+
+    .accordion-header-custom:hover {
+        opacity: 0.9;
+    }
+
+    .accordion-header-custom .accordion-icon {
+        transition: transform 0.3s ease;
+        display: inline-block;
+    }
+
+    .accordion-header-custom .accordion-icon.rotated {
+        transform: rotate(180deg);
     }
     
     /* ============================================ */
@@ -398,6 +442,19 @@
         .row.g-4 > .col-md-2 {
             flex: 0 0 100%;
             max-width: 100%;
+        }
+        
+        /* ✅ إزالة text-truncate من الشركة واسم الباكدج في الموبايل */
+        .info-card .value.text-truncate {
+            white-space: normal !important;
+            overflow: visible !important;
+            text-overflow: clip !important;
+            word-wrap: break-word !important;
+        }
+        
+        /* ✅ تكبير حجم الخط للشركة واسم الباكدج في الموبايل */
+        .info-card .value.small {
+            font-size: 0.85rem !important;
         }
     }
 </style>
@@ -584,315 +641,372 @@
         {% endif %}
 
         <!-- ============================================ -->
-        <!-- ✅ عرض تفاصيل الباكدج المختار -->
+        <!-- ✅ عرض تفاصيل الباكدج المختار - Accordion -->
         <!-- ============================================ -->
         {% if selected_package %}
+        
+        <!-- ===== القسم 1: معلومات الباكدج ===== -->
         <div class="card shadow border-0 mt-4 fade-in">
-            <div class="card-header" style="background: linear-gradient(135deg, #0dcaf0, #0d6efd); color: #fff;">
-                <h5 class="mb-0 d-flex align-items-center">
-                    <i class="bi bi-info-circle me-2"></i>
-                    معلومات الباكدج
-                    <span class="badge bg-light text-dark ms-3">
-                        <i class="bi bi-tag"></i>
-                        {{ selected_package.package.code|default:"بدون كود" }}
+            <div class="card-header accordion-header-custom" style="background: linear-gradient(135deg, #0dcaf0, #0d6efd); color: #fff;" onclick="toggleAccordion('packageInfo')">
+                <h5 class="mb-0 d-flex justify-content-between align-items-center">
+                    <span>
+                        <i class="bi bi-info-circle me-2"></i>
+                        معلومات الباكدج
+                        <span class="badge bg-light text-dark ms-3">
+                            <i class="bi bi-tag"></i>
+                            {{ selected_package.package.code|default:"بدون كود" }}
+                        </span>
+                        {% if selected_package.package.specialty %}
+                        <span class="badge bg-warning text-dark ms-2">
+                            <i class="bi bi-star"></i>
+                            {{ selected_package.package.specialty.name }}
+                        </span>
+                        {% endif %}
                     </span>
-                    {% if selected_package.package.specialty %}
-                    <span class="badge bg-warning text-dark ms-2">
-                        <i class="bi bi-star"></i>
-                        {{ selected_package.package.specialty.name }}
-                    </span>
-                    {% endif %}
-                </h5>
-            </div>
-
-            <div class="card-body">
-                <div class="row g-4">
-                    <!-- الشركة -->
-                    <div class="col-md-4 col-lg-3">
-                        <div class="info-card">
-                            <label><i class="bi bi-building"></i> الشركة</label>
-                            <div class="value">{{ selected_package.contract.entity.name }}</div>
-                        </div>
-                    </div>
-
-                    <!-- اسم الباكدج -->
-                    <div class="col-md-8 col-lg-5">
-                        <div class="info-card">
-                            <label><i class="bi bi-tag"></i> اسم الباكدج</label>
-                            <div class="value text-primary">{{ selected_package.package.name }}</div>
-                        </div>
-                    </div>
-
-                    <!-- التخصص -->
-                    <div class="col-md-4 col-lg-2">
-                        <div class="info-card">
-                            <label><i class="bi bi-star"></i> التخصص</label>
-                            <div class="value">{{ selected_package.package.specialty.name }}</div>
-                        </div>
-                    </div>
-
-                    <!-- السعر -->
-                    <div class="col-md-4 col-lg-2">
-                        <div class="info-card">
-                            <label><i class="bi bi-currency-pound"></i> السعر</label>
-                            <div class="value text-primary">{{ selected_package.formatted_price }} ج.م</div>
-                        </div>
-                    </div>
-
-                    <!-- مدة الإقامة -->
-                    <div class="col-md-4 col-lg-2">
-                        <div class="info-card">
-                            <label><i class="bi bi-clock"></i> مدة الإقامة</label>
-                            <div class="value">{{ selected_package.package.stay_duration|default:"-" }}</div>
-                        </div>
-                    </div>
-
-                    <!-- الكود -->
-                    <div class="col-md-4 col-lg-2">
-                        <div class="info-card">
-                            <label><i class="bi bi-upc-scan"></i> الكود</label>
-                            <div class="value">{{ selected_package.package.code|default:"-" }}</div>
-                        </div>
-                    </div>
-
-                    <!-- اعتباراً من -->
-                    <div class="col-md-4 col-lg-2">
-                        <div class="info-card">
-                            <label><i class="bi bi-calendar-plus"></i> اعتباراً من</label>
-                            <div class="value">{{ selected_package.effective_from|date:"Y-m-d"|default:"-" }}</div>
-                        </div>
-                    </div>
-
-                    <!-- صالح حتى -->
-                    <div class="col-md-4 col-lg-2">
-                        <div class="info-card">
-                            <label><i class="bi bi-calendar-minus"></i> صالح حتى</label>
-                            <div class="value">{{ selected_package.valid_until|date:"Y-m-d"|default:"-" }}</div>
-                        </div>
-                    </div>
-
-                    <!-- الحالة -->
-                    <div class="col-md-4 col-lg-2">
-                        <div class="info-card">
-                            <label><i class="bi bi-check-circle"></i> الحالة</label>
-                            <div class="value">
-                                {% if selected_package.is_expired %}
-                                    <span class="badge bg-danger">
-                                        <i class="bi bi-exclamation-circle"></i> منتهي
-                                    </span>
-                                {% else %}
-                                    <span class="badge bg-success">
-                                        <i class="bi bi-check-circle"></i> ساري
-                                    </span>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- ملاحظات الباكدج -->
-                    <div class="col-md-12">
-                        <div class="info-card">
-                            <label><i class="bi bi-pencil"></i> ملاحظات الباكدج</label>
-                            <div id="package-notes" style="padding: 4px 0; white-space: pre-wrap; line-height: 1.8;">
-                                {% if selected_package.package.package_note %}
-                                    {{ selected_package.package.package_note|linebreaksbr }}
-                                {% else %}
-                                    <span class="text-muted">لا توجد ملاحظات</span>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ============================================ -->
-        <!-- ✅ التسعير والخصومات -->
-        <!-- ============================================ -->
-        <div class="card shadow border-0 mt-4 fade-in">
-        <div class="card-header" style="background: linear-gradient(135deg, #0dcaf0, #0d6efd); color: #fff;">
-                <h5 class="mb-0 d-flex align-items-center">
-                    <i class="bi bi-cash-stack me-2"></i>
-                    تخفيض التكلفة
-                    <span class="badge bg-light text-dark ms-3">
-                        <i class="bi bi-percent"></i>
-                        خصم ديناميكي
+                    <span class="accordion-icon" id="packageInfoIcon">
+                        <i class="bi bi-chevron-up"></i>
                     </span>
                 </h5>
             </div>
 
-            <div class="card-body">
-                <!-- Hidden Fields -->
-                <input type="hidden" id="base-price" value="{{ selected_package.total_before_discount|default:0 }}">
-                <input type="hidden" id="special-price" value="{{ selected_package.special_offer_price|default:0 }}">
-                <input type="hidden" id="cash-price" value="{{ selected_package.cash_price|default:0 }}">
-                <input type="hidden" id="current-price-value" value="{{ selected_package.package_price|default:0 }}">
-                <input type="hidden" id="suggested-price-value" value="{{ selected_package.suggested_price|default:0 }}">
-
-                <div class="row g-4">
-                    <div class="col-md-4">
-                        <div class="info-card">
-                            <label><i class="bi bi-coin"></i> السعر الحالي</label>
-                            <div class="value text-primary">{{ selected_package.formatted_price }} ج.م</div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-4">
-                        <div class="info-card">
-                            <label><i class="bi bi-calculator"></i> الإجمالي (بدون خصم)</label>
-                            <div class="value">{{ selected_package.formatted_total_before }} ج.م</div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-4">
-                        <div class="info-card">
-                            <label><i class="bi bi-list-ul"></i> قائمة الأسعار</label>
-                            <div class="value">{{ selected_package.price_list_applied|default:'-' }}</div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-4">
-                        <div class="info-card">
-                            <label><i class="bi bi-percent"></i> معدل الخصم الحالي</label>
-                            <div class="value">{{ selected_package.current_discount_label }}</div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-4">
-                        <div class="info-card">
-                            <label><i class="bi bi-sliders2"></i> معدل الخصم المقترح</label>
-                            <select id="discount-select" class="form-select">
-                                {% if selected_package.suggested_discount_rate %}
-                                <option value="{{ selected_package.suggested_discount_rate }}" selected>
-                                    العقد الحالي ({{ selected_package.formatted_suggested_discount }})
-                                </option>
-                                {% endif %}
-                                <option value="5">5%</option>
-                                <option value="10">10%</option>
-                                <option value="15">15%</option>
-                                <option value="20">20%</option>
-                                <option value="25">25%</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="col-md-4">
-                        <div class="info-card">
-                            <label><i class="bi bi-tag"></i> السعر المقترح</label>
-                            <div id="suggested-price-display" class="value text-success">
-                                {{ selected_package.formatted_suggested_price }}
+            <div id="packageInfoContent" class="collapse show">
+                <div class="card-body">
+                    <div class="row g-3">
+                        <!-- 1️⃣ الشركة -->
+                        <div class="col-md-3 col-6">
+                            <div class="info-card text-center">
+                                <div class="card-title justify-content-center">
+                                    <i class="bi bi-building text-primary"></i>
+                                    الشركة
+                                </div>
+                                <div class="value" title="{{ selected_package.contract.entity.name }}">
+                                    {{ selected_package.contract.entity.name }}
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="col-md-4">
-                        <div class="info-card">
-                            <label><i class="bi bi-gift"></i> قيمة التخفيض</label>
-                            <div id="savings-display" class="value text-danger">
-                                {{ selected_package.formatted_discount_value }}
+                        <!-- 2️⃣ اسم الباكدج -->
+                        <div class="col-md-3 col-6">
+                            <div class="info-card text-center">
+                                <div class="card-title justify-content-center">
+                                    <i class="bi bi-tag text-success"></i>
+                                    اسم الباكدج
+                                </div>
+                                <div class="value text-primary" title="{{ selected_package.package.name }}">
+                                    {{ selected_package.package.name }}
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="col-md-8">
-                        <div class="alert alert-info mb-0">
-                            <strong><i class="bi bi-info-circle"></i> ملاحظات الأسعار</strong>
-                            <hr class="my-2">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <i class="bi bi-star"></i>
-                                    <strong>أقل سعر أجل (Special Offer):</strong>
-                                    <span class="fw-bold">{{ selected_package.formatted_special_offer }} ج.م</span>
-                                    {% if selected_package.special_offer_company %}
-                                        <br>
-                                        <small class="text-success">
-                                            <i class="bi bi-building"></i>
-                                            {{ selected_package.special_offer_company }}
-                                        </small>
+                        <!-- 3️⃣ التخصص -->
+                        <div class="col-md-3 col-6">
+                            <div class="info-card text-center">
+                                <div class="card-title justify-content-center">
+                                    <i class="bi bi-star text-warning"></i>
+                                    التخصص
+                                </div>
+                                <div class="value">
+                                    {{ selected_package.package.specialty.name }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 4️⃣ السعر -->
+                        <div class="col-md-3 col-6">
+                            <div class="info-card text-center">
+                                <div class="card-title justify-content-center">
+                                    <i class="bi bi-currency-pound text-danger"></i>
+                                    السعر
+                                </div>
+                                <div class="value" style="font-size: 1.3rem; font-weight: 800; color: #198754;">
+                                    {{ selected_package.formatted_price }} ج.م
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 5️⃣ مدة الإقامة -->
+                        <div class="col-md-3 col-6">
+                            <div class="info-card text-center">
+                                <div class="card-title justify-content-center">
+                                    <i class="bi bi-clock text-info"></i>
+                                    مدة الإقامة
+                                </div>
+                                <div class="value">
+                                    {{ selected_package.package.stay_duration|default:"-" }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 6️⃣ الكود -->
+                        <div class="col-md-3 col-6">
+                            <div class="info-card text-center">
+                                <div class="card-title justify-content-center">
+                                    <i class="bi bi-upc-scan text-purple"></i>
+                                    الكود
+                                </div>
+                                <div class="value">
+                                    <span class="badge bg-primary">{{ selected_package.package.code|default:"-" }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 7️⃣ اعتباراً من -->
+                        <div class="col-md-3 col-6">
+                            <div class="info-card text-center">
+                                <div class="card-title justify-content-center">
+                                    <i class="bi bi-calendar-plus text-success"></i>
+                                    اعتباراً من
+                                </div>
+                                <div class="value">
+                                    {{ selected_package.effective_from|date:"Y-m-d"|default:"-" }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 8️⃣ الحالة -->
+                        <div class="col-md-3 col-6">
+                            <div class="info-card text-center">
+                                <div class="card-title justify-content-center">
+                                    <i class="bi bi-check-circle"></i>
+                                    الحالة
+                                </div>
+                                <div class="value">
+                                    {% if selected_package.is_expired %}
+                                        <span class="badge bg-danger">
+                                            <i class="bi bi-exclamation-circle"></i> منتهي
+                                        </span>
+                                    {% else %}
+                                        <span class="badge bg-success">
+                                            <i class="bi bi-check-circle"></i> ساري
+                                        </span>
                                     {% endif %}
                                 </div>
-                                <div class="col-md-6">
-                                    <i class="bi bi-cash"></i>
-                                    <strong>السعر النقدي:</strong>
-                                    <span class="fw-bold">{{ selected_package.formatted_cash }} ج.م</span>
+                            </div>
+                        </div>
+
+                        <!-- 9️⃣ الملاحظات -->
+                        <div class="col-12">
+                            <div class="info-card">
+                                <div class="card-title">
+                                    <i class="bi bi-pencil text-warning"></i>
+                                    ملاحظات الباكدج
+                                </div>
+                                <div id="package-notes" style="padding: 4px 0; white-space: pre-wrap; line-height: 1.8;">
+                                    {% if selected_package.package.package_note %}
+                                        {{ selected_package.package.package_note|linebreaksbr }}
+                                    {% else %}
+                                        <span class="text-muted">لا توجد ملاحظات</span>
+                                    {% endif %}
                                 </div>
                             </div>
-                            <hr class="my-2">
-                            <small class="text-muted">
-                                <i class="bi bi-info-circle"></i>
-                                تغيير نسبة الخصم يحسب السعر الجديد فقط، ولا يتم حفظ أي بيانات.
-                            </small>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- ============================================ -->
-        <!-- ✅ جدول مقارنة الخصومات -->
-        <!-- ============================================ -->
-        <div class="card shadow border-0 mt-4 fade-in">
-            <div class="card-header" style="background: linear-gradient(135deg, #0dcaf0, #0d6efd); color: #fff;">
-                <h5 class="mb-0 d-flex align-items-center">
-                    <i class="bi bi-table me-2"></i>
-                    معدلات الخصم المقترحة
-                    <span class="badge bg-light text-dark ms-3">
-                        <i class="bi bi-arrow-left-right"></i>
-                        مقارنة
+        <!-- ===== القسم 2: تخفيض التكلفة ===== -->
+        <div class="card shadow border-0 mt-3 fade-in">
+            <div class="card-header accordion-header-custom" style="background: linear-gradient(135deg, #0dcaf0, #0d6efd); color: #fff;" onclick="toggleAccordion('pricingInfo')">
+                <h5 class="mb-0 d-flex justify-content-between align-items-center">
+                    <span>
+                        <i class="bi bi-cash-stack me-2"></i>
+                        تخفيض التكلفة
+                        <span class="badge bg-light text-dark ms-3">
+                            <i class="bi bi-percent"></i>
+                            خصم ديناميكي
+                        </span>
+                    </span>
+                    <span class="accordion-icon" id="pricingInfoIcon">
+                        <i class="bi bi-chevron-down"></i>
                     </span>
                 </h5>
             </div>
 
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-bordered table-hover align-middle">
-                        <thead>
-                            <tr>
-                                <th>معدل الخصم</th>
-                                <th>السعر المقترح</th>
-                                <th>قيمة التخفيض</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr><td><span class="badge bg-primary">5%</span></td><td id="price5">-</td><td id="saving5">-</td></tr>
-                            <tr><td><span class="badge bg-info">10%</span></td><td id="price10">-</td><td id="saving10">-</td></tr>
-                            <tr><td><span class="badge bg-success">15%</span></td><td id="price15">-</td><td id="saving15">-</td></tr>
-                            <tr><td><span class="badge bg-warning text-dark">20%</span></td><td id="price20">-</td><td id="saving20">-</td></tr>
-                            <tr><td><span class="badge bg-danger">25%</span></td><td id="price25">-</td><td id="saving25">-</td></tr>
-                        </tbody>
-                    </table>
+            <div id="pricingInfoContent" class="collapse">
+                <div class="card-body">
+                    <!-- Hidden Fields -->
+                    <input type="hidden" id="base-price" value="{{ selected_package.total_before_discount|default:0 }}">
+                    <input type="hidden" id="special-price" value="{{ selected_package.special_offer_price|default:0 }}">
+                    <input type="hidden" id="cash-price" value="{{ selected_package.cash_price|default:0 }}">
+                    <input type="hidden" id="current-price-value" value="{{ selected_package.package_price|default:0 }}">
+                    <input type="hidden" id="suggested-price-value" value="{{ selected_package.suggested_price|default:0 }}">
+
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <div class="info-card">
+                                <div class="card-title"><i class="bi bi-coin text-primary"></i> السعر الحالي</div>
+                                <div class="value text-primary">{{ selected_package.formatted_price }} ج.م</div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="info-card">
+                                <div class="card-title"><i class="bi bi-calculator text-success"></i> الإجمالي (بدون خصم)</div>
+                                <div class="value">{{ selected_package.formatted_total_before }} ج.م</div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="info-card">
+                                <div class="card-title"><i class="bi bi-list-ul text-purple"></i> قائمة الأسعار</div>
+                                <div class="value">{{ selected_package.price_list_applied|default:'-' }}</div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="info-card">
+                                <div class="card-title"><i class="bi bi-percent text-warning"></i> معدل الخصم الحالي</div>
+                                <div class="value">{{ selected_package.current_discount_label }}</div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="info-card">
+                                <div class="card-title"><i class="bi bi-sliders2 text-warning"></i> معدل الخصم المقترح</div>
+                                <select id="discount-select" class="form-select">
+                                    {% if selected_package.suggested_discount_rate %}
+                                    <option value="{{ selected_package.suggested_discount_rate }}" selected>
+                                        العقد الحالي ({{ selected_package.formatted_suggested_discount }})
+                                    </option>
+                                    {% endif %}
+                                    <option value="5">5%</option>
+                                    <option value="10">10%</option>
+                                    <option value="15">15%</option>
+                                    <option value="20">20%</option>
+                                    <option value="25">25%</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="info-card">
+                                <div class="card-title"><i class="bi bi-tag text-success"></i> السعر المقترح</div>
+                                <div id="suggested-price-display" class="value text-success" style="font-size: 1.2rem; font-weight: 800;">
+                                    {{ selected_package.formatted_suggested_price }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="info-card">
+                                <div class="card-title"><i class="bi bi-gift text-danger"></i> قيمة التخفيض</div>
+                                <div id="savings-display" class="value text-danger" style="font-size: 1.1rem; font-weight: 700;">
+                                    {{ selected_package.formatted_discount_value }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="alert alert-info mb-0 border-start border-4 border-info">
+                                <strong><i class="bi bi-info-circle"></i> ملاحظات الأسعار</strong>
+                                <hr class="my-2">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <i class="bi bi-star text-warning"></i>
+                                        <strong>أقل سعر أجل (Special Offer):</strong>
+                                        <span class="fw-bold">{{ selected_package.formatted_special_offer }} ج.م</span>
+                                        {% if selected_package.special_offer_company %}
+                                            <br>
+                                            <small class="text-success">
+                                                <i class="bi bi-building"></i>
+                                                {{ selected_package.special_offer_company }}
+                                            </small>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-md-6">
+                                        <i class="bi bi-cash text-success"></i>
+                                        <strong>السعر النقدي:</strong>
+                                        <span class="fw-bold">{{ selected_package.formatted_cash }} ج.م</span>
+                                    </div>
+                                </div>
+                                <hr class="my-2">
+                                <small class="text-muted">
+                                    <i class="bi bi-info-circle"></i>
+                                    تغيير نسبة الخصم يحسب السعر الجديد فقط، ولا يتم حفظ أي بيانات.
+                                </small>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- ============================================ -->
-        <!-- ✅ المرفقات -->
-        <!-- ============================================ -->
-        <div class="card shadow border-0 mt-4 fade-in">
-            <div class="card-header" style="background: linear-gradient(135deg, #0dcaf0, #0d6efd); color: #fff;">
-                <h5 class="mb-0 d-flex align-items-center">
-                    <i class="bi bi-paperclip me-2"></i>
-                    المرفقات
-                    <span class="badge bg-light text-dark ms-3">
-                        <i class="bi bi-file-earmark"></i>
-                        {% if selected_package.approval_pdf %}مرفق{% else %}لا يوجد{% endif %}
+        <!-- ===== القسم 3: معدلات الخصم المقترحة ===== -->
+        <div class="card shadow border-0 mt-3 fade-in">
+            <div class="card-header accordion-header-custom" style="background: linear-gradient(135deg, #0dcaf0, #0d6efd); color: #fff;" onclick="toggleAccordion('discountTable')">
+                <h5 class="mb-0 d-flex justify-content-between align-items-center">
+                    <span>
+                        <i class="bi bi-table me-2"></i>
+                        معدلات الخصم المقترحة
+                        <span class="badge bg-light text-dark ms-3">
+                            <i class="bi bi-arrow-left-right"></i>
+                            مقارنة
+                        </span>
+                    </span>
+                    <span class="accordion-icon" id="discountTableIcon">
+                        <i class="bi bi-chevron-down"></i>
                     </span>
                 </h5>
             </div>
 
-            <div class="card-body">
-                {% if selected_package.approval_pdf %}
-                    <div class="alert alert-success mb-0">
-                        <strong><i class="bi bi-file-pdf"></i> المرفقات:</strong>
-                        <hr class="my-2">
-                        <pre class="mb-0" style="white-space: pre-wrap; word-wrap: break-word; font-size: 0.9rem;">{{ selected_package.approval_pdf }}</pre>
+            <div id="discountTableContent" class="collapse">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>معدل الخصم</th>
+                                    <th>السعر المقترح</th>
+                                    <th>قيمة التخفيض</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td><span class="badge bg-primary">5%</span></td><td id="price5">-</td><td id="saving5">-</td></tr>
+                                <tr><td><span class="badge bg-info">10%</span></td><td id="price10">-</td><td id="saving10">-</td></tr>
+                                <tr><td><span class="badge bg-success">15%</span></td><td id="price15">-</td><td id="saving15">-</td></tr>
+                                <tr><td><span class="badge bg-warning text-dark">20%</span></td><td id="price20">-</td><td id="saving20">-</td></tr>
+                                <tr><td><span class="badge bg-danger">25%</span></td><td id="price25">-</td><td id="saving25">-</td></tr>
+                            </tbody>
+                        </table>
                     </div>
-                {% else %}
-                    <div class="alert alert-warning mb-0 text-center py-4">
-                        <i class="bi bi-exclamation-triangle" style="font-size: 2rem;"></i>
-                        <h6 class="mt-2">لا توجد مرفقات</h6>
-                    </div>
-                {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== القسم 4: المرفقات ===== -->
+        <div class="card shadow border-0 mt-3 fade-in">
+            <div class="card-header accordion-header-custom" style="background: linear-gradient(135deg, #0dcaf0, #0d6efd); color: #fff;" onclick="toggleAccordion('attachments')">
+                <h5 class="mb-0 d-flex justify-content-between align-items-center">
+                    <span>
+                        <i class="bi bi-paperclip me-2"></i>
+                        المرفقات
+                        <span class="badge bg-light text-dark ms-3">
+                            <i class="bi bi-file-earmark"></i>
+                            {% if selected_package.approval_pdf %}مرفق{% else %}لا يوجد{% endif %}
+                        </span>
+                    </span>
+                    <span class="accordion-icon" id="attachmentsIcon">
+                        <i class="bi bi-chevron-down"></i>
+                    </span>
+                </h5>
+            </div>
+
+            <div id="attachmentsContent" class="collapse">
+                <div class="card-body">
+                    {% if selected_package.approval_pdf %}
+                        <div class="alert alert-success mb-0">
+                            <strong><i class="bi bi-file-pdf"></i> المرفقات:</strong>
+                            <hr class="my-2">
+                            <pre class="mb-0" style="white-space: pre-wrap; word-wrap: break-word; font-size: 0.9rem;">{{ selected_package.approval_pdf }}</pre>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-warning mb-0 text-center py-4">
+                            <i class="bi bi-exclamation-triangle" style="font-size: 2rem;"></i>
+                            <h6 class="mt-2">لا توجد مرفقات</h6>
+                        </div>
+                    {% endif %}
+                </div>
             </div>
         </div>
 
@@ -994,6 +1108,30 @@
 <!-- ============================================ -->
 <script>
 // ============================================================
+// ✅ Accordion - فتح وغلق الأقسام
+// ============================================================
+function toggleAccordion(sectionId) {
+    const content = document.getElementById(sectionId + 'Content');
+    const icon = document.getElementById(sectionId + 'Icon');
+    
+    if (content) {
+        if (content.classList.contains('show')) {
+            content.classList.remove('show');
+            if (icon) {
+                icon.innerHTML = '<i class="bi bi-chevron-down"></i>';
+                icon.classList.remove('rotated');
+            }
+        } else {
+            content.classList.add('show');
+            if (icon) {
+                icon.innerHTML = '<i class="bi bi-chevron-up"></i>';
+                icon.classList.add('rotated');
+            }
+        }
+    }
+}
+
+// ============================================================
 // ✅ معالجة بحث الشركة
 // ============================================================
 function handleCompanySearch(input) {
@@ -1086,6 +1224,15 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
+    
+    // ===== فتح القسم الأول تلقائياً =====
+    const packageInfoContent = document.getElementById('packageInfoContent');
+    const packageInfoIcon = document.getElementById('packageInfoIcon');
+    if (packageInfoContent && packageInfoIcon) {
+        packageInfoContent.classList.add('show');
+        packageInfoIcon.innerHTML = '<i class="bi bi-chevron-up"></i>';
+        packageInfoIcon.classList.add('rotated');
+    }
 });
 </script>
 
@@ -1193,7 +1340,6 @@ document.addEventListener("DOMContentLoaded", function () {
         let text = tempDiv.textContent.trim();
         
         if (text && text !== 'لا توجد ملاحظات') {
-            // تقسيم على * أو - أو \n
             let lines = text.split(/[\*\-\n]+/);
             let cleanLines = [];
             let seen = new Set();
