@@ -3389,6 +3389,7 @@ def package_performance_comparison(request):
     from django.db.models import Sum, Count, Q
     from decimal import Decimal
     from frontend.models import ReportStatisticSheet15
+    import json
     
     # 📅 الفلاتر - الفترة الأولى
     year1 = request.GET.get('year1', '2025')
@@ -3414,6 +3415,7 @@ def package_performance_comparison(request):
     source = request.GET.get('source', 'sheet15')
     
     if source == 'sheet11':
+        from frontend.models import ReportStatistic
         Model = ReportStatistic
         price_field = 'amount'
     else:
@@ -3424,7 +3426,10 @@ def package_performance_comparison(request):
     def build_filters(year, month, quarter, sector, entity, sub_company, specialty, package_type):
         filters = Q()
         if year:
-            filters &= Q(admission_date__year=int(year))
+            try:
+                filters &= Q(admission_date__year=int(year))
+            except:
+                pass
         if month:
             filters &= Q(month=month)
         if quarter:
@@ -3460,8 +3465,8 @@ def package_performance_comparison(request):
     queryset1 = Model.objects.filter(filters1)
     queryset2 = Model.objects.filter(filters2)
     
-    # 📊 تجميع البيانات
-    def aggregate_packages(queryset):
+    # 📊 تجميع البيانات مع التفاصيل الكاملة
+    def aggregate_packages_with_details(queryset):
         packages = {}
         for stat in queryset:
             pkg_name = stat.package_name or 'غير محدد'
@@ -3471,27 +3476,50 @@ def package_performance_comparison(request):
                     'total_amount': Decimal('0.00'),
                     'code': getattr(stat, 'code', ''),
                     'specialty': getattr(stat, 'specialty', ''),
+                    'sector': getattr(stat, 'sector', ''),
+                    'month': getattr(stat, 'month', ''),
+                    'entity': getattr(stat, 'entity_name', ''),
+                    'sub_company': getattr(stat, 'sub_company', ''),
+                    'details': []
                 }
             packages[pkg_name]['count'] += 1
             amount = getattr(stat, price_field) or Decimal('0.00')
             if amount:
                 packages[pkg_name]['total_amount'] += amount
+            
+            # ✅ إضافة التفاصيل لكل عملية
+            packages[pkg_name]['details'].append({
+                'patient_name': getattr(stat, 'patient_name', ''),
+                'admission_date': getattr(stat, 'admission_date', ''),
+                'amount': amount,
+                'entity': getattr(stat, 'entity_name', ''),
+                'sub_company': getattr(stat, 'sub_company', ''),
+                'sector': getattr(stat, 'sector', ''),
+                'month': getattr(stat, 'month', ''),
+                'status': getattr(stat, 'status', ''),
+                'code': getattr(stat, 'code', ''),
+                'specialty': getattr(stat, 'specialty', ''),
+            })
         return packages
     
-    packages1 = aggregate_packages(queryset1)
-    packages2 = aggregate_packages(queryset2)
+    packages1 = aggregate_packages_with_details(queryset1)
+    packages2 = aggregate_packages_with_details(queryset2)
     
     # 📊 دمج البيانات للمقارنة
     all_packages = set(packages1.keys()) | set(packages2.keys())
     comparison_data = []
     
     for pkg in all_packages:
-        # ✅ إضافة specialty في القيم الافتراضية
         default_data = {
             'count': 0,
             'total_amount': Decimal('0.00'),
             'code': '',
-            'specialty': ''  # ✅ أضف هذا
+            'specialty': '',
+            'sector': '',
+            'month': '',
+            'entity': '',
+            'sub_company': '',
+            'details': []
         }
         data1 = packages1.get(pkg, default_data)
         data2 = packages2.get(pkg, default_data)
@@ -3507,12 +3535,18 @@ def package_performance_comparison(request):
             'package_name': pkg,
             'code': data1['code'] or data2['code'] or '',
             'specialty': data1['specialty'] or data2['specialty'] or '',
+            'sector': data1['sector'] or data2['sector'] or '',
+            'month': data1['month'] or data2['month'] or '',
+            'entity': data1['entity'] or data2['entity'] or '',
+            'sub_company': data1['sub_company'] or data2['sub_company'] or '',
             'count1': data1['count'],
-            'amount1': data1['total_amount'],
+            'amount1': float(data1['total_amount']),
             'count2': data2['count'],
-            'amount2': data2['total_amount'],
+            'amount2': float(data2['total_amount']),
             'change_percent': round(change_percent, 1),
             'change_direction': 'up' if change_percent > 0 else 'down' if change_percent < 0 else 'same',
+            'details1': data1['details'],
+            'details2': data2['details'],
         })
     
     comparison_data.sort(key=lambda x: abs(x['change_percent']), reverse=True)
@@ -3581,8 +3615,12 @@ def package_performance_comparison(request):
               'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر']
     quarters = ['الاول', 'الثاني', 'الثالث', 'الرابع']
     
+    # ✅ تحويل Decimal إلى float و JSON
+    comparison_data_json = json.dumps(comparison_data, default=str)
+    
     context = {
         'comparison_data': comparison_data,
+        'comparison_data_json': comparison_data_json,
         'years': years,
         'months': months,
         'quarters': quarters,
@@ -3623,49 +3661,67 @@ from frontend.models import ReportStatisticSheet15
 from django.http import JsonResponse
 from frontend.models import ReportStatisticSheet15
 
+from django.http import JsonResponse
+
 def get_package_filters(request):
-    """API لإرجاع الفلاتر المترابطة"""
+    """API لإرجاع الفلاتر المترابطة (متسلسلة)"""
 
     source = request.GET.get("source", "sheet15")
+    entity = request.GET.get("entity", "").strip()
+    sector = request.GET.get("sector", "").strip()
+    sub_company = request.GET.get("sub_company", "").strip()
+    specialty = request.GET.get("specialty", "").strip()
+    
+    # ✅ الفلاتر الزمنية
+    year = request.GET.get("year", "").strip()
+    month = request.GET.get("month", "").strip()
+    quarter = request.GET.get("quarter", "").strip()
 
     if source == "sheet11":
         Model = ReportStatistic
     else:
         Model = ReportStatisticSheet15
 
-    queryset = Model.objects.order_by()
+    # ✅ قاعدة البيانات الأساسية
+    base_queryset = Model.objects.all()
+    filtered_queryset = Model.objects.all()
 
     # ==========================
-    # قراءة الفلاتر
+    # 1️⃣ تطبيق الفلاتر (ما عدا السنة)
     # ==========================
-
-    entity = request.GET.get("entity", "").strip()
-    sector = request.GET.get("sector", "").strip()
-    sub_company = request.GET.get("sub_company", "").strip()
-    specialty = request.GET.get("specialty", "").strip()
-
-    # ==========================
-    # تطبيق الفلاتر
-    # ==========================
-
     if entity:
-        queryset = queryset.filter(entity_name__icontains=entity)
-
+        filtered_queryset = filtered_queryset.filter(entity_name__icontains=entity)
     if sector:
-        queryset = queryset.filter(sector__icontains=sector)
-
+        filtered_queryset = filtered_queryset.filter(sector__icontains=sector)
     if sub_company:
-        queryset = queryset.filter(sub_company__icontains=sub_company)
-
+        filtered_queryset = filtered_queryset.filter(sub_company__icontains=sub_company)
     if specialty:
-        queryset = queryset.filter(specialty__icontains=specialty)
+        filtered_queryset = filtered_queryset.filter(specialty__icontains=specialty)
+    if month:
+        filtered_queryset = filtered_queryset.filter(month=month)
+    if quarter:
+        quarter_months = {
+            'الاول': ['يناير', 'فبراير', 'مارس'],
+            'الثاني': ['أبريل', 'مايو', 'يونيو'],
+            'الثالث': ['يوليو', 'أغسطس', 'سبتمبر'],
+            'الرابع': ['أكتوبر', 'نوفمبر', 'ديسمبر'],
+        }
+        if quarter in quarter_months:
+            filtered_queryset = filtered_queryset.filter(month__in=quarter_months[quarter])
+    
+    # ✅ السنة نطبقها بس للجلب (مش للفلترة لو مفيش بيانات)
+    year_queryset = filtered_queryset
+    if year:
+        try:
+            year_queryset = year_queryset.filter(admission_date__year=int(year))
+        except:
+            pass
 
     # ==========================
-    # القطاعات
+    # 2️⃣ جلب القطاعات (من filtered_queryset بدون سنة)
     # ==========================
-
     sectors = list(
-        queryset.exclude(sector__isnull=True)
+        filtered_queryset.exclude(sector__isnull=True)
         .exclude(sector="")
         .order_by()
         .values_list("sector", flat=True)
@@ -3673,11 +3729,21 @@ def get_package_filters(request):
     )
 
     # ==========================
-    # الشركات الفرعية
+    # 3️⃣ جلب الجهات (من filtered_queryset بدون سنة)
     # ==========================
+    entities = list(
+        filtered_queryset.exclude(entity_name__isnull=True)
+        .exclude(entity_name="")
+        .order_by()
+        .values_list("entity_name", flat=True)
+        .distinct()
+    )
 
+    # ==========================
+    # 4️⃣ جلب الشركات الفرعية (من filtered_queryset بدون سنة)
+    # ==========================
     sub_companies = list(
-        queryset.exclude(sub_company__isnull=True)
+        filtered_queryset.exclude(sub_company__isnull=True)
         .exclude(sub_company="")
         .order_by()
         .values_list("sub_company", flat=True)
@@ -3685,11 +3751,10 @@ def get_package_filters(request):
     )
 
     # ==========================
-    # التخصصات
+    # 5️⃣ جلب التخصصات (من filtered_queryset بدون سنة)
     # ==========================
-
     specialties = list(
-        queryset.exclude(specialty__isnull=True)
+        filtered_queryset.exclude(specialty__isnull=True)
         .exclude(specialty="")
         .order_by()
         .values_list("specialty", flat=True)
@@ -3697,13 +3762,11 @@ def get_package_filters(request):
     )
 
     # ==========================
-    # الباكدجات
+    # 6️⃣ جلب الباكدجات (من filtered_queryset بدون سنة)
     # ==========================
-
     package_list = []
-
     packages = (
-        queryset.exclude(package_name__isnull=True)
+        filtered_queryset.exclude(package_name__isnull=True)
         .exclude(package_name="")
         .order_by()
         .values("package_name", "code")
@@ -3711,10 +3774,8 @@ def get_package_filters(request):
     )
 
     for item in packages:
-
         package_name = item["package_name"]
         code = item["code"] or ""
-
         if code:
             package_list.append(f"{package_name} ({code})")
         else:
@@ -3722,6 +3783,7 @@ def get_package_filters(request):
 
     return JsonResponse({
         "sectors": sorted(sectors),
+        "entities": sorted(entities),
         "sub_companies": sorted(sub_companies),
         "specialties": sorted(specialties),
         "packages": sorted(package_list),

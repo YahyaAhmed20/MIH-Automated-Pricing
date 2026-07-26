@@ -405,6 +405,7 @@
                                     <th>الفترة الثانية (المبلغ)</th>
                                     <th>التغيير</th>
                                     <th>نسبة التغيير</th>
+                                    <th>الإجراءات</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -452,6 +453,14 @@
                                             </span>
                                         {% endif %}
                                     </td>
+                                    <td>
+                                        <button class="btn btn-sm btn-info" 
+                                                onclick="showPackageDetails({{ forloop.counter0 }})"
+                                                data-bs-toggle="modal" 
+                                                data-bs-target="#packageDetailsModal">
+                                            <i class="fas fa-eye"></i> عرض المزيد
+                                        </button>
+                                    </td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
@@ -462,7 +471,7 @@
                                     <td>{{ total_amount1|floatformat:2 }}</td>
                                     <td>{{ total_count2 }}</td>
                                     <td>{{ total_amount2|floatformat:2 }}</td>
-                                    <td colspan="2"></td>
+                                    <td colspan="3"></td>
                                 </tr>
                             </tfoot>
                         </table>
@@ -480,13 +489,261 @@
     </div>
 </div>
 
+<!-- ============================================ -->
+<!-- ✅ Modal تفاصيل الباكدج -->
+<!-- ============================================ -->
+<div class="modal fade" id="packageDetailsModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header" style="background: linear-gradient(135deg, #0d6efd, #0dcaf0); color: white;">
+                <h5 class="modal-title">
+                    <i class="fas fa-box"></i> 
+                    تفاصيل الباكدج: <span id="modalPackageName"></span>
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <!-- ✅ معلومات الباكدج -->
+                <div class="row g-3 mb-4">
+                    <div class="col-md-2">
+                        <div class="card border-0 bg-light">
+                            <div class="card-body text-center">
+                                <small class="text-muted">🔑 الكود</small>
+                                <h6 class="fw-bold" id="modalCode">-</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card border-0 bg-light">
+                            <div class="card-body text-center">
+                                <small class="text-muted">📚 التخصص</small>
+                                <h6 class="fw-bold" id="modalSpecialty">-</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="card border-0 bg-light">
+                            <div class="card-body text-center">
+                                <small class="text-muted">🏭 القطاع</small>
+                                <h6 class="fw-bold" id="modalSector">-</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="card border-0 bg-light">
+                            <div class="card-body text-center">
+                                <small class="text-muted">📅 الشهر</small>
+                                <h6 class="fw-bold" id="modalMonth">-</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card border-0 bg-success bg-opacity-10">
+                            <div class="card-body text-center">
+                                <small class="text-muted">💰 إجمالي المبلغ</small>
+                                <h6 class="fw-bold text-success" id="modalTotalAmount">-</h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ✅ الجهة والشركة الفرعية -->
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <div class="card border-0 bg-primary bg-opacity-10">
+                            <div class="card-body">
+                                <small class="text-muted">🏢 الجهة</small>
+                                <h6 class="fw-bold" id="modalEntity">-</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card border-0 bg-info bg-opacity-10">
+                            <div class="card-body">
+                                <small class="text-muted">🏢 الشركة الفرعية</small>
+                                <h6 class="fw-bold" id="modalSubCompany">-</h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ✅ تفاصيل الفترتين -->
+                <ul class="nav nav-tabs" id="detailsTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="period1-tab" data-bs-toggle="tab" data-bs-target="#period1" type="button" role="tab">
+                            <i class="fas fa-calendar-alt"></i> الفترة الأولى 
+                            <span class="badge bg-primary" id="count1-badge">0</span>
+                            <span class="badge bg-secondary" id="amount1-badge">0</span>
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="period2-tab" data-bs-toggle="tab" data-bs-target="#period2" type="button" role="tab">
+                            <i class="fas fa-calendar-alt"></i> الفترة الثانية
+                            <span class="badge bg-success" id="count2-badge">0</span>
+                            <span class="badge bg-secondary" id="amount2-badge">0</span>
+                        </button>
+                    </li>
+                </ul>
+                <div class="tab-content p-3 border border-top-0 rounded-bottom">
+                    <!-- ✅ الفترة الأولى -->
+                    <div class="tab-pane fade show active" id="period1" role="tabpanel">
+                        <div class="table-responsive">
+                            <table class="table table-sm table-hover">
+                                <thead class="table-primary">
+                                    <tr>
+                                        <th>#</th>
+                                        <th>المريض</th>
+                                        <th>التاريخ</th>
+                                        <th>الجهة</th>
+                                        <th>الشركة الفرعية</th>
+                                        <th class="text-end">المبلغ</th>
+                                        <th>الحالة</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="details1-body">
+                                    <!-- يتم ملؤها بواسطة JavaScript -->
+                                </tbody>
+                                <tfoot class="table-secondary fw-bold">
+                                    <tr>
+                                        <td colspan="5" class="text-end">الإجمالي</td>
+                                        <td class="text-end" id="total1-amount">0.00</td>
+                                        <td></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- ✅ الفترة الثانية -->
+                    <div class="tab-pane fade" id="period2" role="tabpanel">
+                        <div class="table-responsive">
+                            <table class="table table-sm table-hover">
+                                <thead class="table-success">
+                                    <tr>
+                                        <th>#</th>
+                                        <th>المريض</th>
+                                        <th>التاريخ</th>
+                                        <th>الجهة</th>
+                                        <th>الشركة الفرعية</th>
+                                        <th class="text-end">المبلغ</th>
+                                        <th>الحالة</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="details2-body">
+                                    <!-- يتم ملؤها بواسطة JavaScript -->
+                                </tbody>
+                                <tfoot class="table-secondary fw-bold">
+                                    <tr>
+                                        <td colspan="5" class="text-end">الإجمالي</td>
+                                        <td class="text-end" id="total2-amount">0.00</td>
+                                        <td></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times"></i> إغلاق
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- 🎯 JavaScript -->
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // ============================================
-    // دوال تحديث القوائم بالـ AJAX
-    // ============================================
+// ============================================
+// ✅ بيانات الباكدجات من الـ Django
+// ============================================
+const comparisonData = JSON.parse('{{ comparison_data_json|safe }}');
+
+// ✅ للتأكد من البيانات
+console.log('Comparison Data:', comparisonData);
+
+// ============================================
+// ✅ عرض تفاصيل الباكدج
+// ============================================
+function showPackageDetails(index) {
+    const item = comparisonData[index];
     
+    console.log('Selected Item:', item);
+    
+    // ✅ معلومات الباكدج
+    document.getElementById('modalPackageName').textContent = item.package_name || '-';
+    document.getElementById('modalCode').textContent = item.code || '-';
+    document.getElementById('modalSpecialty').textContent = item.specialty || '-';
+    document.getElementById('modalSector').textContent = item.sector || '-';
+    document.getElementById('modalMonth').textContent = item.month || '-';
+    document.getElementById('modalEntity').textContent = item.entity || '-';
+    document.getElementById('modalSubCompany').textContent = item.sub_company || '-';
+    
+    // ✅ إجمالي المبلغ (بالأرقام الإنجليزية)
+    const totalAmount = (item.amount1 || 0) + (item.amount2 || 0);
+    document.getElementById('modalTotalAmount').textContent = totalAmount.toLocaleString('en-US') + ' ج.م';
+    
+    // ✅ عدد السجلات والمبالغ (بالأرقام الإنجليزية)
+    document.getElementById('count1-badge').textContent = item.count1 || 0;
+    document.getElementById('count2-badge').textContent = item.count2 || 0;
+    document.getElementById('amount1-badge').textContent = (item.amount1 || 0).toLocaleString('en-US');
+    document.getElementById('amount2-badge').textContent = (item.amount2 || 0).toLocaleString('en-US');
+    
+    // ✅ تعبئة تفاصيل الفترة الأولى
+    const tbody1 = document.getElementById('details1-body');
+    tbody1.innerHTML = '';
+    let total1 = 0;
+    
+    if (item.details1 && item.details1.length > 0) {
+        item.details1.forEach((detail, i) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${i + 1}</td>
+                <td>${detail.patient_name || '-'}</td>
+                <td>${detail.admission_date || '-'}</td>
+                <td>${detail.entity || '-'}</td>
+                <td>${detail.sub_company || '-'}</td>
+                <td class="text-end fw-bold">${Number(detail.amount).toLocaleString('en-US')}</td>
+                <td><span class="badge bg-success">${detail.status || '-'}</span></td>
+            `;
+            tbody1.appendChild(row);
+            total1 += Number(detail.amount) || 0;
+        });
+    } else {
+        tbody1.innerHTML = `<tr><td colspan="7" class="text-center text-muted">لا توجد بيانات</td></tr>`;
+    }
+    document.getElementById('total1-amount').textContent = total1.toLocaleString('en-US');
+    
+    // ✅ تعبئة تفاصيل الفترة الثانية
+    const tbody2 = document.getElementById('details2-body');
+    tbody2.innerHTML = '';
+    let total2 = 0;
+    
+    if (item.details2 && item.details2.length > 0) {
+        item.details2.forEach((detail, i) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${i + 1}</td>
+                <td>${detail.patient_name || '-'}</td>
+                <td>${detail.admission_date || '-'}</td>
+                <td>${detail.entity || '-'}</td>
+                <td>${detail.sub_company || '-'}</td>
+                <td class="text-end fw-bold">${Number(detail.amount).toLocaleString('en-US')}</td>
+                <td><span class="badge bg-success">${detail.status || '-'}</span></td>
+            `;
+            tbody2.appendChild(row);
+            total2 += Number(detail.amount) || 0;
+        });
+    } else {
+        tbody2.innerHTML = `<tr><td colspan="7" class="text-center text-muted">لا توجد بيانات</td></tr>`;
+    }
+    document.getElementById('total2-amount').textContent = total2.toLocaleString('en-US');
+}
+
+// ============================================
+// ✅ دوال تحديث القوائم بالـ AJAX
+// ============================================
+document.addEventListener('DOMContentLoaded', function() {
     function updateDatalist(id, values) {
         const list = document.getElementById(id);
         if (!list) return;
@@ -503,47 +760,75 @@ document.addEventListener('DOMContentLoaded', function() {
         const sector = document.getElementById(`sector${prefix}`);
         const subCompany = document.getElementById(`sub_company${prefix}`);
         const specialty = document.getElementById(`specialty${prefix}`);
+        const packageType = document.getElementById(`package_type${prefix}`);
         const source = document.querySelector("select[name='source']");
         
-        if (!entity || !sector || !subCompany || !specialty || !source) return;
+        const year = document.querySelector(`select[name='year${prefix}']`);
+        const month = document.querySelector(`select[name='month${prefix}']`);
+        const quarter = document.querySelector(`select[name='quarter${prefix}']`);
+        
+        if (!entity || !sector || !subCompany || !specialty || !packageType || !source) return;
 
         async function refreshFilters() {
             const params = new URLSearchParams();
             params.append("source", source.value);
+            
             if (entity.value) params.append("entity", entity.value);
             if (sector.value) params.append("sector", sector.value);
             if (subCompany.value) params.append("sub_company", subCompany.value);
             if (specialty.value) params.append("specialty", specialty.value);
+            
+            if (year && year.value) params.append("year", year.value);
+            if (month && month.value) params.append("month", month.value);
+            if (quarter && quarter.value) params.append("quarter", quarter.value);
 
             try {
                 const response = await fetch(`/ajax/package-filters/?${params}`);
                 const data = await response.json();
 
                 updateDatalist(`sectorList${prefix}`, data.sectors || []);
+                updateDatalist(`entityList${prefix}`, data.entities || []);
                 updateDatalist(`subCompanyList${prefix}`, data.sub_companies || []);
                 updateDatalist(`specialtyList${prefix}`, data.specialties || []);
                 updateDatalist(`packageTypeList${prefix}`, data.packages || []);
+                
             } catch (error) {
                 console.error('Error refreshing filters:', error);
             }
         }
 
-        // تحديث عند تغيير القيم
         entity.addEventListener("change", refreshFilters);
+        entity.addEventListener("input", function() {
+            if (this.value === "") refreshFilters();
+        });
+        
         sector.addEventListener("change", refreshFilters);
+        sector.addEventListener("input", function() {
+            if (this.value === "") refreshFilters();
+        });
+        
         subCompany.addEventListener("change", refreshFilters);
+        subCompany.addEventListener("input", function() {
+            if (this.value === "") refreshFilters();
+        });
+        
         specialty.addEventListener("change", refreshFilters);
+        specialty.addEventListener("input", function() {
+            if (this.value === "") refreshFilters();
+        });
+
+        if (year) year.addEventListener("change", refreshFilters);
+        if (month) month.addEventListener("change", refreshFilters);
+        if (quarter) quarter.addEventListener("change", refreshFilters);
+
+        source.addEventListener("change", refreshFilters);
+        
+        setTimeout(() => refreshFilters(), 300);
     }
 
-    // ============================================
-    // تهيئة الفلاتر للفترتين
-    // ============================================
     initPackageFilters(1);
     initPackageFilters(2);
 
-    // ============================================
-    // تحديث عند الضغط على Enter في أي input
-    // ============================================
     const inputs = document.querySelectorAll('input[list]');
     inputs.forEach(input => {
         input.addEventListener('keypress', function(e) {
@@ -554,9 +839,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // ============================================
-    // تحديث عند تغيير أي Select (السنة، الربع، الشهر)
-    // ============================================
     const selects = document.querySelectorAll('.form-select-submit');
     selects.forEach(select => {
         select.addEventListener('change', function() {
@@ -564,39 +846,21 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // ============================================
-    // حل مشكلة اختيار الـ datalist
-    // ============================================
-    // عند النقر على خيار في الـ datalist، نقوم بتحديث الحقل
     document.addEventListener('click', function(e) {
         if (e.target.tagName === 'OPTION') {
             const datalist = e.target.closest('datalist');
             if (datalist) {
                 const input = document.querySelector(`input[list="${datalist.id}"]`);
                 if (input) {
-                    // تحديث قيمة الـ input
                     input.value = e.target.value;
-                    // تشغيل حدث change
                     const changeEvent = new Event('change', { bubbles: true });
                     input.dispatchEvent(changeEvent);
                 }
             }
         }
     });
-
-    // ============================================
-    // تنسيق الأرقام
-    // ============================================
-    const numbers = document.querySelectorAll('.number-format');
-    numbers.forEach(el => {
-        const value = parseFloat(el.textContent.replace(/,/g, ''));
-        if (!isNaN(value)) {
-            el.textContent = value.toLocaleString('ar-EG');
-        }
-    });
 });
 </script>
-
 <style>
     .counter-card {
         transition: transform 0.3s ease;
@@ -623,13 +887,30 @@ document.addEventListener('DOMContentLoaded', function() {
         font-size: 0.85rem;
         margin-bottom: 0.2rem;
     }
-    /* تنسيق الـ datalist */
     input[list]::-webkit-calendar-picker-indicator {
         opacity: 0.5;
         cursor: pointer;
     }
     input[list]:hover::-webkit-calendar-picker-indicator {
         opacity: 1;
+    }
+    .modal-xl {
+        max-width: 1200px;
+    }
+    .modal-header {
+        border-radius: 8px 8px 0 0;
+    }
+    .nav-tabs .nav-link.active {
+        background: linear-gradient(135deg, #0d6efd, #0dcaf0);
+        color: white !important;
+        border-color: #0d6efd;
+    }
+    .nav-tabs .nav-link {
+        color: #495057;
+    }
+    .nav-tabs .nav-link:hover {
+        border-color: #0d6efd;
+        color: #0d6efd;
     }
 </style>
 {% endblock %}
