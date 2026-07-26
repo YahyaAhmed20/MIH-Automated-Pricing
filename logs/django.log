@@ -1052,3 +1052,196 @@ Watching for file changes with StatReloader
 "GET /doctors/ HTTP/1.1" 200 223351
 "GET /doctors/ HTTP/1.1" 200 223351
 "GET /doctors/ HTTP/1.1" 200 223309
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 34414
+"GET /static/images/logo.jpeg HTTP/1.1" 200 68755
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 14144
+"GET /doctors/ HTTP/1.1" 200 223309
+"GET /doctors/%D8%AF/%20%D9%85%D8%AD%D9%85%D8%AF%20%D8%B9%D8%A8%D8%AF%20%D8%A7%D9%84%D8%AD%D9%85%D9%8A%D8%AF%20%D8%AD%D9%81%D9%86%D9%89/ HTTP/1.1" 200 73227
+"GET /package-comparison/ HTTP/1.1" 200 2165448
+"GET /package-comparison/ HTTP/1.1" 200 1497840
+"GET /package-comparison/?source=sheet15 HTTP/1.1" 200 1497840
+"GET /package-comparison/?source=sheet15 HTTP/1.1" 200 1497840
+"GET /package-comparison/?source=sheet15 HTTP/1.1" 200 1497840
+"GET /package-comparison/?source=sheet15 HTTP/1.1" 200 1500123
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /package-comparison/?source=sheet15 HTTP/1.1" 200 1547777
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /package-comparison/?source=sheet15 HTTP/1.1" 200 1547777
+"GET /package-comparison/?year1=2025&quarter1=&month1=&year2=2025&quarter2=&month2=&source=sheet15 HTTP/1.1" 200 1547777
+"GET /package-comparison/?year1=2025&quarter1=&month1=&year2=2025&quarter2=&month2=&source=sheet15 HTTP/1.1" 200 1547777
+"GET /package-comparison/?year1=2025&quarter1=&month1=&year2=2025&quarter2=&month2=&source=sheet15 HTTP/1.1" 200 1547777
+"GET /package-comparison/?year1=2025&quarter1=&month1=&year2=2025&quarter2=&month2=&source=sheet15 HTTP/1.1" 200 1547777
+"GET /package-comparison/?year1=2025&quarter1=&month1=&year2=2025&quarter2=&month2=&source=sheet15 HTTP/1.1" 200 1547592
+"GET /package-comparison/?year1=2025&quarter1=&month1=&year2=2025&quarter2=&month2=&source=sheet15 HTTP/1.1" 200 1547592
+"GET /package-comparison/?year1=2025&quarter1=&month1=&year2=2025&quarter2=&month2=&source=sheet15 HTTP/1.1" 200 1550848
+"GET /package-comparison/?year1=2025&quarter1=&month1=&year2=2025&quarter2=&month2=&source=sheet15 HTTP/1.1" 200 1550848
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /package-comparison/?year1=2025&quarter1=&month1=&year2=2025&quarter2=&month2=&source=sheet15 HTTP/1.1" 200 1550848
+- Broken pipe from ('127.0.0.1', 58775)
+"GET /package-comparison/?source=sheet15 HTTP/1.1" 200 1550848
+"GET /package-comparison/?year1=2025&quarter1=&month1=&year2=2025&quarter2=&month2=&source=sheet15 HTTP/1.1" 200 1550848
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /package-comparison/?year1=2025&quarter1=&month1=&year2=2025&quarter2=&month2=&source=sheet15 HTTP/1.1" 200 1550848
+"GET /package-comparison/?year1=2025&quarter1=&month1=&year2=2025&quarter2=&month2=&source=sheet15 HTTP/1.1" 200 1550848
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /package-comparison/?year1=2025&quarter1=&month1=&year2=2025&quarter2=&month2=&source=sheet15 HTTP/1.1" 200 1555609
+Not Found: /api/filter-options/
+"GET /api/filter-options/?source=sheet15&filter_type=entities HTTP/1.1" 404 30204
+Not Found: /api/filter-options/
+"GET /api/filter-options/?source=sheet15&filter_type=sectors&entity1=%D8%A7%D9%84%D8%A7%D9%87%D9%84%D9%89+%D9%84%D9%84%D9%85%D8%B4%D8%B1%D9%88%D8%B9%D8%A7%D8%AA+%D9%88%D8%A7%D9%84%D8%AE%D8%AF%D9%85%D8%A7%D8%AA+%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%D8%A9 HTTP/1.1" 404 30393
+Not Found: /api/filter-options/
+"GET /api/filter-options/?source=sheet15&filter_type=sub_companies&entity1=%D8%A7%D9%84%D8%A7%D9%87%D9%84%D9%89+%D9%84%D9%84%D9%85%D8%B4%D8%B1%D9%88%D8%B9%D8%A7%D8%AA+%D9%88%D8%A7%D9%84%D8%AE%D8%AF%D9%85%D8%A7%D8%AA+%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%D8%A9 HTTP/1.1" 404 30399
+Not Found: /api/filter-options/
+"GET /api/filter-options/?source=sheet15&filter_type=specialties&entity1=%D8%A7%D9%84%D8%A7%D9%87%D9%84%D9%89+%D9%84%D9%84%D9%85%D8%B4%D8%B1%D9%88%D8%B9%D8%A7%D8%AA+%D9%88%D8%A7%D9%84%D8%AE%D8%AF%D9%85%D8%A7%D8%AA+%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%D8%A9 HTTP/1.1" 404 30397
+Not Found: /api/filter-options/
+"GET /api/filter-options/?source=sheet15&filter_type=package_types&entity1=%D8%A7%D9%84%D8%A7%D9%87%D9%84%D9%89+%D9%84%D9%84%D9%85%D8%B4%D8%B1%D9%88%D8%B9%D8%A7%D8%AA+%D9%88%D8%A7%D9%84%D8%AE%D8%AF%D9%85%D8%A7%D8%AA+%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%D8%A9 HTTP/1.1" 404 30399
+Not Found: /api/filter-options/
+"GET /api/filter-options/?source=sheet15&filter_type=entities HTTP/1.1" 404 30204
+Not Found: /api/filter-options/
+"GET /api/filter-options/?source=sheet15&filter_type=sectors&entity1=%D8%B4%D8%B1%D9%83%D8%A9+%D8%AC%D9%84%D9%88%D8%A8+%D9%85%D9%8A%D8%AF HTTP/1.1" 404 30284
+Not Found: /api/filter-options/
+"GET /api/filter-options/?source=sheet15&filter_type=sub_companies&entity1=%D8%B4%D8%B1%D9%83%D8%A9+%D8%AC%D9%84%D9%88%D8%A8+%D9%85%D9%8A%D8%AF HTTP/1.1" 404 30290
+Not Found: /api/filter-options/
+"GET /api/filter-options/?source=sheet15&filter_type=specialties&entity1=%D8%B4%D8%B1%D9%83%D8%A9+%D8%AC%D9%84%D9%88%D8%A8+%D9%85%D9%8A%D8%AF HTTP/1.1" 404 30288
+Not Found: /api/filter-options/
+"GET /api/filter-options/?source=sheet15&filter_type=package_types&entity1=%D8%B4%D8%B1%D9%83%D8%A9+%D8%AC%D9%84%D9%88%D8%A8+%D9%85%D9%8A%D8%AF HTTP/1.1" 404 30290
+Not Found: /api/filter-options/
+"GET /api/filter-options/?filter_type=entities&source=sheet15 HTTP/1.1" 404 30204
+Not Found: /api/filter-options/
+"GET /api/filter-options/?filter_type=entities&source=sheet15 HTTP/1.1" 404 30204
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\urls.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+Not Found: /api/filter-options
+"GET /api/filter-options HTTP/1.1" 404 30161
+"GET / HTTP/1.1" 200 34414
+"GET /package-comparison/ HTTP/1.1" 200 1546881
+"GET /package-comparison/?source=sheet15 HTTP/1.1" 200 1546881
+"GET /package-comparison/?source=sheet15 HTTP/1.1" 200 1546881
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /package-comparison/?source=sheet15 HTTP/1.1" 200 1525077
+"GET /package-comparison/?source=sheet15 HTTP/1.1" 200 1524485
+"GET /package-comparison/?source=sheet15 HTTP/1.1" 200 1548074
+"GET /package-comparison/?year1=2025&quarter1=&month1=&year2=2025&quarter2=&month2=&source=sheet15 HTTP/1.1" 200 1548074
+D:\desktop\rphospital\src\frontend\urls.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /package-comparison/?year1=2025&quarter1=&month1=&year2=2025&quarter2=&month2=&source=sheet15 HTTP/1.1" 200 1548074
+"GET /ajax/package-filters/ HTTP/1.1" 200 322551
+"GET /ajax/package-filters/?entity=%D8%A7%D9%84%D8%AA%D8%A3%D9%85%D9%8A%D9%86%20%D8%A7%D9%84%D8%B5%D8%AD%D9%8A HTTP/1.1" 200 71
+"GET /package-comparison/?year1=2025&quarter1=&month1=&year2=2025&quarter2=&month2=&source=sheet15 HTTP/1.1" 200 1548074
+"GET /ajax/package-filters/?entity=%D8%B4%D8%B1%D9%83%D9%87%20%D8%AC%D9%84%D9%88%D8%A8%20%D9%85%D9%8A%D8%AF HTTP/1.1" 200 71
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Internal Server Error: /ajax/package-filters/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 3338, in get_package_filters
+    name = item["package_name"]
+           ~~~~^^^^^^^^^^^^^^^^
+TypeError: string indices must be integers, not 'str'
+"GET /ajax/package-filters/?entity=%D8%B4%D8%B1%D9%83%D8%A9%20%D8%AC%D9%84%D9%88%D8%A8%20%D9%85%D9%8A%D8%AF HTTP/1.1" 500 76720
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /ajax/package-filters/?entity=%D8%B4%D8%B1%D9%83%D8%A9%20%D8%AC%D9%84%D9%88%D8%A8%20%D9%85%D9%8A%D8%AF HTTP/1.1" 200 11148
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /package-comparison/?year1=2025&quarter1=&month1=&year2=2025&quarter2=&month2=&source=sheet15 HTTP/1.1" 200 1549988
+"GET /ajax/package-filters/?source=sheet15&entity=%D8%B4%D8%B1%D9%83%D8%A9+%D8%AC%D9%84%D9%88%D8%A8+%D9%85%D9%8A%D8%AF HTTP/1.1" 200 11148
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /package-comparison/?year1=2025&quarter1=&month1=&year2=2025&quarter2=&month2=&source=sheet15 HTTP/1.1" 200 397968
+"GET /ajax/package-filters/?source=sheet15&entity=%D8%A7%D9%84%D8%A7%D9%87%D9%84%D9%89+%D9%84%D9%84%D9%85%D8%B4%D8%B1%D9%88%D8%B9%D8%A7%D8%AA+%D9%88%D8%A7%D9%84%D8%AE%D8%AF%D9%85%D8%A7%D8%AA+%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%D8%A9 HTTP/1.1" 200 6586
+"GET /ajax/package-filters/?source=sheet15&entity=%D8%A7%D9%84%D8%A7%D9%87%D9%84%D9%89+%D9%84%D9%84%D9%85%D8%B4%D8%B1%D9%88%D8%B9%D8%A7%D8%AA+%D9%88%D8%A7%D9%84%D8%AE%D8%AF%D9%85%D8%A7%D8%AA+%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%D8%A9&sub_company=%D9%86%D9%82%D8%AF%D9%8A HTTP/1.1" 200 2077
+"GET /ajax/package-filters/?source=sheet15&entity=%D8%A7%D9%84%D8%A7%D9%87%D9%84%D9%89+%D9%84%D9%84%D9%85%D8%B4%D8%B1%D9%88%D8%B9%D8%A7%D8%AA+%D9%88%D8%A7%D9%84%D8%AE%D8%AF%D9%85%D8%A7%D8%AA+%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%D8%A9&sub_company=%D9%86%D9%82%D8%AF%D9%8A&specialty=%D8%A7%D9%84%D8%AC%D8%B1%D8%A7%D8%AD%D9%87 HTTP/1.1" 200 575
+"GET /package-comparison/?year1=2025&quarter1=&month1=&year2=2025&quarter2=&month2=&source=sheet15 HTTP/1.1" 200 397968
+Watching for file changes with StatReloader
+"GET /package-comparison/?year1=2025&quarter1=&month1=&year2=2025&quarter2=&month2=&source=sheet15 HTTP/1.1" 200 397968
+"GET /ajax/package-filters/?source=sheet15&entity=%D8%A7%D9%8A%D8%AC%D9%8A%D9%85%D9%8A%D8%AF HTTP/1.1" 200 345
+"GET /package-comparison/?year1=2025&quarter1=&month1=&year2=2025&quarter2=&month2=&source=sheet15 HTTP/1.1" 200 398482
+"GET /ajax/package-filters/?source=sheet15&sector=%D8%A7%D9%84%D8%A8%D8%AA%D8%B1%D9%88%D9%84 HTTP/1.1" 200 3009
+"GET /package-comparison/?year1=2025&quarter1=&month1=&year2=2025&quarter2=&month2=&source=sheet15 HTTP/1.1" 200 398482
+"GET /ajax/package-filters/?source=sheet15&sector=%D8%A7%D9%84%D9%81%D9%86%D8%A7%D8%AF%D9%82 HTTP/1.1" 200 1469
+"GET /package-comparison/?year1=2025&quarter1=&month1=&year2=2025&quarter2=&month2=&source=sheet15 HTTP/1.1" 200 398482
+"GET /ajax/package-filters/?source=sheet15&sector=%D8%A7%D9%84%D9%81%D9%86%D8%A7%D8%AF%D9%82 HTTP/1.1" 200 1469
+"GET /package-comparison/?year1=2025&quarter1=&month1=&year2=2025&quarter2=&month2=&source=sheet15 HTTP/1.1" 200 398482
+"GET /ajax/package-filters/?source=sheet15&sector=%D8%A7%D9%84%D9%81%D9%86%D8%A7%D8%AF%D9%82 HTTP/1.1" 200 1469
+"GET /ajax/package-filters/?source=sheet15&entity=%D8%A7%D9%8A%D8%AC%D9%8A%D9%85%D9%8A%D8%AF&sector=%D8%A7%D9%84%D9%81%D9%86%D8%A7%D8%AF%D9%82 HTTP/1.1" 200 71
+"GET /ajax/package-filters/?source=sheet15&entity=%D8%A7%D9%84%D8%A8%D9%86%D9%83+%D8%A7%D9%84%D8%B9%D9%82%D8%A7%D8%B1%D9%89+%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%89+%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%89&sector=%D8%A7%D9%84%D9%81%D9%86%D8%A7%D8%AF%D9%82 HTTP/1.1" 200 71
+"GET /ajax/package-filters/?source=sheet15&entity=%D8%A7%D9%84%D8%A8%D9%86%D9%83+%D8%A7%D9%84%D8%B9%D9%82%D8%A7%D8%B1%D9%89+%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%89+%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%89 HTTP/1.1" 200 559
+"GET /ajax/package-filters/?source=sheet15&entity=%D8%A7%D9%84%D8%A8%D9%86%D9%83+%D8%A7%D9%84%D8%B9%D9%82%D8%A7%D8%B1%D9%89+%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%89+%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%89&sub_company=%D8%A7%D9%84%D8%B9%D8%A7%D9%85%D9%84%D9%8A%D9%86+%D8%A8%D8%A7%D9%84%D8%AC%D8%A7%D9%85%D8%B9%D9%87 HTTP/1.1" 200 506
+"GET /ajax/package-filters/?source=sheet15&entity=%D8%A7%D9%84%D8%A8%D9%86%D9%83+%D8%A7%D9%84%D8%B9%D9%82%D8%A7%D8%B1%D9%89+%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%89+%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%89&sector=%D8%AA%D8%B9%D8%A7%D9%82%D8%AF+%D9%85%D8%A8%D8%A7%D8%B4%D8%B1&sub_company=%D8%A7%D9%84%D8%B9%D8%A7%D9%85%D9%84%D9%8A%D9%86+%D8%A8%D8%A7%D9%84%D8%AC%D8%A7%D9%85%D8%B9%D9%87 HTTP/1.1" 200 506
+"GET /ajax/package-filters/?source=sheet15&entity=%D8%A7%D9%84%D8%A8%D9%86%D9%83+%D8%A7%D9%84%D8%B9%D9%82%D8%A7%D8%B1%D9%89+%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%89+%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%89&sector=%D8%AA%D8%B9%D8%A7%D9%82%D8%AF+%D9%85%D8%A8%D8%A7%D8%B4%D8%B1&sub_company=%D8%A7%D9%84%D8%B9%D8%A7%D9%85%D9%84%D9%8A%D9%86+%D8%A8%D8%A7%D9%84%D8%AC%D8%A7%D9%85%D8%B9%D9%87&specialty=%D8%A7%D9%84%D8%A7%D9%86%D9%81+%D9%88%D8%A7%D9%84%D8%A7%D8%B0%D9%86 HTTP/1.1" 200 506
+"GET /package-comparison/?year1=2025&quarter1=&month1=&year2=2025&quarter2=&month2=&source=sheet15 HTTP/1.1" 200 398482
+Watching for file changes with StatReloader
+"GET /ajax/package-filters/?source=sheet15&entity=%D8%A7%D9%86%D8%A8%D9%89 HTTP/1.1" 200 511
+"GET /ajax/package-filters/?source=sheet15&entity=%D8%A7%D9%86%D8%A8%D9%89&sector=%D8%A7%D9%84%D9%81%D9%86%D8%A7%D8%AF%D9%82 HTTP/1.1" 200 71
+"GET /ajax/package-filters/?source=sheet15&entity=%D8%A7%D9%86%D8%A8%D9%89 HTTP/1.1" 200 511
+"GET /ajax/package-filters/?source=sheet15&entity=%D8%A7%D9%86%D8%A8%D9%89&sub_company=%D8%A8%D9%86%D9%83+%D8%A7%D9%8A+%D8%A8%D9%8A+%D8%B3%D9%8A HTTP/1.1" 200 331
+"GET /ajax/package-filters/?source=sheet15&entity=%D8%A7%D9%86%D8%A8%D9%89&sector=%D8%B4%D8%B1%D9%83%D8%A7%D8%AA+%D8%A7%D9%84%D8%AA%D8%A3%D9%85%D9%8A%D9%86&sub_company=%D8%A8%D9%86%D9%83+%D8%A7%D9%8A+%D8%A8%D9%8A+%D8%B3%D9%8A HTTP/1.1" 200 331
+"GET /ajax/package-filters/?source=sheet15&entity=%D8%A7%D9%86%D8%A8%D9%89&sector=%D8%B4%D8%B1%D9%83%D8%A7%D8%AA+%D8%A7%D9%84%D8%AA%D8%A3%D9%85%D9%8A%D9%86&sub_company=%D8%A8%D9%86%D9%83+%D8%A7%D9%8A+%D8%A8%D9%8A+%D8%B3%D9%8A&specialty=%D8%A7%D9%84%D8%A7%D9%86%D9%81+%D9%88%D8%A7%D9%84%D8%A7%D8%B0%D9%86 HTTP/1.1" 200 331
+"GET /package-comparison/?year1=2025&quarter1=&month1=&year2=2025&quarter2=&month2=&source=sheet15 HTTP/1.1" 200 398482
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET /package-comparison/ HTTP/1.1" 200 409859
+"GET /ajax/package-filters/?source=sheet15&entity=%D8%A7%D9%84%D8%A8%D9%86%D9%83+%D8%A7%D9%84%D9%85%D8%B1%D9%83%D8%B2%D9%89+%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%89 HTTP/1.1" 200 719
+"GET /ajax/package-filters/?source=sheet15&entity=%D8%A7%D9%84%D8%A8%D9%86%D9%83+%D8%A7%D9%84%D9%85%D8%B1%D9%83%D8%B2%D9%89+%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%89&sector=%D8%AA%D8%B9%D8%A7%D9%82%D8%AF+%D9%85%D8%A8%D8%A7%D8%B4%D8%B1 HTTP/1.1" 200 719
+"GET /ajax/package-filters/?source=sheet15&entity=%D8%A7%D9%84%D8%A8%D9%86%D9%83+%D8%A7%D9%84%D9%85%D8%B1%D9%83%D8%B2%D9%89+%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%89&sector=%D8%AA%D8%B9%D8%A7%D9%82%D8%AF+%D9%85%D8%A8%D8%A7%D8%B4%D8%B1&sub_company=%D8%A7%D9%88%D8%B2%D9%8A%D8%B1%D9%8A%D9%88%D9%86+%D9%84%D9%84%D9%85%D9%82%D8%A7%D9%88%D9%84%D8%A7%D8%AA+%D9%88%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D8%AB%D9%85%D8%A7%D8%B1+%D8%A7%D9%84%D8%B9%D9%82%D8%A7%D8%B1%D9%8A HTTP/1.1" 200 616
+"GET /ajax/package-filters/?source=sheet15&entity=%D8%A7%D9%84%D8%A8%D9%86%D9%83+%D8%A7%D9%84%D9%85%D8%B1%D9%83%D8%B2%D9%89+%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%89&sector=%D8%AA%D8%B9%D8%A7%D9%82%D8%AF+%D9%85%D8%A8%D8%A7%D8%B4%D8%B1&sub_company=%D8%A7%D9%88%D8%B2%D9%8A%D8%B1%D9%8A%D9%88%D9%86+%D9%84%D9%84%D9%85%D9%82%D8%A7%D9%88%D9%84%D8%A7%D8%AA+%D9%88%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D8%AB%D9%85%D8%A7%D8%B1+%D8%A7%D9%84%D8%B9%D9%82%D8%A7%D8%B1%D9%8A&specialty=%D8%A7%D9%84%D8%A7%D9%86%D9%81+%D9%88%D8%A7%D9%84%D8%A7%D8%B0%D9%86 HTTP/1.1" 200 616
+"GET /package-comparison/?source=sheet15&year1=2025&quarter1=&month1=&sector1=%D8%AA%D8%B9%D8%A7%D9%82%D8%AF+%D9%85%D8%A8%D8%A7%D8%B4%D8%B1&entity1=%D8%A7%D9%84%D8%A8%D9%86%D9%83+%D8%A7%D9%84%D9%85%D8%B1%D9%83%D8%B2%D9%89+%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%89&sub_company1=%D8%A7%D9%88%D8%B2%D9%8A%D8%B1%D9%8A%D9%88%D9%86+%D9%84%D9%84%D9%85%D9%82%D8%A7%D9%88%D9%84%D8%A7%D8%AA+%D9%88%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D8%AB%D9%85%D8%A7%D8%B1+%D8%A7%D9%84%D8%B9%D9%82%D8%A7%D8%B1%D9%8A&specialty1=%D8%A7%D9%84%D8%A7%D9%86%D9%81+%D9%88%D8%A7%D9%84%D8%A7%D8%B0%D9%86&package_type1=%D8%AC%D8%B1%D8%A7%D8%AD%D8%A9+%D9%88%D8%B8%D9%8A%D9%81%D9%8A%D8%A9+%D8%A8%D8%A7%D9%84%D8%AC%D9%8A%D9%88%D8%A8+%D8%A7%D9%84%D8%A7%D9%86%D9%81%D9%8A%D8%A9+%D8%A8%D8%A7%D9%84%D9%85%D9%86%D8%B8%D8%A7%D8%B1&year2=2025&quarter2=&month2=&sector2=&entity2=&sub_company2=&specialty2=&package_type2= HTTP/1.1" 200 409751
+"GET /ajax/package-filters/?source=sheet15&sector=%D8%A7%D9%84%D9%81%D9%86%D8%A7%D8%AF%D9%82 HTTP/1.1" 200 1469
+"GET /ajax/package-filters/?source=sheet15&entity=%D8%A7%D9%8A%D8%AC%D9%8A%D9%85%D9%8A%D8%AF&sector=%D8%A7%D9%84%D9%81%D9%86%D8%A7%D8%AF%D9%82 HTTP/1.1" 200 71
+"GET /ajax/package-filters/?source=sheet15&entity=%D8%A7%D9%8A%D8%AC%D9%8A%D9%85%D9%8A%D8%AF HTTP/1.1" 200 345
+"GET /ajax/package-filters/?source=sheet15&entity=%D8%A7%D9%8A%D8%AC%D9%8A%D9%85%D9%8A%D8%AF&sub_company=%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%8A%D8%A9+%D9%84%D9%84%D8%A7%D8%AA%D8%B5%D8%A7%D9%84%D8%A7%D8%AA HTTP/1.1" 200 345
+"GET /ajax/package-filters/?source=sheet15&entity=%D8%A7%D9%8A%D8%AC%D9%8A%D9%85%D9%8A%D8%AF&sector=%D8%B4%D8%B1%D9%83%D8%A7%D8%AA+%D8%A7%D9%84%D8%AA%D8%A3%D9%85%D9%8A%D9%86&sub_company=%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%8A%D8%A9+%D9%84%D9%84%D8%A7%D8%AA%D8%B5%D8%A7%D9%84%D8%A7%D8%AA HTTP/1.1" 200 345
+"GET /ajax/package-filters/?source=sheet15&entity=%D8%A7%D9%8A%D8%AC%D9%8A%D9%85%D9%8A%D8%AF&sector=%D8%B4%D8%B1%D9%83%D8%A7%D8%AA+%D8%A7%D9%84%D8%AA%D8%A3%D9%85%D9%8A%D9%86&sub_company=%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%8A%D8%A9+%D9%84%D9%84%D8%A7%D8%AA%D8%B5%D8%A7%D9%84%D8%A7%D8%AA&specialty=%D8%A7%D9%84%D8%B9%D8%B8%D8%A7%D9%85 HTTP/1.1" 200 345
+"GET /package-comparison/?source=sheet15&year1=2025&quarter1=&month1=&sector1=%D8%AA%D8%B9%D8%A7%D9%82%D8%AF+%D9%85%D8%A8%D8%A7%D8%B4%D8%B1&entity1=%D8%A7%D9%84%D8%A8%D9%86%D9%83+%D8%A7%D9%84%D9%85%D8%B1%D9%83%D8%B2%D9%89+%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%89&sub_company1=%D8%A7%D9%88%D8%B2%D9%8A%D8%B1%D9%8A%D9%88%D9%86+%D9%84%D9%84%D9%85%D9%82%D8%A7%D9%88%D9%84%D8%A7%D8%AA+%D9%88%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D8%AB%D9%85%D8%A7%D8%B1+%D8%A7%D9%84%D8%B9%D9%82%D8%A7%D8%B1%D9%8A&specialty1=%D8%A7%D9%84%D8%A7%D9%86%D9%81+%D9%88%D8%A7%D9%84%D8%A7%D8%B0%D9%86&package_type1=%D8%AC%D8%B1%D8%A7%D8%AD%D8%A9+%D9%88%D8%B8%D9%8A%D9%81%D9%8A%D8%A9+%D8%A8%D8%A7%D9%84%D8%AC%D9%8A%D9%88%D8%A8+%D8%A7%D9%84%D8%A7%D9%86%D9%81%D9%8A%D8%A9+%D8%A8%D8%A7%D9%84%D9%85%D9%86%D8%B8%D8%A7%D8%B1&year2=2025&quarter2=&month2=&sector2=%D8%B4%D8%B1%D9%83%D8%A7%D8%AA+%D8%A7%D9%84%D8%AA%D8%A3%D9%85%D9%8A%D9%86&entity2=%D8%A7%D9%8A%D8%AC%D9%8A%D9%85%D9%8A%D8%AF&sub_company2=%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%8A%D8%A9+%D9%84%D9%84%D8%A7%D8%AA%D8%B5%D8%A7%D9%84%D8%A7%D8%AA&specialty2=%D8%A7%D9%84%D8%B9%D8%B8%D8%A7%D9%85&package_type2= HTTP/1.1" 200 246047
+"GET /package-comparison/?source=sheet15&year1=2025&quarter1=&month1=&sector1=%D8%AA%D8%B9%D8%A7%D9%82%D8%AF+%D9%85%D8%A8%D8%A7%D8%B4%D8%B1&entity1=%D8%A7%D9%84%D8%A8%D9%86%D9%83+%D8%A7%D9%84%D9%85%D8%B1%D9%83%D8%B2%D9%89+%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%89&sub_company1=%D8%A7%D9%88%D8%B2%D9%8A%D8%B1%D9%8A%D9%88%D9%86+%D9%84%D9%84%D9%85%D9%82%D8%A7%D9%88%D9%84%D8%A7%D8%AA+%D9%88%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D8%AB%D9%85%D8%A7%D8%B1+%D8%A7%D9%84%D8%B9%D9%82%D8%A7%D8%B1%D9%8A&specialty1=%D8%A7%D9%84%D8%A7%D9%86%D9%81+%D9%88%D8%A7%D9%84%D8%A7%D8%B0%D9%86&package_type1=%D8%AC%D8%B1%D8%A7%D8%AD%D8%A9+%D9%88%D8%B8%D9%8A%D9%81%D9%8A%D8%A9+%D8%A8%D8%A7%D9%84%D8%AC%D9%8A%D9%88%D8%A8+%D8%A7%D9%84%D8%A7%D9%86%D9%81%D9%8A%D8%A9+%D8%A8%D8%A7%D9%84%D9%85%D9%86%D8%B8%D8%A7%D8%B1&year2=2025&quarter2=&month2=&sector2=%D8%B4%D8%B1%D9%83%D8%A7%D8%AA+%D8%A7%D9%84%D8%AA%D8%A3%D9%85%D9%8A%D9%86&entity2=%D8%A7%D9%8A%D8%AC%D9%8A%D9%85%D9%8A%D8%AF&sub_company2=%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%8A%D8%A9+%D9%84%D9%84%D8%A7%D8%AA%D8%B5%D8%A7%D9%84%D8%A7%D8%AA&specialty2=%D8%A7%D9%84%D8%B9%D8%B8%D8%A7%D9%85&package_type2= HTTP/1.1" 200 246053
+"GET /package-comparison/?source=sheet15&year1=2025&quarter1=&month1=&sector1=%D8%AA%D8%B9%D8%A7%D9%82%D8%AF+%D9%85%D8%A8%D8%A7%D8%B4%D8%B1&entity1=%D8%A7%D9%84%D8%A8%D9%86%D9%83+%D8%A7%D9%84%D9%85%D8%B1%D9%83%D8%B2%D9%89+%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%89&sub_company1=%D8%A7%D9%88%D8%B2%D9%8A%D8%B1%D9%8A%D9%88%D9%86+%D9%84%D9%84%D9%85%D9%82%D8%A7%D9%88%D9%84%D8%A7%D8%AA+%D9%88%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D8%AB%D9%85%D8%A7%D8%B1+%D8%A7%D9%84%D8%B9%D9%82%D8%A7%D8%B1%D9%8A&specialty1=%D8%A7%D9%84%D8%A7%D9%86%D9%81+%D9%88%D8%A7%D9%84%D8%A7%D8%B0%D9%86&package_type1=%D8%AC%D8%B1%D8%A7%D8%AD%D8%A9+%D9%88%D8%B8%D9%8A%D9%81%D9%8A%D8%A9+%D8%A8%D8%A7%D9%84%D8%AC%D9%8A%D9%88%D8%A8+%D8%A7%D9%84%D8%A7%D9%86%D9%81%D9%8A%D8%A9+%D8%A8%D8%A7%D9%84%D9%85%D9%86%D8%B8%D8%A7%D8%B1&year2=2025&quarter2=&month2=&sector2=%D8%B4%D8%B1%D9%83%D8%A7%D8%AA+%D8%A7%D9%84%D8%AA%D8%A3%D9%85%D9%8A%D9%86&entity2=%D8%A7%D9%8A%D8%AC%D9%8A%D9%85%D9%8A%D8%AF&sub_company2=%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%8A%D8%A9+%D9%84%D9%84%D8%A7%D8%AA%D8%B5%D8%A7%D9%84%D8%A7%D8%AA&specialty2=%D8%A7%D9%84%D8%B9%D8%B8%D8%A7%D9%85&package_type2= HTTP/1.1" 200 246053
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /package-comparison/?source=sheet15&year1=2025&quarter1=&month1=&sector1=%D8%AA%D8%B9%D8%A7%D9%82%D8%AF+%D9%85%D8%A8%D8%A7%D8%B4%D8%B1&entity1=%D8%A7%D9%84%D8%A8%D9%86%D9%83+%D8%A7%D9%84%D9%85%D8%B1%D9%83%D8%B2%D9%89+%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%89&sub_company1=%D8%A7%D9%88%D8%B2%D9%8A%D8%B1%D9%8A%D9%88%D9%86+%D9%84%D9%84%D9%85%D9%82%D8%A7%D9%88%D9%84%D8%A7%D8%AA+%D9%88%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D8%AB%D9%85%D8%A7%D8%B1+%D8%A7%D9%84%D8%B9%D9%82%D8%A7%D8%B1%D9%8A&specialty1=%D8%A7%D9%84%D8%A7%D9%86%D9%81+%D9%88%D8%A7%D9%84%D8%A7%D8%B0%D9%86&package_type1=%D8%AC%D8%B1%D8%A7%D8%AD%D8%A9+%D9%88%D8%B8%D9%8A%D9%81%D9%8A%D8%A9+%D8%A8%D8%A7%D9%84%D8%AC%D9%8A%D9%88%D8%A8+%D8%A7%D9%84%D8%A7%D9%86%D9%81%D9%8A%D8%A9+%D8%A8%D8%A7%D9%84%D9%85%D9%86%D8%B8%D8%A7%D8%B1&year2=2025&quarter2=&month2=&sector2=%D8%B4%D8%B1%D9%83%D8%A7%D8%AA+%D8%A7%D9%84%D8%AA%D8%A3%D9%85%D9%8A%D9%86&entity2=%D8%A7%D9%8A%D8%AC%D9%8A%D9%85%D9%8A%D8%AF&sub_company2=%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%8A%D8%A9+%D9%84%D9%84%D8%A7%D8%AA%D8%B5%D8%A7%D9%84%D8%A7%D8%AA&specialty2=%D8%A7%D9%84%D8%B9%D8%B8%D8%A7%D9%85&package_type2= HTTP/1.1" 200 243466
+"GET /package-comparison/?source=sheet15 HTTP/1.1" 200 352409
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /package-comparison/?source=sheet15 HTTP/1.1" 200 357745
+"GET /ajax/package-filters/?source=sheet15&entity=%D8%A7%D9%84%D8%A8%D9%86%D9%83+%D8%A7%D9%84%D9%85%D8%B1%D9%83%D8%B2%D9%89+%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%89 HTTP/1.1" 200 719
+"GET /ajax/package-filters/?source=sheet15&entity=%D8%A7%D9%84%D8%A8%D9%86%D9%83+%D8%A7%D9%84%D9%85%D8%B1%D9%83%D8%B2%D9%89+%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%89&sector=%D8%AA%D8%B9%D8%A7%D9%82%D8%AF+%D9%85%D8%A8%D8%A7%D8%B4%D8%B1 HTTP/1.1" 200 719
+"GET /ajax/package-filters/?source=sheet15&entity=%D8%A7%D9%84%D8%A8%D9%86%D9%83+%D8%A7%D9%84%D9%85%D8%B1%D9%83%D8%B2%D9%89+%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%89&sector=%D8%AA%D8%B9%D8%A7%D9%82%D8%AF+%D9%85%D8%A8%D8%A7%D8%B4%D8%B1&sub_company=smg HTTP/1.1" 200 412
+"GET /ajax/package-filters/?source=sheet15&entity=%D8%A7%D9%84%D8%A8%D9%86%D9%83+%D8%A7%D9%84%D9%85%D8%B1%D9%83%D8%B2%D9%89+%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%89&sector=%D8%AA%D8%B9%D8%A7%D9%82%D8%AF+%D9%85%D8%A8%D8%A7%D8%B4%D8%B1&sub_company=smg&specialty=%D8%A7%D9%84%D8%A7%D9%86%D9%81+%D9%88%D8%A7%D9%84%D8%A7%D8%B0%D9%86 HTTP/1.1" 200 412
+"GET /ajax/package-filters/?source=sheet15&entity=%D8%A7%D9%86%D8%A8%D9%89 HTTP/1.1" 200 511
+"GET /ajax/package-filters/?source=sheet15&entity=%D8%A7%D9%86%D8%A8%D9%89&sector=%D8%B4%D8%B1%D9%83%D8%A7%D8%AA+%D8%A7%D9%84%D8%AA%D8%A3%D9%85%D9%8A%D9%86 HTTP/1.1" 200 511
+"GET /ajax/package-filters/?source=sheet15&entity=%D8%A7%D9%86%D8%A8%D9%89&sector=%D8%B4%D8%B1%D9%83%D8%A7%D8%AA+%D8%A7%D9%84%D8%AA%D8%A3%D9%85%D9%8A%D9%86&sub_company=%D8%A8%D9%86%D9%83+%D8%A7%D9%8A+%D8%A8%D9%8A+%D8%B3%D9%8A HTTP/1.1" 200 331
+"GET /ajax/package-filters/?source=sheet15&entity=%D8%A7%D9%86%D8%A8%D9%89&sector=%D8%B4%D8%B1%D9%83%D8%A7%D8%AA+%D8%A7%D9%84%D8%AA%D8%A3%D9%85%D9%8A%D9%86&sub_company=%D8%A8%D9%86%D9%83+%D8%A7%D9%8A+%D8%A8%D9%8A+%D8%B3%D9%8A&specialty=%D8%A7%D9%84%D8%A7%D9%86%D9%81+%D9%88%D8%A7%D9%84%D8%A7%D8%B0%D9%86 HTTP/1.1" 200 331
+"GET /package-comparison/?source=sheet15&year1=2025&quarter1=&month1=&sector1=%D8%AA%D8%B9%D8%A7%D9%82%D8%AF+%D9%85%D8%A8%D8%A7%D8%B4%D8%B1&entity1=%D8%A7%D9%84%D8%A8%D9%86%D9%83+%D8%A7%D9%84%D9%85%D8%B1%D9%83%D8%B2%D9%89+%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%89&sub_company1=smg&specialty1=%D8%A7%D9%84%D8%A7%D9%86%D9%81+%D9%88%D8%A7%D9%84%D8%A7%D8%B0%D9%86&package_type1=%D8%AC%D8%B1%D8%A7%D8%AD%D8%A9+%D9%88%D8%B8%D9%8A%D9%81%D9%8A%D8%A9+%D8%A8%D8%A7%D9%84%D8%AC%D9%8A%D9%88%D8%A8+%D8%A7%D9%84%D8%A7%D9%86%D9%81%D9%8A%D8%A9+%D8%A8%D8%A7%D9%84%D9%85%D9%86%D8%B8%D8%A7%D8%B1&year2=2025&quarter2=&month2=&sector2=%D8%B4%D8%B1%D9%83%D8%A7%D8%AA+%D8%A7%D9%84%D8%AA%D8%A3%D9%85%D9%8A%D9%86&entity2=%D8%A7%D9%86%D8%A8%D9%89&sub_company2=%D8%A8%D9%86%D9%83+%D8%A7%D9%8A+%D8%A8%D9%8A+%D8%B3%D9%8A&specialty2=%D8%A7%D9%84%D8%A7%D9%86%D9%81+%D9%88%D8%A7%D9%84%D8%A7%D8%B0%D9%86&package_type2=%D9%84%D9%88%D8%B2+%D9%88%D9%84%D8%AD%D9%85%D9%8A%D8%A9 HTTP/1.1" 500 89421
+Watching for file changes with StatReloader
+"GET /package-comparison/?source=sheet15&year1=2025&quarter1=&month1=&sector1=%D8%AA%D8%B9%D8%A7%D9%82%D8%AF+%D9%85%D8%A8%D8%A7%D8%B4%D8%B1&entity1=%D8%A7%D9%84%D8%A8%D9%86%D9%83+%D8%A7%D9%84%D9%85%D8%B1%D9%83%D8%B2%D9%89+%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%89&sub_company1=smg&specialty1=%D8%A7%D9%84%D8%A7%D9%86%D9%81+%D9%88%D8%A7%D9%84%D8%A7%D8%B0%D9%86&package_type1=%D8%AC%D8%B1%D8%A7%D8%AD%D8%A9+%D9%88%D8%B8%D9%8A%D9%81%D9%8A%D8%A9+%D8%A8%D8%A7%D9%84%D8%AC%D9%8A%D9%88%D8%A8+%D8%A7%D9%84%D8%A7%D9%86%D9%81%D9%8A%D8%A9+%D8%A8%D8%A7%D9%84%D9%85%D9%86%D8%B8%D8%A7%D8%B1&year2=2025&quarter2=&month2=&sector2=%D8%B4%D8%B1%D9%83%D8%A7%D8%AA+%D8%A7%D9%84%D8%AA%D8%A3%D9%85%D9%8A%D9%86&entity2=%D8%A7%D9%86%D8%A8%D9%89&sub_company2=%D8%A8%D9%86%D9%83+%D8%A7%D9%8A+%D8%A8%D9%8A+%D8%B3%D9%8A&specialty2=%D8%A7%D9%84%D8%A7%D9%86%D9%81+%D9%88%D8%A7%D9%84%D8%A7%D8%B0%D9%86&package_type2=%D9%84%D9%88%D8%B2+%D9%88%D9%84%D8%AD%D9%85%D9%8A%D8%A9 HTTP/1.1" 500 90211
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /package-comparison/?source=sheet15&year1=2025&quarter1=&month1=&sector1=%D8%AA%D8%B9%D8%A7%D9%82%D8%AF+%D9%85%D8%A8%D8%A7%D8%B4%D8%B1&entity1=%D8%A7%D9%84%D8%A8%D9%86%D9%83+%D8%A7%D9%84%D9%85%D8%B1%D9%83%D8%B2%D9%89+%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%89&sub_company1=smg&specialty1=%D8%A7%D9%84%D8%A7%D9%86%D9%81+%D9%88%D8%A7%D9%84%D8%A7%D8%B0%D9%86&package_type1=%D8%AC%D8%B1%D8%A7%D8%AD%D8%A9+%D9%88%D8%B8%D9%8A%D9%81%D9%8A%D8%A9+%D8%A8%D8%A7%D9%84%D8%AC%D9%8A%D9%88%D8%A8+%D8%A7%D9%84%D8%A7%D9%86%D9%81%D9%8A%D8%A9+%D8%A8%D8%A7%D9%84%D9%85%D9%86%D8%B8%D8%A7%D8%B1&year2=2025&quarter2=&month2=&sector2=%D8%B4%D8%B1%D9%83%D8%A7%D8%AA+%D8%A7%D9%84%D8%AA%D8%A3%D9%85%D9%8A%D9%86&entity2=%D8%A7%D9%86%D8%A8%D9%89&sub_company2=%D8%A8%D9%86%D9%83+%D8%A7%D9%8A+%D8%A8%D9%8A+%D8%B3%D9%8A&specialty2=%D8%A7%D9%84%D8%A7%D9%86%D9%81+%D9%88%D8%A7%D9%84%D8%A7%D8%B0%D9%86&package_type2=%D9%84%D9%88%D8%B2+%D9%88%D9%84%D8%AD%D9%85%D9%8A%D8%A9 HTTP/1.1" 200 243606
+"GET /doctors/ HTTP/1.1" 200 223309
+"GET /doctors/ HTTP/1.1" 200 223309
+"GET /doctors/%D8%AF/%20%D9%85%D8%AD%D9%85%D8%AF%20%D8%B9%D8%A8%D8%AF%20%D8%A7%D9%84%D8%AD%D9%85%D9%8A%D8%AF%20%D8%AD%D9%81%D9%86%D9%89/ HTTP/1.1" 200 73227
+"GET /doctors/%D8%AF/%20%D9%85%D8%AD%D9%85%D8%AF%20%D8%B9%D8%A8%D8%AF%20%D8%A7%D9%84%D8%AD%D9%85%D9%8A%D8%AF%20%D8%AD%D9%81%D9%86%D9%89/?status=rejected HTTP/1.1" 200 53527

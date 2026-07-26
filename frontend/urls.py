@@ -160,6 +160,7 @@ urlpatterns = [
     name="quality_dashboard"
 ),
     
+
     path(
     "patients/<int:pk>/",
     views.patient_detail,
@@ -189,5 +190,10 @@ path(
     "system/update/",
     views.system_update,
     name="system_update",
+),
+path(
+    "ajax/package-filters/",
+    views.get_package_filters,
+    name="package_filters",
 ),
 ]

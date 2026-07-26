@@ -19,7 +19,7 @@
     <!-- 🔍 اختيار المصدر -->
     <div class="row mb-3">
         <div class="col-12">
-            <form method="GET" class="row g-2 align-items-end">
+            <form method="GET" class="row g-2 align-items-end" id="sourceForm">
                 <div class="col-md-3">
                     <label class="form-label fw-bold">المصدر:</label>
                     <select name="source" class="form-select" onchange="this.form.submit()">
@@ -41,250 +41,281 @@
     </div>
 
     <!-- 📅 البوكسين جنب بعض -->
-    <div class="row g-3">
-        <!-- البوكس الأول - الفترة الأولى -->
-        <div class="col-md-6">
-            <div class="card shadow-sm">
-                <div class="card-header" style="background: linear-gradient(135deg, #0d6efd, #0dcaf0); color: white;">
-                    <h5 class="mb-0">
-                        <i class="fas fa-calendar-alt"></i> الفترة الأولى
-                        <span class="badge bg-light text-primary ms-2">{{ year1 }}</span>
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <div class="row g-2">
-                        <!-- السنة -->
-                        <div class="col-md-6">
-                            <label class="form-label fw-bold">السنة:</label>
-                            <select name="year1" class="form-select form-select-sm" form="comparisonForm">
-                                <option value="">الكل</option>
-                                {% for year in years %}
-                                <option value="{{ year }}" {% if year == year1 %}selected{% endif %}>
-                                    {{ year }}
-                                </option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        
-                        <!-- الربع -->
-                        <div class="col-md-6">
-                            <label class="form-label fw-bold">الربع:</label>
-                            <select name="quarter1" class="form-select form-select-sm" form="comparisonForm">
-                                <option value="">الكل</option>
-                                {% for q in quarters %}
-                                <option value="{{ q }}" {% if q == quarter1 %}selected{% endif %}>
-                                    الربع {{ q }}
-                                </option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        
-                        <!-- الشهر -->
-                        <div class="col-md-6">
-                            <label class="form-label fw-bold">الشهر:</label>
-                            <select name="month1" class="form-select form-select-sm" form="comparisonForm">
-                                <option value="">الكل</option>
-                                {% for month in months %}
-                                <option value="{{ month }}" {% if month == month1 %}selected{% endif %}>
-                                    {{ month }}
-                                </option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        
-                        <!-- القطاع -->
-                        <div class="col-md-6">
-                            <label class="form-label fw-bold">القطاع:</label>
-                            <select name="sector1" class="form-select form-select-sm" form="comparisonForm">
-                                <option value="">الكل</option>
-                                {% for sector in sectors %}
-                                <option value="{{ sector }}" {% if sector == sector1 %}selected{% endif %}>
-                                    {{ sector }}
-                                </option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        
-                        <!-- الجهة -->
-                        <div class="col-md-6">
-                            <label class="form-label fw-bold">الجهة:</label>
-                            <select name="entity1" class="form-select form-select-sm" form="comparisonForm">
-                                <option value="">الكل</option>
-                                {% for entity in entities %}
-                                <option value="{{ entity }}" {% if entity == entity1 %}selected{% endif %}>
-                                    {{ entity }}
-                                </option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        
-                        <!-- الشركة الفرعية -->
-                        <div class="col-md-6">
-                            <label class="form-label fw-bold">الشركة الفرعية:</label>
-                            <select name="sub_company1" class="form-select form-select-sm" form="comparisonForm">
-                                <option value="">الكل</option>
-                                {% for sub in sub_companies %}
-                                <option value="{{ sub }}" {% if sub == sub_company1 %}selected{% endif %}>
-                                    {{ sub }}
-                                </option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        
-                        <!-- التخصص -->
-                        <div class="col-md-6">
-                            <label class="form-label fw-bold">التخصص:</label>
-                            <select name="specialty1" class="form-select form-select-sm" form="comparisonForm">
-                                <option value="">الكل</option>
-                                {% for spec in specialties %}
-                                <option value="{{ spec }}" {% if spec == specialty1 %}selected{% endif %}>
-                                    {{ spec }}
-                                </option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        
-                        <!-- نوع الباكدج -->
-                        <div class="col-md-6">
-                            <label class="form-label fw-bold">نوع الباكدج:</label>
-                            <select name="package_type1" class="form-select form-select-sm" form="comparisonForm">
-                                <option value="">الكل</option>
-                                {% for pkg in package_types %}
-                                <option value="{{ pkg }}" {% if pkg == package_type1 %}selected{% endif %}>
-                                    {{ pkg }}
-                                </option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- البوكس الثاني - الفترة الثانية -->
-        <div class="col-md-6">
-            <div class="card shadow-sm">
-                <div class="card-header" style="background: linear-gradient(135deg, #198754, #0dcaf0); color: white;">
-                    <h5 class="mb-0">
-                        <i class="fas fa-calendar-alt"></i> الفترة الثانية
-                        <span class="badge bg-light text-primary ms-2">{{ year2 }}</span>
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <div class="row g-2">
-                        <!-- السنة -->
-                        <div class="col-md-6">
-                            <label class="form-label fw-bold">السنة:</label>
-                            <select name="year2" class="form-select form-select-sm" form="comparisonForm">
-                                <option value="">الكل</option>
-                                {% for year in years %}
-                                <option value="{{ year }}" {% if year == year2 %}selected{% endif %}>
-                                    {{ year }}
-                                </option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        
-                        <!-- الربع -->
-                        <div class="col-md-6">
-                            <label class="form-label fw-bold">الربع:</label>
-                            <select name="quarter2" class="form-select form-select-sm" form="comparisonForm">
-                                <option value="">الكل</option>
-                                {% for q in quarters %}
-                                <option value="{{ q }}" {% if q == quarter2 %}selected{% endif %}>
-                                    الربع {{ q }}
-                                </option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        
-                        <!-- الشهر -->
-                        <div class="col-md-6">
-                            <label class="form-label fw-bold">الشهر:</label>
-                            <select name="month2" class="form-select form-select-sm" form="comparisonForm">
-                                <option value="">الكل</option>
-                                {% for month in months %}
-                                <option value="{{ month }}" {% if month == month2 %}selected{% endif %}>
-                                    {{ month }}
-                                </option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        
-                        <!-- القطاع -->
-                        <div class="col-md-6">
-                            <label class="form-label fw-bold">القطاع:</label>
-                            <select name="sector2" class="form-select form-select-sm" form="comparisonForm">
-                                <option value="">الكل</option>
-                                {% for sector in sectors %}
-                                <option value="{{ sector }}" {% if sector == sector2 %}selected{% endif %}>
-                                    {{ sector }}
-                                </option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        
-                        <!-- الجهة -->
-                        <div class="col-md-6">
-                            <label class="form-label fw-bold">الجهة:</label>
-                            <select name="entity2" class="form-select form-select-sm" form="comparisonForm">
-                                <option value="">الكل</option>
-                                {% for entity in entities %}
-                                <option value="{{ entity }}" {% if entity == entity2 %}selected{% endif %}>
-                                    {{ entity }}
-                                </option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        
-                        <!-- الشركة الفرعية -->
-                        <div class="col-md-6">
-                            <label class="form-label fw-bold">الشركة الفرعية:</label>
-                            <select name="sub_company2" class="form-select form-select-sm" form="comparisonForm">
-                                <option value="">الكل</option>
-                                {% for sub in sub_companies %}
-                                <option value="{{ sub }}" {% if sub == sub_company2 %}selected{% endif %}>
-                                    {{ sub }}
-                                </option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        
-                        <!-- التخصص -->
-                        <div class="col-md-6">
-                            <label class="form-label fw-bold">التخصص:</label>
-                            <select name="specialty2" class="form-select form-select-sm" form="comparisonForm">
-                                <option value="">الكل</option>
-                                {% for spec in specialties %}
-                                <option value="{{ spec }}" {% if spec == specialty2 %}selected{% endif %}>
-                                    {{ spec }}
-                                </option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        
-                        <!-- نوع الباكدج -->
-                        <div class="col-md-6">
-                            <label class="form-label fw-bold">نوع الباكدج:</label>
-                            <select name="package_type2" class="form-select form-select-sm" form="comparisonForm">
-                                <option value="">الكل</option>
-                                {% for pkg in package_types %}
-                                <option value="{{ pkg }}" {% if pkg == package_type2 %}selected{% endif %}>
-                                    {{ pkg }}
-                                </option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 🔘 زر عرض النتائج -->
-    <form id="comparisonForm" method="GET" class="mt-3">
+    <form id="comparisonForm" method="GET">
         <input type="hidden" name="source" value="{{ source }}">
-        <div class="row">
+        
+        <div class="row g-3">
+            <!-- البوكس الأول - الفترة الأولى -->
+            <div class="col-md-6">
+                <div class="card shadow-sm">
+                    <div class="card-header" style="background: linear-gradient(135deg, #0d6efd, #0dcaf0); color: white;">
+                        <h5 class="mb-0">
+                            <i class="fas fa-calendar-alt"></i> الفترة الأولى
+                            <span class="badge bg-light text-primary ms-2">{{ year1 }}</span>
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-2">
+                            <!-- ✅ السنة - Select -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">السنة:</label>
+                                <select name="year1" class="form-select form-select-sm form-select-submit">
+                                    <option value="">الكل</option>
+                                    {% for year in years %}
+                                    <option value="{{ year }}" {% if year == year1 %}selected{% endif %}>
+                                        {{ year }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            
+                            <!-- ✅ الربع - Select -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">الربع:</label>
+                                <select name="quarter1" class="form-select form-select-sm form-select-submit">
+                                    <option value="">الكل</option>
+                                    {% for q in quarters %}
+                                    <option value="{{ q }}" {% if q == quarter1 %}selected{% endif %}>
+                                        الربع {{ q }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            
+                            <!-- ✅ الشهر - Select -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">الشهر:</label>
+                                <select name="month1" class="form-select form-select-sm form-select-submit">
+                                    <option value="">الكل</option>
+                                    {% for month in months %}
+                                    <option value="{{ month }}" {% if month == month1 %}selected{% endif %}>
+                                        {{ month }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            
+                            <!-- 🔍 القطاع - Input + Datalist -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">القطاع:</label>
+                                <input type="text"
+                                       id="sector1"
+                                       name="sector1"
+                                       class="form-control form-control-sm filter-input" 
+                                       list="sectorList1" placeholder="ابحث عن قطاع..." 
+                                       value="{{ sector1 }}" autocomplete="off">
+                                <datalist id="sectorList1">
+                                    {% for sector in sectors %}
+                                    <option value="{{ sector }}">{{ sector }}</option>
+                                    {% endfor %}
+                                </datalist>
+                            </div>
+                            
+                            <!-- 🔍 الجهة - Input + Datalist -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">الجهة:</label>
+                                <input type="text"
+                                       id="entity1"
+                                       name="entity1"
+                                       class="form-control form-control-sm filter-input" 
+                                       list="entityList1" placeholder="ابحث عن جهة..." 
+                                       value="{{ entity1 }}" autocomplete="off">
+                                <datalist id="entityList1">
+                                    {% for entity in entities %}
+                                    <option value="{{ entity }}">{{ entity }}</option>
+                                    {% endfor %}
+                                </datalist>
+                            </div>
+                            
+                            <!-- 🔍 الشركة الفرعية - Input + Datalist -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">الشركة الفرعية:</label>
+                                <input type="text"
+                                       id="sub_company1"
+                                       name="sub_company1"
+                                       class="form-control form-control-sm filter-input" 
+                                       list="subCompanyList1" placeholder="ابحث عن شركة..." 
+                                       value="{{ sub_company1 }}" autocomplete="off">
+                                <datalist id="subCompanyList1">
+                                    {% for sub in sub_companies %}
+                                    <option value="{{ sub }}">{{ sub }}</option>
+                                    {% endfor %}
+                                </datalist>
+                            </div>
+                            
+                            <!-- 🔍 التخصص - Input + Datalist -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">التخصص:</label>
+                                <input type="text"
+                                       id="specialty1"
+                                       name="specialty1"
+                                       class="form-control form-control-sm filter-input" 
+                                       list="specialtyList1" placeholder="ابحث عن تخصص..." 
+                                       value="{{ specialty1 }}" autocomplete="off">
+                                <datalist id="specialtyList1">
+                                    {% for spec in specialties %}
+                                    <option value="{{ spec }}">{{ spec }}</option>
+                                    {% endfor %}
+                                </datalist>
+                            </div>
+                            
+                            <!-- 🔍 نوع الباكدج - Input + Datalist -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">نوع الباكدج:</label>
+                                <input type="text"
+                                       id="package_type1"
+                                       name="package_type1"
+                                       class="form-control form-control-sm" 
+                                       list="packageTypeList1" placeholder="ابحث عن باكدج..." 
+                                       value="{{ package_type1 }}" autocomplete="off">
+                                <datalist id="packageTypeList1">
+                                    {% for pkg in package_types %}
+                                    <option value="{{ pkg }}">{{ pkg }}</option>
+                                    {% endfor %}
+                                </datalist>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- البوكس الثاني - الفترة الثانية -->
+            <div class="col-md-6">
+                <div class="card shadow-sm">
+                    <div class="card-header" style="background: linear-gradient(135deg, #198754, #0dcaf0); color: white;">
+                        <h5 class="mb-0">
+                            <i class="fas fa-calendar-alt"></i> الفترة الثانية
+                            <span class="badge bg-light text-primary ms-2">{{ year2 }}</span>
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-2">
+                            <!-- ✅ السنة - Select -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">السنة:</label>
+                                <select name="year2" class="form-select form-select-sm form-select-submit">
+                                    <option value="">الكل</option>
+                                    {% for year in years %}
+                                    <option value="{{ year }}" {% if year == year2 %}selected{% endif %}>
+                                        {{ year }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            
+                            <!-- ✅ الربع - Select -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">الربع:</label>
+                                <select name="quarter2" class="form-select form-select-sm form-select-submit">
+                                    <option value="">الكل</option>
+                                    {% for q in quarters %}
+                                    <option value="{{ q }}" {% if q == quarter2 %}selected{% endif %}>
+                                        الربع {{ q }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            
+                            <!-- ✅ الشهر - Select -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">الشهر:</label>
+                                <select name="month2" class="form-select form-select-sm form-select-submit">
+                                    <option value="">الكل</option>
+                                    {% for month in months %}
+                                    <option value="{{ month }}" {% if month == month2 %}selected{% endif %}>
+                                        {{ month }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            
+                            <!-- 🔍 القطاع - Input + Datalist -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">القطاع:</label>
+                                <input type="text"
+                                       id="sector2"
+                                       name="sector2"
+                                       class="form-control form-control-sm filter-input" 
+                                       list="sectorList2" placeholder="ابحث عن قطاع..." 
+                                       value="{{ sector2 }}" autocomplete="off">
+                                <datalist id="sectorList2">
+                                    {% for sector in sectors %}
+                                    <option value="{{ sector }}">{{ sector }}</option>
+                                    {% endfor %}
+                                </datalist>
+                            </div>
+                            
+                            <!-- 🔍 الجهة - Input + Datalist -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">الجهة:</label>
+                                <input type="text"
+                                       id="entity2"
+                                       name="entity2"
+                                       class="form-control form-control-sm filter-input" 
+                                       list="entityList2" placeholder="ابحث عن جهة..." 
+                                       value="{{ entity2 }}" autocomplete="off">
+                                <datalist id="entityList2">
+                                    {% for entity in entities %}
+                                    <option value="{{ entity }}">{{ entity }}</option>
+                                    {% endfor %}
+                                </datalist>
+                            </div>
+                            
+                            <!-- 🔍 الشركة الفرعية - Input + Datalist -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">الشركة الفرعية:</label>
+                                <input type="text"
+                                       id="sub_company2"
+                                       name="sub_company2"
+                                       class="form-control form-control-sm filter-input" 
+                                       list="subCompanyList2" placeholder="ابحث عن شركة..." 
+                                       value="{{ sub_company2 }}" autocomplete="off">
+                                <datalist id="subCompanyList2">
+                                    {% for sub in sub_companies %}
+                                    <option value="{{ sub }}">{{ sub }}</option>
+                                    {% endfor %}
+                                </datalist>
+                            </div>
+                            
+                            <!-- 🔍 التخصص - Input + Datalist -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">التخصص:</label>
+                                <input type="text"
+                                       id="specialty2"
+                                       name="specialty2"
+                                       class="form-control form-control-sm filter-input" 
+                                       list="specialtyList2" placeholder="ابحث عن تخصص..." 
+                                       value="{{ specialty2 }}" autocomplete="off">
+                                <datalist id="specialtyList2">
+                                    {% for spec in specialties %}
+                                    <option value="{{ spec }}">{{ spec }}</option>
+                                    {% endfor %}
+                                </datalist>
+                            </div>
+                            
+                            <!-- 🔍 نوع الباكدج - Input + Datalist -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">نوع الباكدج:</label>
+                                <input type="text"
+                                       id="package_type2"
+                                       name="package_type2"
+                                       class="form-control form-control-sm" 
+                                       list="packageTypeList2" placeholder="ابحث عن باكدج..." 
+                                       value="{{ package_type2 }}" autocomplete="off">
+                                <datalist id="packageTypeList2">
+                                    {% for pkg in package_types %}
+                                    <option value="{{ pkg }}">{{ pkg }}</option>
+                                    {% endfor %}
+                                </datalist>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 🔘 زر عرض النتائج -->
+        <div class="row mt-3">
             <div class="col-12 text-center">
                 <button type="submit" class="btn btn-primary btn-lg">
                     <i class="fas fa-play"></i> عرض النتائج
@@ -311,15 +342,7 @@
             <div class="card bg-success text-white">
                 <div class="card-body text-center">
                     <h6 class="card-title">إجمالي الفترة الأولى</h6>
-                    <h2 class="card-text">
-                        {% with total=0 %}
-                            {% for item in comparison_data %}
-                                {% with total=total|add:item.amount1 %}
-                                {% endwith %}
-                            {% endfor %}
-                            {{ total|floatformat:0 }}
-                        {% endwith %}
-                    </h2>
+                    <h2 class="card-text">{{ total_amount1|floatformat:2 }}</h2>
                 </div>
             </div>
         </div>
@@ -327,15 +350,7 @@
             <div class="card bg-info text-white">
                 <div class="card-body text-center">
                     <h6 class="card-title">إجمالي الفترة الثانية</h6>
-                    <h2 class="card-text">
-                        {% with total=0 %}
-                            {% for item in comparison_data %}
-                                {% with total=total|add:item.amount2 %}
-                                {% endwith %}
-                            {% endfor %}
-                            {{ total|floatformat:0 }}
-                        {% endwith %}
-                    </h2>
+                    <h2 class="card-text">{{ total_amount2|floatformat:2 }}</h2>
                 </div>
             </div>
         </div>
@@ -381,7 +396,9 @@
                             <thead class="table-primary">
                                 <tr>
                                     <th>#</th>
+                                    <th>الكود</th>
                                     <th>اسم الباكدج</th>
+                                    <th>التخصص</th>
                                     <th>الفترة الأولى (العدد)</th>
                                     <th>الفترة الأولى (المبلغ)</th>
                                     <th>الفترة الثانية (العدد)</th>
@@ -394,7 +411,9 @@
                                 {% for item in comparison_data %}
                                 <tr>
                                     <td>{{ forloop.counter }}</td>
+                                    <td><span class="badge bg-secondary">{{ item.code|default:"-" }}</span></td>
                                     <td class="fw-bold">{{ item.package_name }}</td>
+                                    <td>{{ item.specialty|default:"-" }}</td>
                                     <td>
                                         <span class="badge bg-primary">{{ item.count1 }}</span>
                                     </td>
@@ -438,43 +457,11 @@
                             </tbody>
                             <tfoot class="table-secondary fw-bold">
                                 <tr>
-                                    <td colspan="2" class="text-center">الإجمالي</td>
-                                    <td>
-                                        {% with total=0 %}
-                                            {% for item in comparison_data %}
-                                                {% with total=total|add:item.count1 %}
-                                                {% endwith %}
-                                            {% endfor %}
-                                            {{ total }}
-                                        {% endwith %}
-                                    </td>
-                                    <td>
-                                        {% with total=0 %}
-                                            {% for item in comparison_data %}
-                                                {% with total=total|add:item.amount1 %}
-                                                {% endwith %}
-                                            {% endfor %}
-                                            {{ total|floatformat:2 }}
-                                        {% endwith %}
-                                    </td>
-                                    <td>
-                                        {% with total=0 %}
-                                            {% for item in comparison_data %}
-                                                {% with total=total|add:item.count2 %}
-                                                {% endwith %}
-                                            {% endfor %}
-                                            {{ total }}
-                                        {% endwith %}
-                                    </td>
-                                    <td>
-                                        {% with total=0 %}
-                                            {% for item in comparison_data %}
-                                                {% with total=total|add:item.amount2 %}
-                                                {% endwith %}
-                                            {% endfor %}
-                                            {{ total|floatformat:2 }}
-                                        {% endwith %}
-                                    </td>
+                                    <td colspan="4" class="text-center">الإجمالي</td>
+                                    <td>{{ total_count1 }}</td>
+                                    <td>{{ total_amount1|floatformat:2 }}</td>
+                                    <td>{{ total_count2 }}</td>
+                                    <td>{{ total_amount2|floatformat:2 }}</td>
                                     <td colspan="2"></td>
                                 </tr>
                             </tfoot>
@@ -496,23 +483,110 @@
 <!-- 🎯 JavaScript -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // 🎯 تحديث الفلاتر عند التغيير
-    const filters = document.querySelectorAll('select[form="comparisonForm"]');
-    filters.forEach(filter => {
-        filter.addEventListener('change', function() {
-            // تحديث المصدر
-            const sourceInput = document.querySelector('input[name="source"]');
-            if (sourceInput) {
-                const sourceSelect = document.querySelector('select[name="source"]');
-                if (sourceSelect) {
-                    sourceInput.value = sourceSelect.value;
-                }
+    // ============================================
+    // دوال تحديث القوائم بالـ AJAX
+    // ============================================
+    
+    function updateDatalist(id, values) {
+        const list = document.getElementById(id);
+        if (!list) return;
+        list.innerHTML = "";
+        values.forEach(value => {
+            const option = document.createElement("option");
+            option.value = value;
+            list.appendChild(option);
+        });
+    }
+
+    function initPackageFilters(prefix) {
+        const entity = document.getElementById(`entity${prefix}`);
+        const sector = document.getElementById(`sector${prefix}`);
+        const subCompany = document.getElementById(`sub_company${prefix}`);
+        const specialty = document.getElementById(`specialty${prefix}`);
+        const source = document.querySelector("select[name='source']");
+        
+        if (!entity || !sector || !subCompany || !specialty || !source) return;
+
+        async function refreshFilters() {
+            const params = new URLSearchParams();
+            params.append("source", source.value);
+            if (entity.value) params.append("entity", entity.value);
+            if (sector.value) params.append("sector", sector.value);
+            if (subCompany.value) params.append("sub_company", subCompany.value);
+            if (specialty.value) params.append("specialty", specialty.value);
+
+            try {
+                const response = await fetch(`/ajax/package-filters/?${params}`);
+                const data = await response.json();
+
+                updateDatalist(`sectorList${prefix}`, data.sectors || []);
+                updateDatalist(`subCompanyList${prefix}`, data.sub_companies || []);
+                updateDatalist(`specialtyList${prefix}`, data.specialties || []);
+                updateDatalist(`packageTypeList${prefix}`, data.packages || []);
+            } catch (error) {
+                console.error('Error refreshing filters:', error);
             }
+        }
+
+        // تحديث عند تغيير القيم
+        entity.addEventListener("change", refreshFilters);
+        sector.addEventListener("change", refreshFilters);
+        subCompany.addEventListener("change", refreshFilters);
+        specialty.addEventListener("change", refreshFilters);
+    }
+
+    // ============================================
+    // تهيئة الفلاتر للفترتين
+    // ============================================
+    initPackageFilters(1);
+    initPackageFilters(2);
+
+    // ============================================
+    // تحديث عند الضغط على Enter في أي input
+    // ============================================
+    const inputs = document.querySelectorAll('input[list]');
+    inputs.forEach(input => {
+        input.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                document.getElementById('comparisonForm').submit();
+            }
+        });
+    });
+
+    // ============================================
+    // تحديث عند تغيير أي Select (السنة، الربع، الشهر)
+    // ============================================
+    const selects = document.querySelectorAll('.form-select-submit');
+    selects.forEach(select => {
+        select.addEventListener('change', function() {
             document.getElementById('comparisonForm').submit();
         });
     });
-    
-    // 🎯 تنسيق الأرقام
+
+    // ============================================
+    // حل مشكلة اختيار الـ datalist
+    // ============================================
+    // عند النقر على خيار في الـ datalist، نقوم بتحديث الحقل
+    document.addEventListener('click', function(e) {
+        if (e.target.tagName === 'OPTION') {
+            const datalist = e.target.closest('datalist');
+            if (datalist) {
+                const input = document.querySelector(`input[list="${datalist.id}"]`);
+                if (input) {
+                    // تحديث قيمة الـ input
+                    input.value = e.target.value;
+                    // تشغيل حدث change
+                    const changeEvent = new Event('change', { bubbles: true });
+                    input.dispatchEvent(changeEvent);
+                }
+            }
+        }
+    });
+
+    // ============================================
+    // تنسيق الأرقام
+    // ============================================
     const numbers = document.querySelectorAll('.number-format');
     numbers.forEach(el => {
         const value = parseFloat(el.textContent.replace(/,/g, ''));
@@ -537,6 +611,10 @@ document.addEventListener('DOMContentLoaded', function() {
     .card-header {
         border-radius: 8px 8px 0 0;
     }
+    input.form-control-sm {
+        font-size: 0.85rem;
+        padding: 0.25rem 0.5rem;
+    }
     select.form-select-sm {
         font-size: 0.85rem;
         padding: 0.25rem 0.5rem;
@@ -544,6 +622,14 @@ document.addEventListener('DOMContentLoaded', function() {
     label.form-label {
         font-size: 0.85rem;
         margin-bottom: 0.2rem;
+    }
+    /* تنسيق الـ datalist */
+    input[list]::-webkit-calendar-picker-indicator {
+        opacity: 0.5;
+        cursor: pointer;
+    }
+    input[list]:hover::-webkit-calendar-picker-indicator {
+        opacity: 1;
     }
 </style>
 {% endblock %}

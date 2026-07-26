@@ -3108,7 +3108,7 @@ def package_performance_comparison(request):
     
     from django.db.models import Sum, Count, Q
     from decimal import Decimal
-    from frontend.models import  ReportStatisticSheet15
+    from frontend.models import ReportStatisticSheet15
     
     # 📅 الفلاتر - الفترة الأولى
     year1 = request.GET.get('year1', '2025')
@@ -3140,13 +3140,12 @@ def package_performance_comparison(request):
         Model = ReportStatisticSheet15
         price_field = 'service_price'
     
-    # 📊 بناء الفلاتر - المعدل
+    # 📊 بناء الفلاتر
     def build_filters(year, month, quarter, sector, entity, sub_company, specialty, package_type):
         filters = Q()
         if year:
-            filters &= Q(admission_date__year=year)
+            filters &= Q(admission_date__year=int(year))
         if month:
-            # ✅ استخدام حقل month النصي
             filters &= Q(month=month)
         if quarter:
             quarter_months = {
@@ -3157,16 +3156,21 @@ def package_performance_comparison(request):
             }
             if quarter in quarter_months:
                 filters &= Q(month__in=quarter_months[quarter])
-        if sector:
+        if sector and sector.strip():
             filters &= Q(sector__icontains=sector)
-        if entity:
+        if entity and entity.strip():
             filters &= Q(entity_name__icontains=entity)
-        if sub_company:
+        if sub_company and sub_company.strip():
             filters &= Q(sub_company__icontains=sub_company)
-        if specialty:
+        if specialty and specialty.strip():
             filters &= Q(specialty__icontains=specialty)
-        if package_type:
-            filters &= Q(package_name__icontains=package_type)
+        if package_type and package_type.strip():
+            if "(" in package_type and ")" in package_type:
+                package_type = package_type.split("(")[-1].replace(")", "").strip()
+            filters &= (
+                Q(package_name__icontains=package_type) |
+                Q(code__icontains=package_type)
+            )
         return filters
     
     filters1 = build_filters(year1, month1, quarter1, sector1, entity1, sub_company1, specialty1, package_type1)
@@ -3176,7 +3180,7 @@ def package_performance_comparison(request):
     queryset1 = Model.objects.filter(filters1)
     queryset2 = Model.objects.filter(filters2)
     
-    # 📊 تجميع البيانات حسب الباكدج
+    # 📊 تجميع البيانات
     def aggregate_packages(queryset):
         packages = {}
         for stat in queryset:
@@ -3185,10 +3189,13 @@ def package_performance_comparison(request):
                 packages[pkg_name] = {
                     'count': 0,
                     'total_amount': Decimal('0.00'),
+                    'code': getattr(stat, 'code', ''),
+                    'specialty': getattr(stat, 'specialty', ''),
                 }
             packages[pkg_name]['count'] += 1
             amount = getattr(stat, price_field) or Decimal('0.00')
-            packages[pkg_name]['total_amount'] += amount
+            if amount:
+                packages[pkg_name]['total_amount'] += amount
         return packages
     
     packages1 = aggregate_packages(queryset1)
@@ -3199,16 +3206,27 @@ def package_performance_comparison(request):
     comparison_data = []
     
     for pkg in all_packages:
-        data1 = packages1.get(pkg, {'count': 0, 'total_amount': Decimal('0.00')})
-        data2 = packages2.get(pkg, {'count': 0, 'total_amount': Decimal('0.00')})
+        # ✅ إضافة specialty في القيم الافتراضية
+        default_data = {
+            'count': 0,
+            'total_amount': Decimal('0.00'),
+            'code': '',
+            'specialty': ''  # ✅ أضف هذا
+        }
+        data1 = packages1.get(pkg, default_data)
+        data2 = packages2.get(pkg, default_data)
         
         change_percent = 0
         if data1['total_amount'] > 0:
             change = data2['total_amount'] - data1['total_amount']
             change_percent = (change / data1['total_amount']) * 100
+        elif data2['total_amount'] > 0:
+            change_percent = 100
         
         comparison_data.append({
             'package_name': pkg,
+            'code': data1['code'] or data2['code'] or '',
+            'specialty': data1['specialty'] or data2['specialty'] or '',
             'count1': data1['count'],
             'amount1': data1['total_amount'],
             'count2': data2['count'],
@@ -3219,20 +3237,63 @@ def package_performance_comparison(request):
     
     comparison_data.sort(key=lambda x: abs(x['change_percent']), reverse=True)
     
-    # 📋 قيم الفلاتر
-    sectors = Model.objects.values_list('sector', flat=True).distinct().exclude(sector__isnull=True).exclude(sector='')
-    entities = Model.objects.values_list('entity_name', flat=True).distinct().exclude(entity_name__isnull=True).exclude(entity_name='')
-    sub_companies = Model.objects.values_list('sub_company', flat=True).distinct().exclude(sub_company__isnull=True).exclude(sub_company='')
-    specialties = Model.objects.values_list('specialty', flat=True).distinct().exclude(specialty__isnull=True).exclude(specialty='')
+    # ✅ حساب الإجماليات
+    total_amount1 = sum(item['amount1'] for item in comparison_data)
+    total_amount2 = sum(item['amount2'] for item in comparison_data)
+    total_count1 = sum(item['count1'] for item in comparison_data)
+    total_count2 = sum(item['count2'] for item in comparison_data)
     
-    # استخراج أنواع الباكدجات
+    # 📋 قيم الفلاتر
+    sectors = (
+        Model.objects.exclude(sector__isnull=True)
+        .exclude(sector="")
+        .order_by()
+        .values_list("sector", flat=True)
+        .distinct()
+    )
+    
+    entities = (
+        Model.objects.exclude(entity_name__isnull=True)
+        .exclude(entity_name="")
+        .order_by()
+        .values_list("entity_name", flat=True)
+        .distinct()
+    )
+    
+    sub_companies = (
+        Model.objects.exclude(sub_company__isnull=True)
+        .exclude(sub_company="")
+        .order_by()
+        .values_list("sub_company", flat=True)
+        .distinct()
+    )
+    
+    specialties = (
+        Model.objects.exclude(specialty__isnull=True)
+        .exclude(specialty="")
+        .order_by()
+        .values_list("specialty", flat=True)
+        .distinct()
+    )
+    
     package_types = []
-    for pkg in Model.objects.exclude(package_name__isnull=True).exclude(package_name='').values_list('package_name', flat=True).distinct():
-        parts = pkg.split()
-        if len(parts) >= 2:
-            package_types.append(' '.join(parts[:2]))
-        else:
-            package_types.append(pkg)
+    packages_qs = (
+        Model.objects.exclude(package_name__isnull=True)
+        .exclude(package_name="")
+        .order_by()
+        .values("package_name", "code")
+        .distinct()
+    )
+    
+    for pkg in packages_qs:
+        pkg_name = pkg["package_name"] or ""
+        pkg_code = pkg["code"] or ""
+        if pkg_name:
+            if pkg_code:
+                display = f"{pkg_name} ({pkg_code})"
+            else:
+                display = pkg_name
+            package_types.append(display)
     package_types = sorted(list(set(package_types)))
     
     years = ['2024', '2025', '2026', '2027']
@@ -3268,9 +3329,123 @@ def package_performance_comparison(request):
         'specialty2': specialty2,
         'package_type1': package_type1,
         'package_type2': package_type2,
+        # ✅ الإجماليات
+        'total_amount1': total_amount1,
+        'total_amount2': total_amount2,
+        'total_count1': total_count1,
+        'total_count2': total_count2,
     }
     
     return render(request, 'frontend/package_performance_comparison.html', context)
+from django.http import JsonResponse
+from frontend.models import ReportStatisticSheet15
+
+from django.http import JsonResponse
+from frontend.models import ReportStatisticSheet15
+
+def get_package_filters(request):
+    """API لإرجاع الفلاتر المترابطة"""
+
+    source = request.GET.get("source", "sheet15")
+
+    if source == "sheet11":
+        Model = ReportStatistic
+    else:
+        Model = ReportStatisticSheet15
+
+    queryset = Model.objects.order_by()
+
+    # ==========================
+    # قراءة الفلاتر
+    # ==========================
+
+    entity = request.GET.get("entity", "").strip()
+    sector = request.GET.get("sector", "").strip()
+    sub_company = request.GET.get("sub_company", "").strip()
+    specialty = request.GET.get("specialty", "").strip()
+
+    # ==========================
+    # تطبيق الفلاتر
+    # ==========================
+
+    if entity:
+        queryset = queryset.filter(entity_name__icontains=entity)
+
+    if sector:
+        queryset = queryset.filter(sector__icontains=sector)
+
+    if sub_company:
+        queryset = queryset.filter(sub_company__icontains=sub_company)
+
+    if specialty:
+        queryset = queryset.filter(specialty__icontains=specialty)
+
+    # ==========================
+    # القطاعات
+    # ==========================
+
+    sectors = list(
+        queryset.exclude(sector__isnull=True)
+        .exclude(sector="")
+        .order_by()
+        .values_list("sector", flat=True)
+        .distinct()
+    )
+
+    # ==========================
+    # الشركات الفرعية
+    # ==========================
+
+    sub_companies = list(
+        queryset.exclude(sub_company__isnull=True)
+        .exclude(sub_company="")
+        .order_by()
+        .values_list("sub_company", flat=True)
+        .distinct()
+    )
+
+    # ==========================
+    # التخصصات
+    # ==========================
+
+    specialties = list(
+        queryset.exclude(specialty__isnull=True)
+        .exclude(specialty="")
+        .order_by()
+        .values_list("specialty", flat=True)
+        .distinct()
+    )
+
+    # ==========================
+    # الباكدجات
+    # ==========================
+
+    package_list = []
+
+    packages = (
+        queryset.exclude(package_name__isnull=True)
+        .exclude(package_name="")
+        .order_by()
+        .values("package_name", "code")
+        .distinct()
+    )
+
+    for item in packages:
+
+        package_name = item["package_name"]
+        code = item["code"] or ""
+
+        if code:
+            package_list.append(f"{package_name} ({code})")
+        else:
+            package_list.append(package_name)
+
+    return JsonResponse({
+        "sectors": sorted(sectors),
+        "sub_companies": sorted(sub_companies),
+        "specialties": sorted(specialties),
+        "packages": sorted(package_list),
+    })
 from django.utils import timezone  # ✅ أضف هذا السطر
 
 from django.shortcuts import render
