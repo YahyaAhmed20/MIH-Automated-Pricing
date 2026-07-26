@@ -3020,7 +3020,10 @@ def doctors_list(request):
             date_error = "⚠️ تاريخ النهاية غير صحيح. تأكد من إدخال يوم وشهر وسنة صحيحة."
     
     # 📊 الاستعلام الأساسي
-    queryset = ExternalApproval.objects.all()
+    # ✅ ✅ ✅ استبعاد Serv. Done من الإحصائيات
+    queryset = ExternalApproval.objects.all().exclude(
+        main_status__iexact='serv. done'
+    )
     
     # تطبيق الفلاتر
     if search_query:
@@ -3101,6 +3104,10 @@ def doctors_list(request):
 def doctor_detail(request, doctor_name):
     """صفحة تفاصيل الطبيب"""
     
+    from django.db.models import Sum, Q
+    from decimal import Decimal
+    from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+    
     # 🔍 جلب جميع حالات الطبيب
     doctor_cases = ExternalApproval.objects.filter(
         doctor_name__iexact=doctor_name
@@ -3112,8 +3119,10 @@ def doctor_detail(request, doctor_name):
             'error': 'لا توجد حالات لهذا الطبيب'
         })
     
-    # 📊 إحصائيات الحالات (8 بوكسات - شامل Serv. Done)
-    total_cases = doctor_cases.count()
+    # ✅ ✅ ✅ إجمالي الحالات (باستثناء Serv. Done)
+    total_cases = doctor_cases.exclude(
+        main_status__iexact='serv. done'
+    ).count()
     
     # ✅ الحالات حسب main_status (مع handling للـ None)
     status_stats = {
@@ -3126,8 +3135,36 @@ def doctor_detail(request, doctor_name):
         'serv done': doctor_cases.filter(main_status__iexact='serv. done').count(),
     }
     
-    # 💰 التكلفة الإجمالية
-    total_cost = doctor_cases.aggregate(total=Sum('initial_cost'))['total'] or 0
+    # 💰 التكلفة الإجمالية (جميع الحالات - شامل Serv. Done)
+    total_cost = doctor_cases.aggregate(total=Sum('initial_cost'))['total'] or Decimal('0.00')
+    
+    # ✅ تنسيق الأرقام
+    def format_number(value):
+        if value is None:
+            return "0"
+        try:
+            num = int(float(value))
+            return f"{num:,}"
+        except (ValueError, TypeError):
+            return str(value)
+    
+    # ✅ تنسيق التاريخ
+    def format_date(value):
+        if not value:
+            return "-"
+        try:
+            if isinstance(value, str):
+                from datetime import datetime
+                for fmt in ['%Y-%m-%d', '%d/%m/%Y', '%m/%d/%Y']:
+                    try:
+                        dt = datetime.strptime(value, fmt)
+                        return dt.strftime('%d/%m/%Y')
+                    except ValueError:
+                        continue
+                return value
+            return value.strftime('%d/%m/%Y')
+        except:
+            return str(value)
     
     # 📋 جلب بيانات الطبيب (أول سجل)
     doctor_info = doctor_cases.first()
@@ -3139,8 +3176,10 @@ def doctor_detail(request, doctor_name):
         # لو في فلتر، نفلتر الحالات
         cases_list = doctor_cases.filter(main_status__iexact=status_filter).order_by('-date', '-id')
     else:
-        # لو مفيش فلتر، نعرض الكل
-        cases_list = doctor_cases.order_by('-date', '-id')
+        # ✅ ✅ ✅ لو مفيش فلتر، نعرض الكل باستثناء Serv. Done
+        cases_list = doctor_cases.exclude(
+            main_status__iexact='serv. done'
+        ).order_by('-date', '-id')
     
     # Pagination (10 حالات في الصفحة)
     paginator = Paginator(cases_list, 10)
@@ -3153,15 +3192,36 @@ def doctor_detail(request, doctor_name):
     except EmptyPage:
         cases = paginator.page(paginator.num_pages)
     
+    # ✅ تنسيق البيانات للـ HTML
+    formatted_cases = []
+    for case in cases:
+        formatted_cases.append({
+            'id': case.id,
+            'patient_name': case.patient_name or '-',
+            'procedure': case.procedure or '-',
+            'company': case.company or '-',
+            'doctor_name': case.doctor_name or '-',
+            'main_status': case.main_status or '-',
+            'admission_date': format_date(case.admission_date),
+            'initial_cost': format_number(case.initial_cost),
+            'medical_number': case.medical_number or '-',
+            'specialty': case.specialty or '-',
+            'notes': case.notes or '-',
+            'date': format_date(case.date),
+            'phone': case.phone or '-',
+            'report': case.report or '-',
+            'approval': case.approval or '-',
+        })
+    
     context = {
         'doctor_name': doctor_name,
         'doctor_info': doctor_info,
-        'total_cases': total_cases,
-        'total_cost': total_cost,
+        'total_cases': total_cases,  # ✅ بدون Serv. Done
+        'total_cost': format_number(total_cost),
         'status_stats': status_stats,
-        'cases': cases,
+        'cases': formatted_cases,
         'paginator': paginator,
-        'status_filter': status_filter,  # ✅ الفلتر الحالي
+        'status_filter': status_filter,
     }
     
     return render(request, 'frontend/doctor_detail.html', context)

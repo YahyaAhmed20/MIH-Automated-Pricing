@@ -1,5 +1,28 @@
 
 
+هنخلي 
+التقارير والاحصائيات 
+اسمها متابعه البكدحات 
+جواها نقطتين 
+احصائيات البكدجات  دي اصلا الي ف الاساس التقارير والاحصائيات
+مقارنه اداء البكدجات  دي 
+
+      <li class="menu-item">
+    <a class="menu-link" href="{% url 'package_comparison' %}">
+        مقارنة أداء الباكدجات
+    </a>
+</li>
+
+ <!-- 9. التقارير والإحصائيات -->
+        <li class="menu-item">
+            <a class="menu-link" href="{% url 'reports' %}">
+                <i class="bi bi-bar-chart"></i>
+                التقارير والإحصائيات
+            </a>
+        </li>
+
+
+
 
 <datalist>
 SEARCH

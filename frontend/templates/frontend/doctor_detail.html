@@ -242,10 +242,10 @@
                                 {% for case in cases %}
                                 <tr>
                                     <td>{{ forloop.counter }}</td>
-                                    <td class="fw-bold">{{ case.patient_name|default:"-" }}</td>
-                                    <td>{{ case.procedure|truncatechars:30|default:"-" }}</td>
-                                    <td>{{ case.company|default:"-" }}</td>
-                                    <td>{{ case.doctor_name|default:"-" }}</td>
+                                    <td class="fw-bold">{{ case.patient_name }}</td>
+                                    <td>{{ case.procedure|truncatechars:30 }}</td>
+                                    <td>{{ case.company }}</td>
+                                    <td>{{ case.doctor_name }}</td>
                                     <td>
                                         <span class="badge 
                                             {% if case.main_status == 'approved' %}bg-success
@@ -256,10 +256,10 @@
                                             {% elif case.main_status == 'rejected' %}bg-dark
                                             {% elif case.main_status == 'serv. done' %}" style="background: linear-gradient(135deg, #0dcaf0, #0d6efd); color: white;"
                                             {% else %}bg-light text-dark{% endif %}">
-                                            {{ case.main_status|default:"-" }}
+                                            {{ case.main_status }}
                                         </span>
                                     </td>
-                                    <td>{{ case.admission_date|date:"d/m/Y"|default:"-" }}</td>
+                                    <td>{{ case.admission_date }}</td>
                                     <td>
                                         <button class="btn btn-sm btn-outline-primary" 
                                                 data-bs-toggle="modal" 
@@ -334,16 +334,16 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-6">
-                            <p><strong>👤 المريض:</strong> {{ case.patient_name|default:"-" }}</p>
-                            <p><strong>🆔 الرقم الطبي:</strong> {{ case.medical_number|default:"-" }}</p>
-                            <p><strong>🏥 الجهة:</strong> {{ case.company|default:"-" }}</p>
-                            <p><strong>👨‍⚕️ الطبيب:</strong> {{ case.doctor_name|default:"-" }}</p>
-                            <p><strong>📞 التليفون:</strong> {{ case.phone|default:"-" }}</p>
+                            <p><strong>👤 المريض:</strong> {{ case.patient_name }}</p>
+                            <p><strong>🆔 الرقم الطبي:</strong> {{ case.medical_number }}</p>
+                            <p><strong>🏥 الجهة:</strong> {{ case.company }}</p>
+                            <p><strong>👨‍⚕️ الطبيب:</strong> {{ case.doctor_name }}</p>
+                            <p><strong>📞 التليفون:</strong> {{ case.phone }}</p>
                         </div>
                         <div class="col-md-6">
-                            <p><strong>📝 الإجراء:</strong> {{ case.procedure|default:"-" }}</p>
-                            <p><strong>📅 تاريخ الدخول:</strong> {{ case.admission_date|date:"d/m/Y"|default:"-" }}</p>
-                            <p><strong>📅 التاريخ:</strong> {{ case.date|date:"d/m/Y"|default:"-" }}</p>
+                            <p><strong>📝 الإجراء:</strong> {{ case.procedure }}</p>
+                            <p><strong>📅 تاريخ الدخول:</strong> {{ case.admission_date }}</p>
+                            <p><strong>📅 التاريخ:</strong> {{ case.date }}</p>
                             <p><strong>✅ الحالة:</strong> 
                                 <span class="badge 
                                     {% if case.main_status == 'approved' %}bg-success
@@ -354,11 +354,11 @@
                                     {% elif case.main_status == 'rejected' %}bg-dark
                                     {% elif case.main_status == 'serv. done' %}" style="background: linear-gradient(135deg, #0dcaf0, #0d6efd); color: white;"
                                     {% else %}bg-light text-dark{% endif %}">
-                                    {{ case.main_status|default:"-" }}
+                                    {{ case.main_status }}
                                 </span>
                             </p>
-                            <p><strong>📄 التقرير:</strong> {{ case.report|default:"-" }}</p>
-                            <p><strong>✅ الموافقة:</strong> {{ case.approval|default:"-" }}</p>
+                            <p><strong>📄 التقرير:</strong> {{ case.report }}</p>
+                            <p><strong>✅ الموافقة:</strong> {{ case.approval }}</p>
                         </div>
                     </div>
                 </div>

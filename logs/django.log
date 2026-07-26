@@ -1929,3 +1929,300 @@ server closed the connection unexpectedly
 "GET /reports/ HTTP/1.1" 200 124253
 "GET /package-comparison/ HTTP/1.1" 200 358150
 "GET /doctors/ HTTP/1.1" 200 247707
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 34811
+"GET /static/images/logo.jpeg HTTP/1.1" 200 68755
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 14755
+"GET /doctors/ HTTP/1.1" 200 247707
+"GET /doctors/%D8%AF/%20%D9%85%D8%AD%D9%85%D8%AF%20%D8%B9%D8%A8%D8%AF%20%D8%A7%D9%84%D8%AD%D9%85%D9%8A%D8%AF%20%D8%AD%D9%81%D9%86%D9%89/ HTTP/1.1" 200 75082
+Internal Server Error: /doctor/\u062f/ \u0645\u062d\u0645\u062f \u0639\u0628\u062f \u0627\u0644\u062d\u0645\u064a\u062f \u062d\u0641\u0646\u0649/status/approved/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 279, in ensure_connection
+    self.connect()
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\postgresql\base.py", line 332, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\psycopg2\__init__.py", line 135, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.OperationalError: connection to server at "tokaido.proxy.rlwy.net" (66.33.22.222), port 16688 failed: Connection timed out (0x0000274C/10060)
+	Is the server running on that host and accepting TCP/IP connections?
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 3188, in doctor_status_detail
+    if not doctor_cases.exists():
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 1298, in exists
+    return self.query.has_results(using=self.db)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\sql\query.py", line 676, in has_results
+    return compiler.has_results()
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\sql\compiler.py", line 1591, in has_results
+    return bool(self.execute_sql(SINGLE))
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\sql\compiler.py", line 1621, in execute_sql
+    cursor = self.connection.cursor()
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 320, in cursor
+    return self._cursor()
+           ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 296, in _cursor
+    self.ensure_connection()
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 278, in ensure_connection
+    with self.wrap_database_errors:
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 279, in ensure_connection
+    self.connect()
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\postgresql\base.py", line 332, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\psycopg2\__init__.py", line 135, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: connection to server at "tokaido.proxy.rlwy.net" (66.33.22.222), port 16688 failed: Connection timed out (0x0000274C/10060)
+	Is the server running on that host and accepting TCP/IP connections?
+
+"GET /doctor/%D8%AF/%20%D9%85%D8%AD%D9%85%D8%AF%20%D8%B9%D8%A8%D8%AF%20%D8%A7%D9%84%D8%AD%D9%85%D9%8A%D8%AF%20%D8%AD%D9%81%D9%86%D9%89/status/approved/ HTTP/1.1" 500 178087
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /doctor/%D8%AF/%20%D9%85%D8%AD%D9%85%D8%AF%20%D8%B9%D8%A8%D8%AF%20%D8%A7%D9%84%D8%AD%D9%85%D9%8A%D8%AF%20%D8%AD%D9%81%D9%86%D9%89/status/approved/ HTTP/1.1" 200 38107
+Internal Server Error: /doctors/\u062f/ \u0645\u062d\u0645\u062f \u0639\u0628\u062f \u0627\u0644\u062d\u0645\u064a\u062f \u062d\u0641\u0646\u0649/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 3107, in doctor_detail
+    from frontend.models import ExternalApproval
+ImportError: cannot import name 'ExternalApproval' from 'frontend.models' (D:\desktop\rphospital\src\frontend\models.py)
+"GET /doctors/%D8%AF/%20%D9%85%D8%AD%D9%85%D8%AF%20%D8%B9%D8%A8%D8%AF%20%D8%A7%D9%84%D8%AD%D9%85%D9%8A%D8%AF%20%D8%AD%D9%81%D9%86%D9%89/ HTTP/1.1" 500 73931
+"GET /doctors/ HTTP/1.1" 200 247707
+Internal Server Error: /doctors/\u062f/ \u0645\u062d\u0645\u062f \u0639\u0628\u062f \u0627\u0644\u062d\u0645\u064a\u062f \u062d\u0641\u0646\u0649/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 3107, in doctor_detail
+    from frontend.models import ExternalApproval
+ImportError: cannot import name 'ExternalApproval' from 'frontend.models' (D:\desktop\rphospital\src\frontend\models.py)
+"GET /doctors/%D8%AF/%20%D9%85%D8%AD%D9%85%D8%AF%20%D8%B9%D8%A8%D8%AF%20%D8%A7%D9%84%D8%AD%D9%85%D9%8A%D8%AF%20%D8%AD%D9%81%D9%86%D9%89/ HTTP/1.1" 500 73794
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+- Broken pipe from ('127.0.0.1', 49437)
+"GET /doctors/%D8%AF/%20%D9%85%D8%AD%D9%85%D8%AF%20%D8%B9%D8%A8%D8%AF%20%D8%A7%D9%84%D8%AD%D9%85%D9%8A%D8%AF%20%D8%AD%D9%81%D9%86%D9%89/ HTTP/1.1" 200 65451
+- Broken pipe from ('127.0.0.1', 49442)
+"GET /doctors/ HTTP/1.1" 200 247707
+"GET /doctors/?search=%D8%AE%D8%A7%D9%84%D8%AF&specialty=&day_from=&month_from=&year_from=&day_to=&month_to=&year_to= HTTP/1.1" 200 50001
+"GET /doctors/%D8%A7.%D8%AF%20/%20%D8%AE%D8%A7%D9%84%D8%AF%20%D8%AF%D9%8A%D8%A7%D8%A8/ HTTP/1.1" 200 49622
+"GET /doctors/%D8%A7.%D8%AF%20/%20%D8%AE%D8%A7%D9%84%D8%AF%20%D8%AF%D9%8A%D8%A7%D8%A8/ HTTP/1.1" 200 49658
+"GET /doctors/ HTTP/1.1" 200 247707
+"GET /doctors/?search=%D8%AE%D8%A7%D9%84%D8%AF&specialty=&day_from=&month_from=&year_from=&day_to=&month_to=&year_to= HTTP/1.1" 200 50001
+"GET /doctors/%D8%A7.%D8%AF%20/%20%D8%AE%D8%A7%D9%84%D8%AF%20%D8%AF%D9%8A%D8%A7%D8%A8/ HTTP/1.1" 200 49658
+"GET /doctors/%D8%A7.%D8%AF%20/%20%D8%AE%D8%A7%D9%84%D8%AF%20%D8%AF%D9%8A%D8%A7%D8%A8/ HTTP/1.1" 200 49658
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+Internal Server Error: /doctors/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 2977, in doctors_list
+    from frontend.models import ExternalApproval
+ImportError: cannot import name 'ExternalApproval' from 'frontend.models' (D:\desktop\rphospital\src\frontend\models.py)
+"GET /doctors/ HTTP/1.1" 500 72549
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /doctors/ HTTP/1.1" 200 193913
+- Broken pipe from ('127.0.0.1', 49630)
+Internal Server Error: /doctors/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 279, in ensure_connection
+    self.connect()
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\postgresql\base.py", line 332, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\psycopg2\__init__.py", line 135, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.OperationalError: connection to server at "tokaido.proxy.rlwy.net" (66.33.22.222), port 16688 failed: server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+SSL SYSCALL error: Connection reset by peer (0x00002746/10054)
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 3055, in doctors_list
+    total_cases_all = doctors_data.aggregate(total=Sum('total_cases'))['total'] or 0
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 590, in aggregate
+    return self.query.chain().get_aggregation(self.db, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\sql\query.py", line 628, in get_aggregation
+    result = compiler.execute_sql(SINGLE)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\sql\compiler.py", line 1621, in execute_sql
+    cursor = self.connection.cursor()
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 320, in cursor
+    return self._cursor()
+           ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 296, in _cursor
+    self.ensure_connection()
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 278, in ensure_connection
+    with self.wrap_database_errors:
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 279, in ensure_connection
+    self.connect()
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\postgresql\base.py", line 332, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\psycopg2\__init__.py", line 135, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: connection to server at "tokaido.proxy.rlwy.net" (66.33.22.222), port 16688 failed: server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+SSL SYSCALL error: Connection reset by peer (0x00002746/10054)
+
+"GET /doctors/?search=%D8%AE%D8%A7%D9%84%D8%AF&specialty=&day_from=&month_from=&year_from=&day_to=&month_to=&year_to= HTTP/1.1" 500 185134
+Internal Server Error: /doctors/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.OperationalError: server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 3077, in doctors_list
+    for doctor in doctors_data:
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 386, in __iter__
+    self._fetch_all()
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 1954, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 218, in __iter__
+    for row in compiler.results_iter(
+               ^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\sql\compiler.py", line 1572, in results_iter
+    results = self.execute_sql(
+              ^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\sql\compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+
+- Broken pipe from ('127.0.0.1', 49626)
+"GET /doctors/?search=%D8%AE%D8%A7%D9%84%D8%AF&specialty=&day_from=&month_from=&year_from=&day_to=&month_to=&year_to= HTTP/1.1" 200 49997
+"GET /doctors/%D8%A7.%D8%AF%20/%20%D8%AE%D8%A7%D9%84%D8%AF%20%D8%AF%D9%8A%D8%A7%D8%A8/ HTTP/1.1" 200 49658
+"GET /doctors/%D8%A7.%D8%AF%20/%20%D8%AE%D8%A7%D9%84%D8%AF%20%D8%AF%D9%8A%D8%A7%D8%A8/ HTTP/1.1" 200 49658
