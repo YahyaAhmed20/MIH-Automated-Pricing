@@ -1,10 +1,8 @@
 from django.db import models
-
+from django.shortcuts import render
 # Create your models here.
 
-
-
-# في frontend/models.py
+# frontend/models.py
 
 class ReportStatisticSheet15(models.Model):
     """التقارير والإحصائيات - شيت 15"""
@@ -109,9 +107,11 @@ class ReportStatisticSheet15(models.Model):
     )
     
     # ✅ حقول جديدة في شيت 15
-    invoice_value = models.DecimalField(
+    invoice_amount = models.DecimalField(
         max_digits=14,
         decimal_places=2,
+        blank=True,
+        null=True,
         default=0,
         verbose_name="قيمة الفاتوره"
     )
@@ -122,6 +122,13 @@ class ReportStatisticSheet15(models.Model):
         null=True,
         db_index=True,
         verbose_name="الكود"
+    )
+    
+    doctor_name = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name="اسم الطبيب"
     )
     
     # ✅ حقول التحكم
@@ -150,6 +157,7 @@ class ReportStatisticSheet15(models.Model):
             models.Index(fields=["month"]),
             models.Index(fields=["payment_type"]),
             models.Index(fields=["code"]),
+            models.Index(fields=["doctor_name"]),
         ]
     
     def __str__(self):

@@ -1,4 +1,4 @@
-# في imports/services/report_statistic_sheet15_import_service.py
+# imports/services/report_statistic_sheet15_import_service.py
 
 import pandas as pd
 import time
@@ -153,14 +153,19 @@ class ReportStatisticSheet15ImportService:
                     service_price = ReportStatisticSheet15ImportService.clean_amount(row.iloc[12])
                 
                 # العمود 13: قيمة الفاتوره
-                invoice_value = Decimal('0.00')
+                invoice_amount = Decimal('0.00')
                 if len(row) > 13 and pd.notna(row.iloc[13]):
-                    invoice_value = ReportStatisticSheet15ImportService.clean_amount(row.iloc[13])
+                    invoice_amount = ReportStatisticSheet15ImportService.clean_amount(row.iloc[13])
                 
                 # العمود 14: الكود
                 code = ""
                 if len(row) > 14 and pd.notna(row.iloc[14]):
                     code = ImportHelpers.normalize_text(row.iloc[14])
+                
+                # ✅ العمود 15: اسم الطبيب (العمود الأخير)
+                doctor_name = ""
+                if len(row) > 15 and pd.notna(row.iloc[15]):
+                    doctor_name = ImportHelpers.normalize_text(row.iloc[15])
 
                 result["processed"] += 1
                 processed = result["processed"]
@@ -217,12 +222,17 @@ class ReportStatisticSheet15ImportService:
                         existing_stat.service_price = service_price
                         changed = True
                         
-                    if existing_stat.invoice_value != invoice_value:
-                        existing_stat.invoice_value = invoice_value
+                    if existing_stat.invoice_amount != invoice_amount:
+                        existing_stat.invoice_amount = invoice_amount
                         changed = True
                         
                     if existing_stat.code != code:
                         existing_stat.code = code
+                        changed = True
+                    
+                    # ✅ اسم الطبيب
+                    if existing_stat.doctor_name != doctor_name:
+                        existing_stat.doctor_name = doctor_name
                         changed = True
 
                     if changed:
@@ -245,8 +255,9 @@ class ReportStatisticSheet15ImportService:
                         payment_type=payment_type,
                         sub_company=sub_company,
                         service_price=service_price,
-                        invoice_value=invoice_value,
+                        invoice_amount=invoice_amount,
                         code=code,
+                        doctor_name=doctor_name,  # ✅ جديد
                     )
                     to_create.append(stat)
                     stats_cache[key] = stat
@@ -287,8 +298,9 @@ class ReportStatisticSheet15ImportService:
                     "payment_type",
                     "sub_company",
                     "service_price",
-                    "invoice_value",
+                    "invoice_amount",
                     "code",
+                    "doctor_name",  # ✅ جديد
                 ],
                 batch_size=1000,
             )

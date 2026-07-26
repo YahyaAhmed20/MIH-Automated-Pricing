@@ -148,10 +148,40 @@ class ReportStatisticImportService:
                 if len(row) > 11 and pd.notna(row.iloc[11]):
                     sub_company = ImportHelpers.normalize_text(row.iloc[11])
                 
-                # العمود 12: المبلغ
+                # العمود 12: سعر الخدمة
                 amount = Decimal('0.00')
                 if len(row) > 12 and pd.notna(row.iloc[12]):
                     amount = ReportStatisticImportService.clean_amount(row.iloc[12])
+                
+                # العمود 13: قيمة الفاتورة
+                invoice_amount = Decimal('0.00')
+                if len(row) > 13 and pd.notna(row.iloc[13]):
+                    invoice_amount = ReportStatisticImportService.clean_amount(row.iloc[13])
+                
+                # العمود 14: الكود
+                code = ""
+                if len(row) > 14 and pd.notna(row.iloc[14]):
+                    code = ImportHelpers.normalize_text(row.iloc[14])
+                
+                # العمود 15: نوع المريض
+                patient_type = ""
+                if len(row) > 15 and pd.notna(row.iloc[15]):
+                    patient_type = ImportHelpers.normalize_text(row.iloc[15])
+                
+                # العمود 16: مدة الإقامة
+                stay_duration = ""
+                if len(row) > 16 and pd.notna(row.iloc[16]):
+                    stay_duration = ImportHelpers.normalize_text(row.iloc[16])
+                
+                # العمود 17: م (ملاحظات)
+                notes = ""
+                if len(row) > 17 and pd.notna(row.iloc[17]):
+                    notes = ImportHelpers.normalize_text(row.iloc[17])
+                
+                # ✅ العمود 18: اسم الطبيب (العمود الأخير)
+                doctor_name = ""
+                if len(row) > 18 and pd.notna(row.iloc[18]):
+                    doctor_name = ImportHelpers.normalize_text(row.iloc[18])
 
                 result["processed"] += 1
                 processed = result["processed"]
@@ -207,6 +237,31 @@ class ReportStatisticImportService:
                     if existing_stat.amount != amount:
                         existing_stat.amount = amount
                         changed = True
+                    
+                    if existing_stat.invoice_amount != invoice_amount:
+                        existing_stat.invoice_amount = invoice_amount
+                        changed = True
+                    
+                    if existing_stat.code != code:
+                        existing_stat.code = code
+                        changed = True
+                    
+                    if existing_stat.patient_type != patient_type:
+                        existing_stat.patient_type = patient_type
+                        changed = True
+                    
+                    if existing_stat.stay_duration != stay_duration:
+                        existing_stat.stay_duration = stay_duration
+                        changed = True
+                    
+                    if existing_stat.notes != notes:
+                        existing_stat.notes = notes
+                        changed = True
+                    
+                    # ✅ اسم الطبيب
+                    if existing_stat.doctor_name != doctor_name:
+                        existing_stat.doctor_name = doctor_name
+                        changed = True
 
                     if changed:
                         to_update.append(existing_stat)
@@ -228,6 +283,12 @@ class ReportStatisticImportService:
                         payment_type=payment_type,
                         sub_company=sub_company,
                         amount=amount,
+                        invoice_amount=invoice_amount,
+                        code=code,
+                        patient_type=patient_type,
+                        stay_duration=stay_duration,
+                        notes=notes,
+                        doctor_name=doctor_name,  # ✅ جديد
                     )
                     to_create.append(stat)
                     stats_cache[key] = stat
@@ -268,6 +329,12 @@ class ReportStatisticImportService:
                     "payment_type",
                     "sub_company",
                     "amount",
+                    "invoice_amount",
+                    "code",
+                    "patient_type",
+                    "stay_duration",
+                    "notes",
+                    "doctor_name",  # ✅ جديد
                 ],
                 batch_size=1000,
             )

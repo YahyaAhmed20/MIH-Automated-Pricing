@@ -1313,6 +1313,51 @@ class ReportStatistic(models.Model):
         verbose_name="المبلغ"
     )
     
+    # ✅ حقول جديدة من شيت 11
+    invoice_amount = models.DecimalField(
+        max_digits=14,
+        decimal_places=2,
+        blank=True,
+        null=True,
+        verbose_name="قيمة الفاتوره"
+    )
+    
+    code = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        verbose_name="الكود"
+    )
+    
+    patient_type = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        verbose_name="نوع المريض"
+    )
+    
+    stay_duration = models.CharField(
+        max_length=50,
+        blank=True,
+        null=True,
+        verbose_name="مدة الاقامه"
+    )
+    
+    notes = models.TextField(
+        blank=True,
+        null=True,
+        verbose_name="ملاحظات"
+    )
+    
+    # ✅ اسم الطبيب (العمود الأخير)
+    doctor_name = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        db_index=True,
+        verbose_name="اسم الطبيب"
+    )
+    
     # ✅ حقول إضافية للتحكم
     created_at = models.DateTimeField(
         auto_now_add=True,
@@ -1338,12 +1383,11 @@ class ReportStatistic(models.Model):
             models.Index(fields=["account_number"]),
             models.Index(fields=["month"]),
             models.Index(fields=["payment_type"]),
+            models.Index(fields=["doctor_name"]),  # ✅ إضافة فهرس للطبيب
         ]
     
     def __str__(self):
         return f"{self.patient_name} - {self.package_name} ({self.amount})"
-    
-    
     
 # ============================================
 # ✅ External Approvals Follow-up - Sheet 12

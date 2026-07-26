@@ -3383,6 +3383,12 @@ def doctor_status_detail(request, doctor_name, status_type):
 
 # في src/frontend/views.py
 
+from django.http import JsonResponse
+from pricing_requests.models import  ReportStatistic
+
+from django.http import JsonResponse
+from frontend.models import ReportStatisticSheet15
+
 def package_performance_comparison(request):
     """مقارنة أداء الباكدجات بين فترتين - تدعم شيت 11 و شيت 15"""
     
@@ -3400,6 +3406,7 @@ def package_performance_comparison(request):
     sub_company1 = request.GET.get('sub_company1', '')
     specialty1 = request.GET.get('specialty1', '')
     package_type1 = request.GET.get('package_type1', '')
+    doctor_name1 = request.GET.get('doctor_name1', '')
     
     # 📅 الفلاتر - الفترة الثانية
     year2 = request.GET.get('year2', '2025')
@@ -3410,6 +3417,7 @@ def package_performance_comparison(request):
     sub_company2 = request.GET.get('sub_company2', '')
     specialty2 = request.GET.get('specialty2', '')
     package_type2 = request.GET.get('package_type2', '')
+    doctor_name2 = request.GET.get('doctor_name2', '')
     
     # 📊 اختيار المصدر
     source = request.GET.get('source', 'sheet15')
@@ -3423,7 +3431,7 @@ def package_performance_comparison(request):
         price_field = 'service_price'
     
     # 📊 بناء الفلاتر
-    def build_filters(year, month, quarter, sector, entity, sub_company, specialty, package_type):
+    def build_filters(year, month, quarter, sector, entity, sub_company, specialty, package_type, doctor_name):
         filters = Q()
         if year:
             try:
@@ -3456,10 +3464,12 @@ def package_performance_comparison(request):
                 Q(package_name__icontains=package_type) |
                 Q(code__icontains=package_type)
             )
+        if doctor_name and doctor_name.strip():
+            filters &= Q(doctor_name__icontains=doctor_name)
         return filters
     
-    filters1 = build_filters(year1, month1, quarter1, sector1, entity1, sub_company1, specialty1, package_type1)
-    filters2 = build_filters(year2, month2, quarter2, sector2, entity2, sub_company2, specialty2, package_type2)
+    filters1 = build_filters(year1, month1, quarter1, sector1, entity1, sub_company1, specialty1, package_type1, doctor_name1)
+    filters2 = build_filters(year2, month2, quarter2, sector2, entity2, sub_company2, specialty2, package_type2, doctor_name2)
     
     # 📊 جلب البيانات
     queryset1 = Model.objects.filter(filters1)
@@ -3480,6 +3490,7 @@ def package_performance_comparison(request):
                     'month': getattr(stat, 'month', ''),
                     'entity': getattr(stat, 'entity_name', ''),
                     'sub_company': getattr(stat, 'sub_company', ''),
+                    'doctor_name': getattr(stat, 'doctor_name', ''),
                     'details': []
                 }
             packages[pkg_name]['count'] += 1
@@ -3487,9 +3498,10 @@ def package_performance_comparison(request):
             if amount:
                 packages[pkg_name]['total_amount'] += amount
             
-            # ✅ إضافة التفاصيل لكل عملية
+            # ✅ إضافة التفاصيل لكل عملية (مع الرقم الحسابي)
             packages[pkg_name]['details'].append({
                 'patient_name': getattr(stat, 'patient_name', ''),
+                'account_number': getattr(stat, 'account_number', ''),  # ✅ جديد
                 'admission_date': getattr(stat, 'admission_date', ''),
                 'amount': amount,
                 'entity': getattr(stat, 'entity_name', ''),
@@ -3499,6 +3511,7 @@ def package_performance_comparison(request):
                 'status': getattr(stat, 'status', ''),
                 'code': getattr(stat, 'code', ''),
                 'specialty': getattr(stat, 'specialty', ''),
+                'doctor_name': getattr(stat, 'doctor_name', ''),
             })
         return packages
     
@@ -3519,6 +3532,7 @@ def package_performance_comparison(request):
             'month': '',
             'entity': '',
             'sub_company': '',
+            'doctor_name': '',
             'details': []
         }
         data1 = packages1.get(pkg, default_data)
@@ -3539,6 +3553,7 @@ def package_performance_comparison(request):
             'month': data1['month'] or data2['month'] or '',
             'entity': data1['entity'] or data2['entity'] or '',
             'sub_company': data1['sub_company'] or data2['sub_company'] or '',
+            'doctor_name': data1['doctor_name'] or data2['doctor_name'] or '',
             'count1': data1['count'],
             'amount1': float(data1['total_amount']),
             'count2': data2['count'],
@@ -3590,6 +3605,14 @@ def package_performance_comparison(request):
         .distinct()
     )
     
+    doctors = (
+        Model.objects.exclude(doctor_name__isnull=True)
+        .exclude(doctor_name="")
+        .order_by()
+        .values_list("doctor_name", flat=True)
+        .distinct()
+    )
+    
     package_types = []
     packages_qs = (
         Model.objects.exclude(package_name__isnull=True)
@@ -3628,6 +3651,7 @@ def package_performance_comparison(request):
         'entities': entities,
         'sub_companies': sub_companies,
         'specialties': specialties,
+        'doctors': doctors,
         'package_types': package_types,
         'source': source,
         # القيم المحددة
@@ -3647,7 +3671,9 @@ def package_performance_comparison(request):
         'specialty2': specialty2,
         'package_type1': package_type1,
         'package_type2': package_type2,
-        # ✅ الإجماليات
+        'doctor_name1': doctor_name1,
+        'doctor_name2': doctor_name2,
+        # الإجماليات
         'total_amount1': total_amount1,
         'total_amount2': total_amount2,
         'total_count1': total_count1,
@@ -3655,13 +3681,7 @@ def package_performance_comparison(request):
     }
     
     return render(request, 'frontend/package_performance_comparison.html', context)
-from django.http import JsonResponse
-from frontend.models import ReportStatisticSheet15
 
-from django.http import JsonResponse
-from frontend.models import ReportStatisticSheet15
-
-from django.http import JsonResponse
 
 def get_package_filters(request):
     """API لإرجاع الفلاتر المترابطة (متسلسلة)"""
@@ -3671,6 +3691,7 @@ def get_package_filters(request):
     sector = request.GET.get("sector", "").strip()
     sub_company = request.GET.get("sub_company", "").strip()
     specialty = request.GET.get("specialty", "").strip()
+    doctor_name = request.GET.get("doctor_name", "").strip()  # ✅ جديد
     
     # ✅ الفلاتر الزمنية
     year = request.GET.get("year", "").strip()
@@ -3678,12 +3699,12 @@ def get_package_filters(request):
     quarter = request.GET.get("quarter", "").strip()
 
     if source == "sheet11":
+        from frontend.models import ReportStatistic
         Model = ReportStatistic
     else:
         Model = ReportStatisticSheet15
 
     # ✅ قاعدة البيانات الأساسية
-    base_queryset = Model.objects.all()
     filtered_queryset = Model.objects.all()
 
     # ==========================
@@ -3697,6 +3718,8 @@ def get_package_filters(request):
         filtered_queryset = filtered_queryset.filter(sub_company__icontains=sub_company)
     if specialty:
         filtered_queryset = filtered_queryset.filter(specialty__icontains=specialty)
+    if doctor_name:  # ✅ جديد
+        filtered_queryset = filtered_queryset.filter(doctor_name__icontains=doctor_name)
     if month:
         filtered_queryset = filtered_queryset.filter(month=month)
     if quarter:
@@ -3709,14 +3732,6 @@ def get_package_filters(request):
         if quarter in quarter_months:
             filtered_queryset = filtered_queryset.filter(month__in=quarter_months[quarter])
     
-    # ✅ السنة نطبقها بس للجلب (مش للفلترة لو مفيش بيانات)
-    year_queryset = filtered_queryset
-    if year:
-        try:
-            year_queryset = year_queryset.filter(admission_date__year=int(year))
-        except:
-            pass
-
     # ==========================
     # 2️⃣ جلب القطاعات (من filtered_queryset بدون سنة)
     # ==========================
@@ -3762,7 +3777,18 @@ def get_package_filters(request):
     )
 
     # ==========================
-    # 6️⃣ جلب الباكدجات (من filtered_queryset بدون سنة)
+    # 6️⃣ جلب الأطباء (✅ جديد)
+    # ==========================
+    doctors = list(
+        filtered_queryset.exclude(doctor_name__isnull=True)
+        .exclude(doctor_name="")
+        .order_by()
+        .values_list("doctor_name", flat=True)
+        .distinct()
+    )
+
+    # ==========================
+    # 7️⃣ جلب الباكدجات (من filtered_queryset بدون سنة)
     # ==========================
     package_list = []
     packages = (
@@ -3786,6 +3812,7 @@ def get_package_filters(request):
         "entities": sorted(entities),
         "sub_companies": sorted(sub_companies),
         "specialties": sorted(specialties),
+        "doctors": sorted(doctors),  # ✅ جديد
         "packages": sorted(package_list),
     })
 from django.utils import timezone  # ✅ أضف هذا السطر

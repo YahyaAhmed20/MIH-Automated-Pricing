@@ -158,6 +158,22 @@
                                     {% endfor %}
                                 </datalist>
                             </div>
+
+                            <!-- ✅ اسم الطبيب - Input + Datalist -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">👨‍⚕️ اسم الطبيب:</label>
+                                <input type="text"
+                                       id="doctor_name1"
+                                       name="doctor_name1"
+                                       class="form-control form-control-sm filter-input" 
+                                       list="doctorList1" placeholder="ابحث عن طبيب..." 
+                                       value="{{ doctor_name1 }}" autocomplete="off">
+                                <datalist id="doctorList1">
+                                    {% for doctor in doctors %}
+                                    <option value="{{ doctor }}">{{ doctor }}</option>
+                                    {% endfor %}
+                                </datalist>
+                            </div>
                             
                             <!-- 🔍 نوع الباكدج - Input + Datalist -->
                             <div class="col-md-6">
@@ -289,6 +305,22 @@
                                 <datalist id="specialtyList2">
                                     {% for spec in specialties %}
                                     <option value="{{ spec }}">{{ spec }}</option>
+                                    {% endfor %}
+                                </datalist>
+                            </div>
+
+                            <!-- ✅ اسم الطبيب - Input + Datalist -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">👨‍⚕️ اسم الطبيب:</label>
+                                <input type="text"
+                                       id="doctor_name2"
+                                       name="doctor_name2"
+                                       class="form-control form-control-sm filter-input" 
+                                       list="doctorList2" placeholder="ابحث عن طبيب..." 
+                                       value="{{ doctor_name2 }}" autocomplete="off">
+                                <datalist id="doctorList2">
+                                    {% for doctor in doctors %}
+                                    <option value="{{ doctor }}">{{ doctor }}</option>
                                     {% endfor %}
                                 </datalist>
                             </div>
@@ -547,9 +579,9 @@
                     </div>
                 </div>
 
-                <!-- ✅ الجهة والشركة الفرعية -->
+                <!-- ✅ الجهة والشركة الفرعية واسم الطبيب -->
                 <div class="row g-3 mb-4">
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <div class="card border-0 bg-primary bg-opacity-10">
                             <div class="card-body">
                                 <small class="text-muted">🏢 الجهة</small>
@@ -557,11 +589,19 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <div class="card border-0 bg-info bg-opacity-10">
                             <div class="card-body">
                                 <small class="text-muted">🏢 الشركة الفرعية</small>
                                 <h6 class="fw-bold" id="modalSubCompany">-</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card border-0 bg-warning bg-opacity-10">
+                            <div class="card-body">
+                                <small class="text-muted">👨‍⚕️ اسم الطبيب</small>
+                                <h6 class="fw-bold" id="modalDoctor">-</h6>
                             </div>
                         </div>
                     </div>
@@ -593,9 +633,11 @@
                                     <tr>
                                         <th>#</th>
                                         <th>المريض</th>
+                                        <th>الرقم الحسابي</th>
                                         <th>التاريخ</th>
                                         <th>الجهة</th>
                                         <th>الشركة الفرعية</th>
+                                        <th>اسم الطبيب</th>
                                         <th class="text-end">المبلغ</th>
                                         <th>الحالة</th>
                                     </tr>
@@ -605,7 +647,7 @@
                                 </tbody>
                                 <tfoot class="table-secondary fw-bold">
                                     <tr>
-                                        <td colspan="5" class="text-end">الإجمالي</td>
+                                        <td colspan="7" class="text-end">الإجمالي</td>
                                         <td class="text-end" id="total1-amount">0.00</td>
                                         <td></td>
                                     </tr>
@@ -621,9 +663,11 @@
                                     <tr>
                                         <th>#</th>
                                         <th>المريض</th>
+                                        <th>الرقم الحسابي</th>
                                         <th>التاريخ</th>
                                         <th>الجهة</th>
                                         <th>الشركة الفرعية</th>
+                                        <th>اسم الطبيب</th>
                                         <th class="text-end">المبلغ</th>
                                         <th>الحالة</th>
                                     </tr>
@@ -633,7 +677,7 @@
                                 </tbody>
                                 <tfoot class="table-secondary fw-bold">
                                     <tr>
-                                        <td colspan="5" class="text-end">الإجمالي</td>
+                                        <td colspan="7" class="text-end">الإجمالي</td>
                                         <td class="text-end" id="total2-amount">0.00</td>
                                         <td></td>
                                     </tr>
@@ -678,6 +722,7 @@ function showPackageDetails(index) {
     document.getElementById('modalMonth').textContent = item.month || '-';
     document.getElementById('modalEntity').textContent = item.entity || '-';
     document.getElementById('modalSubCompany').textContent = item.sub_company || '-';
+    document.getElementById('modalDoctor').textContent = item.doctor_name || '-';
     
     // ✅ إجمالي المبلغ (بالأرقام الإنجليزية)
     const totalAmount = (item.amount1 || 0) + (item.amount2 || 0);
@@ -700,9 +745,11 @@ function showPackageDetails(index) {
             row.innerHTML = `
                 <td>${i + 1}</td>
                 <td>${detail.patient_name || '-'}</td>
+                <td>${detail.account_number || '-'}</td>
                 <td>${detail.admission_date || '-'}</td>
                 <td>${detail.entity || '-'}</td>
                 <td>${detail.sub_company || '-'}</td>
+                <td>${detail.doctor_name || '-'}</td>
                 <td class="text-end fw-bold">${Number(detail.amount).toLocaleString('en-US')}</td>
                 <td><span class="badge bg-success">${detail.status || '-'}</span></td>
             `;
@@ -710,7 +757,7 @@ function showPackageDetails(index) {
             total1 += Number(detail.amount) || 0;
         });
     } else {
-        tbody1.innerHTML = `<tr><td colspan="7" class="text-center text-muted">لا توجد بيانات</td></tr>`;
+        tbody1.innerHTML = `<tr><td colspan="9" class="text-center text-muted">لا توجد بيانات</td></tr>`;
     }
     document.getElementById('total1-amount').textContent = total1.toLocaleString('en-US');
     
@@ -725,9 +772,11 @@ function showPackageDetails(index) {
             row.innerHTML = `
                 <td>${i + 1}</td>
                 <td>${detail.patient_name || '-'}</td>
+                <td>${detail.account_number || '-'}</td>
                 <td>${detail.admission_date || '-'}</td>
                 <td>${detail.entity || '-'}</td>
                 <td>${detail.sub_company || '-'}</td>
+                <td>${detail.doctor_name || '-'}</td>
                 <td class="text-end fw-bold">${Number(detail.amount).toLocaleString('en-US')}</td>
                 <td><span class="badge bg-success">${detail.status || '-'}</span></td>
             `;
@@ -735,7 +784,7 @@ function showPackageDetails(index) {
             total2 += Number(detail.amount) || 0;
         });
     } else {
-        tbody2.innerHTML = `<tr><td colspan="7" class="text-center text-muted">لا توجد بيانات</td></tr>`;
+        tbody2.innerHTML = `<tr><td colspan="9" class="text-center text-muted">لا توجد بيانات</td></tr>`;
     }
     document.getElementById('total2-amount').textContent = total2.toLocaleString('en-US');
 }
@@ -760,6 +809,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const sector = document.getElementById(`sector${prefix}`);
         const subCompany = document.getElementById(`sub_company${prefix}`);
         const specialty = document.getElementById(`specialty${prefix}`);
+        const doctor = document.getElementById(`doctor_name${prefix}`);
         const packageType = document.getElementById(`package_type${prefix}`);
         const source = document.querySelector("select[name='source']");
         
@@ -767,7 +817,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const month = document.querySelector(`select[name='month${prefix}']`);
         const quarter = document.querySelector(`select[name='quarter${prefix}']`);
         
-        if (!entity || !sector || !subCompany || !specialty || !packageType || !source) return;
+        if (!entity || !sector || !subCompany || !specialty || !doctor || !packageType || !source) return;
 
         async function refreshFilters() {
             const params = new URLSearchParams();
@@ -777,6 +827,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (sector.value) params.append("sector", sector.value);
             if (subCompany.value) params.append("sub_company", subCompany.value);
             if (specialty.value) params.append("specialty", specialty.value);
+            if (doctor.value) params.append("doctor_name", doctor.value);
             
             if (year && year.value) params.append("year", year.value);
             if (month && month.value) params.append("month", month.value);
@@ -790,6 +841,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 updateDatalist(`entityList${prefix}`, data.entities || []);
                 updateDatalist(`subCompanyList${prefix}`, data.sub_companies || []);
                 updateDatalist(`specialtyList${prefix}`, data.specialties || []);
+                updateDatalist(`doctorList${prefix}`, data.doctors || []);
                 updateDatalist(`packageTypeList${prefix}`, data.packages || []);
                 
             } catch (error) {
@@ -814,6 +866,11 @@ document.addEventListener('DOMContentLoaded', function() {
         
         specialty.addEventListener("change", refreshFilters);
         specialty.addEventListener("input", function() {
+            if (this.value === "") refreshFilters();
+        });
+
+        doctor.addEventListener("change", refreshFilters);
+        doctor.addEventListener("input", function() {
             if (this.value === "") refreshFilters();
         });
 
