@@ -7,7 +7,7 @@
 <div class="container-fluid mt-3">
     <!-- 🔙 زر العودة -->
     <div class="row mb-3">
-        <div class="col-12">
+        <div class="col-md-8">
             <a href="{% url 'doctors_list' %}" class="btn btn-outline-secondary">
                 <i class="fas fa-arrow-right"></i> العودة إلى الأطباء
             </a>
@@ -16,13 +16,18 @@
             </h3>
             <span class="badge bg-info">{{ doctor_info.specialty|default:"بدون تخصص" }}</span>
         </div>
+        <div class="col-md-4 text-end">
+            <span class="badge bg-primary fs-6 p-2">
+                <i class="fas fa-stethoscope"></i> إجمالي {{ total_cases }} حالة
+            </span>
+        </div>
     </div>
 
     {% if error %}
     <div class="alert alert-warning">{{ error }}</div>
     {% else %}
 
-    <!-- 📊 البوكسات العلوية (8 بوكسات متحركة) مع زر عرض المزيد -->
+    <!-- 📊 البوكسات العلوية بالترتيب المطلوب -->
     <div class="row mb-4 g-2">
         <!-- 1. إجمالي الحالات -->
         <div class="col-md-3 col-sm-6">
@@ -44,7 +49,7 @@
                     <h6 class="card-title"><i class="fas fa-check-circle"></i> تمت الموافقة</h6>
                     <h3 class="card-text counter" data-target="{{ status_stats.approved }}">0</h3>
                     {% if status_stats.approved > 0 %}
-                    <a href="{% url 'doctor_detail' doctor_name %}?status=approved" class="btn btn-light btn-sm mt-2 w-100">
+                    <a href="{% url 'doctor_status_detail' doctor_name 'approved' %}" class="btn btn-light btn-sm mt-2 w-100">
                         <i class="fas fa-chevron-down"></i> عرض المزيد
                     </a>
                     {% else %}
@@ -56,52 +61,14 @@
             </div>
         </div>
         
-        <!-- 3. ملغاه -->
-        <div class="col-md-3 col-sm-6">
-            <div class="card text-white bg-secondary h-100">
-                <div class="card-body text-center">
-                    <h6 class="card-title"><i class="fas fa-times-circle"></i> ملغاه</h6>
-                    <h3 class="card-text counter" data-target="{{ status_stats.cancelled }}">0</h3>
-                    {% if status_stats.cancelled > 0 %}
-                    <a href="{% url 'doctor_detail' doctor_name %}?status=cancelled" class="btn btn-light btn-sm mt-2 w-100">
-                        <i class="fas fa-chevron-down"></i> عرض المزيد
-                    </a>
-                    {% else %}
-                    <button class="btn btn-light btn-sm mt-2 w-100" disabled>
-                        <i class="fas fa-minus"></i> لا توجد حالات
-                    </button>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-        
-        <!-- 4. رفض المريض -->
-        <div class="col-md-3 col-sm-6">
-            <div class="card text-white bg-danger h-100">
-                <div class="card-body text-center">
-                    <h6 class="card-title"><i class="fas fa-user-slash"></i> رفض المريض</h6>
-                    <h3 class="card-text counter" data-target="{{ status_stats.patient_refused }}">0</h3>
-                    {% if status_stats.patient_refused > 0 %}
-                    <a href="{% url 'doctor_detail' doctor_name %}?status=patient refused" class="btn btn-light btn-sm mt-2 w-100">
-                        <i class="fas fa-chevron-down"></i> عرض المزيد
-                    </a>
-                    {% else %}
-                    <button class="btn btn-light btn-sm mt-2 w-100" disabled>
-                        <i class="fas fa-minus"></i> لا توجد حالات
-                    </button>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-        
-        <!-- 5. قيد الانتظار -->
+        <!-- 3. قيد الانتظار -->
         <div class="col-md-3 col-sm-6">
             <div class="card text-white bg-warning h-100">
                 <div class="card-body text-center">
                     <h6 class="card-title"><i class="fas fa-clock"></i> قيد الانتظار</h6>
                     <h3 class="card-text counter" data-target="{{ status_stats.pending }}">0</h3>
                     {% if status_stats.pending > 0 %}
-                    <a href="{% url 'doctor_detail' doctor_name %}?status=pending" class="btn btn-light btn-sm mt-2 w-100">
+                    <a href="{% url 'doctor_status_detail' doctor_name 'pending' %}" class="btn btn-light btn-sm mt-2 w-100">
                         <i class="fas fa-chevron-down"></i> عرض المزيد
                     </a>
                     {% else %}
@@ -113,14 +80,14 @@
             </div>
         </div>
         
-        <!-- 6. مؤجل بمعرفة المريض -->
+        <!-- 4. مؤجل بمعرفة المريض -->
         <div class="col-md-3 col-sm-6">
             <div class="card text-white bg-info h-100">
                 <div class="card-body text-center">
                     <h6 class="card-title"><i class="fas fa-pause-circle"></i> مؤجل بمعرفة المريض</h6>
                     <h3 class="card-text counter" data-target="{{ status_stats.bending_by_patient }}">0</h3>
                     {% if status_stats.bending_by_patient > 0 %}
-                    <a href="{% url 'doctor_detail' doctor_name %}?status=bending by patient" class="btn btn-light btn-sm mt-2 w-100">
+                    <a href="{% url 'doctor_status_detail' doctor_name 'bending_by_patient' %}" class="btn btn-light btn-sm mt-2 w-100">
                         <i class="fas fa-chevron-down"></i> عرض المزيد
                     </a>
                     {% else %}
@@ -132,14 +99,14 @@
             </div>
         </div>
         
-        <!-- 7. مرفوضه -->
+        <!-- 5. مرفوضه -->
         <div class="col-md-3 col-sm-6">
             <div class="card text-white bg-dark h-100">
                 <div class="card-body text-center">
                     <h6 class="card-title"><i class="fas fa-ban"></i> مرفوضه</h6>
                     <h3 class="card-text counter" data-target="{{ status_stats.rejected }}">0</h3>
                     {% if status_stats.rejected > 0 %}
-                    <a href="{% url 'doctor_detail' doctor_name %}?status=rejected" class="btn btn-light btn-sm mt-2 w-100">
+                    <a href="{% url 'doctor_status_detail' doctor_name 'rejected' %}" class="btn btn-light btn-sm mt-2 w-100">
                         <i class="fas fa-chevron-down"></i> عرض المزيد
                     </a>
                     {% else %}
@@ -150,7 +117,45 @@
                 </div>
             </div>
         </div>
-
+        
+        <!-- 6. رفض المريض -->
+        <div class="col-md-3 col-sm-6">
+            <div class="card text-white bg-danger h-100">
+                <div class="card-body text-center">
+                    <h6 class="card-title"><i class="fas fa-user-slash"></i> رفض المريض</h6>
+                    <h3 class="card-text counter" data-target="{{ status_stats.patient_refused }}">0</h3>
+                    {% if status_stats.patient_refused > 0 %}
+                    <a href="{% url 'doctor_status_detail' doctor_name 'patient_refused' %}" class="btn btn-light btn-sm mt-2 w-100">
+                        <i class="fas fa-chevron-down"></i> عرض المزيد
+                    </a>
+                    {% else %}
+                    <button class="btn btn-light btn-sm mt-2 w-100" disabled>
+                        <i class="fas fa-minus"></i> لا توجد حالات
+                    </button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- 7. ملغاه -->
+        <div class="col-md-3 col-sm-6">
+            <div class="card text-white bg-secondary h-100">
+                <div class="card-body text-center">
+                    <h6 class="card-title"><i class="fas fa-times-circle"></i> ملغاه</h6>
+                    <h3 class="card-text counter" data-target="{{ status_stats.cancelled }}">0</h3>
+                    {% if status_stats.cancelled > 0 %}
+                    <a href="{% url 'doctor_status_detail' doctor_name 'cancelled' %}" class="btn btn-light btn-sm mt-2 w-100">
+                        <i class="fas fa-chevron-down"></i> عرض المزيد
+                    </a>
+                    {% else %}
+                    <button class="btn btn-light btn-sm mt-2 w-100" disabled>
+                        <i class="fas fa-minus"></i> لا توجد حالات
+                    </button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
         <!-- 8. خدمة منتهية -->
         <div class="col-md-3 col-sm-6">
             <div class="card text-white" style="background: linear-gradient(135deg, #0dcaf0, #0d6efd);">
@@ -158,7 +163,7 @@
                     <h6 class="card-title"><i class="fas fa-check-double"></i> خدمة منتهية</h6>
                     <h3 class="card-text counter" data-target="{{ status_stats.serv_done }}">0</h3>
                     {% if status_stats.serv_done > 0 %}
-                    <a href="{% url 'doctor_detail' doctor_name %}?status=serv. done" class="btn btn-light btn-sm mt-2 w-100">
+                    <a href="{% url 'doctor_status_detail' doctor_name 'serv_done' %}" class="btn btn-light btn-sm mt-2 w-100">
                         <i class="fas fa-chevron-down"></i> عرض المزيد
                     </a>
                     {% else %}
@@ -205,8 +210,8 @@
     <!-- 📋 جدول تفاصيل الحالات -->
     <div class="row">
         <div class="col-12">
-            <div class="card">
-                <div class="card-header bg-primary text-white">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">
                         <i class="fas fa-list"></i> 
                         تفاصيل الحالات
@@ -230,7 +235,6 @@
                                     <th>الطبيب</th>
                                     <th>حالة الموافقة</th>
                                     <th>تاريخ الدخول</th>
-                                    <th>التكلفة</th>
                                     <th>عرض المزيد</th>
                                 </tr>
                             </thead>
@@ -255,8 +259,7 @@
                                             {{ case.main_status|default:"-" }}
                                         </span>
                                     </td>
-                                    <td>{{ case.admission_date|date:"Y-m-d"|default:"-" }}</td>
-                                    <td>{{ case.initial_cost|floatformat:0 }}</td>
+                                    <td>{{ case.admission_date|date:"d/m/Y"|default:"-" }}</td>
                                     <td>
                                         <button class="btn btn-sm btn-outline-primary" 
                                                 data-bs-toggle="modal" 
@@ -267,16 +270,17 @@
                                 </tr>
                                 {% empty %}
                                 <tr>
-                                    <td colspan="9" class="text-center text-muted">
-                                        <i class="fas fa-info-circle"></i> لا توجد حالات
+                                    <td colspan="8" class="text-center text-muted py-4">
+                                        <i class="fas fa-info-circle fa-2x d-block mb-2"></i>
+                                        لا توجد حالات
                                     </td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
                             <tfoot class="table-secondary fw-bold">
                                 <tr>
-                                    <td colspan="7" class="text-center">الإجمالي</td>
-                                    <td>{{ total_cost|floatformat:0 }}</td>
+                                    <td colspan="6" class="text-center">الإجمالي</td>
+                                    <td>{{ cases|length }}</td>
                                     <td></td>
                                 </tr>
                             </tfoot>
@@ -334,12 +338,12 @@
                             <p><strong>🆔 الرقم الطبي:</strong> {{ case.medical_number|default:"-" }}</p>
                             <p><strong>🏥 الجهة:</strong> {{ case.company|default:"-" }}</p>
                             <p><strong>👨‍⚕️ الطبيب:</strong> {{ case.doctor_name|default:"-" }}</p>
-                            <p><strong>📋 التخصص:</strong> {{ case.specialty|default:"-" }}</p>
+                            <p><strong>📞 التليفون:</strong> {{ case.phone|default:"-" }}</p>
                         </div>
                         <div class="col-md-6">
                             <p><strong>📝 الإجراء:</strong> {{ case.procedure|default:"-" }}</p>
-                            <p><strong>💰 التكلفة:</strong> {{ case.initial_cost|floatformat:0 }}</p>
-                            <p><strong>📅 تاريخ الدخول:</strong> {{ case.admission_date|date:"Y-m-d"|default:"-" }}</p>
+                            <p><strong>📅 تاريخ الدخول:</strong> {{ case.admission_date|date:"d/m/Y"|default:"-" }}</p>
+                            <p><strong>📅 التاريخ:</strong> {{ case.date|date:"d/m/Y"|default:"-" }}</p>
                             <p><strong>✅ الحالة:</strong> 
                                 <span class="badge 
                                     {% if case.main_status == 'approved' %}bg-success
@@ -353,7 +357,8 @@
                                     {{ case.main_status|default:"-" }}
                                 </span>
                             </p>
-                            <p><strong>📝 ملاحظات:</strong> {{ case.notes|default:"-" }}</p>
+                            <p><strong>📄 التقرير:</strong> {{ case.report|default:"-" }}</p>
+                            <p><strong>✅ الموافقة:</strong> {{ case.approval|default:"-" }}</p>
                         </div>
                     </div>
                 </div>
@@ -400,4 +405,40 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
+
+<style>
+    .card {
+        border: none;
+        border-radius: 12px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    }
+    .table th, .table td {
+        vertical-align: middle;
+    }
+    .badge {
+        font-size: 0.9rem;
+        padding: 0.4rem 0.7rem;
+    }
+    .btn-sm {
+        padding: 0.2rem 0.6rem;
+    }
+    .table-responsive {
+        max-height: 600px;
+        overflow-y: auto;
+    }
+    .table thead th {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        background-color: #0d6efd;
+        color: white;
+    }
+    .text-success {
+        color: #198754 !important;
+    }
+</style>
 {% endblock %}

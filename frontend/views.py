@@ -3167,6 +3167,159 @@ def doctor_detail(request, doctor_name):
     return render(request, 'frontend/doctor_detail.html', context)
 
 
+def doctor_status_detail(request, doctor_name, status_type):
+    """
+    صفحة تفاصيل حالات الطبيب حسب نوع الحالة (مرفوضه، موافقة، إلخ)
+    """
+    
+    from django.db.models import Sum
+    from decimal import Decimal
+    from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+    from urllib.parse import unquote
+    
+    # ✅ فك تشفير اسم الدكتور
+    doctor_name = unquote(doctor_name)
+    
+    # 🔍 جلب حالات الطبيب حسب النوع
+    doctor_cases = ExternalApproval.objects.filter(
+        doctor_name__iexact=doctor_name
+    )
+    
+    if not doctor_cases.exists():
+        return render(request, 'frontend/doctor_status_detail.html', {
+            'doctor_name': doctor_name,
+            'error': 'لا توجد حالات لهذا الطبيب'
+        })
+    
+    # ✅ تعيين الحالة المطلوبة
+    status_mapping = {
+        'approved': 'approved',
+        'cancelled': 'cancelled',
+        'patient_refused': 'patient refused',
+        'pending': 'pending',
+        'bending_by_patient': 'bending by patient',
+        'rejected': 'rejected',
+        'serv_done': 'serv. done',
+    }
+    
+    # ✅ ألوان الحالات
+    status_colors = {
+        'approved': 'success',
+        'cancelled': 'secondary',
+        'patient refused': 'danger',
+        'pending': 'warning',
+        'bending by patient': 'info',
+        'rejected': 'dark',
+        'serv. done': 'info',
+    }
+    
+    # ✅ أيقونات الحالات
+    status_icons = {
+        'approved': 'fa-check-circle',
+        'cancelled': 'fa-times-circle',
+        'patient refused': 'fa-user-slash',
+        'pending': 'fa-clock',
+        'bending by patient': 'fa-pause-circle',
+        'rejected': 'fa-ban',
+        'serv. done': 'fa-check-double',
+    }
+    
+    # ✅ أسماء الحالات بالعربي
+    status_names = {
+        'approved': 'تمت الموافقة',
+        'cancelled': 'ملغاه',
+        'patient refused': 'رفض المريض',
+        'pending': 'قيد الانتظار',
+        'bending by patient': 'مؤجل بمعرفة المريض',
+        'rejected': 'مرفوضه',
+        'serv. done': 'خدمة منتهية',
+    }
+    
+    main_status = status_mapping.get(status_type, '')
+    
+    # ✅ فلتر الحالات
+    if main_status:
+        filtered_cases = doctor_cases.filter(main_status__iexact=main_status)
+    else:
+        filtered_cases = doctor_cases
+    
+    # ✅ إحصائيات
+    total_count = filtered_cases.count()
+    total_cost = filtered_cases.aggregate(total=Sum('initial_cost'))['total'] or Decimal('0.00')
+    
+    # ✅ تنسيق الأرقام
+    def format_number(value):
+        if value is None:
+            return "0"
+        try:
+            num = int(float(value))
+            return f"{num:,}"
+        except (ValueError, TypeError):
+            return str(value)
+    
+    # ✅ تنسيق التاريخ
+    def format_date(value):
+        if not value:
+            return "-"
+        try:
+            if isinstance(value, str):
+                from datetime import datetime
+                for fmt in ['%Y-%m-%d', '%d/%m/%Y', '%m/%d/%Y']:
+                    try:
+                        dt = datetime.strptime(value, fmt)
+                        return dt.strftime('%d/%m/%Y')
+                    except ValueError:
+                        continue
+                return value
+            return value.strftime('%d/%m/%Y')
+        except:
+            return str(value)
+    
+    # ✅ Pagination
+    paginator = Paginator(filtered_cases, 20)
+    page = request.GET.get('page', 1)
+    
+    try:
+        cases = paginator.page(page)
+    except PageNotAnInteger:
+        cases = paginator.page(1)
+    except EmptyPage:
+        cases = paginator.page(paginator.num_pages)
+    
+    # ✅ تنسيق البيانات
+    formatted_cases = []
+    for case in cases:
+        formatted_cases.append({
+            'id': case.id,
+            'patient_name': case.patient_name or '-',
+            'procedure': case.procedure or '-',
+            'company': case.company or '-',
+            'doctor_name': case.doctor_name or '-',
+            'main_status': case.main_status or '-',
+            'admission_date': format_date(case.admission_date),
+            'initial_cost': format_number(case.initial_cost),
+            'medical_number': case.medical_number or '-',
+            'specialty': case.specialty or '-',
+            'notes': case.notes or '-',
+            'date': format_date(case.date),
+            'phone': case.phone or '-',
+        })
+    
+    context = {
+        'doctor_name': doctor_name,
+        'status_type': status_type,
+        'main_status': main_status,
+        'status_name': status_names.get(main_status, main_status),
+        'status_color': status_colors.get(main_status, 'primary'),
+        'status_icon': status_icons.get(main_status, 'fa-circle'),
+        'total_count': total_count,
+        'total_cost': format_number(total_cost),
+        'cases': formatted_cases,
+        'paginator': paginator,
+        'doctor_info': doctor_cases.first(),
+    }
+    
+    return render(request, 'frontend/doctor_status_detail.html', context)
 
 # في src/frontend/views.py
 

@@ -1,6 +1,6 @@
 # frontend/urls.py
 
-from django.urls import path
+from django.urls import path,re_path
 from . import views
 
 urlpatterns = [
@@ -196,4 +196,6 @@ path(
     views.get_package_filters,
     name="package_filters",
 ),
+    re_path(r'^doctor/(?P<doctor_name>.+)/status/(?P<status_type>[^/]+)/$', views.doctor_status_detail, name='doctor_status_detail'),
+
 ]
