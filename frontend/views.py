@@ -2971,11 +2971,53 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 def doctors_list(request):
     """صفحة الأطباء - عرض جميع الأطباء مع إحصائياتهم"""
     
+    from datetime import datetime
+    from decimal import Decimal
+    from django.db.models import Q, Count, Sum
+    
     # 🔍 الفلترة (اختياري)
     search_query = request.GET.get('search', '').strip()
     specialty_filter = request.GET.get('specialty', '').strip()
-    date_from = request.GET.get('date_from', '')
-    date_to = request.GET.get('date_to', '')
+    
+    # ✅ تجميع التاريخ من ثلاث خانات
+    day_from = request.GET.get('day_from', '').strip()
+    month_from = request.GET.get('month_from', '').strip()
+    year_from = request.GET.get('year_from', '').strip()
+    
+    day_to = request.GET.get('day_to', '').strip()
+    month_to = request.GET.get('month_to', '').strip()
+    year_to = request.GET.get('year_to', '').strip()
+    
+    # ✅ دالة التحقق من صحة التاريخ
+    def validate_date(day, month, year):
+        """التحقق من صحة التاريخ وإرجاع YYYY-MM-DD أو None"""
+        if not day or not month or not year:
+            return None
+        
+        try:
+            # محاولة إنشاء كائن تاريخ
+            dt = datetime(int(year), int(month), int(day))
+            # لو نجح، نرجع بصيغة YYYY-MM-DD
+            return dt.strftime('%Y-%m-%d')
+        except (ValueError, TypeError):
+            # تاريخ غير صحيح
+            return None
+    
+    # ✅ دمج الخانات في تاريخ واحد (مع التحقق)
+    date_from = validate_date(day_from, month_from, year_from)
+    date_to = validate_date(day_to, month_to, year_to)
+    
+    # ✅ رسائل الخطأ
+    date_error = None
+    
+    if (day_from or month_from or year_from) and not date_from:
+        date_error = "⚠️ تاريخ البداية غير صحيح. تأكد من إدخال يوم وشهر وسنة صحيحة."
+    
+    if (day_to or month_to or year_to) and not date_to:
+        if date_error:
+            date_error += " ⚠️ تاريخ النهاية غير صحيح."
+        else:
+            date_error = "⚠️ تاريخ النهاية غير صحيح. تأكد من إدخال يوم وشهر وسنة صحيحة."
     
     # 📊 الاستعلام الأساسي
     queryset = ExternalApproval.objects.all()
@@ -3008,7 +3050,7 @@ def doctors_list(request):
     
     # 📈 إجمالي الكل
     total_cases_all = doctors_data.aggregate(total=Sum('total_cases'))['total'] or 0
-    total_cost_all = doctors_data.aggregate(total=Sum('total_cost'))['total'] or 0
+    total_cost_all = doctors_data.aggregate(total=Sum('total_cost'))['total'] or Decimal('0.00')
     
     # 🏷️ قائمة التخصصات للفلتر
     specialties = ExternalApproval.objects.exclude(
@@ -3017,20 +3059,45 @@ def doctors_list(request):
         specialty=''
     ).values_list('specialty', flat=True).distinct().order_by('specialty')
     
+    # ✅ دالة تنسيق الأرقام
+    def format_number(value):
+        if value is None:
+            return "0"
+        try:
+            num = int(float(value))
+            return f"{num:,}"
+        except (ValueError, TypeError):
+            return str(value)
+    
+    # ✅ تنسيق البيانات
+    formatted_doctors = []
+    for doctor in doctors_data:
+        formatted_doctors.append({
+            'doctor_name': doctor['doctor_name'],
+            'specialty': doctor['specialty'],
+            'total_cases': doctor['total_cases'],
+            'total_cost_formatted': format_number(doctor['total_cost']),
+        })
+    
     context = {
-        'doctors': doctors_data,
+        'doctors': formatted_doctors,
         'total_cases_all': total_cases_all,
-        'total_cost_all': total_cost_all,
+        'total_cost_all': format_number(total_cost_all),
         'specialties': specialties,
         'search_query': search_query,
         'specialty_filter': specialty_filter,
-        'date_from': date_from,
-        'date_to': date_to,
+        # ✅ خانات التاريخ منفصلة (للحفاظ على القيم المدخلة)
+        'day_from': day_from,
+        'month_from': month_from,
+        'year_from': year_from,
+        'day_to': day_to,
+        'month_to': month_to,
+        'year_to': year_to,
+        # ✅ رسالة الخطأ
+        'date_error': date_error,
     }
     
     return render(request, 'frontend/doctors.html', context)
-
-
 def doctor_detail(request, doctor_name):
     """صفحة تفاصيل الطبيب"""
     
