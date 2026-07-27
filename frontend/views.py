@@ -3423,7 +3423,7 @@ def package_performance_comparison(request):
     source = request.GET.get('source', 'sheet15')
     
     if source == 'sheet11':
-        from frontend.models import ReportStatistic
+        from pricing_requests.models import ReportStatistic
         Model = ReportStatistic
         price_field = 'amount'
     else:
@@ -3460,10 +3460,14 @@ def package_performance_comparison(request):
         if package_type and package_type.strip():
             if "(" in package_type and ")" in package_type:
                 package_type = package_type.split("(")[-1].replace(")", "").strip()
-            filters &= (
-                Q(package_name__icontains=package_type) |
-                Q(code__icontains=package_type)
-            )
+            
+            # ✅ البحث في package_name دائماً
+            filters &= Q(package_name__icontains=package_type)
+            
+            # ✅ لو المصدر شيت 15، نضيف البحث في code
+            if source == 'sheet15':
+                filters |= Q(code__icontains=package_type)
+        
         if doctor_name and doctor_name.strip():
             filters &= Q(doctor_name__icontains=doctor_name)
         return filters
@@ -3501,7 +3505,7 @@ def package_performance_comparison(request):
             # ✅ إضافة التفاصيل لكل عملية (مع الرقم الحسابي)
             packages[pkg_name]['details'].append({
                 'patient_name': getattr(stat, 'patient_name', ''),
-                'account_number': getattr(stat, 'account_number', ''),  # ✅ جديد
+                'account_number': getattr(stat, 'account_number', ''),
                 'admission_date': getattr(stat, 'admission_date', ''),
                 'amount': amount,
                 'entity': getattr(stat, 'entity_name', ''),
@@ -3626,7 +3630,7 @@ def package_performance_comparison(request):
         pkg_name = pkg["package_name"] or ""
         pkg_code = pkg["code"] or ""
         if pkg_name:
-            if pkg_code:
+            if source == 'sheet15' and pkg_code:
                 display = f"{pkg_name} ({pkg_code})"
             else:
                 display = pkg_name
@@ -3691,7 +3695,7 @@ def get_package_filters(request):
     sector = request.GET.get("sector", "").strip()
     sub_company = request.GET.get("sub_company", "").strip()
     specialty = request.GET.get("specialty", "").strip()
-    doctor_name = request.GET.get("doctor_name", "").strip()  # ✅ جديد
+    doctor_name = request.GET.get("doctor_name", "").strip()
     
     # ✅ الفلاتر الزمنية
     year = request.GET.get("year", "").strip()
@@ -3699,7 +3703,7 @@ def get_package_filters(request):
     quarter = request.GET.get("quarter", "").strip()
 
     if source == "sheet11":
-        from frontend.models import ReportStatistic
+        from pricing_requests.models import ReportStatistic
         Model = ReportStatistic
     else:
         Model = ReportStatisticSheet15
@@ -3718,7 +3722,7 @@ def get_package_filters(request):
         filtered_queryset = filtered_queryset.filter(sub_company__icontains=sub_company)
     if specialty:
         filtered_queryset = filtered_queryset.filter(specialty__icontains=specialty)
-    if doctor_name:  # ✅ جديد
+    if doctor_name:
         filtered_queryset = filtered_queryset.filter(doctor_name__icontains=doctor_name)
     if month:
         filtered_queryset = filtered_queryset.filter(month=month)
@@ -3777,7 +3781,7 @@ def get_package_filters(request):
     )
 
     # ==========================
-    # 6️⃣ جلب الأطباء (✅ جديد)
+    # 6️⃣ جلب الأطباء
     # ==========================
     doctors = list(
         filtered_queryset.exclude(doctor_name__isnull=True)
@@ -3800,9 +3804,11 @@ def get_package_filters(request):
     )
 
     for item in packages:
-        package_name = item["package_name"]
+        package_name = item["package_name"] or ""
         code = item["code"] or ""
-        if code:
+        
+        # ✅ لو المصدر شيت 15، نضيف الكود
+        if source == "sheet15" and code:
             package_list.append(f"{package_name} ({code})")
         else:
             package_list.append(package_name)
@@ -3812,9 +3818,10 @@ def get_package_filters(request):
         "entities": sorted(entities),
         "sub_companies": sorted(sub_companies),
         "specialties": sorted(specialties),
-        "doctors": sorted(doctors),  # ✅ جديد
+        "doctors": sorted(doctors),
         "packages": sorted(package_list),
     })
+    
 from django.utils import timezone  # ✅ أضف هذا السطر
 
 from django.shortcuts import render
