@@ -3315,7 +3315,7 @@ def doctor_status_detail(request, doctor_name, status_type):
         'serv_done': 'serv. done',
     }
     
-    # ✅ ألوان الحالات
+    # ✅ ألوان الحالات - Bootstrap classes
     status_colors = {
         'approved': 'success',
         'cancelled': 'secondary',
@@ -3324,6 +3324,28 @@ def doctor_status_detail(request, doctor_name, status_type):
         'bending by patient': 'info',
         'rejected': 'dark',
         'serv. done': 'info',
+    }
+    
+    # ✅ ألوان متدرجة (Gradients) لكل حالة
+    status_gradients = {
+        'approved': 'linear-gradient(135deg, #198754, #157347)',
+        'cancelled': 'linear-gradient(135deg, #6c757d, #495057)',
+        'patient refused': 'linear-gradient(135deg, #dc3545, #b02a37)',
+        'pending': 'linear-gradient(135deg, #ffc107, #e0a800)',
+        'bending by patient': 'linear-gradient(135deg, #0dcaf0, #0d6efd)',
+        'rejected': 'linear-gradient(135deg, #212529, #343a40)',
+        'serv. done': 'linear-gradient(135deg, #0dcaf0, #0d6efd)',
+    }
+    
+    # ✅ لون النص لكل حالة (أبيض أو غامق)
+    status_texts = {
+        'approved': 'white',
+        'cancelled': 'white',
+        'patient refused': 'white',
+        'pending': '#212529',  # غامق عشان يبان على الأصفر
+        'bending by patient': 'white',
+        'rejected': 'white',
+        'serv. done': 'white',
     }
     
     # ✅ أيقونات الحالات
@@ -3418,22 +3440,27 @@ def doctor_status_detail(request, doctor_name, status_type):
             'phone': case.phone or '-',
         })
     
+    # ✅ الحصول على الـ color class
+    color_class = status_colors.get(main_status, 'primary')
+    
     context = {
         'doctor_name': doctor_name,
         'status_type': status_type,
         'main_status': main_status,
         'status_name': status_names.get(main_status, main_status),
-        'status_color': status_colors.get(main_status, 'primary'),
+        'status_color': color_class,
         'status_icon': status_icons.get(main_status, 'fa-circle'),
+        'status_gradient': status_gradients.get(main_status, 'linear-gradient(135deg, #0d6efd, #0a58ca)'),
+        'status_text': status_texts.get(main_status, 'white'),
         'total_count': total_count,
-        'total_cost': format_number(total_cost),
+        'total_cost': format_number(total_cost),  # ✅ للعرض (مع فواصل)
+        'total_cost_raw': int(total_cost),  # ✅ للكاونتر (بدون فواصل)
         'cases': formatted_cases,
         'paginator': paginator,
         'doctor_info': doctor_cases.first(),
     }
     
     return render(request, 'frontend/doctor_status_detail.html', context)
-
 # في src/frontend/views.py
 
 from django.http import JsonResponse

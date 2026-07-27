@@ -4,192 +4,697 @@
 {% block title %}تفاصيل الطبيب - {{ doctor_name }}{% endblock %}
 
 {% block content %}
-<div class="container-fluid mt-3">
-    <!-- 🔙 زر العودة -->
-    <div class="row mb-3">
-        <div class="col-md-8">
-            <a href="{% url 'doctors_list' %}" class="btn btn-outline-secondary">
-                <i class="fas fa-arrow-right"></i> العودة إلى الأطباء
+
+<style>
+    /* ✅ البوكسات الإحصائية - تصميم احترافي بألوان متمايزة */
+    .stats-box {
+        border-radius: 20px;
+        padding: 1.5rem 1rem;
+        text-align: center;
+        color: #fff;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+        min-height: 160px;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        will-change: transform;
+        border: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .stats-box::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 100%;
+        height: 100%;
+        background: rgba(255,255,255,0.05);
+        border-radius: 50%;
+        transform: rotate(25deg);
+        pointer-events: none;
+    }
+    
+    .stats-box:hover {
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    }
+    
+    .stats-box:active {
+        transform: scale(0.97);
+    }
+    
+    .stats-box .stats-number {
+        font-size: 2.6rem;
+        font-weight: 800;
+        text-shadow: 0 2px 15px rgba(0,0,0,0.15);
+        line-height: 1.2;
+        transition: all 0.3s ease;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .stats-box .stats-number.counting {
+        animation: pulse 0.5s ease;
+    }
+    
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.08); }
+        100% { transform: scale(1); }
+    }
+    
+    .stats-box .stats-label {
+        font-size: 0.8rem;
+        font-weight: 600;
+        margin-top: 6px;
+        opacity: 0.95;
+        letter-spacing: 0.3px;
+        line-height: 1.3;
+        max-width: 95%;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .stats-box .stats-icon {
+        font-size: 1.8rem;
+        margin-bottom: 6px;
+        opacity: 0.85;
+        line-height: 1;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .stats-box .btn-show-details {
+        margin-top: 10px;
+        padding: 0.25rem 1rem;
+        border-radius: 50px;
+        font-size: 0.65rem;
+        font-weight: 600;
+        background: rgba(255,255,255,0.2);
+        color: #fff;
+        border: 1px solid rgba(255,255,255,0.25);
+        transition: all 0.3s ease;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+        width: 100%;
+        max-width: 140px;
+        position: relative;
+        z-index: 1;
+        backdrop-filter: blur(5px);
+    }
+    
+    .stats-box .btn-show-details:hover {
+        background: rgba(255,255,255,0.35);
+        transform: scale(1.05);
+        color: #fff;
+    }
+    
+    .stats-box .btn-show-details:active {
+        transform: scale(0.95);
+    }
+    
+    .stats-box .btn-show-details:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+    }
+    
+    .stats-box .btn-show-details:disabled:hover {
+        background: rgba(255,255,255,0.2);
+        transform: none;
+    }
+    
+    /* ✅ ألوان متمايزة لكل كرت - Gradient مخصص */
+    .stats-box-total {
+        background: linear-gradient(135deg, #0d6efd, #0a58ca);
+        color: white;
+    }
+    .stats-box-approved {
+        background: linear-gradient(135deg, #198754, #157347);
+        color: white;
+    }
+    .stats-box-pending {
+        background: linear-gradient(135deg, #ffc107, #e0a800);
+        color: #212529;
+    }
+    .stats-box-bending {
+        background: linear-gradient(135deg, #0dcaf0, #0d6efd);
+        color: white;
+    }
+    .stats-box-rejected {
+        background: linear-gradient(135deg, #212529, #343a40);
+        color: white;
+    }
+    .stats-box-refused {
+        background: linear-gradient(135deg, #dc3545, #b02a37);
+        color: white;
+    }
+    .stats-box-cancelled {
+        background: linear-gradient(135deg, #6c757d, #495057);
+        color: white;
+    }
+    .stats-box-servdone {
+        background: linear-gradient(135deg, #0dcaf0, #0d6efd);
+        color: white;
+    }
+    
+    /* ✅ جعل جميع الكروت في الصف بنفس الارتفاع */
+    .row.g-2 {
+        display: flex;
+        flex-wrap: wrap;
+    }
+    
+    .row.g-2 > [class*="col-"] {
+        display: flex;
+        flex-direction: column;
+        padding: 0 6px;
+    }
+    
+    .row.g-2 > [class*="col-"] .stats-box {
+        flex: 1;
+    }
+    
+    /* ✅ تحسين Responsive - للكروت */
+    @media (max-width: 992px) {
+        .stats-box .stats-number {
+            font-size: 2rem;
+        }
+        .stats-box {
+            min-height: 140px;
+            padding: 1rem 0.8rem;
+            border-radius: 16px;
+        }
+        .stats-box .stats-label {
+            font-size: 0.7rem;
+        }
+        .stats-box .stats-icon {
+            font-size: 1.5rem;
+        }
+        .stats-box .btn-show-details {
+            font-size: 0.6rem;
+            padding: 0.2rem 0.8rem;
+            max-width: 120px;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .stats-box .stats-number {
+            font-size: 1.6rem;
+        }
+        .stats-box {
+            min-height: 120px;
+            padding: 0.8rem 0.5rem;
+            border-radius: 14px;
+        }
+        .stats-box .stats-label {
+            font-size: 0.65rem;
+            margin-top: 4px;
+        }
+        .stats-box .stats-icon {
+            font-size: 1.2rem;
+            margin-bottom: 4px;
+        }
+        .stats-box .btn-show-details {
+            font-size: 0.55rem;
+            padding: 0.15rem 0.5rem;
+            margin-top: 6px;
+            max-width: 100px;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .stats-box {
+            min-height: 100px;
+            padding: 0.5rem 0.3rem;
+            border-radius: 12px;
+        }
+        .stats-box .stats-number {
+            font-size: 1.3rem;
+        }
+        .stats-box .stats-label {
+            font-size: 0.55rem;
+            margin-top: 2px;
+        }
+        .stats-box .stats-icon {
+            font-size: 1rem;
+            margin-bottom: 2px;
+        }
+        .stats-box .btn-show-details {
+            font-size: 0.5rem;
+            padding: 0.1rem 0.4rem;
+            margin-top: 4px;
+            max-width: 80px;
+        }
+        .row.g-2 > [class*="col-"] {
+            padding: 0 4px;
+        }
+    }
+    
+    /* ✅ تنسيق الجدول */
+    .card {
+        border: none;
+        border-radius: 20px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        overflow: hidden;
+    }
+    
+    .card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    }
+    
+    .table th, .table td {
+        vertical-align: middle;
+    }
+    
+    .badge {
+        font-size: 0.8rem;
+        padding: 0.3rem 0.6rem;
+        border-radius: 12px;
+    }
+    
+    .btn-sm {
+        padding: 0.2rem 0.6rem;
+        border-radius: 10px;
+        font-size: 0.75rem;
+    }
+    
+    .table-responsive {
+        max-height: 600px;
+        overflow-y: auto;
+        border-radius: 12px;
+    }
+    
+    .table thead th {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        background: linear-gradient(135deg, #0d6efd, #0a58ca);
+        color: white;
+        border-bottom: 2px solid #0a58ca;
+        font-size: 0.85rem;
+    }
+    
+    .table tfoot td {
+        background: #f8f9fa;
+        font-weight: 700;
+        border-top: 2px solid #0d6efd;
+    }
+    
+    /* ✅ تنسيق الـ Alert */
+    .alert {
+        border-radius: 15px;
+        border: none;
+    }
+    
+    /* ✅ تنسيق الـ Modal - داعم للموبايل */
+    .modal-content {
+        border-radius: 20px;
+        border: none;
+        overflow: hidden;
+    }
+    
+    .modal-header {
+        background: linear-gradient(135deg, #0d6efd, #0a58ca);
+        color: white;
+        border: none;
+        padding: 1rem 1.5rem;
+    }
+    
+    .modal-header .btn-close {
+        filter: brightness(0) invert(1);
+    }
+    
+    .modal-footer {
+        border: none;
+        padding: 1rem 1.5rem;
+        background: #f8f9fa;
+    }
+    
+    .modal-body {
+        padding: 1.5rem;
+    }
+    
+    .modal-body p {
+        margin-bottom: 0.6rem;
+        font-size: 0.95rem;
+        display: flex;
+        align-items: flex-start;
+        gap: 6px;
+    }
+    
+    .modal-body p strong {
+        min-width: 100px;
+        display: inline-block;
+        color: #495057;
+    }
+    
+    /* ✅ تنسيق الـ Modal في الموبايل */
+    @media (max-width: 768px) {
+        .modal-dialog {
+            margin: 10px;
+            max-width: 100%;
+        }
+        .modal-content {
+            border-radius: 16px;
+        }
+        .modal-header {
+            padding: 0.8rem 1rem;
+        }
+        .modal-header h5 {
+            font-size: 1rem;
+        }
+        .modal-body {
+            padding: 1rem;
+        }
+        .modal-body p {
+            font-size: 0.85rem;
+            flex-wrap: wrap;
+        }
+        .modal-body p strong {
+            min-width: 80px;
+            font-size: 0.8rem;
+        }
+        .modal-footer {
+            padding: 0.8rem 1rem;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .modal-footer .btn {
+            font-size: 0.8rem;
+            padding: 0.3rem 0.8rem;
+            flex: 1;
+            min-width: 80px;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .modal-dialog {
+            margin: 5px;
+        }
+        .modal-content {
+            border-radius: 12px;
+        }
+        .modal-header {
+            padding: 0.6rem 0.8rem;
+        }
+        .modal-header h5 {
+            font-size: 0.9rem;
+        }
+        .modal-body {
+            padding: 0.8rem;
+        }
+        .modal-body p {
+            font-size: 0.75rem;
+            margin-bottom: 0.4rem;
+        }
+        .modal-body p strong {
+            min-width: 65px;
+            font-size: 0.7rem;
+        }
+        .modal-footer {
+            padding: 0.6rem 0.8rem;
+        }
+        .modal-footer .btn {
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
+            min-width: 60px;
+        }
+    }
+    
+    /* ✅ تنسيق Pagination */
+    .pagination .page-link {
+        border-radius: 10px;
+        margin: 0 3px;
+        border: none;
+        color: #0d6efd;
+        font-size: 0.9rem;
+    }
+    
+    .pagination .page-item.active .page-link {
+        background: linear-gradient(135deg, #0d6efd, #0a58ca);
+        color: white;
+    }
+    
+    .pagination .page-link:hover {
+        background: #e7f1ff;
+    }
+    
+    /* ✅ تنسيق العنوان */
+    .header-title {
+        background: linear-gradient(135deg, #0d6efd, #0a58ca);
+        padding: 0.4rem 1.2rem;
+        border-radius: 15px;
+        color: white;
+        display: inline-block;
+        font-size: 1.2rem;
+    }
+    
+    /* ✅ تنسيق الجدول في الموبايل */
+    @media (max-width: 768px) {
+        .table-responsive {
+            max-height: 400px;
+        }
+        .table thead th {
+            font-size: 0.7rem;
+            padding: 0.4rem 0.3rem;
+        }
+        .table td {
+            font-size: 0.7rem;
+            padding: 0.3rem 0.2rem;
+        }
+        .badge {
+            font-size: 0.6rem;
+            padding: 0.2rem 0.4rem;
+        }
+        .btn-sm {
+            font-size: 0.6rem;
+            padding: 0.1rem 0.4rem;
+        }
+        .header-title {
+            font-size: 1rem;
+            padding: 0.3rem 1rem;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .table thead th {
+            font-size: 0.55rem;
+            padding: 0.2rem 0.15rem;
+        }
+        .table td {
+            font-size: 0.55rem;
+            padding: 0.2rem 0.15rem;
+        }
+        .badge {
+            font-size: 0.5rem;
+            padding: 0.1rem 0.25rem;
+        }
+        .btn-sm {
+            font-size: 0.5rem;
+            padding: 0.05rem 0.25rem;
+        }
+    }
+</style>
+
+<div class="container-fluid py-3">
+    
+    <!-- 🔙 زر العودة + العنوان -->
+    <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+        <div class="d-flex align-items-center gap-2 flex-wrap">
+            <a href="{% url 'doctors_list' %}" class="btn btn-outline-secondary btn-sm">
+                <i class="fas fa-arrow-right me-1"></i> العودة
             </a>
-            <h3 class="d-inline-block ms-3 fw-bold" style="color: #0d6efd;">
-                <i class="fas fa-user-md"></i> {{ doctor_name }}
-            </h3>
-            <span class="badge bg-info">{{ doctor_info.specialty|default:"بدون تخصص" }}</span>
+            <h4 class="fw-bold mb-0 header-title">
+                <i class="fas fa-user-md me-2"></i>
+                {{ doctor_name }}
+            </h4>
+            <span class="badge bg-info text-white fs-6 p-2">
+                <i class="fas fa-stethoscope me-1"></i>
+                {{ doctor_info.specialty|default:"بدون تخصص" }}
+            </span>
         </div>
-        <div class="col-md-4 text-end">
+        <div>
             <span class="badge bg-primary fs-6 p-2">
-                <i class="fas fa-stethoscope"></i> إجمالي {{ total_cases }} حالة
+                <i class="fas fa-file-medical me-1"></i>
+                إجمالي {{ total_cases }} حالة
             </span>
         </div>
     </div>
 
     {% if error %}
-    <div class="alert alert-warning">{{ error }}</div>
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-triangle me-2"></i>
+        {{ error }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
     {% else %}
 
-    <!-- 📊 البوكسات العلوية بالترتيب المطلوب -->
-    <div class="row mb-4 g-2">
+    <!-- 📊 البوكسات العلوية - بتصميم احترافي وألوان متمايزة -->
+    <div class="row g-2 mb-3">
+        
         <!-- 1. إجمالي الحالات -->
-        <div class="col-md-3 col-sm-6">
-            <div class="card text-white bg-primary h-100">
-                <div class="card-body text-center">
-                    <h6 class="card-title"><i class="fas fa-users"></i> إجمالي الحالات</h6>
-                    <h3 class="card-text counter" data-target="{{ total_cases }}">0</h3>
-                    <a href="{% url 'doctor_detail' doctor_name %}" class="btn btn-light btn-sm mt-2 w-100">
-                        <i class="fas fa-chevron-down"></i> عرض المزيد
-                    </a>
-                </div>
+        <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6 col-6">
+            <div class="stats-box stats-box-total">
+                <div class="stats-icon"><i class="fas fa-users"></i></div>
+                <div class="stats-number counter" data-target="{{ total_cases }}">0</div>
+                <div class="stats-label">إجمالي الحالات</div>
+                <a href="{% url 'doctor_detail' doctor_name %}" class="btn-show-details">
+                    <i class="fas fa-eye me-1"></i> عرض الكل
+                </a>
             </div>
         </div>
         
         <!-- 2. تمت الموافقة -->
-        <div class="col-md-3 col-sm-6">
-            <div class="card text-white bg-success h-100">
-                <div class="card-body text-center">
-                    <h6 class="card-title"><i class="fas fa-check-circle"></i> تمت الموافقة</h6>
-                    <h3 class="card-text counter" data-target="{{ status_stats.approved }}">0</h3>
-                    {% if status_stats.approved > 0 %}
-                    <a href="{% url 'doctor_status_detail' doctor_name 'approved' %}" class="btn btn-light btn-sm mt-2 w-100">
-                        <i class="fas fa-chevron-down"></i> عرض المزيد
-                    </a>
-                    {% else %}
-                    <button class="btn btn-light btn-sm mt-2 w-100" disabled>
-                        <i class="fas fa-minus"></i> لا توجد حالات
-                    </button>
-                    {% endif %}
-                </div>
+        <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6 col-6">
+            <div class="stats-box stats-box-approved">
+                <div class="stats-icon"><i class="fas fa-check-circle"></i></div>
+                <div class="stats-number counter" data-target="{{ status_stats.approved }}">0</div>
+                <div class="stats-label">تمت الموافقة</div>
+                {% if status_stats.approved > 0 %}
+                <a href="{% url 'doctor_status_detail' doctor_name 'approved' %}" class="btn-show-details">
+                    <i class="fas fa-eye me-1"></i> عرض
+                </a>
+                {% else %}
+                <button class="btn-show-details" disabled>
+                    <i class="fas fa-minus me-1"></i> لا توجد
+                </button>
+                {% endif %}
             </div>
         </div>
         
         <!-- 3. قيد الانتظار -->
-        <div class="col-md-3 col-sm-6">
-            <div class="card text-white bg-warning h-100">
-                <div class="card-body text-center">
-                    <h6 class="card-title"><i class="fas fa-clock"></i> قيد الانتظار</h6>
-                    <h3 class="card-text counter" data-target="{{ status_stats.pending }}">0</h3>
-                    {% if status_stats.pending > 0 %}
-                    <a href="{% url 'doctor_status_detail' doctor_name 'pending' %}" class="btn btn-light btn-sm mt-2 w-100">
-                        <i class="fas fa-chevron-down"></i> عرض المزيد
-                    </a>
-                    {% else %}
-                    <button class="btn btn-light btn-sm mt-2 w-100" disabled>
-                        <i class="fas fa-minus"></i> لا توجد حالات
-                    </button>
-                    {% endif %}
-                </div>
+        <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6 col-6">
+            <div class="stats-box stats-box-pending">
+                <div class="stats-icon"><i class="fas fa-clock"></i></div>
+                <div class="stats-number counter" data-target="{{ status_stats.pending }}">0</div>
+                <div class="stats-label">قيد الانتظار</div>
+                {% if status_stats.pending > 0 %}
+                <a href="{% url 'doctor_status_detail' doctor_name 'pending' %}" class="btn-show-details" style="color: #212529; border-color: rgba(0,0,0,0.2);">
+                    <i class="fas fa-eye me-1"></i> عرض
+                </a>
+                {% else %}
+                <button class="btn-show-details" disabled style="color: #212529; border-color: rgba(0,0,0,0.2);">
+                    <i class="fas fa-minus me-1"></i> لا توجد
+                </button>
+                {% endif %}
             </div>
         </div>
         
         <!-- 4. مؤجل بمعرفة المريض -->
-        <div class="col-md-3 col-sm-6">
-            <div class="card text-white bg-info h-100">
-                <div class="card-body text-center">
-                    <h6 class="card-title"><i class="fas fa-pause-circle"></i> مؤجل بمعرفة المريض</h6>
-                    <h3 class="card-text counter" data-target="{{ status_stats.bending_by_patient }}">0</h3>
-                    {% if status_stats.bending_by_patient > 0 %}
-                    <a href="{% url 'doctor_status_detail' doctor_name 'bending_by_patient' %}" class="btn btn-light btn-sm mt-2 w-100">
-                        <i class="fas fa-chevron-down"></i> عرض المزيد
-                    </a>
-                    {% else %}
-                    <button class="btn btn-light btn-sm mt-2 w-100" disabled>
-                        <i class="fas fa-minus"></i> لا توجد حالات
-                    </button>
-                    {% endif %}
-                </div>
+        <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6 col-6">
+            <div class="stats-box stats-box-bending">
+                <div class="stats-icon"><i class="fas fa-pause-circle"></i></div>
+                <div class="stats-number counter" data-target="{{ status_stats.bending_by_patient }}">0</div>
+                <div class="stats-label">مؤجل بمعرفة المريض</div>
+                {% if status_stats.bending_by_patient > 0 %}
+                <a href="{% url 'doctor_status_detail' doctor_name 'bending_by_patient' %}" class="btn-show-details">
+                    <i class="fas fa-eye me-1"></i> عرض
+                </a>
+                {% else %}
+                <button class="btn-show-details" disabled>
+                    <i class="fas fa-minus me-1"></i> لا توجد
+                </button>
+                {% endif %}
             </div>
         </div>
         
         <!-- 5. مرفوضه -->
-        <div class="col-md-3 col-sm-6">
-            <div class="card text-white bg-dark h-100">
-                <div class="card-body text-center">
-                    <h6 class="card-title"><i class="fas fa-ban"></i> مرفوضه</h6>
-                    <h3 class="card-text counter" data-target="{{ status_stats.rejected }}">0</h3>
-                    {% if status_stats.rejected > 0 %}
-                    <a href="{% url 'doctor_status_detail' doctor_name 'rejected' %}" class="btn btn-light btn-sm mt-2 w-100">
-                        <i class="fas fa-chevron-down"></i> عرض المزيد
-                    </a>
-                    {% else %}
-                    <button class="btn btn-light btn-sm mt-2 w-100" disabled>
-                        <i class="fas fa-minus"></i> لا توجد حالات
-                    </button>
-                    {% endif %}
-                </div>
+        <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6 col-6">
+            <div class="stats-box stats-box-rejected">
+                <div class="stats-icon"><i class="fas fa-ban"></i></div>
+                <div class="stats-number counter" data-target="{{ status_stats.rejected }}">0</div>
+                <div class="stats-label">مرفوضه</div>
+                {% if status_stats.rejected > 0 %}
+                <a href="{% url 'doctor_status_detail' doctor_name 'rejected' %}" class="btn-show-details">
+                    <i class="fas fa-eye me-1"></i> عرض
+                </a>
+                {% else %}
+                <button class="btn-show-details" disabled>
+                    <i class="fas fa-minus me-1"></i> لا توجد
+                </button>
+                {% endif %}
             </div>
         </div>
         
         <!-- 6. رفض المريض -->
-        <div class="col-md-3 col-sm-6">
-            <div class="card text-white bg-danger h-100">
-                <div class="card-body text-center">
-                    <h6 class="card-title"><i class="fas fa-user-slash"></i> رفض المريض</h6>
-                    <h3 class="card-text counter" data-target="{{ status_stats.patient_refused }}">0</h3>
-                    {% if status_stats.patient_refused > 0 %}
-                    <a href="{% url 'doctor_status_detail' doctor_name 'patient_refused' %}" class="btn btn-light btn-sm mt-2 w-100">
-                        <i class="fas fa-chevron-down"></i> عرض المزيد
-                    </a>
-                    {% else %}
-                    <button class="btn btn-light btn-sm mt-2 w-100" disabled>
-                        <i class="fas fa-minus"></i> لا توجد حالات
-                    </button>
-                    {% endif %}
-                </div>
+        <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6 col-6">
+            <div class="stats-box stats-box-refused">
+                <div class="stats-icon"><i class="fas fa-user-slash"></i></div>
+                <div class="stats-number counter" data-target="{{ status_stats.patient_refused }}">0</div>
+                <div class="stats-label">رفض المريض</div>
+                {% if status_stats.patient_refused > 0 %}
+                <a href="{% url 'doctor_status_detail' doctor_name 'patient_refused' %}" class="btn-show-details">
+                    <i class="fas fa-eye me-1"></i> عرض
+                </a>
+                {% else %}
+                <button class="btn-show-details" disabled>
+                    <i class="fas fa-minus me-1"></i> لا توجد
+                </button>
+                {% endif %}
             </div>
         </div>
         
         <!-- 7. ملغاه -->
-        <div class="col-md-3 col-sm-6">
-            <div class="card text-white bg-secondary h-100">
-                <div class="card-body text-center">
-                    <h6 class="card-title"><i class="fas fa-times-circle"></i> ملغاه</h6>
-                    <h3 class="card-text counter" data-target="{{ status_stats.cancelled }}">0</h3>
-                    {% if status_stats.cancelled > 0 %}
-                    <a href="{% url 'doctor_status_detail' doctor_name 'cancelled' %}" class="btn btn-light btn-sm mt-2 w-100">
-                        <i class="fas fa-chevron-down"></i> عرض المزيد
-                    </a>
-                    {% else %}
-                    <button class="btn btn-light btn-sm mt-2 w-100" disabled>
-                        <i class="fas fa-minus"></i> لا توجد حالات
-                    </button>
-                    {% endif %}
-                </div>
+        <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6 col-6">
+            <div class="stats-box stats-box-cancelled">
+                <div class="stats-icon"><i class="fas fa-times-circle"></i></div>
+                <div class="stats-number counter" data-target="{{ status_stats.cancelled }}">0</div>
+                <div class="stats-label">ملغاه</div>
+                {% if status_stats.cancelled > 0 %}
+                <a href="{% url 'doctor_status_detail' doctor_name 'cancelled' %}" class="btn-show-details">
+                    <i class="fas fa-eye me-1"></i> عرض
+                </a>
+                {% else %}
+                <button class="btn-show-details" disabled>
+                    <i class="fas fa-minus me-1"></i> لا توجد
+                </button>
+                {% endif %}
             </div>
         </div>
         
         <!-- 8. خدمة منتهية -->
-        <div class="col-md-3 col-sm-6">
-            <div class="card text-white" style="background: linear-gradient(135deg, #0dcaf0, #0d6efd);">
-                <div class="card-body text-center">
-                    <h6 class="card-title"><i class="fas fa-check-double"></i> خدمة منتهية</h6>
-                    <h3 class="card-text counter" data-target="{{ status_stats.serv_done }}">0</h3>
-                    {% if status_stats.serv_done > 0 %}
-                    <a href="{% url 'doctor_status_detail' doctor_name 'serv_done' %}" class="btn btn-light btn-sm mt-2 w-100">
-                        <i class="fas fa-chevron-down"></i> عرض المزيد
-                    </a>
-                    {% else %}
-                    <button class="btn btn-light btn-sm mt-2 w-100" disabled>
-                        <i class="fas fa-minus"></i> لا توجد حالات
-                    </button>
-                    {% endif %}
-                </div>
+        <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6 col-6">
+            <div class="stats-box stats-box-servdone">
+                <div class="stats-icon"><i class="fas fa-check-double"></i></div>
+                <div class="stats-number counter" data-target="{{ status_stats.serv_done }}">0</div>
+                <div class="stats-label">خدمة منتهية</div>
+                {% if status_stats.serv_done > 0 %}
+                <a href="{% url 'doctor_status_detail' doctor_name 'serv_done' %}" class="btn-show-details">
+                    <i class="fas fa-eye me-1"></i> عرض
+                </a>
+                {% else %}
+                <button class="btn-show-details" disabled>
+                    <i class="fas fa-minus me-1"></i> لا توجد
+                </button>
+                {% endif %}
             </div>
         </div>
+        
     </div>
 
     <!-- 📊 شريط الفلتر الحالي -->
     {% if status_filter %}
     <div class="row mb-3">
         <div class="col-12">
-            <div class="alert alert-info d-flex justify-content-between align-items-center">
+            <div class="alert alert-info d-flex justify-content-between align-items-center flex-wrap gap-2" style="border-radius: 15px;">
                 <span>
-                    <i class="fas fa-filter"></i> 
+                    <i class="fas fa-filter me-2"></i> 
                     <strong>عرض الحالات:</strong> 
                     <span class="badge 
                         {% if status_filter == 'approved' %}bg-success
                         {% elif status_filter == 'cancelled' %}bg-secondary
                         {% elif status_filter == 'patient_refused' %}bg-danger
-                        {% elif status_filter == 'pending' %}bg-warning
-                        {% elif status_filter == 'bending_by_patient' %}bg-info
+                        {% elif status_filter == 'pending' %}bg-warning text-dark
+                        {% elif status_filter == 'bending_by_patient' %}bg-info text-dark
                         {% elif status_filter == 'rejected' %}bg-dark
                         {% elif status_filter == 'serv_done' %}" style="background: linear-gradient(135deg, #0dcaf0, #0d6efd); color: white;"
                         {% else %}bg-primary{% endif %}">
@@ -200,7 +705,7 @@
                     </span>
                 </span>
                 <a href="{% url 'doctor_detail' doctor_name %}" class="btn btn-sm btn-outline-secondary">
-                    <i class="fas fa-times"></i> إلغاء الفلتر
+                    <i class="fas fa-times me-1"></i> إلغاء الفلتر
                 </a>
             </div>
         </div>
@@ -211,22 +716,24 @@
     <div class="row">
         <div class="col-12">
             <div class="card shadow-sm">
-                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center flex-wrap gap-2" style="border-radius: 20px 20px 0 0;">
                     <h5 class="mb-0">
-                        <i class="fas fa-list"></i> 
+                        <i class="fas fa-list me-2"></i> 
                         تفاصيل الحالات
                         {% if status_filter %}
                             <span class="badge bg-light text-primary ms-2">
                                 {{ status_filter }}
                             </span>
                         {% endif %}
-                        <span class="badge bg-light text-primary ms-2">{{ cases|length }}</span>
                     </h5>
+                    <span class="badge bg-light text-primary fs-6">
+                        {{ cases|length }} حالة
+                    </span>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
                         <table class="table table-striped table-hover" id="casesTable">
-                            <thead class="table-primary">
+                            <thead>
                                 <tr>
                                     <th>#</th>
                                     <th>اسم المريض</th>
@@ -235,13 +742,13 @@
                                     <th>الطبيب</th>
                                     <th>حالة الموافقة</th>
                                     <th>تاريخ الدخول</th>
-                                    <th>عرض المزيد</th>
+                                    <th>عرض</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {% for case in cases %}
                                 <tr>
-                                    <td>{{ forloop.counter }}</td>
+                                    <td class="fw-bold">{{ forloop.counter }}</td>
                                     <td class="fw-bold">{{ case.patient_name }}</td>
                                     <td>{{ case.procedure|truncatechars:30 }}</td>
                                     <td>{{ case.company }}</td>
@@ -251,8 +758,8 @@
                                             {% if case.main_status == 'approved' %}bg-success
                                             {% elif case.main_status == 'cancelled' %}bg-secondary
                                             {% elif case.main_status == 'patient refused' %}bg-danger
-                                            {% elif case.main_status == 'pending' %}bg-warning
-                                            {% elif case.main_status == 'bending by patient' %}bg-info
+                                            {% elif case.main_status == 'pending' %}bg-warning text-dark
+                                            {% elif case.main_status == 'bending by patient' %}bg-info text-dark
                                             {% elif case.main_status == 'rejected' %}bg-dark
                                             {% elif case.main_status == 'serv. done' %}" style="background: linear-gradient(135deg, #0dcaf0, #0d6efd); color: white;"
                                             {% else %}bg-light text-dark{% endif %}">
@@ -264,15 +771,17 @@
                                         <button class="btn btn-sm btn-outline-primary" 
                                                 data-bs-toggle="modal" 
                                                 data-bs-target="#caseModal{{ case.id }}">
-                                            <i class="fas fa-chevron-down"></i> عرض
+                                            <i class="fas fa-chevron-down"></i>
+                                            <span class="d-none d-sm-inline"> عرض</span>
                                         </button>
                                     </td>
                                 </tr>
                                 {% empty %}
                                 <tr>
                                     <td colspan="8" class="text-center text-muted py-4">
-                                        <i class="fas fa-info-circle fa-2x d-block mb-2"></i>
-                                        لا توجد حالات
+                                        <i class="fas fa-info-circle fa-3x d-block mb-3 opacity-50"></i>
+                                        <p class="mb-0">لا توجد حالات</p>
+                                        <small>جرب تغيير الفلتر أو العودة للقائمة الرئيسية</small>
                                     </td>
                                 </tr>
                                 {% endfor %}
@@ -320,52 +829,54 @@
         </div>
     </div>
 
-    <!-- 🎯 Modals لكل حالة -->
+    <!-- 🎯 Modals لكل حالة - داعم للموبايل -->
     {% for case in cases %}
-    <div class="modal fade" id="caseModal{{ case.id }}" tabindex="-1">
-        <div class="modal-dialog modal-lg">
+    <div class="modal fade" id="caseModal{{ case.id }}" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
-                <div class="modal-header bg-primary text-white">
+                <div class="modal-header">
                     <h5 class="modal-title">
-                        <i class="fas fa-file-medical"></i> تفاصيل الحالة
+                        <i class="fas fa-file-medical me-2"></i> تفاصيل الحالة
                     </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-6">
-                            <p><strong>👤 المريض:</strong> {{ case.patient_name }}</p>
-                            <p><strong>🆔 الرقم الطبي:</strong> {{ case.medical_number }}</p>
-                            <p><strong>🏥 الجهة:</strong> {{ case.company }}</p>
-                            <p><strong>👨‍⚕️ الطبيب:</strong> {{ case.doctor_name }}</p>
-                            <p><strong>📞 التليفون:</strong> {{ case.phone }}</p>
+                            <p><strong><i class="fas fa-user me-1"></i> المريض:</strong> {{ case.patient_name }}</p>
+                            <p><strong><i class="fas fa-id-card me-1"></i> الرقم الطبي:</strong> {{ case.medical_number }}</p>
+                            <p><strong><i class="fas fa-hospital me-1"></i> الجهة:</strong> {{ case.company }}</p>
+                            <p><strong><i class="fas fa-user-md me-1"></i> الطبيب:</strong> {{ case.doctor_name }}</p>
+                            <p><strong><i class="fas fa-phone me-1"></i> التليفون:</strong> {{ case.phone }}</p>
                         </div>
                         <div class="col-md-6">
-                            <p><strong>📝 الإجراء:</strong> {{ case.procedure }}</p>
-                            <p><strong>📅 تاريخ الدخول:</strong> {{ case.admission_date }}</p>
-                            <p><strong>📅 التاريخ:</strong> {{ case.date }}</p>
-                            <p><strong>✅ الحالة:</strong> 
+                            <p><strong><i class="fas fa-syringe me-1"></i> الإجراء:</strong> {{ case.procedure }}</p>
+                            <p><strong><i class="fas fa-calendar-check me-1"></i> تاريخ الدخول:</strong> {{ case.admission_date }}</p>
+                            <p><strong><i class="fas fa-calendar-alt me-1"></i> التاريخ:</strong> {{ case.date }}</p>
+                            <p><strong><i class="fas fa-check-circle me-1"></i> الحالة:</strong> 
                                 <span class="badge 
                                     {% if case.main_status == 'approved' %}bg-success
                                     {% elif case.main_status == 'cancelled' %}bg-secondary
                                     {% elif case.main_status == 'patient refused' %}bg-danger
-                                    {% elif case.main_status == 'pending' %}bg-warning
-                                    {% elif case.main_status == 'bending by patient' %}bg-info
+                                    {% elif case.main_status == 'pending' %}bg-warning text-dark
+                                    {% elif case.main_status == 'bending by patient' %}bg-info text-dark
                                     {% elif case.main_status == 'rejected' %}bg-dark
                                     {% elif case.main_status == 'serv. done' %}" style="background: linear-gradient(135deg, #0dcaf0, #0d6efd); color: white;"
                                     {% else %}bg-light text-dark{% endif %}">
                                     {{ case.main_status }}
                                 </span>
                             </p>
-                            <p><strong>📄 التقرير:</strong> {{ case.report }}</p>
-                            <p><strong>✅ الموافقة:</strong> {{ case.approval }}</p>
+                            <p><strong><i class="fas fa-file-alt me-1"></i> التقرير:</strong> {{ case.report }}</p>
+                            <p><strong><i class="fas fa-check-double me-1"></i> الموافقة:</strong> {{ case.approval }}</p>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إغلاق</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-1"></i> إغلاق
+                    </button>
                     <button type="button" class="btn btn-success" onclick="window.print()">
-                        <i class="fas fa-file-pdf"></i> PDF
+                        <i class="fas fa-file-pdf me-1"></i> PDF
                     </button>
                 </div>
             </div>
@@ -379,66 +890,79 @@
 <!-- 🎯 JavaScript -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // عدادات متحركة للبوكسات - مع التعامل مع NaN
+    
+    // ============================================================
+    // ✅ الكاونترات المتحركة
+    // ============================================================
     const counters = document.querySelectorAll('.counter');
-    counters.forEach(counter => {
+    
+    const animateCounter = (counter) => {
         let target = parseFloat(counter.getAttribute('data-target'));
         if (isNaN(target) || target === undefined) {
             target = 0;
         }
         
-        const duration = 1000;
-        const step = target / (duration / 16);
         let current = 0;
+        const duration = 1500;
+        const steps = 60;
+        const increment = Math.max(1, Math.ceil(target / steps));
+        let frame = 0;
         
         const updateCounter = () => {
-            current += step;
-            if (current < target) {
-                counter.textContent = Math.round(current).toLocaleString();
+            if (frame < steps && current < target) {
+                frame++;
+                current += increment;
+                if (current > target) current = target;
+                counter.textContent = current.toLocaleString('en-US');
                 requestAnimationFrame(updateCounter);
             } else {
-                counter.textContent = target.toLocaleString();
+                counter.textContent = target.toLocaleString('en-US');
+                counter.classList.add('counting');
             }
         };
         
-        updateCounter();
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    updateCounter();
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.2 });
+        
+        observer.observe(counter);
+    };
+    
+    counters.forEach(counter => animateCounter(counter));
+    
+    // ============================================================
+    // ✅ تأثير للزر المعطل
+    // ============================================================
+    const disabledBtns = document.querySelectorAll('.btn-show-details:disabled');
+    disabledBtns.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            this.style.animation = 'shake 0.3s ease';
+            setTimeout(() => {
+                this.style.animation = '';
+            }, 300);
+        });
     });
+    
+    // ============================================================
+    // ✅ إضافة تأثير اهتزاز
+    // ============================================================
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+    `;
+    document.head.appendChild(style);
+    
 });
 </script>
 
-<style>
-    .card {
-        border: none;
-        border-radius: 12px;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    .card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-    }
-    .table th, .table td {
-        vertical-align: middle;
-    }
-    .badge {
-        font-size: 0.9rem;
-        padding: 0.4rem 0.7rem;
-    }
-    .btn-sm {
-        padding: 0.2rem 0.6rem;
-    }
-    .table-responsive {
-        max-height: 600px;
-        overflow-y: auto;
-    }
-    .table thead th {
-        position: sticky;
-        top: 0;
-        z-index: 10;
-        background-color: #0d6efd;
-        color: white;
-    }
-    .text-success {
-        color: #198754 !important;
-    }
-</style>
 {% endblock %}

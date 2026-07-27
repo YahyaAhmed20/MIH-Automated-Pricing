@@ -4,93 +4,583 @@
 {% block title %}{{ status_name }} - {{ doctor_name }}{% endblock %}
 
 {% block content %}
-<div class="container-fluid mt-3">
-    <!-- 🔙 زر العودة -->
-    <div class="row mb-3">
-        <div class="col-md-8">
-            <a href="{% url 'doctor_detail' doctor_name %}" class="btn btn-outline-secondary">
-                <i class="fas fa-arrow-right"></i> العودة إلى تفاصيل الطبيب
+
+<style>
+    /* ✅ البوكسات الإحصائية - تصميم احترافي بألوان متمايزة */
+    .stats-box {
+        border-radius: 20px;
+        padding: 1.8rem 1.5rem;
+        text-align: center;
+        color: #fff;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+        min-height: 160px;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        will-change: transform;
+        border: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .stats-box::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 100%;
+        height: 100%;
+        background: rgba(255,255,255,0.05);
+        border-radius: 50%;
+        transform: rotate(25deg);
+        pointer-events: none;
+    }
+    
+    .stats-box:hover {
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    }
+    
+    .stats-box:active {
+        transform: scale(0.97);
+    }
+    
+    .stats-box .stats-number {
+        font-size: 3rem;
+        font-weight: 800;
+        text-shadow: 0 2px 15px rgba(0,0,0,0.15);
+        line-height: 1.2;
+        transition: all 0.3s ease;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .stats-box .stats-number.counting {
+        animation: pulse 0.5s ease;
+    }
+    
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.08); }
+        100% { transform: scale(1); }
+    }
+    
+    .stats-box .stats-label {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-top: 8px;
+        opacity: 0.95;
+        letter-spacing: 0.5px;
+        line-height: 1.4;
+        max-width: 90%;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .stats-box .stats-icon {
+        font-size: 2.2rem;
+        margin-bottom: 8px;
+        opacity: 0.85;
+        line-height: 1;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .stats-box .btn-show-details {
+        margin-top: 12px;
+        padding: 0.3rem 1.2rem;
+        border-radius: 50px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        background: rgba(255,255,255,0.2);
+        color: #fff;
+        border: 1px solid rgba(255,255,255,0.25);
+        transition: all 0.3s ease;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+        position: relative;
+        z-index: 1;
+        backdrop-filter: blur(5px);
+    }
+    
+    .stats-box .btn-show-details:hover {
+        background: rgba(255,255,255,0.35);
+        transform: scale(1.05);
+        color: #fff;
+    }
+    
+    .stats-box .btn-show-details:active {
+        transform: scale(0.95);
+    }
+    
+    .stats-box .btn-show-details:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+    }
+    
+    .stats-box .btn-show-details:disabled:hover {
+        background: rgba(255,255,255,0.2);
+        transform: none;
+    }
+    
+    /* ✅ ألوان متمايزة لكل كرت - حسب الحالة */
+    .stats-box-status {
+        background: var(--status-gradient);
+        color: var(--status-text);
+    }
+    
+    .stats-box-cost {
+        background: linear-gradient(135deg, #198754, #157347);
+        color: white;
+    }
+    
+    /* ✅ جعل جميع الكروت في الصف بنفس الارتفاع */
+    .row.g-4 {
+        display: flex;
+        flex-wrap: wrap;
+    }
+    
+    .row.g-4 > [class*="col-"] {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .row.g-4 > [class*="col-"] .stats-box {
+        flex: 1;
+    }
+    
+    /* ✅ تحسين Responsive - للكروت */
+    @media (max-width: 992px) {
+        .stats-box .stats-number {
+            font-size: 2.4rem;
+        }
+        .stats-box {
+            min-height: 140px;
+            padding: 1.2rem 1rem;
+            border-radius: 16px;
+        }
+        .stats-box .stats-label {
+            font-size: 0.85rem;
+        }
+        .stats-box .stats-icon {
+            font-size: 1.8rem;
+        }
+        .stats-box .btn-show-details {
+            font-size: 0.7rem;
+            padding: 0.2rem 1rem;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .stats-box .stats-number {
+            font-size: 2rem;
+        }
+        .stats-box {
+            min-height: 120px;
+            padding: 1rem 0.8rem;
+            border-radius: 14px;
+        }
+        .stats-box .stats-label {
+            font-size: 0.75rem;
+            margin-top: 4px;
+        }
+        .stats-box .stats-icon {
+            font-size: 1.5rem;
+            margin-bottom: 4px;
+        }
+        .stats-box .btn-show-details {
+            font-size: 0.6rem;
+            padding: 0.15rem 0.8rem;
+            margin-top: 6px;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .stats-box {
+            min-height: 100px;
+            padding: 0.6rem 0.4rem;
+            border-radius: 12px;
+        }
+        .stats-box .stats-number {
+            font-size: 1.5rem;
+        }
+        .stats-box .stats-label {
+            font-size: 0.65rem;
+            margin-top: 2px;
+        }
+        .stats-box .stats-icon {
+            font-size: 1.2rem;
+            margin-bottom: 2px;
+        }
+        .stats-box .btn-show-details {
+            font-size: 0.5rem;
+            padding: 0.1rem 0.5rem;
+            margin-top: 4px;
+        }
+    }
+    
+    /* ✅ تنسيق الجدول */
+    .card {
+        border: none;
+        border-radius: 20px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        overflow: hidden;
+    }
+    
+    .card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    }
+    
+    .table th, .table td {
+        vertical-align: middle;
+    }
+    
+    .badge {
+        font-size: 0.85rem;
+        padding: 0.35rem 0.6rem;
+        border-radius: 12px;
+    }
+    
+    .btn-sm {
+        padding: 0.2rem 0.6rem;
+        border-radius: 10px;
+        font-size: 0.75rem;
+    }
+    
+    .table-responsive {
+        max-height: 600px;
+        overflow-y: auto;
+        border-radius: 12px;
+    }
+    
+    .table thead th {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        border-bottom: 2px solid rgba(0,0,0,0.1);
+        font-size: 0.85rem;
+        padding: 0.8rem 0.6rem;
+    }
+    
+    .table tfoot td {
+        background: #f8f9fa;
+        font-weight: 700;
+        border-top: 2px solid #0d6efd;
+    }
+    
+    .table tbody tr:hover {
+        background: rgba(0,0,0,0.02);
+    }
+    
+    /* ✅ تنسيق الـ Modal - داعم للموبايل */
+    .modal-content {
+        border-radius: 20px;
+        border: none;
+        overflow: hidden;
+    }
+    
+    .modal-header {
+        border: none;
+        padding: 1rem 1.5rem;
+    }
+    
+    .modal-header .btn-close {
+        filter: brightness(0) invert(1);
+    }
+    
+    .modal-footer {
+        border: none;
+        padding: 1rem 1.5rem;
+        background: #f8f9fa;
+        border-radius: 0 0 20px 20px;
+    }
+    
+    .modal-body {
+        padding: 1.5rem;
+    }
+    
+    .modal-body p {
+        margin-bottom: 0.6rem;
+        font-size: 0.95rem;
+        display: flex;
+        align-items: flex-start;
+        gap: 6px;
+    }
+    
+    .modal-body p strong {
+        min-width: 100px;
+        display: inline-block;
+        color: #495057;
+    }
+    
+    /* ✅ تنسيق الـ Modal في الموبايل */
+    @media (max-width: 768px) {
+        .modal-dialog {
+            margin: 10px;
+            max-width: 100%;
+        }
+        .modal-content {
+            border-radius: 16px;
+        }
+        .modal-header {
+            padding: 0.8rem 1rem;
+        }
+        .modal-header h5 {
+            font-size: 1rem;
+        }
+        .modal-body {
+            padding: 1rem;
+        }
+        .modal-body p {
+            font-size: 0.85rem;
+            flex-wrap: wrap;
+        }
+        .modal-body p strong {
+            min-width: 80px;
+            font-size: 0.8rem;
+        }
+        .modal-footer {
+            padding: 0.8rem 1rem;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .modal-footer .btn {
+            font-size: 0.8rem;
+            padding: 0.3rem 0.8rem;
+            flex: 1;
+            min-width: 80px;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .modal-dialog {
+            margin: 5px;
+        }
+        .modal-content {
+            border-radius: 12px;
+        }
+        .modal-header {
+            padding: 0.6rem 0.8rem;
+        }
+        .modal-header h5 {
+            font-size: 0.9rem;
+        }
+        .modal-body {
+            padding: 0.8rem;
+        }
+        .modal-body p {
+            font-size: 0.75rem;
+            margin-bottom: 0.4rem;
+        }
+        .modal-body p strong {
+            min-width: 65px;
+            font-size: 0.7rem;
+        }
+        .modal-footer {
+            padding: 0.6rem 0.8rem;
+        }
+        .modal-footer .btn {
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
+            min-width: 60px;
+        }
+    }
+    
+    /* ✅ تنسيق Pagination */
+    .pagination .page-link {
+        border-radius: 10px;
+        margin: 0 3px;
+        border: none;
+        color: #0d6efd;
+        font-size: 0.9rem;
+    }
+    
+    .pagination .page-item.active .page-link {
+        background: linear-gradient(135deg, #0d6efd, #0a58ca);
+        color: white;
+    }
+    
+    .pagination .page-link:hover {
+        background: #e7f1ff;
+    }
+    
+    /* ✅ تنسيق العنوان */
+    .header-title {
+        background: linear-gradient(135deg, #0d6efd, #0a58ca);
+        padding: 0.4rem 1.2rem;
+        border-radius: 15px;
+        color: white;
+        display: inline-block;
+        font-size: 1.1rem;
+    }
+    
+    .status-badge-large {
+        padding: 0.4rem 1.2rem;
+        border-radius: 50px;
+        font-size: 1rem;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        border: 1px solid rgba(255,255,255,0.2);
+    }
+    
+    /* ✅ تنسيق الجدول في الموبايل */
+    @media (max-width: 768px) {
+        .table-responsive {
+            max-height: 400px;
+        }
+        .table thead th {
+            font-size: 0.7rem;
+            padding: 0.4rem 0.3rem;
+        }
+        .table td {
+            font-size: 0.7rem;
+            padding: 0.3rem 0.2rem;
+        }
+        .badge {
+            font-size: 0.6rem;
+            padding: 0.2rem 0.4rem;
+        }
+        .btn-sm {
+            font-size: 0.6rem;
+            padding: 0.1rem 0.4rem;
+        }
+        .header-title {
+            font-size: 1rem;
+            padding: 0.3rem 1rem;
+        }
+        .status-badge-large {
+            font-size: 0.8rem;
+            padding: 0.3rem 0.8rem;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .table thead th {
+            font-size: 0.55rem;
+            padding: 0.2rem 0.15rem;
+        }
+        .table td {
+            font-size: 0.55rem;
+            padding: 0.2rem 0.15rem;
+        }
+        .badge {
+            font-size: 0.5rem;
+            padding: 0.1rem 0.25rem;
+        }
+        .btn-sm {
+            font-size: 0.5rem;
+            padding: 0.05rem 0.25rem;
+        }
+        .status-badge-large {
+            font-size: 0.7rem;
+            padding: 0.2rem 0.6rem;
+        }
+    }
+</style>
+
+<div class="container-fluid py-3">
+    
+    <!-- 🔙 زر العودة + العنوان -->
+    <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+        <div class="d-flex align-items-center gap-2 flex-wrap">
+            <a href="{% url 'doctor_detail' doctor_name %}" class="btn btn-outline-secondary btn-sm">
+                <i class="fas fa-arrow-right me-1"></i> العودة
             </a>
-            <h4 class="d-inline-block ms-3 fw-bold" style="color: #0d6efd;">
-                <i class="fas fa-user-md"></i> {{ doctor_name }}
+            <h4 class="fw-bold mb-0 header-title">
+                <i class="fas fa-user-md me-2"></i>
+                {{ doctor_name }}
             </h4>
-            <span class="badge bg-info">{{ doctor_info.specialty|default:"بدون تخصص" }}</span>
+            <span class="badge bg-info text-white fs-6 p-2">
+                <i class="fas fa-stethoscope me-1"></i>
+                {{ doctor_info.specialty|default:"بدون تخصص" }}
+            </span>
         </div>
-        <div class="col-md-4 text-end">
-            <span class="badge bg-{{ status_color }} fs-6 p-2">
-                <i class="fas {{ status_icon }}"></i> {{ status_name }}
+        <div>
+            <span class="status-badge-large" style="background: {{ status_gradient }}; color: {{ status_text }};">
+                <i class="fas {{ status_icon }}"></i>
+                {{ status_name }}
+                <span class="badge {% if status_color == 'warning' or status_color == 'light' %}bg-dark text-white{% else %}bg-white text-dark{% endif %} ms-2">{{ total_count }}</span>
             </span>
         </div>
     </div>
 
-    <!-- 📊 البطاقات العلوية -->
-    <div class="row mb-4 g-3">
-        <div class="col-md-6">
-            <div class="card bg-{{ status_color }} text-white shadow-sm">
-                <div class="card-body d-flex align-items-center">
-                    <div class="me-3">
-                        <i class="fas {{ status_icon }} fa-3x opacity-50"></i>
-                    </div>
-                    <div>
-                        <h6 class="card-title mb-1">إجمالي الحالات</h6>
-                        <h2 class="card-text fw-bold">{{ total_count }}</h2>
-                    </div>
-                </div>
+    <!-- 📊 البوكسات العلوية - بتصميم احترافي -->
+    <div class="row g-4 mb-4">
+        
+        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+            <div class="stats-box stats-box-status" style="--status-gradient: {{ status_gradient }}; --status-text: {{ status_text }};">
+                <div class="stats-icon"><i class="fas {{ status_icon }}"></i></div>
+                <div class="stats-number counter" data-target="{{ total_count }}">0</div>
+                <div class="stats-label">إجمالي الحالات - {{ status_name }}</div>
+               
             </div>
         </div>
-        <div class="col-md-6">
-            <div class="card bg-success text-white shadow-sm">
-                <div class="card-body d-flex align-items-center">
-                    <div class="me-3">
-                        <i class="fas fa-money-bill-wave fa-3x opacity-50"></i>
-                    </div>
-                    <div>
-                        <h6 class="card-title mb-1">إجمالي التكلفة</h6>
-                        <h2 class="card-text fw-bold">{{ total_cost }}</h2>
-                    </div>
-                </div>
+        
+        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+            <div class="stats-box stats-box-cost">
+                <div class="stats-icon"><i class="fas fa-money-bill-wave"></i></div>
+                <!-- ✅ data-target بدون فواصل عشان الكاونتر يشتغل صح -->
+                <div class="stats-number counter" data-target="{{ total_cost_raw }}">0</div>
+                <div class="stats-label">إجمالي التكلفة</div>
+               
             </div>
         </div>
+        
     </div>
 
     <!-- 📋 جدول تفاصيل الحالات -->
     <div class="row">
         <div class="col-12">
             <div class="card shadow-sm">
-                <div class="card-header bg-{{ status_color }} text-white d-flex justify-content-between align-items-center">
+                <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2" 
+                     style="background: {{ status_gradient }}; color: {{ status_text }}; border-radius: 20px 20px 0 0; border: none;">
                     <h5 class="mb-0">
-                        <i class="fas fa-list"></i> 
+                        <i class="fas fa-list me-2"></i> 
                         {{ status_name }}
-                        <span class="badge bg-light text-dark ms-2">{{ cases|length }}</span>
                     </h5>
+                    <span class="badge {% if status_color == 'warning' or status_color == 'light' %}bg-dark text-white{% else %}bg-white text-dark{% endif %} fs-6">
+                        {{ cases|length }} حالة
+                    </span>
                 </div>
                 <div class="card-body">
                     {% if cases %}
                     <div class="table-responsive">
                         <table class="table table-striped table-hover" id="casesTable">
-                            <thead class="table-{{ status_color }}">
-                                <tr>
+                            <thead>
+                                <tr style="background: {{ status_gradient }}20; color: {{ status_text }};">
                                     <th>#</th>
                                     <th>اسم المريض</th>
                                     <th>الإجراء</th>
                                     <th>الجهة</th>
                                     <th>تاريخ الدخول</th>
-                                    <th>عرض المزيد</th>
+                                    <th>عرض</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {% for case in cases %}
                                 <tr>
-                                    <td>{{ forloop.counter }}</td>
+                                    <td class="fw-bold">{{ forloop.counter }}</td>
                                     <td class="fw-bold">{{ case.patient_name }}</td>
                                     <td>{{ case.procedure|truncatechars:35 }}</td>
                                     <td>{{ case.company }}</td>
-                                    <td>{{ case.admission_date }}</td>
+                                    <td>{{ case.admission_date|default:"-" }}</td>
                                     <td>
-                                        <button class="btn btn-sm btn-outline-{{ status_color }}" 
+                                        <button class="btn btn-sm" 
+                                                style="background: {{ status_gradient }}; color: {{ status_text }}; border: none;"
                                                 data-bs-toggle="modal" 
                                                 data-bs-target="#caseModal{{ case.id }}">
-                                            <i class="fas fa-chevron-down"></i> عرض
+                                            <i class="fas fa-chevron-down me-1"></i>
+                                            <span class="d-none d-sm-inline">عرض</span>
                                         </button>
                                     </td>
                                 </tr>
@@ -107,8 +597,9 @@
                     </div>
                     {% else %}
                     <div class="text-center py-5">
-                        <i class="fas fa-info-circle fa-3x text-muted"></i>
+                        <i class="fas fa-info-circle fa-3x text-muted opacity-50"></i>
                         <h5 class="text-muted mt-3">لا توجد حالات</h5>
+                        <small class="text-muted">لا توجد حالات بهذه الحالة للطبيب {{ doctor_name }}</small>
                     </div>
                     {% endif %}
 
@@ -145,47 +636,104 @@
         </div>
     </div>
 
-    <!-- 🎯 Modals لكل حالة -->
+    <!-- 🎯 Modals لكل حالة - داعم للموبايل -->
     {% for case in cases %}
-    <div class="modal fade" id="caseModal{{ case.id }}" tabindex="-1">
-        <div class="modal-dialog modal-lg">
+    <div class="modal fade" id="caseModal{{ case.id }}" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
-                <div class="modal-header bg-{{ status_color }} text-white">
+                <div class="modal-header" style="background: {{ status_gradient }}; color: {{ status_text }};">
                     <h5 class="modal-title">
-                        <i class="fas fa-file-medical"></i> تفاصيل الحالة
+                        <i class="fas fa-file-medical me-2"></i> تفاصيل الحالة
                     </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    <button type="button" class="btn-close {% if status_color == 'warning' or status_color == 'light' %}btn-close-dark{% else %}btn-close-white{% endif %}" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-6">
-                            <p><strong>👤 المريض:</strong> {{ case.patient_name }}</p>
-                            <p><strong>🆔 الرقم الطبي:</strong> {{ case.medical_number }}</p>
-                            <p><strong>🏥 الجهة:</strong> {{ case.company }}</p>
-                            <p><strong>📞 التليفون:</strong> {{ case.phone }}</p>
+                            <p><strong><i class="fas fa-user me-1"></i> المريض:</strong> {{ case.patient_name }}</p>
+                            <p><strong><i class="fas fa-id-card me-1"></i> الرقم الطبي:</strong> {{ case.medical_number }}</p>
+                            <p><strong><i class="fas fa-hospital me-1"></i> الجهة:</strong> {{ case.company }}</p>
+                            <p><strong><i class="fas fa-phone me-1"></i> التليفون:</strong> {{ case.phone }}</p>
                         </div>
                         <div class="col-md-6">
-                            <p><strong>📝 الإجراء:</strong> {{ case.procedure }}</p>
-                            <p><strong>📅 تاريخ الدخول:</strong> {{ case.admission_date }}</p>
-                            <p><strong>✅ الحالة:</strong> 
-                                <span class="badge bg-{{ status_color }}">
+                            <p><strong><i class="fas fa-syringe me-1"></i> الإجراء:</strong> {{ case.procedure }}</p>
+                            <p><strong><i class="fas fa-calendar-check me-1"></i> تاريخ الدخول:</strong> {{ case.admission_date|default:"-" }}</p>
+                            <p><strong><i class="fas fa-check-circle me-1"></i> الحالة:</strong> 
+                                <span class="badge" style="background: {{ status_gradient }}; color: {{ status_text }};">
                                     <i class="fas {{ status_icon }}"></i> {{ status_name }}
                                 </span>
                             </p>
-                            <p><strong>📄 التقرير:</strong> {{ case.report|default:"-" }}</p>
-                            <p><strong>✅ الموافقة:</strong> {{ case.approval|default:"-" }}</p>
+                            <p><strong><i class="fas fa-file-alt me-1"></i> التقرير:</strong> {{ case.report|default:"-" }}</p>
+                            <p><strong><i class="fas fa-check-double me-1"></i> الموافقة:</strong> {{ case.approval|default:"-" }}</p>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إغلاق</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-1"></i> إغلاق
+                    </button>
                     <button type="button" class="btn btn-success" onclick="window.print()">
-                        <i class="fas fa-file-pdf"></i> PDF
+                        <i class="fas fa-file-pdf me-1"></i> PDF
                     </button>
                 </div>
             </div>
         </div>
     </div>
     {% endfor %}
+    
 </div>
+
+<!-- 🎯 JavaScript -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    
+    // ============================================================
+    // ✅ الكاونترات المتحركة
+    // ============================================================
+    const counters = document.querySelectorAll('.counter');
+    
+    const animateCounter = (counter) => {
+        let target = parseFloat(counter.getAttribute('data-target'));
+        if (isNaN(target) || target === undefined) {
+            target = 0;
+        }
+        
+        let current = 0;
+        const duration = 1500;
+        const steps = 60;
+        const increment = Math.max(1, Math.ceil(target / steps));
+        let frame = 0;
+        
+        const updateCounter = () => {
+            if (frame < steps && current < target) {
+                frame++;
+                current += increment;
+                if (current > target) current = target;
+                // ✅ تنسيق الرقم بفواصل
+                counter.textContent = current.toLocaleString('en-US');
+                requestAnimationFrame(updateCounter);
+            } else {
+                // ✅ تنسيق الرقم النهائي بفواصل
+                counter.textContent = target.toLocaleString('en-US');
+                counter.classList.add('counting');
+            }
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    updateCounter();
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.2 });
+        
+        observer.observe(counter);
+    };
+    
+    counters.forEach(counter => animateCounter(counter));
+    
+});
+</script>
+
 {% endblock %}

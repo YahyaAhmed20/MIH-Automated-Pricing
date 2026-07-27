@@ -4135,3 +4135,121 @@ Watching for file changes with StatReloader
 "GET /doctors/?doctor_name=%D8%A3.%D8%AF%2F+%D9%87%D8%A8%D8%A9+%D8%A7%D8%A8%D8%B1%D8%A7%D9%87%D9%8A%D9%85+%D8%B9%D8%B7%D9%8A%D8%A9&specialty=&day_from=&month_from=&year_from=&day_to=&month_to=&year_to= HTTP/1.1" 200 56588
 "GET /doctors/?doctor_name=%D8%A3.%D8%AF%2F+%D9%87%D8%A8%D8%A9+%D8%A7%D8%A8%D8%B1%D8%A7%D9%87%D9%8A%D9%85+%D8%B9%D8%B7%D9%8A%D8%A9&specialty=%D8%A3%D9%85%D8%B1%D8%A7%D8%B6+%D8%A7%D9%84%D8%AF%D9%85&day_from=&month_from=&year_from=&day_to=&month_to=&year_to= HTTP/1.1" 200 41692
 "GET /doctors/%D8%A3.%D8%AF/%20%D9%87%D8%A8%D8%A9%20%D8%A7%D8%A8%D8%B1%D8%A7%D9%87%D9%8A%D9%85%20%D8%B9%D8%B7%D9%8A%D8%A9/ HTTP/1.1" 200 45850
+Watching for file changes with StatReloader
+"GET /doctors/%D8%A3.%D8%AF/%20%D9%87%D8%A8%D8%A9%20%D8%A7%D8%A8%D8%B1%D8%A7%D9%87%D9%8A%D9%85%20%D8%B9%D8%B7%D9%8A%D8%A9/ HTTP/1.1" 200 45850
+"GET /doctors/ HTTP/1.1" 200 213391
+"GET /pending-analysis/ HTTP/1.1" 200 184452
+"GET /external-approvals/ HTTP/1.1" 200 53845
+"GET /external-approvals/early/ HTTP/1.1" 200 106160
+"GET /doctors/ HTTP/1.1" 200 213391
+"GET /doctors/%D8%A7.%D8%AF%20/%20%D9%85%D8%A7%D8%AC%D8%AF%20%D8%A8%D9%87%D8%AC%D8%AA/ HTTP/1.1" 200 73095
+"GET /doctors/%D8%A7.%D8%AF%20/%20%D9%85%D8%A7%D8%AC%D8%AF%20%D8%A8%D9%87%D8%AC%D8%AA/ HTTP/1.1" 200 73095
+"GET /doctors/ HTTP/1.1" 200 231062
+"GET /doctors/%D8%A7.%D8%AF%20/%20%D9%85%D8%A7%D8%AC%D8%AF%20%D8%A8%D9%87%D8%AC%D8%AA/ HTTP/1.1" 200 73095
+"GET /doctors/ HTTP/1.1" 200 231062
+"GET /doctors/?doctor_name=%D8%A7.%D8%AF+%2F+%D8%A3%D8%AD%D9%85%D8%AF+%D9%8A%D8%AD%D9%8A%D9%89+%D8%A7%D8%AD%D9%85%D8%AF+%D9%81%D8%B1%D9%8A%D8%AF&specialty=&day_from=&month_from=&year_from=&day_to=&month_to=&year_to= HTTP/1.1" 200 63475
+"GET /doctors/?doctor_name=%D8%A7.%D8%AF+%2F+%D8%A3%D8%AD%D9%85%D8%AF+%D9%8A%D8%AD%D9%8A%D9%89+%D8%A7%D8%AD%D9%85%D8%AF+%D9%81%D8%B1%D9%8A%D8%AF&specialty=&day_from=&month_from=&year_from=&day_to=&month_to=&year_to= HTTP/1.1" 200 63327
+"GET /doctors/?doctor_name=%D8%A7.%D8%AF+%2F+%D8%A3%D8%AD%D9%85%D8%AF+%D9%8A%D8%AD%D9%8A%D9%89+%D8%A7%D8%AD%D9%85%D8%AF+%D9%81%D8%B1%D9%8A%D8%AF&specialty=&day_from=&month_from=&year_from=&day_to=&month_to=&year_to= HTTP/1.1" 200 63327
+"GET /doctors/?doctor_name=%D8%A7.%D8%AF+%2F+%D8%A3%D8%AD%D9%85%D8%AF+%D9%8A%D8%AD%D9%8A%D9%89+%D8%A7%D8%AD%D9%85%D8%AF+%D9%81%D8%B1%D9%8A%D8%AF&specialty=&day_from=&month_from=&year_from=&day_to=&month_to=&year_to= HTTP/1.1" 200 63181
+"GET /doctors/%D8%A7.%D8%AF%20/%20%D8%A3%D8%AD%D9%85%D8%AF%20%D9%8A%D8%AD%D9%8A%D9%89%20%D8%A7%D8%AD%D9%85%D8%AF%20%D9%81%D8%B1%D9%8A%D8%AF/ HTTP/1.1" 200 38349
+"GET /doctor/%D8%A7.%D8%AF%20/%20%D8%A3%D8%AD%D9%85%D8%AF%20%D9%8A%D8%AD%D9%8A%D9%89%20%D8%A7%D8%AD%D9%85%D8%AF%20%D9%81%D8%B1%D9%8A%D8%AF/status/approved/ HTTP/1.1" 200 31397
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 14866
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 14866
+"GET /doctors/?doctor_name=%D8%A7.%D8%AF+%2F+%D8%A3%D8%AD%D9%85%D8%AF+%D9%8A%D8%AD%D9%8A%D9%89+%D8%A7%D8%AD%D9%85%D8%AF+%D9%81%D8%B1%D9%8A%D8%AF&specialty=&day_from=&month_from=&year_from=&day_to=&month_to=&year_to= HTTP/1.1" 200 63181
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 14866
+- Broken pipe from ('127.0.0.1', 58141)
+"GET /doctors/?doctor_name=%D8%A7.%D8%AF+%2F+%D8%A3%D8%AD%D9%85%D8%AF+%D9%8A%D8%AD%D9%8A%D9%89+%D8%A7%D8%AD%D9%85%D8%AF+%D9%81%D8%B1%D9%8A%D8%AF&specialty=&day_from=&month_from=&year_from=&day_to=&month_to=&year_to= HTTP/1.1" 200 63181
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 14866
+"GET /doctors/%D8%A7.%D8%AF%20/%20%D8%A3%D8%AD%D9%85%D8%AF%20%D9%8A%D8%AD%D9%8A%D9%89%20%D8%A7%D8%AD%D9%85%D8%AF%20%D9%81%D8%B1%D9%8A%D8%AF/ HTTP/1.1" 200 38349
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 14866
+"GET /doctors/%D8%A7.%D8%AF%20/%20%D8%A3%D8%AD%D9%85%D8%AF%20%D9%8A%D8%AD%D9%8A%D9%89%20%D8%A7%D8%AD%D9%85%D8%AF%20%D9%81%D8%B1%D9%8A%D8%AF/ HTTP/1.1" 200 48369
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 14866
+"GET /doctors/%D8%A7.%D8%AF%20/%20%D8%A3%D8%AD%D9%85%D8%AF%20%D9%8A%D8%AD%D9%8A%D9%89%20%D8%A7%D8%AD%D9%85%D8%AF%20%D9%81%D8%B1%D9%8A%D8%AF/ HTTP/1.1" 200 48369
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 14866
+"GET /doctor/%D8%A7.%D8%AF%20/%20%D8%A3%D8%AD%D9%85%D8%AF%20%D9%8A%D8%AD%D9%8A%D9%89%20%D8%A7%D8%AD%D9%85%D8%AF%20%D9%81%D8%B1%D9%8A%D8%AF/status/approved/ HTTP/1.1" 200 31397
+"GET /doctors/%D8%A7.%D8%AF%20/%20%D8%A3%D8%AD%D9%85%D8%AF%20%D9%8A%D8%AD%D9%8A%D9%89%20%D8%A7%D8%AD%D9%85%D8%AF%20%D9%81%D8%B1%D9%8A%D8%AF/ HTTP/1.1" 200 48369
+"GET /doctor/%D8%A7.%D8%AF%20/%20%D8%A3%D8%AD%D9%85%D8%AF%20%D9%8A%D8%AD%D9%8A%D9%89%20%D8%A7%D8%AD%D9%85%D8%AF%20%D9%81%D8%B1%D9%8A%D8%AF/status/approved/ HTTP/1.1" 200 42171
+"GET /doctor/%D8%A7.%D8%AF%20/%20%D8%A3%D8%AD%D9%85%D8%AF%20%D9%8A%D8%AD%D9%8A%D9%89%20%D8%A7%D8%AD%D9%85%D8%AF%20%D9%81%D8%B1%D9%8A%D8%AF/status/approved/ HTTP/1.1" 200 31397
+"GET /doctor/%D8%A7.%D8%AF%20/%20%D8%A3%D8%AD%D9%85%D8%AF%20%D9%8A%D8%AD%D9%8A%D9%89%20%D8%A7%D8%AD%D9%85%D8%AF%20%D9%81%D8%B1%D9%8A%D8%AF/status/approved/ HTTP/1.1" 200 42809
+"GET /doctor/%D8%A7.%D8%AF%20/%20%D8%A3%D8%AD%D9%85%D8%AF%20%D9%8A%D8%AD%D9%8A%D9%89%20%D8%A7%D8%AD%D9%85%D8%AF%20%D9%81%D8%B1%D9%8A%D8%AF/status/approved/ HTTP/1.1" 200 42809
+"GET /doctor/%D8%A7.%D8%AF%20/%20%D8%A3%D8%AD%D9%85%D8%AF%20%D9%8A%D8%AD%D9%8A%D9%89%20%D8%A7%D8%AD%D9%85%D8%AF%20%D9%81%D8%B1%D9%8A%D8%AF/status/serv_done/ HTTP/1.1" 200 42938
+"GET /doctor/%D8%A7.%D8%AF%20/%20%D8%A3%D8%AD%D9%85%D8%AF%20%D9%8A%D8%AD%D9%8A%D9%89%20%D8%A7%D8%AD%D9%85%D8%AF%20%D9%81%D8%B1%D9%8A%D8%AF/status/approved/ HTTP/1.1" 200 42809
+"GET /doctors/%D8%A7.%D8%AF%20/%20%D8%A3%D8%AD%D9%85%D8%AF%20%D9%8A%D8%AD%D9%8A%D9%89%20%D8%A7%D8%AD%D9%85%D8%AF%20%D9%81%D8%B1%D9%8A%D8%AF/ HTTP/1.1" 200 48369
+"GET /doctor/%D8%A7.%D8%AF%20/%20%D8%A3%D8%AD%D9%85%D8%AF%20%D9%8A%D8%AD%D9%8A%D9%89%20%D8%A7%D8%AD%D9%85%D8%AF%20%D9%81%D8%B1%D9%8A%D8%AF/status/approved/ HTTP/1.1" 200 42809
+"GET /doctor/%D8%A7.%D8%AF%20/%20%D8%A3%D8%AD%D9%85%D8%AF%20%D9%8A%D8%AD%D9%8A%D9%89%20%D8%A7%D8%AD%D9%85%D8%AF%20%D9%81%D8%B1%D9%8A%D8%AF/status/approved/ HTTP/1.1" 200 42461
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 14866
+"GET /doctors/%D8%A7.%D8%AF%20/%20%D8%A3%D8%AD%D9%85%D8%AF%20%D9%8A%D8%AD%D9%8A%D9%89%20%D8%A7%D8%AD%D9%85%D8%AF%20%D9%81%D8%B1%D9%8A%D8%AF/ HTTP/1.1" 200 48369
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 14866
+"GET /doctor/%D8%A7.%D8%AF%20/%20%D8%A3%D8%AD%D9%85%D8%AF%20%D9%8A%D8%AD%D9%8A%D9%89%20%D8%A7%D8%AD%D9%85%D8%AF%20%D9%81%D8%B1%D9%8A%D8%AF/status/serv_done/ HTTP/1.1" 200 42590
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 14866
+- Broken pipe from ('127.0.0.1', 61949)
+"GET /doctors/ HTTP/1.1" 200 230768
+"GET /doctors/%D8%A7.%D8%AF%20/%20%D9%85%D8%A7%D8%AC%D8%AF%20%D8%A8%D9%87%D8%AC%D8%AA/ HTTP/1.1" 200 89004
+"GET /doctor/%D8%A7.%D8%AF%20/%20%D9%85%D8%A7%D8%AC%D8%AF%20%D8%A8%D9%87%D8%AC%D8%AA/status/patient_refused/ HTTP/1.1" 200 42389
+"GET /doctors/%D8%A7.%D8%AF%20/%20%D9%85%D8%A7%D8%AC%D8%AF%20%D8%A8%D9%87%D8%AC%D8%AA/ HTTP/1.1" 200 89004
+"GET /doctor/%D8%A7.%D8%AF%20/%20%D9%85%D8%A7%D8%AC%D8%AF%20%D8%A8%D9%87%D8%AC%D8%AA/status/serv_done/ HTTP/1.1" 200 120026
+"GET /doctor/%D8%A7.%D8%AF%20/%20%D9%85%D8%A7%D8%AC%D8%AF%20%D8%A8%D9%87%D8%AC%D8%AA/status/patient_refused/ HTTP/1.1" 200 42389
+"GET /doctors/%D8%A7.%D8%AF%20/%20%D9%85%D8%A7%D8%AC%D8%AF%20%D8%A8%D9%87%D8%AC%D8%AA/ HTTP/1.1" 200 89004
+"GET /doctors/%D8%A7.%D8%AF%20/%20%D9%85%D8%A7%D8%AC%D8%AF%20%D8%A8%D9%87%D8%AC%D8%AA/ HTTP/1.1" 200 89004
+"GET /doctor/%D8%A7.%D8%AF%20/%20%D9%85%D8%A7%D8%AC%D8%AF%20%D8%A8%D9%87%D8%AC%D8%AA/status/approved/ HTTP/1.1" 200 50563
+Watching for file changes with StatReloader
+"GET /doctors/%D8%A7.%D8%AF%20/%20%D9%85%D8%A7%D8%AC%D8%AF%20%D8%A8%D9%87%D8%AC%D8%AA/ HTTP/1.1" 200 89004
+"GET /doctors/ HTTP/1.1" 200 213391
+"GET /doctors/ HTTP/1.1" 200 230768
+"GET /doctors/%D8%A7.%D8%AF%20/%20%D9%85%D8%A7%D8%AC%D8%AF%20%D8%A8%D9%87%D8%AC%D8%AA/ HTTP/1.1" 200 89004
+"GET /doctors/%D8%A7.%D8%AF%20/%20%D9%85%D8%A7%D8%AC%D8%AF%20%D8%A8%D9%87%D8%AC%D8%AA/ HTTP/1.1" 200 73095
+"GET /doctors/%D8%A7.%D8%AF%20/%20%D9%85%D8%A7%D8%AC%D8%AF%20%D8%A8%D9%87%D8%AC%D8%AA/ HTTP/1.1" 200 89004
+"GET /doctors/%D8%A7.%D8%AF%20/%20%D9%85%D8%A7%D8%AC%D8%AF%20%D8%A8%D9%87%D8%AC%D8%AA/ HTTP/1.1" 200 89004
+"GET /doctors/%D8%A7.%D8%AF%20/%20%D9%85%D8%A7%D8%AC%D8%AF%20%D8%A8%D9%87%D8%AC%D8%AA/ HTTP/1.1" 200 73095
+"GET /doctors/%D8%A7.%D8%AF%20/%20%D9%85%D8%A7%D8%AC%D8%AF%20%D8%A8%D9%87%D8%AC%D8%AA/ HTTP/1.1" 200 92578
+"GET /doctor/%D8%A7.%D8%AF%20/%20%D9%85%D8%A7%D8%AC%D8%AF%20%D8%A8%D9%87%D8%AC%D8%AA/status/approved/ HTTP/1.1" 200 50563
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 14866
+"GET /doctors/ HTTP/1.1" 200 230768
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 14866
+"GET /doctors/%D8%AF/%20%D9%85%D8%AD%D9%85%D8%AF%20%D8%AD%D9%84%D9%85%D9%89%20%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D8%BA%D9%81%D8%A7%D8%B1/ HTTP/1.1" 200 75111
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 14866
+"GET /doctor/%D8%AF/%20%D9%85%D8%AD%D9%85%D8%AF%20%D8%AD%D9%84%D9%85%D9%89%20%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D8%BA%D9%81%D8%A7%D8%B1/status/serv_done/ HTTP/1.1" 200 34613
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 14866
+"GET /doctors/%D8%AF/%20%D9%85%D8%AD%D9%85%D8%AF%20%D8%AD%D9%84%D9%85%D9%89%20%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D8%BA%D9%81%D8%A7%D8%B1/ HTTP/1.1" 200 75111
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 14866
+"GET /doctor/%D8%AF/%20%D9%85%D8%AD%D9%85%D8%AF%20%D8%AD%D9%84%D9%85%D9%89%20%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D8%BA%D9%81%D8%A7%D8%B1/status/pending/ HTTP/1.1" 200 34682
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 14866
+"GET /doctor/%D8%AF/%20%D9%85%D8%AD%D9%85%D8%AF%20%D8%AD%D9%84%D9%85%D9%89%20%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D8%BA%D9%81%D8%A7%D8%B1/status/pending/ HTTP/1.1" 200 50114
+"GET /doctor/%D8%AF/%20%D9%85%D8%AD%D9%85%D8%AF%20%D8%AD%D9%84%D9%85%D9%89%20%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D8%BA%D9%81%D8%A7%D8%B1/status/pending/ HTTP/1.1" 200 34682
+"GET /doctor/%D8%AF/%20%D9%85%D8%AD%D9%85%D8%AF%20%D8%AD%D9%84%D9%85%D9%89%20%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D8%BA%D9%81%D8%A7%D8%B1/status/pending/ HTTP/1.1" 200 34682
+"GET /doctor/%D8%AF/%20%D9%85%D8%AD%D9%85%D8%AF%20%D8%AD%D9%84%D9%85%D9%89%20%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D8%BA%D9%81%D8%A7%D8%B1/status/pending/ HTTP/1.1" 200 50114
+"GET /doctor/%D8%AF/%20%D9%85%D8%AD%D9%85%D8%AF%20%D8%AD%D9%84%D9%85%D9%89%20%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D8%BA%D9%81%D8%A7%D8%B1/status/pending/ HTTP/1.1" 200 50228
+"GET /doctor/%D8%AF/%20%D9%85%D8%AD%D9%85%D8%AF%20%D8%AD%D9%84%D9%85%D9%89%20%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D8%BA%D9%81%D8%A7%D8%B1/status/pending/ HTTP/1.1" 200 50228
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /doctor/%D8%AF/%20%D9%85%D8%AD%D9%85%D8%AF%20%D8%AD%D9%84%D9%85%D9%89%20%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D8%BA%D9%81%D8%A7%D8%B1/status/pending/ HTTP/1.1" 200 50721
+"GET /doctor/%D8%AF/%20%D9%85%D8%AD%D9%85%D8%AF%20%D8%AD%D9%84%D9%85%D9%89%20%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D8%BA%D9%81%D8%A7%D8%B1/status/pending/ HTTP/1.1" 200 34682
+"GET /doctor/%D8%AF/%20%D9%85%D8%AD%D9%85%D8%AF%20%D8%AD%D9%84%D9%85%D9%89%20%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D8%BA%D9%81%D8%A7%D8%B1/status/pending/ HTTP/1.1" 200 34682
+"GET /doctor/%D8%AF/%20%D9%85%D8%AD%D9%85%D8%AF%20%D8%AD%D9%84%D9%85%D9%89%20%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D8%BA%D9%81%D8%A7%D8%B1/status/pending/ HTTP/1.1" 200 50721
+"GET /doctor/%D8%AF/%20%D9%85%D8%AD%D9%85%D8%AF%20%D8%AD%D9%84%D9%85%D9%89%20%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D8%BA%D9%81%D8%A7%D8%B1/status/pending/ HTTP/1.1" 200 50370
+"GET /doctors/%D8%AF/%20%D9%85%D8%AD%D9%85%D8%AF%20%D8%AD%D9%84%D9%85%D9%89%20%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D8%BA%D9%81%D8%A7%D8%B1/ HTTP/1.1" 200 75111
+"GET /doctor/%D8%AF/%20%D9%85%D8%AD%D9%85%D8%AF%20%D8%AD%D9%84%D9%85%D9%89%20%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D8%BA%D9%81%D8%A7%D8%B1/status/patient_refused/ HTTP/1.1" 200 46193
+"GET /doctors/%D8%AF/%20%D9%85%D8%AD%D9%85%D8%AF%20%D8%AD%D9%84%D9%85%D9%89%20%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D8%BA%D9%81%D8%A7%D8%B1/ HTTP/1.1" 200 75111
+"GET /doctors/ HTTP/1.1" 200 230768
+"GET /doctors/%D8%A7.%D8%AF%20/%20%D8%A7%D9%8A%D9%87%D8%A7%D8%A8%20%D8%A7%D9%84%D8%B1%D9%81%D8%A7%D8%B9%D9%89/ HTTP/1.1" 200 74942
+"GET /doctor/%D8%A7.%D8%AF%20/%20%D8%A7%D9%8A%D9%87%D8%A7%D8%A8%20%D8%A7%D9%84%D8%B1%D9%81%D8%A7%D8%B9%D9%89/status/serv_done/ HTTP/1.1" 200 75162
+"GET /doctor/%D8%A7.%D8%AF%20/%20%D8%A7%D9%8A%D9%87%D8%A7%D8%A8%20%D8%A7%D9%84%D8%B1%D9%81%D8%A7%D8%B9%D9%89/status/approved/ HTTP/1.1" 200 50292
+"GET /package-comparison/ HTTP/1.1" 200 2249042
+"GET /ajax/package-filters/?source=sheet15&year=2025 HTTP/1.1" 200 60902
+"GET /ajax/package-filters/?source=sheet15&year=2025 HTTP/1.1" 200 60902

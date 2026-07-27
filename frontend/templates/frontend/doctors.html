@@ -4,30 +4,368 @@
 {% block title %}الأطباء{% endblock %}
 
 {% block content %}
-<div class="container-fluid mt-3">
+
+<style>
+    /* ✅ البوكسات الإحصائية - مقاس موحد (نفس استايل الصفحة الأولى) */
+    .stats-box {
+        border-radius: 20px;
+        padding: 1.8rem 1.5rem;
+        text-align: center;
+        color: #fff;
+        transition: all 0.4s ease;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+        min-height: 180px;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        will-change: transform;
+    }
+    
+    .stats-box:hover {
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: 0 15px 50px rgba(0,0,0,0.25);
+    }
+    
+    .stats-box:active {
+        transform: scale(0.97);
+    }
+    
+    .stats-box .stats-number {
+        font-size: 3rem;
+        font-weight: 800;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        line-height: 1.2;
+        transition: all 0.3s ease;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    .stats-box .stats-number.counting {
+        animation: pulse 0.5s ease;
+    }
+    
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); }
+    }
+    
+    .stats-box .stats-label {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-top: 8px;
+        opacity: 0.95;
+        letter-spacing: 0.5px;
+        line-height: 1.4;
+        max-width: 90%;
+    }
+    
+    .stats-box .stats-icon {
+        font-size: 2.2rem;
+        margin-bottom: 8px;
+        opacity: 0.8;
+        line-height: 1;
+    }
+    
+    .stats-box .btn-show-details {
+        margin-top: 12px;
+        padding: 0.3rem 1.2rem;
+        border-radius: 50px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        background: rgba(255,255,255,0.2);
+        color: #fff;
+        border: 1px solid rgba(255,255,255,0.3);
+        transition: all 0.3s ease;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+    }
+    
+    .stats-box .btn-show-details:hover {
+        background: rgba(255,255,255,0.35);
+        transform: scale(1.05);
+        color: #fff;
+    }
+    
+    .stats-box .btn-show-details:active {
+        transform: scale(0.95);
+    }
+    
+    /* ✅ جعل جميع الكروت في الصف بنفس الارتفاع */
+    .row.g-4 {
+        display: flex;
+        flex-wrap: wrap;
+    }
+    
+    .row.g-4 > [class*="col-"] {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .row.g-4 > [class*="col-"] .stats-box {
+        flex: 1;
+    }
+    
+    /* ✅ تحسين Responsive - للكروت */
+    @media (max-width: 768px) {
+        .stats-box .stats-number {
+            font-size: 2.2rem;
+        }
+        .stats-box {
+            min-height: 150px;
+            padding: 1.2rem 1rem;
+        }
+        .stats-box .stats-label {
+            font-size: 0.85rem;
+        }
+        .stats-box .stats-icon {
+            font-size: 1.8rem;
+        }
+        .stats-box .btn-show-details {
+            font-size: 0.7rem;
+            padding: 0.2rem 1rem;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .stats-box {
+            min-height: 120px;
+            padding: 0.75rem 0.5rem;
+            border-radius: 15px;
+        }
+        .stats-box .stats-number {
+            font-size: 1.6rem;
+        }
+        .stats-box .stats-label {
+            font-size: 0.7rem;
+            margin-top: 4px;
+        }
+        .stats-box .stats-icon {
+            font-size: 1.4rem;
+            margin-bottom: 4px;
+        }
+        .stats-box .btn-show-details {
+            font-size: 0.6rem;
+            padding: 0.15rem 0.6rem;
+            margin-top: 6px;
+        }
+    }
+    
+    /* ✅ تنسيق الفلاتر */
+    .filter-card {
+        border-radius: 20px;
+        border: none;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+    
+    .filter-card:hover {
+        box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+    }
+    
+    .filter-card .card-header {
+        background: linear-gradient(135deg, #0d6efd, #0a58ca);
+        color: white;
+        border: none;
+        padding: 0.8rem 1.5rem;
+    }
+    
+    /* ✅ تنسيق خانات التاريخ */
+    input[name$="_from"], input[name$="_to"] {
+        font-size: 0.875rem;
+        padding: 0.2rem 0;
+        direction: ltr;
+        border-radius: 8px;
+    }
+    
+    .d-flex.gap-1 {
+        gap: 4px !important;
+    }
+    
+    small.text-muted {
+        display: block;
+        margin-top: 2px;
+        font-size: 0.7rem;
+    }
+    
+    /* ✅ تنسيق الـ datalist */
+    input[list]::-webkit-calendar-picker-indicator {
+        opacity: 0.6;
+        cursor: pointer;
+        padding: 2px;
+    }
+    
+    input[list]:hover::-webkit-calendar-picker-indicator {
+        opacity: 1;
+    }
+    
+    input[list] {
+        background-color: #fff;
+    }
+    
+    /* ✅ تنسيق السليكت عند التحديد */
+    select.form-select:focus {
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    }
+    
+    /* ✅ تنسيق رسائل التوضيح */
+    .text-primary.fw-bold {
+        font-size: 0.65rem;
+        background-color: #e7f1ff;
+        padding: 1px 6px;
+        border-radius: 10px;
+        margin-right: 2px;
+    }
+    
+    /* ✅ تنسيق البطاقات */
+    .card {
+        border: none;
+        border-radius: 20px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    }
+    
+    .table th, .table td {
+        vertical-align: middle;
+    }
+    
+    .badge {
+        font-size: 0.9rem;
+        padding: 0.4rem 0.7rem;
+        border-radius: 12px;
+    }
+    
+    .btn-sm {
+        padding: 0.2rem 0.6rem;
+        border-radius: 10px;
+    }
+    
+    .table-responsive {
+        max-height: 600px;
+        overflow-y: auto;
+        border-radius: 12px;
+    }
+    
+    .table thead th {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        background-color: #0d6efd;
+        color: white;
+        border-bottom: 2px solid #0a58ca;
+    }
+    
+    .table tfoot td {
+        background-color: #f8f9fa;
+        font-weight: 700;
+        border-top: 2px solid #0d6efd;
+    }
+    
+    .text-success {
+        color: #198754 !important;
+    }
+    
+    .fw-bold {
+        font-weight: 700 !important;
+    }
+    
+    /* ✅ تنسيق الـ small تحت الحقول */
+    small.text-muted i {
+        font-size: 0.6rem;
+        margin-left: 2px;
+    }
+    
+    /* ✅ تنسيق الجدول في الموبايل */
+    @media (max-width: 768px) {
+        .table-responsive {
+            max-height: 400px;
+        }
+        .table thead th {
+            font-size: 0.8rem;
+            padding: 0.5rem 0.4rem;
+        }
+        .table td {
+            font-size: 0.8rem;
+            padding: 0.4rem 0.3rem;
+        }
+        .badge {
+            font-size: 0.7rem;
+            padding: 0.2rem 0.4rem;
+        }
+        .btn-sm {
+            font-size: 0.65rem;
+            padding: 0.1rem 0.4rem;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .table thead th {
+            font-size: 0.65rem;
+            padding: 0.3rem 0.2rem;
+        }
+        .table td {
+            font-size: 0.65rem;
+            padding: 0.3rem 0.2rem;
+        }
+        .badge {
+            font-size: 0.6rem;
+            padding: 0.15rem 0.3rem;
+        }
+        .btn-sm {
+            font-size: 0.55rem;
+            padding: 0.05rem 0.3rem;
+        }
+    }
+</style>
+
+<div class="container-fluid py-4">
+    
     <!-- 🏷️ العنوان -->
-    <div class="row mb-3">
-        <div class="col-md-8">
-            <h2 class="fw-bold" style="color: #0d6efd;">
-                <i class="fas fa-user-md"></i> الأطباء
-            </h2>
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+        <div>
+            <h4 class="fw-bold mb-0" style="color: #0d6efd;">
+                <i class="fas fa-user-md me-2"></i>
+                الأطباء
+            </h4>
+            <p class="text-muted small mb-0">
+                <i class="fas fa-database me-1"></i>
+                {{ doctors|length }} طبيب مسجل
+            </p>
         </div>
-        <div class="col-md-4 text-end">
+        <div class="d-flex gap-2 flex-wrap">
             <a href="{% url 'package_comparison' %}" class="btn btn-success btn-sm">
-                <i class="fas fa-chart-line"></i> مقارنة الباكدجات
+                <i class="fas fa-chart-line me-1"></i> مقارنة الباكدجات
             </a>
-        </div>
-        <div class="col-12">
-            <hr>
+            <button onclick="location.reload()" class="btn btn-outline-secondary btn-sm">
+                <i class="fas fa-sync-alt me-1"></i> تحديث
+            </button>
         </div>
     </div>
 
-    <!-- 🔍 الفلاتر -->
-    <div class="row mb-3">
-        <div class="col-12">
-            <form method="GET" class="row g-2" id="searchForm">
+    <!-- 🔍 الفلاتر - بنفس استايل البطاقات -->
+    <div class="card filter-card mb-4">
+        <div class="card-header">
+            <i class="fas fa-sliders-h me-2"></i>
+            الفلاتر والبحث
+        </div>
+        <div class="card-body">
+            <form method="GET" class="row g-3" id="searchForm">
                 <!-- ✅ حقل البحث بالـ datalist -->
-                <div class="col-md-3">
+                <div class="col-lg-3 col-md-6">
+                    <label class="form-label fw-bold small text-muted">
+                        <i class="fas fa-user-md me-1"></i> اسم الدكتور
+                    </label>
                     <input type="text" name="doctor_name" 
                            class="form-control" 
                            placeholder="🔍 ابدأ بكتابة اسم الدكتور..."
@@ -49,7 +387,10 @@
                 </div>
                 
                 <!-- ✅ حقل التخصص -->
-                <div class="col-md-2">
+                <div class="col-lg-2 col-md-6">
+                    <label class="form-label fw-bold small text-muted">
+                        <i class="fas fa-tag me-1"></i> التخصص
+                    </label>
                     <select name="specialty" class="form-select" id="specialtySelect">
                         <option value="">جميع التخصصات</option>
                         {% for spec in specialties %}
@@ -66,44 +407,50 @@
                     </small>
                 </div>
                 
-                <!-- ✅ تاريخ من - ثلاث خانات منفصلة -->
-                <div class="col-md-2">
+                <!-- ✅ تاريخ من -->
+                <div class="col-lg-2 col-md-6">
+                    <label class="form-label fw-bold small text-muted">
+                        <i class="fas fa-calendar-alt me-1"></i> من تاريخ
+                    </label>
                     <div class="d-flex gap-1">
                         <input type="text" name="day_from" class="form-control text-center" 
                                placeholder="DD" maxlength="2" 
-                               value="{{ day_from }}" style="width: 33%;">
+                               value="{{ day_from }}" style="width: 33%; border-radius: 8px;">
                         <input type="text" name="month_from" class="form-control text-center" 
                                placeholder="MM" maxlength="2" 
-                               value="{{ month_from }}" style="width: 33%;">
+                               value="{{ month_from }}" style="width: 33%; border-radius: 8px;">
                         <input type="text" name="year_from" class="form-control text-center" 
                                placeholder="YYYY" maxlength="4" 
-                               value="{{ year_from }}" style="width: 34%;">
+                               value="{{ year_from }}" style="width: 34%; border-radius: 8px;">
                     </div>
-                    <small class="text-muted fw-bold">📅 من تاريخ</small>
+                    <small class="text-muted fw-bold">📅 DD / MM / YYYY</small>
                 </div>
                 
-                <!-- ✅ تاريخ إلى - ثلاث خانات منفصلة -->
-                <div class="col-md-2">
+                <!-- ✅ تاريخ إلى -->
+                <div class="col-lg-2 col-md-6">
+                    <label class="form-label fw-bold small text-muted">
+                        <i class="fas fa-calendar-alt me-1"></i> إلى تاريخ
+                    </label>
                     <div class="d-flex gap-1">
                         <input type="text" name="day_to" class="form-control text-center" 
                                placeholder="DD" maxlength="2" 
-                               value="{{ day_to }}" style="width: 33%;">
+                               value="{{ day_to }}" style="width: 33%; border-radius: 8px;">
                         <input type="text" name="month_to" class="form-control text-center" 
                                placeholder="MM" maxlength="2" 
-                               value="{{ month_to }}" style="width: 33%;">
+                               value="{{ month_to }}" style="width: 33%; border-radius: 8px;">
                         <input type="text" name="year_to" class="form-control text-center" 
                                placeholder="YYYY" maxlength="4" 
-                               value="{{ year_to }}" style="width: 34%;">
+                               value="{{ year_to }}" style="width: 34%; border-radius: 8px;">
                     </div>
-                    <small class="text-muted fw-bold">📅 إلى تاريخ</small>
+                    <small class="text-muted fw-bold">📅 DD / MM / YYYY</small>
                 </div>
                 
-                <div class="col-md-3">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-search"></i> بحث
+                <div class="col-lg-3 col-md-12 d-flex align-items-end gap-2 flex-wrap">
+                    <button type="submit" class="btn btn-primary flex-grow-1">
+                        <i class="fas fa-search me-1"></i> بحث
                     </button>
-                    <a href="{% url 'doctors_list' %}" class="btn btn-secondary">
-                        <i class="fas fa-undo"></i> إعادة تعيين
+                    <a href="{% url 'doctors_list' %}" class="btn btn-secondary flex-grow-1">
+                        <i class="fas fa-undo me-1"></i> إعادة تعيين
                     </a>
                 </div>
             </form>
@@ -114,8 +461,8 @@
     {% if date_error %}
     <div class="row mb-3">
         <div class="col-12">
-            <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                <i class="fas fa-exclamation-triangle"></i>
+            <div class="alert alert-warning alert-dismissible fade show" role="alert" style="border-radius: 15px;">
+                <i class="fas fa-exclamation-triangle me-2"></i>
                 {{ date_error }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
@@ -123,45 +470,41 @@
     </div>
     {% endif %}
 
-    <!-- 📊 البطاقات العلوية -->
-    <div class="row mb-3 g-3">
-        <div class="col-md-6">
-            <div class="card bg-primary text-white shadow-sm">
-                <div class="card-body d-flex align-items-center">
-                    <div class="me-3">
-                        <i class="fas fa-users fa-3x opacity-50"></i>
-                    </div>
-                    <div>
-                        <h6 class="card-title mb-1">إجمالي الحالات</h6>
-                        <h2 class="card-text fw-bold counter" data-target="{{ total_cases_all }}">0</h2>
-                    </div>
-                </div>
+    <!-- 📊 البطاقات العلوية - بنفس استايل البوكسات -->
+    <div class="row g-4 mb-4">
+        
+        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+            <div class="stats-box" style="background: linear-gradient(135deg, #0d6efd, #0a58ca);">
+                <div class="stats-icon"><i class="fas fa-users"></i></div>
+                <div class="stats-number counter" data-target="{{ total_cases_all }}">0</div>
+                <div class="stats-label">إجمالي الحالات</div>
+              
             </div>
         </div>
-        <div class="col-md-6">
-            <div class="card bg-success text-white shadow-sm">
-                <div class="card-body d-flex align-items-center">
-                    <div class="me-3">
-                        <i class="fas fa-money-bill-wave fa-3x opacity-50"></i>
-                    </div>
-                    <div>
-                        <h6 class="card-title mb-1">إجمالي التكلفة</h6>
-                        <h2 class="card-text fw-bold counter" data-target="{{ total_cost_all }}">0</h2>
-                    </div>
-                </div>
+        
+        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+            <div class="stats-box" style="background: linear-gradient(135deg, #198754, #157347);">
+                <div class="stats-icon"><i class="fas fa-money-bill-wave"></i></div>
+                <div class="stats-number counter" data-target="{{ total_cost_all }}">0</div>
+                <div class="stats-label">إجمالي التكلفة</div>
+                
             </div>
         </div>
+        
     </div>
 
     <!-- 📋 الجدول -->
     <div class="row">
         <div class="col-12">
             <div class="card shadow-sm">
-                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center flex-wrap gap-2" style="border-radius: 20px 20px 0 0;">
                     <h5 class="mb-0">
-                        <i class="fas fa-list"></i> قائمة الأطباء
+                        <i class="fas fa-list me-2"></i>
+                        قائمة الأطباء
                     </h5>
-                    <span class="badge bg-light text-primary">{{ doctors|length }} طبيب</span>
+                    <span class="badge bg-light text-primary fs-6">
+                        {{ doctors|length }} طبيب
+                    </span>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -179,7 +522,7 @@
                             <tbody>
                                 {% for doctor in doctors %}
                                 <tr>
-                                    <td>{{ forloop.counter }}</td>
+                                    <td class="fw-bold">{{ forloop.counter }}</td>
                                     <td>
                                         <a href="{% url 'doctor_detail' doctor.doctor_name %}" 
                                            class="text-primary fw-bold text-decoration-none">
@@ -196,15 +539,17 @@
                                     <td>
                                         <a href="{% url 'doctor_detail' doctor.doctor_name %}" 
                                            class="btn btn-sm btn-outline-primary">
-                                            <i class="fas fa-eye"></i> عرض
+                                            <i class="fas fa-eye"></i>
+                                            <span class="d-none d-sm-inline"> عرض</span>
                                         </a>
                                     </td>
                                 </tr>
                                 {% empty %}
                                 <tr>
                                     <td colspan="6" class="text-center text-muted py-4">
-                                        <i class="fas fa-info-circle fa-2x d-block mb-2"></i>
-                                        لا يوجد أطباء
+                                        <i class="fas fa-info-circle fa-3x d-block mb-3 opacity-50"></i>
+                                        <p class="mb-0">لا يوجد أطباء</p>
+                                        <small>جرب تغيير الفلاتر أو إعادة التعيين</small>
                                     </td>
                                 </tr>
                                 {% endfor %}
@@ -230,6 +575,46 @@
 document.addEventListener('DOMContentLoaded', function() {
     
     // ============================================================
+    // ✅ الكاونترات المتحركة - بنفس نظام الصفحة الأولى
+    // ============================================================
+    const counters = document.querySelectorAll('.counter');
+    
+    const animateCounter = (counter) => {
+        const target = parseFloat(counter.getAttribute('data-target'));
+        let current = 0;
+        const duration = 1500;
+        const steps = 60;
+        const increment = Math.max(1, Math.ceil(target / steps));
+        let frame = 0;
+        
+        const updateCounter = () => {
+            if (frame < steps && current < target) {
+                frame++;
+                current += increment;
+                if (current > target) current = target;
+                counter.textContent = current.toLocaleString('en-US');
+                requestAnimationFrame(updateCounter);
+            } else {
+                counter.textContent = target.toLocaleString('en-US');
+                counter.classList.add('counting');
+            }
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    updateCounter();
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.2 });
+        
+        observer.observe(counter);
+    };
+    
+    counters.forEach(counter => animateCounter(counter));
+    
+    // ============================================================
     // ✅ فلترة التخصصات عند اختيار من datalist
     // ============================================================
     const doctorInput = document.getElementById('doctorSearchInput');
@@ -238,7 +623,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 🔥 عند اختيار من القائمة (change event - مش input)
     doctorInput.addEventListener('change', function(e) {
-        // لو فيه قيمة، نرسل الفورم
         if (this.value.trim() !== '') {
             searchForm.submit();
         }
@@ -256,7 +640,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // ✅ عند تغيير التخصص - إرسال الفورم تلقائيًا
     // ============================================================
     specialtySelect.addEventListener('change', function(e) {
-        // لو اختار تخصص (حتى لو "جميع التخصصات")
         searchForm.submit();
     });
     
@@ -270,7 +653,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const maxLength = parseInt(this.maxLength);
             const currentLength = this.value.length;
             
-            // ✅ لو وصل لآخر خانة، ننتقل للخانة التالية
             if (currentLength === maxLength) {
                 const inputs = this.parentElement.querySelectorAll('input');
                 let currentIndex = Array.from(inputs).indexOf(this);
@@ -281,7 +663,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         
-        // ✅ لو ضغط Backspace ونفذت الخانة، ننتقل للخانة السابقة
         input.addEventListener('keydown', function(e) {
             if (e.key === 'Backspace' && this.value === '') {
                 const inputs = this.parentElement.querySelectorAll('input');
@@ -294,147 +675,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // ============================================================
-    // ✅ عدادات متحركة
-    // ============================================================
-    const counters = document.querySelectorAll('.counter');
-    counters.forEach(counter => {
-        let target = parseFloat(counter.getAttribute('data-target'));
-        if (isNaN(target)) {
-            const text = counter.textContent.replace(/,/g, '').trim();
-            target = parseFloat(text) || 0;
-        }
-        
-        const duration = 1500;
-        const step = target / (duration / 16);
-        let current = 0;
-        
-        const updateCounter = () => {
-            current += step;
-            if (current < target) {
-                counter.textContent = Math.round(current).toLocaleString();
-                requestAnimationFrame(updateCounter);
-            } else {
-                counter.textContent = target.toLocaleString();
-            }
-        };
-        
-        if (target === 0) {
-            counter.textContent = '0';
-            return;
-        }
-        
-        updateCounter();
-    });
-    
-    // ============================================================
-    // ✅ عرض رسالة توضيحية عند اختيار تخصص أو دكتور
-    // ============================================================
-    {% if specialty_filter %}
-        // لو في تخصص محدد، نضيف إشارة في الـ datalist
-        const doctorLabel = document.querySelector('small.text-muted');
-        if (doctorLabel && !doctorLabel.innerHTML.includes('دكاترة التخصص')) {
-            doctorLabel.innerHTML += ' <span class="text-primary fw-bold">(دكاترة التخصص المختار)</span>';
-        }
-    {% endif %}
-    
-    {% if selected_doctor %}
-        // لو في دكتور محدد، نضيف إشارة في التخصصات
-        const specialtyLabel = document.querySelector('.col-md-2 small.text-muted');
-        if (specialtyLabel && !specialtyLabel.innerHTML.includes('تخصصات الدكتور')) {
-            specialtyLabel.innerHTML += ' <span class="text-primary fw-bold">(تخصصات الدكتور)</span>';
-        }
-    {% endif %}
 });
 </script>
 
-<style>
-    .card {
-        border: none;
-        border-radius: 12px;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    .card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-    }
-    .table th, .table td {
-        vertical-align: middle;
-    }
-    .badge {
-        font-size: 0.9rem;
-        padding: 0.4rem 0.7rem;
-    }
-    .btn-sm {
-        padding: 0.2rem 0.6rem;
-    }
-    .table-responsive {
-        max-height: 600px;
-        overflow-y: auto;
-    }
-    .table thead th {
-        position: sticky;
-        top: 0;
-        z-index: 10;
-        background-color: #0d6efd;
-        color: white;
-    }
-    .text-success {
-        color: #198754 !important;
-    }
-    
-    /* ✅ تنسيق خانات التاريخ */
-    input[name$="_from"], input[name$="_to"] {
-        font-size: 0.875rem;
-        padding: 0.2rem 0;
-        direction: ltr;
-    }
-    .d-flex.gap-1 {
-        gap: 4px !important;
-    }
-    small.text-muted {
-        display: block;
-        margin-top: 2px;
-        font-size: 0.7rem;
-    }
-    
-    /* ✅ تنسيق الـ datalist */
-    input[list]::-webkit-calendar-picker-indicator {
-        opacity: 0.6;
-        cursor: pointer;
-        padding: 2px;
-    }
-    input[list]:hover::-webkit-calendar-picker-indicator {
-        opacity: 1;
-    }
-    input[list] {
-        background-color: #fff;
-    }
-    
-    /* ✅ Bold للنصوص */
-    .fw-bold {
-        font-weight: 700 !important;
-    }
-    
-    /* ✅ تنسيق الـ small تحت الحقول */
-    small.text-muted i {
-        font-size: 0.6rem;
-        margin-left: 2px;
-    }
-    
-    /* ✅ تنسيق السليكت عند التحديد */
-    select.form-select:focus {
-        border-color: #0d6efd;
-        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
-    }
-    
-    /* ✅ تنسيق رسائل التوضيح */
-    .text-primary.fw-bold {
-        font-size: 0.65rem;
-        background-color: #e7f1ff;
-        padding: 1px 6px;
-        border-radius: 10px;
-        margin-right: 2px;
-    }
-</style>
 {% endblock %}
