@@ -3272,3 +3272,7 @@ Watching for file changes with StatReloader
 "GET /doctors/%D8%A7.%D8%AF%20/%20%D9%83%D8%B1%D9%8A%D9%85%20%D8%AE%D8%A7%D9%84%D8%AF%20%D8%B2%D9%87%D8%AF%D9%89/ HTTP/1.1" 200 69589
 "GET /doctor/%D8%A7.%D8%AF%20/%20%D9%83%D8%B1%D9%8A%D9%85%20%D8%AE%D8%A7%D9%84%D8%AF%20%D8%B2%D9%87%D8%AF%D9%89/status/serv_done/ HTTP/1.1" 200 40945
 "GET /doctor/%D8%A7.%D8%AF%20/%20%D9%83%D8%B1%D9%8A%D9%85%20%D8%AE%D8%A7%D9%84%D8%AF%20%D8%B2%D9%87%D8%AF%D9%89/status/patient_refused/ HTTP/1.1" 200 40877
+Watching for file changes with StatReloader
+"GET /company-discounts/ HTTP/1.1" 200 95791
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
