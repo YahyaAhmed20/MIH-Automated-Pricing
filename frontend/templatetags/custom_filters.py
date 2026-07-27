@@ -78,3 +78,42 @@ def trim_note(value):
     value = re.sub(r'^الباكدج\s+', '', value, flags=re.IGNORECASE)
     
     return value.strip()
+
+# ✅ ✅ ✅ فلتر جديد: replace
+@register.filter
+def replace(value, arg):
+    """
+    استبدال نص بآخر في السلسلة النصية
+    الاستخدام: {{ value|replace:"old:new" }}
+    مثال: {{ "hello world"|replace:"world:everyone" }} → "hello everyone"
+    """
+    if not value or not arg:
+        return value
+    
+    try:
+        # arg format: "old:new"
+        parts = arg.split(':')
+        if len(parts) == 2:
+            old, new = parts
+            return value.replace(old, new)
+        return value
+    except Exception:
+        return value
+
+# ✅ ✅ ✅ فلتر جديد: split_by_star
+@register.filter
+def split_by_star(value):
+    """
+    تقسيم النص على علامة * وإرجاع قائمة
+    الاستخدام: {{ value|split_by_star }}
+    """
+    if not value:
+        return []
+    
+    parts = value.split('*')
+    cleaned_parts = []
+    for part in parts:
+        part = part.strip()
+        if part:
+            cleaned_parts.append('* ' + part)
+    return cleaned_parts

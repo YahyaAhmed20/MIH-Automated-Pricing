@@ -2249,7 +2249,8 @@ def company_discounts(request):
                 discount.details_list = []
 
             discount.service_name = discount.item_name
-            discount.discount_rate = discount.discount
+            # ✅ إزالة علامة % من discount_rate
+            discount.discount_rate = discount.discount.replace('%', '') if discount.discount else ''
             discount.items = []
 
             if discount.section == "داخلي":
@@ -2271,7 +2272,7 @@ def company_discounts(request):
             if key not in internal_groups:
                 internal_groups[key] = {
                     'service_name': discount.item_name,
-                    'discount_rate': discount.discount,
+                    'discount_rate': discount.discount_rate,  # ✅ بدون %
                     'section': 'داخلي',
                     'items': []
                 }
@@ -2294,7 +2295,7 @@ def company_discounts(request):
             if key not in external_groups:
                 external_groups[key] = {
                     'service_name': discount.item_name,
-                    'discount_rate': discount.discount,
+                    'discount_rate': discount.discount_rate,  # ✅ بدون %
                     'section': 'خارجي',
                     'items': []
                 }
@@ -2381,7 +2382,7 @@ def company_discounts(request):
     # ============================================
     exceptions = CompanyException.objects.all()
     
-          # ============================================
+    # ============================================
     # ✅ ✅ ✅ الاستثناءات (موديل جديد - CompanyExceptionProfile)
     # ============================================
     exception_profiles = (
@@ -2413,7 +2414,6 @@ def company_discounts(request):
         internal_items = []
         external_items = []
 
-        # ✅ ✅ ✅ إزالة seen_items - نضيف كل العناصر بدون تكرار
         for item in profile.items.all():
             if item.section == "داخلي":
                 internal_items.append(item)
@@ -2431,7 +2431,7 @@ def company_discounts(request):
             if key not in internal_groups:
                 internal_groups[key] = {
                     'service_name': item.service_name,
-                    'discount_rate': item.discount_rate,
+                    'discount_rate': item.discount_rate.replace('%', '') if item.discount_rate else '',  # ✅ بدون %
                     'section': 'داخلي',
                     'items': []
                 }
@@ -2447,7 +2447,7 @@ def company_discounts(request):
             if key not in external_groups:
                 external_groups[key] = {
                     'service_name': item.service_name,
-                    'discount_rate': item.discount_rate,
+                    'discount_rate': item.discount_rate.replace('%', '') if item.discount_rate else '',  # ✅ بدون %
                     'section': 'خارجي',
                     'items': []
                 }
@@ -2466,8 +2466,6 @@ def company_discounts(request):
             'external_count': len(external_items),
             'total_count': len(internal_items) + len(external_items),
         })
-
-    
 
     # ============================================
     # ✅ القائمة الثابتة للخدمات غير الخاضعة للخصم
@@ -2496,7 +2494,7 @@ def company_discounts(request):
         request,
         "frontend/company_discounts.html",
         {
-            # ✅ ✅ ✅ بيانات الاستثناءات مع internal_groups و external_groups
+            # ✅ بيانات الاستثناءات مع internal_groups و external_groups
             "exceptions_data": exceptions_data,
             "exceptions_list": EXCEPTIONS_LIST,
             "total_internal": total_internal,
