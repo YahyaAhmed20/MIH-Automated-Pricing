@@ -3128,11 +3128,11 @@ def doctor_detail(request, doctor_name):
     status_stats = {
         'approved': doctor_cases.filter(main_status__iexact='approved').count(),
         'cancelled': doctor_cases.filter(main_status__iexact='cancelled').count(),
-        'patient refused': doctor_cases.filter(main_status__iexact='patient refused').count(),
+        'patient_refused': doctor_cases.filter(main_status__iexact='patient refused').count(),  # ✅ غير المفتاح
         'pending': doctor_cases.filter(main_status__iexact='pending').count(),
-        'bending by patient': doctor_cases.filter(main_status__iexact='bending by patient').count(),
+        'bending_by_patient': doctor_cases.filter(main_status__iexact='bending by patient').count(),  # ✅ غير المفتاح
         'rejected': doctor_cases.filter(main_status__iexact='rejected').count(),
-        'serv done': doctor_cases.filter(main_status__iexact='serv. done').count(),
+        'serv_done': doctor_cases.filter(main_status__iexact='serv. done').count(),  # ✅ غير المفتاح
     }
     
     # 💰 التكلفة الإجمالية (جميع الحالات - شامل Serv. Done)
@@ -3218,7 +3218,7 @@ def doctor_detail(request, doctor_name):
         'doctor_info': doctor_info,
         'total_cases': total_cases,  # ✅ بدون Serv. Done
         'total_cost': format_number(total_cost),
-        'status_stats': status_stats,
+        'status_stats': status_stats,  # ✅ المفاتيح الجديدة
         'cases': formatted_cases,
         'paginator': paginator,
         'status_filter': status_filter,

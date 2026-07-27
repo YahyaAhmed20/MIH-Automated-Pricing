@@ -187,11 +187,11 @@
                     <span class="badge 
                         {% if status_filter == 'approved' %}bg-success
                         {% elif status_filter == 'cancelled' %}bg-secondary
-                        {% elif status_filter == 'patient refused' %}bg-danger
+                        {% elif status_filter == 'patient_refused' %}bg-danger
                         {% elif status_filter == 'pending' %}bg-warning
-                        {% elif status_filter == 'bending by patient' %}bg-info
+                        {% elif status_filter == 'bending_by_patient' %}bg-info
                         {% elif status_filter == 'rejected' %}bg-dark
-                        {% elif status_filter == 'serv. done' %}" style="background: linear-gradient(135deg, #0dcaf0, #0d6efd); color: white;"
+                        {% elif status_filter == 'serv_done' %}" style="background: linear-gradient(135deg, #0dcaf0, #0d6efd); color: white;"
                         {% else %}bg-primary{% endif %}">
                         {{ status_filter }}
                     </span>
