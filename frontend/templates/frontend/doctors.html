@@ -26,13 +26,31 @@
     <div class="row mb-3">
         <div class="col-12">
             <form method="GET" class="row g-2" id="searchForm">
+                <!-- ✅ حقل البحث بالـ datalist -->
                 <div class="col-md-3">
-                    <input type="text" name="search" class="form-control" 
-                           placeholder="🔍 بحث باسم الطبيب أو التخصص..."
-                           value="{{ search_query }}">
+                    <input type="text" name="doctor_name" 
+                           class="form-control" 
+                           placeholder="🔍 ابدأ بكتابة اسم الدكتور..."
+                           list="doctorsList"
+                           value="{{ selected_doctor }}"
+                           id="doctorSearchInput"
+                           autocomplete="off">
+                    <datalist id="doctorsList">
+                        {% for doctor in all_doctors %}
+                            <option value="{{ doctor }}"></option>
+                        {% endfor %}
+                    </datalist>
+                    <small class="text-muted">
+                        <i class="fas fa-info-circle"></i> اختر من القائمة المنسدلة
+                        {% if specialty_filter %}
+                            <span class="text-primary fw-bold">(دكاترة التخصص المختار)</span>
+                        {% endif %}
+                    </small>
                 </div>
+                
+                <!-- ✅ حقل التخصص -->
                 <div class="col-md-2">
-                    <select name="specialty" class="form-select">
+                    <select name="specialty" class="form-select" id="specialtySelect">
                         <option value="">جميع التخصصات</option>
                         {% for spec in specialties %}
                             <option value="{{ spec }}" {% if spec == specialty_filter %}selected{% endif %}>
@@ -40,6 +58,12 @@
                             </option>
                         {% endfor %}
                     </select>
+                    <small class="text-muted">
+                        <i class="fas fa-tag"></i> التخصصات المتاحة
+                        {% if selected_doctor %}
+                            <span class="text-primary fw-bold">(تخصصات الدكتور)</span>
+                        {% endif %}
+                    </small>
                 </div>
                 
                 <!-- ✅ تاريخ من - ثلاث خانات منفصلة -->
@@ -55,7 +79,7 @@
                                placeholder="YYYY" maxlength="4" 
                                value="{{ year_from }}" style="width: 34%;">
                     </div>
-                    <small class="text-muted fw-bold">من تاريخ</small>
+                    <small class="text-muted fw-bold">📅 من تاريخ</small>
                 </div>
                 
                 <!-- ✅ تاريخ إلى - ثلاث خانات منفصلة -->
@@ -71,7 +95,7 @@
                                placeholder="YYYY" maxlength="4" 
                                value="{{ year_to }}" style="width: 34%;">
                     </div>
-                    <small class="text-muted fw-bold">إلى تاريخ</small>
+                    <small class="text-muted fw-bold">📅 إلى تاريخ</small>
                 </div>
                 
                 <div class="col-md-3">
@@ -201,9 +225,40 @@
     </div>
 </div>
 
-<!-- 🎯 JavaScript للانتقال التلقائي بين الخانات والعدادات -->
+<!-- 🎯 JavaScript -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    
+    // ============================================================
+    // ✅ فلترة التخصصات عند اختيار من datalist
+    // ============================================================
+    const doctorInput = document.getElementById('doctorSearchInput');
+    const specialtySelect = document.getElementById('specialtySelect');
+    const searchForm = document.getElementById('searchForm');
+    
+    // 🔥 عند اختيار من القائمة (change event - مش input)
+    doctorInput.addEventListener('change', function(e) {
+        // لو فيه قيمة، نرسل الفورم
+        if (this.value.trim() !== '') {
+            searchForm.submit();
+        }
+    });
+    
+    // 🔥 للتوافق مع المتصفحات المختلفة - لو ضغط Enter
+    doctorInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            searchForm.submit();
+        }
+    });
+    
+    // ============================================================
+    // ✅ عند تغيير التخصص - إرسال الفورم تلقائيًا
+    // ============================================================
+    specialtySelect.addEventListener('change', function(e) {
+        // لو اختار تخصص (حتى لو "جميع التخصصات")
+        searchForm.submit();
+    });
     
     // ============================================================
     // ✅ الانتقال التلقائي بين خانات التاريخ
@@ -226,7 +281,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         
-        // ✅ لو ضغط Delete ونفذت الخانة، ننتقل للخانة السابقة
+        // ✅ لو ضغط Backspace ونفذت الخانة، ننتقل للخانة السابقة
         input.addEventListener('keydown', function(e) {
             if (e.key === 'Backspace' && this.value === '') {
                 const inputs = this.parentElement.querySelectorAll('input');
@@ -271,6 +326,25 @@ document.addEventListener('DOMContentLoaded', function() {
         
         updateCounter();
     });
+    
+    // ============================================================
+    // ✅ عرض رسالة توضيحية عند اختيار تخصص أو دكتور
+    // ============================================================
+    {% if specialty_filter %}
+        // لو في تخصص محدد، نضيف إشارة في الـ datalist
+        const doctorLabel = document.querySelector('small.text-muted');
+        if (doctorLabel && !doctorLabel.innerHTML.includes('دكاترة التخصص')) {
+            doctorLabel.innerHTML += ' <span class="text-primary fw-bold">(دكاترة التخصص المختار)</span>';
+        }
+    {% endif %}
+    
+    {% if selected_doctor %}
+        // لو في دكتور محدد، نضيف إشارة في التخصصات
+        const specialtyLabel = document.querySelector('.col-md-2 small.text-muted');
+        if (specialtyLabel && !specialtyLabel.innerHTML.includes('تخصصات الدكتور')) {
+            specialtyLabel.innerHTML += ' <span class="text-primary fw-bold">(تخصصات الدكتور)</span>';
+        }
+    {% endif %}
 });
 </script>
 
@@ -308,6 +382,7 @@ document.addEventListener('DOMContentLoaded', function() {
     .text-success {
         color: #198754 !important;
     }
+    
     /* ✅ تنسيق خانات التاريخ */
     input[name$="_from"], input[name$="_to"] {
         font-size: 0.875rem;
@@ -322,9 +397,44 @@ document.addEventListener('DOMContentLoaded', function() {
         margin-top: 2px;
         font-size: 0.7rem;
     }
+    
+    /* ✅ تنسيق الـ datalist */
+    input[list]::-webkit-calendar-picker-indicator {
+        opacity: 0.6;
+        cursor: pointer;
+        padding: 2px;
+    }
+    input[list]:hover::-webkit-calendar-picker-indicator {
+        opacity: 1;
+    }
+    input[list] {
+        background-color: #fff;
+    }
+    
     /* ✅ Bold للنصوص */
     .fw-bold {
         font-weight: 700 !important;
+    }
+    
+    /* ✅ تنسيق الـ small تحت الحقول */
+    small.text-muted i {
+        font-size: 0.6rem;
+        margin-left: 2px;
+    }
+    
+    /* ✅ تنسيق السليكت عند التحديد */
+    select.form-select:focus {
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    }
+    
+    /* ✅ تنسيق رسائل التوضيح */
+    .text-primary.fw-bold {
+        font-size: 0.65rem;
+        background-color: #e7f1ff;
+        padding: 1px 6px;
+        border-radius: 10px;
+        margin-right: 2px;
     }
 </style>
 {% endblock %}

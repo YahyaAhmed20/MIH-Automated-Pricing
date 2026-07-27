@@ -4111,3 +4111,27 @@ Not Found: /.well-known/appspecific/com.chrome.devtools.json
 "GET /company-discounts/ HTTP/1.1" 200 103533
 "GET /company-discounts/ HTTP/1.1" 200 103533
 "GET /company-discounts/ HTTP/1.1" 200 108815
+Watching for file changes with StatReloader
+"GET /reports/ HTTP/1.1" 200 125079
+"GET /package-comparison/ HTTP/1.1" 200 2249042
+"GET /ajax/package-filters/?source=sheet15&year=2025 HTTP/1.1" 200 60902
+"GET /ajax/package-filters/?source=sheet15&year=2025 HTTP/1.1" 200 60902
+"GET /reports/ HTTP/1.1" 200 125079
+"GET /doctors/ HTTP/1.1" 200 193875
+"GET /doctors/?search=%D9%85%D8%A7%D8%AC%D8%AF&specialty=&day_from=&month_from=&year_from=&day_to=&month_to=&year_to= HTTP/1.1" 200 42418
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /doctors/?search=%D9%85%D8%A7%D8%AC%D8%AF&specialty=&day_from=&month_from=&year_from=&day_to=&month_to=&year_to= HTTP/1.1" 200 61127
+"GET /doctors/ HTTP/1.1" 200 212592
+"GET /doctors/?doctor_name=%D8%A7.%D8%AF+%2F+%D8%B3%D8%A7%D9%86%D8%AF%D8%B1%D8%A7+%D9%85%D8%AD%D9%85%D8%AF+%D9%86%D8%B5%D8%B1&specialty=&day_from=&month_from=&year_from=&day_to=&month_to=&year_to= HTTP/1.1" 200 55592
+"GET /doctors/ HTTP/1.1" 200 212592
+"GET /doctors/?doctor_name=%D8%AF+%2F+%D9%87%D8%B4%D8%A7%D9%85+%D8%A7%D9%84%D8%B5%D8%A7%D9%88%D9%89&specialty=%D8%AC%D8%B1%D8%A7%D8%AD%D8%A9+%D8%A3%D8%B7%D9%81%D8%A7%D9%84&day_from=&month_from=&year_from=&day_to=&month_to=&year_to= HTTP/1.1" 200 54492
+"GET /doctors/ HTTP/1.1" 200 212592
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /doctors/ HTTP/1.1" 200 213391
+"GET /doctors/?doctor_name=&specialty=%D8%A3%D9%85%D8%B1%D8%A7%D8%B6+%D8%A7%D9%84%D8%AF%D9%85&day_from=&month_from=&year_from=&day_to=&month_to=&year_to= HTTP/1.1" 200 48451
+"GET /doctors/ HTTP/1.1" 200 213391
+"GET /doctors/?doctor_name=%D8%A3.%D8%AF%2F+%D9%87%D8%A8%D8%A9+%D8%A7%D8%A8%D8%B1%D8%A7%D9%87%D9%8A%D9%85+%D8%B9%D8%B7%D9%8A%D8%A9&specialty=&day_from=&month_from=&year_from=&day_to=&month_to=&year_to= HTTP/1.1" 200 56588
+"GET /doctors/?doctor_name=%D8%A3.%D8%AF%2F+%D9%87%D8%A8%D8%A9+%D8%A7%D8%A8%D8%B1%D8%A7%D9%87%D9%8A%D9%85+%D8%B9%D8%B7%D9%8A%D8%A9&specialty=%D8%A3%D9%85%D8%B1%D8%A7%D8%B6+%D8%A7%D9%84%D8%AF%D9%85&day_from=&month_from=&year_from=&day_to=&month_to=&year_to= HTTP/1.1" 200 41692
+"GET /doctors/%D8%A3.%D8%AF/%20%D9%87%D8%A8%D8%A9%20%D8%A7%D8%A8%D8%B1%D8%A7%D9%87%D9%8A%D9%85%20%D8%B9%D8%B7%D9%8A%D8%A9/ HTTP/1.1" 200 45850

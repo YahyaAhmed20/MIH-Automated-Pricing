@@ -2976,6 +2976,7 @@ def doctors_list(request):
     # 🔍 الفلترة (اختياري)
     search_query = request.GET.get('search', '').strip()
     specialty_filter = request.GET.get('specialty', '').strip()
+    selected_doctor = request.GET.get('doctor_name', '').strip()  # ✅ اسم الدكتور المختار من datalist
     
     # ✅ تجميع التاريخ من ثلاث خانات
     day_from = request.GET.get('day_from', '').strip()
@@ -3023,16 +3024,26 @@ def doctors_list(request):
         main_status__iexact='serv. done'
     )
     
-    # تطبيق الفلاتر
+    # ============================================================
+    # ✅ الترتيب الجديد: التخصص أولاً، ثم الدكتور
+    # ============================================================
+    
+    # 1️⃣ فلترة حسب التخصص (لو موجود)
+    if specialty_filter:
+        queryset = queryset.filter(specialty__icontains=specialty_filter)
+    
+    # 2️⃣ فلترة حسب الدكتور المختار من datalist (لو موجود) - ضمن التخصص المفلتر
+    if selected_doctor:
+        queryset = queryset.filter(doctor_name__icontains=selected_doctor)
+    
+    # 3️⃣ فلترة حسب البحث العام (لو موجود)
     if search_query:
         queryset = queryset.filter(
             Q(doctor_name__icontains=search_query) |
             Q(specialty__icontains=search_query)
         )
     
-    if specialty_filter:
-        queryset = queryset.filter(specialty__icontains=specialty_filter)
-    
+    # 4️⃣ فلترة حسب التاريخ
     if date_from:
         queryset = queryset.filter(date__gte=date_from)
     
@@ -3053,12 +3064,54 @@ def doctors_list(request):
     total_cases_all = doctors_data.aggregate(total=Sum('total_cases'))['total'] or 0
     total_cost_all = doctors_data.aggregate(total=Sum('total_cost'))['total'] or Decimal('0.00')
     
-    # 🏷️ قائمة التخصصات للفلتر
-    specialties = ExternalApproval.objects.exclude(
-        specialty__isnull=True
-    ).exclude(
-        specialty=''
-    ).values_list('specialty', flat=True).distinct().order_by('specialty')
+    # ============================================================
+    # 🏷️ قائمة التخصصات - تتغير حسب الاختيار
+    # ============================================================
+    if selected_doctor:
+        # ✅ لو اختار دكتور، نجيب التخصصات بتاعته بس
+        specialties = ExternalApproval.objects.filter(
+            doctor_name__icontains=selected_doctor
+        ).exclude(
+            specialty__isnull=True
+        ).exclude(
+            specialty=''
+        ).values_list('specialty', flat=True).distinct().order_by('specialty')
+    elif specialty_filter:
+        # ✅ لو اختار تخصص، نجيب التخصصات اللي زي الفلتر (عشان يظهر في السليكت)
+        specialties = ExternalApproval.objects.filter(
+            specialty__icontains=specialty_filter
+        ).exclude(
+            specialty__isnull=True
+        ).exclude(
+            specialty=''
+        ).values_list('specialty', flat=True).distinct().order_by('specialty')
+    else:
+        # ✅ لو ماختارش حاجة، نجيب كل التخصصات
+        specialties = ExternalApproval.objects.exclude(
+            specialty__isnull=True
+        ).exclude(
+            specialty=''
+        ).values_list('specialty', flat=True).distinct().order_by('specialty')
+    
+    # ============================================================
+    # 📋 قائمة كل الأطباء للـ datalist
+    # ============================================================
+    # ✅ لو في تخصص محدد، نجيب الدكاترة بتوعه بس للـ datalist
+    if specialty_filter:
+        all_doctors = ExternalApproval.objects.filter(
+            specialty__icontains=specialty_filter
+        ).exclude(
+            doctor_name__isnull=True
+        ).exclude(
+            doctor_name=''
+        ).values_list('doctor_name', flat=True).distinct().order_by('doctor_name')
+    else:
+        # ✅ كل الدكاترة
+        all_doctors = ExternalApproval.objects.exclude(
+            doctor_name__isnull=True
+        ).exclude(
+            doctor_name=''
+        ).values_list('doctor_name', flat=True).distinct().order_by('doctor_name')
     
     # ✅ دالة تنسيق الأرقام
     def format_number(value):
@@ -3084,9 +3137,11 @@ def doctors_list(request):
         'doctors': formatted_doctors,
         'total_cases_all': total_cases_all,
         'total_cost_all': format_number(total_cost_all),
-        'specialties': specialties,
+        'specialties': specialties,  # 🔥 هتتغير حسب الاختيار
+        'all_doctors': all_doctors,  # ✅ الدكاترة للـ datalist (مصفاة حسب التخصص لو موجود)
         'search_query': search_query,
         'specialty_filter': specialty_filter,
+        'selected_doctor': selected_doctor,  # ✅ الدكتور المختار
         # ✅ خانات التاريخ منفصلة (للحفاظ على القيم المدخلة)
         'day_from': day_from,
         'month_from': month_from,
