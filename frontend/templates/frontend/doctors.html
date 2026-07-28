@@ -476,18 +476,18 @@
         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
             <div class="stats-box" style="background: linear-gradient(135deg, #0d6efd, #0a58ca);">
                 <div class="stats-icon"><i class="fas fa-users"></i></div>
+                <!-- ✅ total_cases_all (رقم بدون فواصل) -->
                 <div class="stats-number counter" data-target="{{ total_cases_all }}">0</div>
                 <div class="stats-label">إجمالي الحالات</div>
-              
             </div>
         </div>
         
         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
             <div class="stats-box" style="background: linear-gradient(135deg, #198754, #157347);">
                 <div class="stats-icon"><i class="fas fa-money-bill-wave"></i></div>
-                <div class="stats-number counter" data-target="{{ total_cost_all }}">0</div>
+                <!-- ✅ total_cost_all_raw (رقم بدون فواصل للكاونتر) -->
+                <div class="stats-number counter" data-target="{{ total_cost_all_raw }}">0</div>
                 <div class="stats-label">إجمالي التكلفة</div>
-                
             </div>
         </div>
         
@@ -592,9 +592,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 frame++;
                 current += increment;
                 if (current > target) current = target;
+                // ✅ toLocaleString عشان يظهر بفواصل
                 counter.textContent = current.toLocaleString('en-US');
                 requestAnimationFrame(updateCounter);
             } else {
+                // ✅ toLocaleString عشان يظهر بفواصل
                 counter.textContent = target.toLocaleString('en-US');
                 counter.classList.add('counting');
             }

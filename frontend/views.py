@@ -3135,8 +3135,9 @@ def doctors_list(request):
     
     context = {
         'doctors': formatted_doctors,
-        'total_cases_all': total_cases_all,
-        'total_cost_all': format_number(total_cost_all),
+        'total_cases_all': total_cases_all,  # ✅ رقم بدون فواصل للكاونتر
+        'total_cost_all': format_number(total_cost_all),  # ✅ للعرض (مع فواصل)
+        'total_cost_all_raw': int(total_cost_all),  # ✅ ✅ ✅ للكاونتر (بدون فواصل)
         'specialties': specialties,  # 🔥 هتتغير حسب الاختيار
         'all_doctors': all_doctors,  # ✅ الدكاترة للـ datalist (مصفاة حسب التخصص لو موجود)
         'search_query': search_query,
