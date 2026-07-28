@@ -29,7 +29,8 @@ SECRET_KEY = 'django-insecure-mbdn9)+91#j^)w^jk4skrz_h_2nx_j&6l)!-=fdj*2sogl^m=h
 DEBUG = True  # ⚠️ خليها False في production
 
 ALLOWED_HOSTS = [
-    "mih-automated-pricing.up.railway.app",
+    # "mih-automated-pricing.up.railway.app",
+    "web-production-8d018.up.railway.app",
     "127.0.0.1",
     "localhost",
     ".railway.app",
@@ -38,7 +39,8 @@ ALLOWED_HOSTS = [
 CSRF_TRUSTED_ORIGINS = [
     "http://127.0.0.1:8000",
     "http://localhost:8000",
-    "https://mih-automated-pricing.up.railway.app",
+    # "https://mih-automated-pricing.up.railway.app",
+    "https://web-production-8d018.up.railway.app",
 ]
 
 
@@ -117,15 +119,82 @@ TEMPLATES = [
 WSGI_APPLICATION = 'project.wsgi.application'
 
 
+# # Database
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'railway',
+#         'USER': 'postgres',
+#         'PASSWORD': 'CJNFXTSwAvrlDwSdwqypPizihWhLRdDM',
+#         'HOST': 'tokaido.proxy.rlwy.net',
+#         'PORT': '16688',
+#         'OPTIONS': {
+#             'sslmode': 'require',
+#             'connect_timeout': 60,
+#             'keepalives': 1,
+#             'keepalives_idle': 30,
+#             'keepalives_interval': 10,
+#             'keepalives_count': 5,
+#         },
+#         'CONN_MAX_AGE': 60,
+#         'CONN_HEALTH_CHECKS': True,
+#     }
+# }
+
+
+# # ✅ ==========================================================
+# # ✅ إعدادات منع Internal Server Error
+# # ✅ ==========================================================
+
+# # ✅ زيادة حجم البيانات المسموح بها
+# DATA_UPLOAD_MAX_MEMORY_SIZE = 1024 * 1024 * 100  # 100 MB
+# DATA_UPLOAD_MAX_NUMBER_FIELDS = 10000
+
+# # ✅ زيادة مهلة الطلبات (لعمليات التحديث الطويلة)
+# # ✅ ملحوظة: في Railway، المهلة الافتراضية 60 ثانية
+# # ✅ الحل الأفضل هو تشغيل التحديث في الخلفية (Background Task)
+
+# # ✅ إعدادات Logging
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#     'handlers': {
+#         'console': {
+#             'class': 'logging.StreamHandler',
+#         },
+#         'file': {
+#             'class': 'logging.FileHandler',
+#             'filename': os.path.join(BASE_DIR, 'logs', 'django.log'),
+#         },
+#     },
+#     'root': {
+#         'handlers': ['console', 'file'],
+#         'level': 'INFO',
+#     },
+#     'loggers': {
+#         'django': {
+#             'handlers': ['console', 'file'],
+#             'level': 'INFO',
+#             'propagate': False,
+#         },
+#         'django.db.backends': {
+#             'handlers': ['console'],
+#             'level': 'ERROR',
+#         },
+#     },
+# }
+
+
+
 # Database
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'railway',
         'USER': 'postgres',
-        'PASSWORD': 'CJNFXTSwAvrlDwSdwqypPizihWhLRdDM',
-        'HOST': 'tokaido.proxy.rlwy.net',
-        'PORT': '16688',
+        'PASSWORD': 'fsbiCuHDERshMImzTkGfKjSwVZWaWZor',
+        'HOST': 'shortline.proxy.rlwy.net',
+        'PORT': '40857',
         'OPTIONS': {
             'sslmode': 'require',
             'connect_timeout': 60,
@@ -181,7 +250,6 @@ LOGGING = {
         },
     },
 }
-
 # ✅ إنشاء مجلد logs إذا لم يكن موجوداً
 LOG_DIR = os.path.join(BASE_DIR, 'logs')
 if not os.path.exists(LOG_DIR):
