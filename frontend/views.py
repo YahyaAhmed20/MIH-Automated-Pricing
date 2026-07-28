@@ -3161,6 +3161,8 @@ def doctor_detail(request, doctor_name):
     from django.db.models import Sum, Q
     from decimal import Decimal
     from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+    from django.utils import timezone
+    from datetime import timedelta
     
     # 🔍 جلب جميع حالات الطبيب
     doctor_cases = ExternalApproval.objects.filter(
@@ -3178,15 +3180,20 @@ def doctor_detail(request, doctor_name):
         main_status__iexact='serv. done'
     ).count()
     
+    # ✅ ✅ ✅ حساب "دخول باكر (غداً)" للدكتور
+    today = timezone.localtime().date()
+    tomorrow = today + timedelta(days=1)
+    early_admissions = doctor_cases.filter(admission_date=tomorrow).count()
+    
     # ✅ الحالات حسب main_status (مع handling للـ None)
     status_stats = {
         'approved': doctor_cases.filter(main_status__iexact='approved').count(),
         'cancelled': doctor_cases.filter(main_status__iexact='cancelled').count(),
-        'patient_refused': doctor_cases.filter(main_status__iexact='patient refused').count(),  # ✅ غير المفتاح
+        'patient_refused': doctor_cases.filter(main_status__iexact='patient refused').count(),
         'pending': doctor_cases.filter(main_status__iexact='pending').count(),
-        'bending_by_patient': doctor_cases.filter(main_status__iexact='bending by patient').count(),  # ✅ غير المفتاح
+        'bending_by_patient': doctor_cases.filter(main_status__iexact='bending by patient').count(),
         'rejected': doctor_cases.filter(main_status__iexact='rejected').count(),
-        'serv_done': doctor_cases.filter(main_status__iexact='serv. done').count(),  # ✅ غير المفتاح
+        'serv_done': doctor_cases.filter(main_status__iexact='serv. done').count(),
     }
     
     # 💰 التكلفة الإجمالية (جميع الحالات - شامل Serv. Done)
@@ -3226,7 +3233,10 @@ def doctor_detail(request, doctor_name):
     # 🎯 فلتر الحالات حسب main_status (من الـ URL)
     status_filter = request.GET.get('status', '')
     
-    if status_filter:
+    if status_filter == 'early':
+        # ✅ فلترة خاصة بدخول باكر - حسب admission_date = الغد
+        cases_list = doctor_cases.filter(admission_date=tomorrow).order_by('-date', '-id')
+    elif status_filter:
         # لو في فلتر، نفلتر الحالات
         cases_list = doctor_cases.filter(main_status__iexact=status_filter).order_by('-date', '-id')
     else:
@@ -3270,17 +3280,17 @@ def doctor_detail(request, doctor_name):
     context = {
         'doctor_name': doctor_name,
         'doctor_info': doctor_info,
-        'total_cases': total_cases,  # ✅ بدون Serv. Done
-        'total_cost': format_number(total_cost),
-        'status_stats': status_stats,  # ✅ المفاتيح الجديدة
+        'total_cases': total_cases,
+        'total_cost': format_number(total_cost),  # ✅ للعرض (مع فواصل)
+        'total_cost_raw': int(total_cost),  # ✅ ✅ ✅ للكاونتر (بدون فواصل)
+        'status_stats': status_stats,
+        'early_admissions': early_admissions,  # ✅ ✅ ✅ جديد
         'cases': formatted_cases,
         'paginator': paginator,
         'status_filter': status_filter,
     }
     
     return render(request, 'frontend/doctor_detail.html', context)
-
-
 def doctor_status_detail(request, doctor_name, status_type):
     """
     صفحة تفاصيل حالات الطبيب حسب نوع الحالة (مرفوضه، موافقة، إلخ)
@@ -3290,6 +3300,8 @@ def doctor_status_detail(request, doctor_name, status_type):
     from decimal import Decimal
     from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
     from urllib.parse import unquote
+    from django.utils import timezone
+    from datetime import timedelta
     
     # ✅ فك تشفير اسم الدكتور
     doctor_name = unquote(doctor_name)
@@ -3314,6 +3326,7 @@ def doctor_status_detail(request, doctor_name, status_type):
         'bending_by_patient': 'bending by patient',
         'rejected': 'rejected',
         'serv_done': 'serv. done',
+        'early': 'early',  # ✅ ✅ ✅ جديد - دخول باكر
     }
     
     # ✅ ألوان الحالات - Bootstrap classes
@@ -3325,6 +3338,7 @@ def doctor_status_detail(request, doctor_name, status_type):
         'bending by patient': 'info',
         'rejected': 'dark',
         'serv. done': 'info',
+        'early': 'success',  # ✅ جديد
     }
     
     # ✅ ألوان متدرجة (Gradients) لكل حالة
@@ -3336,6 +3350,7 @@ def doctor_status_detail(request, doctor_name, status_type):
         'bending by patient': 'linear-gradient(135deg, #0dcaf0, #0d6efd)',
         'rejected': 'linear-gradient(135deg, #212529, #343a40)',
         'serv. done': 'linear-gradient(135deg, #0dcaf0, #0d6efd)',
+        'early': 'linear-gradient(135deg, #1b5e20, #2e7d32)',  # ✅ جديد - أخضر غامق
     }
     
     # ✅ لون النص لكل حالة (أبيض أو غامق)
@@ -3347,6 +3362,7 @@ def doctor_status_detail(request, doctor_name, status_type):
         'bending by patient': 'white',
         'rejected': 'white',
         'serv. done': 'white',
+        'early': 'white',  # ✅ جديد
     }
     
     # ✅ أيقونات الحالات
@@ -3358,6 +3374,7 @@ def doctor_status_detail(request, doctor_name, status_type):
         'bending by patient': 'fa-pause-circle',
         'rejected': 'fa-ban',
         'serv. done': 'fa-check-double',
+        'early': 'fa-calendar-check',  # ✅ جديد
     }
     
     # ✅ أسماء الحالات بالعربي
@@ -3369,12 +3386,18 @@ def doctor_status_detail(request, doctor_name, status_type):
         'bending by patient': 'مؤجل بمعرفة المريض',
         'rejected': 'مرفوضه',
         'serv. done': 'خدمة منتهية',
+        'early': 'دخول باكر (غداً)',  # ✅ جديد
     }
     
     main_status = status_mapping.get(status_type, '')
     
-    # ✅ فلتر الحالات
-    if main_status:
+    # ✅ ✅ ✅ فلتر الحالات - مع معالجة خاصة لـ 'early'
+    if main_status == 'early':
+        # ✅ فلترة خاصة بدخول باكر - حسب admission_date = الغد
+        today = timezone.localtime().date()
+        tomorrow = today + timedelta(days=1)
+        filtered_cases = doctor_cases.filter(admission_date=tomorrow)
+    elif main_status:
         filtered_cases = doctor_cases.filter(main_status__iexact=main_status)
     else:
         filtered_cases = doctor_cases

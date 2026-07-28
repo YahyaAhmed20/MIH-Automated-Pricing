@@ -4371,3 +4371,48 @@ Not Found: /.well-known/appspecific/com.chrome.devtools.json
 "GET /doctors/%D8%AF/%20%D9%85%D8%AD%D9%85%D8%AF%20%D8%AD%D9%84%D9%85%D9%89%20%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D8%BA%D9%81%D8%A7%D8%B1/ HTTP/1.1" 200 75566
 Not Found: /.well-known/appspecific/com.chrome.devtools.json
 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 14866
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 34811
+"GET /static/images/logo.jpeg HTTP/1.1" 200 68755
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 14755
+"GET /doctors/ HTTP/1.1" 200 231040
+"GET /doctors/%D8%A7.%D8%AF%20/%20%D9%85%D8%A7%D8%AC%D8%AF%20%D8%A8%D9%87%D8%AC%D8%AA/ HTTP/1.1" 200 93115
+"GET /doctors/ HTTP/1.1" 200 231040
+"GET /doctors/%D8%A7.%D8%AF%20/%20%D9%85%D8%A7%D8%AC%D8%AF%20%D8%A8%D9%87%D8%AC%D8%AA/ HTTP/1.1" 200 93115
+"GET /external-approvals/ HTTP/1.1" 200 53845
+"GET /external-approvals/early/ HTTP/1.1" 200 74393
+"GET /doctors/ HTTP/1.1" 200 231040
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /doctors/%D8%A7.%D8%AF%20/%20%D9%85%D8%A7%D8%AC%D8%AF%20%D8%A8%D9%87%D8%AC%D8%AA/ HTTP/1.1" 200 93115
+"GET /doctors/%D8%A7.%D8%AF%20/%20%D9%85%D8%A7%D8%AC%D8%AF%20%D8%A8%D9%87%D8%AC%D8%AA/ HTTP/1.1" 200 93889
+"GET /doctors/%D8%A7.%D8%AF%20/%20%D9%85%D8%AD%D9%85%D8%AF%20%D8%AD%D8%AC%D8%A7%D8%A8/ HTTP/1.1" 200 66992
+"GET /doctors/%D8%A7.%D8%AF%20/%20%D9%85%D8%AD%D9%85%D8%AF%20%D8%AD%D8%AC%D8%A7%D8%A8/ HTTP/1.1" 200 67003
+Watching for file changes with StatReloader
+"GET /doctors/?doctor_name=%D8%A7.%D8%AF+%2F+%D9%83%D8%B1%D9%8A%D9%85+%D8%AE%D8%A7%D9%84%D8%AF+%D8%B2%D9%87%D8%AF%D9%89&specialty=&day_from=&month_from=&year_from=&day_to=&month_to=&year_to= HTTP/1.1" 200 63379
+"GET /doctors/%D8%A7.%D8%AF%20/%20%D9%83%D8%B1%D9%8A%D9%85%20%D8%AE%D8%A7%D9%84%D8%AF%20%D8%B2%D9%87%D8%AF%D9%89/ HTTP/1.1" 200 89818
+"GET /doctor/%D8%A7.%D8%AF%20/%20%D9%83%D8%B1%D9%8A%D9%85%20%D8%AE%D8%A7%D9%84%D8%AF%20%D8%B2%D9%87%D8%AF%D9%89/status/early/ HTTP/1.1" 200 94821
+"GET /doctor/%D8%A7.%D8%AF%20/%20%D9%83%D8%B1%D9%8A%D9%85%20%D8%AE%D8%A7%D9%84%D8%AF%20%D8%B2%D9%87%D8%AF%D9%89/status/early/ HTTP/1.1" 200 94821
+"GET /doctors/%D8%A7.%D8%AF%20/%20%D9%83%D8%B1%D9%8A%D9%85%20%D8%AE%D8%A7%D9%84%D8%AF%20%D8%B2%D9%87%D8%AF%D9%89/ HTTP/1.1" 200 89818
+"GET /doctor/%D8%A7.%D8%AF%20/%20%D9%83%D8%B1%D9%8A%D9%85%20%D8%AE%D8%A7%D9%84%D8%AF%20%D8%B2%D9%87%D8%AF%D9%89/status/early/ HTTP/1.1" 200 94821
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /doctors/%D8%A7.%D8%AF%20/%20%D9%83%D8%B1%D9%8A%D9%85%20%D8%AE%D8%A7%D9%84%D8%AF%20%D8%B2%D9%87%D8%AF%D9%89/ HTTP/1.1" 200 89792
+"GET /doctor/%D8%A7.%D8%AF%20/%20%D9%83%D8%B1%D9%8A%D9%85%20%D8%AE%D8%A7%D9%84%D8%AF%20%D8%B2%D9%87%D8%AF%D9%89/status/early/ HTTP/1.1" 200 94821
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /doctor/%D8%A7.%D8%AF%20/%20%D9%83%D8%B1%D9%8A%D9%85%20%D8%AE%D8%A7%D9%84%D8%AF%20%D8%B2%D9%87%D8%AF%D9%89/status/early/ HTTP/1.1" 200 50279
+"GET /doctor/%D8%A7.%D8%AF%20/%20%D9%83%D8%B1%D9%8A%D9%85%20%D8%AE%D8%A7%D9%84%D8%AF%20%D8%B2%D9%87%D8%AF%D9%89/status/approved/ HTTP/1.1" 200 46140
+"GET /doctor/%D8%A7.%D8%AF%20/%20%D9%83%D8%B1%D9%8A%D9%85%20%D8%AE%D8%A7%D9%84%D8%AF%20%D8%B2%D9%87%D8%AF%D9%89/status/pending/ HTTP/1.1" 200 46205
+"GET /doctor/%D8%A7.%D8%AF%20/%20%D9%83%D8%B1%D9%8A%D9%85%20%D8%AE%D8%A7%D9%84%D8%AF%20%D8%B2%D9%87%D8%AF%D9%89/status/rejected/ HTTP/1.1" 200 54355
+"GET /doctor/%D8%A7.%D8%AF%20/%20%D9%83%D8%B1%D9%8A%D9%85%20%D8%AE%D8%A7%D9%84%D8%AF%20%D8%B2%D9%87%D8%AF%D9%89/status/patient_refused/ HTTP/1.1" 200 58281
+"GET /doctor/%D8%A7.%D8%AF%20/%20%D9%83%D8%B1%D9%8A%D9%85%20%D8%AE%D8%A7%D9%84%D8%AF%20%D8%B2%D9%87%D8%AF%D9%89/status/early/ HTTP/1.1" 200 50279
+"GET /doctor/%D8%A7.%D8%AF%20/%20%D9%83%D8%B1%D9%8A%D9%85%20%D8%AE%D8%A7%D9%84%D8%AF%20%D8%B2%D9%87%D8%AF%D9%89/status/patient_refused/ HTTP/1.1" 200 58281
+"GET /doctor/%D8%A7.%D8%AF%20/%20%D9%83%D8%B1%D9%8A%D9%85%20%D8%AE%D8%A7%D9%84%D8%AF%20%D8%B2%D9%87%D8%AF%D9%89/status/approved/ HTTP/1.1" 200 46140
+"GET /doctor/%D8%A7.%D8%AF%20/%20%D9%83%D8%B1%D9%8A%D9%85%20%D8%AE%D8%A7%D9%84%D8%AF%20%D8%B2%D9%87%D8%AF%D9%89/status/early/ HTTP/1.1" 200 50279
+"GET /doctor/%D8%A7.%D8%AF%20/%20%D9%83%D8%B1%D9%8A%D9%85%20%D8%AE%D8%A7%D9%84%D8%AF%20%D8%B2%D9%87%D8%AF%D9%89/status/pending/ HTTP/1.1" 200 46205
+"GET /doctor/%D8%A7.%D8%AF%20/%20%D9%83%D8%B1%D9%8A%D9%85%20%D8%AE%D8%A7%D9%84%D8%AF%20%D8%B2%D9%87%D8%AF%D9%89/status/patient_refused/ HTTP/1.1" 200 58281
+"GET /doctor/%D8%A7.%D8%AF%20/%20%D9%83%D8%B1%D9%8A%D9%85%20%D8%AE%D8%A7%D9%84%D8%AF%20%D8%B2%D9%87%D8%AF%D9%89/status/rejected/ HTTP/1.1" 200 54355

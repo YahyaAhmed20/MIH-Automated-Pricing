@@ -160,6 +160,11 @@
         background: linear-gradient(135deg, #6c757d, #495057);
         color: white;
     }
+    /* ✅ جديد - كارت دخول باكر */
+    .stats-box-early {
+        background: linear-gradient(135deg, #1b5e20, #2e7d32);
+        color: white;
+    }
     
     /* ✅ جعل جميع الكروت في الصف بنفس الارتفاع */
     .row.g-2 {
@@ -565,7 +570,7 @@
     </div>
     {% else %}
 
-    <!-- 📊 البوكسات العلوية - بتصميم احترافي وألوان متمايزة (من غير خدمة منتهية) -->
+    <!-- 📊 البوكسات العلوية - بتصميم احترافي وألوان متمايزة -->
     <div class="row g-2 mb-3">
         
         <!-- 1. إجمالي الحالات -->
@@ -598,7 +603,25 @@
             </div>
         </div>
         
-        <!-- 3. قيد الانتظار -->
+        <!-- 3. دخول باكر (غداً) -->
+        <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6 col-6">
+            <div class="stats-box stats-box-early">
+                <div class="stats-icon"><i class="fas fa-calendar-check"></i></div>
+                <div class="stats-number counter" data-target="{{ early_admissions }}">0</div>
+                <div class="stats-label">دخول باكر (غداً)</div>
+                {% if early_admissions > 0 %}
+                <a href="{% url 'doctor_status_detail' doctor_name 'early' %}" class="btn-show-details">
+                    <i class="fas fa-eye me-1"></i> عرض
+                </a>
+                {% else %}
+                <button class="btn-show-details" disabled>
+                    <i class="fas fa-minus me-1"></i> لا توجد
+                </button>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- 4. قيد الانتظار -->
         <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6 col-6">
             <div class="stats-box stats-box-pending">
                 <div class="stats-icon"><i class="fas fa-clock"></i></div>
@@ -616,7 +639,7 @@
             </div>
         </div>
         
-        <!-- 4. مؤجل بمعرفة المريض -->
+        <!-- 5. مؤجل بمعرفة المريض -->
         <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6 col-6">
             <div class="stats-box stats-box-bending">
                 <div class="stats-icon"><i class="fas fa-pause-circle"></i></div>
@@ -634,7 +657,7 @@
             </div>
         </div>
         
-        <!-- 5. مرفوضه -->
+        <!-- 6. مرفوضه -->
         <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6 col-6">
             <div class="stats-box stats-box-rejected">
                 <div class="stats-icon"><i class="fas fa-ban"></i></div>
@@ -652,7 +675,7 @@
             </div>
         </div>
         
-        <!-- 6. رفض المريض -->
+        <!-- 7. رفض المريض -->
         <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6 col-6">
             <div class="stats-box stats-box-refused">
                 <div class="stats-icon"><i class="fas fa-user-slash"></i></div>
@@ -670,7 +693,7 @@
             </div>
         </div>
         
-        <!-- 7. ملغاه -->
+        <!-- 8. ملغاه -->
         <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6 col-6">
             <div class="stats-box stats-box-cancelled">
                 <div class="stats-icon"><i class="fas fa-times-circle"></i></div>
@@ -705,6 +728,7 @@
                         {% elif status_filter == 'pending' %}bg-warning text-dark
                         {% elif status_filter == 'bending_by_patient' %}bg-info text-dark
                         {% elif status_filter == 'rejected' %}bg-dark
+                        {% elif status_filter == 'early' %}" style="background: linear-gradient(135deg, #1b5e20, #2e7d32); color: white;"
                         {% else %}bg-primary{% endif %}">
                         {{ status_filter }}
                     </span>
