@@ -30,7 +30,7 @@ DEBUG = True  # ⚠️ خليها False في production
 
 ALLOWED_HOSTS = [
     # "mih-automated-pricing.up.railway.app",
-    "web-production-8d018.up.railway.app",
+    # "web-production-8d018.up.railway.app",
     "127.0.0.1",
     "localhost",
     ".railway.app",
@@ -40,7 +40,7 @@ CSRF_TRUSTED_ORIGINS = [
     "http://127.0.0.1:8000",
     "http://localhost:8000",
     # "https://mih-automated-pricing.up.railway.app",
-    "https://web-production-8d018.up.railway.app",
+    # "https://web-production-8d018.up.railway.app",
 ]
 
 

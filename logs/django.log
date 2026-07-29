@@ -4441,3 +4441,181 @@ Watching for file changes with StatReloader
 Watching for file changes with StatReloader
 D:\desktop\rphospital\src\project\settings.py changed, reloading.
 Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Not Found: /api/companies/
+"GET /api/companies/ HTTP/1.1" 404 30760
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 14755
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 34809
+"GET /static/images/logo.jpeg HTTP/1.1" 200 68755
+"GET /credit-package-pricing/ HTTP/1.1" 200 47157
+"GET /contract-entities/ HTTP/1.1" 200 46723
+"GET /credit-package-pricing/ HTTP/1.1" 200 47157
+"GET /packages-price-list/ HTTP/1.1" 200 38735
+"GET /credit-package-pricing/ HTTP/1.1" 200 47157
+Watching for file changes with StatReloader
+"GET /credit-package-pricing/ HTTP/1.1" 200 47315
+"GET /credit-package-pricing/?company_search=%D8%A7%D9%84%D8%A8%D9%86%D9%83+%D8%A7%D9%84%D8%B9%D9%82%D8%A7%D8%B1%D9%89+%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%89+%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%89&company=1&specialty=&package_search=&package= HTTP/1.1" 200 19898245
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /credit-package-pricing/?company_search=%D8%A7%D9%84%D8%A8%D9%86%D9%83+%D8%A7%D9%84%D8%B9%D9%82%D8%A7%D8%B1%D9%89+%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%89+%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%89&company=1&specialty=&package_search=&package= HTTP/1.1" 200 47499
+"GET /credit-package-pricing/ HTTP/1.1" 200 47157
+Watching for file changes with StatReloader
+"GET /credit-package-pricing/ HTTP/1.1" 200 47157
+Watching for file changes with StatReloader
+"GET /credit-package-pricing/ HTTP/1.1" 200 47157
+"GET /cash-packages/ HTTP/1.1" 200 511551
+"GET /cash-packages/?search=%D8%A7%D8%B3%D8%AA%D8%A6%D8%B5%D8%A7%D9%84+%D8%A7%D9%84%D8%AB%D8%AF%D9%89+%D9%83%D9%84%D9%8A%D8%A7+%D8%A7%D9%88+%D8%AC%D8%B2%D8%A6%D9%8A%D8%A7+%D9%85%D8%B9+%D8%A7%D8%B3%D8%AA%D8%A6%D8%B5%D8%A7%D9%84+%D8%A7%D9%84%D8%BA%D8%AF%D8%AF+%D8%A7%D9%84%D9%84%D9%8A%D9%85%D9%81%D8%A7%D9%88%D9%8A%D8%A9&specialty= HTTP/1.1" 200 62748
+"GET /cash-packages/ HTTP/1.1" 200 511551
+Watching for file changes with StatReloader
+"GET /cash-packages/ HTTP/1.1" 200 511551
+"GET /credit-package-pricing/ HTTP/1.1" 200 47157
+Watching for file changes with StatReloader
+"GET /credit-package-pricing/ HTTP/1.1" 200 47157
+"GET /cash-packages/ HTTP/1.1" 200 40945
+"GET /contract-entities/ HTTP/1.1" 200 46723
+Watching for file changes with StatReloader
+"GET /credit-package-pricing/ HTTP/1.1" 200 47157
+"GET /cash-packages/ HTTP/1.1" 200 40945
+"GET /doctors/ HTTP/1.1" 200 231144
+Watching for file changes with StatReloader
+- Broken pipe from ('127.0.0.1', 55929)
+"GET /credit-package-pricing/ HTTP/1.1" 200 47157
+Watching for file changes with StatReloader
+"GET /credit-package-pricing/ HTTP/1.1" 200 47315
+"GET /credit-package-pricing/?company_search=%D8%A7%D9%84%D8%A8%D9%86%D9%83+%D8%A7%D9%84%D8%B9%D9%82%D8%A7%D8%B1%D9%89+%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%89+%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%89&company=1&specialty=&package_search=&package= HTTP/1.1" 200 529247
+"GET /credit-package-pricing/?company_search=%D8%A7%D9%84%D8%A8%D9%86%D9%83+%D8%A7%D9%84%D8%B9%D9%82%D8%A7%D8%B1%D9%89+%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%89+%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%89&company=1&specialty=219&package_search=&package= HTTP/1.1" 200 63909
+"GET /credit-package-pricing/?company=1&package=251&company_search=%D8%A7%D9%84%D8%A8%D9%86%D9%83%20%D8%A7%D9%84%D8%B9%D9%82%D8%A7%D8%B1%D9%89%20%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%89%20%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%89&package_search=&specialty=219 HTTP/1.1" 200 77925
+"GET /credit-package-pricing/?company=1&package=301&company_search=%D8%A7%D9%84%D8%A8%D9%86%D9%83%20%D8%A7%D9%84%D8%B9%D9%82%D8%A7%D8%B1%D9%89%20%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%89%20%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%89&package_search=&specialty=219 HTTP/1.1" 200 77949
+"GET /credit-package-pricing/?company_search=%D8%A7%D9%84%D8%A8%D9%86%D9%83+%D8%A7%D9%84%D8%B9%D9%82%D8%A7%D8%B1%D9%89+%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%89+%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%89&company=1&specialty=&package_search=&package= HTTP/1.1" 200 529247
+Watching for file changes with StatReloader
+"GET /credit-package-pricing/?company_search=%D8%A7%D9%84%D8%A8%D9%86%D9%83+%D8%A7%D9%84%D8%B9%D9%82%D8%A7%D8%B1%D9%89+%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%89+%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%89&company=1&specialty=&package_search=&package= HTTP/1.1" 200 47499
+Watching for file changes with StatReloader
+"GET /cash-packages/ HTTP/1.1" 200 511551
+"GET /cash-packages/?search=%D8%A7%D8%B3%D8%AA%D8%A6%D8%B5%D8%A7%D9%84+%D8%A7%D9%84%D8%B1%D8%AD%D9%85+%D8%AC%D8%B1%D8%A7%D8%AD%D9%8A%D8%A7+%28+%D9%86%D8%B5%D9%81%D9%89+%29+%28%28+%D8%A8%D8%AF%D9%88%D9%86+%D9%84%D9%8A%D8%AC%D8%A7%D8%B4%D9%88%D8%B1+%2B+PCA+%29%29+%D9%81%D9%89+%D8%AD%D8%A7%D9%84%D9%87+%D8%A7%D8%B3%D8%AA%D8%AE%D8%AF%D8%A7%D9%85+PCA+%D9%8A%D8%AA%D9%85+%D8%A7%D8%B6%D8%A7%D9%81%D9%87+1500+%D8%AC+%D9%82%D9%8A%D9%85%D9%87+%D8%A7%D9%84%D9%85%D8%B3%D8%AA%D9%84%D8%B2%D9%85&specialty= HTTP/1.1" 200 64261
+"GET /credit-package-pricing/ HTTP/1.1" 200 47157
+"GET /pending-analysis/ HTTP/1.1" 200 184480
+"GET /service-search/ HTTP/1.1" 200 753837
+Watching for file changes with StatReloader
+- Broken pipe from ('127.0.0.1', 57300)
+"GET /credit-package-pricing/ HTTP/1.1" 200 47157
+"GET /cash-packages/ HTTP/1.1" 200 40945
+"GET /credit-package-pricing/ HTTP/1.1" 200 47157
+Watching for file changes with StatReloader
+"GET /system/update/ HTTP/1.1" 200 37982
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 100
+"GET /api/update-progress/ HTTP/1.1" 200 100
+"GET /api/update-progress/ HTTP/1.1" 200 105
+"GET /api/update-progress/ HTTP/1.1" 200 105
+"GET /api/update-progress/ HTTP/1.1" 200 105
+"GET /api/update-progress/ HTTP/1.1" 200 105
+"GET /api/update-progress/ HTTP/1.1" 200 105
+"GET /api/update-progress/ HTTP/1.1" 200 105
+"GET /api/update-progress/ HTTP/1.1" 200 105
+"GET /api/update-progress/ HTTP/1.1" 200 104
+"GET /api/update-progress/ HTTP/1.1" 200 104
+"GET /api/update-progress/ HTTP/1.1" 200 104
+"GET /api/update-progress/ HTTP/1.1" 200 104
+"GET /api/update-progress/ HTTP/1.1" 200 104
+"GET /api/update-progress/ HTTP/1.1" 200 101
+"GET /api/update-progress/ HTTP/1.1" 200 101
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 103
+"GET /api/update-progress/ HTTP/1.1" 200 103
+"GET /api/update-progress/ HTTP/1.1" 200 103
+"GET /api/update-progress/ HTTP/1.1" 200 103
+"GET /api/update-progress/ HTTP/1.1" 200 103
+"GET /api/update-progress/ HTTP/1.1" 200 103
+"GET /api/update-progress/ HTTP/1.1" 200 103
+"GET /api/update-progress/ HTTP/1.1" 200 103
+"GET /api/update-progress/ HTTP/1.1" 200 103
+"GET /api/update-progress/ HTTP/1.1" 200 103
+"GET /api/update-progress/ HTTP/1.1" 200 103
+"GET /api/update-progress/ HTTP/1.1" 200 103
+"GET /api/update-progress/ HTTP/1.1" 200 103
+"GET /api/update-progress/ HTTP/1.1" 200 103
+"GET /api/update-progress/ HTTP/1.1" 200 97
+"GET /api/update-progress/ HTTP/1.1" 200 106
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 109
+"GET /api/update-progress/ HTTP/1.1" 200 106
+"GET /api/update-progress/ HTTP/1.1" 200 105
+"GET /api/update-progress/ HTTP/1.1" 200 105
+"GET /api/update-progress/ HTTP/1.1" 200 105
+"GET /api/update-progress/ HTTP/1.1" 200 105
+"GET /api/update-progress/ HTTP/1.1" 200 105
+"GET /api/update-progress/ HTTP/1.1" 200 105
+"GET /api/update-progress/ HTTP/1.1" 200 106
+"GET /api/update-progress/ HTTP/1.1" 200 106
+"GET /api/update-progress/ HTTP/1.1" 200 106
+"GET /api/update-progress/ HTTP/1.1" 200 106
+"GET /api/update-progress/ HTTP/1.1" 200 114
+"POST /system/update/ HTTP/1.1" 200 64721
+Watching for file changes with StatReloader
+"GET /cash-packages/ HTTP/1.1" 200 511551
+"GET /cash-packages/?search=%D8%A7%D8%B3%D8%AA%D8%A6%D8%B5%D8%A7%D9%84+%D8%A7%D9%84%D8%AB%D8%AF%D9%89+%D9%83%D9%84%D9%8A%D8%A7+%D8%A7%D9%88+%D8%AC%D8%B2%D8%A6%D9%8A%D8%A7+%D9%85%D8%B9+%D8%A7%D8%B3%D8%AA%D8%A6%D8%B5%D8%A7%D9%84+%D8%A7%D9%84%D8%BA%D8%AF%D8%AF+%D8%A7%D9%84%D9%84%D9%8A%D9%85%D9%81%D8%A7%D9%88%D9%8A%D8%A9&specialty= HTTP/1.1" 200 62748
+"GET /credit-package-pricing/ HTTP/1.1" 200 47157
+Watching for file changes with StatReloader
+"GET /credit-package-pricing/ HTTP/1.1" 200 69942
+"GET /credit-package-pricing/?company_search=%D8%AC%D8%A7%D8%B3%D9%83%D9%88+%28+%D8%A7%D9%84%D8%B4%D8%B1%D9%83%D9%87+%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%8A%D9%87+%D9%84%D9%84%D8%BA%D8%A7%D8%B2%D8%A7%D8%AA+%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%D8%B9%D9%8A%D9%87+%29&company=17&specialty=&package_search=&package= HTTP/1.1" 200 226895
+"GET /credit-package-pricing/?company=17&package=344&company_search=%D8%AC%D8%A7%D8%B3%D9%83%D9%88%20(%20%D8%A7%D9%84%D8%B4%D8%B1%D9%83%D9%87%20%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%8A%D9%87%20%D9%84%D9%84%D8%BA%D8%A7%D8%B2%D8%A7%D8%AA%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%D8%B9%D9%8A%D9%87%20)&package_search=&specialty= HTTP/1.1" 200 97238
+"GET /cash-packages/ HTTP/1.1" 200 511551
+"GET /credit-package-pricing/ HTTP/1.1" 200 69942
+"GET /credit-package-pricing/?company_search=%D8%A7%D9%84%D8%AA%D8%B9%D8%A7%D9%88%D9%86+%D9%84%D9%84%D8%A8%D8%AA%D8%B1%D9%88%D9%84&company=25&specialty=&package_search=&package= HTTP/1.1" 200 217375
+"GET /credit-package-pricing/?company_search=%D8%A7%D9%84%D8%AA%D8%B9%D8%A7%D9%88%D9%86+%D9%84%D9%84%D8%A8%D8%AA%D8%B1%D9%88%D9%84&company=25&specialty=196&package_search=&package= HTTP/1.1" 200 81692
+"GET /credit-package-pricing/?company_search=%D8%A7%D9%84%D8%AA%D8%B9%D8%A7%D9%88%D9%86+%D9%84%D9%84%D8%A8%D8%AA%D8%B1%D9%88%D9%84&company=25&specialty=196&package_search=%D9%85%D9%86%D8%B8%D8%A7%D8%B1+%D8%AD%D8%A7%D9%84%D8%A8+%D9%85%D8%B9+%D8%AA%D8%B1%D9%83%D9%8A%D8%A8+%D8%AF%D8%B9%D8%A7%D9%85%D8%A9&package=1203 HTTP/1.1" 200 76831

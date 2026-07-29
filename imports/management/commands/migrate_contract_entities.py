@@ -1,7 +1,5 @@
 from django.core.management.base import BaseCommand
-
 from imports.services.excel_provider import ExcelProvider
-
 from imports.services.contract_structure_migration_service import (
     ContractStructureMigrationService,
 )
@@ -12,7 +10,6 @@ class Command(BaseCommand):
     help = "Migrate Contract Structure"
 
     def add_arguments(self, parser):
-
         parser.add_argument(
             "file_path",
             nargs="?",
@@ -22,20 +19,15 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
 
+        # ✅ استخدم header=None لأن شيت 1 مفيش Header
         dataframe = ExcelProvider.read(
             file_path=options["file_path"],
             sheet_name="1",
-            header=0,
+            header=None,  # ✅ مفيش Header
         )
 
-        result = (
-            ContractStructureMigrationService.migrate(
-                dataframe
-            )
-        )
+        result = ContractStructureMigrationService.migrate(dataframe)
 
         self.stdout.write(
-            self.style.SUCCESS(
-                str(result)
-            )
+            self.style.SUCCESS(str(result))
         )

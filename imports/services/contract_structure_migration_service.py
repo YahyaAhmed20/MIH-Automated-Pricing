@@ -361,25 +361,183 @@ class ContractStructureMigrationService:
         contract_packages_to_create = []
         contract_packages_to_update = []
 
-        # ✅ تشغيل على كل الصفوف - استخدام to_dict("records") بدلاً من itertuples()
+        # ✅ تشغيل على كل الصفوف - استخدام to_dict("records")
         print("⏳ Processing rows...")
         total_rows = len(dataframe)
         processed = 0
 
+        # ✅ استخدام أرقام الأعمدة (بدون Header)
         for row in dataframe.to_dict("records"):
-            ContractStructureMigrationService.sync_row(
-                row,  # ✅ row من to_dict (ديكت)
-                packages_cache,
+
+            # ✅ العمود 0: الشركه
+            company_name = ContractStructureMigrationService.normalize_company_name(
+                row.get(0, "")
+            )
+
+            # ✅ العمود 6: الكود
+            package_codes = ContractStructureMigrationService.normalize_package_codes(
+                row.get(6, "")
+            )
+
+            # ✅ العمود 2: اسم الباكدج
+            package_name = ImportHelpers.normalize_text(
+                row.get(2, "")
+            )
+
+            # ✅ العمود 1: نوع التعاقد (الفئة المالية)
+            financial_code = ImportHelpers.normalize_text(
+                row.get(1, "")
+            )
+
+            if not company_name or not package_codes:
+                continue
+
+            result["processed"] += 1
+
+            # ============================================================
+            # ✅ Entity - باستخدام Cache
+            # ============================================================
+            entity = ContractStructureMigrationService.get_or_create_entity(
+                company_name,
                 entities_cache,
+                result,
+            )
+
+            # ============================================================
+            # ✅ Financial Category - باستخدام Cache
+            # ============================================================
+            if not financial_code:
+                financial_code = "DEFAULT"
+
+            financial_category = ContractStructureMigrationService.get_or_create_financial_category(
+                entity,
+                financial_code,
                 financial_categories_cache,
+                result,
+            )
+
+            # ============================================================
+            # ✅ Contract - باستخدام Cache (بدون get_or_create)
+            # ============================================================
+            contract = ContractStructureMigrationService.get_or_create_contract_cached(
+                entity,
+                financial_category,
+                company_name,
                 contracts_cache,
                 contracts_cache_full,
-                contract_packages_cache,
-                contract_packages_to_create,
-                contract_packages_to_update,
                 default_price_list,
                 result
             )
+
+            # ============================================================
+            # ✅ Package Lookup
+            # ============================================================
+            package = None
+
+            for code in package_codes:
+                key = ImportHelpers.package_lookup_key(code, package_name)
+                package = packages_cache.get(key)
+                if package:
+                    break
+
+            if not package:
+                result["package_not_found"] += 1
+                for code in package_codes:
+                    result["missing_codes"].add(code)
+                continue
+
+            # ============================================================
+            # ✅ Price - استخدام قيم افتراضية
+            # ============================================================
+            price = ContractStructureMigrationService.clean_decimal(
+                row.get(4, None)  # ✅ العمود 4: السعر
+            )
+
+            # ✅ إذا كان السعر فارغاً، استخدم الاجمالي (العمود 10)
+            if price is None:
+                price = ContractStructureMigrationService.clean_decimal(
+                    row.get(10, None)
+                )
+
+            # ✅ إذا كان الاجمالي فارغاً، استخدم النقدي (العمود 16)
+            if price is None:
+                price = ContractStructureMigrationService.clean_decimal(
+                    row.get(16, None)
+                )
+
+            # ✅ إذا كان كل شيء فارغاً، استخدم 0 كقيمة افتراضية
+            if price is None:
+                price = 0
+                result["missing_price"] += 1
+
+            # ============================================================
+            # ✅ ContractPackage - باستخدام Bulk بدلاً من update_or_create
+            # ============================================================
+            defaults = {
+                "package_price": price,
+                "total_before_discount": ContractStructureMigrationService.clean_decimal(
+                    row.get(10, None)  # ✅ العمود 10: الاجمالي
+                ),
+                "current_discount_rate": ContractStructureMigrationService.clean_percentage(
+                    row.get(12, None)  # ✅ العمود 12: معدل الخصم الحالي
+                ),
+                "current_discount_text": ContractStructureMigrationService.clean_discount_text(
+                    row.get(12, None)
+                ),
+                "cash_price": ContractStructureMigrationService.clean_decimal(
+                    row.get(16, None)  # ✅ العمود 16: النقدي
+                ),
+                "special_offer_price": ContractStructureMigrationService.clean_decimal(
+                    row.get(14, None)  # ✅ العمود 14: Special Offer
+                ),
+                "special_offer_company": (
+                    row.get(15, "") or ""  # ✅ العمود 15: الشركه.1
+                ),
+                "price_list_applied": row.get(13, None),  # ✅ العمود 13: قائمة الاسعار
+                "effective_from": ContractStructureMigrationService.clean_date(
+                    row.get(7, None)  # ✅ العمود 7: اعتبارا من
+                ),
+                "valid_until": ContractStructureMigrationService.clean_date(
+                    row.get(8, None)  # ✅ العمود 8: ساري حتي
+                ),
+                "notes": row.get(9, None),  # ✅ العمود 9: ملاحظات الباكدج
+                "approval_pdf": row.get(19, None),  # ✅ العمود 19: مشتملات الباكدج
+                "is_active": True,
+                "suggested_price": ContractStructureMigrationService.clean_decimal(
+                    row.get(18, None)  # ✅ العمود 18: السعر المقترح
+                ),
+                "suggested_discount_rate": ContractStructureMigrationService.clean_percentage(
+                    row.get(17, None)  # ✅ العمود 17: معدل الخصم المقترح
+                ),
+            }
+
+            key = (contract.id, package.id)
+            contract_package = contract_packages_cache.get(key)
+
+            if contract_package:
+
+                changed = False
+
+                for field, value in defaults.items():
+                    if getattr(contract_package, field) != value:
+                        setattr(contract_package, field, value)
+                        changed = True
+
+                if changed:
+                    contract_packages_to_update.append(contract_package)
+                    result["updated_packages"] += 1
+
+            else:
+
+                contract_package = ContractPackage(
+                    contract=contract,
+                    package=package,
+                    **defaults,
+                )
+
+                contract_packages_to_create.append(contract_package)
+                contract_packages_cache[key] = contract_package
+                result["created_packages"] += 1
 
             processed += 1
             if processed % 1000 == 0:
@@ -427,230 +585,3 @@ class ContractStructureMigrationService:
         print(f"✅ Completed in {elapsed:.2f} seconds")
 
         return result
-
-    # ============================================================
-    # ✅ sync_row() - المعدل بالكامل مع Bulk و to_dict
-    # ============================================================
-    @staticmethod
-    def sync_row(
-        row,  # ✅ row من to_dict (ديكت)
-        packages_cache,
-        entities_cache,
-        financial_categories_cache,
-        contracts_cache,
-        contracts_cache_full,
-        contract_packages_cache,
-        contract_packages_to_create,
-        contract_packages_to_update,
-        default_price_list,
-        result
-    ):
-
-        # ============================================================
-        # ✅ استخراج البيانات من الصف - استخدام row.get()
-        # ============================================================
-        company_name = ContractStructureMigrationService.normalize_company_name(
-            row.get("الشركه", "")
-        )
-
-        # ✅ أكواد الباكدجات
-        package_codes = ContractStructureMigrationService.normalize_package_codes(
-            row.get("الكود", "")
-        )
-
-        # ✅ اسم الباكدج
-        package_name = ImportHelpers.normalize_text(
-            row.get("اسم الباكدج", "")
-        )
-
-        # ✅ الفئة المالية
-        financial_code = ImportHelpers.normalize_text(
-            row.get("الفئة المالية", "")
-        )
-
-        if not company_name or not package_codes:
-            return
-
-        result["processed"] += 1
-
-        # ============================================================
-        # ✅ Entity - باستخدام Cache
-        # ============================================================
-        entity = ContractStructureMigrationService.get_or_create_entity(
-            company_name,
-            entities_cache,
-            result,
-        )
-
-        # ============================================================
-        # ✅ Financial Category - باستخدام Cache
-        # ============================================================
-        if not financial_code:
-            financial_code = "DEFAULT"
-
-        financial_category = ContractStructureMigrationService.get_or_create_financial_category(
-            entity,
-            financial_code,
-            financial_categories_cache,
-            result,
-        )
-
-        # ============================================================
-        # ✅ Contract - باستخدام Cache (بدون get_or_create)
-        # ============================================================
-        contract = ContractStructureMigrationService.get_or_create_contract_cached(
-            entity,
-            financial_category,
-            company_name,
-            contracts_cache,
-            contracts_cache_full,
-            default_price_list,
-            result
-        )
-
-        # ============================================================
-        # ✅ Package Lookup - مع تشخيص NPH04-C
-        # ============================================================
-        package = None
-
-        for code in package_codes:
-
-            key = ImportHelpers.package_lookup_key(
-                code,
-                package_name,
-            )
-
-            # ✅ تشخيص NPH04-C
-            if "NPH04-C" in package_codes:
-                print("=" * 60)
-                print("🔍 Debug NPH04-C")
-                print(f"   Codes: {package_codes}")
-                print(f"   Package Name: {package_name}")
-                print(f"   Lookup Key: {key}")
-                print(f"   Exists: {key in packages_cache}")
-                print("=" * 60)
-
-                # ✅ إذا لم يكن موجوداً، ابحث عن أقرب مفتاح
-                if key not in packages_cache:
-                    print("🔍 Searching for similar keys...")
-                    for k in packages_cache:
-                        if k[0] == "NPH04-C":
-                            print(f"   Found DB Key: {k}")
-                            print(f"   DB Name: {k[1]}")
-                            break
-                    print("=" * 60)
-
-            package = packages_cache.get(key)
-
-            if package:
-                break
-
-        if not package:
-            result["package_not_found"] += 1
-
-            for code in package_codes:
-                result["missing_codes"].add(code)
-
-            return
-
-        # ============================================================
-        # ✅ Price - استخدام قيم افتراضية
-        # ============================================================
-        price = ContractStructureMigrationService.clean_decimal(
-            row.get("السعر", None)
-        )
-
-        # ✅ إذا كان السعر فارغاً، استخدم الاجمالي
-        if price is None:
-            price = ContractStructureMigrationService.clean_decimal(
-                row.get("الاجمالي", None)
-            )
-
-        # ✅ إذا كان الاجمالي فارغاً، استخدم النقدي
-        if price is None:
-            price = ContractStructureMigrationService.clean_decimal(
-                row.get("النقدي", None)
-            )
-
-        # ✅ إذا كان كل شيء فارغاً، استخدم 0 كقيمة افتراضية
-        if price is None:
-            price = 0
-            result["missing_price"] += 1
-
-        # ============================================================
-        # ✅ ContractPackage - باستخدام Bulk بدلاً من update_or_create
-        # ============================================================
-        defaults = {
-            "package_price": price,
-            "total_before_discount": ContractStructureMigrationService.clean_decimal(
-                row.get("الاجمالي", None)
-            ),
-            "current_discount_rate": ContractStructureMigrationService.clean_percentage(
-                row.get("معدل الخصم الحالي", None)
-            ),
-            "current_discount_text": ContractStructureMigrationService.clean_discount_text(
-                row.get("معدل الخصم الحالي", None)
-            ),
-            "cash_price": ContractStructureMigrationService.clean_decimal(
-                row.get("النقدي", None)
-            ),
-            "special_offer_price": ContractStructureMigrationService.clean_decimal(
-                row.get("Special Offer", None)
-            ),
-            "special_offer_company": (
-                row.get("الشركه.1", "") or ""
-            ),
-            "price_list_applied": row.get(
-                "قائمة الاسعار المطبقه / معدل الزياده", None
-            ),
-            "effective_from": ContractStructureMigrationService.clean_date(
-                row.get("اعتبارا من", None)
-            ),
-            "valid_until": ContractStructureMigrationService.clean_date(
-                row.get("ساري حتي", None)
-            ),
-            "notes": row.get("ملاحظات الباكدج", None),
-            "approval_pdf": row.get("الموافقه", None),
-            "is_active": True,
-            "suggested_price": ContractStructureMigrationService.clean_decimal(
-                row.get("السعر المقترح", None)
-            ),
-            "suggested_discount_rate": ContractStructureMigrationService.clean_percentage(
-                row.get("معدل الخصم المقترح", None)
-            ),
-        }
-
-        key = (
-            contract.id,
-            package.id,
-        )
-
-        contract_package = contract_packages_cache.get(key)
-
-        if contract_package:
-
-            changed = False
-
-            for field, value in defaults.items():
-
-                if getattr(contract_package, field) != value:
-                    setattr(contract_package, field, value)
-                    changed = True
-
-            if changed:
-                contract_packages_to_update.append(contract_package)
-                result["updated_packages"] += 1
-
-        else:
-
-            contract_package = ContractPackage(
-                contract=contract,
-                package=package,
-                **defaults,
-            )
-
-            contract_packages_to_create.append(contract_package)
-
-            contract_packages_cache[key] = contract_package
-
-            result["created_packages"] += 1
