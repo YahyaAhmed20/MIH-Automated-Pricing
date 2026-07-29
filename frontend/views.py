@@ -5438,18 +5438,12 @@ _update_progress = {
     "is_running": False,
     "results": [],
 }
+from imports.services.progress_service import ProgressService
 
 
 def update_progress(request):
     """API لتحديث التقدم"""
-    return JsonResponse({
-        "completed": _update_progress["completed"],
-        "current_command": _update_progress["current_command"],
-        "total": _update_progress["total"],
-        "is_running": _update_progress["is_running"],
-        "results": _update_progress["results"],
-    })
-
+    return JsonResponse(ProgressService.get())
 
 def extract_results_from_logs(logs):
     """استخراج النتائج من الـ logs"""
