@@ -44,9 +44,7 @@ CSRF_TRUSTED_ORIGINS = [
     # "https://mih-automated-pricing.up.railway.app",
     "https://web-production-8d018.up.railway.app",
 ]
-CSRF_TRUSTED_ORIGINS = [
-    "https://web-production-8d018.up.railway.app",
-]
+
 
 # Application definition
 
