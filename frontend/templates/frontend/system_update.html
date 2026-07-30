@@ -246,6 +246,16 @@
         height: 1rem;
         border-width: 0.2em;
     }
+
+    /* ✅ Clear logs button */
+    .btn-clear-logs {
+        transition: all 0.3s ease;
+    }
+
+    .btn-clear-logs:hover {
+        background: rgba(255,255,255,0.2) !important;
+        transform: scale(1.05);
+    }
 </style>
 
 <div class="row">
@@ -283,7 +293,7 @@
                     <div class="col-md-3">
 
                         <h5>
-                            {{ total_commands|default:16 }}
+                            {{ total_commands|default:18 }}
                         </h5>
 
                         <small class="text-muted">
@@ -422,28 +432,27 @@
 
 </div>
 
-<!-- ✅ عرض الـ Logs -->
-{% if logs %}
-
-<div class="card shadow-sm mt-4 border-0 result-card">
-
-    <div class="card-header bg-dark text-white">
-
+<!-- ✅ عرض الـ Logs مع زر مسح -->
+<div class="card shadow-sm mt-4 border-0 result-card" id="logsCard" {% if not logs or logs == 'None' %}style="display:none;"{% endif %}>
+    <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
         <strong>
             📋 سجل عملية التحديث
         </strong>
-
+        <button 
+            id="clearLogsBtn"
+            class="btn btn-sm btn-outline-light btn-clear-logs"
+            onclick="clearLogs()"
+            title="مسح سجل التحديث"
+        >
+            <i class="bi bi-trash3"></i>
+            مسح السجل
+        </button>
     </div>
 
     <div class="card-body p-0">
-
-        <pre class="logs-content mb-0">{{ logs }}</pre>
-
+        <pre class="logs-content mb-0" id="logsContent">{% if logs and logs != 'None' %}{{ logs }}{% else %}⚠️ لا توجد سجلات لعرضها{% endif %}</pre>
     </div>
-
 </div>
-
-{% endif %}
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -456,8 +465,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const progressText = document.getElementById('progressText');
     const progressDetail = document.getElementById('progressDetail');
     const timeDisplay = document.getElementById('timeDisplay');
+    const logsCard = document.getElementById('logsCard');
 
-    // ✅ أسماء الأوامر بالترتيب (16 أمر)
+    // ✅ أسماء الأوامر بالترتيب (18 أمر)
     const COMMANDS = [
         'Package Catalog',
         'Cash Packages',
@@ -479,7 +489,7 @@ document.addEventListener('DOMContentLoaded', function() {
         'Normalize Categories'
     ];
 
-    const totalCommands = {{ total_commands }};
+    const totalCommands = {{ total_commands|default:18 }};
     let progressInterval = null;
     let checkInterval = null;
     let startTime = null;
@@ -513,6 +523,19 @@ document.addEventListener('DOMContentLoaded', function() {
             button.innerHTML = '<i class="bi bi-arrow-repeat"></i> تحديث جميع البيانات';
             clearInterval(checkInterval);
             clearInterval(timerInterval);
+            
+            // ✅ إظهار الـ Logs بعد الانتهاء
+            setTimeout(function() {
+                fetch('/api/update-progress/')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.logs && data.logs != 'None') {
+                            logsCard.style.display = 'block';
+                            document.getElementById('logsContent').textContent = data.logs;
+                        }
+                    })
+                    .catch(() => {});
+            }, 1000);
             return;
         }
 
@@ -521,6 +544,9 @@ document.addEventListener('DOMContentLoaded', function() {
             const currentName = currentCommand || COMMANDS[completed] || '...';
             progressText.innerHTML = `⏳ جاري التنفيذ: ${currentName} (${completed}/${totalCommands})`;
             progressDetail.innerHTML = `تم تنفيذ ${completed} من ${totalCommands} أمر`;
+            
+            // ✅ إخفاء الـ Logs أثناء التحديث
+            logsCard.style.display = 'none';
         }
     }
 
@@ -589,6 +615,9 @@ document.addEventListener('DOMContentLoaded', function() {
         progressBar.classList.add('bg-success', 'progress-bar-animated');
         progressText.innerHTML = '⏳ جاري التحديث...';
         progressDetail.innerHTML = 'بدء التنفيذ...';
+        
+        // ✅ إخفاء الـ Logs أثناء التحديث
+        logsCard.style.display = 'none';
 
         // ✅ بدء计时器
         startTime = Date.now();
@@ -660,8 +689,51 @@ document.addEventListener('DOMContentLoaded', function() {
         clearInterval(checkInterval);
     }
 
+    // ✅ مسح السجل
+    window.clearLogs = function() {
+        if (!confirm('⚠️ هل أنت متأكد من مسح سجل التحديث؟')) {
+            return;
+        }
+        
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        
+        fetch('/api/clear-logs/', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrfToken,
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // ✅ إخفاء الـ Logs مباشرة
+                logsCard.style.display = 'none';
+                // ✅ عرض رسالة نجاح
+                const alertDiv = document.createElement('div');
+                alertDiv.className = 'alert alert-success alert-dismissible fade show mt-3';
+                alertDiv.innerHTML = `
+                    ✅ ${data.message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                `;
+                document.querySelector('.col-lg-8').appendChild(alertDiv);
+                
+                // ✅ إخفاء الرسالة بعد 3 ثواني
+                setTimeout(() => {
+                    alertDiv.remove();
+                }, 3000);
+            } else {
+                alert('❌ فشل مسح السجل: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('❌ حدث خطأ أثناء مسح السجل');
+        });
+    };
+
     // ✅ لو في Logs بعد التحديث (عند تحميل الصفحة)
-    {% if logs %}
+    {% if logs and logs != 'None' %}
     setTimeout(function() {
         if (checkInterval) {
             clearInterval(checkInterval);
@@ -677,7 +749,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         const hasError = '{{ logs|slice:":100" }}'.includes('ERROR') || '{{ logs|slice:":100" }}'.includes('❌');
-        const isComplete = '{{ completed|default:0 }}' >= '{{ total_commands|default:16 }}';
+        const isComplete = '{{ completed|default:0 }}' >= '{{ total_commands|default:18 }}';
         
         if (hasError) {
             progressBar.style.width = '100%';
@@ -701,6 +773,9 @@ document.addEventListener('DOMContentLoaded', function() {
             statusBadge.className = 'text-success';
             button.disabled = false;
             button.innerHTML = '<i class="bi bi-arrow-repeat"></i> تحديث جميع البيانات';
+            
+            // ✅ إظهار الـ Logs
+            logsCard.style.display = 'block';
         }
     }, 500);
     {% endif %}
@@ -716,6 +791,9 @@ document.addEventListener('DOMContentLoaded', function() {
     timerInterval = setInterval(updateTimer, 1000);
     checkInterval = setInterval(checkProgress, 2000);
     setTimeout(checkProgress, 500);
+    
+    // ✅ إخفاء الـ Logs أثناء التحديث
+    logsCard.style.display = 'none';
     {% endif %}
 
 });

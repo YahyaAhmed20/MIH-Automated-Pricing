@@ -191,6 +191,8 @@ path(
     views.system_update,
     name="system_update",
 ),
+path('api/clear-logs/', views.clear_logs, name='clear_logs'),
+
 path(
     "ajax/package-filters/",
     views.get_package_filters,

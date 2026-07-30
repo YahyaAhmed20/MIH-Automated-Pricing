@@ -18,12 +18,13 @@ def update_all_data_task(self):
     # ✅ حساب العدد الإجمالي للأوامر
     total = len(IMPORT_COMMANDS) + len(POST_IMPORT_COMMANDS)
 
-    # ✅ بداية التحديث
+    # ✅ بداية التحديث - مسح الـ logs القديمة
     ProgressService.reset()
-
+    
     ProgressService.update(
         is_running=True,
         total=total,
+        logs=None,  # ✅ مسح الـ logs القديمة
     )
 
     try:
@@ -42,12 +43,12 @@ def update_all_data_task(self):
 
         logs = output.getvalue()
 
-        # ✅ نهاية التحديث - تحديث صريح بـ total
+        # ✅ نهاية التحديث - حفظ الـ logs الجديدة
         ProgressService.update(
             is_running=False,
             completed=total,
             total=total,
-            logs=logs,
+            logs=logs,  # ✅ الـ logs الجديدة
         )
 
         return {

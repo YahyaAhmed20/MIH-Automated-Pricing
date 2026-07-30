@@ -5422,7 +5422,6 @@ from django.shortcuts import render
 from imports.services.update_all_data_service import UpdateAllDataService
 from imports.tasks import update_all_data_task
 from imports.services.progress_service import ProgressService
-
 def clean_logs(text):
     """
     Remove ANSI terminal color codes from command output.
@@ -5475,8 +5474,11 @@ def system_update(request):
     """عرض صفحة تحديث النظام"""
     
     if request.method == "POST":
-        # ✅ إعادة تعيين التقدم وبدء المهمة
+        # ✅ إعادة تعيين التقدم ومسح الـ Logs القديمة
         ProgressService.reset()
+        # ✅ خلي الـ logs فاضية عشان تبدأ من جديد
+        ProgressService.update(logs=None)
+        
         task = update_all_data_task.delay()
         
         # ✅ إرجاع JSON للـ fetch
@@ -5516,3 +5518,23 @@ def system_update(request):
             "completed": progress.get("completed", 0),
         }
     )
+    
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_protect
+from django.views.decorators.http import require_http_methods
+
+@csrf_protect
+@require_http_methods(["POST"])
+def clear_logs(request):
+    """API لمسح سجل التحديث"""
+    try:
+        ProgressService.update(logs=None)
+        return JsonResponse({
+            "success": True,
+            "message": "تم مسح السجل بنجاح"
+        })
+    except Exception as e:
+        return JsonResponse({
+            "success": False,
+            "message": f"حدث خطأ: {str(e)}"
+        }, status=500)
