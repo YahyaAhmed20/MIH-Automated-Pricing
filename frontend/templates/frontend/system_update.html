@@ -159,6 +159,12 @@
         box-shadow: 0 8px 30px rgba(40, 167, 69, 0.4);
     }
 
+    .btn-success:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+        transform: none !important;
+    }
+
     /* ✅ أنيميشن */
     @keyframes slideIn {
         from {
@@ -232,6 +238,13 @@
     .logs-content::-webkit-scrollbar-thumb {
         background: #00ff88;
         border-radius: 10px;
+    }
+
+    /* ✅ Spinner */
+    .spinner-border-sm {
+        width: 1rem;
+        height: 1rem;
+        border-width: 0.2em;
     }
 </style>
 
@@ -461,14 +474,17 @@ document.addEventListener('DOMContentLoaded', function() {
         'Company Discount Rank',
         'Company Exceptions',
         'Report Statistics',
-        'External Approvals'
+        'External Approvals',
+        'Report Statistics Sheet 15',
+        'Normalize Categories'
     ];
 
-    const totalCommands = COMMANDS.length;
+    const totalCommands = {{ total_commands }};
     let progressInterval = null;
     let checkInterval = null;
     let startTime = null;
     let timerInterval = null;
+    let isFetching = false;
 
     // ✅ تحديث الوقت
     function updateTimer() {
@@ -480,12 +496,13 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ✅ تحديث الـ Progress
-    function updateProgress(completed, currentCommand) {
+    function updateProgress(completed, currentCommand, isRunning) {
         const progress = Math.min(Math.round((completed / totalCommands) * 100), 100);
         progressBar.style.width = progress + '%';
         progressBar.innerHTML = progress + '%';
 
-        if (completed >= totalCommands) {
+        // ✅ إذا انتهى التحديث
+        if (!isRunning && completed >= totalCommands) {
             progressBar.classList.remove('progress-bar-animated');
             progressBar.classList.add('bg-success');
             progressText.innerHTML = '✅ تم الانتهاء من جميع الأوامر بنجاح!';
@@ -494,49 +511,75 @@ document.addEventListener('DOMContentLoaded', function() {
             statusBadge.className = 'text-success';
             button.disabled = false;
             button.innerHTML = '<i class="bi bi-arrow-repeat"></i> تحديث جميع البيانات';
-            clearInterval(progressInterval);
             clearInterval(checkInterval);
             clearInterval(timerInterval);
             return;
         }
 
-        const currentName = currentCommand || COMMANDS[completed] || '...';
-        progressText.innerHTML = `⏳ جاري التنفيذ: ${currentName} (${completed}/${totalCommands})`;
-        progressDetail.innerHTML = `تم تنفيذ ${completed} من ${totalCommands} أمر`;
+        // ✅ إذا كان التحديث جاري
+        if (isRunning) {
+            const currentName = currentCommand || COMMANDS[completed] || '...';
+            progressText.innerHTML = `⏳ جاري التنفيذ: ${currentName} (${completed}/${totalCommands})`;
+            progressDetail.innerHTML = `تم تنفيذ ${completed} من ${totalCommands} أمر`;
+        }
     }
 
     // ✅ التحقق من التقدم
     function checkProgress() {
+        if (isFetching) return;
+        isFetching = true;
+
         fetch('/api/update-progress/')
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
             .then(data => {
                 const completed = data.completed || 0;
                 const currentCommand = data.current_command || '';
-                updateProgress(completed, currentCommand);
+                const isRunning = data.is_running || false;
+                updateProgress(completed, currentCommand, isRunning);
+                
+                // ✅ إذا انتهى التحديث، نوقف الـ polling
+                if (!isRunning && completed >= totalCommands) {
+                    clearInterval(checkInterval);
+                    clearInterval(timerInterval);
+                }
             })
-            .catch(() => {
-                if (progressInterval) return;
-                let fakeProgress = 0;
-                progressInterval = setInterval(function() {
-                    fakeProgress = Math.min(fakeProgress + 2, 95);
-                    progressBar.style.width = fakeProgress + '%';
-                    progressBar.innerHTML = fakeProgress + '%';
-                    if (fakeProgress >= 95) {
-                        clearInterval(progressInterval);
-                    }
-                }, 2000);
+            .catch(error => {
+                console.error('Error fetching progress:', error);
+                // ✅ Fallback: زيادة تدريجية وهمية
+                if (!progressInterval) {
+                    let fakeProgress = parseInt(progressBar.innerHTML) || 0;
+                    progressInterval = setInterval(function() {
+                        fakeProgress = Math.min(fakeProgress + 1, 95);
+                        progressBar.style.width = fakeProgress + '%';
+                        progressBar.innerHTML = fakeProgress + '%';
+                        if (fakeProgress >= 95) {
+                            clearInterval(progressInterval);
+                            progressInterval = null;
+                        }
+                    }, 3000);
+                }
+            })
+            .finally(() => {
+                isFetching = false;
             });
     }
 
-    // ✅ عند إرسال الفورم
+    // ✅ عند إرسال الفورم باستخدام fetch
     form.addEventListener('submit', function(e) {
+        e.preventDefault();
+
         if (button.disabled) {
-            e.preventDefault();
             return;
         }
 
+        // ✅ تعطيل الزر وتحديث واجهة المستخدم
         button.disabled = true;
-        button.innerHTML = '⏳ جاري التحديث...';
+        button.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> جاري التحديث...';
         statusBadge.innerHTML = '🔄 جاري التحديث';
         statusBadge.className = 'text-warning';
         progressContainer.classList.remove('d-none');
@@ -547,15 +590,40 @@ document.addEventListener('DOMContentLoaded', function() {
         progressText.innerHTML = '⏳ جاري التحديث...';
         progressDetail.innerHTML = 'بدء التنفيذ...';
 
+        // ✅ بدء计时器
         startTime = Date.now();
         if (timerInterval) clearInterval(timerInterval);
         timerInterval = setInterval(updateTimer, 1000);
 
-        if (checkInterval) clearInterval(checkInterval);
-        checkInterval = setInterval(checkProgress, 2000);
+        // ✅ إرسال الطلب بـ fetch (الخطوة 2)
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        const formData = new FormData(form);
 
-        setTimeout(checkProgress, 500);
+        fetch(window.location.pathname, {
+            method: "POST",
+            body: formData,
+            headers: {
+                "X-CSRFToken": csrfToken
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // ✅ بدء التحقق من التقدم
+                if (checkInterval) clearInterval(checkInterval);
+                setTimeout(checkProgress, 500);
+                checkInterval = setInterval(checkProgress, 2000);
+            } else {
+                // ✅ فشل بدء المهمة
+                handleError(data.message || 'حدث خطأ أثناء بدء التحديث');
+            }
+        })
+        .catch(error => {
+            console.error('Fetch error:', error);
+            handleError('فشل الاتصال بالخادم. تأكد من اتصال الإنترنت.');
+        });
 
+        // ✅ Auto-cleanup بعد 10 دقائق
         setTimeout(function() {
             if (checkInterval) {
                 clearInterval(checkInterval);
@@ -565,6 +633,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 clearInterval(progressInterval);
                 progressInterval = null;
             }
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
             if (!progressBar.innerHTML.includes('100%')) {
                 progressText.innerHTML = '⏳ جاري التحديث (قد يستغرق وقتاً أطول)...';
                 progressDetail.innerHTML = 'العملية ما زالت قيد التنفيذ';
@@ -572,7 +644,23 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 600000);
     });
 
-    // ✅ لو في Logs بعد التحديث
+    // ✅ دالة معالجة الأخطاء
+    function handleError(message) {
+        progressText.innerHTML = '❌ ' + message;
+        progressDetail.innerHTML = 'يرجى المحاولة مرة أخرى';
+        statusBadge.innerHTML = '❌ خطأ';
+        statusBadge.className = 'text-danger';
+        button.disabled = false;
+        button.innerHTML = '<i class="bi bi-arrow-repeat"></i> إعادة المحاولة';
+        progressBar.classList.remove('progress-bar-animated');
+        progressBar.classList.add('bg-danger');
+        progressBar.style.width = '100%';
+        progressBar.innerHTML = '❌';
+        clearInterval(timerInterval);
+        clearInterval(checkInterval);
+    }
+
+    // ✅ لو في Logs بعد التحديث (عند تحميل الصفحة)
     {% if logs %}
     setTimeout(function() {
         if (checkInterval) {
@@ -587,7 +675,10 @@ document.addEventListener('DOMContentLoaded', function() {
             clearInterval(timerInterval);
             timerInterval = null;
         }
+        
         const hasError = '{{ logs|slice:":100" }}'.includes('ERROR') || '{{ logs|slice:":100" }}'.includes('❌');
+        const isComplete = '{{ completed|default:0 }}' >= '{{ total_commands|default:16 }}';
+        
         if (hasError) {
             progressBar.style.width = '100%';
             progressBar.innerHTML = '❌ خطأ';
@@ -599,7 +690,7 @@ document.addEventListener('DOMContentLoaded', function() {
             statusBadge.className = 'text-danger';
             button.disabled = false;
             button.innerHTML = '<i class="bi bi-arrow-repeat"></i> إعادة المحاولة';
-        } else {
+        } else if (isComplete) {
             progressBar.style.width = '100%';
             progressBar.innerHTML = '100%';
             progressBar.classList.remove('progress-bar-animated');
@@ -612,6 +703,19 @@ document.addEventListener('DOMContentLoaded', function() {
             button.innerHTML = '<i class="bi bi-arrow-repeat"></i> تحديث جميع البيانات';
         }
     }, 500);
+    {% endif %}
+
+    // ✅ إذا كان التحديث قيد التشغيل عند تحميل الصفحة
+    {% if is_running %}
+    progressContainer.classList.remove('d-none');
+    button.disabled = true;
+    button.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> جاري التحديث...';
+    statusBadge.innerHTML = '🔄 جاري التحديث';
+    statusBadge.className = 'text-warning';
+    startTime = Date.now();
+    timerInterval = setInterval(updateTimer, 1000);
+    checkInterval = setInterval(checkProgress, 2000);
+    setTimeout(checkProgress, 500);
     {% endif %}
 
 });

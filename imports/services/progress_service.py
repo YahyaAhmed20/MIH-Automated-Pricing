@@ -9,7 +9,7 @@ class ProgressService:
 
     DEFAULT = {
         "completed": 0,
-        "total": 16,
+        "total": 18,
         "current_command": "",
         "is_running": False,
         "results": [],
@@ -17,14 +17,24 @@ class ProgressService:
 
     @classmethod
     def redis(cls):
+        redis_url = settings.CELERY_BROKER_URL
+
+        if not redis_url:
+            return None
+
         return redis.Redis.from_url(
-            settings.CELERY_BROKER_URL,
+            redis_url,
             decode_responses=True,
         )
 
     @classmethod
     def get(cls):
-        data = cls.redis().get(cls.KEY)
+        client = cls.redis()
+
+        if client is None:
+            return cls.DEFAULT.copy()
+
+        data = client.get(cls.KEY)
 
         if not data:
             return cls.DEFAULT.copy()
@@ -33,7 +43,12 @@ class ProgressService:
 
     @classmethod
     def save(cls, data):
-        cls.redis().set(
+        client = cls.redis()
+
+        if client is None:
+            return
+
+        client.set(
             cls.KEY,
             json.dumps(data),
         )

@@ -3,7 +3,11 @@ from io import StringIO
 from celery import shared_task
 
 from imports.services.progress_service import ProgressService
-from imports.services.update_all_data_service import UpdateAllDataService
+from imports.services.update_all_data_service import (
+    UpdateAllDataService,
+    IMPORT_COMMANDS,
+    POST_IMPORT_COMMANDS,
+)
 
 
 @shared_task(bind=True)
@@ -11,10 +15,15 @@ def update_all_data_task(self):
 
     output = StringIO()
 
+    # ✅ حساب العدد الإجمالي للأوامر
+    total = len(IMPORT_COMMANDS) + len(POST_IMPORT_COMMANDS)
+
+    # ✅ بداية التحديث
     ProgressService.reset()
 
     ProgressService.update(
         is_running=True,
+        total=total,
     )
 
     try:
@@ -31,14 +40,19 @@ def update_all_data_task(self):
             progress_callback=progress_callback,
         )
 
+        logs = output.getvalue()
+
+        # ✅ نهاية التحديث - تحديث صريح بـ total
         ProgressService.update(
             is_running=False,
-            completed=ProgressService.get()["total"],
+            completed=total,
+            total=total,
+            logs=logs,
         )
 
         return {
             "status": "success",
-            "logs": output.getvalue(),
+            "logs": logs,
         }
 
     except Exception as e:

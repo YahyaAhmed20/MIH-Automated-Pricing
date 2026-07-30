@@ -14,7 +14,9 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from datetime import timedelta
 from pathlib import Path
 import os
+from dotenv import load_dotenv
 
+load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -42,7 +44,9 @@ CSRF_TRUSTED_ORIGINS = [
     # "https://mih-automated-pricing.up.railway.app",
     # "https://web-production-8d018.up.railway.app",
 ]
-
+CSRF_TRUSTED_ORIGINS = [
+    "https://web-production-8d018.up.railway.app",
+]
 
 # Application definition
 

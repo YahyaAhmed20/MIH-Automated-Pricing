@@ -5103,3 +5103,2475 @@ D:\desktop\rphospital\src\project\__init__.py changed, reloading.
 Watching for file changes with StatReloader
 D:\desktop\rphospital\src\project\settings.py changed, reloading.
 Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET /system/update/ HTTP/1.1" 200 37982
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5446, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 27, in get
+    data = cls.redis().get(cls.KEY)
+           ^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 20, in redis
+    return redis.Redis.from_url(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 208, in from_url
+    connection_pool = ConnectionPool.from_url(url, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2866, in from_url
+    url_options = parse_url(url)
+                  ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 2266, in parse_url
+    url.startswith("redis://")
+    ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'startswith'
+"GET /api/update-progress/ HTTP/1.1" 500 91565
+Watching for file changes with StatReloader
+"POST /system/update/ HTTP/1.1" 200 64773
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET /system/update/ HTTP/1.1" 200 37982
+No hostname was supplied. Reverting to default 'localhost'
+"GET /api/update-progress/ HTTP/1.1" 200 88
+"GET /api/update-progress/ HTTP/1.1" 200 88
+"GET /api/update-progress/ HTTP/1.1" 200 88
+"GET /api/update-progress/ HTTP/1.1" 200 88
+"GET /api/update-progress/ HTTP/1.1" 200 88
+"GET /api/update-progress/ HTTP/1.1" 200 88
+"GET /api/update-progress/ HTTP/1.1" 200 88
+Internal Server Error: /system/update/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\kombu\utils\functional.py", line 32, in __call__
+    return self.__value__
+           ^^^^^^^^^^^^^^
+AttributeError: 'ChannelPromise' object has no attribute '__value__'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\kombu\connection.py", line 474, in _reraise_as_library_errors
+    yield
+  File "D:\desktop\rphospital\Lib\site-packages\kombu\connection.py", line 461, in _ensure_connection
+    return retry_over_time(
+           ^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\kombu\utils\functional.py", line 318, in retry_over_time
+    return fun(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\kombu\connection.py", line 941, in _connection_factory
+    self._connection = self._establish_connection()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\kombu\connection.py", line 863, in _establish_connection
+    conn = self.transport.establish_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\kombu\transport\pyamqp.py", line 203, in establish_connection
+    conn.connect()
+  File "D:\desktop\rphospital\Lib\site-packages\amqp\connection.py", line 324, in connect
+    self.transport.connect()
+  File "D:\desktop\rphospital\Lib\site-packages\amqp\transport.py", line 132, in connect
+    self._connect(self.host, self.port, self.connect_timeout)
+  File "D:\desktop\rphospital\Lib\site-packages\amqp\transport.py", line 187, in _connect
+    self.sock.connect(sa)
+ConnectionRefusedError: [WinError 10061] No connection could be made because the target machine actively refused it
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5483, in system_update
+    task = update_all_data_task.delay()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\celery\app\task.py", line 463, in delay
+    return self.apply_async(args, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\celery\app\task.py", line 627, in apply_async
+    return app.send_task(
+           ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\celery\app\base.py", line 969, in send_task
+    amqp.send_task_message(P, name, message, **options)
+  File "D:\desktop\rphospital\Lib\site-packages\celery\app\amqp.py", line 559, in send_task_message
+    ret = producer.publish(
+          ^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\kombu\messaging.py", line 190, in publish
+    return _publish(
+           ^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\kombu\connection.py", line 558, in _ensured
+    return fun(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\kombu\messaging.py", line 200, in _publish
+    channel = self.channel
+              ^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\kombu\messaging.py", line 224, in _get_channel
+    channel = self._channel = channel()
+                              ^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\kombu\utils\functional.py", line 34, in __call__
+    value = self.__value__ = self.__contract__()
+                             ^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\kombu\messaging.py", line 240, in <lambda>
+    channel = ChannelPromise(lambda: connection.default_channel)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\kombu\connection.py", line 960, in default_channel
+    self._ensure_connection(**conn_opts)
+  File "D:\desktop\rphospital\Lib\site-packages\kombu\connection.py", line 460, in _ensure_connection
+    with ctx():
+  File "C:\Users\hp\AppData\Local\Programs\Python\Python311\Lib\contextlib.py", line 155, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "D:\desktop\rphospital\Lib\site-packages\kombu\connection.py", line 478, in _reraise_as_library_errors
+    raise ConnectionError(str(exc)) from exc
+kombu.exceptions.OperationalError: [WinError 10061] No connection could be made because the target machine actively refused it
+"POST /system/update/ HTTP/1.1" 500 215009
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 34811
+"GET /cash-packages/ HTTP/1.1" 200 511551
+"GET /system/update/ HTTP/1.1" 200 37982
+No hostname was supplied. Reverting to default 'localhost'
+"GET /api/update-progress/ HTTP/1.1" 200 88
+"GET /api/update-progress/ HTTP/1.1" 200 88
+"GET /api/update-progress/ HTTP/1.1" 200 88
+"GET /api/update-progress/ HTTP/1.1" 200 88
+Internal Server Error: /system/update/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\kombu\utils\functional.py", line 32, in __call__
+    return self.__value__
+           ^^^^^^^^^^^^^^
+AttributeError: 'ChannelPromise' object has no attribute '__value__'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\kombu\connection.py", line 474, in _reraise_as_library_errors
+    yield
+  File "D:\desktop\rphospital\Lib\site-packages\kombu\connection.py", line 461, in _ensure_connection
+    return retry_over_time(
+           ^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\kombu\utils\functional.py", line 318, in retry_over_time
+    return fun(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\kombu\connection.py", line 941, in _connection_factory
+    self._connection = self._establish_connection()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\kombu\connection.py", line 863, in _establish_connection
+    conn = self.transport.establish_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\kombu\transport\pyamqp.py", line 203, in establish_connection
+    conn.connect()
+  File "D:\desktop\rphospital\Lib\site-packages\amqp\connection.py", line 324, in connect
+    self.transport.connect()
+  File "D:\desktop\rphospital\Lib\site-packages\amqp\transport.py", line 132, in connect
+    self._connect(self.host, self.port, self.connect_timeout)
+  File "D:\desktop\rphospital\Lib\site-packages\amqp\transport.py", line 187, in _connect
+    self.sock.connect(sa)
+ConnectionRefusedError: [WinError 10061] No connection could be made because the target machine actively refused it
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5483, in system_update
+    task = update_all_data_task.delay()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\celery\app\task.py", line 463, in delay
+    return self.apply_async(args, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\celery\app\task.py", line 627, in apply_async
+    return app.send_task(
+           ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\celery\app\base.py", line 969, in send_task
+    amqp.send_task_message(P, name, message, **options)
+  File "D:\desktop\rphospital\Lib\site-packages\celery\app\amqp.py", line 559, in send_task_message
+    ret = producer.publish(
+          ^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\kombu\messaging.py", line 190, in publish
+    return _publish(
+           ^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\kombu\connection.py", line 558, in _ensured
+    return fun(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\kombu\messaging.py", line 200, in _publish
+    channel = self.channel
+              ^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\kombu\messaging.py", line 224, in _get_channel
+    channel = self._channel = channel()
+                              ^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\kombu\utils\functional.py", line 34, in __call__
+    value = self.__value__ = self.__contract__()
+                             ^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\kombu\messaging.py", line 240, in <lambda>
+    channel = ChannelPromise(lambda: connection.default_channel)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\kombu\connection.py", line 960, in default_channel
+    self._ensure_connection(**conn_opts)
+  File "D:\desktop\rphospital\Lib\site-packages\kombu\connection.py", line 460, in _ensure_connection
+    with ctx():
+  File "C:\Users\hp\AppData\Local\Programs\Python\Python311\Lib\contextlib.py", line 155, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "D:\desktop\rphospital\Lib\site-packages\kombu\connection.py", line 478, in _reraise_as_library_errors
+    raise ConnectionError(str(exc)) from exc
+kombu.exceptions.OperationalError: [WinError 10061] No connection could be made because the target machine actively refused it
+"POST /system/update/ HTTP/1.1" 500 215015
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 34811
+"GET /system/update/ HTTP/1.1" 200 37982
+"GET /api/update-progress/ HTTP/1.1" 200 88
+"GET /api/update-progress/ HTTP/1.1" 200 88
+"GET /api/update-progress/ HTTP/1.1" 200 88
+"POST /system/update/ HTTP/1.1" 200 37982
+- Broken pipe from ('127.0.0.1', 52229)
+"GET /api/update-progress/ HTTP/1.1" 200 88
+"POST /system/update/ HTTP/1.1" 200 37982
+- Broken pipe from ('127.0.0.1', 52541)
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 14866
+"GET /api/update-progress/ HTTP/1.1" 200 104
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /api/update-progress/ HTTP/1.1" 200 88
+"GET /api/update-progress/ HTTP/1.1" 200 88
+"GET /api/update-progress/ HTTP/1.1" 200 88
+"GET /api/update-progress/ HTTP/1.1" 200 88
+"POST /system/update/ HTTP/1.1" 200 68
+- Broken pipe from ('127.0.0.1', 62451)
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 34811
+"GET /system/update/ HTTP/1.1" 200 41998
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 103
+"GET /api/update-progress/ HTTP/1.1" 200 103
+"GET /api/update-progress/ HTTP/1.1" 200 103
+"GET /api/update-progress/ HTTP/1.1" 200 103
+"GET /api/update-progress/ HTTP/1.1" 200 103
+"GET /api/update-progress/ HTTP/1.1" 200 103
+"GET /api/update-progress/ HTTP/1.1" 200 103
+"GET /api/update-progress/ HTTP/1.1" 200 103
+"GET /api/update-progress/ HTTP/1.1" 200 103
+"GET /api/update-progress/ HTTP/1.1" 200 103
+"GET /api/update-progress/ HTTP/1.1" 200 103
+"GET /api/update-progress/ HTTP/1.1" 200 103
+"GET /api/update-progress/ HTTP/1.1" 200 103
+"GET /api/update-progress/ HTTP/1.1" 200 103
+"GET /api/update-progress/ HTTP/1.1" 200 103
+"GET /api/update-progress/ HTTP/1.1" 200 103
+"GET /api/update-progress/ HTTP/1.1" 200 103
+"GET /api/update-progress/ HTTP/1.1" 200 97
+"GET /api/update-progress/ HTTP/1.1" 200 97
+"GET /api/update-progress/ HTTP/1.1" 200 106
+"GET /api/update-progress/ HTTP/1.1" 200 106
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 109
+"GET /api/update-progress/ HTTP/1.1" 200 109
+"GET /api/update-progress/ HTTP/1.1" 200 106
+"GET /api/update-progress/ HTTP/1.1" 200 106
+"GET /api/update-progress/ HTTP/1.1" 200 105
+"GET /api/update-progress/ HTTP/1.1" 200 105
+"GET /api/update-progress/ HTTP/1.1" 200 105
+"GET /api/update-progress/ HTTP/1.1" 200 105
+"GET /api/update-progress/ HTTP/1.1" 200 105
+"GET /api/update-progress/ HTTP/1.1" 200 106
+"GET /api/update-progress/ HTTP/1.1" 200 106
+"GET /api/update-progress/ HTTP/1.1" 200 106
+"GET /api/update-progress/ HTTP/1.1" 200 114
+"GET /api/update-progress/ HTTP/1.1" 200 114
+"GET /api/update-progress/ HTTP/1.1" 200 114
+"GET /api/update-progress/ HTTP/1.1" 200 114
+"GET /api/update-progress/ HTTP/1.1" 200 114
+"GET /api/update-progress/ HTTP/1.1" 200 114
+"GET /api/update-progress/ HTTP/1.1" 200 108
+"GET /api/update-progress/ HTTP/1.1" 200 108
+"GET /api/update-progress/ HTTP/1.1" 200 156
+"GET /api/update-progress/ HTTP/1.1" 200 9609
+D:\desktop\rphospital\src\imports\services\progress_service.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /api/update-progress/ HTTP/1.1" 200 9609
+D:\desktop\rphospital\src\imports\tasks.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\imports\tasks.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /pricing-details/ HTTP/1.1" 200 263549
+"GET /system/update/ HTTP/1.1" 200 52925
+"POST /system/update/ HTTP/1.1" 200 68
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 100
+"GET /api/update-progress/ HTTP/1.1" 200 105
+"GET /api/update-progress/ HTTP/1.1" 200 105
+"GET /api/update-progress/ HTTP/1.1" 200 104
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 103
+"GET /api/update-progress/ HTTP/1.1" 200 103
+"GET /api/update-progress/ HTTP/1.1" 200 103
+"GET /api/update-progress/ HTTP/1.1" 200 103
+"GET /api/update-progress/ HTTP/1.1" 200 106
+"GET /api/update-progress/ HTTP/1.1" 200 109
+"GET /api/update-progress/ HTTP/1.1" 200 105
+"GET /api/update-progress/ HTTP/1.1" 200 106
+"GET /api/update-progress/ HTTP/1.1" 200 114
+"GET /api/update-progress/ HTTP/1.1" 200 157
+"GET /doctors/ HTTP/1.1" 200 231144
+"GET /system/update/ HTTP/1.1" 200 41565
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"POST /system/update/ HTTP/1.1" 200 68
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 100
+"GET /api/update-progress/ HTTP/1.1" 200 105
+"GET /api/update-progress/ HTTP/1.1" 200 105
+"GET /api/update-progress/ HTTP/1.1" 200 104
+"GET /api/update-progress/ HTTP/1.1" 200 101
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 103
+"GET /api/update-progress/ HTTP/1.1" 200 103
+"GET /api/update-progress/ HTTP/1.1" 200 103
+"GET /api/update-progress/ HTTP/1.1" 200 103
+"GET /api/update-progress/ HTTP/1.1" 200 106
+"GET /api/update-progress/ HTTP/1.1" 200 106
+"GET /api/update-progress/ HTTP/1.1" 200 105
+"GET /api/update-progress/ HTTP/1.1" 200 106
+"GET /api/update-progress/ HTTP/1.1" 200 114
+"GET /api/update-progress/ HTTP/1.1" 200 157
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /system/update/ HTTP/1.1" 200 41565
+"POST /system/update/ HTTP/1.1" 200 68
+"GET /api/update-progress/ HTTP/1.1" 200 88
+"GET /api/update-progress/ HTTP/1.1" 200 88
+"GET /api/update-progress/ HTTP/1.1" 200 87
+"GET /api/update-progress/ HTTP/1.1" 200 87
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 100
+"GET /api/update-progress/ HTTP/1.1" 200 100
+"GET /api/update-progress/ HTTP/1.1" 200 100
+"GET /api/update-progress/ HTTP/1.1" 200 105
+"GET /api/update-progress/ HTTP/1.1" 200 105
+"GET /api/update-progress/ HTTP/1.1" 200 105
+"GET /api/update-progress/ HTTP/1.1" 200 105
+"GET /api/update-progress/ HTTP/1.1" 200 105
+"GET /api/update-progress/ HTTP/1.1" 200 105
+"GET /api/update-progress/ HTTP/1.1" 200 105
+"GET /api/update-progress/ HTTP/1.1" 200 105
+"GET /api/update-progress/ HTTP/1.1" 200 105
+"GET /api/update-progress/ HTTP/1.1" 200 105
+"GET /api/update-progress/ HTTP/1.1" 200 105
+"GET /api/update-progress/ HTTP/1.1" 200 105
+"GET /api/update-progress/ HTTP/1.1" 200 105
+"GET /api/update-progress/ HTTP/1.1" 200 105
+"GET /api/update-progress/ HTTP/1.1" 200 105
+"GET /api/update-progress/ HTTP/1.1" 200 105
+"GET /api/update-progress/ HTTP/1.1" 200 105
+"GET /api/update-progress/ HTTP/1.1" 200 105
+"GET /api/update-progress/ HTTP/1.1" 200 104
+"GET /api/update-progress/ HTTP/1.1" 200 104
+"GET /api/update-progress/ HTTP/1.1" 200 104
+Watching for file changes with StatReloader
+"POST /system/update/ HTTP/1.1" 200 68
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 105
+"GET /api/update-progress/ HTTP/1.1" 200 104
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 103
+"GET /api/update-progress/ HTTP/1.1" 200 103
+"GET /api/update-progress/ HTTP/1.1" 200 103
+"GET /api/update-progress/ HTTP/1.1" 200 97
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 105
+"GET /api/update-progress/ HTTP/1.1" 200 105
+"GET /api/update-progress/ HTTP/1.1" 200 114
+"GET /api/update-progress/ HTTP/1.1" 200 108
+"GET /api/update-progress/ HTTP/1.1" 200 157
+"GET /api/update-progress/ HTTP/1.1" 200 104
+D:\desktop\rphospital\src\project\settings.py changed, reloading.
+Watching for file changes with StatReloader

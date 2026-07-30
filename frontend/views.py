@@ -5420,7 +5420,8 @@ from django.contrib import messages
 from django.shortcuts import render
 
 from imports.services.update_all_data_service import UpdateAllDataService
-
+from imports.tasks import update_all_data_task
+from imports.services.progress_service import ProgressService
 
 def clean_logs(text):
     """
@@ -5434,7 +5435,7 @@ def clean_logs(text):
 _update_progress = {
     "completed": 0,
     "current_command": "",
-    "total": 16,
+    "total": 18,
     "is_running": False,
     "results": [],
 }
@@ -5468,78 +5469,50 @@ def extract_results_from_logs(logs):
                     })
     
     return results
-
+from django.http import JsonResponse
 
 def system_update(request):
-
-    global _update_progress
-
-    logs = None
-
+    """عرض صفحة تحديث النظام"""
+    
     if request.method == "POST":
+        # ✅ إعادة تعيين التقدم وبدء المهمة
+        ProgressService.reset()
+        task = update_all_data_task.delay()
+        
+        # ✅ إرجاع JSON للـ fetch
+        return JsonResponse({
+            "success": True,
+            "task_id": task.id,
+        })
 
-        output = io.StringIO()
+    # ✅ GET - عرض الصفحة مع النتائج الحالية
+    progress = ProgressService.get()
+    print("Progress:", progress)
+    results = progress.get("results", [])
+    logs = progress.get("logs", None)
 
-        # ✅ إعادة تعيين التقدم
-        _update_progress["completed"] = 0
-        _update_progress["current_command"] = ""
-        _update_progress["is_running"] = True
-        _update_progress["results"] = []
+    success_count = sum(
+        1 for r in results
+        if r.get("status") == "success"
+    )
 
-        try:
-
-            # ✅ تمرير الـ progress callback
-            def progress_callback(command_name, completed):
-                _update_progress["current_command"] = command_name
-                _update_progress["completed"] = completed
-
-            UpdateAllDataService.run(
-                stdout=output,
-                progress_callback=progress_callback
-            )
-
-            logs = clean_logs(output.getvalue())
-
-            # ✅ استخراج النتائج من الـ logs
-            _update_progress["results"] = extract_results_from_logs(logs)
-
-            _update_progress["is_running"] = False
-            _update_progress["completed"] = _update_progress["total"]
-
-            messages.success(
-                request,
-                "تم تحديث جميع البيانات بنجاح."
-            )
-
-        except Exception as e:
-
-            logs = clean_logs(output.getvalue())
-            logs += "\n\n"
-            logs += "=" * 70
-            logs += "\n❌ ERROR DETAILS:\n"
-            logs += traceback.format_exc()
-            logs += "=" * 70
-
-            _update_progress["is_running"] = False
-
-            messages.error(
-                request,
-                f"حدث خطأ أثناء التحديث: {str(e)[:100]}"
-            )
-
-    # ✅ حساب النجاح والفشل
-    success_count = sum(1 for r in _update_progress["results"] if r.get("status") == "success")
-    error_count = sum(1 for r in _update_progress["results"] if r.get("status") == "error")
-
-    # ✅ تمرير النتائج للـ HTML
+    error_count = sum(
+        1 for r in results
+        if r.get("status") == "error"
+    )
+    print("=" * 50)
+    print(progress)
+    print("=" * 50)
     return render(
         request,
         "frontend/system_update.html",
         {
+            "results": results,
             "logs": logs,
-            "results": _update_progress["results"],
-            "total_commands": _update_progress["total"],
+            "total_commands": progress.get("total", 18),
             "success_count": success_count,
             "error_count": error_count,
+            "is_running": progress.get("is_running", False),
+            "completed": progress.get("completed", 0),
         }
     )
