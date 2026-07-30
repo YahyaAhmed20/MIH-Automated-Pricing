@@ -7755,3 +7755,85 @@ Watching for file changes with StatReloader
 "GET /api/update-progress/ HTTP/1.1" 200 114
 "GET /api/update-progress/ HTTP/1.1" 200 9604
 "GET /api/update-progress/ HTTP/1.1" 200 9604
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 35505
+"GET /static/images/logo.jpeg HTTP/1.1" 200 68755
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 15022
+"GET /credit-package-pricing/ HTTP/1.1" 200 70645
+"GET /cash-packages/ HTTP/1.1" 200 512300
+"GET /contract-entities/ HTTP/1.1" 200 47417
+"GET /company-discounts/ HTTP/1.1" 200 113034
+"GET /special-offers/ HTTP/1.1" 200 351925
+"GET /service-search/ HTTP/1.1" 200 754531
+"GET /doctors/ HTTP/1.1" 200 150094
+"GET /procedures/ HTTP/1.1" 200 112554
+"GET /procedure-fees/ HTTP/1.1" 200 68163
+"GET /pricing-details/ HTTP/1.1" 200 264069
+"GET /similar-invoices/ HTTP/1.1" 200 313970
+"GET /reports/ HTTP/1.1" 200 125795
+"GET /package-comparison/ HTTP/1.1" 200 2270184
+"GET /ajax/package-filters/?source=sheet15&year=2025 HTTP/1.1" 200 60902
+"GET /ajax/package-filters/?source=sheet15&year=2025 HTTP/1.1" 200 60902
+"GET /patient-search/ HTTP/1.1" 200 843848
+"GET /external-approvals/ HTTP/1.1" 200 54548
+"GET /pending-analysis/ HTTP/1.1" 200 184923
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 15133
+"GET /system/update/ HTTP/1.1" 200 56850
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 15133
+"GET /contract-entities/ HTTP/1.1" 200 47417
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 15133
+"GET /contract-entities/1/ HTTP/1.1" 200 59613
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 15133
+"GET /special-offers/ HTTP/1.1" 200 351925
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 15133
+"GET /special-offers/ HTTP/1.1" 200 355548
+"GET /company-discounts/ HTTP/1.1" 200 116657
+"GET /reports/ HTTP/1.1" 200 129418
+"GET / HTTP/1.1" 200 39128
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 15133
+"GET / HTTP/1.1" 200 40126
+"GET / HTTP/1.1" 200 40126
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 15133
+"GET / HTTP/1.1" 200 40126
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 15133
+"GET / HTTP/1.1" 200 40330
+"GET /credit-package-pricing/ HTTP/1.1" 200 75470
+"GET /credit-package-pricing/ HTTP/1.1" 200 75266
+"GET /credit-package-pricing/ HTTP/1.1" 200 75266
+"GET /credit-package-pricing/ HTTP/1.1" 200 75470
+"GET /credit-package-pricing/ HTTP/1.1" 200 75470
+"GET /contract-entities/ HTTP/1.1" 200 52242
+"GET /similar-invoices/ HTTP/1.1" 200 318795
+"GET /similar-invoices/ HTTP/1.1" 200 318591
+"GET /similar-invoices/ HTTP/1.1" 200 318795
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 15133
+Watching for file changes with StatReloader
+"GET /similar-invoices/ HTTP/1.1" 200 320592
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+"GET /contract-entities/ HTTP/1.1" 200 54039
+"GET /contract-entities/ HTTP/1.1" 200 61559
+"GET /company-discounts/ HTTP/1.1" 200 127176
+"GET /special-offers/ HTTP/1.1" 200 376977
+"GET /external-approvals/ HTTP/1.1" 200 68690
+"GET /system/update/ HTTP/1.1" 200 70992
+"GET / HTTP/1.1" 200 49647
+"GET / HTTP/1.1" 200 49647
+"GET /credit-package-pricing/ HTTP/1.1" 200 84909
+"GET /contract-entities/ HTTP/1.1" 200 61559
+"GET /pricing-details/ HTTP/1.1" 200 278211
+"GET /pricing-details/ HTTP/1.1" 200 280375
+"GET / HTTP/1.1" 200 51979
+"GET /contract-entities/ HTTP/1.1" 200 63891
+"GET /similar-invoices/ HTTP/1.1" 200 330444
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 15133

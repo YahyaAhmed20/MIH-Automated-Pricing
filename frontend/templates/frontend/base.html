@@ -11,6 +11,12 @@
         MIH Automated Pricing
     </title>
 
+    <!-- Cache Control for Images -->
+    <meta http-equiv="Cache-Control" content="max-age=31536000, public">
+
+    <!-- Google Font: Cairo -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css"
           rel="stylesheet">
 
@@ -26,10 +32,10 @@
 /* ===== CSS Variables ===== */
 /* ============================================================ */
 :root {
-    --sidebar-bg: #1e293b;
-    --sidebar-hover: rgba(255,255,255,0.12);
-    --sidebar-active: #0d6efd;
-    --text-white: #ffffff;
+    --sidebar-bg: #0f172a;
+    --sidebar-hover: rgba(255,255,255,0.06);
+    --sidebar-active: #3b82f6;
+    --text-white: #f1f5f9;
     --text-muted: #94a3b8;
     --card-shadow: 0 2px 12px rgba(0,0,0,0.05);
     --card-shadow-hover: 0 6px 25px rgba(0,0,0,0.1);
@@ -41,6 +47,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: 'Cairo', Tahoma, sans-serif;
 }
 
 html, body {
@@ -49,7 +56,7 @@ html, body {
 
 body {
     background: #f4f6f9;
-    font-family: Tahoma, sans-serif;
+    font-family: 'Cairo', Tahoma, sans-serif;
     display: flex;
     flex-direction: column;
 }
@@ -73,30 +80,64 @@ body {
     padding-bottom: 15px;
     transition: all var(--transition-speed) ease;
     scrollbar-width: thin;
-    scrollbar-color: rgba(255,255,255,.3) rgba(255,255,255,.05);
+    scrollbar-color: rgba(255,255,255,.4) rgba(255,255,255,.05);
+}
+
+/* تأثير توهج خفيف للـ Sidebar */
+.sidebar::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 0% 0%, rgba(59, 130, 246, 0.05), transparent 70%);
+    pointer-events: none;
+    z-index: 0;
 }
 
 /* ===== Scrollbar Styles ===== */
 .sidebar::-webkit-scrollbar {
-    width: 6px;
-}
-
-.sidebar::-webkit-scrollbar-thumb {
-    background: rgba(255,255,255,.4);
-    border-radius: 10px;
-}
-
-.sidebar::-webkit-scrollbar-thumb:hover {
-    background: rgba(255,255,255,.6);
+    width: 8px;
 }
 
 .sidebar::-webkit-scrollbar-track {
-    background: rgba(255,255,255,.05);
+    background: rgba(255,255,255,0.05);
     border-radius: 10px;
+    margin: 5px;
 }
 
-.sidebar:hover::-webkit-scrollbar-thumb {
-    background: rgba(255,255,255,.5);
+.sidebar::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.3);
+    border-radius: 10px;
+    border: 2px solid rgba(255,255,255,0.05);
+    transition: all 0.3s ease;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+    background: rgba(255,255,255,0.6);
+    border-color: rgba(255,255,255,0.1);
+}
+
+/* للمتصفحات التي تدعم scrollbar-width */
+.sidebar {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,0.3) rgba(255,255,255,0.05);
+}
+
+/* إضافة شريط تمرير مرئي دائماً في Desktop */
+@media (min-width: 769px) {
+    .sidebar {
+        scrollbar-width: thin;
+    }
+    
+    .sidebar::-webkit-scrollbar-thumb {
+        background: rgba(255,255,255,0.25);
+    }
+    
+    .sidebar:hover::-webkit-scrollbar-thumb {
+        background: rgba(255,255,255,0.5);
+    }
 }
 
 .content {
@@ -148,31 +189,95 @@ body {
 /* ===== Logo ===== */
 /* ============================================================ */
 .logo-box {
-    padding: 16px 15px 12px;
+    padding: 20px 15px 16px;
     text-align: center;
-    border-bottom: 1px solid rgba(255,255,255,.08);
+    border-bottom: 1px solid rgba(255,255,255,.06);
+    position: relative;
+}
+
+/* توهج خلفي للشعار */
+.logo-box::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 110px;
+    height: 110px;
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.08), transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+    animation: glowPulse 4s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+    0%, 100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.5;
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(1.2);
+        opacity: 1;
+    }
+}
+
+.logo-box::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 20%;
+    width: 60%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.3), transparent);
 }
 
 .logo-box img {
-    width: 70px;
-    height: 70px;
+    width: 75px;
+    height: 75px;
     border-radius: 50%;
     background: white;
-    padding: 6px;
+    padding: 5px;
     object-fit: cover;
-    transition: all var(--transition-speed) ease;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 4px 20px rgba(59, 130, 246, 0.15);
+    border: 2px solid rgba(255,255,255,0.05);
+    animation: logoPulse 3s ease-in-out infinite;
+    position: relative;
+    z-index: 1;
+}
+
+@keyframes logoPulse {
+    0%, 100% {
+        box-shadow: 0 4px 20px rgba(59, 130, 246, 0.15);
+    }
+    50% {
+        box-shadow: 0 4px 30px rgba(59, 130, 246, 0.35), 0 0 60px rgba(59, 130, 246, 0.1);
+    }
 }
 
 .logo-box img:hover {
-    transform: scale(1.05);
+    transform: scale(1.08) rotate(-3deg);
+    box-shadow: 0 6px 35px rgba(59, 130, 246, 0.35), 0 0 80px rgba(59, 130, 246, 0.15);
 }
 
 .logo-box h4 {
-    margin-top: 6px;
-    font-weight: bold;
-    font-size: 15px;
+    margin-top: 10px;
+    font-weight: 700;
+    font-size: 17px;
     color: var(--text-white);
     letter-spacing: 0.5px;
+    background: linear-gradient(135deg, #f1f5f9, #94a3b8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    position: relative;
+    z-index: 1;
+}
+
+/* شريط متحرك */
+@keyframes gradientMove {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 300% 0%; }
 }
 
 /* ============================================================ */
@@ -185,7 +290,9 @@ body {
 }
 
 .menu-item {
-    margin: 2px 6px;
+    margin: 2px 8px;
+    position: relative;
+    z-index: 1;
 }
 
 .menu-link {
@@ -195,10 +302,11 @@ body {
     padding: 9px 14px;
     transition: all var(--transition-speed) ease;
     cursor: pointer;
-    font-size: 13.5px;
+    font-size: 14px;
     border-right: 3px solid transparent;
     border-radius: 0 8px 8px 0;
     font-weight: 400;
+    position: relative;
 }
 
 .menu-link:hover {
@@ -209,26 +317,66 @@ body {
 }
 
 .menu-link.active {
-    background: rgba(13,110,253,0.2);
-    border-right-color: var(--sidebar-active);
-    color: var(--text-white);
+    background: rgba(59, 130, 246, 0.15);
+    border-right: 4px solid var(--sidebar-active);
+    box-shadow: inset 0 0 20px rgba(59, 130, 246, 0.05);
+    padding-right: 18px;
+}
+
+/* نقطة نشاط للعنصر النشط */
+.menu-link.active::after {
+    content: '';
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--sidebar-active);
+    box-shadow: 0 0 12px rgba(59, 130, 246, 0.6);
+    animation: pulse-dot 2s infinite;
+}
+
+@keyframes pulse-dot {
+    0%, 100% {
+        opacity: 1;
+        transform: translateY(-50%) scale(1);
+    }
+    50% {
+        opacity: 0.5;
+        transform: translateY(-50%) scale(0.8);
+    }
 }
 
 .menu-link i {
-    margin-left: 10px;
-    font-size: 14px;
-    width: 22px;
+    margin-left: 12px;
+    font-size: 18px;
+    width: 24px;
     text-align: center;
     color: var(--text-muted);
     transition: all var(--transition-speed) ease;
+    background: linear-gradient(135deg, #64748b, #94a3b8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 .menu-link:hover i {
-    color: var(--text-white);
+    background: linear-gradient(135deg, #60a5fa, #3b82f6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    transform: scale(1.1) rotate(-5deg);
 }
 
 .menu-link.active i {
-    color: var(--sidebar-active);
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    transform: scale(1.15);
+    filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.4));
 }
 
 .menu-arrow {
@@ -247,22 +395,25 @@ body {
 /* ===== Submenu ===== */
 /* ============================================================ */
 .submenu {
-    background: rgba(0,0,0,.2);
+    background: rgba(0,0,0,.25);
+    backdrop-filter: blur(4px);
     list-style: none;
     padding: 2px 0;
     margin: 0;
-    border-radius: 0 0 8px 8px;
+    border-radius: 0 0 10px 10px;
+    margin-top: 2px;
 }
 
 .submenu a {
     display: block;
-    padding: 6px 30px 6px 45px;
+    padding: 7px 32px 7px 45px;
     color: rgba(255,255,255,.7);
     text-decoration: none;
-    font-size: 12.5px;
+    font-size: 13px;
     transition: all var(--transition-speed) ease;
     border-right: 3px solid transparent;
-    border-radius: 0 6px 6px 0;
+    border-radius: 0 8px 8px 0;
+    position: relative;
 }
 
 .submenu a:hover {
@@ -273,15 +424,51 @@ body {
 }
 
 .submenu a i {
-    margin-left: 8px;
-    font-size: 12px;
-    width: 20px;
+    margin-left: 10px;
+    font-size: 14px;
+    width: 22px;
     text-align: center;
-    color: rgba(255,255,255,.5);
+    color: rgba(255,255,255,.4);
+    transition: all var(--transition-speed) ease;
+    background: linear-gradient(135deg, #64748b, #94a3b8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 .submenu a:hover i {
+    background: linear-gradient(135deg, #60a5fa, #3b82f6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    transform: translateX(-3px) scale(1.1);
+}
+
+.submenu a.active {
+    background: rgba(59, 130, 246, 0.12);
+    border-right-color: var(--sidebar-active);
     color: var(--text-white);
+}
+
+.submenu a.active i {
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    transform: scale(1.1);
+}
+
+.submenu a.active::before {
+    content: '';
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--sidebar-active);
+    box-shadow: 0 0 8px rgba(59, 130, 246, 0.4);
 }
 
 /* ============================================================ */
@@ -309,6 +496,172 @@ body {
 }
 
 /* ============================================================ */
+/* ===== Page Transition Overlay ===== */
+/* ============================================================ */
+.page-transition {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(15, 23, 42, 0.92);
+    backdrop-filter: blur(12px);
+    z-index: 99999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+}
+
+.page-transition.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.transition-logo-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+}
+
+.transition-logo {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: white;
+    padding: 10px;
+    object-fit: cover;
+    box-shadow: 0 0 60px rgba(59, 130, 246, 0.3), 0 0 120px rgba(59, 130, 246, 0.1);
+    animation: transitionLogoAnim 1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    transform: scale(0) rotate(-30deg);
+    opacity: 0;
+}
+
+@keyframes transitionLogoAnim {
+    0% {
+        transform: scale(0) rotate(-30deg);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.1) rotate(5deg);
+        opacity: 1;
+    }
+    70% {
+        transform: scale(0.95) rotate(-2deg);
+    }
+    100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+    }
+}
+
+.transition-loader {
+    width: 60px;
+    height: 60px;
+    border: 3px solid rgba(255,255,255,0.05);
+    border-top: 3px solid #3b82f6;
+    border-right: 3px solid #8b5cf6;
+    border-radius: 50%;
+    animation: loaderSpin 0.8s linear infinite;
+    opacity: 0;
+    animation-delay: 0.3s;
+}
+
+@keyframes loaderSpin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.page-transition.active .transition-loader {
+    opacity: 1;
+}
+
+.transition-text {
+    color: rgba(255,255,255,0.8);
+    font-size: 18px;
+    font-weight: 400;
+    margin-top: 10px;
+    opacity: 0;
+    animation: fadeInText 0.5s ease forwards 0.6s;
+}
+
+@keyframes fadeInText {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== تأثير اختفاء الشعار ===== */
+.page-transition.fade-out .transition-logo {
+    animation: transitionLogoOut 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes transitionLogoOut {
+    0% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1.5) rotate(30deg);
+        opacity: 0;
+    }
+}
+
+.page-transition.fade-out .transition-loader {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.page-transition.fade-out .transition-text {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+/* ============================================================ */
+/* ===== Scroll to Top Button ===== */
+/* ============================================================ */
+.scroll-top-btn {
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    color: white;
+    border: none;
+    font-size: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 9998;
+    box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4);
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    opacity: 0;
+    transform: translateY(20px) scale(0.8);
+    pointer-events: none;
+}
+
+.scroll-top-btn.visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: all;
+}
+
+.scroll-top-btn:hover {
+    transform: translateY(-3px) scale(1.1);
+    box-shadow: 0 6px 30px rgba(59, 130, 246, 0.6);
+    background: linear-gradient(135deg, #2563eb, #7c3aed);
+}
+
+.scroll-top-btn:active {
+    transform: scale(0.95);
+}
+
+/* ============================================================ */
 /* ===== Topbar ===== */
 /* ============================================================ */
 .topbar {
@@ -324,7 +677,7 @@ body {
 }
 
 .topbar h4 {
-    font-size: 18px;
+    font-size: 19px;
     font-weight: 600;
     color: #1e293b;
 }
@@ -408,8 +761,16 @@ body {
         padding: 18px 20px;
     }
     .menu-link {
-        font-size: 12.5px;
+        font-size: 13px;
         padding: 8px 12px;
+    }
+
+    .scroll-top-btn {
+        bottom: 80px;
+        right: 16px;
+        width: 45px;
+        height: 45px;
+        font-size: 20px;
     }
 }
 
@@ -429,7 +790,25 @@ body {
         min-height: 100vh;
         max-height: 100vh;
         transition: right var(--transition-speed) ease;
-        box-shadow: 0 0 30px rgba(0,0,0,.3);
+        box-shadow: 0 0 40px rgba(0,0,0,0.4);
+        border-radius: 0 20px 20px 0;
+    }
+
+    /* شريط التمرير في الموبايل */
+    .sidebar::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .sidebar::-webkit-scrollbar-thumb {
+        background: rgba(255,255,255,0.4);
+        border-radius: 10px;
+        border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .sidebar::-webkit-scrollbar-track {
+        background: rgba(255,255,255,0.05);
+        border-radius: 10px;
+        margin: 5px;
     }
 
     .sidebar.open {
@@ -455,7 +834,7 @@ body {
     }
 
     .topbar h4 {
-        font-size: 16px;
+        font-size: 17px;
     }
 
     .logo-box {
@@ -468,17 +847,39 @@ body {
     }
 
     .logo-box h4 {
-        font-size: 13px;
+        font-size: 14px;
     }
 
     .menu-link {
-        font-size: 12px;
+        font-size: 12.5px;
         padding: 7px 12px;
     }
 
+    .menu-link i {
+        font-size: 20px;
+        width: 28px;
+        margin-left: 14px;
+    }
+
+    .menu-link.active {
+        border-right-width: 5px;
+        padding-right: 20px;
+    }
+
+    .menu-link.active::after {
+        width: 8px;
+        height: 8px;
+        left: 10px;
+    }
+
     .submenu a {
-        font-size: 11.5px;
+        font-size: 12px;
         padding: 5px 25px 5px 35px;
+    }
+
+    .submenu a i {
+        font-size: 16px;
+        width: 24px;
     }
 
     .whatsapp-btn {
@@ -497,6 +898,14 @@ body {
         font-size: 11px;
         padding: 4px !important;
     }
+
+    .scroll-top-btn {
+        bottom: 70px;
+        right: 12px;
+        width: 42px;
+        height: 42px;
+        font-size: 18px;
+    }
 }
 
 /* ===== Small Mobile ===== */
@@ -512,7 +921,7 @@ body {
     }
 
     .topbar h4 {
-        font-size: 14px;
+        font-size: 15px;
     }
 
     .topbar small {
@@ -520,14 +929,14 @@ body {
     }
 
     .menu-link {
-        font-size: 11px;
+        font-size: 11.5px;
         padding: 6px 10px;
     }
 
     .menu-link i {
-        font-size: 12px;
-        width: 18px;
-        margin-left: 6px;
+        font-size: 18px;
+        width: 24px;
+        margin-left: 10px;
     }
 
     .submenu a {
@@ -536,8 +945,8 @@ body {
     }
 
     .submenu a i {
-        font-size: 11px;
-        width: 16px;
+        font-size: 14px;
+        width: 20px;
     }
 
     .logo-box img {
@@ -561,6 +970,14 @@ body {
     .sidebar.open {
         right: 0;
     }
+
+    .scroll-top-btn {
+        bottom: 65px;
+        right: 10px;
+        width: 38px;
+        height: 38px;
+        font-size: 16px;
+    }
 }
 
 /* ===== Ultra Small ===== */
@@ -576,8 +993,8 @@ body {
     }
 
     .menu-link i {
-        font-size: 11px;
-        width: 16px;
+        font-size: 16px;
+        width: 20px;
     }
 
     .submenu a {
@@ -593,12 +1010,34 @@ body {
     .sidebar.open {
         right: 0;
     }
+
+    .scroll-top-btn {
+        bottom: 60px;
+        right: 8px;
+        width: 35px;
+        height: 35px;
+        font-size: 14px;
+    }
 }
     </style>
 
 </head>
 
 <body>
+
+<!-- ========== Page Transition Overlay ========== -->
+<div class="page-transition" id="pageTransition">
+    <div class="transition-logo-wrapper">
+        <img src="{% static 'images/logo.jpeg' %}?v=1.0" alt="MIH Logo" class="transition-logo">
+        <div class="transition-loader"></div>
+        <p class="transition-text" id="transitionText">جار التحميل...</p>
+    </div>
+</div>
+
+<!-- ========== Scroll to Top Button ========== -->
+<button class="scroll-top-btn" id="scrollTopBtn" aria-label="العودة للأعلى">
+    <i class="bi bi-chevron-up"></i>
+</button>
 
 <!-- ========== Sidebar Toggle Button (Mobile) ========== -->
 <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle Sidebar">
@@ -615,7 +1054,7 @@ body {
     <a href="/" class="text-decoration-none">
         <div class="logo-box">
 
-            <img src="{% static 'images/logo.jpeg' %}"
+            <img src="{% static 'images/logo.jpeg' %}?v=1.0"
                  alt="MIH Logo">
 
             <h4>
@@ -626,6 +1065,9 @@ body {
 
         </div>
     </a>
+
+    <!-- شريط تزييني متحرك -->
+    <div style="height: 3px; background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899, #3b82f6); background-size: 300% 100%; margin: 0 15px 8px; border-radius: 0 0 10px 10px; animation: gradientMove 4s linear infinite;"></div>
 
     <!-- Alert Box -->
     <div class="sidebar-alert">
@@ -641,39 +1083,40 @@ body {
 
         <!-- لوحة التحكم -->
         <li class="menu-item">
-            <a class="menu-link active" href="{% url 'home' %}">
+            <a class="menu-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'home' %}">
                 <i class="bi bi-speedometer2"></i>
                 لوحة التحكم
             </a>
         </li>
 
-      <!-- 1. الباكدجات -->
-<li class="menu-item">
-    <a class="menu-link"
-       data-bs-toggle="collapse"
-       href="#packagesMenu"
-       role="button"
-       aria-expanded="false">
+        <!-- 1. الباكدجات -->
+        <li class="menu-item">
+            <a class="menu-link {% if request.resolver_match.url_name in 'credit_package_pricing,cash_packages,packages_price_list,package_create' %}active{% endif %}"
+               data-bs-toggle="collapse"
+               href="#packagesMenu"
+               role="button"
+               aria-expanded="{% if request.resolver_match.url_name in 'credit_package_pricing,cash_packages,packages_price_list,package_create' %}true{% else %}false{% endif %}">
 
-        <i class="bi bi-box"></i>
-        الباكدجات
-        <i class="bi bi-chevron-down menu-arrow"></i>
-    </a>
+                <i class="bi bi-box"></i>
+                الباكدجات
+                <i class="bi bi-chevron-down menu-arrow"></i>
+            </a>
 
-    <div class="collapse submenu" id="packagesMenu">
-        <!-- ✅ باكدجات الآجل -->
-        <a href="{% url 'credit_package_pricing' %}">
-            <i class="bi bi-box-seam"></i> باكدجات الآجل
-        </a>
-        <!-- ✅ باكدجات النقدي -->
-        <a href="{% url 'cash_packages' %}">
-            <i class="bi bi-cash-coin"></i> باكدجات النقدي
-        </a>
-    </div>
-</li>
+            <div class="collapse submenu {% if request.resolver_match.url_name in 'credit_package_pricing,cash_packages,packages_price_list,package_create' %}show{% endif %}" id="packagesMenu">
+                <!-- باكدجات الآجل -->
+                <a href="{% url 'credit_package_pricing' %}" class="{% if request.resolver_match.url_name == 'credit_package_pricing' %}active{% endif %}">
+                    <i class="bi bi-box-seam"></i> باكدجات الآجل
+                </a>
+                <!-- باكدجات النقدي -->
+                <a href="{% url 'cash_packages' %}" class="{% if request.resolver_match.url_name == 'cash_packages' %}active{% endif %}">
+                    <i class="bi bi-cash-coin"></i> باكدجات النقدي
+                </a>
+            </div>
+        </li>
+
         <!-- 2. الجهات المتعاقدة -->
         <li class="menu-item">
-            <a class="menu-link" href="{% url 'contract_entities' %}">
+            <a class="menu-link {% if request.resolver_match.url_name == 'contract_entities' %}active{% endif %}" href="{% url 'contract_entities' %}">
                 <i class="bi bi-buildings"></i>
                 الجهات المتعاقدة
             </a>
@@ -681,7 +1124,7 @@ body {
 
         <!-- 3. خصومات الشركات -->
         <li class="menu-item">
-            <a class="menu-link" href="{% url 'company_discounts' %}">
+            <a class="menu-link {% if request.resolver_match.url_name == 'company_discounts' %}active{% endif %}" href="{% url 'company_discounts' %}">
                 <i class="bi bi-percent"></i>
                 خصومات الشركات
             </a>
@@ -689,7 +1132,7 @@ body {
 
         <!-- 4. العروض -->
         <li class="menu-item">
-            <a class="menu-link" href="{% url 'special_offers' %}">
+            <a class="menu-link {% if request.resolver_match.url_name == 'special_offers' %}active{% endif %}" href="{% url 'special_offers' %}">
                 <i class="bi bi-megaphone"></i>
                 العروض
             </a>
@@ -697,7 +1140,7 @@ body {
 
         <!-- 5. البحث عن خدمة -->
         <li class="menu-item">
-            <a class="menu-link" href="{% url 'service_search' %}">
+            <a class="menu-link {% if request.resolver_match.url_name == 'service_search' %}active{% endif %}" href="{% url 'service_search' %}">
                 <i class="bi bi-search"></i>
                 البحث عن خدمة
             </a>
@@ -705,31 +1148,30 @@ body {
 
         <!-- الأطباء -->
         <li class="menu-item">
-            <a class="menu-link" href="{% url 'doctors_list' %}">
+            <a class="menu-link {% if request.resolver_match.url_name == 'doctors_list' %}active{% endif %}" href="{% url 'doctors_list' %}">
                 <i class="bi bi-person-badge"></i>
                 الأطباء
             </a>
-        </li> 
-  
+        </li>
 
         <!-- 6. توصيفات العمليات -->
         <li class="menu-item">
-            <a class="menu-link"
+            <a class="menu-link {% if request.resolver_match.url_name in 'procedures,procedure_fees' %}active{% endif %}"
                data-bs-toggle="collapse"
                href="#operationsMenu"
                role="button"
-               aria-expanded="false">
+               aria-expanded="{% if request.resolver_match.url_name in 'procedures,procedure_fees' %}true{% else %}false{% endif %}">
 
                 <i class="bi bi-clipboard2-pulse"></i>
                 توصيفات العمليات
                 <i class="bi bi-chevron-down menu-arrow"></i>
             </a>
 
-            <div class="collapse submenu" id="operationsMenu">
-                <a href="{% url 'procedures' %}">
+            <div class="collapse submenu {% if request.resolver_match.url_name in 'procedures,procedure_fees' %}show{% endif %}" id="operationsMenu">
+                <a href="{% url 'procedures' %}" class="{% if request.resolver_match.url_name == 'procedures' %}active{% endif %}">
                     <i class="bi bi-file-text"></i> توصيف العمليات
                 </a>
-                <a href="{% url 'procedure_fees' %}">
+                <a href="{% url 'procedure_fees' %}" class="{% if request.resolver_match.url_name == 'procedure_fees' %}active{% endif %}">
                     <i class="bi bi-calculator"></i> احتساب أتعاب العملية
                 </a>
             </div>
@@ -737,7 +1179,7 @@ body {
 
         <!-- 7. تفاصيل التسعير -->
         <li class="menu-item">
-            <a class="menu-link" href="{% url 'pricing_details' %}">
+            <a class="menu-link {% if request.resolver_match.url_name == 'pricing_details' %}active{% endif %}" href="{% url 'pricing_details' %}">
                 <i class="bi bi-cash-stack"></i>
                 تفاصيل التسعير
             </a>
@@ -745,40 +1187,40 @@ body {
 
         <!-- 8. فواتير مماثلة -->
         <li class="menu-item">
-            <a class="menu-link" href="{% url 'similar_invoices' %}">
+            <a class="menu-link {% if request.resolver_match.url_name == 'similar_invoices' %}active{% endif %}" href="{% url 'similar_invoices' %}">
                 <i class="bi bi-receipt"></i>
                 فواتير مماثلة
             </a>
         </li>
 
-       <!-- متابعة الباكدجات -->
-<li class="menu-item">
-    <a class="menu-link"
-       data-bs-toggle="collapse"
-       href="#packagesTrackingMenu"
-       role="button"
-       aria-expanded="false">
+        <!-- متابعة الباكدجات -->
+        <li class="menu-item">
+            <a class="menu-link {% if request.resolver_match.url_name in 'reports,package_comparison' %}active{% endif %}"
+               data-bs-toggle="collapse"
+               href="#packagesTrackingMenu"
+               role="button"
+               aria-expanded="{% if request.resolver_match.url_name in 'reports,package_comparison' %}true{% else %}false{% endif %}">
 
-        <i class="bi bi-bar-chart"></i>
-        متابعة الباكدجات
-        <i class="bi bi-chevron-down menu-arrow"></i>
-    </a>
+                <i class="bi bi-bar-chart"></i>
+                متابعة الباكدجات
+                <i class="bi bi-chevron-down menu-arrow"></i>
+            </a>
 
-    <div class="collapse submenu" id="packagesTrackingMenu">
-        <!-- 1. احصائيات الباكدجات -->
-        <a href="{% url 'reports' %}">
-            <i class="bi bi-pie-chart"></i> احصائيات الباكدجات
-        </a>
-        <!-- 2. مقارنة أداء الباكدجات -->
-        <a href="{% url 'package_comparison' %}">
-            <i class="bi bi-graph-up-arrow"></i> مقارنة أداء الباكدجات
-        </a>
-    </div>
-</li>
+            <div class="collapse submenu {% if request.resolver_match.url_name in 'reports,package_comparison' %}show{% endif %}" id="packagesTrackingMenu">
+                <!-- احصائيات الباكدجات -->
+                <a href="{% url 'reports' %}" class="{% if request.resolver_match.url_name == 'reports' %}active{% endif %}">
+                    <i class="bi bi-pie-chart"></i> احصائيات الباكدجات
+                </a>
+                <!-- مقارنة أداء الباكدجات -->
+                <a href="{% url 'package_comparison' %}" class="{% if request.resolver_match.url_name == 'package_comparison' %}active{% endif %}">
+                    <i class="bi bi-graph-up-arrow"></i> مقارنة أداء الباكدجات
+                </a>
+            </div>
+        </li>
 
         <!-- 10. جودة البيانات -->
         <li class="menu-item">
-            <a class="menu-link" href="{% url 'quality_dashboard' %}">
+            <a class="menu-link {% if request.resolver_match.url_name == 'quality_dashboard' %}active{% endif %}" href="{% url 'quality_dashboard' %}">
                 <i class="bi bi-shield-check"></i>
                 جودة البيانات
             </a>
@@ -786,55 +1228,45 @@ body {
 
         <!-- 11. متابعة موافقات الخارجي -->
         <li class="menu-item">
-            <a class="menu-link"
+            <a class="menu-link {% if request.resolver_match.url_name in 'patient_search,external_approvals,pending_analysis' %}active{% endif %}"
                data-bs-toggle="collapse"
                href="#approvalMenu"
                role="button"
-               aria-expanded="false">
+               aria-expanded="{% if request.resolver_match.url_name in 'patient_search,external_approvals,pending_analysis' %}true{% else %}false{% endif %}">
 
                 <i class="bi bi-file-medical"></i>
                 متابعة موافقات الخارجي
                 <i class="bi bi-chevron-down menu-arrow"></i>
             </a>
 
-            <div class="collapse submenu" id="approvalMenu">
-
-                  <a href="{% url 'patient_search' %}">
+            <div class="collapse submenu {% if request.resolver_match.url_name in 'patient_search,external_approvals,pending_analysis' %}show{% endif %}" id="approvalMenu">
+                <a href="{% url 'patient_search' %}" class="{% if request.resolver_match.url_name == 'patient_search' %}active{% endif %}">
                     <i class="bi bi-search"></i> بحث عن مريض
                 </a>
-                <a href="{% url 'external_approvals' %}">
-                    <i class="bi bi-list"></i>  متابعة الموافقات 
+                <a href="{% url 'external_approvals' %}" class="{% if request.resolver_match.url_name == 'external_approvals' %}active{% endif %}">
+                    <i class="bi bi-list"></i> متابعة الموافقات 
                 </a>
-                <a href="{% url 'pending_analysis' %}">
-                    <i class="bi bi-list"></i>  احصائيات الموافقات  
+                <a href="{% url 'pending_analysis' %}" class="{% if request.resolver_match.url_name == 'pending_analysis' %}active{% endif %}">
+                    <i class="bi bi-clock-history"></i> احصائيات الموافقات  
                 </a>
-              
             </div>
         </li>
 
-        <!-- 12. تحليل الحالات Pending -->
-        {% comment %} <li class="menu-item">
-            <a class="menu-link" href="{% url 'pending_analysis' %}">
-                <i class="bi bi-clock-history"></i>
-                تحليل الحالات Pending
-            </a>
-        </li> {% endcomment %}
-
         <!-- 13. قوائم الأسعار -->
         <li class="menu-item">
-            <a class="menu-link"
+            <a class="menu-link {% if request.resolver_match.url_name in 'price_lists' %}active{% endif %}"
                data-bs-toggle="collapse"
                href="#priceListMenu"
                role="button"
-               aria-expanded="false">
+               aria-expanded="{% if request.resolver_match.url_name in 'price_lists' %}true{% else %}false{% endif %}">
 
                 <i class="bi bi-list-ul"></i>
                 قوائم الأسعار
                 <i class="bi bi-chevron-down menu-arrow"></i>
             </a>
 
-            <div class="collapse submenu" id="priceListMenu">
-                <a href="#">
+            <div class="collapse submenu {% if request.resolver_match.url_name in 'price_lists' %}show{% endif %}" id="priceListMenu">
+                <a href="#" class="{% if request.resolver_match.url_name == 'price_lists' %}active{% endif %}">
                     <i class="bi bi-calendar"></i> أسعار 2023
                 </a>
                 <a href="#">
@@ -847,30 +1279,25 @@ body {
         </li>
 
         <!-- 14. إدارة النظام -->
-<li class="menu-item">
+        <li class="menu-item">
+            <a class="menu-link {% if request.resolver_match.url_name in 'system_update' %}active{% endif %}"
+               data-bs-toggle="collapse"
+               href="#systemMenu"
+               role="button"
+               aria-expanded="{% if request.resolver_match.url_name in 'system_update' %}true{% else %}false{% endif %}">
 
-    <a class="menu-link"
-       data-bs-toggle="collapse"
-       href="#systemMenu"
-       role="button"
-       aria-expanded="false">
+                <i class="bi bi-gear-fill"></i>
+                إدارة النظام
+                <i class="bi bi-chevron-down menu-arrow"></i>
+            </a>
 
-        <i class="bi bi-gear-fill"></i>
-        إدارة النظام
-        <i class="bi bi-chevron-down menu-arrow"></i>
-
-    </a>
-
-    <div class="collapse submenu" id="systemMenu">
-
-        <a href="{% url 'system_update' %}">
-            <i class="bi bi-arrow-repeat"></i>
-            تحديث البيانات
-        </a>
-
-    </div>
-
-</li>
+            <div class="collapse submenu {% if request.resolver_match.url_name in 'system_update' %}show{% endif %}" id="systemMenu">
+                <a href="{% url 'system_update' %}" class="{% if request.resolver_match.url_name == 'system_update' %}active{% endif %}">
+                    <i class="bi bi-arrow-repeat"></i>
+                    تحديث البيانات
+                </a>
+            </div>
+        </li>
 
     </ul>
 
@@ -940,6 +1367,134 @@ body {
 <script>
     document.addEventListener('DOMContentLoaded', function() {
 
+        // ===== Scroll to Top Button =====
+        const scrollTopBtn = document.getElementById('scrollTopBtn');
+
+        // إظهار/إخفاء الزر عند التمرير
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 300) {
+                scrollTopBtn.classList.add('visible');
+            } else {
+                scrollTopBtn.classList.remove('visible');
+            }
+        });
+
+        // العودة للأعلى عند الضغط
+        scrollTopBtn.addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // ===== Smooth Logo Effect on Page Load =====
+        const logo = document.querySelector('.logo-box img');
+        if (logo) {
+            logo.style.opacity = '0';
+            logo.style.transform = 'scale(0.8)';
+            setTimeout(() => {
+                logo.style.transition = 'all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)';
+                logo.style.opacity = '1';
+                logo.style.transform = 'scale(1)';
+            }, 100);
+        }
+
+        // ===== Page Transition =====
+        const transitionOverlay = document.getElementById('pageTransition');
+        const transitionText = document.getElementById('transitionText');
+        let isTransitioning = false;
+
+        // أسماء الصفحات بالعربية
+        const pageNames = {
+            'home': 'لوحة التحكم',
+            'contract_entities': 'الجهات المتعاقدة',
+            'company_discounts': 'خصومات الشركات',
+            'special_offers': 'العروض',
+            'service_search': 'البحث عن خدمة',
+            'doctors_list': 'الأطباء',
+            'pricing_details': 'تفاصيل التسعير',
+            'similar_invoices': 'فواتير مماثلة',
+            'quality_dashboard': 'جودة البيانات',
+            'reports': 'إحصائيات الباكدجات',
+            'package_comparison': 'مقارنة أداء الباكدجات',
+            'pending_analysis': 'احصائيات الموافقات',
+            'system_update': 'تحديث البيانات',
+            'procedures': 'توصيف العمليات',
+            'procedure_fees': 'احتساب أتعاب العملية',
+            'credit_package_pricing': 'باكدجات الآجل',
+            'cash_packages': 'باكدجات النقدي',
+            'patient_search': 'بحث عن مريض',
+            'external_approvals': 'متابعة الموافقات'
+        };
+
+        // جميع الروابط في الـ Sidebar (القوائم الرئيسية والفرعية)
+        const allLinks = document.querySelectorAll('.menu-link, .submenu a');
+
+        allLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                // تجاهل الروابط التي تحتوي على data-bs-toggle (collapse)
+                if (this.hasAttribute('data-bs-toggle')) return;
+
+                // تجاهل الروابط التي لا تحتوي على href أو href="#"
+                const href = this.getAttribute('href');
+                if (!href || href === '#' || href.startsWith('javascript:')) return;
+
+                e.preventDefault();
+
+                if (isTransitioning) return;
+                isTransitioning = true;
+
+                // تحديث النص حسب الصفحة
+                let pageName = 'جار التحميل...';
+                for (const [key, value] of Object.entries(pageNames)) {
+                    if (href.includes(key)) {
+                        pageName = value;
+                        break;
+                    }
+                }
+                transitionText.textContent = pageName;
+
+                // تفعيل الـ Overlay
+                transitionOverlay.classList.add('active');
+
+                // إعادة تعيين الأنيميشن بإزالة وإعادة إضافة الكلاس
+                const logo = transitionOverlay.querySelector('.transition-logo');
+                logo.style.animation = 'none';
+                logo.offsetHeight; // إعادة تعيين الـ animation
+                logo.style.animation = 'transitionLogoAnim 1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards';
+                logo.style.opacity = '0';
+
+                // إعادة تعيين نص التحميل
+                transitionText.style.opacity = '0';
+                setTimeout(() => {
+                    transitionText.style.opacity = '1';
+                }, 100);
+
+                // بعد 1.2 ثانية، نبدأ إخفاء الـ Overlay وننتقل للصفحة
+                setTimeout(() => {
+                    // إضافة fade-out
+                    transitionOverlay.classList.add('fade-out');
+
+                    setTimeout(() => {
+                        // الانتقال للصفحة
+                        window.location.href = href;
+
+                        // إعادة تعيين الحالة بعد 2 ثانية (احتياطي)
+                        setTimeout(() => {
+                            transitionOverlay.classList.remove('active', 'fade-out');
+                            isTransitioning = false;
+                        }, 500);
+                    }, 600);
+                }, 1200);
+            });
+        });
+
+        // إخفاء الـ Overlay إذا رجع المستخدم للصفحة عبر Back/Forward
+        window.addEventListener('pageshow', function() {
+            transitionOverlay.classList.remove('active', 'fade-out');
+            isTransitioning = false;
+        });
+
         // ===== Sidebar Toggle =====
         const sidebar = document.getElementById('sidebar');
         const toggleBtn = document.getElementById('sidebarToggle');
@@ -971,10 +1526,9 @@ body {
         // الضغط على الـ Overlay يغلق الـ Sidebar
         overlay.addEventListener('click', closeSidebar);
 
-        // إغلاق الـ Sidebar عند الضغط على أي رابط
+        // إغلاق الـ Sidebar عند الضغط على أي رابط (باستثناء الـ collapse)
         document.querySelectorAll('.menu-link').forEach(function(link) {
             link.addEventListener('click', function() {
-                // لا نغلق إذا كان الـ link به collapse
                 if (!this.hasAttribute('data-bs-toggle')) {
                     closeSidebar();
                 }
@@ -989,14 +1543,10 @@ body {
         });
 
         // ===== تتبع الـ Collapse في الهاتف =====
-        // عند فتح Dropdown، نغلق الـ Sidebar تلقائياً بعد فترة قصيرة
         document.querySelectorAll('[data-bs-toggle="collapse"]').forEach(function(trigger) {
             trigger.addEventListener('click', function() {
-                // إذا كان في الهاتف، نغلق الـ Sidebar بعد فتح الـ Dropdown
                 if (window.innerWidth <= 768) {
-                    setTimeout(function() {
-                        // لا نغلق إذا كان المستخدم لا يزال يتصفح
-                    }, 500);
+                    setTimeout(function() {}, 500);
                 }
             });
         });
