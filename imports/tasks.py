@@ -40,17 +40,14 @@ def update_all_data_task(self):
 
         logs = output.getvalue()
 
-        # ✅ مسح الـ Cache الخاص بالشركات والباكدجات فقط
-        cache.delete_pattern('packages_company_*')
-        cache.delete_pattern('specialties_company_*')
-        cache.delete('active_companies_list')
-        cache.delete_pattern('*pricing*')
+        # ✅ مسح الـ Cache بالكامل (لأن LocMemCache مش بيدعم delete_pattern)
+        cache.clear()
 
         ProgressService.update(
             is_running=False,
             completed=total,
             total=total,
-            logs=logs + "\n\n✅ تم تحديث الـ Cache بنجاح",
+            logs=logs + "\n\n✅ تم مسح الـ Cache بنجاح",
         )
 
         return {
