@@ -355,18 +355,20 @@ class ContractStructureMigrationService:
             "package_not_found": 0,
             "missing_codes": set(),
             "missing_price": 0,
+            "deleted_contract_packages": 0,  # ✅ إضافة تتبع الحذف
         }
 
         # ✅ قوائم التجميع للـ Bulk Operations
         contract_packages_to_create = []
         contract_packages_to_update = []
+        contract_package_keys_in_sheet = set()  # ✅ لتتبع الـ ContractPackages الموجودة
 
         # ✅ تشغيل على كل الصفوف - استخدام to_dict("records")
         print("⏳ Processing rows...")
         total_rows = len(dataframe)
         processed = 0
 
-        # ✅ استخدام أرقام الأعمدة (بدون Header)
+        # ✅ استخدام أرقام الأعمدة الصحيحة (بدون Header)
         for row in dataframe.to_dict("records"):
 
             # ✅ العمود 0: الشركه
@@ -374,9 +376,9 @@ class ContractStructureMigrationService:
                 row.get(0, "")
             )
 
-            # ✅ العمود 6: الكود
-            package_codes = ContractStructureMigrationService.normalize_package_codes(
-                row.get(6, "")
+            # ✅ العمود 1: نوع التعاقد (الفئة المالية)
+            financial_code = ImportHelpers.normalize_text(
+                row.get(1, "")
             )
 
             # ✅ العمود 2: اسم الباكدج
@@ -384,9 +386,14 @@ class ContractStructureMigrationService:
                 row.get(2, "")
             )
 
-            # ✅ العمود 1: نوع التعاقد (الفئة المالية)
-            financial_code = ImportHelpers.normalize_text(
-                row.get(1, "")
+            # ✅ العمود 3: التخصص (للعلم فقط)
+            specialty_name = ImportHelpers.normalize_text(
+                row.get(3, "")
+            )
+
+            # ✅ العمود 6: الكود
+            package_codes = ContractStructureMigrationService.normalize_package_codes(
+                row.get(6, "")
             )
 
             if not company_name or not package_codes:
@@ -430,15 +437,23 @@ class ContractStructureMigrationService:
             )
 
             # ============================================================
-            # ✅ Package Lookup
+            # ✅ Package Lookup - مع fallback
             # ============================================================
             package = None
 
+            # جرب البحث بالكود + الاسم
             for code in package_codes:
                 key = ImportHelpers.package_lookup_key(code, package_name)
                 package = packages_cache.get(key)
                 if package:
                     break
+
+            # لو مش موجود، جرب بالكود فقط
+            if not package and package_codes:
+                for code in package_codes:
+                    package = Package.objects.filter(code=code).first()
+                    if package:
+                        break
 
             if not package:
                 result["package_not_found"] += 1
@@ -512,6 +527,7 @@ class ContractStructureMigrationService:
             }
 
             key = (contract.id, package.id)
+            contract_package_keys_in_sheet.add(key)  # ✅ تتبع المفتاح للحذف
             contract_package = contract_packages_cache.get(key)
 
             if contract_package:
@@ -544,6 +560,26 @@ class ContractStructureMigrationService:
                 print(f"   📊 Processed {processed}/{total_rows} rows...")
 
         print(f"   ✅ Processed {processed}/{total_rows} rows")
+
+        # ============================================================
+        # ✅ حذف ContractPackages غير الموجودة في الشيت
+        # ============================================================
+        if contract_package_keys_in_sheet:
+            all_keys = set(contract_packages_cache.keys())
+            keys_to_delete = all_keys - contract_package_keys_in_sheet
+            
+            if keys_to_delete:
+                deleted_count = 0
+                for key in keys_to_delete:
+                    contract_package = contract_packages_cache.get(key)
+                    if contract_package:
+                        contract_package.delete()
+                        deleted_count += 1
+                if deleted_count > 0:
+                    print(f"🗑️ Deleted {deleted_count} contract packages not in sheet")
+                    result["deleted_contract_packages"] = deleted_count
+        else:
+            print("⚠️ No contract packages in sheet - skipping deletion to avoid data loss")
 
         # ✅ تنفيذ الـ Bulk Operations
         print(f"💾 Creating {len(contract_packages_to_create)} ContractPackages...")

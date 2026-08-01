@@ -2,6 +2,7 @@ import io
 import pandas as pd
 import gspread
 from pathlib import Path
+from datetime import datetime
 
 from django.conf import settings
 
@@ -19,6 +20,8 @@ class GoogleSheetsService:
 
     _client = None
     _spreadsheet = None
+    _cache = {}  # ✅ Cache للبيانات
+    _cache_time = {}  # ✅ وقت التخزين
 
     @classmethod
     def get_client(cls):
@@ -35,14 +38,16 @@ class GoogleSheetsService:
         return cls._client
 
     @classmethod
-    def get_spreadsheet(cls):
+    def get_spreadsheet(cls, force_reload=False):  # ✅ إضافة force_reload
+
+        # ✅ إذا كان force_reload، أعد فتح الـ Spreadsheet
+        if force_reload:
+            print(f"🔄 Force reloading spreadsheet at {datetime.now()}")
+            cls._spreadsheet = None
 
         if cls._spreadsheet is None:
-
-            cls._spreadsheet = (
-                cls.get_client().open_by_key(
-                    settings.GOOGLE_SPREADSHEET_ID
-                )
+            cls._spreadsheet = cls.get_client().open_by_key(
+                settings.GOOGLE_SPREADSHEET_ID
             )
 
         return cls._spreadsheet
@@ -111,7 +116,28 @@ class GoogleSheetsService:
         )
 
     @classmethod
-    def get_dataframe(cls, sheet_name):
+    def get_dataframe(cls, sheet_name, force_reload=False):  # ✅ إضافة force_reload
+
+        cache_key = str(sheet_name)
+
+        # ✅ إذا كان force_reload، احذف الـ Cache
+        if force_reload:
+            if cache_key in cls._cache:
+                print(f"🔄 Force reload for sheet {sheet_name} (was cached at {cls._cache_time.get(cache_key, 'unknown')})")
+                del cls._cache[cache_key]
+                if cache_key in cls._cache_time:
+                    del cls._cache_time[cache_key]
+
+            # ✅ أعد فتح الـ Spreadsheet
+            cls.get_spreadsheet(force_reload=True)
+
+        # ✅ استخدام Cache إذا كان موجوداً
+        if cache_key in cls._cache:
+            print(f"✅ Using cached data for sheet {sheet_name}")
+            return cls._cache[cache_key].copy()
+
+        # ✅ قراءة جديدة من Google
+        print(f"📥 Fetching fresh data from Google Sheets: {sheet_name}")
 
         worksheet = cls.get_spreadsheet().worksheet(
             str(sheet_name)
@@ -120,6 +146,7 @@ class GoogleSheetsService:
         data = worksheet.get_all_values()
 
         if not data:
+            print(f"⚠️ Sheet {sheet_name} is empty")
             return pd.DataFrame()
 
         # ✅ استخدام أول صف كـ header
@@ -136,4 +163,17 @@ class GoogleSheetsService:
 
         dataframe = dataframe.reset_index(drop=True)
 
-        return dataframe
+        # ✅ تخزين في Cache مع timestamp
+        cls._cache[cache_key] = dataframe
+        cls._cache_time[cache_key] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+        print(f"✅ Cached sheet {sheet_name} with {len(dataframe)} rows")
+
+        return dataframe.copy()
+
+    @classmethod
+    def clear_cache(cls):  # ✅ إضافة مسح الـ Cache
+        cls._cache.clear()
+        cls._cache_time.clear()
+        cls._spreadsheet = None
+        print("🗑️ Google Sheets cache cleared")

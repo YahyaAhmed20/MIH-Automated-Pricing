@@ -38,25 +38,18 @@ class CompanyContractImportService:
             return ""
         
         try:
-            # إذا كان رقم
             if isinstance(value, (int, float)):
-                # إذا كان بين 0 و 1، اضربه في 100
                 if 0 < value <= 1:
                     value = value * 100
                 return f"{round(value)}%"
             
-            # إذا كان نص
             cleaned = str(value).strip()
             if not cleaned:
                 return ""
             
-            # إزالة علامة النسبة المئوية
             cleaned = cleaned.replace('%', '').strip()
-            
-            # محاولة التحويل إلى رقم
             num = float(cleaned)
             
-            # إذا كان بين 0 و 1، اضربه في 100
             if 0 < num <= 1:
                 num = num * 100
             
@@ -153,6 +146,7 @@ class CompanyContractImportService:
             "created_contracts": 0,
             "updated_contracts": 0,
             "skipped_incomplete_contracts": 0,
+            "deleted_contracts": 0,
         }
 
         # ============================================================
@@ -193,9 +187,11 @@ class CompanyContractImportService:
         # ============================================================
         contracts_to_create = []
         contracts_to_update = []
+        contract_keys_in_sheet = set()
+        seen_keys = set()
 
         # ============================================================
-        # Loop - استخدام أرقام الأعمدة
+        # Loop - الأعمدة الصحيحة لشيت 3
         # ============================================================
         print("⏳ Processing rows...")
         total_rows = len(dataframe)
@@ -203,35 +199,48 @@ class CompanyContractImportService:
 
         for index, row in enumerate(dataframe.to_dict("records"), start=1):
 
-            # ✅ أرقام الأعمدة حسب ترتيب شيت 3
-            # العمود 0: اسم الجهة (الشركة)
+            # ✅ العمود 0: الجهة (الشركة)
             company_name = ImportHelpers.normalize_text(row.get(0, ""))
             company_name = CompanyContractImportService.truncate_text(company_name, 255)
 
             if not company_name:
                 continue
 
-            # العمود 1: نوع التعاقد
+            # ✅ العمود 1: نوع التعاقد
             contract_type = ImportHelpers.normalize_text(row.get(1, ""))
             contract_type = CompanyContractImportService.truncate_text(contract_type, 255)
 
-            # العمود 2: الفئة المالية
+            # ✅ العمود 2: الفئة المالية
             financial_code = ImportHelpers.normalize_text(row.get(2, ""))
             financial_code = CompanyContractImportService.truncate_text(financial_code, 50)
 
-            # العمود 3: قائمة الاسعار الحاليه
+            # ✅ العمود 3: قائمة الاسعار الحاليه
             price_list_name = ImportHelpers.normalize_text(row.get(3, ""))
             price_list_name = CompanyContractImportService.truncate_text(price_list_name, 255)
 
-            # العمود 4: الخدمة الطبية (نسبة الخصم)
+            # ✅ العمود 4: الخدمة الطبية (نسبة الخصم)
             medical_service = CompanyContractImportService.parse_medical_service(row.get(4, None))
 
-            # العمود 5: اعتبارا من (التاريخ)
+            # ✅ العمود 5: اعتباراً من (التاريخ)
             effective_from = ImportHelpers.clean_date(row.get(5, None))
 
-            # العمود 12: ملاحظات (تعليمات التشغيل)
-            operating_instructions = ImportHelpers.normalize_text(row.get(12, ""))
+            # ✅ العمود 6: تعليمات التشغيل
+            operating_instructions = ImportHelpers.normalize_text(row.get(6, ""))
             operating_instructions = CompanyContractImportService.truncate_text(operating_instructions, 255)
+
+            # ✅ العمود 12: ملاحظات
+            notes = ImportHelpers.normalize_text(row.get(12, ""))
+            notes = CompanyContractImportService.truncate_text(notes, 255)
+
+            # ✅ منع التكرار في نفس الملف
+            contract_key = (
+                company_name,
+                financial_code,
+                price_list_name,
+            )
+            if contract_key in seen_keys:
+                continue
+            seen_keys.add(contract_key)
 
             processed += 1
             result["processed"] = processed
@@ -262,13 +271,16 @@ class CompanyContractImportService:
             if not price_list:
                 continue
 
-            # ✅ البحث في Cache
-            contract_key = (
+            # ✅ تخزين المفتاح للحذف
+            contract_db_key = (
                 entity.id,
                 financial_category.id if financial_category else None,
                 price_list.id,
             )
-            existing_contract = contracts_cache.get(contract_key)
+            contract_keys_in_sheet.add(contract_db_key)
+
+            # ✅ البحث في Cache
+            existing_contract = contracts_cache.get(contract_db_key)
 
             if existing_contract:
                 # ✅ تحديث البيانات
@@ -290,6 +302,10 @@ class CompanyContractImportService:
                     existing_contract.operating_instructions = operating_instructions
                     changed = True
 
+                if existing_contract.notes != notes:
+                    existing_contract.notes = notes
+                    changed = True
+
                 if existing_contract.is_active is not True:
                     existing_contract.is_active = True
                     changed = True
@@ -308,16 +324,37 @@ class CompanyContractImportService:
                     medical_service=medical_service,
                     effective_from=effective_from,
                     operating_instructions=operating_instructions,
+                    notes=notes,
                     is_active=True,
                 )
                 contracts_to_create.append(new_contract)
-                contracts_cache[contract_key] = new_contract
+                contracts_cache[contract_db_key] = new_contract
                 result["created_contracts"] += 1
 
             if processed % 1000 == 0:
                 print(f"   📊 Processed {processed}/{total_rows} rows...")
 
         print(f"   ✅ Processed {processed}/{total_rows} rows")
+
+        # ============================================================
+        # ✅ حذف العقود غير الموجودة في الشيت
+        # ============================================================
+        if contract_keys_in_sheet:
+            all_contract_keys = set(contracts_cache.keys())
+            keys_to_delete = all_contract_keys - contract_keys_in_sheet
+            
+            if keys_to_delete:
+                deleted_count = 0
+                for key in keys_to_delete:
+                    contract = contracts_cache.get(key)
+                    if contract:
+                        contract.delete()
+                        deleted_count += 1
+                if deleted_count > 0:
+                    print(f"🗑️ Deleted {deleted_count} contracts not in sheet")
+                    result["deleted_contracts"] = deleted_count
+        else:
+            print("⚠️ No contracts in sheet - skipping deletion to avoid data loss")
 
         # ============================================================
         # Bulk Operations
@@ -336,6 +373,7 @@ class CompanyContractImportService:
                     "medical_service",
                     "effective_from",
                     "operating_instructions",
+                    "notes",
                     "is_active",
                 ],
                 batch_size=1000,

@@ -20,10 +20,12 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
 
         # ✅ استخدم header=None لأن شيت 1 مفيش Header
+        # ✅ إضافة force_reload=True لقراءة أحدث البيانات
         dataframe = ExcelProvider.read(
             file_path=options["file_path"],
             sheet_name="1",
             header=None,  # ✅ مفيش Header
+            force_reload=True,  # ✅ قراءة أحدث البيانات من Google Sheets
         )
 
         result = ContractStructureMigrationService.migrate(dataframe)

@@ -25,10 +25,12 @@ class Command(BaseCommand):
         self.stdout.write("========== Company Contracts Import ==========")
 
         # ✅ استخدم header=None
+        # ✅ إضافة force_reload=True لقراءة أحدث البيانات
         dataframe = ExcelProvider.read(
             file_path=options["file_path"],
             sheet_name="3",  # ✅ شيت 3
             header=None,     # ✅ مفيش Header
+            force_reload=True,  # ✅ قراءة أحدث البيانات من Google Sheets
         )
 
         result = CompanyContractImportService.import_data(dataframe)

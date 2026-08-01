@@ -25,10 +25,12 @@ class Command(BaseCommand):
         self.stdout.write("========== Cash Packages Import ==========")
 
         # ✅ استخدم header=None
+        # ✅ إضافة force_reload=True لقراءة أحدث البيانات
         dataframe = ExcelProvider.read(
             file_path=options["file_path"],
             sheet_name="2",  # ✅ شيت 2
             header=None,     # ✅ مفيش Header
+            force_reload=True,  # ✅ قراءة أحدث البيانات من Google Sheets
         )
 
         result = CashPackageImportService.import_data(dataframe)
@@ -39,5 +41,7 @@ class Command(BaseCommand):
         self.stdout.write(f"Created Packages     : {result['created']}")
         self.stdout.write(f"Updated Packages     : {result['updated']}")
         self.stdout.write(f"Created Specialties  : {result['created_specialties']}")
+        self.stdout.write(f"Deleted Packages     : {result.get('deleted', 0)}")
+        self.stdout.write(f"Skipped Duplicates   : {result.get('skipped_duplicates', 0)}")
         self.stdout.write(f"Missing Specialty    : {result['missing_specialty']}")
         self.stdout.write("==========================================")

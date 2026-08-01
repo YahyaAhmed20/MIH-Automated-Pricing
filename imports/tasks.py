@@ -1,6 +1,6 @@
 from io import StringIO
-
 from celery import shared_task
+from django.core.cache import cache
 
 from imports.services.progress_service import ProgressService
 from imports.services.update_all_data_service import (
@@ -15,22 +15,19 @@ def update_all_data_task(self):
 
     output = StringIO()
 
-    # ✅ حساب العدد الإجمالي للأوامر
     total = len(IMPORT_COMMANDS) + len(POST_IMPORT_COMMANDS)
 
-    # ✅ بداية التحديث - مسح الـ logs القديمة
     ProgressService.reset()
     
     ProgressService.update(
         is_running=True,
         total=total,
-        logs=None,  # ✅ مسح الـ logs القديمة
+        logs=None,
     )
 
     try:
 
         def progress_callback(command_name, completed):
-
             ProgressService.update(
                 current_command=command_name,
                 completed=completed,
@@ -43,12 +40,17 @@ def update_all_data_task(self):
 
         logs = output.getvalue()
 
-        # ✅ نهاية التحديث - حفظ الـ logs الجديدة
+        # ✅ مسح الـ Cache الخاص بالشركات والباكدجات فقط
+        cache.delete_pattern('packages_company_*')
+        cache.delete_pattern('specialties_company_*')
+        cache.delete('active_companies_list')
+        cache.delete_pattern('*pricing*')
+
         ProgressService.update(
             is_running=False,
             completed=total,
             total=total,
-            logs=logs,  # ✅ الـ logs الجديدة
+            logs=logs + "\n\n✅ تم تحديث الـ Cache بنجاح",
         )
 
         return {

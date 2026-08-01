@@ -1,5 +1,3 @@
-# imports/services/package_catalog_import_service.py
-
 import pandas as pd
 import time
 from django.db import transaction
@@ -33,6 +31,8 @@ class PackageCatalogImportService:
             "created": 0,
             "updated": 0,
             "created_specialties": 0,
+            "deleted": 0,
+            "skipped_duplicates": 0,
             "missing_specialty": 0,
         }
 
@@ -46,7 +46,7 @@ class PackageCatalogImportService:
         print(f"   ✅ {len(specialties_cache)} specialties loaded")
 
         # ============================================================
-        # ✅ Cache للـ Packages
+        # ✅ Cache للـ Packages - باستخدام (code, name) كما هو
         # ============================================================
         print("⏳ Loading packages...")
         packages_cache = {}
@@ -63,9 +63,11 @@ class PackageCatalogImportService:
         # ============================================================
         packages_to_create = []
         packages_to_update = []
+        sheet_codes = set()  # ✅ لتتبع الأكواد للحذف
+        seen_keys = set()    # ✅ لمنع التكرار في نفس الملف
 
         # ============================================================
-        # ✅ Loop - استخدام أرقام الأعمدة (بدون Header)
+        # ✅ Loop - استخدام الأعمدة الصحيحة (بدون Header)
         # ============================================================
         print("⏳ Processing rows...")
         total_rows = len(dataframe)
@@ -73,23 +75,38 @@ class PackageCatalogImportService:
 
         for index, row in enumerate(dataframe.to_dict("records"), start=1):
 
-            # ✅ أرقام الأعمدة حسب ترتيب شيت 1
-            # العمود 0: الكود
-            package_code = ImportHelpers.normalize_text(row.get(0, ""))
+            # ✅ الأعمدة الصحيحة حسب ترتيب شيت 1
+            # العمود 0: الشركة (نستخدمها للـ Cache)
+            company_name = ImportHelpers.normalize_text(row.get(0, ""))
             
-            # العمود 1: اسم الباكدج
-            package_name = ImportHelpers.normalize_text(row.get(1, ""))
+            # العمود 1: نوع التعاقد
+            contract_type = ImportHelpers.normalize_text(row.get(1, ""))
+            
+            # العمود 2: اسم الباكدج ✅
+            package_name = ImportHelpers.normalize_text(row.get(2, ""))
             package_name = PackageCatalogImportService.truncate_text(package_name, 255)
             
-            # العمود 2: التخصص
-            specialty_name = ImportHelpers.normalize_text(row.get(2, ""))
+            # العمود 3: التخصص ✅
+            specialty_name = ImportHelpers.normalize_text(row.get(3, ""))
             specialty_name = PackageCatalogImportService.truncate_text(specialty_name, 255)
             
-            # العمود 3: مدة الاقامه
-            stay_duration = ImportHelpers.normalize_text(row.get(3, ""))
+            # العمود 4: السعر
+            price = ImportHelpers.normalize_text(row.get(4, ""))
             
-            # العمود 4: ملاحظات الباكدج
-            package_note = ImportHelpers.normalize_text(row.get(4, ""))
+            # العمود 5: مدة الإقامة ✅
+            stay_duration = ImportHelpers.normalize_text(row.get(5, ""))
+            
+            # العمود 6: الكود ✅
+            package_code = ImportHelpers.normalize_text(row.get(6, ""))
+            
+            # العمود 7: اعتباراً من
+            valid_from = row.get(7, "")
+            
+            # العمود 8: ساري حتى
+            valid_until = row.get(8, "")
+            
+            # العمود 9: ملاحظات الباكدج ✅
+            package_note = ImportHelpers.normalize_text(row.get(9, ""))
             package_note = PackageCatalogImportService.truncate_text(package_note, 255)
 
             # ✅ قيم افتراضية
@@ -106,6 +123,16 @@ class PackageCatalogImportService:
                 result["skipped"] = result.get("skipped", 0) + 1
                 continue
 
+            # ✅ منع التكرار في نفس الملف (أول ظهور بس)
+            package_key = (package_code, package_name)
+            if package_key in seen_keys:
+                result["skipped_duplicates"] += 1
+                continue
+            seen_keys.add(package_key)
+
+            # ✅ تخزين الأكواد للحذف
+            sheet_codes.add(package_code)
+
             result["processed"] += 1
             processed = result["processed"]
 
@@ -121,8 +148,7 @@ class PackageCatalogImportService:
                     specialties_cache[specialty_name] = specialty
                     result["created_specialties"] += 1
 
-            # ✅ البحث في Cache
-            package_key = (package_code, package_name)
+            # ✅ البحث في Cache باستخدام (code, name)
             existing_package = packages_cache.get(package_key)
 
             if existing_package:
@@ -171,6 +197,20 @@ class PackageCatalogImportService:
                 print(f"   📊 Processed {processed}/{total_rows} rows...")
 
         print(f"   ✅ Processed {processed}/{total_rows} rows")
+        print(f"   ⏭️ Skipped {result['skipped_duplicates']} duplicate keys in sheet")
+
+        # ============================================================
+        # ✅ حذف الباكدجات غير الموجودة في الـ Sheet
+        # ============================================================
+        if sheet_codes:
+            deleted_count, _ = Package.objects.exclude(
+                code__in=sheet_codes
+            ).delete()
+            if deleted_count > 0:
+                print(f"🗑️ Deleted {deleted_count} packages not in sheet")
+                result["deleted"] = deleted_count
+        else:
+            print("⚠️ No codes in sheet - skipping deletion to avoid data loss")
 
         # ============================================================
         # ✅ تنفيذ الـ Bulk Operations
