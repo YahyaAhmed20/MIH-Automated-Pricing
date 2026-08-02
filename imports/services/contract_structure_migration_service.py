@@ -269,7 +269,7 @@ class ContractStructureMigrationService:
         return contract
 
     # ============================================================
-    # ✅ migrate() - المعدل مع Cache و Bulk Operations
+    # ✅ migrate() - المعدل مع Cache و Bulk Operations + الحذف
     # ============================================================
     @staticmethod
     @transaction.atomic
@@ -368,7 +368,7 @@ class ContractStructureMigrationService:
         total_rows = len(dataframe)
         processed = 0
 
-        # ✅ استخدام أرقام الأعمدة الصحيحة (بدون Header)
+        # ✅ استخدام أرقام الأعمدة (بدون Header)
         for row in dataframe.to_dict("records"):
 
             # ✅ العمود 0: الشركه
@@ -376,9 +376,9 @@ class ContractStructureMigrationService:
                 row.get(0, "")
             )
 
-            # ✅ العمود 1: نوع التعاقد (الفئة المالية)
-            financial_code = ImportHelpers.normalize_text(
-                row.get(1, "")
+            # ✅ العمود 6: الكود
+            package_codes = ContractStructureMigrationService.normalize_package_codes(
+                row.get(6, "")
             )
 
             # ✅ العمود 2: اسم الباكدج
@@ -386,14 +386,9 @@ class ContractStructureMigrationService:
                 row.get(2, "")
             )
 
-            # ✅ العمود 3: التخصص (للعلم فقط)
-            specialty_name = ImportHelpers.normalize_text(
-                row.get(3, "")
-            )
-
-            # ✅ العمود 6: الكود
-            package_codes = ContractStructureMigrationService.normalize_package_codes(
-                row.get(6, "")
+            # ✅ العمود 1: نوع التعاقد (الفئة المالية)
+            financial_code = ImportHelpers.normalize_text(
+                row.get(1, "")
             )
 
             if not company_name or not package_codes:
@@ -437,23 +432,15 @@ class ContractStructureMigrationService:
             )
 
             # ============================================================
-            # ✅ Package Lookup - مع fallback
+            # ✅ Package Lookup
             # ============================================================
             package = None
 
-            # جرب البحث بالكود + الاسم
             for code in package_codes:
                 key = ImportHelpers.package_lookup_key(code, package_name)
                 package = packages_cache.get(key)
                 if package:
                     break
-
-            # لو مش موجود، جرب بالكود فقط
-            if not package and package_codes:
-                for code in package_codes:
-                    package = Package.objects.filter(code=code).first()
-                    if package:
-                        break
 
             if not package:
                 result["package_not_found"] += 1
@@ -562,7 +549,7 @@ class ContractStructureMigrationService:
         print(f"   ✅ Processed {processed}/{total_rows} rows")
 
         # ============================================================
-        # ✅ حذف ContractPackages غير الموجودة في الشيت
+        # ✅ ✅ ✅ حذف ContractPackages غير الموجودة في الشيت
         # ============================================================
         if contract_package_keys_in_sheet:
             all_keys = set(contract_packages_cache.keys())

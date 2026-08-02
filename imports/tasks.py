@@ -40,14 +40,18 @@ def update_all_data_task(self):
 
         logs = output.getvalue()
 
-        # ✅ مسح الـ Cache بالكامل (لأن LocMemCache مش بيدعم delete_pattern)
-        cache.clear()
+        # ✅ مسح الـ Cache بالكامل
+        try:
+            cache.clear()
+            logs += "\n\n✅ تم مسح الـ Cache بنجاح"
+        except Exception as e:
+            logs += f"\n\n⚠️ فشل مسح الـ Cache: {str(e)}"
 
         ProgressService.update(
             is_running=False,
             completed=total,
             total=total,
-            logs=logs + "\n\n✅ تم مسح الـ Cache بنجاح",
+            logs=logs,
         )
 
         return {
@@ -57,8 +61,11 @@ def update_all_data_task(self):
 
     except Exception as e:
 
+        # ✅ في حالة الخطأ، سجل الـ logs الموجودة
+        error_logs = output.getvalue()
         ProgressService.update(
             is_running=False,
+            logs=error_logs + f"\n\n❌ خطأ: {str(e)}",
         )
 
         raise e

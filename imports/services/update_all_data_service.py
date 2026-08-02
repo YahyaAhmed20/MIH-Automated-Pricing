@@ -4,6 +4,7 @@ from time import perf_counter
 
 from django.core.management import call_command
 from django.core.management.base import CommandError
+from django.core.cache import cache  # ✅ إضافة
 
 from imports.services.excel_provider import ExcelProvider
 
@@ -12,50 +13,31 @@ from imports.services.excel_provider import ExcelProvider
 COMMANDS_WITH_NO_CONFIRM = [
     "import_report_statistics",
     "import_external_approvals",
-    "import_report_statistics_sheet15",  # ✅ جديد
+    "import_report_statistics_sheet15",
 ]
 
 IMPORT_COMMANDS = [
-
     ("Package Catalog", "import_package_catalog"),
-
     ("Cash Packages", "import_cash_packages"),
-
     ("Contract Migration", "migrate_contract_entities"),
-
     ("Company Contracts", "import_company_contracts"),
-
     ("Company Discounts", "import_company_discounts"),
-
     ("Special Offers", "import_special_offers"),
-
     ("Service Records", "import_service_records"),
-
     ("Pricing Details", "import_pricing_details"),
-
     ("Similar Invoices", "import_similar_invoices"),
-
     ("Procedures", "import_procedures"),
-
     ("Medical Procedures", "import_medical_procedures"),
-
     ("Procedure Fees", "import_procedure_fees"),
-
     ("Company Discount Rank", "import_company_discount_rank"),
-
     ("Company Exceptions", "import_company_exceptions"),
-
     ("Report Statistics", "import_report_statistics"),
-
     ("External Approvals", "import_external_approvals"),
-
-    # ✅ جديد - شيت 15
     ("Report Statistics Sheet 15", "import_report_statistics_sheet15"),
 ]
 
-# ✅ ✅ ✅ أوامر إضافية لتوحيد البيانات بعد الاستيراد
 POST_IMPORT_COMMANDS = [
-    ("Normalize Categories", "normalize_categories"),  # ✅ توحيد التصنيفات
+    ("Normalize Categories", "normalize_categories"),
 ]
 
 
@@ -72,6 +54,7 @@ class UpdateAllDataService:
 
         total_start = perf_counter()
 
+        # ✅ مسح Cache الـ Excel
         ExcelProvider.clear_cache()
 
         results = []
@@ -84,7 +67,6 @@ class UpdateAllDataService:
             # ============================================================
             for idx, (title, command_name) in enumerate(IMPORT_COMMANDS):
 
-                # ✅ تحديث التقدم
                 if progress_callback:
                     progress_callback(title, idx)
 
@@ -124,7 +106,7 @@ class UpdateAllDataService:
                 stdout.flush()
 
             # ============================================================
-            # ✅ ✅ ✅ 2. تنفيذ أوامر ما بعد الاستيراد (توحيد البيانات)
+            # ✅ 2. تنفيذ أوامر ما بعد الاستيراد (توحيد البيانات)
             # ============================================================
             stdout.write("")
             stdout.write("=" * 70)
@@ -133,7 +115,6 @@ class UpdateAllDataService:
 
             for idx, (title, command_name) in enumerate(POST_IMPORT_COMMANDS):
 
-                # ✅ تحديث التقدم
                 if progress_callback:
                     progress_callback(title, len(IMPORT_COMMANDS) + idx)
 
@@ -159,8 +140,6 @@ class UpdateAllDataService:
                     elapsed = perf_counter() - start
                     results.append({"title": title, "status": "⚠️", "time": elapsed})
                     stdout.write(f"⚠️ {title} Failed (skipping)")
-
-                    # ✅ لا نوقف العملية إذا فشل توحيد التصنيفات
                     stdout.write(f"   Error: {str(exc)}")
                     stdout.write("   Continuing with remaining commands...")
 
@@ -168,7 +147,15 @@ class UpdateAllDataService:
 
         finally:
 
+            # ✅ مسح Cache الـ Excel
             ExcelProvider.clear_cache()
+
+            # ✅ ✅ ✅ مسح Cache الـ Django (الأهم)
+            try:
+                cache.clear()
+                stdout.write("\n✅ Django cache cleared successfully")
+            except Exception as e:
+                stdout.write(f"\n⚠️ Failed to clear Django cache: {str(e)}")
 
             if progress_callback:
                 progress_callback("✅ تم الانتهاء", total_commands)
