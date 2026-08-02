@@ -18,8 +18,8 @@ COMMANDS_WITH_NO_CONFIRM = [
 
 IMPORT_COMMANDS = [
     ("Package Catalog", "import_package_catalog"),
-    ("Cash Packages", "import_cash_packages"),
     ("Contract Migration", "migrate_contract_entities"),
+    ("Cash Packages", "import_cash_packages"),
     ("Company Contracts", "import_company_contracts"),
     ("Company Discounts", "import_company_discounts"),
     ("Special Offers", "import_special_offers"),
