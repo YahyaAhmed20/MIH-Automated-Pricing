@@ -8909,3 +8909,2523 @@ SSL SYSCALL error: Connection reset by peer (0x00002746/10054)
 "GET /credit-package-pricing/ HTTP/1.1" 200 75979
 "GET /cash-packages/ HTTP/1.1" 200 58122
 "GET /credit-package-pricing/ HTTP/1.1" 200 75979
+Watching for file changes with StatReloader
+- Broken pipe from ('127.0.0.1', 65134)
+- Broken pipe from ('127.0.0.1', 65138)
+"GET /system/update/ HTTP/1.1" 200 71380
+"POST /system/update/ HTTP/1.1" 200 68
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+Watching for file changes with StatReloader
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+Watching for file changes with StatReloader
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /system/update/ HTTP/1.1" 200 62838
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 51977
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 15022
+"GET /system/update/ HTTP/1.1" 200 62838
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+Watching for file changes with StatReloader
+"GET /api/update-progress/ HTTP/1.1" 200 88
+"GET /api/update-progress/ HTTP/1.1" 200 88
+"GET /api/update-progress/ HTTP/1.1" 200 88
+"GET /system/update/ HTTP/1.1" 200 62233
+- Broken pipe from ('127.0.0.1', 57809)
+"POST /system/update/ HTTP/1.1" 200 68
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 88
+"GET /api/update-progress/ HTTP/1.1" 200 88
+"GET /api/update-progress/ HTTP/1.1" 200 101
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 114
+"GET /api/update-progress/ HTTP/1.1" 200 114
+"GET /api/update-progress/ HTTP/1.1" 200 114
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 115
+"GET /api/update-progress/ HTTP/1.1" 200 115
+"GET /api/update-progress/ HTTP/1.1" 200 115
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 111
+"GET /api/update-progress/ HTTP/1.1" 200 111
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 123
+"GET /api/update-progress/ HTTP/1.1" 200 123
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 128
+"GET /api/update-progress/ HTTP/1.1" 200 128
+"GET /api/update-progress/ HTTP/1.1" 200 128
+"GET /api/update-progress/ HTTP/1.1" 200 128
+"GET /api/update-progress/ HTTP/1.1" 200 128
+"GET /api/update-progress/ HTTP/1.1" 200 128
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 122
+"GET /api/update-progress/ HTTP/1.1" 200 122
+"GET /api/update-progress/ HTTP/1.1" 200 170
+"GET /api/update-progress/ HTTP/1.1" 200 170
+"GET /api/update-progress/ HTTP/1.1" 200 9824
+"GET /api/update-progress/ HTTP/1.1" 200 9824
+"POST /system/update/ HTTP/1.1" 200 68
+"GET /api/update-progress/ HTTP/1.1" 200 116
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\redis\_parsers\hiredis.py", line 130, in read_from_socket
+    bufflen = self._sock.recv_into(self._buffer)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TimeoutError: timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5474, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 37, in get
+    data = client.get(cls.KEY)
+           ^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\commands\core.py", line 3194, in get
+    return self.execute_command("GET", name, keys=[name])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 798, in execute_command
+    return self._execute_command(*args, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 804, in _execute_command
+    conn = self.connection or pool.get_connection()
+                              ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\utils.py", line 258, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 3163, in get_connection
+    connection.connect()
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 1007, in connect
+    self.retry.call_with_retry(
+  File "D:\desktop\rphospital\Lib\site-packages\redis\retry.py", line 132, in call_with_retry
+    raise error
+  File "D:\desktop\rphospital\Lib\site-packages\redis\retry.py", line 120, in call_with_retry
+    return do()
+           ^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 1008, in <lambda>
+    lambda: self.connect_check_health(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 1062, in connect_check_health
+    self.on_connect_check_health(check_health=check_health)
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 1187, in on_connect_check_health
+    self.read_response()
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 1372, in read_response
+    response = self._parser.read_response(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\_parsers\hiredis.py", line 172, in read_response
+    self.read_from_socket(timeout=timeout)
+  File "D:\desktop\rphospital\Lib\site-packages\redis\_parsers\hiredis.py", line 139, in read_from_socket
+    raise TimeoutError("Timeout reading from socket")
+redis.exceptions.TimeoutError: Timeout reading from socket
+"GET /api/update-progress/ HTTP/1.1" 500 145640
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 116
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\redis\_parsers\hiredis.py", line 130, in read_from_socket
+    bufflen = self._sock.recv_into(self._buffer)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TimeoutError: timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5474, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 37, in get
+    data = client.get(cls.KEY)
+           ^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\commands\core.py", line 3194, in get
+    return self.execute_command("GET", name, keys=[name])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 798, in execute_command
+    return self._execute_command(*args, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 804, in _execute_command
+    conn = self.connection or pool.get_connection()
+                              ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\utils.py", line 258, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 3163, in get_connection
+    connection.connect()
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 1007, in connect
+    self.retry.call_with_retry(
+  File "D:\desktop\rphospital\Lib\site-packages\redis\retry.py", line 132, in call_with_retry
+    raise error
+  File "D:\desktop\rphospital\Lib\site-packages\redis\retry.py", line 120, in call_with_retry
+    return do()
+           ^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 1008, in <lambda>
+    lambda: self.connect_check_health(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 1062, in connect_check_health
+    self.on_connect_check_health(check_health=check_health)
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 1164, in on_connect_check_health
+    self.activate_maint_notifications_handling_if_enabled(check_health=check_health)
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 610, in activate_maint_notifications_handling_if_enabled
+    self._enable_maintenance_notifications(
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 635, in _enable_maintenance_notifications
+    response = self.read_response()
+               ^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 1372, in read_response
+    response = self._parser.read_response(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\_parsers\hiredis.py", line 172, in read_response
+    self.read_from_socket(timeout=timeout)
+  File "D:\desktop\rphospital\Lib\site-packages\redis\_parsers\hiredis.py", line 139, in read_from_socket
+    raise TimeoutError("Timeout reading from socket")
+redis.exceptions.TimeoutError: Timeout reading from socket
+"GET /api/update-progress/ HTTP/1.1" 500 154800
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 9811
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\redis\_parsers\hiredis.py", line 130, in read_from_socket
+    bufflen = self._sock.recv_into(self._buffer)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TimeoutError: timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5474, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 37, in get
+    data = client.get(cls.KEY)
+           ^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\commands\core.py", line 3194, in get
+    return self.execute_command("GET", name, keys=[name])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 798, in execute_command
+    return self._execute_command(*args, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 820, in _execute_command
+    result = conn.retry.call_with_retry(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\retry.py", line 132, in call_with_retry
+    raise error
+  File "D:\desktop\rphospital\Lib\site-packages\redis\retry.py", line 120, in call_with_retry
+    return do()
+           ^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 821, in <lambda>
+    lambda: self._send_command_parse_response(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 764, in _send_command_parse_response
+    return self.parse_response(conn, command_name, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 864, in parse_response
+    response = connection.read_response()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 1372, in read_response
+    response = self._parser.read_response(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\_parsers\hiredis.py", line 172, in read_response
+    self.read_from_socket(timeout=timeout)
+  File "D:\desktop\rphospital\Lib\site-packages\redis\_parsers\hiredis.py", line 139, in read_from_socket
+    raise TimeoutError("Timeout reading from socket")
+redis.exceptions.TimeoutError: Timeout reading from socket
+"GET /api/update-progress/ HTTP/1.1" 500 134349
+"GET /system/update/ HTTP/1.1" 200 73308
+"POST /api/clear-logs/ HTTP/1.1" 200 125
+Internal Server Error: /system/update/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\redis\_parsers\hiredis.py", line 130, in read_from_socket
+    bufflen = self._sock.recv_into(self._buffer)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TimeoutError: timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5506, in system_update
+    ProgressService.reset()
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 58, in reset
+    cls.save(cls.DEFAULT.copy())
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 51, in save
+    client.set(
+  File "D:\desktop\rphospital\Lib\site-packages\redis\utils.py", line 523, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\commands\core.py", line 4315, in set
+    return self.execute_command("SET", *pieces, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 798, in execute_command
+    return self._execute_command(*args, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 804, in _execute_command
+    conn = self.connection or pool.get_connection()
+                              ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\utils.py", line 258, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 3163, in get_connection
+    connection.connect()
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 1007, in connect
+    self.retry.call_with_retry(
+  File "D:\desktop\rphospital\Lib\site-packages\redis\retry.py", line 132, in call_with_retry
+    raise error
+  File "D:\desktop\rphospital\Lib\site-packages\redis\retry.py", line 120, in call_with_retry
+    return do()
+           ^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 1008, in <lambda>
+    lambda: self.connect_check_health(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 1062, in connect_check_health
+    self.on_connect_check_health(check_health=check_health)
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 1187, in on_connect_check_health
+    self.read_response()
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 1372, in read_response
+    response = self._parser.read_response(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\_parsers\hiredis.py", line 172, in read_response
+    self.read_from_socket(timeout=timeout)
+  File "D:\desktop\rphospital\Lib\site-packages\redis\_parsers\hiredis.py", line 139, in read_from_socket
+    raise TimeoutError("Timeout reading from socket")
+redis.exceptions.TimeoutError: Timeout reading from socket
+"POST /system/update/ HTTP/1.1" 500 157911
+"POST /system/update/ HTTP/1.1" 200 68
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 9809
+"GET /api/update-progress/ HTTP/1.1" 200 9809
+Watching for file changes with StatReloader
+"POST /system/update/ HTTP/1.1" 200 68
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 9809
+"GET /api/update-progress/ HTTP/1.1" 200 9809
+Watching for file changes with StatReloader
+"POST /system/update/ HTTP/1.1" 200 68
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 88
+"GET /api/update-progress/ HTTP/1.1" 200 88
+"GET /api/update-progress/ HTTP/1.1" 200 101
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 114
+"GET /api/update-progress/ HTTP/1.1" 200 114
+"GET /api/update-progress/ HTTP/1.1" 200 114
+"GET /api/update-progress/ HTTP/1.1" 200 114
+"GET /api/update-progress/ HTTP/1.1" 200 114
+"GET /api/update-progress/ HTTP/1.1" 200 114
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /system/update/ HTTP/1.1" 200 73425
+"POST /system/update/ HTTP/1.1" 200 68
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 88
+"GET /api/update-progress/ HTTP/1.1" 200 101
+"GET /api/update-progress/ HTTP/1.1" 200 101
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /system/update/ HTTP/1.1" 200 73540
+"POST /system/update/ HTTP/1.1" 200 68
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 114
+"GET /api/update-progress/ HTTP/1.1" 200 115
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 128
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 9809
+"GET /api/update-progress/ HTTP/1.1" 200 9809
+"POST /system/update/ HTTP/1.1" 200 68
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 88
+"GET /api/update-progress/ HTTP/1.1" 200 101
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 114
+"GET /api/update-progress/ HTTP/1.1" 200 114
+"GET /api/update-progress/ HTTP/1.1" 200 114
+"GET /api/update-progress/ HTTP/1.1" 200 114
+"GET /api/update-progress/ HTTP/1.1" 200 114
+"GET /credit-package-pricing/ HTTP/1.1" 200 75979
+"GET /api/update-progress/ HTTP/1.1" 200 114
+"GET /credit-package-pricing/ HTTP/1.1" 200 75979
+"GET /cash-packages/ HTTP/1.1" 200 82842
+"GET /system/update/ HTTP/1.1" 200 62838
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 115
+"GET /api/update-progress/ HTTP/1.1" 200 115
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 111
+"GET /api/update-progress/ HTTP/1.1" 200 111
+"GET /api/update-progress/ HTTP/1.1" 200 111
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 123
+"GET /api/update-progress/ HTTP/1.1" 200 123
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 128
+"GET /api/update-progress/ HTTP/1.1" 200 128
+"GET /api/update-progress/ HTTP/1.1" 200 128
+"GET /api/update-progress/ HTTP/1.1" 200 128
+"GET /api/update-progress/ HTTP/1.1" 200 128
+"GET /api/update-progress/ HTTP/1.1" 200 128
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 122
+"GET /api/update-progress/ HTTP/1.1" 200 122
+"GET /api/update-progress/ HTTP/1.1" 200 170
+"GET /api/update-progress/ HTTP/1.1" 200 170
+"GET /api/update-progress/ HTTP/1.1" 200 10123
+"GET /api/update-progress/ HTTP/1.1" 200 10123
+"GET /credit-package-pricing/ HTTP/1.1" 200 75979
+"GET /credit-package-pricing/?company_search=BISCO&company=172&specialty=&package_search=&package= HTTP/1.1" 200 325437
+"GET /credit-package-pricing/?company_search=BISCO&company=172&specialty=&package_search=%D8%A7%D8%B3%D8%AA%D8%A6%D8%B5%D8%A7%D9%84+%D8%A7%D9%84%D9%83%D9%8A%D8%B3+%D8%A7%D9%84%D8%AF%D9%87%D9%86%D9%89+%D8%A7%D9%88+%D8%A7%D9%84%D8%B4%D9%85%D8%B9%D9%89&package=90295 HTTP/1.1" 200 88525
+"GET /credit-package-pricing/ HTTP/1.1" 200 75979
+"GET /credit-package-pricing/?company_search=BISCO&company=172&specialty=&package_search=&package= HTTP/1.1" 200 325437
+"GET /credit-package-pricing/?company_search=BISCO&company=172&specialty=&package_search=%D8%A7%D8%B3%D8%AA%D8%A6%D8%B5%D8%A7%D9%84+%D8%A7%D9%84%D9%83%D9%8A%D8%B3+%D8%A7%D9%84%D8%AF%D9%87%D9%86%D9%89+%D8%A7%D9%88+%D8%A7%D9%84%D8%B4%D9%85%D8%B9%D9%89&package=90295 HTTP/1.1" 200 88525
+"GET /credit-package-pricing/ HTTP/1.1" 200 75979
+"GET /credit-package-pricing/?company_search=BISCO&company=172&specialty=&package_search=&package= HTTP/1.1" 200 325437
+"GET /credit-package-pricing/?company_search=BISCO&company=172&specialty=&package_search=%D8%A7%D8%B3%D8%AA%D8%A6%D8%B5%D8%A7%D9%84+%D8%A7%D9%84%D9%83%D9%8A%D8%B3+%D8%A7%D9%84%D8%AF%D9%87%D9%86%D9%89+%D8%A7%D9%88+%D8%A7%D9%84%D8%B4%D9%85%D8%B9%D9%89&package=90295 HTTP/1.1" 200 88525
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /credit-package-pricing/ HTTP/1.1" 200 64334
+"GET /cash-packages/ HTTP/1.1" 200 82842
+"GET /credit-package-pricing/ HTTP/1.1" 200 64334
+"GET /system/update/ HTTP/1.1" 200 73759
+"POST /system/update/ HTTP/1.1" 200 68
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 88
+"GET /api/update-progress/ HTTP/1.1" 200 101
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /credit-package-pricing/ HTTP/1.1" 200 64334
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /cash-packages/ HTTP/1.1" 200 82842
+"GET /credit-package-pricing/ HTTP/1.1" 200 64334
+"GET /credit-package-pricing/ HTTP/1.1" 200 64334
+"GET /system/update/ HTTP/1.1" 200 62838
+"GET /api/update-progress/ HTTP/1.1" 200 122
+"GET /api/update-progress/ HTTP/1.1" 200 170
+"GET /api/update-progress/ HTTP/1.1" 200 10120
+"GET /api/update-progress/ HTTP/1.1" 200 10120
+"GET /credit-package-pricing/ HTTP/1.1" 200 64334
+"GET /cash-packages/ HTTP/1.1" 200 82842
+"GET /credit-package-pricing/ HTTP/1.1" 200 64334
+"GET /system/update/ HTTP/1.1" 200 73756
+D:\desktop\rphospital\src\imports\services\update_all_data_service.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+- Broken pipe from ('127.0.0.1', 51332)
+- Broken pipe from ('127.0.0.1', 51340)
+"GET /credit-package-pricing/ HTTP/1.1" 200 64334
+"GET /cash-packages/ HTTP/1.1" 200 82842
+Watching for file changes with StatReloader
+"GET /credit-package-pricing/ HTTP/1.1" 200 64334
+Watching for file changes with StatReloader
+"GET /system/update/ HTTP/1.1" 200 73756
+"POST /system/update/ HTTP/1.1" 200 68
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 115
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 9808
+"GET /api/update-progress/ HTTP/1.1" 200 9808
+"POST /system/update/ HTTP/1.1" 200 68
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 88
+"GET /api/update-progress/ HTTP/1.1" 200 101
+"GET /api/update-progress/ HTTP/1.1" 200 101
+"GET /api/update-progress/ HTTP/1.1" 200 101
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 114
+"GET /api/update-progress/ HTTP/1.1" 200 114
+"GET /api/update-progress/ HTTP/1.1" 200 114
+"GET /api/update-progress/ HTTP/1.1" 200 114
+"GET /api/update-progress/ HTTP/1.1" 200 114
+"GET /api/update-progress/ HTTP/1.1" 200 114
+"GET /api/update-progress/ HTTP/1.1" 200 114
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /credit-package-pricing/ HTTP/1.1" 200 75979
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /credit-package-pricing/?company_search=BISCO&company=172&specialty=&package_search=&package= HTTP/1.1" 200 494757
+"GET /credit-package-pricing/?company=172&package=91449&company_search=BISCO&package_search=&specialty= HTTP/1.1" 200 149369
+"GET /credit-package-pricing/?company=172&package=90322&company_search=BISCO&package_search=&specialty= HTTP/1.1" 200 148774
+"GET /credit-package-pricing/ HTTP/1.1" 200 75979
+"GET /credit-package-pricing/?company_search=%D8%A7%D9%84%D8%A8%D9%86%D9%83+%D8%A7%D9%84%D8%B9%D9%82%D8%A7%D8%B1%D9%89+%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%89+%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%89&company=1&specialty=&package_search=&package= HTTP/1.1" 200 280373
+"GET /credit-package-pricing/?company=1&package=100207&company_search=%D8%A7%D9%84%D8%A8%D9%86%D9%83%20%D8%A7%D9%84%D8%B9%D9%82%D8%A7%D8%B1%D9%89%20%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%89%20%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%89&package_search=&specialty= HTTP/1.1" 200 118765
+"GET /credit-package-pricing/ HTTP/1.1" 200 75979
+"GET /system/update/ HTTP/1.1" 200 62838
+"GET /api/update-progress/ HTTP/1.1" 200 115
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 116
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\redis\_parsers\hiredis.py", line 130, in read_from_socket
+    bufflen = self._sock.recv_into(self._buffer)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TimeoutError: timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5495, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 37, in get
+    data = client.get(cls.KEY)
+           ^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\commands\core.py", line 3194, in get
+    return self.execute_command("GET", name, keys=[name])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 798, in execute_command
+    return self._execute_command(*args, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 804, in _execute_command
+    conn = self.connection or pool.get_connection()
+                              ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\utils.py", line 258, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 3163, in get_connection
+    connection.connect()
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 1007, in connect
+    self.retry.call_with_retry(
+  File "D:\desktop\rphospital\Lib\site-packages\redis\retry.py", line 132, in call_with_retry
+    raise error
+  File "D:\desktop\rphospital\Lib\site-packages\redis\retry.py", line 120, in call_with_retry
+    return do()
+           ^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 1008, in <lambda>
+    lambda: self.connect_check_health(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 1062, in connect_check_health
+    self.on_connect_check_health(check_health=check_health)
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 1123, in on_connect_check_health
+    self.handshake_metadata = self.read_response()
+                              ^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 1372, in read_response
+    response = self._parser.read_response(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\_parsers\hiredis.py", line 172, in read_response
+    self.read_from_socket(timeout=timeout)
+  File "D:\desktop\rphospital\Lib\site-packages\redis\_parsers\hiredis.py", line 139, in read_from_socket
+    raise TimeoutError("Timeout reading from socket")
+redis.exceptions.TimeoutError: Timeout reading from socket
+"GET /api/update-progress/ HTTP/1.1" 500 145985
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\redis\_parsers\hiredis.py", line 130, in read_from_socket
+    bufflen = self._sock.recv_into(self._buffer)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TimeoutError: timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5495, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 37, in get
+    data = client.get(cls.KEY)
+           ^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\commands\core.py", line 3194, in get
+    return self.execute_command("GET", name, keys=[name])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 798, in execute_command
+    return self._execute_command(*args, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 804, in _execute_command
+    conn = self.connection or pool.get_connection()
+                              ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\utils.py", line 258, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 3163, in get_connection
+    connection.connect()
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 1007, in connect
+    self.retry.call_with_retry(
+  File "D:\desktop\rphospital\Lib\site-packages\redis\retry.py", line 132, in call_with_retry
+    raise error
+  File "D:\desktop\rphospital\Lib\site-packages\redis\retry.py", line 120, in call_with_retry
+    return do()
+           ^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 1008, in <lambda>
+    lambda: self.connect_check_health(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 1062, in connect_check_health
+    self.on_connect_check_health(check_health=check_health)
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 1187, in on_connect_check_health
+    self.read_response()
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 1372, in read_response
+    response = self._parser.read_response(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\_parsers\hiredis.py", line 172, in read_response
+    self.read_from_socket(timeout=timeout)
+  File "D:\desktop\rphospital\Lib\site-packages\redis\_parsers\hiredis.py", line 139, in read_from_socket
+    raise TimeoutError("Timeout reading from socket")
+redis.exceptions.TimeoutError: Timeout reading from socket
+"GET /api/update-progress/ HTTP/1.1" 500 145640
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 123
+"GET /api/update-progress/ HTTP/1.1" 200 123
+"GET /api/update-progress/ HTTP/1.1" 200 123
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 128
+"GET /api/update-progress/ HTTP/1.1" 200 128
+"GET /api/update-progress/ HTTP/1.1" 200 128
+"GET /api/update-progress/ HTTP/1.1" 200 128
+"GET /api/update-progress/ HTTP/1.1" 200 128
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 122
+"GET /api/update-progress/ HTTP/1.1" 200 122
+"GET /api/update-progress/ HTTP/1.1" 200 170
+"GET /api/update-progress/ HTTP/1.1" 200 10355
+"GET /api/update-progress/ HTTP/1.1" 200 10355
+"GET /cash-packages/ HTTP/1.1" 200 82842
+"GET /credit-package-pricing/ HTTP/1.1" 200 75979
+"GET /credit-package-pricing/?company_search=BISCO&company=172&specialty=&package_search=&package= HTTP/1.1" 200 494757
+"GET /credit-package-pricing/?company=172&package=91449&company_search=BISCO&package_search=&specialty= HTTP/1.1" 200 148814
+"GET /credit-package-pricing/ HTTP/1.1" 200 75979
+"GET /credit-package-pricing/?company_search=BISCO&company=172&specialty=&package_search=&package= HTTP/1.1" 200 494757
+"GET /credit-package-pricing/?company_search=BISCO&company=172&specialty=&package_search=%D8%A7%D8%B3%D8%AA%D8%A6%D8%B5%D8%A7%D9%84+%D8%A7%D9%84%D9%83%D9%8A%D8%B3+%D8%A7%D9%84%D8%AF%D9%87%D9%86%D9%89+%D8%A7%D9%88+%D8%A7%D9%84%D8%B4%D9%85%D8%B9%D9%89&package=90295 HTTP/1.1" 200 93845
+"GET /credit-package-pricing/ HTTP/1.1" 200 75979
+"GET /credit-package-pricing/?company_search=BISCO&company=172&specialty=&package_search=&package= HTTP/1.1" 200 494757
+"GET /credit-package-pricing/?company_search=BISCO&company=172&specialty=&package_search=%D8%A7%D8%B3%D8%AA%D8%A6%D8%B5%D8%A7%D9%84+%D8%A7%D9%84%D9%83%D9%8A%D8%B3+%D8%A7%D9%84%D8%AF%D9%87%D9%86%D9%89+%D8%A7%D9%88+%D8%A7%D9%84%D8%B4%D9%85%D8%B9%D9%89&package=90295 HTTP/1.1" 200 93845
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /credit-package-pricing/ HTTP/1.1" 200 64334
+Watching for file changes with StatReloader
+"GET /system/update/ HTTP/1.1" 200 73981
+"POST /system/update/ HTTP/1.1" 200 68
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 114
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 9808
+"GET /api/update-progress/ HTTP/1.1" 200 88
+"POST /system/update/ HTTP/1.1" 200 68
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 128
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 9809
+"GET /api/update-progress/ HTTP/1.1" 200 9809
+"POST /system/update/ HTTP/1.1" 200 68
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 9809
+"GET /api/update-progress/ HTTP/1.1" 200 9809
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"POST /system/update/ HTTP/1.1" 200 68
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 114
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 128
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+D:\desktop\rphospital\src\imports\services\update_all_data_service.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /api/update-progress/ HTTP/1.1" 200 9809
+"GET /api/update-progress/ HTTP/1.1" 200 9809
+"POST /system/update/ HTTP/1.1" 200 68
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 88
+"GET /api/update-progress/ HTTP/1.1" 200 101
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /credit-package-pricing/ HTTP/1.1" 200 64334
+"GET /credit-package-pricing/ HTTP/1.1" 200 64334
+"GET /system/update/ HTTP/1.1" 200 73323
+"POST /system/update/ HTTP/1.1" 200 68
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+Watching for file changes with StatReloader
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /service-search/ HTTP/1.1" 200 771005
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /system/update/ HTTP/1.1" 200 62233
+"POST /system/update/ HTTP/1.1" 200 68
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 114
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 128
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 9811
+"GET /api/update-progress/ HTTP/1.1" 200 9811
+Watching for file changes with StatReloader
+"POST /system/update/ HTTP/1.1" 200 68
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 88
+"GET /api/update-progress/ HTTP/1.1" 200 101
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 114
+"GET /api/update-progress/ HTTP/1.1" 200 114
+"GET /api/update-progress/ HTTP/1.1" 200 114
+"GET /api/update-progress/ HTTP/1.1" 200 114
+"GET /api/update-progress/ HTTP/1.1" 200 114
+"GET /api/update-progress/ HTTP/1.1" 200 114
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /credit-package-pricing/ HTTP/1.1" 200 64334
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /system/update/ HTTP/1.1" 200 62838
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 115
+"GET /api/update-progress/ HTTP/1.1" 200 115
+"GET /api/update-progress/ HTTP/1.1" 200 115
+"GET /api/update-progress/ HTTP/1.1" 200 115
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 111
+"GET /api/update-progress/ HTTP/1.1" 200 111
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 123
+"GET /api/update-progress/ HTTP/1.1" 200 123
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 120
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 1034, in connect_check_health
+    sock = self._connect()
+           ^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 1582, in _connect
+    raise err
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 1566, in _connect
+    sock.connect(socket_address)
+TimeoutError: timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5474, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 37, in get
+    data = client.get(cls.KEY)
+           ^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\commands\core.py", line 3194, in get
+    return self.execute_command("GET", name, keys=[name])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 798, in execute_command
+    return self._execute_command(*args, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 804, in _execute_command
+    conn = self.connection or pool.get_connection()
+                              ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\utils.py", line 258, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 3163, in get_connection
+    connection.connect()
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 1007, in connect
+    self.retry.call_with_retry(
+  File "D:\desktop\rphospital\Lib\site-packages\redis\retry.py", line 132, in call_with_retry
+    raise error
+  File "D:\desktop\rphospital\Lib\site-packages\redis\retry.py", line 120, in call_with_retry
+    return do()
+           ^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 1008, in <lambda>
+    lambda: self.connect_check_health(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 1045, in connect_check_health
+    raise e
+redis.exceptions.TimeoutError: Timeout connecting to server
+"GET /api/update-progress/ HTTP/1.1" 500 138379
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 1034, in connect_check_health
+    sock = self._connect()
+           ^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 1582, in _connect
+    raise err
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 1566, in _connect
+    sock.connect(socket_address)
+TimeoutError: timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5474, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 37, in get
+    data = client.get(cls.KEY)
+           ^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\commands\core.py", line 3194, in get
+    return self.execute_command("GET", name, keys=[name])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 798, in execute_command
+    return self._execute_command(*args, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 804, in _execute_command
+    conn = self.connection or pool.get_connection()
+                              ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\utils.py", line 258, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 3163, in get_connection
+    connection.connect()
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 1007, in connect
+    self.retry.call_with_retry(
+  File "D:\desktop\rphospital\Lib\site-packages\redis\retry.py", line 132, in call_with_retry
+    raise error
+  File "D:\desktop\rphospital\Lib\site-packages\redis\retry.py", line 120, in call_with_retry
+    return do()
+           ^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 1008, in <lambda>
+    lambda: self.connect_check_health(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 1045, in connect_check_health
+    raise e
+redis.exceptions.TimeoutError: Timeout connecting to server
+"GET /api/update-progress/ HTTP/1.1" 500 138379
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\redis\_parsers\hiredis.py", line 130, in read_from_socket
+    bufflen = self._sock.recv_into(self._buffer)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TimeoutError: timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5474, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 37, in get
+    data = client.get(cls.KEY)
+           ^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\commands\core.py", line 3194, in get
+    return self.execute_command("GET", name, keys=[name])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 798, in execute_command
+    return self._execute_command(*args, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 804, in _execute_command
+    conn = self.connection or pool.get_connection()
+                              ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\utils.py", line 258, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 3163, in get_connection
+    connection.connect()
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 1007, in connect
+    self.retry.call_with_retry(
+  File "D:\desktop\rphospital\Lib\site-packages\redis\retry.py", line 132, in call_with_retry
+    raise error
+  File "D:\desktop\rphospital\Lib\site-packages\redis\retry.py", line 120, in call_with_retry
+    return do()
+           ^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 1008, in <lambda>
+    lambda: self.connect_check_health(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 1062, in connect_check_health
+    self.on_connect_check_health(check_health=check_health)
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 1123, in on_connect_check_health
+    self.handshake_metadata = self.read_response()
+                              ^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 1372, in read_response
+    response = self._parser.read_response(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\_parsers\hiredis.py", line 172, in read_response
+    self.read_from_socket(timeout=timeout)
+  File "D:\desktop\rphospital\Lib\site-packages\redis\_parsers\hiredis.py", line 139, in read_from_socket
+    raise TimeoutError("Timeout reading from socket")
+redis.exceptions.TimeoutError: Timeout reading from socket
+"GET /api/update-progress/ HTTP/1.1" 500 145985
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /doctors/ HTTP/1.1" 200 140098
+"GET /system/update/ HTTP/1.1" 200 62838
+"GET /api/update-progress/ HTTP/1.1" 200 120
+Internal Server Error: /api/update-progress/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 1372, in read_response
+    response = self._parser.read_response(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\_parsers\hiredis.py", line 172, in read_response
+    self.read_from_socket(timeout=timeout)
+  File "D:\desktop\rphospital\Lib\site-packages\redis\_parsers\hiredis.py", line 130, in read_from_socket
+    bufflen = self._sock.recv_into(self._buffer)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ConnectionResetError: [WinError 10054] An existing connection was forcibly closed by the remote host
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5474, in update_progress
+    return JsonResponse(ProgressService.get())
+                        ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\imports\services\progress_service.py", line 37, in get
+    data = client.get(cls.KEY)
+           ^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\commands\core.py", line 3194, in get
+    return self.execute_command("GET", name, keys=[name])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 798, in execute_command
+    return self._execute_command(*args, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\client.py", line 804, in _execute_command
+    conn = self.connection or pool.get_connection()
+                              ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\utils.py", line 258, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 3163, in get_connection
+    connection.connect()
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 1007, in connect
+    self.retry.call_with_retry(
+  File "D:\desktop\rphospital\Lib\site-packages\redis\retry.py", line 132, in call_with_retry
+    raise error
+  File "D:\desktop\rphospital\Lib\site-packages\redis\retry.py", line 120, in call_with_retry
+    return do()
+           ^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 1008, in <lambda>
+    lambda: self.connect_check_health(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 1062, in connect_check_health
+    self.on_connect_check_health(check_health=check_health)
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 1200, in on_connect_check_health
+    self.read_response()
+  File "D:\desktop\rphospital\Lib\site-packages\redis\connection.py", line 1388, in read_response
+    raise ConnectionError(f"Error while reading from {host_error} : {e.args}")
+redis.exceptions.ConnectionError: Error while reading from sakura.proxy.rlwy.net:54458 : (10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None)
+"GET /api/update-progress/ HTTP/1.1" 500 146358
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /system/update/ HTTP/1.1" 200 62838
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 120
+Watching for file changes with StatReloader
+"GET /api/update-progress/ HTTP/1.1" 200 88
+"GET /system/update/ HTTP/1.1" 200 62233
+"POST /system/update/ HTTP/1.1" 200 68
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 114
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 9808
+"GET /api/update-progress/ HTTP/1.1" 200 88
+"POST /system/update/ HTTP/1.1" 200 68
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 114
+"GET /api/update-progress/ HTTP/1.1" 200 118
+Watching for file changes with StatReloader
+"GET /api/update-progress/ HTTP/1.1" 200 9809
+"GET /api/update-progress/ HTTP/1.1" 200 9809
+"GET /system/update/ HTTP/1.1" 200 73306
+"POST /system/update/ HTTP/1.1" 200 68
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 88
+"GET /api/update-progress/ HTTP/1.1" 200 88
+"GET /api/update-progress/ HTTP/1.1" 200 101
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 114
+"GET /api/update-progress/ HTTP/1.1" 200 114
+"GET /api/update-progress/ HTTP/1.1" 200 114
+"GET /api/update-progress/ HTTP/1.1" 200 114
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 115
+"GET /api/update-progress/ HTTP/1.1" 200 115
+"GET /api/update-progress/ HTTP/1.1" 200 115
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 120
+"GET /api/update-progress/ HTTP/1.1" 200 128
+"GET /api/update-progress/ HTTP/1.1" 200 128
+"GET /api/update-progress/ HTTP/1.1" 200 128
+"GET /api/update-progress/ HTTP/1.1" 200 128
+"GET /api/update-progress/ HTTP/1.1" 200 128
+"GET /api/update-progress/ HTTP/1.1" 200 128
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 122
+"GET /api/update-progress/ HTTP/1.1" 200 122
+"GET /api/update-progress/ HTTP/1.1" 200 170
+"GET /api/update-progress/ HTTP/1.1" 200 9920
+"GET /api/update-progress/ HTTP/1.1" 200 9920
+Watching for file changes with StatReloader
+"GET /credit-package-pricing/ HTTP/1.1" 200 75979
+"GET /credit-package-pricing/?company_search=BISCO&company=172&specialty=&package_search=&package= HTTP/1.1" 200 433448
+"GET /credit-package-pricing/?company_search=BISCO&company=172&specialty=&package_search=%D8%A7%D8%B3%D8%AA%D8%A6%D8%B5%D8%A7%D9%84+%D8%A7%D9%84%D8%A7%D9%88%D8%B1%D8%A7%D9%85+%D8%A7%D9%84%D9%84%D9%8A%D9%81%D9%8A%D8%A9+%D9%85%D9%86+%D8%A7%D9%84%D8%B1%D8%AD%D9%85&package=90330 HTTP/1.1" 200 94236
+"GET /credit-package-pricing/ HTTP/1.1" 200 75979
+"GET /credit-package-pricing/?company_search=BISCO&company=172&specialty=&package_search=&package= HTTP/1.1" 200 433448
+"GET /credit-package-pricing/?company_search=BISCO&company=172&specialty=&package_search=%D8%A7%D8%B3%D8%AA%D8%A6%D8%B5%D8%A7%D9%84+%D8%A7%D9%84%D9%83%D9%8A%D8%B3+%D8%A7%D9%84%D8%AF%D9%87%D9%86%D9%89+%D8%A7%D9%88+%D8%A7%D9%84%D8%B4%D9%85%D8%B9%D9%89&package=90295 HTTP/1.1" 200 94191
+"GET /credit-package-pricing/ HTTP/1.1" 200 75979
+"GET /credit-package-pricing/?company_search=BISCO&company=172&specialty=&package_search=&package= HTTP/1.1" 200 433448
+Watching for file changes with StatReloader
+"GET /credit-package-pricing/?company_search=BISCO&company=172&specialty=&package_search=&package= HTTP/1.1" 200 433448
+"GET /credit-package-pricing/ HTTP/1.1" 200 75979
+"GET /credit-package-pricing/?company_search=BISCO&company=172&specialty=&package_search=&package= HTTP/1.1" 200 433448
+"GET /credit-package-pricing/?company=172&package=90330&company_search=BISCO&package_search=&specialty= HTTP/1.1" 200 141791
+"GET /credit-package-pricing/?company=172&package=102668&company_search=BISCO&package_search=&specialty= HTTP/1.1" 200 141305
+"GET /credit-package-pricing/ HTTP/1.1" 200 75979
+"GET /credit-package-pricing/?company_search=%D8%A7%D9%84%D8%B4%D8%B1%D9%83%D8%A9+%D8%A7%D9%84%D8%AD%D8%AF%D9%8A%D8%AB%D8%A9+%D9%84%D9%85%D8%B4%D8%AA%D9%82%D8%A7%D8%AA+%D8%A7%D9%84%D8%BA%D8%A7%D8%B2&company=120&specialty=&package_search=&package= HTTP/1.1" 200 301155
+"GET /credit-package-pricing/?company=120&package=92802&company_search=%D8%A7%D9%84%D8%B4%D8%B1%D9%83%D8%A9%20%D8%A7%D9%84%D8%AD%D8%AF%D9%8A%D8%AB%D8%A9%20%D9%84%D9%85%D8%B4%D8%AA%D9%82%D8%A7%D8%AA%20%D8%A7%D9%84%D8%BA%D8%A7%D8%B2&package_search=&specialty= HTTP/1.1" 200 123515
+"GET /credit-package-pricing/ HTTP/1.1" 200 75979
+"GET /credit-package-pricing/?company_search=%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%81+%D8%A7%D9%84%D9%85%D8%AA%D8%AD%D8%AF&company=139&specialty=&package_search=&package= HTTP/1.1" 200 260294
+"GET /credit-package-pricing/?company_search=%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%81+%D8%A7%D9%84%D9%85%D8%AA%D8%AD%D8%AF&company=139&specialty=&package_search=%D8%A7%D8%B3%D8%AA%D8%B9%D9%88%D8%A7%D8%B6+%D8%A7%D9%84%D8%B1%D8%A8%D8%A7%D8%B7+%D8%A7%D9%84%D8%B5%D9%84%D9%8A%D8%A8%D9%89&package=94124 HTTP/1.1" 200 93452
+"GET /credit-package-pricing/ HTTP/1.1" 200 75979
+"GET /credit-package-pricing/?company_search=BISCO&company=172&specialty=&package_search=&package= HTTP/1.1" 200 433448

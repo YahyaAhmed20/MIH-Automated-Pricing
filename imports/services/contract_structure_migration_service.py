@@ -269,7 +269,7 @@ class ContractStructureMigrationService:
         return contract
 
     # ============================================================
-    # ✅ migrate() - المعدل مع Cache و Bulk Operations + الحذف + إنشاء Packages مفقودة
+    # ✅ migrate() - المعدل النهائي مع حل جذري لمشكلة PK
     # ============================================================
     @staticmethod
     def migrate(dataframe):
@@ -461,18 +461,31 @@ class ContractStructureMigrationService:
                     # ✅ استخدم أول كود من القائمة
                     first_code = package_codes[0] if package_codes else f"UNKNOWN_{result['processed']}"
                     
-                    # ✅ إنشاء Package جديد
-                    package = Package.objects.create(
+                    # ✅ ✅ ✅ استخدم get_or_create عشان نمنع التكرار
+                    package, created = Package.objects.get_or_create(
+                        entity=entity,
                         code=first_code,
                         name=package_name,
-                        specialty=specialty,
-                        entity=entity,
-                        is_active=True,
+                        defaults={
+                            "specialty": specialty,
+                            "is_active": True,
+                        },
                     )
-                    # ✅ ✅ ✅ أضفه في الـ Cache عشان منكررهوش تاني
-                    packages_cache[p_key] = package
-                    print(f"   ✅ Created new package: {first_code} - {package_name}")
-                    result["created_packages"] += 1
+                    
+                    # ✅ خزن الـ Package في الـ Cache لجميع الأكواد
+                    for code in package_codes:
+                        cache_key = (
+                            ImportHelpers.normalize_text(code),
+                            entity.id,
+                            ImportHelpers.normalize_text(package_name),
+                        )
+                        packages_cache[cache_key] = package
+                    
+                    if created:
+                        print(f"   ✅ Created new package: {first_code} - {package_name}")
+                        result["created_packages"] += 1
+                    else:
+                        print(f"   ℹ️ Package already exists: {first_code} - {package_name}")
 
                 price = ContractStructureMigrationService.clean_decimal(
                     row.get(4, None)
@@ -552,79 +565,97 @@ class ContractStructureMigrationService:
                         **defaults,
                     )
                     contract_packages_to_create.append(contract_package)
+                    
+                    # ✅ امنع إضافة نفس الـ ContractPackage مرة ثانية
                     contract_packages_cache[contract_package_key] = contract_package
+                    
                     result["created_packages"] += 1
 
                 processed += 1
                 if processed % 1000 == 0:
                     print(f"   📊 Processed {processed}/{total_rows} rows...")
 
-                # ✅ تنفيذ الـ Bulk Operations كل 1000 صف عشان الذاكرة
+                # ✅ تنفيذ الـ Bulk Operations كل 500 صف عشان الذاكرة
                 if len(contract_packages_to_create) >= 500:
-                    ContractPackage.objects.bulk_create(
+                    created_objs = ContractPackage.objects.bulk_create(
                         contract_packages_to_create,
                         batch_size=500,
                     )
+                    # ✅ بعد الحفظ، أضفهم في الـ Cache مع PK
+                    for cp in created_objs:
+                        key = (cp.contract_id, cp.package_id)
+                        contract_packages_cache[key] = cp
                     contract_packages_to_create = []
 
                 if len(contract_packages_to_update) >= 500:
-                    ContractPackage.objects.bulk_update(
-                        contract_packages_to_update,
-                        fields=[
-                            "package_price",
-                            "total_before_discount",
-                            "current_discount_rate",
-                            "current_discount_text",
-                            "cash_price",
-                            "special_offer_price",
-                            "special_offer_company",
-                            "price_list_applied",
-                            "effective_from",
-                            "valid_until",
-                            "notes",
-                            "approval_pdf",
-                            "is_active",
-                            "suggested_price",
-                            "suggested_discount_rate",
-                        ],
-                        batch_size=500,
-                    )
+                    # ✅ فلتر الـ Objects اللي ليها PK
+                    valid_updates = [cp for cp in contract_packages_to_update if cp.id]
+                    if valid_updates:
+                        ContractPackage.objects.bulk_update(
+                            valid_updates,
+                            fields=[
+                                "package_price",
+                                "total_before_discount",
+                                "current_discount_rate",
+                                "current_discount_text",
+                                "cash_price",
+                                "special_offer_price",
+                                "special_offer_company",
+                                "price_list_applied",
+                                "effective_from",
+                                "valid_until",
+                                "notes",
+                                "approval_pdf",
+                                "is_active",
+                                "suggested_price",
+                                "suggested_discount_rate",
+                            ],
+                            batch_size=500,
+                        )
                     contract_packages_to_update = []
 
-            # ✅ راحة بين الـ Chunks عشان الـ DB تريح
-            time.sleep(0.1)
+            # ✅ راحة بين الـ Chunks عشان الـ DB تريح - تم الحذف
+            # time.sleep(0.1)
 
         print(f"   ✅ Processed {processed}/{total_rows} rows")
 
         # ✅ تنفيذ الـ Bulk Operations المتبقية
         if contract_packages_to_create:
-            ContractPackage.objects.bulk_create(
+            created_objs = ContractPackage.objects.bulk_create(
                 contract_packages_to_create,
                 batch_size=500,
             )
+            # ✅ بعد الحفظ، أضفهم في الـ Cache مع PK
+            for cp in created_objs:
+                key = (cp.contract_id, cp.package_id)
+                contract_packages_cache[key] = cp
+            contract_packages_to_create = []
 
         if contract_packages_to_update:
-            ContractPackage.objects.bulk_update(
-                contract_packages_to_update,
-                fields=[
-                    "package_price",
-                    "total_before_discount",
-                    "current_discount_rate",
-                    "current_discount_text",
-                    "cash_price",
-                    "special_offer_price",
-                    "special_offer_company",
-                    "price_list_applied",
-                    "effective_from",
-                    "valid_until",
-                    "notes",
-                    "approval_pdf",
-                    "is_active",
-                    "suggested_price",
-                    "suggested_discount_rate",
-                ],
-                batch_size=500,
-            )
+            # ✅ فلتر الـ Objects اللي ليها PK
+            valid_updates = [cp for cp in contract_packages_to_update if cp.id]
+            if valid_updates:
+                ContractPackage.objects.bulk_update(
+                    valid_updates,
+                    fields=[
+                        "package_price",
+                        "total_before_discount",
+                        "current_discount_rate",
+                        "current_discount_text",
+                        "cash_price",
+                        "special_offer_price",
+                        "special_offer_company",
+                        "price_list_applied",
+                        "effective_from",
+                        "valid_until",
+                        "notes",
+                        "approval_pdf",
+                        "is_active",
+                        "suggested_price",
+                        "suggested_discount_rate",
+                    ],
+                    batch_size=500,
+                )
 
         # ============================================================
         # ✅ حذف ContractPackages غير الموجودة في الشيت
@@ -651,57 +682,57 @@ class ContractStructureMigrationService:
             print("⚠️ No contract packages in sheet - skipping deletion to avoid data loss")
 
         # ============================================================
-        # ✅ ✅ ✅ إضافة ContractPackages المفقودة (محسنة)
+        # ✅ ✅ ✅ إضافة ContractPackages المفقودة (محسنة) - معلق مؤقتاً
         # ============================================================
-        print("⏳ Checking for missing ContractPackages...")
-
-        # ✅ Query واحدة لجلب كل الـ ContractPackages النشطة
-        all_active_cp = ContractPackage.objects.filter(
-            is_active=True
-        ).select_related('contract', 'package')
-
-        # ✅ بناء set من (contract_id, package_id)
-        existing_cp_keys = set()
-        for cp in all_active_cp:
-            existing_cp_keys.add((cp.contract_id, cp.package_id))
-
-        # ✅ تجميع الـ Entities من الشيت
-        entities_in_sheet = set()
-        for row in dataframe.to_dict("records"):
-            company_name = ContractStructureMigrationService.normalize_company_name(
-                row.get(0, "")
-            )
-            if company_name:
-                entity = entities_cache.get(company_name)
-                if entity:
-                    entities_in_sheet.add(entity.id)
-
-        # ✅ لكل Entity، جيب Packagesها وافحصها
-        missing_count = 0
-        for entity_id in entities_in_sheet:
-            entity = ContractEntity.objects.get(id=entity_id)
-            contract = Contract.objects.filter(entity=entity).first()
-            if not contract:
-                continue
-            
-            packages = Package.objects.filter(entity=entity, is_active=True)
-            
-            for p in packages:
-                key = (contract.id, p.id)
-                if key not in existing_cp_keys:
-                    ContractPackage.objects.create(
-                        contract=contract,
-                        package=p,
-                        package_price=0,
-                        is_active=True,
-                    )
-                    missing_count += 1
-                    print(f"   ✅ Added missing ContractPackage: {p.code} - {p.name}")
-
-        if missing_count > 0:
-            print(f"   ✅ Added {missing_count} missing ContractPackages")
-        else:
-            print("   ✅ No missing ContractPackages found")
+        # print("⏳ Checking for missing ContractPackages...")
+        #
+        # # ✅ Query واحدة لجلب كل الـ ContractPackages النشطة
+        # all_active_cp = ContractPackage.objects.filter(
+        #     is_active=True
+        # ).select_related('contract', 'package')
+        #
+        # # ✅ بناء set من (contract_id, package_id)
+        # existing_cp_keys = set()
+        # for cp in all_active_cp:
+        #     existing_cp_keys.add((cp.contract_id, cp.package_id))
+        #
+        # # ✅ تجميع الـ Entities من الشيت
+        # entities_in_sheet = set()
+        # for row in dataframe.to_dict("records"):
+        #     company_name = ContractStructureMigrationService.normalize_company_name(
+        #         row.get(0, "")
+        #     )
+        #     if company_name:
+        #         entity = entities_cache.get(company_name)
+        #         if entity:
+        #             entities_in_sheet.add(entity.id)
+        #
+        # # ✅ لكل Entity، جيب Packagesها وافحصها
+        # missing_count = 0
+        # for entity_id in entities_in_sheet:
+        #     entity = ContractEntity.objects.get(id=entity_id)
+        #     contract = Contract.objects.filter(entity=entity).first()
+        #     if not contract:
+        #         continue
+        #     
+        #     packages = Package.objects.filter(entity=entity, is_active=True)
+        #     
+        #     for p in packages:
+        #         key = (contract.id, p.id)
+        #         if key not in existing_cp_keys:
+        #             ContractPackage.objects.create(
+        #                 contract=contract,
+        #                 package=p,
+        #                 package_price=0,
+        #                 is_active=True,
+        #             )
+        #             missing_count += 1
+        #             print(f"   ✅ Added missing ContractPackage: {p.code} - {p.name}")
+        #
+        # if missing_count > 0:
+        #     print(f"   ✅ Added {missing_count} missing ContractPackages")
+        # else:
+        #     print("   ✅ No missing ContractPackages found")
 
         # ✅ تحويل set إلى list مرتب
         result["missing_codes"] = sorted(list(result["missing_codes"]))
