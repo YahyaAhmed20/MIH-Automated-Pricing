@@ -4,7 +4,7 @@ from time import perf_counter
 
 from django.core.management import call_command
 from django.core.management.base import CommandError
-from django.core.cache import cache  # ✅ إضافة
+from django.core.cache import cache
 
 from imports.services.excel_provider import ExcelProvider
 
@@ -14,6 +14,7 @@ COMMANDS_WITH_NO_CONFIRM = [
     "import_report_statistics",
     "import_external_approvals",
     "import_report_statistics_sheet15",
+    "migrate_contract_entities",
 ]
 
 IMPORT_COMMANDS = [
@@ -100,8 +101,8 @@ class UpdateAllDataService:
                     elapsed = perf_counter() - start
                     results.append({"title": title, "status": "❌", "time": elapsed})
                     stdout.write(f"❌ {title} Failed")
-
-                    raise CommandError(str(exc))
+                    stdout.write(f"   Error: {str(exc)}")
+                    stdout.write("   Continuing with remaining commands...")
 
                 stdout.flush()
 
@@ -150,12 +151,24 @@ class UpdateAllDataService:
             # ✅ مسح Cache الـ Excel
             ExcelProvider.clear_cache()
 
-            # ✅ ✅ ✅ مسح Cache الـ Django (الأهم)
+            # ✅ مسح Cache الـ Django بالكامل
             try:
                 cache.clear()
                 stdout.write("\n✅ Django cache cleared successfully")
             except Exception as e:
                 stdout.write(f"\n⚠️ Failed to clear Django cache: {str(e)}")
+
+            # ✅ مسح Cache المخصص للشركات والباكدجات (باستخدام delete فقط)
+            try:
+                cache.delete('active_companies_list')
+                # ✅ مسح كل مفاتيح Cache اللي تبدأ بـ packages_company_
+                from django.core.cache import caches
+                for key in list(cache._cache.keys()):
+                    if key.startswith('packages_company_') or key.startswith('specialties_company_'):
+                        cache.delete(key)
+                stdout.write("\n✅ Company packages cache cleared successfully")
+            except Exception as e:
+                stdout.write(f"\n⚠️ Failed to clear company cache: {str(e)}")
 
             if progress_callback:
                 progress_callback("✅ تم الانتهاء", total_commands)

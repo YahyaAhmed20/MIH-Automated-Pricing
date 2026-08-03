@@ -1,8 +1,8 @@
 from django.db import models
 
-# Create your models here.
-
-
+# ============================================================
+# ✅ Specialty Model
+# ============================================================
 class Specialty(models.Model):
     name = models.CharField(
         max_length=255,
@@ -36,8 +36,11 @@ class Specialty(models.Model):
 
     def __str__(self):
         return self.name
-    
-    
+
+
+# ============================================================
+# ✅ Procedure Model
+# ============================================================
 class Procedure(models.Model):
 
     CLASSIFICATION_CHOICES = [
@@ -93,13 +96,16 @@ class Procedure(models.Model):
 
     def __str__(self):
         return f"{self.code} - {self.name_ar}"
-    
-    
+
+
+# ============================================================
+# ✅ Package Model
+# ============================================================
 class Package(models.Model):
 
-    # ✅ العلاقة مع ContractEntity (جديد)
+    # ✅ العلاقة مع ContractEntity (الشركة)
     entity = models.ForeignKey(
-        'contracts.ContractEntity',  # ✅ استخدم اسم التطبيق بالكامل
+        'contracts.ContractEntity',
         on_delete=models.CASCADE,
         related_name="packages",
         null=True,
@@ -131,7 +137,7 @@ class Package(models.Model):
         null=True,
         db_index=True
     )
-    
+
     base_price = models.DecimalField(
         max_digits=12,
         decimal_places=2,
@@ -154,9 +160,10 @@ class Package(models.Model):
         blank=True,
         null=True
     )
+
     package_note = models.TextField(
-    blank=True,
-    null=True
+        blank=True,
+        null=True
     )
 
     is_cash_package = models.BooleanField(
@@ -238,13 +245,17 @@ class Package(models.Model):
         ordering = ["name"]
         indexes = [
             models.Index(fields=["specialty"]),
-            models.Index(fields=["entity"]),  # ✅ إضافة فهرس للـ entity
+            models.Index(fields=["entity"]),
+            models.Index(fields=["code", "entity"]),  # ✅ فهرس للكود + الشركة
         ]
 
     def __str__(self):
         return self.name
-    
-    
+
+
+# ============================================================
+# ✅ PackageAttachment Model
+# ============================================================
 class PackageAttachment(models.Model):
 
     package = models.OneToOneField(

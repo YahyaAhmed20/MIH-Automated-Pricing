@@ -65,8 +65,8 @@ class CashPackageImportService:
         # ============================================================
         packages_to_create = []
         packages_to_update = []
-        sheet_codes = set()  # ✅ لتتبع الأكواد للحذف
-        seen_keys = set()    # ✅ لمنع التكرار في نفس الملف
+        sheet_codes = set()
+        seen_keys = set()
 
         # ============================================================
         # ✅ Loop - استخدام الأعمدة الصحيحة لشيت 2
@@ -78,40 +78,31 @@ class CashPackageImportService:
         for index, row in enumerate(dataframe.to_dict("records"), start=1):
 
             # ✅ أعمدة شيت 2 الصحيحة
-            # العمود 0: اسم الباكدج ✅
             package_name = ImportHelpers.normalize_text(row.get(0, ""))
             package_name = CashPackageImportService.truncate_text(package_name, 255)
             
-            # العمود 1: نوع التعاقد
             contract_type = ImportHelpers.normalize_text(row.get(1, ""))
             contract_type = CashPackageImportService.truncate_text(contract_type, 255)
             
-            # العمود 2: التخصص ✅
             specialty_name = ImportHelpers.normalize_text(row.get(2, ""))
             specialty_name = CashPackageImportService.truncate_text(specialty_name, 255)
             
-            # ✅ إذا كان التخصص مفقوداً، استخدم "نقدي"
             if not specialty_name:
                 specialty_name = "نقدي"
                 print(f"⚠️ صف {index}: تخصص مفقود - تم استخدام 'نقدي'")
             
-            # العمود 3: مدة الإقامة ✅
             stay_duration = ImportHelpers.normalize_text(row.get(3, ""))
             
-            # العمود 4: الكود ✅
             package_code = ImportHelpers.normalize_text(row.get(4, ""))
             package_code = CashPackageImportService.truncate_text(package_code, 50)
             
-            # العمود 5: السعر النقدي
             cash_price = ImportHelpers.clean_decimal(row.get(5, None))
             if cash_price is None:
                 cash_price = Decimal('0.00')
             
-            # العمود 6: ملاحظات
             notes = ImportHelpers.normalize_text(row.get(6, ""))
             notes = CashPackageImportService.truncate_text(notes, 255)
 
-            # ✅ قيم افتراضية
             if not package_code:
                 package_code = f"UNKNOWN_{index}"
                 print(f"⚠️ صف {index}: كود مفقود - تم استخدام كود افتراضي")
@@ -120,25 +111,21 @@ class CashPackageImportService:
                 package_name = f"بدون اسم {index}"
                 print(f"⚠️ صف {index}: اسم مفقود - تم استخدام اسم افتراضي")
 
-            # ✅ تخطي الصفوف الفارغة
             if not package_code and not package_name:
                 result["skipped"] = result.get("skipped", 0) + 1
                 continue
 
-            # ✅ منع التكرار في نفس الملف (أول ظهور بس)
             package_key = (package_code, package_name)
             if package_key in seen_keys:
                 result["skipped_duplicates"] += 1
                 continue
             seen_keys.add(package_key)
 
-            # ✅ تخزين الأكواد للحذف
             sheet_codes.add(package_code)
 
             result["processed"] += 1
             processed = result["processed"]
 
-            # ✅ الحصول على التخصص (أو إنشاؤه)
             specialty = specialties_cache.get(specialty_name)
             if not specialty:
                 specialty = Specialty.objects.create(
@@ -148,11 +135,9 @@ class CashPackageImportService:
                 specialties_cache[specialty_name] = specialty
                 result["created_specialties"] += 1
 
-            # ✅ البحث في Cache
             existing_package = packages_cache.get(package_key)
 
             if existing_package:
-                # ✅ تحديث البيانات
                 changed = False
 
                 if existing_package.specialty_id != (specialty.id if specialty else None):
@@ -188,7 +173,6 @@ class CashPackageImportService:
                     result["updated"] += 1
 
             else:
-                # ✅ إنشاء جديد
                 new_package = Package(
                     code=package_code,
                     name=package_name,
@@ -211,14 +195,16 @@ class CashPackageImportService:
         print(f"   ⏭️ Skipped {result['skipped_duplicates']} duplicate keys in sheet")
 
         # ============================================================
-        # ✅ حذف الباكدجات غير الموجودة في الـ Sheet
+        # ✅ ✅ ✅ حذف الباكدجات النقدية فقط (غير الموجودة في الشيت)
         # ============================================================
         if sheet_codes:
-            deleted_count, _ = Package.objects.exclude(
+            deleted_count, _ = Package.objects.filter(
+                is_cash_package=True  # ✅ احذف النقدي بس
+            ).exclude(
                 code__in=sheet_codes
             ).delete()
             if deleted_count > 0:
-                print(f"🗑️ Deleted {deleted_count} packages not in sheet")
+                print(f"🗑️ Deleted {deleted_count} cash packages not in sheet")
                 result["deleted"] = deleted_count
         else:
             print("⚠️ No codes in sheet - skipping deletion to avoid data loss")

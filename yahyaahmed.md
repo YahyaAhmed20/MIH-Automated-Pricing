@@ -1,6 +1,10 @@
+python manage.py import_package_catalog
+python manage.py migrate_contract_entities
+python manage.py import_cash_packages
 
 
 Accordion
+
 
 
 <datalist>

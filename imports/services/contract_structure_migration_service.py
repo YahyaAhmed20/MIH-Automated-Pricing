@@ -12,7 +12,7 @@ from contracts.models import (
     PriceList,
 )
 
-from medical_catalog.models import Package
+from medical_catalog.models import Package, Specialty
 
 # ============================================================
 # ✅ استيراد ImportHelpers
@@ -269,20 +269,23 @@ class ContractStructureMigrationService:
         return contract
 
     # ============================================================
-    # ✅ migrate() - المعدل مع Cache و Bulk Operations + الحذف
+    # ✅ migrate() - المعدل مع Cache و Bulk Operations + الحذف + إنشاء Packages مفقودة
     # ============================================================
     @staticmethod
-    @transaction.atomic
     def migrate(dataframe):
 
         start_time = time.perf_counter()
         print("⏳ Starting migration...")
 
-        # ✅ ✅ ✅ Cache للباكدجات - استخدام package_lookup_key
+        # ✅ ✅ ✅ Cache للباكدجات - استخدام (code, entity_id, name) كمفتاح
         print("⏳ Loading packages...")
         packages_cache = {}
-        for p in Package.objects.exclude(code__isnull=True).iterator(chunk_size=1000):
-            key = ImportHelpers.package_lookup_key(p.code, p.name)
+        for p in Package.objects.exclude(code__isnull=True).only('code', 'entity_id', 'name').iterator(chunk_size=500):
+            key = (
+                ImportHelpers.normalize_text(p.code),
+                p.entity_id if p.entity_id else None,
+                ImportHelpers.normalize_text(p.name),
+            )
             packages_cache[key] = p
         print(f"   ✅ {len(packages_cache)} packages loaded")
 
@@ -355,40 +358,40 @@ class ContractStructureMigrationService:
             "package_not_found": 0,
             "missing_codes": set(),
             "missing_price": 0,
-            "deleted_contract_packages": 0,  # ✅ إضافة تتبع الحذف
+            "deleted_contract_packages": 0,
         }
 
         # ✅ قوائم التجميع للـ Bulk Operations
         contract_packages_to_create = []
         contract_packages_to_update = []
-        contract_package_keys_in_sheet = set()  # ✅ لتتبع الـ ContractPackages الموجودة
+        contract_package_keys_in_sheet = set()
 
-        # ✅ تشغيل على كل الصفوف - استخدام to_dict("records")
+        # ✅ تشغيل على كل الصفوف - استخدام to_dict("records") عشان السرعة
         print("⏳ Processing rows...")
         total_rows = len(dataframe)
         processed = 0
 
-        # ✅ استخدام أرقام الأعمدة (بدون Header)
         for row in dataframe.to_dict("records"):
 
-            # ✅ العمود 0: الشركه
             company_name = ContractStructureMigrationService.normalize_company_name(
                 row.get(0, "")
             )
 
-            # ✅ العمود 6: الكود
             package_codes = ContractStructureMigrationService.normalize_package_codes(
                 row.get(6, "")
             )
 
-            # ✅ العمود 2: اسم الباكدج
             package_name = ImportHelpers.normalize_text(
                 row.get(2, "")
             )
 
-            # ✅ العمود 1: نوع التعاقد (الفئة المالية)
             financial_code = ImportHelpers.normalize_text(
                 row.get(1, "")
+            )
+
+            # ✅ جلب التخصص من العمود 3
+            specialty_name = ImportHelpers.normalize_text(
+                row.get(3, "")
             )
 
             if not company_name or not package_codes:
@@ -396,18 +399,12 @@ class ContractStructureMigrationService:
 
             result["processed"] += 1
 
-            # ============================================================
-            # ✅ Entity - باستخدام Cache
-            # ============================================================
             entity = ContractStructureMigrationService.get_or_create_entity(
                 company_name,
                 entities_cache,
                 result,
             )
 
-            # ============================================================
-            # ✅ Financial Category - باستخدام Cache
-            # ============================================================
             if not financial_code:
                 financial_code = "DEFAULT"
 
@@ -418,9 +415,6 @@ class ContractStructureMigrationService:
                 result,
             )
 
-            # ============================================================
-            # ✅ Contract - باستخدام Cache (بدون get_or_create)
-            # ============================================================
             contract = ContractStructureMigrationService.get_or_create_contract_cached(
                 entity,
                 financial_category,
@@ -432,95 +426,107 @@ class ContractStructureMigrationService:
             )
 
             # ============================================================
-            # ✅ Package Lookup
+            # ✅ Package Lookup - مع إنشاء Package جديد لو مش موجود
             # ============================================================
             package = None
-
+            found_code = None
+            
             for code in package_codes:
-                key = ImportHelpers.package_lookup_key(code, package_name)
-                package = packages_cache.get(key)
+                p_key = (
+                    ImportHelpers.normalize_text(code),
+                    entity.id,
+                    ImportHelpers.normalize_text(package_name),
+                )
+                package = packages_cache.get(p_key)
                 if package:
+                    found_code = code
                     break
 
+            # ✅ إذا مش موجود، أنشئ Package جديد
             if not package:
-                result["package_not_found"] += 1
-                for code in package_codes:
-                    result["missing_codes"].add(code)
-                continue
+                # ✅ جلب التخصص من الاسم
+                specialty = None
+                if specialty_name:
+                    specialty = Specialty.objects.filter(name__icontains=specialty_name).first()
+                if not specialty:
+                    specialty = Specialty.objects.first()
+                
+                # ✅ استخدم أول كود من القائمة
+                first_code = package_codes[0] if package_codes else f"UNKNOWN_{result['processed']}"
+                
+                # ✅ إنشاء Package جديد
+                package = Package.objects.create(
+                    code=first_code,
+                    name=package_name,
+                    specialty=specialty,
+                    entity=entity,
+                    is_active=True,
+                )
+                print(f"   ✅ Created new package: {first_code} - {package_name}")
+                result["created_packages"] += 1
 
-            # ============================================================
-            # ✅ Price - استخدام قيم افتراضية
-            # ============================================================
             price = ContractStructureMigrationService.clean_decimal(
-                row.get(4, None)  # ✅ العمود 4: السعر
+                row.get(4, None)
             )
 
-            # ✅ إذا كان السعر فارغاً، استخدم الاجمالي (العمود 10)
             if price is None:
                 price = ContractStructureMigrationService.clean_decimal(
                     row.get(10, None)
                 )
 
-            # ✅ إذا كان الاجمالي فارغاً، استخدم النقدي (العمود 16)
             if price is None:
                 price = ContractStructureMigrationService.clean_decimal(
                     row.get(16, None)
                 )
 
-            # ✅ إذا كان كل شيء فارغاً، استخدم 0 كقيمة افتراضية
             if price is None:
                 price = 0
                 result["missing_price"] += 1
 
-            # ============================================================
-            # ✅ ContractPackage - باستخدام Bulk بدلاً من update_or_create
-            # ============================================================
             defaults = {
                 "package_price": price,
                 "total_before_discount": ContractStructureMigrationService.clean_decimal(
-                    row.get(10, None)  # ✅ العمود 10: الاجمالي
+                    row.get(10, None)
                 ),
                 "current_discount_rate": ContractStructureMigrationService.clean_percentage(
-                    row.get(12, None)  # ✅ العمود 12: معدل الخصم الحالي
+                    row.get(12, None)
                 ),
                 "current_discount_text": ContractStructureMigrationService.clean_discount_text(
                     row.get(12, None)
                 ),
                 "cash_price": ContractStructureMigrationService.clean_decimal(
-                    row.get(16, None)  # ✅ العمود 16: النقدي
+                    row.get(16, None)
                 ),
                 "special_offer_price": ContractStructureMigrationService.clean_decimal(
-                    row.get(14, None)  # ✅ العمود 14: Special Offer
+                    row.get(14, None)
                 ),
                 "special_offer_company": (
-                    row.get(15, "") or ""  # ✅ العمود 15: الشركه.1
+                    row.get(15, "") or ""
                 ),
-                "price_list_applied": row.get(13, None),  # ✅ العمود 13: قائمة الاسعار
+                "price_list_applied": row.get(13, None),
                 "effective_from": ContractStructureMigrationService.clean_date(
-                    row.get(7, None)  # ✅ العمود 7: اعتبارا من
+                    row.get(7, None)
                 ),
                 "valid_until": ContractStructureMigrationService.clean_date(
-                    row.get(8, None)  # ✅ العمود 8: ساري حتي
+                    row.get(8, None)
                 ),
-                "notes": row.get(9, None),  # ✅ العمود 9: ملاحظات الباكدج
-                "approval_pdf": row.get(19, None),  # ✅ العمود 19: مشتملات الباكدج
+                "notes": row.get(9, None),
+                "approval_pdf": row.get(19, None),
                 "is_active": True,
                 "suggested_price": ContractStructureMigrationService.clean_decimal(
-                    row.get(18, None)  # ✅ العمود 18: السعر المقترح
+                    row.get(18, None)
                 ),
                 "suggested_discount_rate": ContractStructureMigrationService.clean_percentage(
-                    row.get(17, None)  # ✅ العمود 17: معدل الخصم المقترح
+                    row.get(17, None)
                 ),
             }
 
-            key = (contract.id, package.id)
-            contract_package_keys_in_sheet.add(key)  # ✅ تتبع المفتاح للحذف
-            contract_package = contract_packages_cache.get(key)
+            contract_package_key = (contract.id, package.id)
+            contract_package_keys_in_sheet.add(contract_package_key)
+            contract_package = contract_packages_cache.get(contract_package_key)
 
             if contract_package:
-
                 changed = False
-
                 for field, value in defaults.items():
                     if getattr(contract_package, field) != value:
                         setattr(contract_package, field, value)
@@ -531,51 +537,58 @@ class ContractStructureMigrationService:
                     result["updated_packages"] += 1
 
             else:
-
                 contract_package = ContractPackage(
                     contract=contract,
                     package=package,
                     **defaults,
                 )
-
                 contract_packages_to_create.append(contract_package)
-                contract_packages_cache[key] = contract_package
+                contract_packages_cache[contract_package_key] = contract_package
                 result["created_packages"] += 1
 
             processed += 1
             if processed % 1000 == 0:
                 print(f"   📊 Processed {processed}/{total_rows} rows...")
 
+            # ✅ تنفيذ الـ Bulk Operations كل 1000 صف عشان الذاكرة
+            if len(contract_packages_to_create) >= 500:
+                ContractPackage.objects.bulk_create(
+                    contract_packages_to_create,
+                    batch_size=500,
+                )
+                contract_packages_to_create = []
+
+            if len(contract_packages_to_update) >= 500:
+                ContractPackage.objects.bulk_update(
+                    contract_packages_to_update,
+                    fields=[
+                        "package_price",
+                        "total_before_discount",
+                        "current_discount_rate",
+                        "current_discount_text",
+                        "cash_price",
+                        "special_offer_price",
+                        "special_offer_company",
+                        "price_list_applied",
+                        "effective_from",
+                        "valid_until",
+                        "notes",
+                        "approval_pdf",
+                        "is_active",
+                        "suggested_price",
+                        "suggested_discount_rate",
+                    ],
+                    batch_size=500,
+                )
+                contract_packages_to_update = []
+
         print(f"   ✅ Processed {processed}/{total_rows} rows")
 
-        # ============================================================
-        # ✅ ✅ ✅ حذف ContractPackages غير الموجودة في الشيت
-        # ============================================================
-        if contract_package_keys_in_sheet:
-            all_keys = set(contract_packages_cache.keys())
-            keys_to_delete = all_keys - contract_package_keys_in_sheet
-            
-            if keys_to_delete:
-                deleted_count = 0
-                for key in keys_to_delete:
-                    contract_package = contract_packages_cache.get(key)
-                    if contract_package:
-                        contract_package.delete()
-                        deleted_count += 1
-                if deleted_count > 0:
-                    print(f"🗑️ Deleted {deleted_count} contract packages not in sheet")
-                    result["deleted_contract_packages"] = deleted_count
-        else:
-            print("⚠️ No contract packages in sheet - skipping deletion to avoid data loss")
-
-        # ✅ تنفيذ الـ Bulk Operations
-        print(f"💾 Creating {len(contract_packages_to_create)} ContractPackages...")
-        print(f"💾 Updating {len(contract_packages_to_update)} ContractPackages...")
-
+        # ✅ تنفيذ الـ Bulk Operations المتبقية
         if contract_packages_to_create:
             ContractPackage.objects.bulk_create(
                 contract_packages_to_create,
-                batch_size=1000,
+                batch_size=500,
             )
 
         if contract_packages_to_update:
@@ -598,8 +611,85 @@ class ContractStructureMigrationService:
                     "suggested_price",
                     "suggested_discount_rate",
                 ],
-                batch_size=1000,
+                batch_size=500,
             )
+
+        # ============================================================
+        # ✅ حذف ContractPackages غير الموجودة في الشيت
+        # ============================================================
+        if contract_package_keys_in_sheet:
+            all_keys = set(contract_packages_cache.keys())
+            keys_to_delete = all_keys - contract_package_keys_in_sheet
+            
+            if keys_to_delete:
+                ids_to_delete = []
+                for key in keys_to_delete:
+                    cp = contract_packages_cache.get(key)
+                    if cp and cp.id:
+                        ids_to_delete.append(cp.id)
+                
+                if ids_to_delete:
+                    deleted_count = ContractPackage.objects.filter(
+                        id__in=ids_to_delete
+                    ).delete()[0]
+                    if deleted_count > 0:
+                        print(f"🗑️ Deleted {deleted_count} contract packages not in sheet")
+                        result["deleted_contract_packages"] = deleted_count
+        else:
+            print("⚠️ No contract packages in sheet - skipping deletion to avoid data loss")
+
+        # ============================================================
+        # ✅ ✅ ✅ إضافة ContractPackages المفقودة (محسنة)
+        # ============================================================
+        print("⏳ Checking for missing ContractPackages...")
+
+        # ✅ Query واحدة لجلب كل الـ ContractPackages النشطة
+        all_active_cp = ContractPackage.objects.filter(
+            is_active=True
+        ).select_related('contract', 'package')
+
+        # ✅ بناء set من (contract_id, package_id)
+        existing_cp_keys = set()
+        for cp in all_active_cp:
+            existing_cp_keys.add((cp.contract_id, cp.package_id))
+
+        # ✅ تجميع الـ Entities من الشيت
+        entities_in_sheet = set()
+        for row in dataframe.to_dict("records"):
+            company_name = ContractStructureMigrationService.normalize_company_name(
+                row.get(0, "")
+            )
+            if company_name:
+                entity = entities_cache.get(company_name)
+                if entity:
+                    entities_in_sheet.add(entity.id)
+
+        # ✅ لكل Entity، جيب Packagesها وافحصها
+        missing_count = 0
+        for entity_id in entities_in_sheet:
+            entity = ContractEntity.objects.get(id=entity_id)
+            contract = Contract.objects.filter(entity=entity).first()
+            if not contract:
+                continue
+            
+            packages = Package.objects.filter(entity=entity, is_active=True)
+            
+            for p in packages:
+                key = (contract.id, p.id)
+                if key not in existing_cp_keys:
+                    ContractPackage.objects.create(
+                        contract=contract,
+                        package=p,
+                        package_price=0,
+                        is_active=True,
+                    )
+                    missing_count += 1
+                    print(f"   ✅ Added missing ContractPackage: {p.code} - {p.name}")
+
+        if missing_count > 0:
+            print(f"   ✅ Added {missing_count} missing ContractPackages")
+        else:
+            print("   ✅ No missing ContractPackages found")
 
         # ✅ تحويل set إلى list مرتب
         result["missing_codes"] = sorted(list(result["missing_codes"]))

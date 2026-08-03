@@ -3992,7 +3992,7 @@ def credit_package_pricing(request):
         specialties = cache.get(cache_key)
         
         if specialties is None:
-            # ✅ جلب الـ Package IDs النشطة للشركة
+            # ✅ جلب الـ Package IDs النشطة للشركة من ContractPackage
             active_package_ids = ContractPackage.objects.filter(
                 contract__entity_id=company_id,
                 is_active=True
@@ -4010,7 +4010,6 @@ def credit_package_pricing(request):
             )
             cache.set(cache_key, specialties, 60 * 15)
     else:
-        # ✅ إذا لم يتم اختيار شركة، نرجع قائمة فارغة
         specialties = []
     
     packages = []
@@ -4018,65 +4017,56 @@ def credit_package_pricing(request):
     
     if company_id:
         # ============================================================
-        # ✅ جلب الباكدجات مع Cache
+        # ✅ جلب الباكدجات من ContractPackage (مع التكرارات)
         # ============================================================
         cache_key = f'packages_company_{company_id}'
         cached_packages = cache.get(cache_key)
         
         if cached_packages is not None:
-            package_ids = [p['id'] for p in cached_packages]
-            packages = list(
-                ContractPackage.objects
-                .filter(
-                    id__in=package_ids,
-                    is_active=True
-                )
-                .select_related(
-                    "package",
-                    "contract__entity",
-                    "package__specialty"
-                )
-                .order_by("package__name")
-            )
+            # ✅ استخدام Cache
+            packages = cached_packages
         else:
-            # ✅ جلب من قاعدة البيانات
-            packages = list(
+            # ✅ جلب من قاعدة البيانات - من ContractPackage مباشرة
+            contract_packages = list(
                 ContractPackage.objects
                 .filter(
                     contract__entity_id=company_id,
-                    is_active=True,
+                    is_active=True
                 )
                 .select_related(
-                    "package",
-                    "contract__entity",
-                    "package__specialty"
+                    'package',
+                    'package__specialty',
+                    'contract__entity'
                 )
-                .order_by("package__name")
+                .order_by('package__name')
             )
             
             # ✅ تخزين في Cache
             cache_data = [
                 {
-                    'id': p.id,
-                    'package_name': p.package.name,
-                    'package_code': p.package.code,
-                    'package_price': str(p.package_price),
-                    'current_discount_rate': str(p.current_discount_rate) if p.current_discount_rate else None,
-                    'current_discount_text': p.current_discount_text,
-                    'entity_name': p.contract.entity.name,
-                    'specialty_id': p.package.specialty_id if p.package else None,
-                    'specialty_name': p.package.specialty.name if p.package and p.package.specialty else None,
-                    'is_expired': p.valid_until < timezone.localdate() if p.valid_until else False
+                    'id': cp.id,
+                    'package_id': cp.package.id,
+                    'name': cp.package.name,
+                    'code': cp.package.code,
+                    'specialty_id': cp.package.specialty_id,
+                    'specialty_name': cp.package.specialty.name if cp.package.specialty else None,
+                    'stay_duration': cp.package.stay_duration,
+                    'package_note': cp.package.package_note,
+                    'cash_price': str(cp.cash_price) if cp.cash_price else None,
+                    'price': str(cp.package_price) if cp.package_price else None,
+                    'is_cash_package': cp.package.is_cash_package,
+                    'contract_package_id': cp.id,
                 }
-                for p in packages
+                for cp in contract_packages
             ]
             cache.set(cache_key, cache_data, 60 * 10)
+            packages = cache_data
         
         # ✅ تطبيق فلتر البحث على الباكدجات
         if package_search:
             packages = [
                 p for p in packages 
-                if package_search.lower() in p.package.name.lower()
+                if package_search.lower() in p.get('name', '').lower()
             ]
         
         # ✅ تطبيق فلتر التخصص
@@ -4085,10 +4075,50 @@ def credit_package_pricing(request):
                 specialty_id = int(specialty_id)
                 packages = [
                     p for p in packages
-                    if p.package and p.package.specialty_id == specialty_id
+                    if p.get('specialty_id') == specialty_id
                 ]
             except (ValueError, TypeError):
                 pass
+        
+        # ============================================================
+        # ✅ تحويل الـ packages إلى كائنات قابلة للتنسيق
+        # ============================================================
+        class PackageWrapper:
+            def __init__(self, data):
+                self.id = data.get('id')
+                self.package_id = data.get('package_id')
+                self.name = data.get('name')
+                self.code = data.get('code')
+                self.specialty_id = data.get('specialty_id')
+                self.specialty_name = data.get('specialty_name')
+                self.stay_duration = data.get('stay_duration')
+                self.package_note = data.get('package_note')
+                self.cash_price = data.get('cash_price')
+                self.price = data.get('price')
+                self.is_cash_package = data.get('is_cash_package', False)
+                self.contract_package_id = data.get('contract_package_id')
+                
+                # ✅ حقل package لازم يكون موجود عشان الـ template
+                self.package = type('obj', (object,), {
+                    'id': self.package_id,
+                    'name': self.name,
+                    'code': self.code,
+                    'specialty_id': self.specialty_id,
+                    'specialty': type('obj', (object,), {
+                        'name': self.specialty_name,
+                        'id': self.specialty_id,
+                    }) if self.specialty_id else None,
+                })()
+                
+                # ✅ حقل contract عشان التوافق مع الـ template القديم
+                self.contract = type('obj', (object,), {
+                    'entity': type('obj', (object,), {
+                        'name': 'نقدي' if self.is_cash_package else 'أجل',
+                    })()
+                })()
+        
+        # ✅ تحويل البيانات إلى Wrapper
+        packages = [PackageWrapper(p) for p in packages]
         
         # ============================================================
         # ✅ Helper functions لتنسيق الأرقام
@@ -4096,26 +4126,28 @@ def credit_package_pricing(request):
         def format_price(value):
             if value is None:
                 return "-"
-            return f"{int(float(value)):,}"
+            try:
+                return f"{int(float(value)):,}"
+            except (ValueError, TypeError):
+                return str(value)
         
         def format_percentage(value):
             if value is None:
                 return "-"
-            if value == int(value):
-                return f"{int(value)}%"
-            return f"{value:.1f}%"
+            try:
+                value = float(value)
+                if value == int(value):
+                    return f"{int(value)}%"
+                return f"{value:.1f}%"
+            except (ValueError, TypeError):
+                return str(value)
         
-        # ✅ تنسيق الباكدجات مع إضافة التخصص
+        # ✅ تنسيق الباكدجات
         for cp in packages:
-            cp.formatted_price = format_price(cp.package_price)
-            cp.formatted_discount = (
-                (cp.current_discount_text or "").strip()
-                or (
-                    format_percentage(cp.current_discount_rate)
-                    if cp.current_discount_rate
-                    else "-"
-                )
-            )
+            cp.formatted_price = format_price(cp.price)
+            cp.formatted_cash = format_price(cp.cash_price)
+            cp.formatted_discount = "-"
+            cp.current_discount_label = "-"
             
             # ✅ إضافة معلومات التخصص للباكدج
             if cp.package and hasattr(cp.package, 'specialty') and cp.package.specialty:
@@ -4125,18 +4157,12 @@ def credit_package_pricing(request):
                 cp.specialty_name = "غير محدد"
                 cp.specialty_id = None
             
-            # ✅ إضافة حالة الانتهاء
-            if not hasattr(cp, 'is_expired'):
-                cp.is_expired = cp.valid_until < timezone.localdate() if cp.valid_until else False
+            cp.is_expired = False
     
     if package_id:
-        # ✅ جلب الباكدج المحدد مع التخصص
+        # ✅ جلب الباكدج المحدد
         selected_package = get_object_or_404(
-            ContractPackage.objects.select_related(
-                "package",
-                "contract__entity",
-                "package__specialty",
-            ),
+            Package.objects.select_related('specialty'),
             id=package_id,
             is_active=True,
         )
@@ -4148,86 +4174,54 @@ def credit_package_pricing(request):
             def format_price(value):
                 if value is None:
                     return "-"
-                return f"{int(float(value)):,}"
+                try:
+                    return f"{int(float(value)):,}"
+                except (ValueError, TypeError):
+                    return str(value)
             
             def format_percentage(value):
                 if value is None:
                     return "-"
-                if value == int(value):
-                    return f"{int(value)}%"
-                return f"{value:.1f}%"
+                try:
+                    value = float(value)
+                    if value == int(value):
+                        return f"{int(value)}%"
+                    return f"{value:.1f}%"
+                except (ValueError, TypeError):
+                    return str(value)
             
             # ============================================================
             # ✅ تنسيق الأسعار
             # ============================================================
-            selected_package.formatted_price = format_price(selected_package.package_price)
-            selected_package.formatted_cash = format_price(selected_package.cash_price) if selected_package.cash_price else "-"
-            selected_package.formatted_total_before = format_price(selected_package.total_before_discount) if selected_package.total_before_discount else "0"
-            selected_package.formatted_special_offer = format_price(selected_package.special_offer_price) if selected_package.special_offer_price else "-"
-            selected_package.formatted_current_price = format_price(selected_package.package_price)
+            selected_package.formatted_price = format_price(selected_package.base_price)
+            selected_package.formatted_cash = format_price(selected_package.cash_price)
+            selected_package.formatted_total_before = format_price(selected_package.total_without_discount)
+            selected_package.formatted_special_offer = format_price(selected_package.special_offer_price)
+            selected_package.formatted_current_price = format_price(selected_package.base_price)
             
             # ============================================================
             # ✅ تنسيق الخصومات
             # ============================================================
-            selected_package.formatted_discount = format_percentage(selected_package.current_discount_rate) if selected_package.current_discount_rate else "0%"
-            selected_package.current_discount_label = (
-                (selected_package.current_discount_text or "").strip()
-                or selected_package.formatted_discount
-            )
+            selected_package.formatted_discount = format_percentage(selected_package.current_discount)
+            selected_package.current_discount_label = selected_package.formatted_discount
             
             # ============================================================
             # ✅ السعر المقترح والخصومات المقترحة
             # ============================================================
-            selected_package.formatted_suggested_price = (
-                format_price(selected_package.suggested_price)
-                if selected_package.suggested_price
-                else "-"
-            )
-            
-            selected_package.formatted_suggested_discount = (
-                format_percentage(selected_package.suggested_discount_rate)
-                if selected_package.suggested_discount_rate
-                else "-"
-            )
-            
-            # ============================================================
-            # ✅ حساب التوفير وأفضل سعر
-            # ============================================================
-            discount_value = PricingEngine.calculate_savings(
-                selected_package.package_price,
-                selected_package.suggested_price
-            )
-            
-            discount_percentage = PricingEngine.calculate_savings_percentage(
-                selected_package.package_price,
-                selected_package.suggested_price
-            )
-            
-            best_price = PricingEngine.get_best_price(selected_package)
-            
-            selected_package.formatted_discount_value = format_price(discount_value)
-            selected_package.formatted_discount_percentage = format_percentage(discount_percentage)
-            selected_package.best_price = best_price
+            selected_package.formatted_suggested_price = format_price(selected_package.suggested_price)
+            selected_package.formatted_suggested_discount = format_percentage(selected_package.suggested_discount_rate)
             
             # ============================================================
             # ✅ إضافة معلومات التخصص للباكدج المحدد
             # ============================================================
-            if selected_package.package and hasattr(selected_package.package, 'specialty') and selected_package.package.specialty:
-                selected_package.specialty_name = selected_package.package.specialty.name
-                selected_package.specialty_id = selected_package.package.specialty.id
+            if selected_package.specialty:
+                selected_package.specialty_name = selected_package.specialty.name
+                selected_package.specialty_id = selected_package.specialty.id
             else:
                 selected_package.specialty_name = "غير محدد"
                 selected_package.specialty_id = None
             
-            # ============================================================
-            # ✅ التحقق من انتهاء الصلاحية
-            # ============================================================
-            today = timezone.localdate()
-            selected_package.is_expired = (
-                selected_package.valid_until
-                and
-                selected_package.valid_until < today
-            )
+            selected_package.is_expired = False
     
     return render(
         request,
@@ -4239,11 +4233,10 @@ def credit_package_pricing(request):
             "selected_company": selected_company,
             "company_search": company_search,
             "package_search": package_search,
-            "specialties": specialties,  # ✅ الآن التخصصات حسب الشركة
+            "specialties": specialties,
             "selected_specialty": specialty_id,
         }
     )
-
 def cash_packages(request):
 
     search = request.GET.get("search", "")
