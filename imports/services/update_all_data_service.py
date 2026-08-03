@@ -14,7 +14,6 @@ COMMANDS_WITH_NO_CONFIRM = [
     "import_report_statistics",
     "import_external_approvals",
     "import_report_statistics_sheet15",
-    "migrate_contract_entities",
 ]
 
 IMPORT_COMMANDS = [
@@ -35,6 +34,7 @@ IMPORT_COMMANDS = [
     ("Report Statistics", "import_report_statistics"),
     ("External Approvals", "import_external_approvals"),
     ("Report Statistics Sheet 15", "import_report_statistics_sheet15"),
+    ("Effective Dates", "import_effective_dates"),  # ✅ إضافة
 ]
 
 POST_IMPORT_COMMANDS = [

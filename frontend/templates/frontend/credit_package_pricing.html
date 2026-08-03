@@ -654,12 +654,12 @@
                         معلومات الباكدج
                         <span class="badge bg-light text-dark ms-3">
                             <i class="bi bi-tag"></i>
-                            {{ selected_package.package.code|default:"بدون كود" }}
+                            {{ selected_package.code|default:"بدون كود" }}
                         </span>
-                        {% if selected_package.package.specialty %}
+                        {% if selected_package.specialty %}
                         <span class="badge bg-warning text-dark ms-2">
                             <i class="bi bi-star"></i>
-                            {{ selected_package.package.specialty.name }}
+                            {{ selected_package.specialty.name }}
                         </span>
                         {% endif %}
                     </span>
@@ -679,8 +679,8 @@
                                     <i class="bi bi-building text-primary"></i>
                                     الشركة
                                 </div>
-                                <div class="value" title="{{ selected_package.contract.entity.name }}">
-                                    {{ selected_package.contract.entity.name }}
+                                <div class="value" title="{{ selected_company.name }}">
+                                    {{ selected_company.name }}
                                 </div>
                             </div>
                         </div>
@@ -692,8 +692,8 @@
                                     <i class="bi bi-tag text-success"></i>
                                     اسم الباكدج
                                 </div>
-                                <div class="value text-primary" title="{{ selected_package.package.name }}">
-                                    {{ selected_package.package.name }}
+                                <div class="value text-primary" title="{{ selected_package.name }}">
+                                    {{ selected_package.name }}
                                 </div>
                             </div>
                         </div>
@@ -706,7 +706,7 @@
                                     التخصص
                                 </div>
                                 <div class="value">
-                                    {{ selected_package.package.specialty.name }}
+                                    {{ selected_package.specialty.name }}
                                 </div>
                             </div>
                         </div>
@@ -732,7 +732,7 @@
                                     مدة الإقامة
                                 </div>
                                 <div class="value">
-                                    {{ selected_package.package.stay_duration|default:"-" }}
+                                    {{ selected_package.stay_duration|default:"-" }}
                                 </div>
                             </div>
                         </div>
@@ -745,7 +745,7 @@
                                     الكود
                                 </div>
                                 <div class="value">
-                                    <span class="badge bg-primary">{{ selected_package.package.code|default:"-" }}</span>
+                                    <span class="badge bg-primary">{{ selected_package.code|default:"-" }}</span>
                                 </div>
                             </div>
                         </div>
@@ -792,8 +792,8 @@
                                     ملاحظات الباكدج
                                 </div>
                                 <div id="package-notes" style="padding: 4px 0; white-space: pre-wrap; line-height: 1.8;">
-                                    {% if selected_package.package.package_note %}
-                                        {{ selected_package.package.package_note|linebreaksbr }}
+                                    {% if selected_package.package_note %}
+                                        {{ selected_package.package_note|linebreaksbr }}
                                     {% else %}
                                         <span class="text-muted">لا توجد ملاحظات</span>
                                     {% endif %}
@@ -826,11 +826,11 @@
             <div id="pricingInfoContent" class="collapse">
                 <div class="card-body">
                     <!-- Hidden Fields -->
-                    <input type="hidden" id="base-price" value="{{ selected_package.total_before_discount|default:0 }}">
-                    <input type="hidden" id="special-price" value="{{ selected_package.special_offer_price|default:0 }}">
-                    <input type="hidden" id="cash-price" value="{{ selected_package.cash_price|default:0 }}">
-                    <input type="hidden" id="current-price-value" value="{{ selected_package.package_price|default:0 }}">
-                    <input type="hidden" id="suggested-price-value" value="{{ selected_package.suggested_price|default:0 }}">
+                    <input type="hidden" id="base-price" value="{{ selected_contract_package.total_before_discount|default:selected_package.total_without_discount|default:0 }}">
+                    <input type="hidden" id="special-price" value="{{ selected_contract_package.special_offer_price|default:selected_package.special_offer_price|default:0 }}">
+                    <input type="hidden" id="cash-price" value="{{ selected_contract_package.cash_price|default:selected_package.cash_price|default:0 }}">
+                    <input type="hidden" id="current-price-value" value="{{ selected_contract_package.package_price|default:selected_package.base_price|default:0 }}">
+                    <input type="hidden" id="suggested-price-value" value="{{ selected_contract_package.suggested_price|default:0 }}">
 
                     <div class="row g-3">
                         <div class="col-md-4">
@@ -850,7 +850,7 @@
                         <div class="col-md-4">
                             <div class="info-card">
                                 <div class="card-title"><i class="bi bi-list-ul text-purple"></i> قائمة الأسعار</div>
-                                <div class="value">{{ selected_package.price_list_applied|default:'-' }}</div>
+                                <div class="value">{{ selected_contract_package.price_list_applied|default:'-' }}</div>
                             </div>
                         </div>
 
@@ -860,13 +860,17 @@
                                 <div class="value">{{ selected_package.current_discount_label }}</div>
                             </div>
                         </div>
+                        <!-- ✅ مؤقت للاختبار -->
+<div style="display: none;">
+    DEBUG: {{ selected_contract_package.package_price }}
+</div>
 
                         <div class="col-md-4">
                             <div class="info-card">
                                 <div class="card-title"><i class="bi bi-sliders2 text-warning"></i> معدل الخصم المقترح</div>
                                 <select id="discount-select" class="form-select">
-                                    {% if selected_package.suggested_discount_rate %}
-                                    <option value="{{ selected_package.suggested_discount_rate }}" selected>
+                                    {% if selected_contract_package.suggested_discount_rate %}
+                                    <option value="{{ selected_contract_package.suggested_discount_rate }}" selected>
                                         العقد الحالي ({{ selected_package.formatted_suggested_discount }})
                                     </option>
                                     {% endif %}
@@ -906,11 +910,11 @@
                                         <i class="bi bi-star text-warning"></i>
                                         <strong>أقل سعر أجل (Special Offer):</strong>
                                         <span class="fw-bold">{{ selected_package.formatted_special_offer }} ج.م</span>
-                                        {% if selected_package.special_offer_company %}
+                                        {% if selected_contract_package.special_offer_company %}
                                             <br>
                                             <small class="text-success">
                                                 <i class="bi bi-building"></i>
-                                                {{ selected_package.special_offer_company }}
+                                                {{ selected_contract_package.special_offer_company }}
                                             </small>
                                         {% endif %}
                                     </div>
@@ -983,7 +987,7 @@
                         المرفقات
                         <span class="badge bg-light text-dark ms-3">
                             <i class="bi bi-file-earmark"></i>
-                            {% if selected_package.approval_pdf %}مرفق{% else %}لا يوجد{% endif %}
+                            {% if selected_contract_package.approval_pdf %}مرفق{% else %}لا يوجد{% endif %}
                         </span>
                     </span>
                     <span class="accordion-icon" id="attachmentsIcon">
@@ -994,11 +998,11 @@
 
             <div id="attachmentsContent" class="collapse">
                 <div class="card-body">
-                    {% if selected_package.approval_pdf %}
+                    {% if selected_contract_package.approval_pdf %}
                         <div class="alert alert-success mb-0">
                             <strong><i class="bi bi-file-pdf"></i> المرفقات:</strong>
                             <hr class="my-2">
-                            <pre class="mb-0" style="white-space: pre-wrap; word-wrap: break-word; font-size: 0.9rem;">{{ selected_package.approval_pdf }}</pre>
+                            <pre class="mb-0" style="white-space: pre-wrap; word-wrap: break-word; font-size: 0.9rem;">{{ selected_contract_package.approval_pdf }}</pre>
                         </div>
                     {% else %}
                         <div class="alert alert-warning mb-0 text-center py-4">

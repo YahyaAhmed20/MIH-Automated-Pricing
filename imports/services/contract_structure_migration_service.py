@@ -280,7 +280,7 @@ class ContractStructureMigrationService:
         # ✅ ✅ ✅ Cache للباكدجات - استخدام (code, entity_id, name) كمفتاح
         print("⏳ Loading packages...")
         packages_cache = {}
-        for p in Package.objects.exclude(code__isnull=True).only('code', 'entity_id', 'name').iterator(chunk_size=500):
+        for p in Package.objects.exclude(code__isnull=True).only('code', 'entity_id', 'name').iterator(chunk_size=200):
             key = (
                 ImportHelpers.normalize_text(p.code),
                 p.entity_id if p.entity_id else None,
@@ -462,6 +462,8 @@ class ContractStructureMigrationService:
                     entity=entity,
                     is_active=True,
                 )
+                # ✅ ✅ ✅ أضفه في الـ Cache عشان منكررهوش تاني
+                packages_cache[p_key] = package
                 print(f"   ✅ Created new package: {first_code} - {package_name}")
                 result["created_packages"] += 1
 

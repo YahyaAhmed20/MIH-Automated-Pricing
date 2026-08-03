@@ -8407,3 +8407,505 @@ Watching for file changes with StatReloader
 "GET /credit-package-pricing/?company_search=MOLTO&company=173&specialty=&package_search=&package= HTTP/1.1" 200 236886
 "GET /credit-package-pricing/ HTTP/1.1" 200 75979
 "GET /credit-package-pricing/?company_search=BISCO&company=172&specialty=&package_search=&package= HTTP/1.1" 200 237128
+Watching for file changes with StatReloader
+Not Found: /credit-package-pricing/
+"GET /credit-package-pricing/?company=172&package=112735&company_search=BISCO&package_search=&specialty= HTTP/1.1" 404 13398
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /credit-package-pricing/?company=172&package=112735&company_search=BISCO&package_search=&specialty= HTTP/1.1" 200 114608
+"GET /credit-package-pricing/ HTTP/1.1" 200 75979
+"GET /credit-package-pricing/?company_search=BISCO&company=172&specialty=&package_search=&package= HTTP/1.1" 200 237128
+"GET /credit-package-pricing/?company=172&package=112735&company_search=BISCO&package_search=&specialty= HTTP/1.1" 200 114608
+"GET /credit-package-pricing/?company=172&package=112747&company_search=BISCO&package_search=&specialty= HTTP/1.1" 200 114609
+"GET /credit-package-pricing/?company=172&package=112735&company_search=BISCO&package_search=&specialty= HTTP/1.1" 200 114608
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /credit-package-pricing/?company=172&package=112735&company_search=BISCO&package_search=&specialty= HTTP/1.1" 200 114497
+"GET /credit-package-pricing/ HTTP/1.1" 200 75979
+"GET /credit-package-pricing/?company_search=%D8%A7%D8%A8%D8%A7%D8%AA%D8%B4%D9%89+%D9%85%D8%B5%D8%B1&company=135&specialty=&package_search=&package= HTTP/1.1" 200 233541
+Internal Server Error: /credit-package-pricing/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 4228, in credit_package_pricing
+    selected_package.formatted_suggested_price = format_price(selected_package.suggested_price)
+                                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Package' object has no attribute 'suggested_price'
+"GET /credit-package-pricing/?company=135&package=93838&company_search=%D8%A7%D8%A8%D8%A7%D8%AA%D8%B4%D9%89%20%D9%85%D8%B5%D8%B1&package_search=&specialty= HTTP/1.1" 500 91182
+"GET /credit-package-pricing/ HTTP/1.1" 200 75979
+"GET /credit-package-pricing/?company_search=BISCO&company=172&specialty=&package_search=&package= HTTP/1.1" 200 236478
+Internal Server Error: /credit-package-pricing/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 4228, in credit_package_pricing
+    selected_package.formatted_suggested_price = format_price(selected_package.suggested_price)
+                                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Package' object has no attribute 'suggested_price'
+"GET /credit-package-pricing/?company=172&package=90342&company_search=BISCO&package_search=&specialty= HTTP/1.1" 500 90702
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /credit-package-pricing/?company=172&package=90342&company_search=BISCO&package_search=&specialty= HTTP/1.1" 200 114474
+"GET /credit-package-pricing/ HTTP/1.1" 200 75979
+"GET /credit-package-pricing/?company_search=BISCO&company=172&specialty=&package_search=&package= HTTP/1.1" 200 236478
+"GET /credit-package-pricing/?company=172&package=90330&company_search=BISCO&package_search=&specialty= HTTP/1.1" 200 114474
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /credit-package-pricing/?company=172&package=90330&company_search=BISCO&package_search=&specialty= HTTP/1.1" 500 377442
+Watching for file changes with StatReloader
+"GET /credit-package-pricing/ HTTP/1.1" 200 75979
+"GET /credit-package-pricing/?company_search=BISCO&company=172&specialty=&package_search=&package= HTTP/1.1" 200 236478
+"GET /credit-package-pricing/?company=172&package=90330&company_search=BISCO&package_search=&specialty= HTTP/1.1" 500 369549
+"GET /credit-package-pricing/?company=172&package=90330&company_search=BISCO&package_search=&specialty= HTTP/1.1" 200 114878
+"GET /credit-package-pricing/?company=172&package=90330&company_search=BISCO&package_search=&specialty= HTTP/1.1" 200 114878
+"GET /credit-package-pricing/ HTTP/1.1" 200 75979
+"GET /credit-package-pricing/?company_search=BISCO&company=172&specialty=&package_search=&package= HTTP/1.1" 200 236478
+"GET /credit-package-pricing/?company_search=BISCO&company=172&specialty=&package_search=%D8%A7%D8%B3%D8%AA%D8%A6%D8%B5%D8%A7%D9%84+%D8%A7%D9%84%D8%A7%D9%88%D8%B1%D8%A7%D9%85+%D8%A7%D9%84%D9%84%D9%8A%D9%81%D9%8A%D8%A9+%D9%85%D9%86+%D8%A7%D9%84%D8%B1%D8%AD%D9%85&package=90330 HTTP/1.1" 200 93570
+"GET /credit-package-pricing/ HTTP/1.1" 200 75979
+"GET /credit-package-pricing/?company_search=BISCO&company=172&specialty=&package_search=&package= HTTP/1.1" 200 236478
+"GET /credit-package-pricing/?company_search=BISCO&company=172&specialty=&package_search=%D8%A7%D8%B3%D8%AA%D8%A6%D8%B5%D8%A7%D9%84+%D8%A7%D9%84%D9%83%D9%8A%D8%B3+%D8%A7%D9%84%D8%AF%D9%87%D9%86%D9%89+%D8%A7%D9%88+%D8%A7%D9%84%D8%B4%D9%85%D8%B9%D9%89&package=90295 HTTP/1.1" 200 93537
+Watching for file changes with StatReloader
+"GET /credit-package-pricing/ HTTP/1.1" 200 75979
+"GET /credit-package-pricing/ HTTP/1.1" 200 75979
+"GET /credit-package-pricing/?company_search=BISCO&company=172&specialty=&package_search=&package= HTTP/1.1" 200 236478
+"GET /credit-package-pricing/?company=172&package=90330&company_search=BISCO&package_search=&specialty= HTTP/1.1" 200 114989
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET /credit-package-pricing/?company=172&package=90330&company_search=BISCO&package_search=&specialty= HTTP/1.1" 200 114989
+"GET /credit-package-pricing/ HTTP/1.1" 200 75979
+"GET /credit-package-pricing/?company_search=BISCO&company=172&specialty=&package_search=&package= HTTP/1.1" 200 236478
+"GET /credit-package-pricing/?company=172&package=90330&company_search=BISCO&package_search=&specialty= HTTP/1.1" 200 114989
+Watching for file changes with StatReloader
+"GET /credit-package-pricing/?company=172&package=119785&company_search=BISCO&package_search=&specialty= HTTP/1.1" 200 115531
+"GET /credit-package-pricing/ HTTP/1.1" 200 75979
+"GET /credit-package-pricing/?company_search=BISCO&company=172&specialty=&package_search=&package= HTTP/1.1" 200 236478
+"GET /credit-package-pricing/?company=172&package=96565&company_search=BISCO&package_search=&specialty= HTTP/1.1" 200 115091
+"GET /credit-package-pricing/ HTTP/1.1" 200 75979
+"GET /credit-package-pricing/?company_search=BISCO&company=172&specialty=&package_search=&package= HTTP/1.1" 200 236478
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET /credit-package-pricing/?company=172&package=90336&company_search=BISCO&package_search=&specialty= HTTP/1.1" 200 116022
+"GET /credit-package-pricing/ HTTP/1.1" 200 75979
+"GET /credit-package-pricing/?company_search=BISCO&company=172&specialty=&package_search=&package= HTTP/1.1" 200 244362
+"GET /credit-package-pricing/?company=172&package=90338&company_search=BISCO&package_search=&specialty= HTTP/1.1" 200 115982
+"GET /credit-package-pricing/ HTTP/1.1" 200 75979
+"GET /credit-package-pricing/?company_search=BISCO&company=172&specialty=&package_search=&package= HTTP/1.1" 200 244362
+"GET /credit-package-pricing/?company_search=BISCO&company=172&specialty=&package_search=%D8%A7%D8%B3%D8%AA%D8%A6%D8%B5%D8%A7%D9%84+%D8%A7%D9%84%D9%83%D9%8A%D8%B3+%D8%A7%D9%84%D8%AF%D9%87%D9%86%D9%89+%D8%A7%D9%88+%D8%A7%D9%84%D8%B4%D9%85%D8%B9%D9%89&package=90295 HTTP/1.1" 200 93662
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /credit-package-pricing/ HTTP/1.1" 200 75979
+"GET /credit-package-pricing/?company_search=BISCO&company=172&specialty=&package_search=&package= HTTP/1.1" 200 244362
+"GET /credit-package-pricing/?company_search=BISCO&company=172&specialty=&package_search=%D8%A7%D8%B3%D8%AA%D8%A6%D8%B5%D8%A7%D9%84+%D8%A7%D9%84%D9%83%D9%8A%D8%B3+%D8%A7%D9%84%D8%AF%D9%87%D9%86%D9%89+%D8%A7%D9%88+%D8%A7%D9%84%D8%B4%D9%85%D8%B9%D9%89&package=90295 HTTP/1.1" 200 93662
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /credit-package-pricing/?company_search=BISCO&company=172&specialty=&package_search=%D8%A7%D8%B3%D8%AA%D8%A6%D8%B5%D8%A7%D9%84+%D8%A7%D9%84%D9%83%D9%8A%D8%B3+%D8%A7%D9%84%D8%AF%D9%87%D9%86%D9%89+%D8%A7%D9%88+%D8%A7%D9%84%D8%B4%D9%85%D8%B9%D9%89&package=90295 HTTP/1.1" 200 94182
+"GET /credit-package-pricing/ HTTP/1.1" 200 75979
+"GET /credit-package-pricing/?company_search=BISCO&company=172&specialty=&package_search=&package= HTTP/1.1" 200 244362
+"GET /credit-package-pricing/?company=172&package=90330&company_search=BISCO&package_search=&specialty= HTTP/1.1" 200 116542
+"GET /credit-package-pricing/ HTTP/1.1" 200 75979
+"GET /credit-package-pricing/?company_search=BISCO&company=172&specialty=&package_search=&package= HTTP/1.1" 200 244362
+"GET /credit-package-pricing/?company_search=BISCO&company=172&specialty=&package_search=%D8%A7%D8%B3%D8%AA%D8%A6%D8%B5%D8%A7%D9%84+%D8%A7%D9%84%D9%83%D9%8A%D8%B3+%D8%A7%D9%84%D8%AF%D9%87%D9%86%D9%89+%D8%A7%D9%88+%D8%A7%D9%84%D8%B4%D9%85%D8%B9%D9%89&package=90295 HTTP/1.1" 200 94182
+"GET /credit-package-pricing/?company=172&package=90330&company_search=BISCO&package_search=&specialty= HTTP/1.1" 200 116542
+Watching for file changes with StatReloader
+"GET /credit-package-pricing/?company=172&package=90330&company_search=BISCO&package_search=&specialty= HTTP/1.1" 200 116542
+"GET /credit-package-pricing/?company=172&package=90330&company_search=BISCO&package_search=&specialty= HTTP/1.1" 200 116542
+"GET /credit-package-pricing/ HTTP/1.1" 200 75979
+"GET /credit-package-pricing/?company_search=MOLTO&company=173&specialty=&package_search=&package= HTTP/1.1" 200 239857
+"GET /credit-package-pricing/?company=173&package=90417&company_search=MOLTO&package_search=&specialty= HTTP/1.1" 200 115631
+"GET /credit-package-pricing/ HTTP/1.1" 200 75979
+"GET /credit-package-pricing/?company_search=BISCO&company=172&specialty=&package_search=&package= HTTP/1.1" 200 244362
+"GET /credit-package-pricing/?company_search=BISCO&company=172&specialty=&package_search=%D8%A7%D8%B3%D8%AA%D8%A6%D8%B5%D8%A7%D9%84+%D8%A7%D9%84%D9%83%D9%8A%D8%B3+%D8%A7%D9%84%D8%AF%D9%87%D9%86%D9%89+%D8%A7%D9%88+%D8%A7%D9%84%D8%B4%D9%85%D8%B9%D9%89&package=90295 HTTP/1.1" 200 94182
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /credit-package-pricing/?company_search=BISCO&company=172&specialty=&package_search=%D8%A7%D8%B3%D8%AA%D8%A6%D8%B5%D8%A7%D9%84+%D8%A7%D9%84%D9%83%D9%8A%D8%B3+%D8%A7%D9%84%D8%AF%D9%87%D9%86%D9%89+%D8%A7%D9%88+%D8%A7%D9%84%D8%B4%D9%85%D8%B9%D9%89&package=90295 HTTP/1.1" 200 94191
+"GET /credit-package-pricing/ HTTP/1.1" 200 75979
+"GET /credit-package-pricing/?company_search=MOLTO&company=173&specialty=&package_search=&package= HTTP/1.1" 200 239857
+"GET /credit-package-pricing/?company_search=MOLTO&company=173&specialty=&package_search=%D8%A7%D8%B3%D8%AA%D8%A6%D8%B5%D8%A7%D9%84+%D8%A7%D9%84%D9%83%D9%8A%D8%B3+%D8%A7%D9%84%D8%AF%D9%87%D9%86%D9%89+%D8%A7%D9%88+%D8%A7%D9%84%D8%B4%D9%85%D8%B9%D9%89&package=90382 HTTP/1.1" 200 94247
+D:\desktop\rphospital\src\imports\services\update_all_data_service.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /cash-packages/ HTTP/1.1" 200 58122
+"GET /contract-entities/ HTTP/1.1" 200 61635
+"GET /cash-packages/ HTTP/1.1" 200 58122
+"GET / HTTP/1.1" 200 51978
+"GET /system/update/ HTTP/1.1" 200 67962
+"POST /system/update/ HTTP/1.1" 200 68
+"GET /api/update-progress/ HTTP/1.1" 200 116
+Watching for file changes with StatReloader
+"GET /system/update/ HTTP/1.1" 200 62838
+"GET /api/update-progress/ HTTP/1.1" 200 128
+"GET /api/update-progress/ HTTP/1.1" 200 9743
+"GET /api/update-progress/ HTTP/1.1" 200 9743
+"GET /credit-package-pricing/ HTTP/1.1" 200 64334
+"GET /cash-packages/ HTTP/1.1" 200 82832
+"GET /contract-entities/ HTTP/1.1" 200 61635
+"GET /credit-package-pricing/ HTTP/1.1" 200 64334
+Watching for file changes with StatReloader
+"GET /credit-package-pricing/ HTTP/1.1" 200 64334
+"GET /system/update/ HTTP/1.1" 200 73253
+"POST /system/update/ HTTP/1.1" 200 68
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 114
+"GET /api/update-progress/ HTTP/1.1" 200 118
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 117
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 9740
+"GET /api/update-progress/ HTTP/1.1" 200 9740
+Watching for file changes with StatReloader
+"POST /system/update/ HTTP/1.1" 200 68
+"GET /api/update-progress/ HTTP/1.1" 200 102
+"GET /api/update-progress/ HTTP/1.1" 200 88
+"GET /api/update-progress/ HTTP/1.1" 200 88
+"GET /api/update-progress/ HTTP/1.1" 200 101
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 116
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+"GET /api/update-progress/ HTTP/1.1" 200 119
+Internal Server Error: /credit-package-pricing/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 279, in ensure_connection
+    self.connect()
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\postgresql\base.py", line 332, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\psycopg2\__init__.py", line 135, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.OperationalError: could not translate host name "shortline.proxy.rlwy.net" to address: Name or service not known
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 3966, in credit_package_pricing
+    companies = list(
+                ^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 386, in __iter__
+    self._fetch_all()
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 1954, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 93, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\sql\compiler.py", line 1621, in execute_sql
+    cursor = self.connection.cursor()
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 320, in cursor
+    return self._cursor()
+           ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 296, in _cursor
+    self.ensure_connection()
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 278, in ensure_connection
+    with self.wrap_database_errors:
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 279, in ensure_connection
+    self.connect()
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\postgresql\base.py", line 332, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\psycopg2\__init__.py", line 135, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: could not translate host name "shortline.proxy.rlwy.net" to address: Name or service not known
+
+"GET /credit-package-pricing/ HTTP/1.1" 500 173576
+Internal Server Error: /credit-package-pricing/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 279, in ensure_connection
+    self.connect()
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\postgresql\base.py", line 332, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\psycopg2\__init__.py", line 135, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.OperationalError: connection to server at "shortline.proxy.rlwy.net" (66.33.22.244), port 40857 failed: server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+SSL SYSCALL error: Connection reset by peer (0x00002746/10054)
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 3966, in credit_package_pricing
+    companies = list(
+                ^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 386, in __iter__
+    self._fetch_all()
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 1954, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 93, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\sql\compiler.py", line 1621, in execute_sql
+    cursor = self.connection.cursor()
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 320, in cursor
+    return self._cursor()
+           ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 296, in _cursor
+    self.ensure_connection()
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 278, in ensure_connection
+    with self.wrap_database_errors:
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 279, in ensure_connection
+    self.connect()
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\postgresql\base.py", line 332, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\psycopg2\__init__.py", line 135, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: connection to server at "shortline.proxy.rlwy.net" (66.33.22.244), port 40857 failed: server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+SSL SYSCALL error: Connection reset by peer (0x00002746/10054)
+
+- Broken pipe from ('127.0.0.1', 62861)
+"GET /credit-package-pricing/ HTTP/1.1" 200 75979
+"GET /cash-packages/ HTTP/1.1" 200 58122
+"GET /credit-package-pricing/ HTTP/1.1" 200 75979

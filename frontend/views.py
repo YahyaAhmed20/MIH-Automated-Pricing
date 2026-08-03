@@ -4014,10 +4014,11 @@ def credit_package_pricing(request):
     
     packages = []
     selected_package = None
+    selected_contract_package = None
     
     if company_id:
         # ============================================================
-        # ✅ جلب الباكدجات من ContractPackage (مع التكرارات)
+        # ✅ جلب الباكدجات من Package مباشرة (بدون ContractPackage)
         # ============================================================
         cache_key = f'packages_company_{company_id}'
         cached_packages = cache.get(cache_key)
@@ -4026,38 +4027,34 @@ def credit_package_pricing(request):
             # ✅ استخدام Cache
             packages = cached_packages
         else:
-            # ✅ جلب من قاعدة البيانات - من ContractPackage مباشرة
-            contract_packages = list(
-                ContractPackage.objects
+            # ✅ جلب من قاعدة البيانات - من Package مباشرة
+            package_objects = list(
+                Package.objects
                 .filter(
-                    contract__entity_id=company_id,
+                    entity_id=company_id,
                     is_active=True
                 )
-                .select_related(
-                    'package',
-                    'package__specialty',
-                    'contract__entity'
-                )
-                .order_by('package__name')
+                .select_related('specialty')
+                .order_by('name')
             )
             
             # ✅ تخزين في Cache
             cache_data = [
                 {
-                    'id': cp.id,
-                    'package_id': cp.package.id,
-                    'name': cp.package.name,
-                    'code': cp.package.code,
-                    'specialty_id': cp.package.specialty_id,
-                    'specialty_name': cp.package.specialty.name if cp.package.specialty else None,
-                    'stay_duration': cp.package.stay_duration,
-                    'package_note': cp.package.package_note,
-                    'cash_price': str(cp.cash_price) if cp.cash_price else None,
-                    'price': str(cp.package_price) if cp.package_price else None,
-                    'is_cash_package': cp.package.is_cash_package,
-                    'contract_package_id': cp.id,
+                    'id': p.id,
+                    'package_id': p.id,
+                    'name': p.name,
+                    'code': p.code,
+                    'specialty_id': p.specialty_id,
+                    'specialty_name': p.specialty.name if p.specialty else None,
+                    'stay_duration': p.stay_duration,
+                    'package_note': p.package_note,
+                    'cash_price': str(p.cash_price) if p.cash_price else None,
+                    'price': str(p.base_price) if p.base_price else None,
+                    'base_price': str(p.base_price) if p.base_price else None,
+                    'is_cash_package': p.is_cash_package,
                 }
-                for cp in contract_packages
+                for p in package_objects
             ]
             cache.set(cache_key, cache_data, 60 * 10)
             packages = cache_data
@@ -4094,9 +4091,8 @@ def credit_package_pricing(request):
                 self.stay_duration = data.get('stay_duration')
                 self.package_note = data.get('package_note')
                 self.cash_price = data.get('cash_price')
-                self.price = data.get('price')
+                self.price = data.get('price') or data.get('base_price')
                 self.is_cash_package = data.get('is_cash_package', False)
-                self.contract_package_id = data.get('contract_package_id')
                 
                 # ✅ حقل package لازم يكون موجود عشان الـ template
                 self.package = type('obj', (object,), {
@@ -4159,13 +4155,29 @@ def credit_package_pricing(request):
             
             cp.is_expired = False
     
+    # ✅ معالجة الباكدج المحدد
     if package_id:
-        # ✅ جلب الباكدج المحدد
-        selected_package = get_object_or_404(
-            Package.objects.select_related('specialty'),
-            id=package_id,
-            is_active=True,
-        )
+        # ✅ جلب الـ ContractPackage من package_id + company_id
+        contract_package = ContractPackage.objects.filter(
+            package_id=package_id,
+            contract__entity_id=company_id,
+            is_active=True
+        ).select_related(
+            'package',
+            'package__specialty',
+            'contract__entity'
+        ).first()
+        
+        if contract_package:
+            selected_package = contract_package.package
+            selected_contract_package = contract_package
+        else:
+            # ✅ لو مش موجود، جرب في Package مباشرة
+            selected_package = get_object_or_404(
+                Package.objects.select_related('specialty'),
+                id=package_id,
+                is_active=True,
+            )
         
         if selected_package:
             # ============================================================
@@ -4191,25 +4203,46 @@ def credit_package_pricing(request):
                     return str(value)
             
             # ============================================================
-            # ✅ تنسيق الأسعار
+            # ✅ تنسيق الأسعار (من الـ ContractPackage لو موجود)
             # ============================================================
-            selected_package.formatted_price = format_price(selected_package.base_price)
-            selected_package.formatted_cash = format_price(selected_package.cash_price)
-            selected_package.formatted_total_before = format_price(selected_package.total_without_discount)
-            selected_package.formatted_special_offer = format_price(selected_package.special_offer_price)
-            selected_package.formatted_current_price = format_price(selected_package.base_price)
-            
-            # ============================================================
-            # ✅ تنسيق الخصومات
-            # ============================================================
-            selected_package.formatted_discount = format_percentage(selected_package.current_discount)
-            selected_package.current_discount_label = selected_package.formatted_discount
-            
-            # ============================================================
-            # ✅ السعر المقترح والخصومات المقترحة
-            # ============================================================
-            selected_package.formatted_suggested_price = format_price(selected_package.suggested_price)
-            selected_package.formatted_suggested_discount = format_percentage(selected_package.suggested_discount_rate)
+            if selected_contract_package:
+                # ✅ استخدم بيانات الـ ContractPackage
+                selected_package.formatted_price = format_price(selected_contract_package.package_price)
+                selected_package.formatted_cash = format_price(selected_contract_package.cash_price)
+                selected_package.formatted_total_before = format_price(selected_contract_package.total_before_discount)
+                selected_package.formatted_special_offer = format_price(selected_contract_package.special_offer_price)
+                selected_package.formatted_current_price = format_price(selected_contract_package.package_price)
+                selected_package.formatted_discount = format_percentage(selected_contract_package.current_discount_rate)
+                selected_package.current_discount_label = (
+                    (selected_contract_package.current_discount_text or "").strip()
+                    or selected_package.formatted_discount
+                )
+                selected_package.formatted_suggested_price = format_price(selected_contract_package.suggested_price)
+                selected_package.formatted_suggested_discount = format_percentage(selected_contract_package.suggested_discount_rate)
+                # ✅ إضافة effective_from
+                selected_package.effective_from = selected_contract_package.effective_from
+            else:
+                # ✅ استخدم بيانات الـ Package (مع getattr لتجنب الأخطاء)
+                selected_package.formatted_price = format_price(selected_package.base_price)
+                selected_package.formatted_cash = format_price(selected_package.cash_price)
+                selected_package.formatted_total_before = format_price(selected_package.total_without_discount)
+                selected_package.formatted_special_offer = format_price(selected_package.special_offer_price)
+                selected_package.formatted_current_price = format_price(selected_package.base_price)
+                selected_package.formatted_discount = format_percentage(
+                    getattr(selected_package, 'current_discount', None)
+                )
+                selected_package.current_discount_label = (
+                    getattr(selected_package, 'current_discount_text', None) or 
+                    selected_package.formatted_discount or "-"
+                )
+                selected_package.formatted_suggested_price = format_price(
+                    getattr(selected_package, 'suggested_price', None)
+                )
+                selected_package.formatted_suggested_discount = format_percentage(
+                    getattr(selected_package, 'suggested_discount_rate', None)
+                )
+                # ✅ effective_from من الـ Package
+                selected_package.effective_from = selected_package.effective_from
             
             # ============================================================
             # ✅ إضافة معلومات التخصص للباكدج المحدد
@@ -4230,6 +4263,7 @@ def credit_package_pricing(request):
             "companies": companies,
             "packages": packages,
             "selected_package": selected_package,
+            "selected_contract_package": selected_contract_package,
             "selected_company": selected_company,
             "company_search": company_search,
             "package_search": package_search,
@@ -4237,6 +4271,7 @@ def credit_package_pricing(request):
             "selected_specialty": specialty_id,
         }
     )
+    
 def cash_packages(request):
 
     search = request.GET.get("search", "")

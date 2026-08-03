@@ -95,7 +95,9 @@ class PackageCatalogImportService:
             specialty_name = ImportHelpers.normalize_text(row.get(3, ""))
             specialty_name = PackageCatalogImportService.truncate_text(specialty_name, 255)
             
-            price = ImportHelpers.normalize_text(row.get(4, ""))
+            # ✅ قراءة السعر
+            price_value = ImportHelpers.clean_decimal(row.get(4, None))
+            
             stay_duration = ImportHelpers.normalize_text(row.get(5, ""))
             
             package_code = ImportHelpers.normalize_text(row.get(6, ""))
@@ -175,6 +177,10 @@ class PackageCatalogImportService:
                     existing_package.package_note = package_note
                     changed = True
 
+                if existing_package.base_price != price_value:
+                    existing_package.base_price = price_value
+                    changed = True
+
                 if existing_package.is_active is not True:
                     existing_package.is_active = True
                     changed = True
@@ -184,12 +190,13 @@ class PackageCatalogImportService:
                     result["updated"] += 1
 
             else:
-                # ✅ إنشاء جديد مع ربط الـ entity
+                # ✅ إنشاء جديد مع ربط الـ entity و base_price
                 new_package = Package(
                     code=package_code,
                     name=package_name,
                     specialty=specialty,
                     entity=entity,
+                    base_price=price_value,
                     stay_duration=stay_duration,
                     package_note=package_note,
                     is_active=True,
@@ -232,6 +239,7 @@ class PackageCatalogImportService:
                     "name",
                     "specialty",
                     "stay_duration",
+                    "base_price",
                     "package_note",
                     "is_active",
                 ],
