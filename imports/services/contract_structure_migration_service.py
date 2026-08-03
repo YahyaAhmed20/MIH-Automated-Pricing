@@ -371,218 +371,228 @@ class ContractStructureMigrationService:
         total_rows = len(dataframe)
         processed = 0
 
-        for row in dataframe.to_dict("records"):
-
-            company_name = ContractStructureMigrationService.normalize_company_name(
-                row.get(0, "")
-            )
-
-            package_codes = ContractStructureMigrationService.normalize_package_codes(
-                row.get(6, "")
-            )
-
-            package_name = ImportHelpers.normalize_text(
-                row.get(2, "")
-            )
-
-            financial_code = ImportHelpers.normalize_text(
-                row.get(1, "")
-            )
-
-            # ✅ جلب التخصص من العمود 3
-            specialty_name = ImportHelpers.normalize_text(
-                row.get(3, "")
-            )
-
-            if not company_name or not package_codes:
-                continue
-
-            result["processed"] += 1
-
-            entity = ContractStructureMigrationService.get_or_create_entity(
-                company_name,
-                entities_cache,
-                result,
-            )
-
-            if not financial_code:
-                financial_code = "DEFAULT"
-
-            financial_category = ContractStructureMigrationService.get_or_create_financial_category(
-                entity,
-                financial_code,
-                financial_categories_cache,
-                result,
-            )
-
-            contract = ContractStructureMigrationService.get_or_create_contract_cached(
-                entity,
-                financial_category,
-                company_name,
-                contracts_cache,
-                contracts_cache_full,
-                default_price_list,
-                result
-            )
-
-            # ============================================================
-            # ✅ Package Lookup - مع إنشاء Package جديد لو مش موجود
-            # ============================================================
-            package = None
-            found_code = None
+        # ✅ معالجة على شكل Chunks صغيرة عشان منقطعش الاتصال
+        chunk_size = 200
+        for chunk_start in range(0, total_rows, chunk_size):
+            chunk_end = min(chunk_start + chunk_size, total_rows)
+            chunk = dataframe.iloc[chunk_start:chunk_end]
+            chunk_data = chunk.to_dict("records")
             
-            for code in package_codes:
-                p_key = (
-                    ImportHelpers.normalize_text(code),
-                    entity.id,
-                    ImportHelpers.normalize_text(package_name),
-                )
-                package = packages_cache.get(p_key)
-                if package:
-                    found_code = code
-                    break
+            for row in chunk_data:
 
-            # ✅ إذا مش موجود، أنشئ Package جديد
-            if not package:
-                # ✅ جلب التخصص من الاسم
-                specialty = None
-                if specialty_name:
-                    specialty = Specialty.objects.filter(name__icontains=specialty_name).first()
-                if not specialty:
-                    specialty = Specialty.objects.first()
+                company_name = ContractStructureMigrationService.normalize_company_name(
+                    row.get(0, "")
+                )
+
+                package_codes = ContractStructureMigrationService.normalize_package_codes(
+                    row.get(6, "")
+                )
+
+                package_name = ImportHelpers.normalize_text(
+                    row.get(2, "")
+                )
+
+                financial_code = ImportHelpers.normalize_text(
+                    row.get(1, "")
+                )
+
+                # ✅ جلب التخصص من العمود 3
+                specialty_name = ImportHelpers.normalize_text(
+                    row.get(3, "")
+                )
+
+                if not company_name or not package_codes:
+                    continue
+
+                result["processed"] += 1
+
+                entity = ContractStructureMigrationService.get_or_create_entity(
+                    company_name,
+                    entities_cache,
+                    result,
+                )
+
+                if not financial_code:
+                    financial_code = "DEFAULT"
+
+                financial_category = ContractStructureMigrationService.get_or_create_financial_category(
+                    entity,
+                    financial_code,
+                    financial_categories_cache,
+                    result,
+                )
+
+                contract = ContractStructureMigrationService.get_or_create_contract_cached(
+                    entity,
+                    financial_category,
+                    company_name,
+                    contracts_cache,
+                    contracts_cache_full,
+                    default_price_list,
+                    result
+                )
+
+                # ============================================================
+                # ✅ Package Lookup - مع إنشاء Package جديد لو مش موجود
+                # ============================================================
+                package = None
+                found_code = None
                 
-                # ✅ استخدم أول كود من القائمة
-                first_code = package_codes[0] if package_codes else f"UNKNOWN_{result['processed']}"
-                
-                # ✅ إنشاء Package جديد
-                package = Package.objects.create(
-                    code=first_code,
-                    name=package_name,
-                    specialty=specialty,
-                    entity=entity,
-                    is_active=True,
-                )
-                # ✅ ✅ ✅ أضفه في الـ Cache عشان منكررهوش تاني
-                packages_cache[p_key] = package
-                print(f"   ✅ Created new package: {first_code} - {package_name}")
-                result["created_packages"] += 1
+                for code in package_codes:
+                    p_key = (
+                        ImportHelpers.normalize_text(code),
+                        entity.id,
+                        ImportHelpers.normalize_text(package_name),
+                    )
+                    package = packages_cache.get(p_key)
+                    if package:
+                        found_code = code
+                        break
 
-            price = ContractStructureMigrationService.clean_decimal(
-                row.get(4, None)
-            )
+                # ✅ إذا مش موجود، أنشئ Package جديد
+                if not package:
+                    # ✅ جلب التخصص من الاسم
+                    specialty = None
+                    if specialty_name:
+                        specialty = Specialty.objects.filter(name__icontains=specialty_name).first()
+                    if not specialty:
+                        specialty = Specialty.objects.first()
+                    
+                    # ✅ استخدم أول كود من القائمة
+                    first_code = package_codes[0] if package_codes else f"UNKNOWN_{result['processed']}"
+                    
+                    # ✅ إنشاء Package جديد
+                    package = Package.objects.create(
+                        code=first_code,
+                        name=package_name,
+                        specialty=specialty,
+                        entity=entity,
+                        is_active=True,
+                    )
+                    # ✅ ✅ ✅ أضفه في الـ Cache عشان منكررهوش تاني
+                    packages_cache[p_key] = package
+                    print(f"   ✅ Created new package: {first_code} - {package_name}")
+                    result["created_packages"] += 1
 
-            if price is None:
                 price = ContractStructureMigrationService.clean_decimal(
-                    row.get(10, None)
+                    row.get(4, None)
                 )
 
-            if price is None:
-                price = ContractStructureMigrationService.clean_decimal(
-                    row.get(16, None)
-                )
+                if price is None:
+                    price = ContractStructureMigrationService.clean_decimal(
+                        row.get(10, None)
+                    )
 
-            if price is None:
-                price = 0
-                result["missing_price"] += 1
+                if price is None:
+                    price = ContractStructureMigrationService.clean_decimal(
+                        row.get(16, None)
+                    )
 
-            defaults = {
-                "package_price": price,
-                "total_before_discount": ContractStructureMigrationService.clean_decimal(
-                    row.get(10, None)
-                ),
-                "current_discount_rate": ContractStructureMigrationService.clean_percentage(
-                    row.get(12, None)
-                ),
-                "current_discount_text": ContractStructureMigrationService.clean_discount_text(
-                    row.get(12, None)
-                ),
-                "cash_price": ContractStructureMigrationService.clean_decimal(
-                    row.get(16, None)
-                ),
-                "special_offer_price": ContractStructureMigrationService.clean_decimal(
-                    row.get(14, None)
-                ),
-                "special_offer_company": (
-                    row.get(15, "") or ""
-                ),
-                "price_list_applied": row.get(13, None),
-                "effective_from": ContractStructureMigrationService.clean_date(
-                    row.get(7, None)
-                ),
-                "valid_until": ContractStructureMigrationService.clean_date(
-                    row.get(8, None)
-                ),
-                "notes": row.get(9, None),
-                "approval_pdf": row.get(19, None),
-                "is_active": True,
-                "suggested_price": ContractStructureMigrationService.clean_decimal(
-                    row.get(18, None)
-                ),
-                "suggested_discount_rate": ContractStructureMigrationService.clean_percentage(
-                    row.get(17, None)
-                ),
-            }
+                if price is None:
+                    price = 0
+                    result["missing_price"] += 1
 
-            contract_package_key = (contract.id, package.id)
-            contract_package_keys_in_sheet.add(contract_package_key)
-            contract_package = contract_packages_cache.get(contract_package_key)
+                defaults = {
+                    "package_price": price,
+                    "total_before_discount": ContractStructureMigrationService.clean_decimal(
+                        row.get(10, None)
+                    ),
+                    "current_discount_rate": ContractStructureMigrationService.clean_percentage(
+                        row.get(12, None)
+                    ),
+                    "current_discount_text": ContractStructureMigrationService.clean_discount_text(
+                        row.get(12, None)
+                    ),
+                    "cash_price": ContractStructureMigrationService.clean_decimal(
+                        row.get(16, None)
+                    ),
+                    "special_offer_price": ContractStructureMigrationService.clean_decimal(
+                        row.get(14, None)
+                    ),
+                    "special_offer_company": (
+                        row.get(15, "") or ""
+                    ),
+                    "price_list_applied": row.get(13, None),
+                    "effective_from": ContractStructureMigrationService.clean_date(
+                        row.get(7, None)
+                    ),
+                    "valid_until": ContractStructureMigrationService.clean_date(
+                        row.get(8, None)
+                    ),
+                    "notes": row.get(9, None),
+                    "approval_pdf": row.get(19, None),
+                    "is_active": True,
+                    "suggested_price": ContractStructureMigrationService.clean_decimal(
+                        row.get(18, None)
+                    ),
+                    "suggested_discount_rate": ContractStructureMigrationService.clean_percentage(
+                        row.get(17, None)
+                    ),
+                }
 
-            if contract_package:
-                changed = False
-                for field, value in defaults.items():
-                    if getattr(contract_package, field) != value:
-                        setattr(contract_package, field, value)
-                        changed = True
+                contract_package_key = (contract.id, package.id)
+                contract_package_keys_in_sheet.add(contract_package_key)
+                contract_package = contract_packages_cache.get(contract_package_key)
 
-                if changed:
-                    contract_packages_to_update.append(contract_package)
-                    result["updated_packages"] += 1
+                if contract_package:
+                    changed = False
+                    for field, value in defaults.items():
+                        if getattr(contract_package, field) != value:
+                            setattr(contract_package, field, value)
+                            changed = True
 
-            else:
-                contract_package = ContractPackage(
-                    contract=contract,
-                    package=package,
-                    **defaults,
-                )
-                contract_packages_to_create.append(contract_package)
-                contract_packages_cache[contract_package_key] = contract_package
-                result["created_packages"] += 1
+                    if changed:
+                        contract_packages_to_update.append(contract_package)
+                        result["updated_packages"] += 1
 
-            processed += 1
-            if processed % 1000 == 0:
-                print(f"   📊 Processed {processed}/{total_rows} rows...")
+                else:
+                    contract_package = ContractPackage(
+                        contract=contract,
+                        package=package,
+                        **defaults,
+                    )
+                    contract_packages_to_create.append(contract_package)
+                    contract_packages_cache[contract_package_key] = contract_package
+                    result["created_packages"] += 1
 
-            # ✅ تنفيذ الـ Bulk Operations كل 1000 صف عشان الذاكرة
-            if len(contract_packages_to_create) >= 500:
-                ContractPackage.objects.bulk_create(
-                    contract_packages_to_create,
-                    batch_size=500,
-                )
-                contract_packages_to_create = []
+                processed += 1
+                if processed % 1000 == 0:
+                    print(f"   📊 Processed {processed}/{total_rows} rows...")
 
-            if len(contract_packages_to_update) >= 500:
-                ContractPackage.objects.bulk_update(
-                    contract_packages_to_update,
-                    fields=[
-                        "package_price",
-                        "total_before_discount",
-                        "current_discount_rate",
-                        "current_discount_text",
-                        "cash_price",
-                        "special_offer_price",
-                        "special_offer_company",
-                        "price_list_applied",
-                        "effective_from",
-                        "valid_until",
-                        "notes",
-                        "approval_pdf",
-                        "is_active",
-                        "suggested_price",
-                        "suggested_discount_rate",
-                    ],
-                    batch_size=500,
-                )
-                contract_packages_to_update = []
+                # ✅ تنفيذ الـ Bulk Operations كل 1000 صف عشان الذاكرة
+                if len(contract_packages_to_create) >= 500:
+                    ContractPackage.objects.bulk_create(
+                        contract_packages_to_create,
+                        batch_size=500,
+                    )
+                    contract_packages_to_create = []
+
+                if len(contract_packages_to_update) >= 500:
+                    ContractPackage.objects.bulk_update(
+                        contract_packages_to_update,
+                        fields=[
+                            "package_price",
+                            "total_before_discount",
+                            "current_discount_rate",
+                            "current_discount_text",
+                            "cash_price",
+                            "special_offer_price",
+                            "special_offer_company",
+                            "price_list_applied",
+                            "effective_from",
+                            "valid_until",
+                            "notes",
+                            "approval_pdf",
+                            "is_active",
+                            "suggested_price",
+                            "suggested_discount_rate",
+                        ],
+                        batch_size=500,
+                    )
+                    contract_packages_to_update = []
+
+            # ✅ راحة بين الـ Chunks عشان الـ DB تريح
+            time.sleep(0.1)
 
         print(f"   ✅ Processed {processed}/{total_rows} rows")
 
