@@ -48,15 +48,12 @@ class CashPackageImportService:
         print(f"   ✅ {len(specialties_cache)} specialties loaded")
 
         # ============================================================
-        # ✅ Cache للـ Packages - باستخدام (code, name)
+        # ✅ Cache للـ Packages - باستخدام (code) فقط
         # ============================================================
         print("⏳ Loading packages...")
         packages_cache = {}
         for p in Package.objects.exclude(code__isnull=True):
-            key = (
-                ImportHelpers.normalize_text(p.code),
-                ImportHelpers.normalize_text(p.name),
-            )
+            key = ImportHelpers.normalize_text(p.code)
             packages_cache[key] = p
         print(f"   ✅ {len(packages_cache)} packages loaded")
 
@@ -115,7 +112,8 @@ class CashPackageImportService:
                 result["skipped"] = result.get("skipped", 0) + 1
                 continue
 
-            package_key = (package_code, package_name)
+            # ✅ استخدام code فقط كمفتاح فريد
+            package_key = package_code
             if package_key in seen_keys:
                 result["skipped_duplicates"] += 1
                 continue
@@ -139,6 +137,11 @@ class CashPackageImportService:
 
             if existing_package:
                 changed = False
+
+                # ✅ تحديث الاسم إذا تغير
+                if existing_package.name != package_name:
+                    existing_package.name = package_name
+                    changed = True
 
                 if existing_package.specialty_id != (specialty.id if specialty else None):
                     existing_package.specialty = specialty
@@ -222,6 +225,7 @@ class CashPackageImportService:
             Package.objects.bulk_update(
                 packages_to_update,
                 fields=[
+                    "name",  # ✅ أضف name للتحديث
                     "specialty",
                     "stay_duration",
                     "contract_type",
