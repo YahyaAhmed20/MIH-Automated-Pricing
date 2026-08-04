@@ -11429,3 +11429,15 @@ Watching for file changes with StatReloader
 "GET /credit-package-pricing/?company_search=%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%81+%D8%A7%D9%84%D9%85%D8%AA%D8%AD%D8%AF&company=139&specialty=&package_search=%D8%A7%D8%B3%D8%AA%D8%B9%D9%88%D8%A7%D8%B6+%D8%A7%D9%84%D8%B1%D8%A8%D8%A7%D8%B7+%D8%A7%D9%84%D8%B5%D9%84%D9%8A%D8%A8%D9%89&package=94124 HTTP/1.1" 200 93452
 "GET /credit-package-pricing/ HTTP/1.1" 200 75979
 "GET /credit-package-pricing/?company_search=BISCO&company=172&specialty=&package_search=&package= HTTP/1.1" 200 433448
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 51978
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 15022
+"GET /cash-packages/ HTTP/1.1" 200 58122
+Watching for file changes with StatReloader
+"GET /cash-packages/ HTTP/1.1" 200 58122
+"GET /credit-package-pricing/ HTTP/1.1" 200 75569
+"GET /credit-package-pricing/?company_search=BISCO&company=172&specialty=&package_search=&package= HTTP/1.1" 200 441014
+"GET /credit-package-pricing/?company=172&package=102172&company_search=BISCO&package_search=&specialty= HTTP/1.1" 200 142860
