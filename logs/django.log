@@ -11441,3 +11441,10 @@ Watching for file changes with StatReloader
 "GET /credit-package-pricing/ HTTP/1.1" 200 75569
 "GET /credit-package-pricing/?company_search=BISCO&company=172&specialty=&package_search=&package= HTTP/1.1" 200 441014
 "GET /credit-package-pricing/?company=172&package=102172&company_search=BISCO&package_search=&specialty= HTTP/1.1" 200 142860
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 51978
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 15022
+"GET /credit-package-pricing/ HTTP/1.1" 200 75569
+"GET /credit-package-pricing/?company_search=BISCO&company=172&specialty=&package_search=&package= HTTP/1.1" 200 232349

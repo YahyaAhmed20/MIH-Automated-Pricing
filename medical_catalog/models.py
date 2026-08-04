@@ -243,15 +243,22 @@ class Package(models.Model):
         verbose_name = "الباكدج"
         verbose_name_plural = "الباكدجات"
         ordering = ["name"]
+
+        constraints = [
+            models.UniqueConstraint(
+                fields=["entity", "code", "name"],
+                name="unique_package_per_entity_code_name",
+            )
+        ]
+
         indexes = [
             models.Index(fields=["specialty"]),
             models.Index(fields=["entity"]),
-            models.Index(fields=["code", "entity"]),  # ✅ فهرس للكود + الشركة
+            models.Index(fields=["code", "entity"]),
         ]
 
     def __str__(self):
         return self.name
-
 
 # ============================================================
 # ✅ PackageAttachment Model
