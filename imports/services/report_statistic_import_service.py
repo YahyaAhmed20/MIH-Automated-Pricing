@@ -11,26 +11,6 @@ from imports.utils.import_helpers import ImportHelpers
 class ReportStatisticImportService:
 
     @staticmethod
-    def clean_amount(value):
-        """تنظيف قيمة المبلغ"""
-        if value is None or pd.isna(value):
-            return Decimal('0.00')
-        
-        try:
-            if isinstance(value, (int, float)):
-                return Decimal(str(value)).quantize(Decimal('0.01'))
-            
-            # إذا كانت نص
-            cleaned = str(value).strip()
-            cleaned = cleaned.replace(',', '').replace('٬', '')
-            cleaned = cleaned.replace('٫', '.')
-            
-            return Decimal(cleaned).quantize(Decimal('0.01'))
-            
-        except (ValueError, TypeError):
-            return Decimal('0.00')
-
-    @staticmethod
     @transaction.atomic
     def import_data(dataframe):
 
@@ -41,17 +21,23 @@ class ReportStatisticImportService:
             "processed": 0,
             "created": 0,
             "updated": 0,
+            "deleted": 0,
             "skipped": 0,
             "errors": 0,
         }
 
         # ============================================================
-        # ✅ تخطي الصف الأول (العناوين)
+        # ✅ تجهيز البيانات (بدون تخطي أي صف)
         # ============================================================
-        data = dataframe.iloc[1:].copy()
+        data = dataframe.copy()
         data = data.reset_index(drop=True)
         
-        print(f"📊 عدد الصفوف بعد تخطي العناوين: {len(data)}")
+        # ✅ تصفية الصفوف الفارغة في عمود اسم المريض
+        data = data[
+            data.iloc[:, 2].astype(str).str.strip() != ""
+        ].reset_index(drop=True)
+        
+        print(f"📊 Valid rows: {len(data)}")
         print("=" * 50)
 
         # ============================================================
@@ -63,16 +49,16 @@ class ReportStatisticImportService:
             key = (
                 ImportHelpers.normalize_text(stat.medical_number),
                 ImportHelpers.normalize_text(stat.account_number),
-                ImportHelpers.normalize_text(stat.patient_name),
             )
             stats_cache[key] = stat
-        print(f"   ✅ {len(stats_cache)} stats loaded")
+        print(f"   ✅ {len(stats_cache)} records loaded")
 
         # ============================================================
         # ✅ قوائم التجميع للـ Bulk Operations
         # ============================================================
         to_create = []
         to_update = []
+        sheet_records = set()
 
         # ============================================================
         # ✅ Loop
@@ -151,12 +137,12 @@ class ReportStatisticImportService:
                 # العمود 12: سعر الخدمة
                 amount = Decimal('0.00')
                 if len(row) > 12 and pd.notna(row.iloc[12]):
-                    amount = ReportStatisticImportService.clean_amount(row.iloc[12])
+                    amount = ImportHelpers.clean_amount(row.iloc[12])
                 
                 # العمود 13: قيمة الفاتورة
                 invoice_amount = Decimal('0.00')
                 if len(row) > 13 and pd.notna(row.iloc[13]):
-                    invoice_amount = ReportStatisticImportService.clean_amount(row.iloc[13])
+                    invoice_amount = ImportHelpers.clean_amount(row.iloc[13])
                 
                 # العمود 14: الكود
                 code = ""
@@ -190,13 +176,17 @@ class ReportStatisticImportService:
                 key = (
                     medical_number,
                     account_number,
-                    patient_name,
                 )
+                sheet_records.add(key)
                 existing_stat = stats_cache.get(key)
 
                 if existing_stat:
                     # ✅ تحديث البيانات
                     changed = False
+                    
+                    if existing_stat.patient_name != patient_name:
+                        existing_stat.patient_name = patient_name
+                        changed = True
                     
                     if existing_stat.admission_date != admission_date:
                         existing_stat.admission_date = admission_date
@@ -288,7 +278,7 @@ class ReportStatisticImportService:
                         patient_type=patient_type,
                         stay_duration=stay_duration,
                         notes=notes,
-                        doctor_name=doctor_name,  # ✅ جديد
+                        doctor_name=doctor_name,
                     )
                     to_create.append(stat)
                     stats_cache[key] = stat
@@ -312,45 +302,94 @@ class ReportStatisticImportService:
         print(f"💾 Creating {len(to_create)} records...")
         print(f"💾 Updating {len(to_update)} records...")
 
+        BATCH_SIZE = 500
+
         if to_create:
-            ReportStatistic.objects.bulk_create(to_create, batch_size=1000)
+            ReportStatistic.objects.bulk_create(
+                to_create,
+                batch_size=BATCH_SIZE,
+            )
 
         if to_update:
-            ReportStatistic.objects.bulk_update(
-                to_update,
-                fields=[
-                    "admission_date",
-                    "discharge_date",
-                    "month",
-                    "specialty",
-                    "package_name",
-                    "entity_name",
-                    "sector",
-                    "payment_type",
-                    "sub_company",
-                    "amount",
-                    "invoice_amount",
-                    "code",
-                    "patient_type",
-                    "stay_duration",
-                    "notes",
-                    "doctor_name",  # ✅ جديد
-                ],
-                batch_size=1000,
+            total_updated = 0
+
+            for i in range(0, len(to_update), BATCH_SIZE):
+                batch = to_update[i:i + BATCH_SIZE]
+
+                ReportStatistic.objects.bulk_update(
+                    batch,
+                    fields=[
+                        "patient_name",
+                        "admission_date",
+                        "discharge_date",
+                        "month",
+                        "specialty",
+                        "package_name",
+                        "entity_name",
+                        "sector",
+                        "payment_type",
+                        "sub_company",
+                        "amount",
+                        "invoice_amount",
+                        "code",
+                        "patient_type",
+                        "stay_duration",
+                        "notes",
+                        "doctor_name",
+                    ],
+                    batch_size=100,
+                )
+
+                total_updated += len(batch)
+
+                print(
+                    f"   ✅ Updated batch {i // BATCH_SIZE + 1} "
+                    f"({total_updated}/{len(to_update)})"
+                )
+
+        # ============================================================
+        # ✅ Reload Cache بعد الـ Bulk Operations
+        # ============================================================
+        stats_cache = {}
+        for stat in ReportStatistic.objects.all():
+            key = (
+                ImportHelpers.normalize_text(stat.medical_number),
+                ImportHelpers.normalize_text(stat.account_number),
             )
+            stats_cache[key] = stat
+
+        # ============================================================
+        # ✅ Delete Records not found in Sheet
+        # ============================================================
+        to_delete = []
+
+        for key, stat in stats_cache.items():
+            if key not in sheet_records:
+                to_delete.append(stat.id)
+
+        if to_delete:
+            deleted, _ = ReportStatistic.objects.filter(
+                id__in=to_delete
+            ).delete()
+
+            result["deleted"] = deleted
+            print(f"🗑️ Deleted {deleted} records")
 
         elapsed = time.perf_counter() - start_time
 
         # عرض النتائج النهائية
-        print("\n" + "=" * 50)
-        print("✅ انتهى الاستيراد!")
-        print(f"   📊 تمت المعالجة: {result['processed']}")
-        print(f"   ✅ تم الإنشاء: {result['created']}")
-        print(f"   🔄 تم التحديث: {result['updated']}")
-        print(f"   ⏭️ تم التخطي: {result['skipped']}")
-        if result["errors"] > 0:
-            print(f"   ❌ الأخطاء: {result['errors']}")
-        print(f"   ⏱️ الوقت: {elapsed:.2f} ثانية")
-        print("=" * 50)
+        print("\n" + "=" * 80)
+        print("✅ انتهى الاستيراد بنجاح!")
+        print(
+            f"📊 Processed: {result['processed']}, "
+            f"Created: {result['created']}, "
+            f"Updated: {result['updated']}, "
+            f"Deleted: {result['deleted']}, "
+            f"Skipped: {result['skipped']}"
+        )
+        if result["errors"]:
+            print(f"❌ Errors: {result['errors']}")
+        print("=" * 80)
+        print(f"⏱️ Completed in {elapsed:.2f} seconds")
 
         return result
