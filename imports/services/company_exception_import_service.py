@@ -34,6 +34,7 @@ class CompanyExceptionImportService:
         discount = ImportHelpers.clean_percentage(val)
         if discount is None:
             return None
+
         return round(discount)
 
     @staticmethod
@@ -67,6 +68,7 @@ class CompanyExceptionImportService:
             "profiles": 0,
             "items": 0,
             "updated": 0,
+            "deleted": 0,
             "skipped": 0,
         }
 
@@ -82,6 +84,9 @@ class CompanyExceptionImportService:
             key = ImportHelpers.normalize_text(profile.entity_name)
             profiles_cache[key] = profile
         print(f"   ✅ {len(profiles_cache)} profiles loaded")
+
+        # ✅ تتبع الملفات الموجودة في الشيت
+        sheet_profiles = set()
 
         print("⏳ Loading existing items...")
         items_cache = {}
@@ -125,6 +130,7 @@ class CompanyExceptionImportService:
 
                 # ✅ Profile
                 key = entity_name
+                sheet_profiles.add(key)
                 existing_profile = profiles_cache.get(key)
 
                 if existing_profile:
@@ -222,10 +228,6 @@ class CompanyExceptionImportService:
 
                         discount_rate = str(discount) if discount is not None else ""
 
-                        # ✅ تشخيص
-                        if service_name in ["خدمات الكلي", "العلاج الاشعاعي", "خدمات بنك الدم"] and entity_name == "الاهلى للخدمات الطبية":
-                            print(f"      🔍 {section} - {service_name}: {details} | سعر: {net_price}")
-
                         items_to_create.append(
                             CompanyExceptionItem(
                                 profile=current_profile,
@@ -257,12 +259,34 @@ class CompanyExceptionImportService:
                 print(f"   📊 Processed {processed}/{total_rows} rows...")
 
         # ============================================================
+        # ✅ Delete Profiles not found in Sheet
+        # ============================================================
+        profiles_cache = {}
+        for profile in CompanyExceptionProfile.objects.all():
+            key = ImportHelpers.normalize_text(profile.entity_name)
+            profiles_cache[key] = profile
+
+        profiles_to_delete = []
+
+        for key, profile in profiles_cache.items():
+            if key not in sheet_profiles:
+                profiles_to_delete.append(profile.id)
+
+        if profiles_to_delete:
+            profiles_count = len(profiles_to_delete)
+            CompanyExceptionProfile.objects.filter(
+                id__in=profiles_to_delete
+            ).delete()
+            result["deleted"] = profiles_count
+            print(f"🗑️ Deleted {profiles_count} profiles")
+
+        # ============================================================
         # ✅ النتائج النهائية
         # ============================================================
         print("\n" + "="*80)
         print("✅ انتهى الاستيراد بنجاح!")
         print(f"📊 الملفات: {result['profiles']}, العناصر: {result['items']}")
-        print(f"📊 Updated: {result['updated']}, Skipped: {result['skipped']}")
+        print(f"📊 Updated: {result['updated']}, Deleted: {result['deleted']}, Skipped: {result['skipped']}")
         print("="*80)
 
         elapsed = time.perf_counter() - start_time

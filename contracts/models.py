@@ -441,10 +441,10 @@ class SpecialOffer(models.Model):
     )
 
     price = models.DecimalField(
-    max_digits=12,
-    decimal_places=2,
-    null=True,
-    blank=True,
+        max_digits=12,
+        decimal_places=2,
+        null=True,
+        blank=True,
     )
 
     valid_from = models.DateField()
@@ -469,9 +469,21 @@ class SpecialOffer(models.Model):
         verbose_name_plural = "العروض الخاصة"
         
         indexes = [
-        models.Index(fields=["entity"]),
-        models.Index(fields=["specialty"]),
-    ]
+            models.Index(fields=["entity"]),
+            models.Index(fields=["specialty"]),
+        ]
+
+        constraints = [
+            models.UniqueConstraint(
+                fields=[
+                    "entity",
+                    "offer_for",
+                    "specialty",
+                    "procedure_name",
+                ],
+                name="unique_special_offer",
+            ),
+        ]
 
     def __str__(self):
         return f"{self.entity} - {self.procedure_name}"
@@ -657,6 +669,34 @@ class CompanyDiscountProfile(models.Model):
     created_at = models.DateTimeField(
         auto_now_add=True
     )
+
+    class Meta:
+        verbose_name = "Company Discount Profile"
+        verbose_name_plural = "Company Discount Profiles"
+
+        constraints = [
+            models.UniqueConstraint(
+                fields=[
+                    "company_name",
+                    "financial_category",
+                ],
+                name="unique_company_discount_profile",
+            )
+        ]
+
+        indexes = [
+            models.Index(
+                fields=[
+                    "company_name",
+                    "financial_category",
+                ]
+            ),
+        ]
+
+    def __str__(self):
+        return f"{self.company_name} - {self.financial_category}"
+
+
 class CompanyDiscount(models.Model):
     
     profile = models.ForeignKey(
@@ -702,4 +742,30 @@ class CompanyDiscount(models.Model):
     created_at = models.DateTimeField(
         auto_now_add=True
     )
-    
+
+    class Meta:
+        verbose_name = "Company Discount"
+        verbose_name_plural = "Company Discounts"
+
+        constraints = [
+            models.UniqueConstraint(
+                fields=[
+                    "profile",
+                    "section",
+                    "item_name",
+                ],
+                name="unique_company_discount",
+            )
+        ]
+
+        indexes = [
+            models.Index(
+                fields=[
+                    "profile",
+                    "section",
+                ]
+            ),
+        ]
+
+    def __str__(self):
+        return f"{self.profile} - {self.section} - {self.item_name}"

@@ -34,6 +34,7 @@ class SpecialOfferImportService:
             "created_specialties": 0,
             "created_offers": 0,
             "updated_offers": 0,
+            "deleted_offers": 0,
         }
 
         # ============================================================
@@ -61,10 +62,12 @@ class SpecialOfferImportService:
         # ============================================================
         print("⏳ Loading existing offers...")
         offers_cache = {}
-        for o in SpecialOffer.objects.select_related('entity', 'specialty').all():
+        for o in SpecialOffer.objects.select_related("entity", "specialty"):
             key = (
                 o.entity_id,
-                ImportHelpers.normalize_text(o.procedure_name),
+                o.offer_for,
+                o.specialty_id,
+                o.procedure_name,
             )
             offers_cache[key] = o
         print(f"   ✅ {len(offers_cache)} offers loaded")
@@ -74,6 +77,7 @@ class SpecialOfferImportService:
         # ============================================================
         offers_to_create = []
         offers_to_update = []
+        sheet_offers = set()
 
         # ============================================================
         # ✅ Loop - استخدام أرقام الأعمدة (بدون Header)
@@ -158,21 +162,19 @@ class SpecialOfferImportService:
             # ============================================================
             offer_key = (
                 entity.id,
-                ImportHelpers.normalize_text(procedure_name),
+                offer_for,
+                specialty.id,
+                procedure_name,
             )
+            
+            # ✅ تتبع العروض في الشيت
+            sheet_offers.add(offer_key)
+            
             existing_offer = offers_cache.get(offer_key)
 
             if existing_offer:
                 # ✅ تحديث البيانات
                 changed = False
-
-                if existing_offer.offer_for != offer_for:
-                    existing_offer.offer_for = offer_for
-                    changed = True
-
-                if existing_offer.specialty_id != specialty.id:
-                    existing_offer.specialty = specialty
-                    changed = True
 
                 if existing_offer.price != price:
                     existing_offer.price = price
@@ -233,8 +235,6 @@ class SpecialOfferImportService:
             SpecialOffer.objects.bulk_update(
                 offers_to_update,
                 fields=[
-                    "offer_for",
-                    "specialty",
                     "price",
                     "valid_from",
                     "valid_to",
@@ -243,6 +243,36 @@ class SpecialOfferImportService:
                 ],
                 batch_size=1000,
             )
+
+        # ============================================================
+        # ✅ Reload Offers
+        # ============================================================
+        offers_cache = {}
+        for o in SpecialOffer.objects.select_related("entity", "specialty"):
+            key = (
+                o.entity_id,
+                o.offer_for,
+                o.specialty_id,
+                o.procedure_name,
+            )
+            offers_cache[key] = o
+
+        # ============================================================
+        # ✅ Delete Offers not found in Sheet
+        # ============================================================
+        offers_to_delete = []
+
+        for key, offer in offers_cache.items():
+            if key not in sheet_offers:
+                offers_to_delete.append(offer.id)
+
+        if offers_to_delete:
+            deleted, _ = SpecialOffer.objects.filter(
+                id__in=offers_to_delete
+            ).delete()
+
+            result["deleted_offers"] = deleted
+            print(f"🗑️ Deleted {deleted} offers")
 
         elapsed = time.perf_counter() - start_time
         print(f"✅ Completed in {elapsed:.2f} seconds")

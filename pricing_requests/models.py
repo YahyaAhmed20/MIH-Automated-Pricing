@@ -569,15 +569,13 @@ class PricingDetail(models.Model):
     )
 
     class Meta:
-
         verbose_name = "تفصيل تسعير"
-
         verbose_name_plural = "تفاصيل التسعير"
 
         ordering = [
-        "-pricing_date",
-        "-cost",
-    ]
+            "-pricing_date",
+            "-cost",
+        ]
 
         indexes = [
             models.Index(fields=["patient_name"]),
@@ -588,10 +586,20 @@ class PricingDetail(models.Model):
             models.Index(fields=["pricing_date"]),
         ]
 
+        constraints = [
+            models.UniqueConstraint(
+                fields=[
+                    "patient_name",
+                    "company_name",
+                    "procedure_name",
+                    "pricing_date",
+                ],
+                name="unique_pricing_detail",
+            ),
+        ]
+
     def __str__(self):
         return f"{self.patient_name} - {self.procedure_name}"
-    
-    
 
 
 class SimilarInvoice(models.Model):
@@ -1008,17 +1016,21 @@ class CompanyDiscountRank(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-
         ordering = [
             "-internal_discount",
             "-external_discount",
             "company_name",
         ]
 
+        constraints = [
+            models.UniqueConstraint(
+                fields=["company_name"],
+                name="unique_company_discount_rank",
+            ),
+        ]
+
     def __str__(self):
         return self.company_name
-    
-    
 class CompanyException(models.Model):
 
     entity_name = models.CharField(

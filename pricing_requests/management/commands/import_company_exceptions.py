@@ -24,11 +24,12 @@ class Command(BaseCommand):
         self.stdout.write("")
         self.stdout.write("========== Company Exceptions Import ==========")
 
-        # ✅ استخدم header=None (حسب الـ Pattern)
+        # ✅ استخدم header=None مع force_reload=True
         dataframe = ExcelProvider.read(
             file_path=options["file_path"],
             sheet_name="9",  # ✅ شيت 9
             header=None,     # ✅ مفيش Header
+            force_reload=True,
         )
 
         result = CompanyExceptionImportService.import_data(dataframe)
@@ -39,5 +40,6 @@ class Command(BaseCommand):
         self.stdout.write(f"Profiles  : {result['profiles']}")
         self.stdout.write(f"Items     : {result['items']}")
         self.stdout.write(f"Updated   : {result['updated']}")
+        self.stdout.write(f"Deleted   : {result.get('deleted', 0)}")
         self.stdout.write(f"Skipped   : {result['skipped']}")
         self.stdout.write("===========================================")

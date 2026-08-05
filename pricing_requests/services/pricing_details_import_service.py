@@ -21,6 +21,7 @@ class PricingDetailsImportService:
             "processed": 0,
             "created": 0,
             "updated": 0,
+            "deleted": 0,
             "skipped": 0,
         }
 
@@ -47,6 +48,7 @@ class PricingDetailsImportService:
         # ============================================================
         to_create = []
         to_update = []
+        sheet_records = set()
 
         # ============================================================
         # ✅ Loop - استخدام أرقام الأعمدة (بدون Header)
@@ -126,6 +128,7 @@ class PricingDetailsImportService:
                 pricing_date,
             )
             
+            sheet_records.add(key)
             existing_record = records_cache.get(key)
 
             if existing_record:
@@ -209,26 +212,73 @@ class PricingDetailsImportService:
         print(f"💾 Creating {len(to_create)} records...")
         print(f"💾 Updating {len(to_update)} records...")
 
+        BATCH_SIZE = 500
+
         if to_create:
-            PricingDetail.objects.bulk_create(to_create, batch_size=1000)
+            PricingDetail.objects.bulk_create(
+                to_create,
+                batch_size=BATCH_SIZE,
+            )
 
         if to_update:
-            PricingDetail.objects.bulk_update(
-                to_update,
-                fields=[
-                    "group_name",
-                    "doctor_name",
-                    "report_name",
-                    "specialty_name",
-                    "pricing_type",
-                    "card_number",
-                    "accountant_name",
-                    "cost_notes",
-                    "cost",
-                    "details",
-                ],
-                batch_size=1000,
+            total_updated = 0
+
+            for i in range(0, len(to_update), BATCH_SIZE):
+                batch = to_update[i:i + BATCH_SIZE]
+
+                PricingDetail.objects.bulk_update(
+                    batch,
+                    fields=[
+                        "group_name",
+                        "doctor_name",
+                        "report_name",
+                        "specialty_name",
+                        "pricing_type",
+                        "card_number",
+                        "accountant_name",
+                        "cost_notes",
+                        "cost",
+                        "details",
+                    ],
+                    batch_size=100,
+                )
+
+                total_updated += len(batch)
+
+                print(
+                    f"   ✅ Updated batch {i // BATCH_SIZE + 1} "
+                    f"({total_updated}/{len(to_update)})"
+                )
+
+        # ============================================================
+        # ✅ Reload Cache بعد الـ Bulk Operations
+        # ============================================================
+        records_cache = {}
+        for record in PricingDetail.objects.all():
+            key = (
+                ImportHelpers.normalize_text(record.patient_name),
+                ImportHelpers.normalize_text(record.company_name),
+                ImportHelpers.normalize_text(record.procedure_name),
+                record.pricing_date,
             )
+            records_cache[key] = record
+
+        # ============================================================
+        # ✅ Delete Records not found in Sheet
+        # ============================================================
+        records_to_delete = []
+
+        for key, record in records_cache.items():
+            if key not in sheet_records:
+                records_to_delete.append(record.id)
+
+        if records_to_delete:
+            deleted, _ = PricingDetail.objects.filter(
+                id__in=records_to_delete
+            ).delete()
+
+            result["deleted"] = deleted
+            print(f"🗑️ Deleted {deleted} records")
 
         elapsed = time.perf_counter() - start_time
         print(f"✅ Completed in {elapsed:.2f} seconds")

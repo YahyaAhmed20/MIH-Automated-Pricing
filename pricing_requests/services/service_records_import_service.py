@@ -20,6 +20,7 @@ class ServiceRecordsImportService:
             "processed": 0,
             "created": 0,
             "updated": 0,
+            "deleted": 0,
             "skipped": 0,
         }
 
@@ -39,6 +40,7 @@ class ServiceRecordsImportService:
         # ============================================================
         records_to_create = []
         records_to_update = []
+        sheet_records = set()
 
         # ============================================================
         # ✅ Loop - استخدام أرقام الأعمدة (بدون Header)
@@ -133,6 +135,8 @@ class ServiceRecordsImportService:
 
             # ✅ البحث في Cache
             key = (account_number, service_code)
+            sheet_records.add(key)
+            
             record = records_cache.get(key)
 
             if record:
@@ -254,6 +258,34 @@ class ServiceRecordsImportService:
                 )
                 total_updated += len(batch)
                 print(f"   ✅ Updated batch {i//BATCH_SIZE + 1} ({total_updated}/{len(records_to_update)})")
+
+        # ============================================================
+        # ✅ Reload Cache بعد الـ Bulk Operations
+        # ============================================================
+        records_cache = {}
+        for r in ServiceRecord.objects.all():
+            key = (
+                ImportHelpers.normalize_text(r.account_number),
+                ImportHelpers.normalize_text(r.service_code),
+            )
+            records_cache[key] = r
+
+        # ============================================================
+        # ✅ Delete Records not موجودة في الشيت
+        # ============================================================
+        records_to_delete = []
+
+        for key, record in records_cache.items():
+            if key not in sheet_records:
+                records_to_delete.append(record.id)
+
+        if records_to_delete:
+            deleted, _ = ServiceRecord.objects.filter(
+                id__in=records_to_delete
+            ).delete()
+
+            result["deleted"] = deleted
+            print(f"🗑️ Deleted {deleted} records")
 
         elapsed = time.perf_counter() - start_time
         print(f"✅ Completed in {elapsed:.2f} seconds")

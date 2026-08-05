@@ -33,6 +33,7 @@ class SimilarInvoicesImportService:
             "processed": 0,
             "created": 0,
             "updated": 0,
+            "deleted": 0,
             "skipped": 0,
         }
 
@@ -46,8 +47,6 @@ class SimilarInvoicesImportService:
             key = (
                 ImportHelpers.normalize_text(record.account_number or ""),
                 ImportHelpers.normalize_text(record.operation_name or ""),
-                ImportHelpers.normalize_text(record.patient_name or ""),
-                record.admission_date,
             )
             records_cache[key] = record
             
@@ -58,6 +57,7 @@ class SimilarInvoicesImportService:
         # ============================================================
         to_create = []
         to_update = []
+        sheet_records = set()
 
         # ============================================================
         # ✅ Loop - استخدام أرقام الأعمدة (بدون Header)
@@ -72,6 +72,11 @@ class SimilarInvoicesImportService:
             # العمود 0: الرقم الحسابي
             account_number = ImportHelpers.normalize_text(row.get(0, ""))
             
+            # ✅ إذا كان الرقم الحسابي مفقوداً، تخطي الصف
+            if not account_number:
+                result["skipped"] += 1
+                continue
+            
             # العمود 1: الرقم الطبي
             medical_number = ImportHelpers.normalize_text(row.get(1, ""))
             
@@ -85,11 +90,15 @@ class SimilarInvoicesImportService:
             discharge_date = ImportHelpers.clean_date(row.get(4, None))
             
             # العمود 5: مدة الاقامه
-            stay_duration_raw = ImportHelpers.clean_decimal(row.get(5, None))
-            if stay_duration_raw is not None:
-                stay_duration = str(int(stay_duration_raw))
-            else:
+            raw_value = row.get(5)
+            if raw_value in ("", None) or pd.isna(raw_value):
                 stay_duration = ""
+            else:
+                stay_duration = str(
+                    int(
+                        ImportHelpers.clean_decimal(raw_value)
+                    )
+                )
             
             # العمود 6: التخصص
             specialty_name = ImportHelpers.normalize_text(row.get(6, ""))
@@ -154,11 +163,7 @@ class SimilarInvoicesImportService:
             notes = ImportHelpers.normalize_text(row.get(20, ""))
             notes = SimilarInvoicesImportService.truncate_text(notes, 255)
 
-            # ✅ قيم افتراضية
-            if not account_number:
-                account_number = f"UNKNOWN_ACCOUNT_{index}"
-                print(f"⚠️ صف {index}: الرقم الحسابي مفقود - تم استخدام رقم افتراضي")
-
+            # ✅ قيم افتراضية لاسم المريض والعملية (اختياري)
             if not patient_name:
                 patient_name = f"UNKNOWN_PATIENT_{index}"
                 print(f"⚠️ صف {index}: اسم المريض مفقود - تم استخدام اسم افتراضي")
@@ -167,11 +172,6 @@ class SimilarInvoicesImportService:
                 operation_name = f"UNKNOWN_OPERATION_{index}"
                 print(f"⚠️ صف {index}: اسم العملية مفقود - تم استخدام اسم افتراضي")
 
-            # ✅ تخطي الصفوف التي لا تحتوي على بيانات مفيدة
-            if not account_number and not patient_name and not operation_name:
-                result["skipped"] += 1
-                continue
-
             result["processed"] += 1
             processed = result["processed"]
 
@@ -179,10 +179,9 @@ class SimilarInvoicesImportService:
             key = (
                 account_number,
                 operation_name,
-                patient_name,
-                admission_date,
             )
             
+            sheet_records.add(key)
             existing_record = records_cache.get(key)
 
             if existing_record:
@@ -191,6 +190,14 @@ class SimilarInvoicesImportService:
                 
                 if existing_record.medical_number != medical_number:
                     existing_record.medical_number = medical_number
+                    changed = True
+                    
+                if existing_record.patient_name != patient_name:
+                    existing_record.patient_name = patient_name
+                    changed = True
+                    
+                if existing_record.admission_date != admission_date:
+                    existing_record.admission_date = admission_date
                     changed = True
                     
                 if existing_record.discharge_date != discharge_date:
@@ -301,33 +308,80 @@ class SimilarInvoicesImportService:
         print(f"💾 Creating {len(to_create)} records...")
         print(f"💾 Updating {len(to_update)} records...")
 
+        BATCH_SIZE = 500
+
         if to_create:
-            SimilarInvoice.objects.bulk_create(to_create, batch_size=1000)
+            SimilarInvoice.objects.bulk_create(
+                to_create,
+                batch_size=BATCH_SIZE,
+            )
 
         if to_update:
-            SimilarInvoice.objects.bulk_update(
-                to_update,
-                fields=[
-                    "medical_number",
-                    "discharge_date",
-                    "stay_duration",
-                    "specialty_name",
-                    "doctor_name",
-                    "entity_name",
-                    "sub_company",
-                    "building",
-                    "total_invoice",
-                    "discount",
-                    "net_invoice",
-                    "company_share",
-                    "patient_share",
-                    "payments",
-                    "invoice_status",
-                    "invoice_closed_date",
-                    "notes",
-                ],
-                batch_size=1000,
+            total_updated = 0
+
+            for i in range(0, len(to_update), BATCH_SIZE):
+                batch = to_update[i:i + BATCH_SIZE]
+
+                SimilarInvoice.objects.bulk_update(
+                    batch,
+                    fields=[
+                        "medical_number",
+                        "patient_name",
+                        "admission_date",
+                        "discharge_date",
+                        "stay_duration",
+                        "specialty_name",
+                        "doctor_name",
+                        "entity_name",
+                        "sub_company",
+                        "building",
+                        "total_invoice",
+                        "discount",
+                        "net_invoice",
+                        "company_share",
+                        "patient_share",
+                        "payments",
+                        "invoice_status",
+                        "invoice_closed_date",
+                        "notes",
+                    ],
+                    batch_size=100,
+                )
+
+                total_updated += len(batch)
+
+                print(
+                    f"   ✅ Updated batch {i // BATCH_SIZE + 1} "
+                    f"({total_updated}/{len(to_update)})"
+                )
+
+        # ============================================================
+        # ✅ Reload Cache بعد الـ Bulk Operations
+        # ============================================================
+        records_cache = {}
+        for record in SimilarInvoice.objects.all():
+            key = (
+                ImportHelpers.normalize_text(record.account_number or ""),
+                ImportHelpers.normalize_text(record.operation_name or ""),
             )
+            records_cache[key] = record
+
+        # ============================================================
+        # ✅ Delete Records not found in Sheet
+        # ============================================================
+        to_delete = []
+
+        for key, record in records_cache.items():
+            if key not in sheet_records:
+                to_delete.append(record.id)
+
+        if to_delete:
+            deleted, _ = SimilarInvoice.objects.filter(
+                id__in=to_delete
+            ).delete()
+
+            result["deleted"] = deleted
+            print(f"🗑️ Deleted {deleted} records")
 
         elapsed = time.perf_counter() - start_time
         print(f"✅ Completed in {elapsed:.2f} seconds")

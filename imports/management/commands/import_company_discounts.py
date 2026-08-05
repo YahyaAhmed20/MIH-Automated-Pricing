@@ -18,20 +18,32 @@ class Command(BaseCommand):
             default=None,
             help="Path to Excel file (Optional)"
         )
+        parser.add_argument(
+            "--company",
+            type=str,
+            default=None,
+            help="Import one company only",
+        )
 
     def handle(self, *args, **options):
 
         self.stdout.write("")
         self.stdout.write("========== Company Discounts Import ==========")
 
-        # ✅ استخدم header=None
+        if options.get("company"):
+            self.stdout.write(f"🎯 Filtering for company: {options['company']}")
+
         dataframe = ExcelProvider.read(
             file_path=options["file_path"],
-            sheet_name="4",  # ✅ شيت 4
-            header=None,     # ✅ مفيش Header
+            sheet_name="4",
+            header=None,
+            force_reload=True,
         )
 
-        result = CompanyDiscountImportService.import_data(dataframe)
+        result = CompanyDiscountImportService.import_data(
+            dataframe,
+            company=options.get("company"),
+        )
 
         self.stdout.write("")
         self.stdout.write("==============================================")
@@ -39,4 +51,6 @@ class Command(BaseCommand):
         self.stdout.write(f"Created Profiles     : {result['created_profiles']}")
         self.stdout.write(f"Updated Profiles     : {result['updated_profiles']}")
         self.stdout.write(f"Created Discounts    : {result['created_discounts']}")
+        self.stdout.write(f"Deleted Profiles    : {result.get('deleted_profiles', 0)}")
+        self.stdout.write(f"Deleted Discounts   : {result.get('deleted_discounts', 0)}")
         self.stdout.write("==============================================")

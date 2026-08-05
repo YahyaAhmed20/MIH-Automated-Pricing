@@ -69,6 +69,7 @@ class ImportHelpers:
 
         try:
             cleaned = str(value).strip()
+            cleaned = cleaned.replace("%", "")
             cleaned = cleaned.replace(" ", "")
             cleaned = cleaned.replace(",", "")
             cleaned = cleaned.replace("٬", "")

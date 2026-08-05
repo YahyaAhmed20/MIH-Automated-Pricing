@@ -10,7 +10,7 @@ from imports.utils.import_helpers import ImportHelpers
 class ProcedureImportService:
 
     @staticmethod
-    def extract_procedures_from_row(row, index):
+    def extract_procedures_from_row(row):
         """
         استخراج الإجراءات من صف واحد في شيت 9
         """
@@ -26,7 +26,7 @@ class ProcedureImportService:
             return procedures
         
         # ✅ تعريف مجموعات الخدمات في الشيت
-        # كل مجموعة تتكون من: [اسم الخدمة, نسبة الخصم, التفاصيل/السعر]
+        # كل مجموعة تتكون من: [العمود, اسم الخدمة]
         service_groups = [
             # (العمود, اسم الخدمة)
             (3, "الاشعه التداخليه"),
@@ -54,13 +54,19 @@ class ProcedureImportService:
                 
                 for item in service_items:
                     if item and str(item).strip():
+                        operation_name = ImportHelpers.normalize_text(item)
+                        
                         # ✅ إنشاء كود فريد للخدمة
-                        code = f"{company_code}_{specialty_name}_{index}"
-                        code = ImportHelpers.normalize_text(code)[:50]  # تقليص الطول
+                        code = (
+                            f"{company_code}_"
+                            f"{specialty_name}_"
+                            f"{operation_name}"
+                        )
+                        code = ImportHelpers.normalize_text(code)[:100]
                         
                         procedures.append({
                             'code': code,
-                            'operation_name': ImportHelpers.normalize_text(item),
+                            'operation_name': operation_name,
                             'specialty_name': specialty_name,
                             'category': f"{company_name} - {year}",
                             'english_name': "",
@@ -79,6 +85,7 @@ class ProcedureImportService:
             "processed": 0,
             "created": 0,
             "updated": 0,
+            "deleted": 0,
             "skipped": 0,
         }
 
@@ -97,6 +104,7 @@ class ProcedureImportService:
         # ============================================================
         to_create = []
         to_update = []
+        sheet_records = set()
 
         # ============================================================
         # ✅ Loop - استخدام أرقام الأعمدة (بدون Header)
@@ -108,7 +116,7 @@ class ProcedureImportService:
         for index, row in enumerate(dataframe.to_dict("records"), start=1):
             
             # ✅ استخراج الإجراءات من الصف
-            procedures_data = ProcedureImportService.extract_procedures_from_row(row, index)
+            procedures_data = ProcedureImportService.extract_procedures_from_row(row)
             
             if not procedures_data:
                 result["skipped"] += 1
@@ -119,6 +127,8 @@ class ProcedureImportService:
 
             for proc_data in procedures_data:
                 code = proc_data['code']
+                sheet_records.add(code)
+                
                 operation_name = proc_data['operation_name']
                 specialty_name = proc_data['specialty_name']
                 category = proc_data['category']
@@ -170,19 +180,61 @@ class ProcedureImportService:
         print(f"💾 Creating {len(to_create)} procedures...")
         print(f"💾 Updating {len(to_update)} procedures...")
 
+        BATCH_SIZE = 500
+
         if to_create:
-            Procedure.objects.bulk_create(to_create, batch_size=1000)
+            Procedure.objects.bulk_create(
+                to_create,
+                batch_size=BATCH_SIZE,
+            )
 
         if to_update:
-            Procedure.objects.bulk_update(
-                to_update,
-                fields=[
-                    "operation_name",
-                    "specialty_name",
-                    "category",
-                ],
-                batch_size=1000,
-            )
+            total_updated = 0
+
+            for i in range(0, len(to_update), BATCH_SIZE):
+                batch = to_update[i:i + BATCH_SIZE]
+
+                Procedure.objects.bulk_update(
+                    batch,
+                    fields=[
+                        "operation_name",
+                        "specialty_name",
+                        "category",
+                    ],
+                    batch_size=100,
+                )
+
+                total_updated += len(batch)
+
+                print(
+                    f"   ✅ Updated batch {i // BATCH_SIZE + 1} "
+                    f"({total_updated}/{len(to_update)})"
+                )
+
+        # ============================================================
+        # ✅ Reload Cache بعد الـ Bulk Operations
+        # ============================================================
+        procedures_cache = {}
+        for procedure in Procedure.objects.all():
+            code = ImportHelpers.normalize_text(procedure.code)
+            procedures_cache[code] = procedure
+
+        # ============================================================
+        # ✅ Delete Procedures not found in Sheet
+        # ============================================================
+        to_delete = []
+
+        for code, procedure in procedures_cache.items():
+            if code not in sheet_records:
+                to_delete.append(procedure.id)
+
+        if to_delete:
+            deleted, _ = Procedure.objects.filter(
+                id__in=to_delete
+            ).delete()
+
+            result["deleted"] = deleted
+            print(f"🗑️ Deleted {deleted} procedures")
 
         elapsed = time.perf_counter() - start_time
         print(f"✅ Completed in {elapsed:.2f} seconds")

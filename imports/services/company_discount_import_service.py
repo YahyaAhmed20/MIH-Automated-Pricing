@@ -38,7 +38,7 @@ class CompanyDiscountImportService:
         {"name": "الاقامه", "discount_col": 6, "details_col": 7, "net_price_col": 8, "is_percentage": True},
         {"name": "المعمل", "discount_col": 9, "details_col": 10, "net_price_col": None, "is_percentage": True},
         {"name": "الاشعه", "discount_col": 11, "details_col": 12, "net_price_col": None, "is_percentage": True},
-        {"name": "اتعاب الاطباء", "discount_col": 13, "details_col": 14, "net_price_col": None, "is_percentage": True},
+        {"name": "اتعاب الاطباء", "discount_col": 13, "details_col": None, "net_price_col": None, "is_percentage": True},
         {"name": "الاشراف الطبي", "discount_col": 19, "details_col": 20, "net_price_col": None, "is_percentage": True},
         {"name": "فتح غرفة العمليات", "discount_col": 21, "details_col": 22, "net_price_col": 23, "is_percentage": True},
         {"name": "اجهزة العمليات", "discount_col": 24, "details_col": 25, "net_price_col": None, "is_percentage": True},
@@ -120,8 +120,46 @@ class CompanyDiscountImportService:
         return "\n".join(lines)
 
     @staticmethod
+    def extract_doctors_fees(group):
+        """
+        استخراج جدول أتعاب الأطباء بالكامل
+        """
+
+        lines = []
+
+        for row in group[1:]:
+
+            level = ImportHelpers.normalize_text(row.get(14, ""))
+
+            if not level:
+                continue
+
+            surgeon = ImportHelpers.normalize_text(row.get(15, ""))
+            anesthesia = ImportHelpers.normalize_text(row.get(16, ""))
+            assistant = ImportHelpers.normalize_text(row.get(17, ""))
+            total = ImportHelpers.normalize_text(row.get(18, ""))
+
+            lines.append(level)
+
+            if surgeon:
+                lines.append(f"جراح : {surgeon}")
+
+            if anesthesia:
+                lines.append(f"تخدير : {anesthesia}")
+
+            if assistant:
+                lines.append(f"مساعد : {assistant}")
+
+            if total:
+                lines.append(f"الإجمالي : {total}")
+
+            lines.append("")
+
+        return "\n".join(lines).strip()
+
+    @staticmethod
     @transaction.atomic
-    def import_data(dataframe):
+    def import_data(dataframe, company=None):
 
         start_time = time.perf_counter()
         print("⏳ Starting Company Discounts import from Sheet 4...")
@@ -132,6 +170,8 @@ class CompanyDiscountImportService:
             "updated_profiles": 0,
             "created_discounts": 0,
             "existing_profiles": 0,
+            "deleted_profiles": 0,
+            "deleted_discounts": 0,
         }
 
         # ============================================================
@@ -169,6 +209,10 @@ class CompanyDiscountImportService:
         discounts_to_create = []
         discounts_to_update = []
 
+        # ✅ تتبع البيانات الموجودة في الشيت
+        sheet_profiles = set()
+        sheet_discounts = set()
+
         # ============================================================
         # ✅ Loop - تجميع البيانات في Groups
         # ============================================================
@@ -176,7 +220,6 @@ class CompanyDiscountImportService:
 
         rows = dataframe.to_dict("records")
 
-        # ✅ تخطي الصفوف الأولى (العناوين)
         start_row = 2
         rows = rows[start_row:]
 
@@ -194,6 +237,15 @@ class CompanyDiscountImportService:
             # صف تابع لنفس الشركة
             elif current_group:
                 current_group.append(row)
+
+        # ✅ فلترة الشركات إذا تم تحديد company
+        if company:
+            normalized_company = ImportHelpers.normalize_text(company)
+            groups = [
+                g for g in groups
+                if ImportHelpers.normalize_text(g[0].get(0, "")) == normalized_company
+            ]
+            print(f"   ✅ Filtered to {len(groups)} companies matching: {company}")
 
         total_rows = len(groups)
         processed = 0
@@ -221,8 +273,8 @@ class CompanyDiscountImportService:
             price_list = ImportHelpers.normalize_text(row.get(3, ""))
             price_list = CompanyDiscountImportService.truncate_text(price_list, 255)
 
-            # ✅ العمود 6: المرفقات (PDF)
-            operating_pdf = ImportHelpers.normalize_text(row.get(6, ""))
+            # ✅ العمود 45: المرفقات (PDF)
+            operating_pdf = ImportHelpers.normalize_text(row.get(45, ""))
             operating_pdf = CompanyDiscountImportService.truncate_text(operating_pdf, 500)
 
             processed += 1
@@ -230,6 +282,8 @@ class CompanyDiscountImportService:
 
             # ✅ البحث في Cache
             profile_key = (company_name, financial_code)
+            sheet_profiles.add(profile_key)
+
             profile = profiles_cache.get(profile_key)
 
             if profile:
@@ -283,14 +337,20 @@ class CompanyDiscountImportService:
                 base_details = CompanyDiscountImportService.get_details(row, item["details_col"])
                 net_price = CompanyDiscountImportService.get_net_price(row, item["net_price_col"])
                 
-                # ✅ ✅ ✅ استخراج التفاصيل الإضافية من الصفوف التابعة
+                # ✅ استخراج التفاصيل الإضافية من الصفوف التابعة
                 extra_details = ""
-                if item["details_col"] is not None and item["net_price_col"] is not None:
+
+                if item["name"] == "اتعاب الاطباء":
+                    extra_details = CompanyDiscountImportService.extract_doctors_fees(group)
+                elif (
+                    item["details_col"] is not None
+                    and item["net_price_col"] is not None
+                ):
                     extra_details = CompanyDiscountImportService.extract_details_from_group(
                         group,
                         item["details_col"],
                         item["net_price_col"],
-                        item["discount_col"]
+                        item["discount_col"],
                     )
                 
                 # ✅ دمج التفاصيل الأساسية والإضافية
@@ -301,12 +361,18 @@ class CompanyDiscountImportService:
                 else:
                     details = base_details
 
-                # ✅ تشخيص للتحقق
-                if item["name"] == "خدمات الكلي" and company_name == "الاهلى للخدمات الطبية":
-                    print(f"   🔍 خدمات الكلي - extra_details: {extra_details[:100] if extra_details else 'None'}")
-
                 # ✅ البحث في Cache
                 discount_key = (profile_cache_id, "داخلي", item["name"])
+                
+                # ✅ تتبع الخصومات في الشيت
+                sheet_discounts.add(
+                    (
+                        company_name,
+                        financial_code,
+                        "داخلي",
+                        item["name"],
+                    )
+                )
 
                 if discount_key in discounts_cache:
                     existing_discount = discounts_cache[discount_key]
@@ -344,6 +410,17 @@ class CompanyDiscountImportService:
             internal_exception = CompanyDiscountImportService.truncate_text(internal_exception, 1000)
 
             discount_key = (profile_cache_id, "داخلي", "الاستثناءات")
+            
+            # ✅ تتبع الاستثناءات الداخلية في الشيت
+            sheet_discounts.add(
+                (
+                    company_name,
+                    financial_code,
+                    "داخلي",
+                    "الاستثناءات",
+                )
+            )
+
             if discount_key in discounts_cache:
                 existing_discount = discounts_cache[discount_key]
                 if existing_discount.details != internal_exception:
@@ -391,6 +468,16 @@ class CompanyDiscountImportService:
                     details = base_details
 
                 discount_key = (profile_cache_id, "خارجي", item["name"])
+                
+                # ✅ تتبع الخصومات الخارجية في الشيت
+                sheet_discounts.add(
+                    (
+                        company_name,
+                        financial_code,
+                        "خارجي",
+                        item["name"],
+                    )
+                )
 
                 if discount_key in discounts_cache:
                     existing_discount = discounts_cache[discount_key]
@@ -428,6 +515,17 @@ class CompanyDiscountImportService:
             external_exception = CompanyDiscountImportService.truncate_text(external_exception, 1000)
 
             discount_key = (profile_cache_id, "خارجي", "الاستثناءات")
+            
+            # ✅ تتبع الاستثناءات الخارجية في الشيت
+            sheet_discounts.add(
+                (
+                    company_name,
+                    financial_code,
+                    "خارجي",
+                    "الاستثناءات",
+                )
+            )
+
             if discount_key in discounts_cache:
                 existing_discount = discounts_cache[discount_key]
                 if existing_discount.details != external_exception:
@@ -478,6 +576,64 @@ class CompanyDiscountImportService:
                 fields=["discount", "details", "net_price"],
                 batch_size=1000,
             )
+
+        # ============================================================
+        # ✅ Reload Profiles بعد الـ bulk_create
+        # ============================================================
+        profiles_cache = {}
+        for profile in CompanyDiscountProfile.objects.all():
+            key = (
+                ImportHelpers.normalize_text(profile.company_name),
+                ImportHelpers.normalize_text(profile.financial_category),
+            )
+            profiles_cache[key] = profile
+
+        # ============================================================
+        # ✅ Reload Discounts
+        # ============================================================
+        discounts_cache = {}
+        for discount in CompanyDiscount.objects.select_related("profile"):
+            profile_key = (
+                ImportHelpers.normalize_text(discount.profile.company_name),
+                ImportHelpers.normalize_text(discount.profile.financial_category),
+                discount.section,
+                discount.item_name,
+            )
+            discounts_cache[profile_key] = discount
+
+        # ============================================================
+        # ✅ Delete Discounts not found in Sheet
+        # ============================================================
+        discounts_to_delete = []
+
+        for key, discount in discounts_cache.items():
+            if key not in sheet_discounts:
+                discounts_to_delete.append(discount.id)
+
+        if discounts_to_delete:
+            deleted, _ = CompanyDiscount.objects.filter(
+                id__in=discounts_to_delete
+            ).delete()
+
+            result["deleted_discounts"] = deleted
+            print(f"🗑️ Deleted {deleted} discounts")
+
+        # ============================================================
+        # ✅ Delete Profiles not found in Sheet
+        # ============================================================
+        profiles_to_delete = []
+
+        for key, profile in profiles_cache.items():
+            if key not in sheet_profiles:
+                profiles_to_delete.append(profile.id)
+
+        if profiles_to_delete:
+            deleted, _ = CompanyDiscountProfile.objects.filter(
+                id__in=profiles_to_delete
+            ).delete()
+
+            result["deleted_profiles"] = deleted
+            print(f"🗑️ Deleted {deleted} profiles")
 
         elapsed = time.perf_counter() - start_time
         print(f"✅ Completed in {elapsed:.2f} seconds")

@@ -24,17 +24,21 @@ class Command(BaseCommand):
         self.stdout.write("")
         self.stdout.write("========== Pricing Details Import ==========")
 
-        # ✅ استخدم header=None
+        # ✅ استخدم header=None مع force_reload=True
         dataframe = ExcelProvider.read(
             file_path=options["file_path"],
             sheet_name="7",  # شيت 7
             header=None,     # ✅ مفيش Header
+            force_reload=True,
         )
 
         result = PricingDetailsImportService.import_data(dataframe)
 
+        self.stdout.write("")
+        self.stdout.write("===========================================")
         self.stdout.write(f"Processed            : {result['processed']}")
         self.stdout.write(f"Created              : {result['created']}")
         self.stdout.write(f"Updated              : {result['updated']}")
+        self.stdout.write(f"Deleted              : {result.get('deleted', 0)}")
         self.stdout.write(f"Skipped              : {result['skipped']}")
         self.stdout.write("===========================================")

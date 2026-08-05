@@ -58,6 +58,7 @@ class CompanyDiscountRankImportService:
             "processed": 0,
             "created": 0,
             "updated": 0,
+            "deleted": 0,
             "skipped": 0,
         }
 
@@ -76,6 +77,7 @@ class CompanyDiscountRankImportService:
         # ============================================================
         to_create = []
         to_update = []
+        sheet_records = set()
 
         # ============================================================
         # ✅ Loop - استخدام أرقام الأعمدة (بدون Header)
@@ -127,6 +129,7 @@ class CompanyDiscountRankImportService:
 
             # ✅ البحث في Cache
             key = company_name
+            sheet_records.add(key)
             existing_rank = ranks_cache.get(key)
 
             if existing_rank:
@@ -182,21 +185,63 @@ class CompanyDiscountRankImportService:
         print(f"💾 Creating {len(to_create)} ranks...")
         print(f"💾 Updating {len(to_update)} ranks...")
 
+        BATCH_SIZE = 500
+
         if to_create:
-            CompanyDiscountRank.objects.bulk_create(to_create, batch_size=1000)
+            CompanyDiscountRank.objects.bulk_create(
+                to_create,
+                batch_size=BATCH_SIZE,
+            )
 
         if to_update:
-            CompanyDiscountRank.objects.bulk_update(
-                to_update,
-                fields=[
-                    "financial_category",
-                    "price_list",
-                    "internal_discount",
-                    "external_discount",
-                    "attachment",
-                ],
-                batch_size=1000,
-            )
+            total_updated = 0
+
+            for i in range(0, len(to_update), BATCH_SIZE):
+                batch = to_update[i:i + BATCH_SIZE]
+
+                CompanyDiscountRank.objects.bulk_update(
+                    batch,
+                    fields=[
+                        "financial_category",
+                        "price_list",
+                        "internal_discount",
+                        "external_discount",
+                        "attachment",
+                    ],
+                    batch_size=100,
+                )
+
+                total_updated += len(batch)
+
+                print(
+                    f"   ✅ Updated batch {i // BATCH_SIZE + 1} "
+                    f"({total_updated}/{len(to_update)})"
+                )
+
+        # ============================================================
+        # ✅ Reload Cache بعد الـ Bulk Operations
+        # ============================================================
+        ranks_cache = {}
+        for rank in CompanyDiscountRank.objects.all():
+            key = ImportHelpers.normalize_text(rank.company_name)
+            ranks_cache[key] = rank
+
+        # ============================================================
+        # ✅ Delete Ranks not found in Sheet
+        # ============================================================
+        ranks_to_delete = []
+
+        for key, rank in ranks_cache.items():
+            if key not in sheet_records:
+                ranks_to_delete.append(rank.id)
+
+        if ranks_to_delete:
+            deleted, _ = CompanyDiscountRank.objects.filter(
+                id__in=ranks_to_delete
+            ).delete()
+
+            result["deleted"] = deleted
+            print(f"🗑️ Deleted {deleted} ranks")
 
         elapsed = time.perf_counter() - start_time
         print(f"✅ Completed in {elapsed:.2f} seconds")

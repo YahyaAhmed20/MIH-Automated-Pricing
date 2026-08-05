@@ -25,8 +25,9 @@ class Command(BaseCommand):
         # ✅ استخدم header=None
         dataframe = ExcelProvider.read(
             file_path=options["file_path"],
-            sheet_name="5",  # ✅ شيت 5
-            header=None,     # ✅ مفيش Header
+            sheet_name="5",
+            header=None,
+            force_reload=True,
         )
 
         result = SpecialOfferImportService.import_data(dataframe)
@@ -38,4 +39,5 @@ class Command(BaseCommand):
         self.stdout.write(f"Created Specialties  : {result['created_specialties']}")
         self.stdout.write(f"Created Offers       : {result['created_offers']}")
         self.stdout.write(f"Updated Offers       : {result['updated_offers']}")
+        self.stdout.write(f"Deleted Offers       : {result.get('deleted_offers', 0)}")
         self.stdout.write("===========================================")
