@@ -55,14 +55,15 @@ class PackageCatalogImportService:
         print(f"   ✅ {len(entities_cache)} entities loaded")
 
         # ============================================================
-        # ✅ Cache للـ Packages - باستخدام (code, entity_id) كمفتاح
+        # ✅ Cache للـ Packages - باستخدام (entity_id, code, name) كمفتاح
         # ============================================================
         print("⏳ Loading packages...")
         packages_cache = {}
         for p in Package.objects.exclude(code__isnull=True):
             key = (
-                ImportHelpers.normalize_text(p.code),
                 p.entity_id if p.entity_id else None,
+                ImportHelpers.normalize_text(p.code),
+                ImportHelpers.normalize_text(p.name),
             )
             packages_cache[key] = p
         print(f"   ✅ {len(packages_cache)} packages loaded")
@@ -72,7 +73,7 @@ class PackageCatalogImportService:
         # ============================================================
         packages_to_create = []
         packages_to_update = []
-        sheet_codes = set()
+        sheet_package_keys = set()
         # ✅ إزالة seen_keys عشان تظهر كل الصفوف حتى المكررة
         # seen_keys = set()
 
@@ -128,15 +129,21 @@ class PackageCatalogImportService:
                 print(f"⚠️ صف {index}: الشركة '{company_name}' غير موجودة - سيتم تخطي الصف")
                 continue
 
+            # ✅ تخزين المفاتيح للحذف
+            sheet_package_keys.add(
+                (
+                    entity.id,
+                    package_code,
+                    package_name,
+                )
+            )
+
             # ✅ ❌ إزالة منع التكرار عشان تظهر كل الصفوف
             # key = (package_code, entity.id)
             # if key in seen_keys:
             #     result["skipped_duplicates"] += 1
             #     continue
             # seen_keys.add(key)
-
-            # ✅ تخزين الأكواد للحذف
-            sheet_codes.add(package_code)
 
             result["processed"] += 1
             processed = result["processed"]
@@ -153,8 +160,12 @@ class PackageCatalogImportService:
                     specialties_cache[specialty_name] = specialty
                     result["created_specialties"] += 1
 
-            # ✅ البحث في Cache بـ (code, entity_id)
-            package_key = (package_code, entity.id)
+            # ✅ البحث في Cache بـ (entity_id, code, name)
+            package_key = (
+                entity.id,
+                package_code,
+                package_name,
+            )
             existing_package = packages_cache.get(package_key)
 
             if existing_package:
@@ -211,19 +222,6 @@ class PackageCatalogImportService:
         print(f"   ✅ Processed {processed}/{total_rows} rows")
 
         # ============================================================
-        # ✅ حذف الباكدجات غير الموجودة في الـ Sheet
-        # ============================================================
-        if sheet_codes:
-            deleted_count, _ = Package.objects.exclude(
-                code__in=sheet_codes
-            ).delete()
-            if deleted_count > 0:
-                print(f"🗑️ Deleted {deleted_count} packages not in sheet")
-                result["deleted"] = deleted_count
-        else:
-            print("⚠️ No codes in sheet - skipping deletion to avoid data loss")
-
-        # ============================================================
         # ✅ تنفيذ الـ Bulk Operations
         # ============================================================
         print(f"💾 Creating {len(packages_to_create)} packages...")
@@ -245,6 +243,32 @@ class PackageCatalogImportService:
                 ],
                 batch_size=1000,
             )
+
+        # ============================================================
+        # ✅ حذف الباكدجات غير الموجودة في الـ Sheet (بعد bulk_update)
+        # ============================================================
+        if sheet_package_keys:
+            packages_to_delete = []
+
+            for package in Package.objects.all():
+                key = (
+                    package.entity_id,
+                    ImportHelpers.normalize_text(package.code),
+                    ImportHelpers.normalize_text(package.name),
+                )
+
+                if key not in sheet_package_keys:
+                    packages_to_delete.append(package.id)
+
+            if packages_to_delete:
+                deleted_count, _ = Package.objects.filter(
+                    id__in=packages_to_delete
+                ).delete()
+
+                print(f"🗑️ Deleted {deleted_count} packages not in sheet")
+                result["deleted"] = deleted_count
+        else:
+            print("⚠️ No package keys in sheet - skipping deletion")
 
         elapsed = time.perf_counter() - start_time
         print(f"✅ Completed in {elapsed:.2f} seconds")
