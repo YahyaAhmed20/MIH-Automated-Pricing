@@ -13,8 +13,8 @@ from imports.exceptions import TaskCancelled
 
 # ✅ الأوامر اللي بتدعم --no-confirm
 COMMANDS_WITH_NO_CONFIRM = [
-    "import_report_statistics",
-    "import_external_approvals",
+    
+    
     "import_report_statistics_sheet15",
 ]
 

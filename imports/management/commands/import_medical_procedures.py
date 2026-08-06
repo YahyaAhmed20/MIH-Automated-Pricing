@@ -20,11 +20,7 @@ class Command(BaseCommand):
             help="Path to Excel file (Optional)",
         )
 
-        parser.add_argument(
-            "--no-confirm",
-            action="store_true",
-            help="Skip confirmation prompt",
-        )
+        # ✅ تم إزالة --no-confirm لأنه لم يعد مطلوباً
 
     def handle(self, *args, **options):
 
@@ -39,30 +35,10 @@ class Command(BaseCommand):
             sheet_name="13",
             header=None,
             force_reload=True,
-
         )
 
         total_rows = len(dataframe)
-
-        if options.get("no_confirm"):
-
-            self.stdout.write(
-                f"✅ Importing {total_rows} Medical Procedures (auto-confirmed)"
-            )
-
-        else:
-
-            confirm = input(
-                f"Import {total_rows} Medical Procedures? (y/n): "
-            )
-
-            if confirm.lower() != "y":
-
-                self.stdout.write(
-                    self.style.WARNING("Import cancelled.")
-                )
-
-                return
+        self.stdout.write(f"✅ Importing {total_rows} Medical Procedures...")
 
         result = MedicalProceduresImportService.import_data(
             dataframe
