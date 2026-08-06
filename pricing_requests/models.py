@@ -781,7 +781,6 @@ class Procedure(models.Model):
 
     code = models.CharField(
         max_length=100,
-        unique=True,
         db_index=True,
         verbose_name="الكود"
     )
@@ -835,10 +834,15 @@ class Procedure(models.Model):
             models.Index(fields=["specialty_name"]),
         ]
 
+        constraints = [
+            models.UniqueConstraint(
+                fields=["code", "category"],
+                name="unique_procedure_code_category",
+            )
+        ]
+
     def __str__(self):
-        return f"{self.code} - {self.operation_name}" 
-    
-    
+        return f"{self.code} - {self.operation_name}"
 
 
 # ✅ ✅ ✅ دالة التحقق من صحة التصنيف

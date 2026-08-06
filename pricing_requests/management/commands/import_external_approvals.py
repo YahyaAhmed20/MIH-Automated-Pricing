@@ -19,50 +19,26 @@ class Command(BaseCommand):
             help="Path to Excel file (Optional)"
         )
 
-        parser.add_argument(
-            "--no-confirm",
-            action="store_true",
-            help="Skip confirmation prompt"
-        )
-
     def handle(self, *args, **options):
 
         self.stdout.write("")
-        self.stdout.write("=" * 60)
-        self.stdout.write("   External Approvals Import")
-        self.stdout.write("=" * 60)
-        self.stdout.write("")
+        self.stdout.write("========== External Approvals Import ==========")
 
-        # ✅ استخدم header=None
+        # ✅ استخدم header=None مع force_reload=True
         dataframe = ExcelProvider.read(
             file_path=options["file_path"],
             sheet_name="12",  # ✅ شيت 12
             header=None,      # ✅ مفيش Header
+            force_reload=True,
         )
-
-        total_rows = len(dataframe) - 1  # ناقص الصف الأول (العناوين)
-
-        # ✅ ✅ ✅ تأكيد الاستيراد (مع دعم --no-confirm)
-        if options.get("no_confirm", False):
-            # ✅ تخطي التأكيد تلقائياً (من الـ Update All)
-            self.stdout.write(f"✅ Importing {total_rows} External Approvals records (auto-confirmed)")
-        else:
-            # ✅ طلب تأكيد من المستخدم (عند التشغيل اليدوي)
-            confirm = input(f"Import {total_rows} records? (y/n): ")
-            if confirm.lower() != "y":
-                self.stdout.write(self.style.WARNING("Import cancelled."))
-                return
 
         result = ExternalApprovalImportService.import_data(dataframe)
 
         self.stdout.write("")
-        self.stdout.write("=" * 60)
-        self.stdout.write("External Approvals Import Completed")
-        self.stdout.write("=" * 60)
+        self.stdout.write("===========================================")
         self.stdout.write(f"Processed : {result['processed']}")
         self.stdout.write(f"Created   : {result['created']}")
         self.stdout.write(f"Updated   : {result['updated']}")
+        self.stdout.write(f"Deleted   : {result.get('deleted', 0)}")
         self.stdout.write(f"Skipped   : {result['skipped']}")
-        if result["errors"]:
-            self.stdout.write(self.style.ERROR(f"Errors    : {result['errors']}"))
-        self.stdout.write("=" * 60)
+        self.stdout.write("===========================================")

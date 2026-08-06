@@ -8,6 +8,36 @@ from pricing_requests.models import ExternalApproval
 from imports.utils.import_helpers import ImportHelpers
 
 
+def build_key(
+    patient_name,
+    card_number,
+    procedure,
+    date,
+    doctor_name,
+):
+    """بناء مفتاح فريد للبحث عن ExternalApproval"""
+    card_number = ImportHelpers.normalize_text(card_number or "")
+    patient_name = ImportHelpers.normalize_text(patient_name or "")
+    procedure = ImportHelpers.normalize_text(procedure or "")
+    doctor_name = ImportHelpers.normalize_text(doctor_name or "")
+
+    if card_number:
+        return (
+            "card",
+            card_number,
+            procedure,
+            date,
+        )
+
+    return (
+        "patient",
+        patient_name,
+        procedure,
+        date,
+        doctor_name,
+    )
+
+
 class ExternalApprovalImportService:
 
     @staticmethod
@@ -24,17 +54,27 @@ class ExternalApprovalImportService:
             "processed": 0,
             "created": 0,
             "updated": 0,
+            "deleted": 0,
             "skipped": 0,
             "errors": 0,
         }
 
         # ============================================================
-        # ✅ تخطي صف العناوين فقط
+        # ✅ تجهيز البيانات (بدون تخطي أي صف)
         # ============================================================
-        data = dataframe.iloc[1:].copy()
+        data = dataframe.copy()
         data = data.reset_index(drop=True)
-
-        print(f"📊 عدد الصفوف بعد تخطي العناوين: {len(data)}")
+        
+        # ✅ تصفية الصفوف الفارغة في عمود اسم المريض (العمود 2)
+        data = data[
+            data.iloc[:, 2]
+            .fillna("")
+            .astype(str)
+            .str.strip()
+            .ne("")
+        ].reset_index(drop=True)
+        
+        print(f"📊 Valid rows: {len(data)}")
         print("=" * 60)
 
         # ============================================================
@@ -43,11 +83,12 @@ class ExternalApprovalImportService:
         print("⏳ Loading existing external approvals...")
         approvals_cache = {}
         for approval in ExternalApproval.objects.all():
-            # مفتاح البحث: الرقم الطبي + اسم المريض + التاريخ
-            key = (
-                ImportHelpers.normalize_text(approval.medical_number or ""),
-                ImportHelpers.normalize_text(approval.patient_name or ""),
+            key = build_key(
+                approval.patient_name,
+                approval.card_number,
+                approval.procedure,
                 approval.date,
+                approval.doctor_name,
             )
             approvals_cache[key] = approval
         print(f"   ✅ {len(approvals_cache)} approvals loaded")
@@ -58,6 +99,7 @@ class ExternalApprovalImportService:
         # ============================================================
         to_create = []
         to_update = []
+        sheet_records = set()
 
         # ============================================================
         # ✅ Loop
@@ -73,7 +115,19 @@ class ExternalApprovalImportService:
                     row.iloc[2] if len(row) > 2 and pd.notna(row.iloc[2]) else ""
                 )
 
-                # ✅ إذا كان اسم المريض فارغاً، نتخطى
+                # ✅ استبعاد صفوف الـ Header والـ Summary
+                if patient_name.lower() in {
+                    "اسم المريض",
+                    "admission",
+                    "approval",
+                    "acc",
+                    "status",
+                    "total",
+                }:
+                    result["skipped"] += 1
+                    continue
+
+                # ✅ إذا كان اسم المريض فارغاً، نتخطى (مرة أخرى للضمان)
                 if not patient_name:
                     result["skipped"] += 1
                     continue
@@ -233,14 +287,17 @@ class ExternalApprovalImportService:
                 )
 
                 result["processed"] += 1
-                processed = result["processed"]
 
-                # ✅ البحث في Cache
-                key = (
-                    medical_number,
+                # ✅ بناء المفتاح
+                key = build_key(
                     patient_name,
+                    card_number,
+                    procedure,
                     date,
+                    doctor_name,
                 )
+                
+                sheet_records.add(key)
                 existing_approval = approvals_cache.get(key)
 
                 if existing_approval:
@@ -253,15 +310,15 @@ class ExternalApprovalImportService:
                         ("card_number", card_number),
                         ("company", company),
                         ("sub_account", sub_account),
-                        ("doctor_name", doctor_name),
+                        ("medical_number", medical_number),
                         ("specialty", specialty),
                         ("required", required),
-                        ("procedure", procedure),
                         ("phone", phone),
                         ("agent_1", agent_1),
                         ("status", status),
                         ("main_status", main_status),
                         ("initial_cost", initial_cost),
+                        ("pricing_date", pricing_date),
                         ("pricing_responsible", pricing_responsible),
                         ("billing_status", billing_status),
                         ("approval_review_responsible", approval_review_responsible),
@@ -286,10 +343,13 @@ class ExternalApprovalImportService:
                     ]
                     
                     for field_name, value in fields_to_check:
-                        if getattr(existing_approval, field_name) != value:
-                            setattr(existing_approval, field_name, value)
+                        old = getattr(existing_approval, field_name)
+                        
+                        if old != value:
                             changed = True
+                            setattr(existing_approval, field_name, value)
                     
+                    # ✅ تحديث جميع الحقول المتغيرة (بدون break)
                     if changed:
                         to_update.append(existing_approval)
                         result["updated"] += 1
@@ -341,8 +401,8 @@ class ExternalApprovalImportService:
                     result["created"] += 1
 
                 # عرض التقدم
-                if processed % 100 == 0:
-                    print(f"   📊 Processed {processed}/{total_rows} rows...")
+                if result["processed"] % 100 == 0:
+                    print(f"   📊 Processed {result['processed']}/{total_rows} rows...")
 
             except Exception as e:
                 result["errors"] += 1
@@ -352,7 +412,7 @@ class ExternalApprovalImportService:
                     print(f"   Patient: {patient_name}")
                 continue
 
-        print(f"   ✅ Processed {processed}/{total_rows} rows")
+        print(f"   ✅ Processed {result['processed']}/{total_rows} rows")
 
         # ============================================================
         # ✅ تنفيذ الـ Bulk Operations
@@ -360,37 +420,114 @@ class ExternalApprovalImportService:
         print(f"💾 Creating {len(to_create)} approvals...")
         print(f"💾 Updating {len(to_update)} approvals...")
 
+        BATCH_SIZE = 500
+
         if to_create:
-            ExternalApproval.objects.bulk_create(to_create, batch_size=1000)
+            ExternalApproval.objects.bulk_create(
+                to_create,
+                batch_size=BATCH_SIZE,
+            )
 
         if to_update:
-            ExternalApproval.objects.bulk_update(
-                to_update,
-                fields=[
-                    "attachment_type", "card_number", "company", "sub_account",
-                    "doctor_name", "specialty", "required", "procedure", "phone",
-                    "agent_1", "status", "main_status", "initial_cost",
-                    "pricing_responsible", "billing_status", "approval_review_responsible",
-                    "accounts_notes", "account_number", "received_cost", "report",
-                    "approval", "request_approval_no", "approval_date", "expiry_date",
-                    "notes", "last_update", "agent_2", "opd_sales_cs", "admission_date",
-                    "or_coordinator_notes", "sales_account", "head", "user", "sales_notes",
-                ],
-                batch_size=1000,
+            total_updated = 0
+
+            for i in range(0, len(to_update), BATCH_SIZE):
+                batch = to_update[i:i + BATCH_SIZE]
+
+                ExternalApproval.objects.bulk_update(
+                    batch,
+                    fields=[
+                        "attachment_type",
+                        "card_number",
+                        "company",
+                        "sub_account",
+                        "medical_number",
+                        "specialty",
+                        "required",
+                        "phone",
+                        "agent_1",
+                        "status",
+                        "main_status",
+                        "initial_cost",
+                        "pricing_date",
+                        "pricing_responsible",
+                        "billing_status",
+                        "approval_review_responsible",
+                        "accounts_notes",
+                        "account_number",
+                        "received_cost",
+                        "report",
+                        "approval",
+                        "request_approval_no",
+                        "approval_date",
+                        "expiry_date",
+                        "notes",
+                        "last_update",
+                        "agent_2",
+                        "opd_sales_cs",
+                        "admission_date",
+                        "or_coordinator_notes",
+                        "sales_account",
+                        "head",
+                        "user",
+                        "sales_notes",
+                    ],
+                    batch_size=100,
+                )
+
+                total_updated += len(batch)
+
+                print(
+                    f"   ✅ Updated batch {i // BATCH_SIZE + 1} "
+                    f"({total_updated}/{len(to_update)})"
+                )
+
+        # ============================================================
+        # ✅ Reload Cache بعد الـ Bulk Operations
+        # ============================================================
+        approvals_cache = {}
+        for approval in ExternalApproval.objects.all():
+            key = build_key(
+                approval.patient_name,
+                approval.card_number,
+                approval.procedure,
+                approval.date,
+                approval.doctor_name,
             )
+            approvals_cache[key] = approval
+
+        # ============================================================
+        # ✅ Delete Records not found in Sheet
+        # ============================================================
+        to_delete = []
+
+        for key, approval in approvals_cache.items():
+            if key not in sheet_records:
+                to_delete.append(approval.id)
+
+        if to_delete:
+            deleted, _ = ExternalApproval.objects.filter(
+                id__in=to_delete
+            ).delete()
+
+            result["deleted"] = deleted
+            print(f"🗑️ Deleted {deleted} approvals")
 
         elapsed = time.perf_counter() - start_time
 
         # عرض النتائج النهائية
-        print("\n" + "=" * 60)
-        print("✅ انتهى الاستيراد")
-        print(f"📊 Processed : {result['processed']}")
-        print(f"✅ Created   : {result['created']}")
-        print(f"🔄 Updated   : {result['updated']}")
-        print(f"⏭️ Skipped   : {result['skipped']}")
-        if result["errors"] > 0:
-            print(f"❌ Errors    : {result['errors']}")
-        print(f"⏱️ الوقت     : {elapsed:.2f} ثانية")
-        print("=" * 60)
+        print("\n" + "=" * 80)
+        print("✅ انتهى الاستيراد بنجاح!")
+        print(
+            f"📊 Processed: {result['processed']}, "
+            f"Created: {result['created']}, "
+            f"Updated: {result['updated']}, "
+            f"Deleted: {result['deleted']}, "
+            f"Skipped: {result['skipped']}"
+        )
+        if result["errors"]:
+            print(f"❌ Errors: {result['errors']}")
+        print("=" * 80)
+        print(f"⏱️ Completed in {elapsed:.2f} seconds")
 
         return result

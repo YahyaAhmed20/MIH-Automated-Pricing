@@ -60,7 +60,6 @@ class Procedure(models.Model):
 
     code = models.CharField(
         max_length=100,
-        unique=True,
         db_index=True
     )
 
@@ -90,6 +89,14 @@ class Procedure(models.Model):
         verbose_name = "الإجراء"
         verbose_name_plural = "الإجراءات"
         ordering = ["code"]
+
+        constraints = [
+            models.UniqueConstraint(
+                fields=["code", "classification"],
+                name="unique_procedure_code_classification",
+            )
+        ]
+
         indexes = [
             models.Index(fields=["specialty"]),
         ]

@@ -1,6 +1,5 @@
 # pricing_requests/services/medical_procedures_import_service.py
 
-import pandas as pd
 import time
 from django.db import transaction
 from medical_catalog.models import Specialty, Procedure
@@ -32,8 +31,12 @@ class MedicalProceduresImportService:
             "created_specialties": 0,
             "created_procedures": 0,
             "updated_procedures": 0,
+            "deleted_procedures": 0,
             "skipped": 0,
         }
+
+        print(f"📊 Valid rows: {len(dataframe)}")
+        print("=" * 60)
 
         # ============================================================
         # ✅ Cache للـ Specialties
@@ -50,9 +53,18 @@ class MedicalProceduresImportService:
         print("⏳ Loading existing procedures...")
         procedures_cache = {}
         for procedure in Procedure.objects.all():
-            code = ImportHelpers.normalize_text(procedure.code)
-            procedures_cache[code] = procedure
+            key = (
+                ImportHelpers.normalize_text(procedure.code),
+                ImportHelpers.normalize_text(procedure.classification),  # تم التعديل من category إلى classification
+            )
+            procedures_cache[key] = procedure
         print(f"   ✅ {len(procedures_cache)} procedures loaded")
+
+        # ============================================================
+        # ✅ Existing Keys + Sheet Keys
+        # ============================================================
+        existing_keys = set(procedures_cache.keys())
+        sheet_keys = set()
 
         # ============================================================
         # ✅ قوائم التجميع للـ Bulk Operations
@@ -67,11 +79,11 @@ class MedicalProceduresImportService:
         total_rows = len(dataframe)
         processed = 0
 
-        for index, row in enumerate(dataframe.to_dict("records"), start=1):
+        for index, row in enumerate(dataframe.itertuples(index=False), start=1):
 
             # ✅ أرقام الأعمدة حسب ترتيب شيت 13
             # العمود 0: الكود (procedure_code)
-            procedure_code = ImportHelpers.normalize_text(row.get(0, ""))
+            procedure_code = ImportHelpers.normalize_text(row[0])
             procedure_code = MedicalProceduresImportService.truncate_text(procedure_code, 50)
 
             if not procedure_code:
@@ -79,11 +91,11 @@ class MedicalProceduresImportService:
                 continue
 
             # العمود 1: أسم العملية (procedure_name_ar)
-            name_ar = ImportHelpers.normalize_text(row.get(1, ""))
+            name_ar = ImportHelpers.normalize_text(row[1])
             name_ar = MedicalProceduresImportService.truncate_text(name_ar, 255)
 
             # العمود 2: التخصص (specialty)
-            specialty_name = ImportHelpers.normalize_text(row.get(2, ""))
+            specialty_name = ImportHelpers.normalize_text(row[2])
             specialty_name = MedicalProceduresImportService.truncate_text(specialty_name, 255)
 
             if not specialty_name:
@@ -91,54 +103,115 @@ class MedicalProceduresImportService:
                 print(f"⚠️ صف {index}: التخصص مفقود - تم استخدام 'بدون تخصص'")
 
             # العمود 3: التصنيف (procedure_category)
-            classification = ImportHelpers.normalize_text(row.get(3, ""))
+            classification = ImportHelpers.normalize_text(row[3])
             classification = MedicalProceduresImportService.truncate_text(classification, 100)
 
             # العمود 4: المسمي باللغه الانجليزيه (procedure_name_en)
-            name_en = ImportHelpers.normalize_text(row.get(4, ""))
+            name_en = ImportHelpers.normalize_text(row[4])
             name_en = MedicalProceduresImportService.truncate_text(name_en, 255)
 
             result["processed"] += 1
             processed = result["processed"]
 
+            # ✅ إضافة المفتاح إلى sheet_keys
+            key = (
+                procedure_code,
+                classification,
+            )
+            sheet_keys.add(key)
+
             # ✅ الحصول على التخصص (أو إنشاؤه)
             specialty = specialties_cache.get(specialty_name)
             if not specialty:
-                specialty = Specialty.objects.create(
+                specialty = Specialty(
                     name=specialty_name,
                     is_active=True,
                 )
+                specialty.save()
                 specialties_cache[specialty_name] = specialty
                 result["created_specialties"] += 1
 
-            # ✅ البحث في Cache
-            existing_procedure = procedures_cache.get(procedure_code)
+            # ✅ البحث في Cache باستخدام المفتاح المركب
+            existing_procedure = procedures_cache.get(key)
 
             if existing_procedure:
                 # ✅ تحديث البيانات
                 changed = False
 
                 if existing_procedure.name_ar != name_ar:
+                    print("name_ar")
+                    print(repr(existing_procedure.name_ar))
+                    print(repr(name_ar))
                     existing_procedure.name_ar = name_ar
                     changed = True
 
                 if existing_procedure.name_en != name_en:
+                    print("name_en")
+                    print(repr(existing_procedure.name_en))
+                    print(repr(name_en))
                     existing_procedure.name_en = name_en
                     changed = True
 
                 if existing_procedure.specialty_id != specialty.id:
+                    print("specialty")
+                    print(repr(existing_procedure.specialty_id))
+                    print(repr(specialty.id))
                     existing_procedure.specialty = specialty
                     changed = True
 
                 if existing_procedure.classification != classification:
+                    print("classification")
+                    print(repr(existing_procedure.classification))
+                    print(repr(classification))
                     existing_procedure.classification = classification
                     changed = True
 
                 if existing_procedure.is_active is not True:
+                    print("is_active")
+                    print(repr(existing_procedure.is_active))
+                    print(repr(True))
                     existing_procedure.is_active = True
                     changed = True
 
+                # ✅ Debug: عرض التغييرات
                 if changed:
+                    print(f"\n🔍 {procedure_code}")
+
+                    if existing_procedure.name_ar != name_ar:
+                        print(
+                            f"name_ar:\n"
+                            f"DB   = {existing_procedure.name_ar!r}\n"
+                            f"Sheet= {name_ar!r}"
+                        )
+
+                    if existing_procedure.name_en != name_en:
+                        print(
+                            f"name_en:\n"
+                            f"DB   = {existing_procedure.name_en!r}\n"
+                            f"Sheet= {name_en!r}"
+                        )
+
+                    if existing_procedure.specialty_id != specialty.id:
+                        print(
+                            f"specialty:\n"
+                            f"DB   = {existing_procedure.specialty_id}\n"
+                            f"Sheet= {specialty.id}"
+                        )
+
+                    if existing_procedure.classification != classification:
+                        print(
+                            f"classification:\n"
+                            f"DB   = {existing_procedure.classification!r}\n"
+                            f"Sheet= {classification!r}"
+                        )
+
+                    if existing_procedure.is_active != True:
+                        print(
+                            f"is_active:\n"
+                            f"DB   = {existing_procedure.is_active}\n"
+                            f"Sheet= True"
+                        )
+
                     procedures_to_update.append(existing_procedure)
                     result["updated_procedures"] += 1
 
@@ -153,10 +226,10 @@ class MedicalProceduresImportService:
                     is_active=True,
                 )
                 procedures_to_create.append(procedure)
-                procedures_cache[procedure_code] = procedure
+                procedures_cache[key] = procedure
                 result["created_procedures"] += 1
 
-            if processed % 1000 == 0:
+            if processed % 100 == 0:
                 print(f"   📊 Processed {processed}/{total_rows} rows...")
 
         print(f"   ✅ Processed {processed}/{total_rows} rows")
@@ -168,7 +241,7 @@ class MedicalProceduresImportService:
         print(f"💾 Updating {len(procedures_to_update)} procedures...")
 
         if procedures_to_create:
-            Procedure.objects.bulk_create(procedures_to_create, batch_size=1000)
+            Procedure.objects.bulk_create(procedures_to_create, batch_size=500)
 
         if procedures_to_update:
             Procedure.objects.bulk_update(
@@ -180,10 +253,43 @@ class MedicalProceduresImportService:
                     "classification",
                     "is_active",
                 ],
-                batch_size=1000,
+                batch_size=500,
             )
 
+        # ============================================================
+        # ✅ Delete Removed Procedures
+        # ============================================================
+        keys_to_delete = existing_keys - sheet_keys
+
+        if keys_to_delete:
+            procedures_to_delete = [
+                procedures_cache[key]
+                for key in keys_to_delete
+            ]
+
+            deleted_count = len(procedures_to_delete)
+
+            if procedures_to_delete:
+                Procedure.objects.filter(
+                    id__in=[p.id for p in procedures_to_delete]
+                ).delete()
+
+            result["deleted_procedures"] = deleted_count
+            print(f"🗑️ Deleted {deleted_count} procedures")
+
         elapsed = time.perf_counter() - start_time
-        print(f"✅ Completed in {elapsed:.2f} seconds")
+
+        # عرض النتائج النهائية
+        print("=" * 60)
+        print("✅ انتهى الاستيراد بنجاح!")
+        print(
+            f"📊 Processed: {result['processed']}, "
+            f"Created: {result['created_procedures']}, "
+            f"Updated: {result['updated_procedures']}, "
+            f"Deleted: {result['deleted_procedures']}, "
+            f"Skipped: {result['skipped']}"
+        )
+        print("=" * 60)
+        print(f"⏱️ Completed in {elapsed:.2f} seconds")
 
         return result

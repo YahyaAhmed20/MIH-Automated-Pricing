@@ -3,6 +3,7 @@ python manage.py migrate_contract_entities
 python manage.py import_cash_packages
 
 
+ضيف import_pricing_requests.py ف update
 Accordion
 
 
