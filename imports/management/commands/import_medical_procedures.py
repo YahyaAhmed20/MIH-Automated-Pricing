@@ -38,6 +38,8 @@ class Command(BaseCommand):
             file_path=options["file_path"],
             sheet_name="13",
             header=None,
+            force_reload=True,
+
         )
 
         total_rows = len(dataframe)

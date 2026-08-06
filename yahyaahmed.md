@@ -4,6 +4,7 @@ python manage.py import_cash_packages
 
 
 ضيف import_pricing_requests.py ف update
+ظبط delete فيه 
 Accordion
 
 
