@@ -8,6 +8,8 @@ python manage.py import_cash_packages
 Accordion
 
 
+الحل 5: إضافة زر "إلغاء" في الواجهة
+
 
 <datalist>
 SEARCH
