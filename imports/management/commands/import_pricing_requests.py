@@ -20,11 +20,7 @@ class Command(BaseCommand):
             help="Path to Excel file (Optional)",
         )
 
-        parser.add_argument(
-            "--no-confirm",
-            action="store_true",
-            help="Skip confirmation prompt",
-        )
+        # ✅ تم إزالة --no-confirm لأنه لم يعد مستخدمًا
 
     def handle(self, *args, **options):
 
@@ -37,29 +33,11 @@ class Command(BaseCommand):
         dataframe = ExcelProvider.read(
             file_path=options["file_path"],
             sheet_name="12",
+            force_reload=True,
         )
 
         total_rows = len(dataframe)
-
-        if options.get("no_confirm", False):
-
-            self.stdout.write(
-                f"✅ Importing {total_rows} Pricing Requests (auto-confirmed)"
-            )
-
-        else:
-
-            confirm = input(
-                f"Import {total_rows} Pricing Requests? (y/n): "
-            )
-
-            if confirm.lower() != "y":
-
-                self.stdout.write(
-                    self.style.WARNING("Import cancelled.")
-                )
-
-                return
+        self.stdout.write(f"📊 Importing {total_rows} Pricing Requests...")
 
         result = PricingRequestImportService.import_data(
             dataframe
@@ -80,6 +58,10 @@ class Command(BaseCommand):
 
         self.stdout.write(
             f"Requests Updated : {result['updated_requests']}"
+        )
+
+        self.stdout.write(
+            f"Requests Deleted : {result['deleted_requests']}"
         )
 
         self.stdout.write(

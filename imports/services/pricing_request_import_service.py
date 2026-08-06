@@ -44,6 +44,7 @@ class PricingRequestImportService:
         updated_requests = 0
         created_users = 0
         created_notes = 0
+        deleted_requests = 0
 
         # ✅ Cache للـ Users
         users_cache = {
@@ -94,6 +95,10 @@ class PricingRequestImportService:
                     request.procedure_name,
                 )
             existing_requests[key] = request
+
+        # ✅ Existing Keys + Sheet Keys
+        existing_keys = set(existing_requests.keys())
+        sheet_keys = set()
 
         requests_to_create = []
         requests_to_update = []
@@ -275,6 +280,9 @@ class PricingRequestImportService:
                     ImportHelpers.clean_date(getattr(row, "التاريخ", None)),
                     ImportHelpers.normalize_text(getattr(row, "الاجراء", "")),
                 )
+
+            # ✅ إضافة المفتاح إلى sheet_keys
+            sheet_keys.add(request_key)
 
             existing_request = existing_requests.get(request_key)
 
@@ -463,10 +471,24 @@ class PricingRequestImportService:
             )
             updated_requests = len(requests_to_update)
 
+        # ✅ Delete Removed Requests
+        keys_to_delete = existing_keys - sheet_keys
+
+        if keys_to_delete:
+            ids_to_delete = [
+                existing_requests[key].id
+                for key in keys_to_delete
+            ]
+
+            deleted_requests, _ = PricingRequest.objects.filter(
+                id__in=ids_to_delete
+            ).delete()
+
         return {
             "created_patients": created_patients,
             "created_requests": created_requests,
             "updated_requests": updated_requests,
+            "deleted_requests": deleted_requests,
             "created_users": created_users,
             "created_notes": created_notes,
         }
