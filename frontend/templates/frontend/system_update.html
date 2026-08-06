@@ -108,6 +108,10 @@
         background: linear-gradient(90deg, #dc3545, #fd7e14) !important;
     }
 
+    .progress-bar.bg-warning {
+        background: linear-gradient(90deg, #ffc107, #fd7e14) !important;
+    }
+
     /* ✅ Summary Cards */
     .summary-card {
         background: #f8f9fc;
@@ -160,6 +164,23 @@
     }
 
     .btn-success:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+        transform: none !important;
+    }
+
+    .btn-danger {
+        background: linear-gradient(135deg, #dc3545, #fd7e14);
+        border: none;
+        box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+    }
+
+    .btn-danger:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 30px rgba(220, 53, 69, 0.4);
+    }
+
+    .btn-danger:disabled {
         opacity: 0.7;
         cursor: not-allowed;
         transform: none !important;
@@ -256,6 +277,26 @@
         background: rgba(255,255,255,0.2) !important;
         transform: scale(1.05);
     }
+
+    /* ✅ Cancel button */
+    .btn-cancel {
+        background: linear-gradient(135deg, #6c757d, #dc3545);
+        border: none;
+        color: white;
+        box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3);
+    }
+
+    .btn-cancel:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 30px rgba(220, 53, 69, 0.4);
+        color: white;
+    }
+
+    .btn-cancel:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+        transform: none !important;
+    }
 </style>
 
 <div class="row">
@@ -344,6 +385,17 @@
                             <i class="bi bi-arrow-repeat"></i>
 
                             تحديث جميع البيانات
+
+                        </button>
+
+                        <button
+                            id="cancelButton"
+                            type="button"
+                            class="btn btn-cancel btn-lg px-5 ms-2 d-none">
+
+                            <i class="bi bi-x-circle"></i>
+
+                            إلغاء التحديث
 
                         </button>
 
@@ -459,6 +511,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const form = document.getElementById('updateForm');
     const button = document.getElementById('updateButton');
+    const cancelButton = document.getElementById('cancelButton');
     const statusBadge = document.getElementById('statusBadge');
     const progressContainer = document.getElementById('progressContainer');
     const progressBar = document.getElementById('progressBar');
@@ -506,13 +559,18 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ✅ تحديث الـ Progress
-    function updateProgress(completed, currentCommand, isRunning) {
+    function updateProgress(
+        completed,
+        currentCommand,
+        isRunning,
+        status
+    ) {
         const progress = Math.min(Math.round((completed / totalCommands) * 100), 100);
         progressBar.style.width = progress + '%';
         progressBar.innerHTML = progress + '%';
 
         // ✅ إذا انتهى التحديث
-        if (!isRunning && completed >= totalCommands) {
+        if (status === "completed") {
             progressBar.classList.remove('progress-bar-animated');
             progressBar.classList.add('bg-success');
             progressText.innerHTML = '✅ تم الانتهاء من جميع الأوامر بنجاح!';
@@ -521,6 +579,7 @@ document.addEventListener('DOMContentLoaded', function() {
             statusBadge.className = 'text-success';
             button.disabled = false;
             button.innerHTML = '<i class="bi bi-arrow-repeat"></i> تحديث جميع البيانات';
+            cancelButton.classList.add('d-none');
             clearInterval(checkInterval);
             clearInterval(timerInterval);
             
@@ -536,6 +595,68 @@ document.addEventListener('DOMContentLoaded', function() {
                     })
                     .catch(() => {});
             }, 1000);
+            return;
+        }
+
+        // ✅ معالجة حالة الإلغاء
+        if (status === 'cancelled') {
+            progressBar.classList.remove('progress-bar-animated');
+            progressBar.classList.add('bg-warning');
+            progressBar.style.width = progress + '%';
+            progressBar.innerHTML = progress + '%';
+            progressText.innerHTML = '🛑 تم إلغاء العملية';
+            progressDetail.innerHTML = 'تم إلغاء التحديث بواسطة المستخدم';
+            statusBadge.innerHTML = '🛑 ملغي';
+            statusBadge.className = 'text-warning';
+            button.disabled = false;
+            button.innerHTML = '<i class="bi bi-arrow-repeat"></i> إعادة المحاولة';
+            cancelButton.classList.add('d-none');
+            clearInterval(checkInterval);
+            clearInterval(timerInterval);
+            
+            // ✅ إظهار الـ Logs
+            setTimeout(function() {
+                fetch('/api/update-progress/')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.logs && data.logs != 'None') {
+                            logsCard.style.display = 'block';
+                            document.getElementById('logsContent').textContent = data.logs;
+                        }
+                    })
+                    .catch(() => {});
+            }, 500);
+            return;
+        }
+
+        // ✅ معالجة حالة الخطأ
+        if (status === 'error') {
+            progressBar.classList.remove('progress-bar-animated');
+            progressBar.classList.add('bg-danger');
+            progressBar.style.width = '100%';
+            progressBar.innerHTML = '❌';
+            progressText.innerHTML = '❌ حدث خطأ أثناء التحديث';
+            progressDetail.innerHTML = 'راجع سجل الأخطاء';
+            statusBadge.innerHTML = '❌ فشل';
+            statusBadge.className = 'text-danger';
+            button.disabled = false;
+            button.innerHTML = '<i class="bi bi-arrow-repeat"></i> إعادة المحاولة';
+            cancelButton.classList.add('d-none');
+            clearInterval(checkInterval);
+            clearInterval(timerInterval);
+            
+            // ✅ إظهار الـ Logs
+            setTimeout(function() {
+                fetch('/api/update-progress/')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.logs && data.logs != 'None') {
+                            logsCard.style.display = 'block';
+                            document.getElementById('logsContent').textContent = data.logs;
+                        }
+                    })
+                    .catch(() => {});
+            }, 500);
             return;
         }
 
@@ -566,10 +687,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 const completed = data.completed || 0;
                 const currentCommand = data.current_command || '';
                 const isRunning = data.is_running || false;
-                updateProgress(completed, currentCommand, isRunning);
+                const status = data.status || "idle";
+
+                updateProgress(
+                    completed,
+                    currentCommand,
+                    isRunning,
+                    status
+                );
                 
                 // ✅ إذا انتهى التحديث، نوقف الـ polling
-                if (!isRunning && completed >= totalCommands) {
+                if (
+                    status === "completed" ||
+                    status === "cancelled" ||
+                    status === "error"
+                ) {
                     clearInterval(checkInterval);
                     clearInterval(timerInterval);
                 }
@@ -595,6 +727,43 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     }
 
+    // ✅ طلب الإلغاء
+    function requestCancel() {
+        if (!confirm('⚠️ هل أنت متأكد من إلغاء عملية التحديث؟')) {
+            return;
+        }
+
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+        fetch('/api/cancel-update/', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrfToken,
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // ✅ تغيير لون الـ Progress Bar فوراً
+                progressBar.classList.remove('progress-bar-animated');
+                progressBar.classList.remove('bg-success');
+                progressBar.classList.add('bg-warning');
+                
+                progressText.innerHTML = '🛑 جاري إلغاء العملية...';
+                progressDetail.innerHTML = 'سيتم الإلغاء بعد انتهاء الأمر الحالي';
+                cancelButton.disabled = true;
+                cancelButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> جاري الإلغاء...';
+            } else {
+                alert('❌ فشل إلغاء العملية: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('❌ حدث خطأ أثناء محاولة الإلغاء');
+        });
+    }
+
     // ✅ عند إرسال الفورم باستخدام fetch
     form.addEventListener('submit', function(e) {
         e.preventDefault();
@@ -606,12 +775,16 @@ document.addEventListener('DOMContentLoaded', function() {
         // ✅ تعطيل الزر وتحديث واجهة المستخدم
         button.disabled = true;
         button.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> جاري التحديث...';
+        cancelButton.classList.remove('d-none');
+        cancelButton.disabled = false;
+        cancelButton.innerHTML = '<i class="bi bi-x-circle"></i> إلغاء التحديث';
+        cancelButton.onclick = requestCancel;
         statusBadge.innerHTML = '🔄 جاري التحديث';
         statusBadge.className = 'text-warning';
         progressContainer.classList.remove('d-none');
         progressBar.style.width = '0%';
         progressBar.innerHTML = '0%';
-        progressBar.classList.remove('bg-danger');
+        progressBar.classList.remove('bg-danger', 'bg-warning');
         progressBar.classList.add('bg-success', 'progress-bar-animated');
         progressText.innerHTML = '⏳ جاري التحديث...';
         progressDetail.innerHTML = 'بدء التنفيذ...';
@@ -624,7 +797,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (timerInterval) clearInterval(timerInterval);
         timerInterval = setInterval(updateTimer, 1000);
 
-        // ✅ إرسال الطلب بـ fetch (الخطوة 2)
+        // ✅ إرسال الطلب بـ fetch
         const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
         const formData = new FormData(form);
 
@@ -666,7 +839,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 clearInterval(timerInterval);
                 timerInterval = null;
             }
-            if (!progressBar.innerHTML.includes('100%')) {
+            if (!progressBar.innerHTML.includes('100%') && !progressBar.innerHTML.includes('❌') && !progressBar.innerHTML.includes('🛑')) {
                 progressText.innerHTML = '⏳ جاري التحديث (قد يستغرق وقتاً أطول)...';
                 progressDetail.innerHTML = 'العملية ما زالت قيد التنفيذ';
             }
@@ -681,6 +854,7 @@ document.addEventListener('DOMContentLoaded', function() {
         statusBadge.className = 'text-danger';
         button.disabled = false;
         button.innerHTML = '<i class="bi bi-arrow-repeat"></i> إعادة المحاولة';
+        cancelButton.classList.add('d-none');
         progressBar.classList.remove('progress-bar-animated');
         progressBar.classList.add('bg-danger');
         progressBar.style.width = '100%';
@@ -748,12 +922,24 @@ document.addEventListener('DOMContentLoaded', function() {
             timerInterval = null;
         }
         
-        const hasError = '{{ logs|slice:":100" }}'.includes('ERROR') || '{{ logs|slice:":100" }}'.includes('❌');
-        const isComplete = '{{ completed|default:0 }}' >= '{{ total_commands|default:18 }}';
+        const status = "{{ status|default:'idle' }}";
         
-        if (hasError) {
+        if (status === "cancelled") {
             progressBar.style.width = '100%';
-            progressBar.innerHTML = '❌ خطأ';
+            progressBar.innerHTML = '🛑';
+            progressBar.classList.remove('bg-success', 'progress-bar-animated');
+            progressBar.classList.add('bg-warning');
+            progressText.innerHTML = '🛑 تم إلغاء العملية';
+            progressDetail.innerHTML = 'تم إلغاء التحديث بواسطة المستخدم';
+            statusBadge.innerHTML = '🛑 ملغي';
+            statusBadge.className = 'text-warning';
+            button.disabled = false;
+            button.innerHTML = '<i class="bi bi-arrow-repeat"></i> إعادة المحاولة';
+            cancelButton.classList.add('d-none');
+            logsCard.style.display = 'block';
+        } else if (status === "error") {
+            progressBar.style.width = '100%';
+            progressBar.innerHTML = '❌';
             progressBar.classList.remove('bg-success', 'progress-bar-animated');
             progressBar.classList.add('bg-danger');
             progressText.innerHTML = '❌ حدث خطأ أثناء التحديث';
@@ -762,7 +948,9 @@ document.addEventListener('DOMContentLoaded', function() {
             statusBadge.className = 'text-danger';
             button.disabled = false;
             button.innerHTML = '<i class="bi bi-arrow-repeat"></i> إعادة المحاولة';
-        } else if (isComplete) {
+            cancelButton.classList.add('d-none');
+            logsCard.style.display = 'block';
+        } else if (status === "completed") {
             progressBar.style.width = '100%';
             progressBar.innerHTML = '100%';
             progressBar.classList.remove('progress-bar-animated');
@@ -773,6 +961,7 @@ document.addEventListener('DOMContentLoaded', function() {
             statusBadge.className = 'text-success';
             button.disabled = false;
             button.innerHTML = '<i class="bi bi-arrow-repeat"></i> تحديث جميع البيانات';
+            cancelButton.classList.add('d-none');
             
             // ✅ إظهار الـ Logs
             logsCard.style.display = 'block';
@@ -785,6 +974,10 @@ document.addEventListener('DOMContentLoaded', function() {
     progressContainer.classList.remove('d-none');
     button.disabled = true;
     button.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> جاري التحديث...';
+    cancelButton.classList.remove('d-none');
+    cancelButton.disabled = false;
+    cancelButton.innerHTML = '<i class="bi bi-x-circle"></i> إلغاء التحديث';
+    cancelButton.onclick = requestCancel;
     statusBadge.innerHTML = '🔄 جاري التحديث';
     statusBadge.className = 'text-warning';
     startTime = Date.now();

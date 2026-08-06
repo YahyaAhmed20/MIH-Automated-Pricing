@@ -5450,6 +5450,7 @@ from django.shortcuts import render
 from imports.services.update_all_data_service import UpdateAllDataService
 from imports.tasks import update_all_data_task
 from imports.services.progress_service import ProgressService
+
 def clean_logs(text):
     """
     Remove ANSI terminal color codes from command output.
@@ -5496,6 +5497,7 @@ def extract_results_from_logs(logs):
                     })
     
     return results
+
 from django.http import JsonResponse
 
 def system_update(request):
@@ -5544,6 +5546,7 @@ def system_update(request):
             "error_count": error_count,
             "is_running": progress.get("is_running", False),
             "completed": progress.get("completed", 0),
+            "status": progress.get("status", "idle"),  # ✅ تمت الإضافة
         }
     )
     
@@ -5566,3 +5569,27 @@ def clear_logs(request):
             "success": False,
             "message": f"حدث خطأ: {str(e)}"
         }, status=500)
+        
+        
+        
+from django.views.decorators.http import require_POST
+
+@require_POST
+def cancel_update(request):
+    """
+    طلب إلغاء عملية التحديث الحالية.
+    """
+    progress = ProgressService.get()
+
+    if not progress.get("is_running"):
+        return JsonResponse({
+            "success": False,
+            "message": "لا توجد عملية قيد التشغيل."
+        }, status=400)
+
+    ProgressService.request_cancel()
+
+    return JsonResponse({
+        "success": True,
+        "message": "تم إرسال طلب الإلغاء."
+    })

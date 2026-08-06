@@ -7,6 +7,8 @@ from django.core.management.base import CommandError
 from django.core.cache import cache
 
 from imports.services.excel_provider import ExcelProvider
+from imports.services.progress_service import ProgressService
+from imports.exceptions import TaskCancelled
 
 
 # ✅ الأوامر اللي بتدعم --no-confirm
@@ -68,6 +70,10 @@ class UpdateAllDataService:
             # ============================================================
             for idx, (title, command_name) in enumerate(IMPORT_COMMANDS):
 
+                # ✅ إذا طلب المستخدم الإلغاء، لا تبدأ أمرًا جديدًا
+                if ProgressService.is_cancel_requested():
+                    raise TaskCancelled()
+
                 if progress_callback:
                     progress_callback(title, idx)
 
@@ -92,9 +98,16 @@ class UpdateAllDataService:
                             stdout=stdout,
                         )
 
+                    # ✅ فحص الإلغاء بعد انتهاء الأمر الحالي
+                    if ProgressService.is_cancel_requested():
+                        raise TaskCancelled()
+
                     elapsed = perf_counter() - start
                     results.append({"title": title, "status": "✅", "time": elapsed})
                     stdout.write(f"✅ END : {title} ({elapsed:.2f} sec)")
+
+                except TaskCancelled:
+                    raise
 
                 except Exception as exc:
 
@@ -116,6 +129,10 @@ class UpdateAllDataService:
 
             for idx, (title, command_name) in enumerate(POST_IMPORT_COMMANDS):
 
+                # ✅ إذا طلب المستخدم الإلغاء، لا تبدأ أمرًا جديدًا
+                if ProgressService.is_cancel_requested():
+                    raise TaskCancelled()
+
                 if progress_callback:
                     progress_callback(title, len(IMPORT_COMMANDS) + idx)
 
@@ -132,9 +149,16 @@ class UpdateAllDataService:
                         stdout=stdout,
                     )
 
+                    # ✅ فحص الإلغاء بعد انتهاء الأمر الحالي
+                    if ProgressService.is_cancel_requested():
+                        raise TaskCancelled()
+
                     elapsed = perf_counter() - start
                     results.append({"title": title, "status": "✅", "time": elapsed})
                     stdout.write(f"✅ END : {title} ({elapsed:.2f} sec)")
+
+                except TaskCancelled:
+                    raise
 
                 except Exception as exc:
 

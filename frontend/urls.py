@@ -46,6 +46,13 @@ urlpatterns = [
     ),
     
     path('api/update-progress/', views.update_progress, name='update_progress'),  # ✅ أضف هذا
+    
+    path(
+    'api/cancel-update/',
+    views.cancel_update,
+    name='cancel_update'
+),
+    
 
     path(
         "external-approvals/",
