@@ -231,14 +231,14 @@ class ContractStructureMigrationService:
         print("⏳ Starting migration...")
 
         # ============================================================
-        # ✅ Cache للباكدجات
+        # ✅ Cache للباكدجات - بدون iterator لتجنب مشاكل server-side cursor
         # ============================================================
         print("⏳ Loading packages...")
         packages_cache = {}
-        for p in Package.objects.exclude(code__isnull=True).iterator(chunk_size=500):
+        for p in Package.objects.exclude(code__isnull=True):
             key = (
                 ImportHelpers.normalize_text(p.code),
-                p.entity_id if p.entity_id else None,
+                p.entity_id,
                 ImportHelpers.normalize_text(p.name),
             )
             packages_cache[key] = p
@@ -263,6 +263,9 @@ class ContractStructureMigrationService:
             for s in Specialty.objects.all()
         }
         print(f"   ✅ {len(specialties_cache)} specialties loaded")
+
+        # ✅ التخصص الافتراضي إذا لم يوجد تخصص
+        default_specialty = Specialty.objects.first()
 
         # ============================================================
         # ✅ Cache للـ FinancialCategory
@@ -291,12 +294,12 @@ class ContractStructureMigrationService:
         print(f"   ✅ {len(contracts_cache_full)} contracts (full cache) loaded")
 
         # ============================================================
-        # ✅ Cache كامل لـ ContractPackage (بدون select_related)
+        # ✅ Cache كامل لـ ContractPackage - بدون iterator
         # ============================================================
         print("⏳ Loading contract packages into cache...")
         contract_packages_cache = {
             (cp.contract_id, cp.package_id): cp
-            for cp in ContractPackage.objects.iterator(chunk_size=1000)
+            for cp in ContractPackage.objects.all()
         }
         print(f"   ✅ {len(contract_packages_cache)} contract packages cached")
 
@@ -342,7 +345,7 @@ class ContractStructureMigrationService:
         total_rows = len(dataframe)
         processed = 0
 
-        chunk_size = 1000  # ✅ تم التعديل من 200 إلى 1000
+        chunk_size = 1000
         for chunk_start in range(0, total_rows, chunk_size):
             chunk_end = min(chunk_start + chunk_size, total_rows)
             chunk = dataframe.iloc[chunk_start:chunk_end]
@@ -405,7 +408,7 @@ class ContractStructureMigrationService:
                     ImportHelpers.normalize_text(specialty_name)
                 )
                 if not specialty:
-                    specialty = Specialty.objects.first()
+                    specialty = default_specialty
 
                 package = ContractStructureMigrationService._get_or_create_package(
                     entity=entity,
