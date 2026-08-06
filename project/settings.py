@@ -17,6 +17,7 @@ import os
 from dotenv import load_dotenv
 
 load_dotenv()
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -28,7 +29,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-mbdn9)+91#j^)w^jk4skrz_h_2nx_j&6l)!-=fdj*2sogl^m=h'
 
 # ✅ SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True  # ⚠️ خليها False في production
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
+
+# ✅ التحكم في طباعة الاستيراد بشكل منفصل
+DEBUG_IMPORT = os.getenv('DEBUG_IMPORT', 'False') == 'True'
 
 ALLOWED_HOSTS = [
     # "mih-automated-pricing.up.railway.app",
@@ -38,7 +42,7 @@ ALLOWED_HOSTS = [
     ".railway.app",
 ]
 
-# سشسشسشسشسشسش
+# CSRF
 CSRF_TRUSTED_ORIGINS = [
     "http://127.0.0.1:8000",
     "http://localhost:8000",
@@ -107,7 +111,7 @@ ROOT_URLCONF = 'project.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR,'templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -120,73 +124,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'project.wsgi.application'
-
-
-# # Database
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'railway',
-#         'USER': 'postgres',
-#         'PASSWORD': 'CJNFXTSwAvrlDwSdwqypPizihWhLRdDM',
-#         'HOST': 'tokaido.proxy.rlwy.net',
-#         'PORT': '16688',
-#         'OPTIONS': {
-#             'sslmode': 'require',
-#             'connect_timeout': 60,
-#             'keepalives': 1,
-#             'keepalives_idle': 30,
-#             'keepalives_interval': 10,
-#             'keepalives_count': 5,
-#         },
-#         'CONN_MAX_AGE': 60,
-#         'CONN_HEALTH_CHECKS': True,
-#     }
-# }
-
-
-# # ✅ ==========================================================
-# # ✅ إعدادات منع Internal Server Error
-# # ✅ ==========================================================
-
-# # ✅ زيادة حجم البيانات المسموح بها
-# DATA_UPLOAD_MAX_MEMORY_SIZE = 1024 * 1024 * 100  # 100 MB
-# DATA_UPLOAD_MAX_NUMBER_FIELDS = 10000
-
-# # ✅ زيادة مهلة الطلبات (لعمليات التحديث الطويلة)
-# # ✅ ملحوظة: في Railway، المهلة الافتراضية 60 ثانية
-# # ✅ الحل الأفضل هو تشغيل التحديث في الخلفية (Background Task)
-
-# # ✅ إعدادات Logging
-# LOGGING = {
-#     'version': 1,
-#     'disable_existing_loggers': False,
-#     'handlers': {
-#         'console': {
-#             'class': 'logging.StreamHandler',
-#         },
-#         'file': {
-#             'class': 'logging.FileHandler',
-#             'filename': os.path.join(BASE_DIR, 'logs', 'django.log'),
-#         },
-#     },
-#     'root': {
-#         'handlers': ['console', 'file'],
-#         'level': 'INFO',
-#     },
-#     'loggers': {
-#         'django': {
-#             'handlers': ['console', 'file'],
-#             'level': 'INFO',
-#             'propagate': False,
-#         },
-#         'django.db.backends': {
-#             'handlers': ['console'],
-#             'level': 'ERROR',
-#         },
-#     },
-# }
-
 
 
 # Database
@@ -220,39 +157,60 @@ DATABASES = {
 DATA_UPLOAD_MAX_MEMORY_SIZE = 1024 * 1024 * 100  # 100 MB
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 10000
 
-# ✅ زيادة مهلة الطلبات (لعمليات التحديث الطويلة)
-# ✅ ملحوظة: في Railway، المهلة الافتراضية 60 ثانية
-# ✅ الحل الأفضل هو تشغيل التحديث في الخلفية (Background Task)
-
-# ✅ إعدادات Logging
+# ✅ إعدادات Logging المحسنة
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+    },
     'handlers': {
         'console': {
             'class': 'logging.StreamHandler',
+            'formatter': 'simple' if not DEBUG else 'verbose',
         },
         'file': {
             'class': 'logging.FileHandler',
             'filename': os.path.join(BASE_DIR, 'logs', 'django.log'),
+            'formatter': 'verbose',
         },
     },
     'root': {
-        'handlers': ['console', 'file'],
-        'level': 'INFO',
+        'handlers': ['console'],
+        'level': 'DEBUG' if DEBUG else 'WARNING',
     },
     'loggers': {
         'django': {
             'handlers': ['console', 'file'],
-            'level': 'INFO',
+            'level': 'INFO' if DEBUG else 'ERROR',
             'propagate': False,
         },
         'django.db.backends': {
             'handlers': ['console'],
             'level': 'ERROR',
+            'propagate': False,
+        },
+        # ✅ منع السجلات المفرطة من الاستيراد
+        'imports': {
+            'handlers': ['console'],
+            'level': 'DEBUG' if DEBUG_IMPORT else 'WARNING',
+            'propagate': False,
+        },
+        'pricing_requests': {
+            'handlers': ['console'],
+            'level': 'DEBUG' if DEBUG_IMPORT else 'WARNING',
+            'propagate': False,
         },
     },
 }
+
 # ✅ إنشاء مجلد logs إذا لم يكن موجوداً
 LOG_DIR = os.path.join(BASE_DIR, 'logs')
 if not os.path.exists(LOG_DIR):
@@ -310,18 +268,14 @@ TEMP_DIR = BASE_DIR / "temp"
 TEMP_EXCEL_FILE = TEMP_DIR / "APP.xlsx"
 
 
+# ==========================================================
+# Celery
+# ==========================================================
 CELERY_BROKER_URL = os.getenv("REDIS_URL")
-
 CELERY_RESULT_BACKEND = os.getenv("REDIS_URL")
-
 CELERY_ACCEPT_CONTENT = ["json"]
-
 CELERY_TASK_SERIALIZER = "json"
-
 CELERY_RESULT_SERIALIZER = "json"
-
 CELERY_TIMEZONE = "Africa/Cairo"
-
 CELERY_TASK_TRACK_STARTED = True
-
 CELERY_TASK_TIME_LIMIT = 60 * 60
