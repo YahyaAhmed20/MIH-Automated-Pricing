@@ -40,6 +40,7 @@ class ReportStatisticSheet15ImportService:
             "processed": 0,
             "created": 0,
             "updated": 0,
+            "deleted": 0,  # ✅ إضافة deleted
             "skipped": 0,
             "errors": 0,
         }
@@ -66,6 +67,12 @@ class ReportStatisticSheet15ImportService:
             )
             stats_cache[key] = stat
         print(f"   ✅ {len(stats_cache)} records loaded")
+
+        # ============================================================
+        # ✅ Existing Keys + Sheet Keys
+        # ============================================================
+        existing_keys = set(stats_cache.keys())
+        sheet_keys = set()
 
         # ============================================================
         # ✅ قوائم التجميع
@@ -170,12 +177,15 @@ class ReportStatisticSheet15ImportService:
                 result["processed"] += 1
                 processed = result["processed"]
 
-                # ✅ البحث في Cache
+                # ✅ إضافة المفتاح إلى sheet_keys
                 key = (
                     medical_number,
                     account_number,
                     patient_name,
                 )
+                sheet_keys.add(key)
+
+                # ✅ البحث في Cache
                 existing_stat = stats_cache.get(key)
 
                 if existing_stat:
@@ -257,7 +267,7 @@ class ReportStatisticSheet15ImportService:
                         service_price=service_price,
                         invoice_amount=invoice_amount,
                         code=code,
-                        doctor_name=doctor_name,  # ✅ جديد
+                        doctor_name=doctor_name,
                     )
                     to_create.append(stat)
                     stats_cache[key] = stat
@@ -300,10 +310,28 @@ class ReportStatisticSheet15ImportService:
                     "service_price",
                     "invoice_amount",
                     "code",
-                    "doctor_name",  # ✅ جديد
+                    "doctor_name",
                 ],
                 batch_size=1000,
             )
+
+        # ============================================================
+        # ✅ Delete Removed Records
+        # ============================================================
+        keys_to_delete = existing_keys - sheet_keys
+
+        if keys_to_delete:
+            ids_to_delete = [
+                stats_cache[key].id
+                for key in keys_to_delete
+            ]
+
+            deleted_count, _ = ReportStatisticSheet15.objects.filter(
+                id__in=ids_to_delete
+            ).delete()
+
+            result["deleted"] = deleted_count
+            print(f"🗑️ Deleted {deleted_count} records")
 
         elapsed = time.perf_counter() - start_time
 
@@ -313,6 +341,7 @@ class ReportStatisticSheet15ImportService:
         print(f"   📊 تمت المعالجة: {result['processed']}")
         print(f"   ✅ تم الإنشاء: {result['created']}")
         print(f"   🔄 تم التحديث: {result['updated']}")
+        print(f"   🗑️ تم الحذف: {result['deleted']}")  # ✅ إضافة deleted
         print(f"   ⏭️ تم التخطي: {result['skipped']}")
         if result["errors"] > 0:
             print(f"   ❌ الأخطاء: {result['errors']}")

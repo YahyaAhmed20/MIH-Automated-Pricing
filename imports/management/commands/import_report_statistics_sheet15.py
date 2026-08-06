@@ -1,4 +1,4 @@
-# في imports/management/commands/import_report_statistics_sheet15.py
+# imports/management/commands/import_report_statistics_sheet15.py
 
 from django.core.management.base import BaseCommand
 from imports.services.excel_provider import ExcelProvider
@@ -33,21 +33,23 @@ class Command(BaseCommand):
         self.stdout.write("=" * 60)
         self.stdout.write("")
 
-        # ✅ استخدم header=None
+        # ✅ استخدم header=None مع force_reload=True
         dataframe = ExcelProvider.read(
             file_path=options["file_path"],
-            sheet_name="15",  # ✅ شيت 15
-            header=None,      # ✅ مفيش Header
+            sheet_name="15",      # ✅ شيت 15
+            header=None,          # ✅ مفيش Header
+            force_reload=True,    # ✅ إعادة تحميل البيانات من المصدر
         )
 
+        # ✅ حساب عدد الصفوف بشكل صحيح (بدون -1 لأن header=None)
+        total_rows = len(dataframe)
+
         if not options.get("no_confirm", False):
-            total_rows = len(dataframe) - 1
             confirm = input(f"Import {total_rows} records? (y/n): ")
             if confirm.lower() != "y":
                 self.stdout.write(self.style.WARNING("Import cancelled."))
                 return
         else:
-            total_rows = len(dataframe) - 1
             self.stdout.write(f"✅ Importing {total_rows} records (auto-confirmed)")
 
         result = ReportStatisticSheet15ImportService.import_data(dataframe)
@@ -59,6 +61,7 @@ class Command(BaseCommand):
         self.stdout.write(f"Processed : {result['processed']}")
         self.stdout.write(f"Created   : {result['created']}")
         self.stdout.write(f"Updated   : {result['updated']}")
+        self.stdout.write(f"Deleted   : {result['deleted']}")  # ✅ إضافة deleted
         self.stdout.write(f"Skipped   : {result['skipped']}")
         if result["errors"]:
             self.stdout.write(self.style.ERROR(f"Errors    : {result['errors']}"))

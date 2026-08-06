@@ -1,10 +1,11 @@
 # pricing_requests/services/procedure_fees_import_service.py
 
-import pandas as pd
 import time
 from django.db import transaction
 from decimal import Decimal
-from pricing_requests.models import ProcedureFee, Procedure  # ✅ استيراد Procedure من نفس الملف
+
+from pricing_requests.models import ProcedureFee
+from medical_catalog.models import Procedure
 from imports.utils.import_helpers import ImportHelpers
 
 
@@ -49,6 +50,7 @@ class ProcedureFeesImportService:
             "processed": 0,
             "created": 0,
             "updated": 0,
+            "deleted": 0,
             "skipped": 0,
         }
 
@@ -65,6 +67,12 @@ class ProcedureFeesImportService:
             )
             fees_cache[key] = fee
         print(f"   ✅ {len(fees_cache)} fees loaded")
+
+        # ============================================================
+        # ✅ Existing Keys + Sheet Keys
+        # ============================================================
+        existing_keys = set(fees_cache.keys())
+        sheet_keys = set()
 
         # ============================================================
         # ✅ قوائم التجميع للـ Bulk Operations
@@ -84,75 +92,67 @@ class ProcedureFeesImportService:
         mismatched_categories = set()
 
         # ============================================================
-        # ✅ Loop - استخدام أرقام الأعمدة (بدون Header)
+        # ✅ Loop - استخدام itertuples
         # ============================================================
         print("⏳ Processing rows...")
         total_rows = len(dataframe)
         processed = 0
 
-        for index, row in enumerate(dataframe.to_dict("records"), start=1):
+        for index, row in enumerate(dataframe.itertuples(index=False), start=1):
 
             # ✅ أرقام الأعمدة حسب ترتيب شيت 14
             # العمود 0: الجهه (اسم الشركة)
-            entity_name = ImportHelpers.normalize_text(row.get(0, ""))
+            entity_name = ImportHelpers.normalize_text(row[0])
             
             # العمود 1: الفئه الماليه (كود الشركة)
-            financial_category = ImportHelpers.normalize_text(row.get(1, ""))
+            financial_category = ImportHelpers.normalize_text(row[1])
             
             # العمود 2: قائمة الاسعار (السنة)
-            price_list = ImportHelpers.normalize_text(row.get(2, ""))
+            price_list = ImportHelpers.normalize_text(row[2])
             
             # العمود 3: التصنيف (نوع الخدمة)
-            category_raw = row.get(3, "")
+            category_raw = row[3]
             category = ImportHelpers.normalize_text(category_raw)
             
             # ✅ ✅ ✅ توحيد التصنيف فوراً
             category = ProcedureFeesImportService.normalize_category(category)
             
             # ✅ العمود 4: اتعاب (أتعاب الجراح)
-            surgeon_raw = row.get(4, None)
+            surgeon_raw = row[4]
             surgeon_fee = ImportHelpers.clean_decimal(surgeon_raw)
             if surgeon_fee is None:
                 surgeon_fee = Decimal('0.00')
             
             # ✅ العمود 5: اتعاب.1 (أتعاب التخدير)
-            anesthesia_raw = row.get(5, None)
+            anesthesia_raw = row[5]
             anesthesia_fee = ImportHelpers.clean_decimal(anesthesia_raw)
             if anesthesia_fee is None:
                 anesthesia_fee = Decimal('0.00')
             
             # ✅ العمود 6: اتعاب.2 (أتعاب المساعد)
-            assistant_raw = row.get(6, None)
+            assistant_raw = row[6]
             assistant_fee = ImportHelpers.clean_decimal(assistant_raw)
             if assistant_fee is None:
                 assistant_fee = Decimal('0.00')
             
             # ✅ العمود 7: اجمالي الاتعاب
-            total_raw = row.get(7, None)
+            total_raw = row[7]
             total_fee = ImportHelpers.clean_decimal(total_raw)
             if total_fee is None:
                 total_fee = Decimal('0.00')
             
             # ✅ العمود 8: معدل الخصم
-            discount_raw = row.get(8, None)
-            if discount_raw and pd.notna(discount_raw):
+            discount_raw = row[8]
+            if discount_raw and str(discount_raw).strip():
                 discount_rate = str(discount_raw).strip()
             else:
                 discount_rate = ""
 
-            # ✅ طباعة أول 5 صفوف للتحقق (Debug)
-            if index <= 5:
-                print(f"   🔍 Row {index}: entity='{entity_name}', category='{category}'")
-                if category_raw != category:
-                    print(f"      ⚠️ تم توحيد التصنيف: '{category_raw}' → '{category}'")
-
             # ✅ ✅ ✅ التحقق من تطابق التصنيف مع التصنيفات الموجودة في جدول Procedure
             if category and not entity_name:
-                # ✅ ✅ ✅ استخدام category بدلاً من classification
-                exists_in_procedure = Procedure.objects.filter(category=category).exists()
+                exists_in_procedure = Procedure.objects.filter(classification=category).exists()
                 if not exists_in_procedure:
                     mismatched_categories.add(category)
-                    print(f"   ⚠️ تحذير: التصنيف '{category}' غير موجود في جدول Procedure")
 
             # ✅ إذا كان الصف يحتوي على معلومات جهة جديدة
             if entity_name:
@@ -161,9 +161,9 @@ class ProcedureFeesImportService:
                 current_price_list = price_list
                 current_discount = discount_rate
                 result["skipped"] += 1
-                print(f"   📌 New entity: {current_entity} (Discount: {current_discount})")
                 continue
 
+           
             # ✅ إذا كان الصف يحتوي على تصنيف وأتعاب
             if category and current_entity:
                 result["processed"] += 1
@@ -175,6 +175,9 @@ class ProcedureFeesImportService:
                     current_financial,
                     category,
                 )
+                
+                # ✅ إضافة المفتاح إلى sheet_keys
+                sheet_keys.add(key)
                 
                 existing_fee = fees_cache.get(key)
 
@@ -216,7 +219,7 @@ class ProcedureFeesImportService:
                         entity_name=current_entity,
                         financial_category=current_financial,
                         price_list=current_price_list,
-                        category=category,  # ✅ التصنيف الموحد
+                        category=category,
                         surgeon_fee=surgeon_fee,
                         anesthesia_fee=anesthesia_fee,
                         assistant_fee=assistant_fee,
@@ -232,7 +235,8 @@ class ProcedureFeesImportService:
                 if not category and not entity_name:
                     result["skipped"] += 1
 
-            if processed % 1000 == 0 and processed > 0:
+            # ✅ ✅ ✅ تم التعديل: أصبحت الطباعة كل 100 صف بدلاً من 1000
+            if processed % 100 == 0 and processed > 0:
                 print(f"   📊 Processed {processed}/{total_rows} rows...")
 
         print(f"   ✅ Processed {processed}/{total_rows} rows")
@@ -273,7 +277,36 @@ class ProcedureFeesImportService:
                 batch_size=1000,
             )
 
+        # ============================================================
+        # ✅ Delete Removed Fees
+        # ============================================================
+        keys_to_delete = existing_keys - sheet_keys
+
+        if keys_to_delete:
+            ids_to_delete = [
+                fees_cache[key].id
+                for key in keys_to_delete
+            ]
+
+            deleted, _ = ProcedureFee.objects.filter(
+                id__in=ids_to_delete
+            ).delete()
+
+            result["deleted"] = deleted
+
         elapsed = time.perf_counter() - start_time
-        print(f"✅ Completed in {elapsed:.2f} seconds")
+
+        # عرض النتائج النهائية
+        print("=" * 60)
+        print("✅ انتهى الاستيراد بنجاح!")
+        print(
+            f"📊 Processed: {result['processed']}, "
+            f"Created: {result['created']}, "
+            f"Updated: {result['updated']}, "
+            f"Deleted: {result['deleted']}, "
+            f"Skipped: {result['skipped']}"
+        )
+        print("=" * 60)
+        print(f"⏱️ Completed in {elapsed:.2f} seconds")
 
         return result
