@@ -11879,3 +11879,38 @@ redis.exceptions.TimeoutError: Timeout reading from socket
 Not Found: /.well-known/appspecific/com.chrome.devtools.json
 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 15406
 "GET /system/update/ HTTP/1.1" 200 74952
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 51977
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 15295
+"GET /system/update/ HTTP/1.1" 200 81631
+"GET /credit-package-pricing/ HTTP/1.1" 200 64334
+Watching for file changes with StatReloader
+"GET /credit-package-pricing/ HTTP/1.1" 200 86823
+"GET /credit-package-pricing/?company_search=%D8%A7%D9%83%D8%B3%D8%A7&company=42&specialty=&package_search=&package= HTTP/1.1" 200 232961
+"GET /cash-packages/ HTTP/1.1" 200 58122
+"GET /credit-package-pricing/ HTTP/1.1" 200 86823
+"GET /credit-package-pricing/?company_search=%D8%AC%D8%A7%D8%B3%D9%83%D9%88+%28+%D8%A7%D9%84%D8%B4%D8%B1%D9%83%D9%87+%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%8A%D9%87+%D9%84%D9%84%D8%BA%D8%A7%D8%B2%D8%A7%D8%AA+%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%D8%B9%D9%8A%D9%87+%29&company=17&specialty=&package_search=&package= HTTP/1.1" 200 240353
+"GET /credit-package-pricing/?company=17&package=173339&company_search=%D8%AC%D8%A7%D8%B3%D9%83%D9%88%20(%20%D8%A7%D9%84%D8%B4%D8%B1%D9%83%D9%87%20%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%8A%D9%87%20%D9%84%D9%84%D8%BA%D8%A7%D8%B2%D8%A7%D8%AA%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%D8%B9%D9%8A%D9%87%20)&package_search=&specialty= HTTP/1.1" 200 115095
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 51979
+"GET /credit-package-pricing/ HTTP/1.1" 200 86823
+"GET /cash-packages/ HTTP/1.1" 200 528923
+"GET /credit-package-pricing/ HTTP/1.1" 200 86823
+"GET /credit-package-pricing/?company_search=%D8%AC%D8%A7%D8%B3%D9%83%D9%88+%28+%D8%A7%D9%84%D8%B4%D8%B1%D9%83%D9%87+%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%8A%D9%87+%D9%84%D9%84%D8%BA%D8%A7%D8%B2%D8%A7%D8%AA+%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%D8%B9%D9%8A%D9%87+%29&company=17&specialty=&package_search=&package= HTTP/1.1" 200 240353
+D:\desktop\rphospital\src\imports\services\update_all_data_service.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 51977
+"GET /credit-package-pricing/ HTTP/1.1" 200 64334
+"GET /cash-packages/ HTTP/1.1" 200 528923
+"GET /credit-package-pricing/ HTTP/1.1" 200 64334
+Watching for file changes with StatReloader
+"GET /credit-package-pricing/ HTTP/1.1" 200 86823
+Watching for file changes with StatReloader
+"GET /credit-package-pricing/ HTTP/1.1" 200 64334
+Watching for file changes with StatReloader
+"GET /credit-package-pricing/ HTTP/1.1" 200 86823
+Watching for file changes with StatReloader
+"GET /credit-package-pricing/ HTTP/1.1" 200 86823

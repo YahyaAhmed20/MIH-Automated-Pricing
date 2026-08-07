@@ -339,22 +339,22 @@ class CompanyContractImportService:
         # ============================================================
         # ✅ حذف العقود غير الموجودة في الشيت
         # ============================================================
-        if contract_keys_in_sheet:
-            all_contract_keys = set(contracts_cache.keys())
-            keys_to_delete = all_contract_keys - contract_keys_in_sheet
+        # if contract_keys_in_sheet:
+        #     all_contract_keys = set(contracts_cache.keys())
+        #     keys_to_delete = all_contract_keys - contract_keys_in_sheet
             
-            if keys_to_delete:
-                deleted_count = 0
-                for key in keys_to_delete:
-                    contract = contracts_cache.get(key)
-                    if contract:
-                        contract.delete()
-                        deleted_count += 1
-                if deleted_count > 0:
-                    print(f"🗑️ Deleted {deleted_count} contracts not in sheet")
-                    result["deleted_contracts"] = deleted_count
-        else:
-            print("⚠️ No contracts in sheet - skipping deletion to avoid data loss")
+        #     if keys_to_delete:
+        #         deleted_count = 0
+        #         for key in keys_to_delete:
+        #             contract = contracts_cache.get(key)
+        #             if contract:
+        #                 contract.delete()
+        #                 deleted_count += 1
+        #         if deleted_count > 0:
+        #             print(f"🗑️ Deleted {deleted_count} contracts not in sheet")
+        #             result["deleted_contracts"] = deleted_count
+        # else:
+        #     print("⚠️ No contracts in sheet - skipping deletion to avoid data loss")
 
         # ============================================================
         # Bulk Operations

@@ -13,8 +13,6 @@ from imports.exceptions import TaskCancelled
 
 # ✅ الأوامر اللي بتدعم --no-confirm
 COMMANDS_WITH_NO_CONFIRM = [
-    
-    
     "import_report_statistics_sheet15",
 ]
 
@@ -82,6 +80,10 @@ class UpdateAllDataService:
                 stdout.write(f"▶ START : {title}")
                 stdout.flush()
 
+                # ✅ عرض اسم الأمر قبل التنفيذ
+                stdout.write(f"RUNNING => {command_name}")
+                stdout.flush()
+
                 start = perf_counter()
 
                 try:
@@ -97,6 +99,21 @@ class UpdateAllDataService:
                             command_name,
                             stdout=stdout,
                         )
+
+                    # ✅ عرض اسم الأمر بعد الانتهاء
+                    stdout.write(f"FINISHED => {command_name}")
+                    stdout.flush()
+
+                    # ✅ إضافة Package Count بعد أوامر معينة
+                    if title == "Package Catalog":
+                        from medical_catalog.models import Package
+                        stdout.write(f"Packages Count = {Package.objects.count()}")
+                    elif title == "Contract Migration":
+                        from medical_catalog.models import Package
+                        stdout.write(f"Packages Count = {Package.objects.count()}")
+                    elif title == "Cash Packages":
+                        from medical_catalog.models import Package
+                        stdout.write(f"Packages Count = {Package.objects.count()}")
 
                     # ✅ فحص الإلغاء بعد انتهاء الأمر الحالي
                     if ProgressService.is_cancel_requested():
