@@ -35,6 +35,7 @@ class SpecialOfferImportService:
             "created_offers": 0,
             "updated_offers": 0,
             "deleted_offers": 0,
+            "skipped": 0,  # ✅ إضافة counter للتخطي
         }
 
         # ============================================================
@@ -124,6 +125,18 @@ class SpecialOfferImportService:
 
             # ✅ العمود 6: ساريه حتي
             valid_to = ImportHelpers.clean_date(row.get(6, None))
+
+            # ============================================================
+            # ✅ ✅ ✅ التحقق من التواريخ - تم التعديل هنا
+            # ============================================================
+            # ✅ التاريخين إجباريين في SpecialOffer
+            # أي صف ناقص فيه أحد التاريخين يتم تخطيه
+            if not valid_from or not valid_to:
+                print(
+                    f"⚠️ صف {index}: تاريخ 'اعتبار من' أو 'ساريه حتي' مفقود - تم تخطي الصف"
+                )
+                result["skipped"] = result.get("skipped", 0) + 1
+                continue
 
             # ✅ العمود 7: ملاحظات
             notes = ImportHelpers.normalize_text(row.get(7, ""))
@@ -221,6 +234,7 @@ class SpecialOfferImportService:
                 print(f"   📊 Processed {processed}/{total_rows} rows...")
 
         print(f"   ✅ Processed {processed}/{total_rows} rows")
+        print(f"   ⏭️ Skipped missing dates: {result.get('skipped', 0)}")
 
         # ============================================================
         # ✅ تنفيذ الـ Bulk Operations

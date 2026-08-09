@@ -502,13 +502,12 @@ class PricingDetail(models.Model):
         verbose_name="التقرير"
     )
 
-    procedure_name = models.CharField(
-        max_length=255,
-        blank=True,
-        null=True,
-        db_index=True,
-        verbose_name="الإجراء"
-    )
+    procedure_name = models.TextField(
+    blank=True,
+    null=True,
+    db_index=True,
+    verbose_name="الإجراء"
+)
 
     specialty_name = models.CharField(
         max_length=255,
@@ -999,13 +998,13 @@ class CompanyDiscountRank(models.Model):
     )
 
     internal_discount = models.DecimalField(
-        max_digits=6,
+        max_digits=10,
         decimal_places=4,
         default=0
     )
 
     external_discount = models.DecimalField(
-        max_digits=6,
+        max_digits=10,
         decimal_places=4,
         default=0
     )
