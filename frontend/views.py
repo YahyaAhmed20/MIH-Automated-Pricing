@@ -80,7 +80,7 @@ from pricing_requests.models import (
     PricingRequest,
     PricingRequestNote
 )
-from medical_catalog.models import Package
+from medical_catalog.models import Package,PackageAttachment
 from django.core.paginator import Paginator
 from django.db.models import Q
 from contracts.models import Contract
@@ -4181,6 +4181,15 @@ def credit_package_pricing(request):
         
         if selected_package:
             # ============================================================
+            # 📎 مرفقات الباكدج
+            # ============================================================
+            selected_attachment = (
+                PackageAttachment.objects
+                .filter(package=selected_package)
+                .first()
+            )
+            
+            # ============================================================
             # ✅ Helper functions
             # ============================================================
             def format_price(value):
@@ -4256,6 +4265,10 @@ def credit_package_pricing(request):
             
             selected_package.is_expired = False
     
+    # ✅ في حالة عدم وجود package_id، تأكد من تعريف selected_attachment
+    else:
+        selected_attachment = None
+    
     return render(
         request,
         "frontend/credit_package_pricing.html",
@@ -4265,6 +4278,7 @@ def credit_package_pricing(request):
             "selected_package": selected_package,
             "selected_contract_package": selected_contract_package,
             "selected_company": selected_company,
+            "selected_attachment": selected_attachment,  # ✅ تمت الإضافة
             "company_search": company_search,
             "package_search": package_search,
             "specialties": specialties,

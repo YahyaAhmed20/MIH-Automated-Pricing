@@ -12,6 +12,8 @@ from contracts.models import (
     PriceList,
 )
 
+from imports.services.google_sheets_service import GoogleSheetsService
+
 
 class CompanyContractImportService:
 
@@ -150,6 +152,19 @@ class CompanyContractImportService:
         }
 
         # ============================================================
+        # 📎 Load Drive Smart Chips - Sheet 3
+        # ============================================================
+        print("📎 Loading Drive Smart Chips from Sheet 3...")
+
+        drive_links = GoogleSheetsService.get_drive_links(
+            sheet_name="3",
+            start_row=1,
+            end_row=len(dataframe) + 1,
+        )
+
+        print(f"   ✅ Loaded {len(drive_links)} Drive links")
+
+        # ============================================================
         # Cache
         # ============================================================
         print("⏳ Loading entities...")
@@ -224,9 +239,44 @@ class CompanyContractImportService:
             # ✅ العمود 5: اعتباراً من (التاريخ)
             effective_from = ImportHelpers.clean_date(row.get(5, None))
 
-            # ✅ العمود 6: تعليمات التشغيل
-            operating_instructions = ImportHelpers.normalize_text(row.get(6, ""))
-            operating_instructions = CompanyContractImportService.truncate_text(operating_instructions, 255)
+            # ============================================================
+            # 📎 العمود 6: تعليمات التشغيل - Google Drive Smart Chip
+            # ============================================================
+
+            # dataframe index 0 = Google Sheet row 2
+            # column 6 = Sheet column G
+
+            drive_position = (
+                index,
+                6,
+            )
+
+            drive_file = drive_links.get(drive_position)
+
+            if drive_file:
+                # اسم الملف
+                operating_instructions = ImportHelpers.normalize_text(
+                    drive_file.get("name", "")
+                )
+
+                # رابط Google Drive
+                operating_pdf = ImportHelpers.normalize_text(
+                    drive_file.get("url", "")
+                )
+
+                if processed < 10:
+                    print(
+                        f"   📎 Row {index + 1}: "
+                        f"{operating_instructions}"
+                    )
+                    print(
+                        f"      🔗 {operating_pdf}"
+                    )
+
+            else:
+                # لا يوجد Smart Chip
+                operating_instructions = ""
+                operating_pdf = ""
 
             # ✅ العمود 12: ملاحظات
             notes = ImportHelpers.normalize_text(row.get(12, ""))
@@ -302,6 +352,10 @@ class CompanyContractImportService:
                     existing_contract.operating_instructions = operating_instructions
                     changed = True
 
+                if existing_contract.operating_pdf != operating_pdf:
+                    existing_contract.operating_pdf = operating_pdf
+                    changed = True
+
                 if existing_contract.notes != notes:
                     existing_contract.notes = notes
                     changed = True
@@ -324,6 +378,7 @@ class CompanyContractImportService:
                     medical_service=medical_service,
                     effective_from=effective_from,
                     operating_instructions=operating_instructions,
+                    operating_pdf=operating_pdf,
                     notes=notes,
                     is_active=True,
                 )
@@ -337,28 +392,51 @@ class CompanyContractImportService:
         print(f"   ✅ Processed {processed}/{total_rows} rows")
 
         # ============================================================
-        # ✅ حذف العقود غير الموجودة في الشيت
+        # 🔄 Sync contracts with Sheet 3
         # ============================================================
-        # if contract_keys_in_sheet:
-        #     all_contract_keys = set(contracts_cache.keys())
-        #     keys_to_delete = all_contract_keys - contract_keys_in_sheet
-            
-        #     if keys_to_delete:
-        #         deleted_count = 0
-        #         for key in keys_to_delete:
-        #             contract = contracts_cache.get(key)
-        #             if contract:
-        #                 contract.delete()
-        #                 deleted_count += 1
-        #         if deleted_count > 0:
-        #             print(f"🗑️ Deleted {deleted_count} contracts not in sheet")
-        #             result["deleted_contracts"] = deleted_count
-        # else:
-        #     print("⚠️ No contracts in sheet - skipping deletion to avoid data loss")
+        print("🔄 Synchronizing contracts with Sheet 3...")
+
+        deactivated_count = 0
+
+        for key, contract in contracts_cache.items():
+
+            # العقد موجود في Sheet 3
+            if key in contract_keys_in_sheet:
+                continue
+
+            # لا نلمس عقود DEFAULT
+            if (
+                contract.financial_category
+                and ImportHelpers.normalize_text(
+                    contract.financial_category.code
+                ).upper() == "DEFAULT"
+            ):
+                continue
+
+            # نعطل العقد بدل حذفه
+            if contract.is_active:
+                contract.is_active = False
+                contracts_to_update.append(contract)
+                deactivated_count += 1
+
+        result["deleted_contracts"] = deactivated_count
+
+        print(
+            f"🔴 Deactivated {deactivated_count} "
+            f"contracts not found in Sheet 3"
+        )
 
         # ============================================================
         # Bulk Operations
         # ============================================================
+        # إزالة أي تكرار في قائمة التحديث
+        unique_updates = {}
+
+        for contract in contracts_to_update:
+            unique_updates[contract.id] = contract
+
+        contracts_to_update = list(unique_updates.values())
+
         print(f"💾 Creating {len(contracts_to_create)} contracts...")
         print(f"💾 Updating {len(contracts_to_update)} contracts...")
 
@@ -373,6 +451,7 @@ class CompanyContractImportService:
                     "medical_service",
                     "effective_from",
                     "operating_instructions",
+                    "operating_pdf",
                     "notes",
                     "is_active",
                 ],

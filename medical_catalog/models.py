@@ -267,9 +267,6 @@ class Package(models.Model):
     def __str__(self):
         return self.name
 
-# ============================================================
-# ✅ PackageAttachment Model
-# ============================================================
 class PackageAttachment(models.Model):
 
     package = models.OneToOneField(
@@ -278,6 +275,7 @@ class PackageAttachment(models.Model):
         related_name="attachment"
     )
 
+    # الملفات المحلية القديمة - لا نحذفها
     package_pdf = models.FileField(
         upload_to="packages/includes/",
         blank=True,
@@ -288,6 +286,56 @@ class PackageAttachment(models.Model):
         upload_to="packages/instructions/",
         blank=True,
         null=True
+    )
+
+    # ============================================================
+    # Google Drive - Package Includes
+    # ============================================================
+
+    package_pdf_name = models.CharField(
+        max_length=500,
+        blank=True,
+        null=True,
+        verbose_name="اسم ملف مشتملات الباكدج"
+    )
+
+    package_pdf_url = models.URLField(
+        max_length=1000,
+        blank=True,
+        null=True,
+        verbose_name="رابط مشتملات الباكدج"
+    )
+
+    package_pdf_drive_id = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name="Google Drive File ID - مشتملات"
+    )
+
+    # ============================================================
+    # Google Drive - Operation Instructions
+    # ============================================================
+
+    operation_instruction_name = models.CharField(
+        max_length=500,
+        blank=True,
+        null=True,
+        verbose_name="اسم ملف تعليمات التشغيل"
+    )
+
+    operation_instruction_url = models.URLField(
+        max_length=1000,
+        blank=True,
+        null=True,
+        verbose_name="رابط تعليمات التشغيل"
+    )
+
+    operation_instruction_drive_id = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name="Google Drive File ID - تعليمات التشغيل"
     )
 
     created_at = models.DateTimeField(auto_now_add=True)

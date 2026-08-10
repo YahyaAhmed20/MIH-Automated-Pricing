@@ -1,4 +1,5 @@
 import io
+import re  # ✅ مضافة لاستخراج الـ file_id من الروابط
 import pandas as pd
 import gspread
 from pathlib import Path
@@ -13,6 +14,7 @@ from googleapiclient.http import MediaIoBaseDownload
 
 SCOPES = [
     "https://www.googleapis.com/auth/spreadsheets.readonly",
+    # ✅ تم إزالة scope drive.readonly لأننا نستخدم get_drive_service() للـ Drive
 ]
 
 
@@ -20,27 +22,21 @@ class GoogleSheetsService:
 
     _client = None
     _spreadsheet = None
-    _cache = {}  # ✅ Cache للبيانات
-    _cache_time = {}  # ✅ وقت التخزين
+    _cache = {}
+    _cache_time = {}
 
     @classmethod
     def get_client(cls):
-
         if cls._client is None:
-
             credentials = Credentials.from_service_account_file(
                 settings.GOOGLE_SERVICE_ACCOUNT_FILE,
                 scopes=SCOPES,
             )
-
             cls._client = gspread.authorize(credentials)
-
         return cls._client
 
     @classmethod
-    def get_spreadsheet(cls, force_reload=False):  # ✅ إضافة force_reload
-
-        # ✅ إذا كان force_reload، أعد فتح الـ Spreadsheet
+    def get_spreadsheet(cls, force_reload=False):
         if force_reload:
             print(f"🔄 Force reloading spreadsheet at {datetime.now()}")
             cls._spreadsheet = None
@@ -49,12 +45,10 @@ class GoogleSheetsService:
             cls._spreadsheet = cls.get_client().open_by_key(
                 settings.GOOGLE_SPREADSHEET_ID
             )
-
         return cls._spreadsheet
 
     @classmethod
     def get_drive_service(cls):
-
         credentials = Credentials.from_service_account_file(
             settings.GOOGLE_SERVICE_ACCOUNT_FILE,
             scopes=[
@@ -62,7 +56,6 @@ class GoogleSheetsService:
                 "https://www.googleapis.com/auth/spreadsheets.readonly",
             ],
         )
-
         return build(
             "drive",
             "v3",
@@ -72,7 +65,6 @@ class GoogleSheetsService:
 
     @classmethod
     def download_excel(cls):
-
         settings.TEMP_DIR.mkdir(
             parents=True,
             exist_ok=True,
@@ -90,37 +82,258 @@ class GoogleSheetsService:
         )
 
         file_stream = io.BytesIO()
-
         downloader = MediaIoBaseDownload(
             file_stream,
             request,
         )
-
         done = False
 
         while not done:
-
             _, done = downloader.next_chunk()
 
         with open(
             settings.TEMP_EXCEL_FILE,
             "wb",
         ) as output:
+            output.write(file_stream.getvalue())
 
-            output.write(
-                file_stream.getvalue()
-            )
+        return Path(settings.TEMP_EXCEL_FILE)
 
-        return Path(
-            settings.TEMP_EXCEL_FILE
+    # ✅ طريقة جديدة - مطلوبة لاستخراج Smart Chips
+    @classmethod
+    def get_sheets_api_service(cls):
+        credentials = Credentials.from_service_account_file(
+            settings.GOOGLE_SERVICE_ACCOUNT_FILE,
+            scopes=SCOPES,
+        )
+        return build(
+            "sheets",
+            "v4",
+            credentials=credentials,
+            cache_discovery=False,
         )
 
+    # ✅ طريقة جديدة - استخراج روابط Drive من Smart Chips (محسّنة بالقراءة على دفعات)
     @classmethod
-    def get_dataframe(cls, sheet_name, force_reload=False):  # ✅ إضافة force_reload
+    def get_drive_links(cls, sheet_name, start_row=1, end_row=None):
+        """
+        استخراج روابط ملفات Google Drive الموجودة كـ Smart Chips
+        داخل خلايا Google Sheets.
 
+        يتم القراءة على دفعات لتجنب Timeout مع الشيتات الكبيرة.
+
+        Returns:
+            {
+                (row_index, column_index): {
+                    "name": "...",
+                    "url": "...",
+                    "file_id": "...",
+                    "mime_type": "..."
+                }
+            }
+        """
+
+        service = cls.get_sheets_api_service()
+
+        # ============================================================
+        # إعدادات القراءة
+        # ============================================================
+
+        BATCH_SIZE = 500
+
+        if end_row is None:
+            # لو لم يتم تحديد النهاية، نستخدم آخر صف معروف
+            worksheet = cls.get_spreadsheet().worksheet(
+                str(sheet_name)
+            )
+
+            end_row = worksheet.row_count
+
+        links = {}
+
+        current_row = start_row
+
+        total_rows = end_row - start_row + 1
+
+        print(
+            f"⏳ Reading Drive Smart Chips in batches "
+            f"of {BATCH_SIZE} rows..."
+        )
+
+        # ============================================================
+        # القراءة على دفعات
+        # ============================================================
+
+        while current_row <= end_row:
+
+            batch_end = min(
+                current_row + BATCH_SIZE - 1,
+                end_row,
+            )
+
+            range_name = (
+                f"{sheet_name}!"
+                f"A{current_row}:U{batch_end}"
+            )
+
+            print(
+                f"   📥 Reading rows "
+                f"{current_row}-{batch_end} "
+                f"of {end_row}"
+            )
+
+            result = (
+                service.spreadsheets()
+                .get(
+                    spreadsheetId=settings.GOOGLE_SPREADSHEET_ID,
+                    ranges=[range_name],
+                    includeGridData=True,
+                )
+                .execute()
+            )
+
+            # ========================================================
+            # معالجة نتيجة الـBatch
+            # ========================================================
+
+            for sheet in result.get("sheets", []):
+
+                data = sheet.get("data", [])
+
+                for grid in data:
+
+                    start_row_index = grid.get(
+                        "startRow",
+                        current_row - 1,
+                    )
+
+                    start_column_index = grid.get(
+                        "startColumn",
+                        0,
+                    )
+
+                    for row_offset, row_data in enumerate(
+                        grid.get("rowData", [])
+                    ):
+
+                        values = row_data.get(
+                            "values",
+                            [],
+                        )
+
+                        for col_offset, cell in enumerate(
+                            values
+                        ):
+
+                            chip_runs = cell.get(
+                                "chipRuns",
+                                [],
+                            )
+
+                            for chip_run in chip_runs:
+
+                                rich_link = (
+                                    chip_run
+                                    .get("chip", {})
+                                    .get(
+                                        "richLinkProperties",
+                                        {},
+                                    )
+                                )
+
+                                url = rich_link.get(
+                                    "uri"
+                                )
+
+                                if not url:
+                                    continue
+
+                                value = (
+                                    cell.get(
+                                        "formattedValue"
+                                    )
+                                    or cell.get(
+                                        "effectiveValue",
+                                        {},
+                                    ).get(
+                                        "stringValue"
+                                    )
+                                    or ""
+                                )
+
+                                # ====================================================
+                                # استخراج File ID
+                                # ====================================================
+
+                                file_id = None
+
+                                patterns = [
+                                    r"[?&]id=([^&]+)",
+                                    r"/file/d/([^/]+)",
+                                    r"/document/d/([^/]+)",
+                                    r"/spreadsheets/d/([^/]+)",
+                                ]
+
+                                for pattern in patterns:
+
+                                    match = re.search(
+                                        pattern,
+                                        url,
+                                    )
+
+                                    if match:
+
+                                        file_id = (
+                                            match.group(1)
+                                        )
+
+                                        break
+
+                                # ====================================================
+                                # حفظ الـSmart Chip
+                                # ====================================================
+
+                                links[
+                                    (
+                                        start_row_index
+                                        + row_offset,
+
+                                        start_column_index
+                                        + col_offset,
+                                    )
+                                ] = {
+                                    "name": value,
+                                    "url": url,
+                                    "file_id": file_id,
+                                    "mime_type": (
+                                        rich_link.get(
+                                            "mimeType"
+                                        )
+                                    ),
+                                }
+
+            # ========================================================
+            # الانتقال للدفعة التالية
+            # ========================================================
+
+            current_row = batch_end + 1
+
+        # ============================================================
+        # النتيجة
+        # ============================================================
+
+        print(
+            f"   ✅ Drive Smart Chips loaded: "
+            f"{len(links)} links "
+            f"from {total_rows} rows"
+        )
+
+        return links
+
+    @classmethod
+    def get_dataframe(cls, sheet_name, force_reload=False):
         cache_key = str(sheet_name)
 
-        # ✅ إذا كان force_reload، احذف الـ Cache
         if force_reload:
             if cache_key in cls._cache:
                 print(f"🔄 Force reload for sheet {sheet_name} (was cached at {cls._cache_time.get(cache_key, 'unknown')})")
@@ -128,15 +341,12 @@ class GoogleSheetsService:
                 if cache_key in cls._cache_time:
                     del cls._cache_time[cache_key]
 
-            # ✅ أعد فتح الـ Spreadsheet
             cls.get_spreadsheet(force_reload=True)
 
-        # ✅ استخدام Cache إذا كان موجوداً
         if cache_key in cls._cache:
             print(f"✅ Using cached data for sheet {sheet_name}")
             return cls._cache[cache_key].copy()
 
-        # ✅ قراءة جديدة من Google
         print(f"📥 Fetching fresh data from Google Sheets: {sheet_name}")
 
         worksheet = cls.get_spreadsheet().worksheet(
@@ -149,21 +359,15 @@ class GoogleSheetsService:
             print(f"⚠️ Sheet {sheet_name} is empty")
             return pd.DataFrame()
 
-        # ✅ استخدام أول صف كـ header
         headers = data[0]
         rows = data[1:]
 
-        # ✅ إنشاء DataFrame مع headers
         dataframe = pd.DataFrame(rows, columns=headers)
-
-        # حذف الصفوف الفارغة بالكامل
         dataframe = dataframe.replace("", pd.NA)
         dataframe = dataframe.dropna(how="all")
         dataframe = dataframe.fillna("")
-
         dataframe = dataframe.reset_index(drop=True)
 
-        # ✅ تخزين في Cache مع timestamp
         cls._cache[cache_key] = dataframe
         cls._cache_time[cache_key] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
@@ -172,7 +376,7 @@ class GoogleSheetsService:
         return dataframe.copy()
 
     @classmethod
-    def clear_cache(cls):  # ✅ إضافة مسح الـ Cache
+    def clear_cache(cls):
         cls._cache.clear()
         cls._cache_time.clear()
         cls._spreadsheet = None
