@@ -3,12 +3,16 @@
 import re
 import pandas as pd
 from decimal import Decimal, ROUND_HALF_UP, InvalidOperation
+from datetime import datetime
+
 
 class ImportHelpers:
 
     @staticmethod
     def normalize_text(value):
-
+        """
+        تنظيف النصوص وإزالة المسافات الزائدة والأسطر الجديدة
+        """
         if pd.isna(value):
             return ""
 
@@ -21,35 +25,59 @@ class ImportHelpers:
 
     @staticmethod
     def clean_date(value):
-
+        """
+        تنظيف قيمة التاريخ وتحويلها إلى كائن date أو None
+        ✅ يدعم جميع الصيغ الممكنة
+        ✅ يدعم الصيغة المصرية YYYY/MM/DD
+        ✅ يدعم الأرقام (timestamps)
+        """
         if pd.isna(value):
             return None
 
         if value in ("", None):
             return None
 
-        try:
-            # محاولة كصيغة MM/DD/YYYY أولاً
-            date = pd.to_datetime(
-                value,
-                format='%m/%d/%Y',
-                errors="coerce",
-            )
+        # ✅ لو كانت القيمة رقم 0 أو قيمة فارغة
+        if isinstance(value, (int, float)):
+            if value == 0:
+                return None
+            # لو كانت قيمة رقمية كبيرة (timestamp)
+            if value > 1000:
+                try:
+                    return pd.to_datetime(value, unit='d').date()
+                except:
+                    return None
 
-            if pd.isna(date):
-                # لو فشلت، جرب صيغة DD/MM/YYYY
-                date = pd.to_datetime(
-                    value,
-                    format='%d/%m/%Y',
-                    errors="coerce",
-                )
-
-            if pd.isna(date):
+        # ✅ لو كانت نصاً
+        if isinstance(value, str):
+            value = value.strip()
+            if not value or value in ['0', 'NULL', 'null', 'None', '']:
                 return None
 
-            return date.date()
+        # ✅ محاولة الصيغ المختلفة (الأولوية للصيغة المصرية)
+        for fmt in (
+            "%Y/%m/%d",     # 2026/8/10 (الصيغة المصرية)
+            "%Y-%m-%d",     # 2026-08-10
+            "%m/%d/%Y",     # 8/10/2026
+            "%d/%m/%Y",     # 10/8/2026
+            "%Y%m%d",       # 20260810
+            "%d-%m-%Y",     # 10-08-2026
+            "%m-%d-%Y",     # 08-10-2026
+            "%d.%m.%Y",     # 10.08.2026
+            "%m.%d.%Y",     # 08.10.2026
+        ):
+            try:
+                return datetime.strptime(str(value).strip(), fmt).date()
+            except (ValueError, TypeError):
+                continue
 
-        except Exception:
+        # ✅ المحاولة الأخيرة: استخدام Pandas (يتعامل مع صيغ متعددة)
+        try:
+            result = pd.to_datetime(value, errors='coerce')
+            if pd.isna(result):
+                return None
+            return result.date()
+        except:
             return None
 
     @staticmethod
@@ -78,7 +106,6 @@ class ImportHelpers:
             decimal_value = Decimal(cleaned)
             decimal_value = decimal_value.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
             
-            # ✅ تم إزالة الحد الأقصى للقيمة
             return decimal_value
             
         except (ValueError, TypeError, InvalidOperation):
@@ -149,7 +176,9 @@ class ImportHelpers:
     # ============================================================
     @staticmethod
     def normalize_company_name(value):
-
+        """
+        تنظيف اسم الشركة
+        """
         return ImportHelpers.normalize_text(value)
 
     @staticmethod
@@ -157,6 +186,9 @@ class ImportHelpers:
         package_code,
         package_name,
     ):
+        """
+        بناء مفتاح فريد للبحث عن الباكدجات
+        """
         return (
             ImportHelpers.normalize_text(package_code),
             ImportHelpers.normalize_text(package_name),
@@ -171,7 +203,9 @@ class ImportHelpers:
         specialties_cache,
         result=None,
     ):
-
+        """
+        الحصول على أو إنشاء تخصص جديد
+        """
         from medical_catalog.models import Specialty
 
         specialty_name = (
