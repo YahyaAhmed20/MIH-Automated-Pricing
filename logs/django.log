@@ -13455,3 +13455,16 @@ Watching for file changes with StatReloader
 Watching for file changes with StatReloader
 "GET /external-approvals/ HTTP/1.1" 200 75390
 "GET /external-approvals/early/ HTTP/1.1" 200 150276
+Watching for file changes with StatReloader
+"GET /external-approvals/coordinator/ HTTP/1.1" 200 60657
+"GET /external-approvals/coordinator/? HTTP/1.1" 200 60657
+"GET /external-approvals/coordinator/? HTTP/1.1" 200 60657
+"GET /external-approvals/ HTTP/1.1" 200 75390
+"GET /external-approvals/early/ HTTP/1.1" 200 164893
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 15406
+"GET /external-approvals/early/ HTTP/1.1" 200 172985
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 15406
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 15406

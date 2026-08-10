@@ -404,6 +404,193 @@
         color: #dc3545 !important;
     }
     
+    /* ============================================ */
+    /* ✅ تحويل الجدول إلى بطاقات على الهواتف */
+    /* ============================================ */
+    
+    /* ✅ إخفاء رأس الجدول على الهواتف */
+    @media (max-width: 767.98px) {
+        .patients-table thead {
+            display: none;
+        }
+        
+        .patients-table tbody tr {
+            display: block;
+            margin-bottom: 1rem;
+            border: 1px solid #e9ecef;
+            border-radius: 16px;
+            padding: 0.75rem;
+            background: #fff;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+            transition: all 0.3s ease;
+        }
+        
+        .patients-table tbody tr:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        }
+        
+        .patients-table tbody td {
+            display: block;
+            padding: 0.4rem 0.6rem !important;
+            border: none !important;
+            font-size: 0.85rem;
+        }
+        
+        .patients-table tbody td:before {
+            content: attr(data-label);
+            font-weight: 700;
+            color: #495057;
+            display: inline-block;
+            width: 35%;
+            min-width: 100px;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            color: #6c757d;
+        }
+        
+        .patients-table tbody td:not(:last-child) {
+            border-bottom: 1px solid #f1f3f5 !important;
+        }
+        
+        .patients-table tbody td:last-child {
+            border-bottom: none !important;
+        }
+        
+        .patients-table .patient-row td:first-child {
+            display: none; /* ✅ إخفاء رقم الصف */
+        }
+        
+        .patients-table .patient-row td:nth-child(2) {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #1a237e;
+            background: #f8f9fa;
+            border-radius: 12px 12px 0 0;
+            padding: 0.75rem !important;
+            margin: -0.75rem -0.75rem 0.5rem -0.75rem;
+            border-bottom: 2px solid #e9ecef !important;
+        }
+        
+        .patients-table .patient-row td:nth-child(2):before {
+            display: none; /* ✅ إخفاء label اسم المريض عشان يظهر كعنوان */
+        }
+        
+        .patients-table .patient-row td:nth-child(3):before {
+            content: "🏢 الجهة";
+        }
+        
+        .patients-table .patient-row td:nth-child(4):before {
+            content: "🏢 الشركة الفرعية";
+        }
+        
+        .patients-table .patient-row td:nth-child(5):before {
+            content: "👨‍⚕️ الطبيب";
+        }
+        
+        .patients-table .patient-row td:nth-child(6):before {
+            content: "📋 الإجراء";
+        }
+        
+        .patients-table .patient-row td:nth-child(7):before {
+            content: "📌 الحالة";
+        }
+        
+        .patients-table .patient-row td:nth-child(8):before {
+            content: "📅 التاريخ";
+        }
+        
+        .patients-table .patient-row td:nth-child(9):before {
+            content: "⚡ الإجراء";
+        }
+        
+        /* ✅ تنسيق زر عرض المزيد في البطاقات */
+        .patients-table .patient-row td:last-child {
+            text-align: center;
+            padding-top: 0.75rem !important;
+        }
+        
+        .patients-table .patient-row td:last-child .btn-view-details {
+            width: 100%;
+            padding: 0.5rem;
+            font-size: 0.85rem;
+            border-radius: 10px;
+        }
+        
+        /* ✅ تنسيق الـ Status Badge */
+        .patients-table .patient-row td:nth-child(7) .status-badge {
+            font-size: 0.8rem;
+            padding: 0.3rem 1rem;
+        }
+        
+        /* ✅ صف التفاصيل (Details Expand) في الهاتف */
+        .details-expand-row td {
+            padding: 0 !important;
+        }
+        
+        .details-container {
+            padding: 1rem !important;
+            margin: 0 !important;
+            border-radius: 12px !important;
+        }
+        
+        .details-container .info-card {
+            padding: 0.75rem !important;
+        }
+        
+        .details-container .info-item {
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            gap: 2px !important;
+            padding: 4px 6px !important;
+        }
+        
+        .details-container .info-item .value {
+            max-width: 100% !important;
+            width: 100% !important;
+        }
+    }
+    
+    /* ============================================ */
+    /* ✅ تحسينات إضافية للهواتف الصغيرة جداً */
+    /* ============================================ */
+    @media (max-width: 480px) {
+        .patients-table tbody td:before {
+            width: 30%;
+            min-width: 70px;
+            font-size: 0.6rem;
+        }
+        
+        .patients-table tbody td {
+            font-size: 0.75rem;
+            padding: 0.3rem 0.4rem !important;
+        }
+        
+        .patients-table .patient-row td:nth-child(2) {
+            font-size: 0.95rem;
+            padding: 0.6rem !important;
+            margin: -0.6rem -0.6rem 0.4rem -0.6rem;
+        }
+        
+        .patients-table .patient-row td:last-child .btn-view-details {
+            font-size: 0.75rem;
+            padding: 0.4rem;
+        }
+        
+        .details-container .info-card .card-title {
+            font-size: 0.7rem !important;
+        }
+        
+        .details-container .info-item .label {
+            font-size: 0.65rem !important;
+        }
+        
+        .details-container .info-item .value {
+            font-size: 0.7rem !important;
+        }
+    }
+    
     /* ✅ Responsive */
     @media (max-width: 768px) {
         .info-item {
@@ -700,16 +887,16 @@
                 <!-- ✅ صف المريض الرئيسي -->
                 <tr class="patient-row" data-patient-id="{{ patient.id }}">
                     <td>{{ forloop.counter0|add:patients.start_index }}</td>
-                    <td>
+                    <td data-label="👤 اسم المريض">
                         <span class="patient-name-link" onclick="toggleDetails({{ patient.id }})">
                             {{ patient.patient_name|default:"-" }}
                         </span>
                     </td>
-                    <td>{{ patient.company|default:"-" }}</td>
-                    <td>{{ patient.sub_account|default:"-" }}</td>
-                    <td>{{ patient.doctor_name|default:"-" }}</td>
-                    <td>{{ patient.procedure|default:"-" }}</td>
-                    <td>
+                    <td data-label="🏢 الجهة">{{ patient.company|default:"-" }}</td>
+                    <td data-label="🏢 الشركة الفرعية">{{ patient.sub_account|default:"-" }}</td>
+                    <td data-label="👨‍⚕️ الطبيب">{{ patient.doctor_name|default:"-" }}</td>
+                    <td data-label="📋 اسم الاجراء">{{ patient.procedure|default:"-" }}</td>
+                    <td data-label="📌 حالة الموافقه">
                         <span class="status-badge 
                             {% if patient.main_status == 'Serv. Done' %}done
                             {% elif patient.main_status == 'Pending' or patient.main_status == 'pending' %}pending
@@ -719,8 +906,8 @@
                             {{ patient.main_status|default:"-" }}
                         </span>
                     </td>
-                    <td>{{ patient.date|date:"Y-m-d"|default:"-" }}</td>
-                    <td>
+                    <td data-label="📅 تاريخ الاجراء">{{ patient.date|date:"Y-m-d"|default:"-" }}</td>
+                    <td data-label="⚡ الإجراء">
                         <button class="btn-view-details" onclick="toggleDetails({{ patient.id }})">
                             <i class="fas fa-chevron-down me-1"></i> عرض المزيد
                         </button>
