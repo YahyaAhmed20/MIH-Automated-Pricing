@@ -115,7 +115,13 @@ class GoogleSheetsService:
 
     # ✅ طريقة جديدة - استخراج روابط Drive من Smart Chips (محسّنة بالقراءة على دفعات)
     @classmethod
-    def get_drive_links(cls, sheet_name, start_row=1, end_row=None):
+    def get_drive_links(
+        cls,
+        sheet_name,
+        start_row=1,
+        end_row=None,
+        end_column="U",
+    ):
         """
         استخراج روابط ملفات Google Drive الموجودة كـ Smart Chips
         داخل خلايا Google Sheets.
@@ -173,7 +179,7 @@ class GoogleSheetsService:
 
             range_name = (
                 f"{sheet_name}!"
-                f"A{current_row}:U{batch_end}"
+                f"A{current_row}:{end_column}{batch_end}"
             )
 
             print(
@@ -225,45 +231,74 @@ class GoogleSheetsService:
                             values
                         ):
 
-                            chip_runs = cell.get(
-                                "chipRuns",
-                                [],
-                            )
+                            # ============================================================
+                            # استخراج Drive Link:
+                            # 1) Smart Chip
+                            # 2) Hyperlink عادي
+                            # ============================================================
 
-                            for chip_run in chip_runs:
+                            link_items = []
+
+                            # ------------------------------------------------------------
+                            # 1. Smart Chip
+                            # ------------------------------------------------------------
+
+                            for chip_run in cell.get("chipRuns", []):
 
                                 rich_link = (
                                     chip_run
                                     .get("chip", {})
-                                    .get(
-                                        "richLinkProperties",
-                                        {},
-                                    )
+                                    .get("richLinkProperties", {})
                                 )
 
-                                url = rich_link.get(
-                                    "uri"
-                                )
+                                url = rich_link.get("uri")
+
+                                if url:
+                                    link_items.append({
+                                        "url": url,
+                                        "mime_type": rich_link.get("mimeType"),
+                                    })
+
+                            # ------------------------------------------------------------
+                            # 2. Hyperlink عادي
+                            # ------------------------------------------------------------
+
+                            if not link_items:
+
+                                url = cell.get("hyperlink")
 
                                 if not url:
-                                    continue
+                                    url = (
+                                        cell.get("effectiveFormat", {})
+                                        .get("textFormat", {})
+                                        .get("link", {})
+                                        .get("uri")
+                                    )
+
+                                if url:
+                                    link_items.append({
+                                        "url": url,
+                                        "mime_type": None,
+                                    })
+
+                            # ------------------------------------------------------------
+                            # معالجة الروابط
+                            # ------------------------------------------------------------
+
+                            for link_item in link_items:
+
+                                url = link_item["url"]
 
                                 value = (
-                                    cell.get(
-                                        "formattedValue"
-                                    )
-                                    or cell.get(
-                                        "effectiveValue",
-                                        {},
-                                    ).get(
-                                        "stringValue"
-                                    )
+                                    cell.get("formattedValue")
+                                    or cell.get("effectiveValue", {})
+                                    .get("stringValue")
                                     or ""
                                 )
 
-                                # ====================================================
+                                # --------------------------------------------------------
                                 # استخراج File ID
-                                # ====================================================
+                                # --------------------------------------------------------
 
                                 file_id = None
 
@@ -282,34 +317,23 @@ class GoogleSheetsService:
                                     )
 
                                     if match:
-
-                                        file_id = (
-                                            match.group(1)
-                                        )
-
+                                        file_id = match.group(1)
                                         break
 
-                                # ====================================================
-                                # حفظ الـSmart Chip
-                                # ====================================================
+                                # --------------------------------------------------------
+                                # حفظ الرابط
+                                # --------------------------------------------------------
 
                                 links[
                                     (
-                                        start_row_index
-                                        + row_offset,
-
-                                        start_column_index
-                                        + col_offset,
+                                        start_row_index + row_offset,
+                                        start_column_index + col_offset,
                                     )
                                 ] = {
                                     "name": value,
                                     "url": url,
                                     "file_id": file_id,
-                                    "mime_type": (
-                                        rich_link.get(
-                                            "mimeType"
-                                        )
-                                    ),
+                                    "mime_type": link_item["mime_type"],
                                 }
 
             # ========================================================

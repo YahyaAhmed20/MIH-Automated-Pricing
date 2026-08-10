@@ -13468,3 +13468,16 @@ Not Found: /.well-known/appspecific/com.chrome.devtools.json
 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 15406
 Not Found: /.well-known/appspecific/com.chrome.devtools.json
 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 15406
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 51979
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 15295
+"GET /company-discounts/ HTTP/1.1" 200 135254
+"GET /company-discounts/?tab=exceptions HTTP/1.1" 200 166028
+Watching for file changes with StatReloader
+"GET /company-discounts/ HTTP/1.1" 200 135254
+"GET /company-discounts/?tab=exceptions HTTP/1.1" 200 166028
+"GET /special-offers/ HTTP/1.1" 200 149807
+Watching for file changes with StatReloader
+"GET /pricing-details/ HTTP/1.1" 200 312634

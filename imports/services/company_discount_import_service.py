@@ -6,7 +6,7 @@ from django.db import transaction
 from decimal import Decimal
 from contracts.models import CompanyDiscountProfile, CompanyDiscount
 from imports.utils.import_helpers import ImportHelpers
-
+from imports.services.google_sheets_service import GoogleSheetsService
 
 class CompanyDiscountImportService:
 
@@ -214,14 +214,75 @@ class CompanyDiscountImportService:
         sheet_discounts = set()
 
         # ============================================================
+        # ✅ تحميل Drive Smart Chips من Sheet 4
+        # ============================================================
+        print("📎 Loading Drive Smart Chips from Sheet 4...")
+
+        drive_links = GoogleSheetsService.get_drive_links(
+            sheet_name="4",
+            start_row=1,
+            end_row=20,
+            end_column="AT",
+        )
+
+        print(f"✅ Loaded {len(drive_links)} Drive links")
+
+        # ============================================================
+        # ✅ ربط Smart Chips بالشركة + الفئة المالية
+        # ============================================================
+
+        spreadsheet = GoogleSheetsService.get_spreadsheet()
+        worksheet = spreadsheet.worksheet("4")
+        raw_sheet_data = worksheet.get_all_values()
+
+        drive_links_by_company = {}
+
+        for (row_index, column_index), drive_data in drive_links.items():
+
+            if column_index != 45:
+                continue
+
+            if row_index >= len(raw_sheet_data):
+                continue
+
+            raw_row = raw_sheet_data[row_index]
+
+            raw_company = (
+                raw_row[0].strip()
+                if len(raw_row) > 0
+                else ""
+            )
+
+            raw_financial_code = (
+                raw_row[2].strip()
+                if len(raw_row) > 2
+                else ""
+            )
+
+            if not raw_company:
+                continue
+
+            key = (
+                ImportHelpers.normalize_text(raw_company),
+                ImportHelpers.normalize_text(raw_financial_code),
+            )
+
+            drive_links_by_company[key] = drive_data
+
+        print(
+            f"✅ Drive links mapped to companies: "
+            f"{len(drive_links_by_company)}"
+        )
+
+        # ============================================================
+        # ✅ تجهيز الصفوف
+        # ============================================================
+        rows = dataframe.to_dict("records")
+
+        # ============================================================
         # ✅ Loop - تجميع البيانات في Groups
         # ============================================================
         print("⏳ Processing rows...")
-
-        rows = dataframe.to_dict("records")
-
-        start_row = 2
-        rows = rows[start_row:]
 
         groups = []
         current_group = None
@@ -273,9 +334,36 @@ class CompanyDiscountImportService:
             price_list = ImportHelpers.normalize_text(row.get(3, ""))
             price_list = CompanyDiscountImportService.truncate_text(price_list, 255)
 
-            # ✅ العمود 45: المرفقات (PDF)
-            operating_pdf = ImportHelpers.normalize_text(row.get(45, ""))
-            operating_pdf = CompanyDiscountImportService.truncate_text(operating_pdf, 500)
+            # ============================================================
+            # ✅ المرفقات - Drive Smart Chip من Sheet 4
+            # ============================================================
+
+            drive_key = (
+                company_name,
+                financial_code,
+            )
+
+            drive_data = drive_links_by_company.get(drive_key)
+
+            if drive_data:
+                operating_pdf = ImportHelpers.normalize_text(
+                    drive_data.get("url", "")
+                )
+
+                print(
+                    f"📎 {company_name}: "
+                    f"{drive_data.get('name', '')}"
+                )
+                print(f"🔗 {operating_pdf}")
+
+            else:
+                # لو مفيش Smart Chip للشركة
+                operating_pdf = ""
+
+            operating_pdf = CompanyDiscountImportService.truncate_text(
+                operating_pdf,
+                500
+            )
 
             processed += 1
             result["processed"] = processed
