@@ -501,6 +501,11 @@ class PricingDetail(models.Model):
         null=True,
         verbose_name="التقرير"
     )
+    report_url = models.URLField(
+        blank=True,
+        null=True,
+        verbose_name="رابط التقرير"
+    )
 
     procedure_name = models.TextField(
     blank=True,

@@ -13481,3 +13481,48 @@ Watching for file changes with StatReloader
 "GET /special-offers/ HTTP/1.1" 200 149807
 Watching for file changes with StatReloader
 "GET /pricing-details/ HTTP/1.1" 200 312634
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 51979
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 15295
+"GET /pricing-details/ HTTP/1.1" 200 314766
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET /pricing-details/ HTTP/1.1" 200 334666
+"GET /pricing-details/?group=&company=&doctor=%D8%A7%D9%8A%D9%87%D8%A7%D8%A8&specialty=&accountant=&date_from=&date_to= HTTP/1.1" 200 79408
+"GET /pricing-details/?group=&company=&doctor=%D8%A7%D9%8A&specialty=&accountant=&date_from=&date_to= HTTP/1.1" 200 79402
+"GET /pricing-details/ HTTP/1.1" 200 334666
+"GET /pricing-details/?group=&company=&doctor=%D8%A7%D9%8A%D9%87%D8%A7%D8%A8+%D8%B5&specialty=&accountant=&date_from=&date_to= HTTP/1.1" 200 79411
+- Broken pipe from ('127.0.0.1', 62874)
+"GET /pricing-details/ HTTP/1.1" 200 334666
+"GET /pricing-details/?group=&company=&doctor=%D8%AF+%D9%85%D8%AD%D9%85%D8%AF+%D9%8A%D9%88%D9%86%D8%B3&specialty=&accountant=&date_from=&date_to= HTTP/1.1" 200 112921
+"GET /pricing-details/?group=&company=&doctor=%D8%AF+%D9%85%D8%AD%D9%85%D8%AF+%D9%8A%D9%88%D9%86%D8%B3&specialty=&accountant=&date_from=&date_to= HTTP/1.1" 200 115437
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 51979
+"GET /pricing-details/ HTTP/1.1" 200 339765
+"GET /pricing-details/?group=&company=&doctor=%D8%AF+%D9%85%D8%AD%D9%85%D8%AF+%D9%8A%D9%88%D9%86%D8%B3&specialty=&accountant=&date_from=&date_to= HTTP/1.1" 200 115437
+Watching for file changes with StatReloader
+"GET /doctors/ HTTP/1.1" 200 229975
+"GET /similar-invoices/ HTTP/1.1" 200 104443
+"GET /procedures/ HTTP/1.1" 200 89772
+"GET /similar-invoices/ HTTP/1.1" 200 104443
+"GET /procedure-fees/ HTTP/1.1" 200 64629
+"GET /pending-analysis/ HTTP/1.1" 200 201046
+"GET /contract-entities/ HTTP/1.1" 200 65827
+"GET /contract-entities/1/ HTTP/1.1" 200 76822
+"GET /contract-entities/ HTTP/1.1" 200 65827
+"GET /company-discounts/ HTTP/1.1" 200 135254
+"GET /company-discounts/?tab=ranking HTTP/1.1" 200 67231
+Not Found: /company-discounts/\u0649\u0649\u0649\u0649\u0649\u0649\u0649\u0649\u0649\u0649\u0649\u0649\u0649\u0649\u0649\u0649\u0649\u0649\u0649
+"GET /company-discounts/%D9%89%D9%89%D9%89%D9%89%D9%89%D9%89%D9%89%D9%89%D9%89%D9%89%D9%89%D9%89%D9%89%D9%89%D9%89%D9%89%D9%89%D9%89%D9%89 HTTP/1.1" 404 15506
+Watching for file changes with StatReloader
+"GET /company-discounts/?tab=ranking HTTP/1.1" 200 66762
+"GET /company-discounts/?tab=ranking HTTP/1.1" 200 66634
+"GET /company-discounts/?tab=ranking HTTP/1.1" 200 66622
+"GET /company-discounts/?tab=exceptions HTTP/1.1" 200 166028
+Not Found: /company-discounts/NO
+"GET /company-discounts/NO HTTP/1.1" 404 15322
+Watching for file changes with StatReloader

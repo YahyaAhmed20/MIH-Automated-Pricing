@@ -287,15 +287,21 @@
                                 {{ item.external_discount|floatformat:0 }}%
                             </span>
                         </td>
-                        <td data-label="المرفقات">
-                            {% if item.attachment %}
-                                <a href="{{ item.attachment }}" target="_blank" class="btn btn-attachment">
-                                    <i class="fas fa-file-pdf"></i> فتح
-                                </a>
-                            {% else %}
-                                <span class="text-muted">-</span>
-                            {% endif %}
-                        </td>
+<td data-label="المرفقات">
+    {% if item.attachment and "drive.google.com" in item.attachment %}
+        <a href="{{ item.attachment }}"
+           target="_blank"
+           rel="noopener noreferrer"
+           class="btn btn-attachment">
+            <i class="fas fa-file-pdf"></i>
+            فتح العقد
+        </a>
+    {% else %}
+        <span class="text-muted">-</span>
+    {% endif %}
+</td>
+
+
                     </tr>
                     {% empty %}
                     <tr>

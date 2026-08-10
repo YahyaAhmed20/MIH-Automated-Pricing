@@ -4649,6 +4649,7 @@ def pricing_details(request):
             "cost",
             "details",
             "report_name",
+            "report_url",
             "cost_notes",
             "group_name",
             "accountant_name",

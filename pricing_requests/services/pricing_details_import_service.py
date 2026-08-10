@@ -6,7 +6,7 @@ from django.db import transaction
 from decimal import Decimal
 from pricing_requests.models import PricingDetail
 from imports.utils.import_helpers import ImportHelpers
-
+from imports.services.google_sheets_service import GoogleSheetsService
 
 class PricingDetailsImportService:
 
@@ -57,6 +57,16 @@ class PricingDetailsImportService:
         total_rows = len(dataframe)
         processed = 0
 
+        print("📎 Loading Drive links from Sheet 7...")
+
+        drive_links = GoogleSheetsService.get_drive_links(
+            sheet_name="7",
+            start_row=1,
+            end_row=len(dataframe) + 1,
+        )
+
+        print(f"✅ Loaded {len(drive_links)} Drive links")
+
         for index, row in enumerate(dataframe.to_dict("records"), start=1):
 
             # ✅ أرقام الأعمدة حسب ترتيب الشيت
@@ -77,6 +87,20 @@ class PricingDetailsImportService:
             
             # العمود 5: التقرير
             report_name = ImportHelpers.normalize_text(row.get(5, ""))
+
+            # رابط التقرير من Google Drive Smart Chip
+            drive_link_data = drive_links.get((index, 5))
+
+            report_url = None
+
+            if drive_link_data:
+                candidate_url = drive_link_data.get("url", "")
+                file_id = drive_link_data.get("file_id")
+
+                # نعتبر الرابط صالحًا فقط إذا كان Google Drive
+                # وله file_id حقيقي
+                if file_id and "drive.google.com" in candidate_url:
+                    report_url = candidate_url
             
             # العمود 6: الاجراء
             procedure_name = ImportHelpers.normalize_text(row.get(6, ""))
@@ -147,6 +171,10 @@ class PricingDetailsImportService:
                     existing_record.report_name = report_name
                     changed = True
                     
+                if existing_record.report_url != report_url:
+                    existing_record.report_url = report_url
+                    changed = True
+                    
                 if existing_record.specialty_name != specialty_name:
                     existing_record.specialty_name = specialty_name
                     changed = True
@@ -188,6 +216,7 @@ class PricingDetailsImportService:
                     company_name=company_name,
                     doctor_name=doctor_name,
                     report_name=report_name,
+                    report_url=report_url,
                     procedure_name=procedure_name,
                     specialty_name=specialty_name,
                     pricing_type=pricing_type,
@@ -232,6 +261,7 @@ class PricingDetailsImportService:
                         "group_name",
                         "doctor_name",
                         "report_name",
+                        "report_url",
                         "specialty_name",
                         "pricing_type",
                         "card_number",

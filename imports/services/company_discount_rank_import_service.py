@@ -6,7 +6,7 @@ from django.db import transaction
 from decimal import Decimal
 from pricing_requests.models import CompanyDiscountRank
 from imports.utils.import_helpers import ImportHelpers
-
+from imports.services.google_sheets_service import GoogleSheetsService
 
 class CompanyDiscountRankImportService:
 
@@ -53,6 +53,16 @@ class CompanyDiscountRankImportService:
 
         start_time = time.perf_counter()
         print("⏳ Starting Company Discount Rank import from Sheet 8...")
+
+        print("📎 Loading Drive Smart Chips from Sheet 8...")
+
+        drive_links = GoogleSheetsService.get_drive_links(
+            sheet_name="8",
+            start_row=1,
+            end_row=len(dataframe) + 2,
+        )
+
+        print(f"   ✅ Loaded {len(drive_links)} Drive links")
 
         result = {
             "processed": 0,
@@ -107,8 +117,14 @@ class CompanyDiscountRankImportService:
             external_discount_raw = row.get(5, None)
             external_discount = CompanyDiscountRankImportService.parse_discount(external_discount_raw)
             
-            # العمود 6: صورة العقد (رابط)
+            # العمود 6: صورة العقد
             attachment = ImportHelpers.normalize_text(row.get(6, ""))
+
+            # Google Drive Smart Chip
+            drive_data = drive_links.get((index, 6))
+
+            if drive_data and drive_data.get("file_id"):
+                attachment = drive_data.get("url", "")
 
             # ✅ تخطي الصفوف الفارغة (عناوين)
             if not company_name:
