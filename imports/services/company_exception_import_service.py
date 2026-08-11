@@ -9,7 +9,6 @@ from pricing_requests.models import (
 )
 from imports.utils.import_helpers import ImportHelpers
 
-
 # ✅ تعريف أعمدة الشيت 9
 COLUMN_MAP = [
     ("داخلي", "الاشعه التداخليه", 3, 4, None),
@@ -120,7 +119,13 @@ class CompanyExceptionImportService:
 
                 financial_category = ImportHelpers.normalize_text(row.get(1, ""))
                 price_list = ImportHelpers.normalize_text(row.get(2, ""))
-                attachment = ImportHelpers.normalize_text(row.get(29, ""))
+
+                raw_attachment = row.get(29, "")
+
+                if raw_attachment and "drive.google.com" in str(raw_attachment):
+                    attachment = str(raw_attachment).strip()
+                else:
+                    attachment = ImportHelpers.normalize_text(raw_attachment)
 
                 print(f"   الفئة المالية: {financial_category}")
                 print(f"   قائمة الأسعار: {price_list}")
