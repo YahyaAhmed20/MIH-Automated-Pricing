@@ -71,29 +71,80 @@ class PricingRequestImportService:
         }
 
         # ✅ Cache للـ Patients
-        patients_cache = {}
+        # نعتمد على اسم المريض + رقم الكارنية كهوية أساسية
+        # لأن الرقم الطبي قد يكون مؤقتًا مثل: سيلز / نرمين / وحيد
+        patients_by_identity = {}
+        patients_by_medical = {}
+
         for patient in Patient.objects.all():
-            key = patient.medical_number or patient.full_name
-            patients_cache[key] = patient
+
+            patient_name_key = ImportHelpers.normalize_text(
+                patient.full_name
+            )
+
+            patient_card_key = ImportHelpers.normalize_text(
+                patient.card_number
+            )
+
+            if patient_name_key:
+                identity_key = (
+                    patient_name_key,
+                    patient_card_key,
+                )
+
+                patients_by_identity[identity_key] = patient
+
+                # لو الكارنية فاضي، نخزن بالاسم فقط كـ fallback
+                if not patient_card_key:
+                    patients_by_identity[
+                        (patient_name_key, "")
+                    ] = patient
+
+            medical_key = ImportHelpers.normalize_text(
+                patient.medical_number
+            )
+
+            if medical_key:
+                patients_by_medical[medical_key] = patient
 
         patients_to_update = []
 
         # ✅ Cache للـ Pricing Requests
+        # لو فيه Approval Number نستخدمه كمفتاح ثابت.
+        # لو مفيش Approval Number:
+        # نستخدم هوية المريض + التاريخ + الإجراء.
+        # لا نعتمد على medical_number لأنه قد يتغير لاحقًا.
+
         existing_requests = {}
+
         for request in PricingRequest.objects.select_related("patient"):
+
             if request.approval_number:
                 key = (
                     "approval",
-                    request.approval_number,
+                    ImportHelpers.normalize_text(
+                        request.approval_number
+                    ),
                 )
             else:
+                patient_name_key = ImportHelpers.normalize_text(
+                    request.patient.full_name
+                )
+
+                patient_card_key = ImportHelpers.normalize_text(
+                    request.patient.card_number
+                )
+
                 key = (
                     "patient",
-                    request.patient.medical_number
-                        or request.patient.full_name,
+                    patient_name_key,
+                    patient_card_key,
                     request.request_date,
-                    request.procedure_name,
+                    ImportHelpers.normalize_text(
+                        request.procedure_name
+                    ),
                 )
+
             existing_requests[key] = request
 
         # ✅ Existing Keys + Sheet Keys
@@ -103,12 +154,15 @@ class PricingRequestImportService:
         requests_to_create = []
         requests_to_update = []
 
-        # ✅ استخدم itertuples بدلاً من iterrows
-        for row in dataframe.itertuples(index=False):
+        # ✅ تخزين الـ Notes مؤقتًا لحين حفظ Pricing Requests
+        notes_to_create = []
+
+        # ✅ استخدام iterrows لأن أسماء الأعمدة في Sheet 12 عربية
+        for _, row in dataframe.iterrows():
             
             # ✅ الحصول على البيانات من row
             patient_name = ImportHelpers.normalize_text(
-                getattr(row, "اسم المريض", "")
+                row.get("اسم المريض", "")
             )
             if not patient_name:
                 continue
@@ -117,35 +171,83 @@ class PricingRequestImportService:
             # Patient
             # ------------------------
             medical_number = ImportHelpers.normalize_text(
-                getattr(row, "الرقم الطبي", "")
+                row.get("الرقم الطبي", "")
             )
 
-            if medical_number and medical_number.lower() == "nan":
-                medical_number = ""
+            if not medical_number or medical_number.lower() == "nan":
+                medical_number = None
+
+            # القيم المؤقتة التي يستخدمها الشيت بدل الرقم الطبي الحقيقي
+            TEMP_MEDICAL_NUMBERS = {
+                "سيلز",
+                "نرمين",
+                "وحيد",
+            }
+
+            if medical_number in TEMP_MEDICAL_NUMBERS:
+                medical_number = None
 
             card_number = ImportHelpers.normalize_text(
-                getattr(row, "رقم الــكـارنية", "")
+                row.get("رقم الــكـارنية", "")
             )
 
             phone = ImportHelpers.normalize_text(
-                getattr(row, "رقم التليفون", "")
+                row.get("رقم التليفون", "")
             )
 
-            # ✅ استخدام Cache للـ Patients
-            key = medical_number or patient_name
-            patient = patients_cache.get(key)
+            # ✅ Patient Identity
+            # اسم المريض + رقم الكارنية هو المفتاح الأساسي
+            patient_identity = (
+                patient_name,
+                card_number,
+            )
+
+            patient = patients_by_identity.get(
+                patient_identity
+            )
+
+            # لو الكارنية غير موجود، جرب الاسم فقط
+            if patient is None and not card_number:
+                patient = patients_by_identity.get(
+                    (patient_name, "")
+                )
+
+            # ⚠️ لا نستخدم الرقم الطبي لتحديد هوية المريض.
+            # الرقم الطبي قد يكون قيمة مؤقتة مثل:
+            # سيلز / نرمين / وحيد
+            #
+            # هوية المريض تعتمد على:
+            # اسم المريض + رقم الكارنية
+            #
+            # والرقم الطبي يتم تحديثه فقط بعد العثور على المريض.
 
             if patient is None:
+
+                # ------------------------
+                # Patient جديد
+                # ------------------------
                 patient = Patient(
-                    medical_number=medical_number or "",
+                    medical_number=medical_number,
                     full_name=patient_name,
                     card_number=card_number,
                     phone=phone,
                 )
-                patients_cache[key] = patient
+
                 patient.save()
+
                 created_patients += 1
+
+                # تحديث الـ caches
+                patients_by_identity[patient_identity] = patient
+
+                if medical_number:
+                    patients_by_medical[medical_number] = patient
+
             else:
+
+                # ------------------------
+                # Patient موجود → Update
+                # ------------------------
                 changed = False
 
                 if patient.full_name != patient_name:
@@ -160,13 +262,30 @@ class PricingRequestImportService:
                     patient.phone = phone
                     changed = True
 
+                # ⭐ أهم جزء:
+                # الرقم الطبي ممكن يتغير من قيمة مؤقتة
+                # إلى الرقم الطبي الحقيقي
+                if patient.medical_number != medical_number:
+
+                    # لا نغيره إلى قيمة فارغة
+                    # إلا لو الشيت فعلاً فارغ
+                    if medical_number:
+                        patient.medical_number = medical_number
+                        changed = True
+
                 if changed:
                     patients_to_update.append(patient)
+
+                # تحديث الـ caches
+                patients_by_identity[patient_identity] = patient
+
+                if medical_number:
+                    patients_by_medical[medical_number] = patient
 
             # ------------------------
             # Entity
             # ------------------------
-            entity_name = ImportHelpers.normalize_text(getattr(row, "الشــركــة", ""))
+            entity_name = ImportHelpers.normalize_text(row.get("الشــركــة", ""))
             entity = None
 
             if entity_name:
@@ -182,7 +301,7 @@ class PricingRequestImportService:
             # ------------------------
             # Sub Company
             # ------------------------
-            sub_company_name = ImportHelpers.normalize_text(getattr(row, "Sub Account", ""))
+            sub_company_name = ImportHelpers.normalize_text(row.get("Sub Account", ""))
             sub_company = None
 
             if entity and sub_company_name:
@@ -201,7 +320,7 @@ class PricingRequestImportService:
             # Specialty
             # ------------------------
             specialty_name = ImportHelpers.normalize_text(
-                getattr(row, "التخصص", "")
+                row.get("التخصص", "")
             )
 
             if not specialty_name:
@@ -220,7 +339,7 @@ class PricingRequestImportService:
             # Agent 1
             # ------------------------
             agent_1_name = ImportHelpers.normalize_text(
-                getattr(row, "Agent 1", "")
+                row.get("Agent 1", "")
             )
 
             agent_1 = None
@@ -240,7 +359,7 @@ class PricingRequestImportService:
             # Agent 2
             # ------------------------
             agent_2_name = ImportHelpers.normalize_text(
-                getattr(row, "Agent 2", "")
+                row.get("Agent 2", "")
             )
 
             agent_2 = None
@@ -260,7 +379,7 @@ class PricingRequestImportService:
             # Request Number
             # ------------------------
             approval_number = ImportHelpers.normalize_text(
-                getattr(row, "Request and Approval NO.", "")
+                row.get("Request and Approval NO.", "")
             )
             if approval_number.lower() == "nan":
                 approval_number = ""
@@ -276,9 +395,18 @@ class PricingRequestImportService:
             else:
                 request_key = (
                     "patient",
-                    patient.medical_number or patient.full_name,
-                    ImportHelpers.clean_date(getattr(row, "التاريخ", None)),
-                    ImportHelpers.normalize_text(getattr(row, "الاجراء", "")),
+                    ImportHelpers.normalize_text(
+                        patient.full_name
+                    ),
+                    ImportHelpers.normalize_text(
+                        patient.card_number
+                    ),
+                    ImportHelpers.clean_date(
+                        row.get("التاريخ", None)
+                    ),
+                    ImportHelpers.normalize_text(
+                        row.get("الاجراء", "")
+                    ),
                 )
 
             # ✅ إضافة المفتاح إلى sheet_keys
@@ -292,20 +420,20 @@ class PricingRequestImportService:
                     patient=patient,
                     entity=entity,
                     sub_company=sub_company,
-                    doctor_name=ImportHelpers.normalize_text(getattr(row, "الطبيب", "")),
+                    doctor_name=ImportHelpers.normalize_text(row.get("الطبيب", "")),
                     specialty=specialty,
-                    procedure_name=ImportHelpers.normalize_text(getattr(row, "الاجراء", "")),
-                    requested_cost=ImportHelpers.clean_decimal(getattr(row, "التكلفه المبدئية", None)),
-                    received_cost=ImportHelpers.clean_decimal(getattr(row, "التكلفة المستلمه", None)),
+                    procedure_name=ImportHelpers.normalize_text(row.get("الاجراء", "")),
+                    requested_cost=ImportHelpers.clean_decimal(row.get("التكلفه المبدئية", None)),
+                    received_cost=ImportHelpers.clean_decimal(row.get("التكلفة المستلمه", None)),
                     approval_number=approval_number or None,
-                    approval_date=ImportHelpers.clean_date(getattr(row, "Approval Date", None)),
-                    approval_expiry_date=ImportHelpers.clean_date(getattr(row, "Expiry Date", None)),
-                    request_date=ImportHelpers.clean_date(getattr(row, "التاريخ", None)),
-                    expected_admission_date=ImportHelpers.clean_date(getattr(row, "تاريخ الدخول", None)),
-                    service_date=ImportHelpers.clean_date(getattr(row, "تاريخ التسعير", None)),
-                    status=PricingRequestImportService.get_status(getattr(row, "Status", "")),
-                    main_status=ImportHelpers.normalize_text(getattr(row, "Main Status", "")),
-                    billing_status=ImportHelpers.normalize_text(getattr(row, "Billing Status", "")),
+                    approval_date=ImportHelpers.clean_date(row.get("Approval Date", None)),
+                    approval_expiry_date=ImportHelpers.clean_date(row.get("Expiry Date", None)),
+                    request_date=ImportHelpers.clean_date(row.get("التاريخ", None)),
+                    expected_admission_date=ImportHelpers.clean_date(row.get("تاريخ الدخول", None)),
+                    service_date=ImportHelpers.clean_date(row.get("تاريخ التسعير", None)),
+                    status=PricingRequestImportService.get_status(row.get("Status", "")),
+                    main_status=ImportHelpers.normalize_text(row.get("Main Status", "")),
+                    billing_status=ImportHelpers.normalize_text(row.get("Billing Status", "")),
                     agent_1=agent_1,
                     agent_2=agent_2,
                 )
@@ -329,61 +457,61 @@ class PricingRequestImportService:
                     pricing_request.sub_company = sub_company
                     changed = True
 
-                if pricing_request.doctor_name != ImportHelpers.normalize_text(getattr(row, "الطبيب", "")):
-                    pricing_request.doctor_name = ImportHelpers.normalize_text(getattr(row, "الطبيب", ""))
+                if pricing_request.doctor_name != ImportHelpers.normalize_text(row.get("الطبيب", "")):
+                    pricing_request.doctor_name = ImportHelpers.normalize_text(row.get("الطبيب", ""))
                     changed = True
 
                 if pricing_request.specialty_id != specialty.id:
                     pricing_request.specialty = specialty
                     changed = True
 
-                if pricing_request.procedure_name != ImportHelpers.normalize_text(getattr(row, "الاجراء", "")):
-                    pricing_request.procedure_name = ImportHelpers.normalize_text(getattr(row, "الاجراء", ""))
+                if pricing_request.procedure_name != ImportHelpers.normalize_text(row.get("الاجراء", "")):
+                    pricing_request.procedure_name = ImportHelpers.normalize_text(row.get("الاجراء", ""))
                     changed = True
 
-                if pricing_request.requested_cost != ImportHelpers.clean_decimal(getattr(row, "التكلفه المبدئية", None)):
-                    pricing_request.requested_cost = ImportHelpers.clean_decimal(getattr(row, "التكلفه المبدئية", None))
+                if pricing_request.requested_cost != ImportHelpers.clean_decimal(row.get("التكلفه المبدئية", None)):
+                    pricing_request.requested_cost = ImportHelpers.clean_decimal(row.get("التكلفه المبدئية", None))
                     changed = True
 
-                if pricing_request.received_cost != ImportHelpers.clean_decimal(getattr(row, "التكلفة المستلمه", None)):
-                    pricing_request.received_cost = ImportHelpers.clean_decimal(getattr(row, "التكلفة المستلمه", None))
+                if pricing_request.received_cost != ImportHelpers.clean_decimal(row.get("التكلفة المستلمه", None)):
+                    pricing_request.received_cost = ImportHelpers.clean_decimal(row.get("التكلفة المستلمه", None))
                     changed = True
 
                 if pricing_request.approval_number != (approval_number or None):
                     pricing_request.approval_number = approval_number or None
                     changed = True
 
-                if pricing_request.approval_date != ImportHelpers.clean_date(getattr(row, "Approval Date", None)):
-                    pricing_request.approval_date = ImportHelpers.clean_date(getattr(row, "Approval Date", None))
+                if pricing_request.approval_date != ImportHelpers.clean_date(row.get("Approval Date", None)):
+                    pricing_request.approval_date = ImportHelpers.clean_date(row.get("Approval Date", None))
                     changed = True
 
-                if pricing_request.approval_expiry_date != ImportHelpers.clean_date(getattr(row, "Expiry Date", None)):
-                    pricing_request.approval_expiry_date = ImportHelpers.clean_date(getattr(row, "Expiry Date", None))
+                if pricing_request.approval_expiry_date != ImportHelpers.clean_date(row.get("Expiry Date", None)):
+                    pricing_request.approval_expiry_date = ImportHelpers.clean_date(row.get("Expiry Date", None))
                     changed = True
 
-                if pricing_request.request_date != ImportHelpers.clean_date(getattr(row, "التاريخ", None)):
-                    pricing_request.request_date = ImportHelpers.clean_date(getattr(row, "التاريخ", None))
+                if pricing_request.request_date != ImportHelpers.clean_date(row.get("التاريخ", None)):
+                    pricing_request.request_date = ImportHelpers.clean_date(row.get("التاريخ", None))
                     changed = True
 
-                if pricing_request.expected_admission_date != ImportHelpers.clean_date(getattr(row, "تاريخ الدخول", None)):
-                    pricing_request.expected_admission_date = ImportHelpers.clean_date(getattr(row, "تاريخ الدخول", None))
+                if pricing_request.expected_admission_date != ImportHelpers.clean_date(row.get("تاريخ الدخول", None)):
+                    pricing_request.expected_admission_date = ImportHelpers.clean_date(row.get("تاريخ الدخول", None))
                     changed = True
 
-                if pricing_request.service_date != ImportHelpers.clean_date(getattr(row, "تاريخ التسعير", None)):
-                    pricing_request.service_date = ImportHelpers.clean_date(getattr(row, "تاريخ التسعير", None))
+                if pricing_request.service_date != ImportHelpers.clean_date(row.get("تاريخ التسعير", None)):
+                    pricing_request.service_date = ImportHelpers.clean_date(row.get("تاريخ التسعير", None))
                     changed = True
 
-                new_status = PricingRequestImportService.get_status(getattr(row, "Status", ""))
+                new_status = PricingRequestImportService.get_status(row.get("Status", ""))
                 if pricing_request.status != new_status:
                     pricing_request.status = new_status
                     changed = True
 
-                if pricing_request.main_status != ImportHelpers.normalize_text(getattr(row, "Main Status", "")):
-                    pricing_request.main_status = ImportHelpers.normalize_text(getattr(row, "Main Status", ""))
+                if pricing_request.main_status != ImportHelpers.normalize_text(row.get("Main Status", "")):
+                    pricing_request.main_status = ImportHelpers.normalize_text(row.get("Main Status", ""))
                     changed = True
 
-                if pricing_request.billing_status != ImportHelpers.normalize_text(getattr(row, "Billing Status", "")):
-                    pricing_request.billing_status = ImportHelpers.normalize_text(getattr(row, "Billing Status", ""))
+                if pricing_request.billing_status != ImportHelpers.normalize_text(row.get("Billing Status", "")):
+                    pricing_request.billing_status = ImportHelpers.normalize_text(row.get("Billing Status", ""))
                     changed = True
 
                 if pricing_request.agent_1_id != (agent_1.id if agent_1 else None):
@@ -410,26 +538,31 @@ class PricingRequestImportService:
 
             for excel_column, department in notes_map:
                 note_text = ImportHelpers.normalize_text(
-                    getattr(row, excel_column, "")
+                    row.get(excel_column, "")
                 )
 
                 if not note_text:
                     continue
 
-                note_obj, note_created = PricingRequestNote.objects.get_or_create(
-                    pricing_request=pricing_request,
-                    department=department,
-                    note=note_text,
+                # ✅ نؤجل إنشاء الـ Note حتى يتم حفظ PricingRequest
+                notes_to_create.append(
+                    (
+                        pricing_request,
+                        department,
+                        note_text,
+                    )
                 )
-
-                if note_created:
-                    created_notes += 1
 
         # ✅ تنفيذ عمليات Bulk للـ Patients
         if patients_to_update:
             Patient.objects.bulk_update(
                 patients_to_update,
-                ["full_name", "card_number", "phone"],
+                [
+                    "full_name",
+                    "card_number",
+                    "phone",
+                    "medical_number",
+                ],
                 batch_size=500,
             )
 
@@ -440,6 +573,18 @@ class PricingRequestImportService:
                 batch_size=500,
             )
             created_requests = len(requests_to_create)
+
+        # ✅ إنشاء الـ Notes بعد حفظ Pricing Requests
+        for pricing_request, department, note_text in notes_to_create:
+
+            note_obj, note_created = PricingRequestNote.objects.get_or_create(
+                pricing_request=pricing_request,
+                department=department,
+                note=note_text,
+            )
+
+            if note_created:
+                created_notes += 1
 
         if requests_to_update:
             update_fields = [

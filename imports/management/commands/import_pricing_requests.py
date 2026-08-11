@@ -33,8 +33,53 @@ class Command(BaseCommand):
         dataframe = ExcelProvider.read(
             file_path=options["file_path"],
             sheet_name="12",
+            header=None,
             force_reload=True,
         )
+
+        columns = [
+            "",
+            "ملحق او رئيسى",
+            "اسم المريض",
+            "رقم الــكـارنية",
+            "الشــركــة",
+            "Sub Account",
+            "التاريخ",
+            "الرقم الطبي",
+            "الطبيب",
+            "التخصص",
+            "المطلوب",
+            "الاجراء",
+            "رقم التليفون",
+            "Agent 1",
+            "Status",
+            "Main Status",
+            "التكلفه المبدئية",
+            "تاريخ التسعير",
+            "مسئول التسعير",
+            "Billing Status",
+            "مسئول مراجعة الموافقة و التسعير",
+            "ملاحظات الحسابات",
+            "الرقم الحسابى",
+            "التكلفة المستلمه",
+            "Report",
+            "Approval",
+            "Request and Approval NO.",
+            "Approval Date",
+            "Expiry Date",
+            "الملاحظات",
+            "Last Update",
+            "Agent 2",
+            "Agent 2.1",
+            "تاريخ الدخول",
+            "ملاحظات الـ OR Coordinator",
+            "sales account",
+            "Head",
+            "USER",
+            "ملاحظات السيلز",
+        ]
+
+        dataframe.columns = columns
 
         total_rows = len(dataframe)
         self.stdout.write(f"📊 Importing {total_rows} Pricing Requests...")

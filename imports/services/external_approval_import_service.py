@@ -220,11 +220,11 @@ class ExternalApprovalImportService:
                     row.iloc[22] if len(row) > 22 and pd.notna(row.iloc[22]) else ""
                 )
 
-                received_cost = ImportHelpers.clean_decimal(
-                    row.iloc[23] if len(row) > 23 and pd.notna(row.iloc[23]) else None
+                received_cost = ImportHelpers.normalize_text(
+                    row.iloc[23] if len(row) > 23 and pd.notna(row.iloc[23]) else ""
                 )
-                if received_cost is None:
-                    received_cost = Decimal('0.00')
+                # if received_cost is None:
+                #     received_cost = Decimal('0.00')
 
                 report = ImportHelpers.normalize_text(
                     row.iloc[24] if len(row) > 24 and pd.notna(row.iloc[24]) else ""

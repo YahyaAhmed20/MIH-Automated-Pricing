@@ -6,7 +6,7 @@ from imports.services.google_sheets_service import GoogleSheetsService
 class ExcelProvider:
 
     _cache = {}
-    _cache_timestamp = {}  # لتتبع وقت التخزين
+    _cache_timestamp = {}
 
     @staticmethod
     def make_unique_columns(columns):
@@ -21,7 +21,9 @@ class ExcelProvider:
                 unique.append(column)
             else:
                 used[column] += 1
-                unique.append(f"{column}.{used[column]}")
+                unique.append(
+                    f"{column}.{used[column]}"
+                )
 
         return unique
 
@@ -30,7 +32,7 @@ class ExcelProvider:
         cls,
         sheet_name,
         header=0,
-        force_reload=False,  # ✅ إضافة المعامل الجديد
+        force_reload=False,
     ):
 
         cache_key = (
@@ -38,67 +40,102 @@ class ExcelProvider:
             str(header),
         )
 
-        # ✅ إذا كان force_reload، احذف الـ Cache
+        # Force reload
         if force_reload and cache_key in cls._cache:
-            print(f"🔄 Force reload for sheet {sheet_name}")
+            print(
+                f"🔄 Force reload for sheet {sheet_name}"
+            )
+
             del cls._cache[cache_key]
+
             if cache_key in cls._cache_timestamp:
                 del cls._cache_timestamp[cache_key]
 
-        # ✅ استخدام Cache إذا كان موجوداً
+        # Use cache
         if cache_key in cls._cache:
-            print(f"✅ Using cached data for sheet {sheet_name} (cached at {cls._cache_timestamp.get(cache_key, 'unknown')})")
+            print(
+                f"✅ Using cached data for sheet "
+                f"{sheet_name} "
+                f"(cached at "
+                f"{cls._cache_timestamp.get(cache_key, 'unknown')})"
+            )
+
             return cls._cache[cache_key].copy()
 
-        # ✅ قراءة جديدة من Google
-        print(f"📥 Fetching fresh data from Google Sheets: {sheet_name}")
+        # Read from Google Sheets
+        print(
+            f"📥 Fetching fresh data from Google Sheets: "
+            f"{sheet_name}"
+        )
+
         raw = GoogleSheetsService.get_dataframe(
             sheet_name,
-            force_reload=force_reload,  # ✅ تمرير force_reload
+            force_reload=force_reload,
         )
 
         if raw.empty:
-            print(f"⚠️ Sheet {sheet_name} is empty")
+            print(
+                f"⚠️ Sheet {sheet_name} is empty"
+            )
             return pd.DataFrame()
 
-        rows = raw.values.tolist()
+        # Debug
+        for i in range(min(5, len(raw))):
+            row_values = raw.iloc[i].tolist()
 
-        # Debug (اختياري)
-        for i in range(min(5, len(rows))):
-            print(f"Row {i}: {rows[i][:5] if rows[i] else 'empty'}...")
+            print(
+                f"Row {i}: "
+                f"{row_values[:5] if row_values else 'empty'}..."
+            )
+
             print("=" * 80)
 
-        # ==========================
-        # header=None
-        # ==========================
+        # ==================================================
+        # GoogleSheetsService already returns a DataFrame
+        # with the correct headers.
+        #
+        # لذلك لا نعيد بناء الـ DataFrame من أول صف.
+        # ==================================================
+
         if header is None:
-            dataframe = pd.DataFrame(rows)
+            # الوضع القديم: يرجع DataFrame بأرقام أعمدة
+            dataframe = raw.copy()
             dataframe.columns = range(len(dataframe.columns))
 
-        # ==========================
-        # header = رقم الصف
-        # ==========================
         else:
-            columns = cls.make_unique_columns(rows[header])
-            dataframe = pd.DataFrame(
-                rows[header + 1:],
-                columns=columns,
+            # الوضع الطبيعي: احتفظ بالـ headers القادمة
+            # من GoogleSheetsService
+            dataframe = raw.copy()
+
+            # ضمان عدم وجود أسماء أعمدة مكررة
+            dataframe.columns = cls.make_unique_columns(
+                dataframe.columns
             )
 
         dataframe = dataframe.reset_index(drop=True)
 
-        # ✅ تخزين في Cache مع timestamp
+        # Cache
         cls._cache[cache_key] = dataframe
-        cls._cache_timestamp[cache_key] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-        print(f"✅ Cached sheet {sheet_name} with {len(dataframe)} rows")
+        cls._cache_timestamp[cache_key] = (
+            datetime.now().strftime(
+                "%Y-%m-%d %H:%M:%S"
+            )
+        )
+
+        print(
+            f"✅ Cached sheet {sheet_name} "
+            f"with {len(dataframe)} rows"
+        )
 
         return dataframe.copy()
 
     @classmethod
     def clear_cache(cls):
+
         cls._cache.clear()
         cls._cache_timestamp.clear()
+
         print("🗑️ Cache cleared")
 
     @classmethod
@@ -107,20 +144,22 @@ class ExcelProvider:
         file_path=None,
         sheet_name=None,
         header=0,
-        force_reload=False,  # ✅ إضافة المعامل الجديد
+        force_reload=False,
     ):
 
-        # لو فيه ملف محلي
+        # Local Excel file
         if file_path:
+
             from imports.utils.excel_reader import ExcelReader
+
             return ExcelReader.read_sheet(
                 file_path=file_path,
                 sheet_name=sheet_name,
             )
 
-        # غير كده اقرأ من Google Sheets
+        # Google Sheets
         return cls.read_sheet(
             sheet_name=sheet_name,
             header=header,
-            force_reload=force_reload,  # ✅ تمرير المعامل
+            force_reload=force_reload,
         )

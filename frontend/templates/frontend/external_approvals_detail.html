@@ -990,27 +990,42 @@
                                         <div class="info-item">
                                             <span class="label">التقرير</span>
                                             <span class="value">
-                                                {% if patient.report %}
-                                                <a href="{{ patient.report }}" target="_blank">
-                                                    <i class="fas fa-file-pdf text-danger"></i> عرض
-                                                </a>
-                                                {% else %}
-                                                -
-                                                {% endif %}
+                                               {% if patient.report %}
+    {% if "http://" in patient.report or "https://" in patient.report %}
+        <a href="{{ patient.report }}" target="_blank" rel="noopener noreferrer">
+            <i class="fas fa-file-pdf text-danger"></i>
+            عرض التقرير
+        </a>
+    {% else %}
+        <span>
+            <i class="fas fa-file-pdf text-danger"></i>
+            {{ patient.report }}
+        </span>
+    {% endif %}
+{% else %}
+    -
+{% endif %}
                                             </span>
                                         </div>
                                         <div class="info-item">
                                             <span class="label">التكلفة المطلوبة</span>
                                             <span class="value">{{ patient.initial_cost|floatformat:2|intcomma }}</span>
                                         </div>
+                                        <!-- ✅ التكلفة المستلمة - الإصدار الجديد -->
                                         <div class="info-item">
                                             <span class="label">التكلفة المستلمة</span>
-                                            <span class="value {% if patient.received_cost < patient.initial_cost %}text-danger-cost{% elif patient.received_cost >= patient.initial_cost %}text-success-cost{% endif %}">
-                                                {{ patient.received_cost|floatformat:2|intcomma }}
-                                                {% if patient.received_cost < patient.initial_cost %}
-                                                <i class="fas fa-arrow-down text-danger ms-1"></i>
-                                                {% elif patient.received_cost >= patient.initial_cost %}
-                                                <i class="fas fa-arrow-up text-success ms-1"></i>
+                                            <span class="value">
+                                                {% if patient.received_cost %}
+                                                    {% if "http" in patient.received_cost %}
+                                                        <a href="{{ patient.received_cost }}" target="_blank" rel="noopener noreferrer">
+                                                            <i class="fas fa-file-invoice-dollar text-success"></i>
+                                                            عرض التكلفة المستلمة
+                                                        </a>
+                                                    {% else %}
+                                                        {{ patient.received_cost }}
+                                                    {% endif %}
+                                                {% else %}
+                                                    -
                                                 {% endif %}
                                             </span>
                                         </div>
@@ -1052,17 +1067,25 @@
                                             </span>
                                         </div>
                                         <div class="info-item">
-                                            <span class="label">صوره الموافقه</span>
-                                            <span class="value">
-                                                {% if patient.approval %}
-                                                <a href="{{ patient.approval }}" target="_blank">
-                                                    <i class="fas fa-file-pdf text-danger"></i> عرض
-                                                </a>
-                                                {% else %}
-                                                -
-                                                {% endif %}
-                                            </span>
-                                        </div>
+    <span class="label">صوره الموافقه</span>
+    <span class="value">
+        {% if patient.approval %}
+            {% if "http://" in patient.approval or "https://" in patient.approval %}
+                <a href="{{ patient.approval }}" target="_blank" rel="noopener noreferrer">
+                    <i class="fas fa-file-pdf text-danger"></i>
+                    عرض الموافقة
+                </a>
+            {% else %}
+                <span>
+                    <i class="fas fa-file-image text-secondary"></i>
+                    {{ patient.approval }}
+                </span>
+            {% endif %}
+        {% else %}
+            -
+        {% endif %}
+    </span>
+</div>
 
                                         <div class="info-item">
                                             <span class="label">تاريخ الموافقه</span>

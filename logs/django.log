@@ -13538,3 +13538,68 @@ Not Found: /company-discounts/NO
 Watching for file changes with StatReloader
 "GET /company-discounts/?tab=exceptions HTTP/1.1" 200 165684
 "GET /similar-invoices/ HTTP/1.1" 200 104443
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 51979
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 15295
+"GET /external-approvals/ HTTP/1.1" 200 75391
+"GET /external-approvals/early/ HTTP/1.1" 200 376033
+Not Found: /external-approvals/early/b17906bc-b101-4de8-a967-f3b8db0bfd8e.jpg
+"GET /external-approvals/early/b17906bc-b101-4de8-a967-f3b8db0bfd8e.jpg HTTP/1.1" 404 15457
+Not Found: /external-approvals/early/c2bd2603-64a0-42ba-aba2-cd4d1051b17f.jpg
+"GET /external-approvals/early/c2bd2603-64a0-42ba-aba2-cd4d1051b17f.jpg HTTP/1.1" 404 15457
+Not Found: /external-approvals/early/b17906bc-b101-4de8-a967-f3b8db0bfd8e.jpg
+"GET /external-approvals/early/b17906bc-b101-4de8-a967-f3b8db0bfd8e.jpg HTTP/1.1" 404 15457
+Not Found: /external-approvals/early/c2bd2603-64a0-42ba-aba2-cd4d1051b17f.jpg
+"GET /external-approvals/early/c2bd2603-64a0-42ba-aba2-cd4d1051b17f.jpg HTTP/1.1" 404 15457
+Not Found: /external-approvals/early/c2bd2603-64a0-42ba-aba2-cd4d1051b17f.jpg
+"GET /external-approvals/early/c2bd2603-64a0-42ba-aba2-cd4d1051b17f.jpg HTTP/1.1" 404 15457
+Not Found: /external-approvals/early/c2bd2603-64a0-42ba-aba2-cd4d1051b17f.jpg
+"GET /external-approvals/early/c2bd2603-64a0-42ba-aba2-cd4d1051b17f.jpg HTTP/1.1" 404 15457
+Not Found: /external-approvals/early/b17906bc-b101-4de8-a967-f3b8db0bfd8e.jpg
+"GET /external-approvals/early/b17906bc-b101-4de8-a967-f3b8db0bfd8e.jpg HTTP/1.1" 404 15457
+"GET /patient-search/ HTTP/1.1" 200 812607
+"GET /external-approvals/ HTTP/1.1" 200 75391
+"GET /external-approvals/early/ HTTP/1.1" 200 376033
+"GET /external-approvals/early/?search=760848 HTTP/1.1" 200 66441
+"GET /external-approvals/early/? HTTP/1.1" 200 376033
+"GET /external-approvals/ HTTP/1.1" 200 75391
+"GET /patient-search/ HTTP/1.1" 200 812607
+"GET /patient-search/?search=760848 HTTP/1.1" 200 74640
+"GET /external-approvals/ HTTP/1.1" 200 75391
+"GET /external-approvals/early/ HTTP/1.1" 200 376033
+Not Found: /external-approvals/early/c2bd2603-64a0-42ba-aba2-cd4d1051b17f.jpg
+"GET /external-approvals/early/c2bd2603-64a0-42ba-aba2-cd4d1051b17f.jpg HTTP/1.1" 404 15457
+Not Found: /external-approvals/early/b17906bc-b101-4de8-a967-f3b8db0bfd8e.jpg
+"GET /external-approvals/early/b17906bc-b101-4de8-a967-f3b8db0bfd8e.jpg HTTP/1.1" 404 15457
+"GET /patient-search/ HTTP/1.1" 200 812607
+Watching for file changes with StatReloader
+"GET /external-approvals/ HTTP/1.1" 200 75391
+"GET /external-approvals/without_approval/ HTTP/1.1" 200 862848
+Not Found: /external-approvals/without_approval/MOHAMED T ABOUEL MOUTEY.pdf
+"GET /external-approvals/without_approval/MOHAMED%20T%20ABOUEL%20MOUTEY.pdf HTTP/1.1" 404 15457
+Not Found: /external-approvals/without_approval/196647 (1).pdf
+"GET /external-approvals/without_approval/196647%20(1).pdf HTTP/1.1" 404 15414
+- Broken pipe from ('127.0.0.1', 63929)
+- Broken pipe from ('127.0.0.1', 65521)
+- Broken pipe from ('127.0.0.1', 49168)
+- Broken pipe from ('127.0.0.1', 49175)
+- Broken pipe from ('127.0.0.1', 49170)
+- Broken pipe from ('127.0.0.1', 49173)
+"GET /external-approvals/without_approval/ HTTP/1.1" 200 856794
+"GET /external-approvals/without_approval/ HTTP/1.1" 200 842994
+"GET /external-approvals/ HTTP/1.1" 200 75391
+"GET /external-approvals/early/ HTTP/1.1" 200 367252
+Watching for file changes with StatReloader
+"GET /pending-analysis/ HTTP/1.1" 200 201136
+"GET /external-approvals/status_pending/ HTTP/1.1" 200 810012
+"GET /external-approvals/status_pending/?page=2 HTTP/1.1" 200 101912
+Watching for file changes with StatReloader
+- Broken pipe from ('127.0.0.1', 49696)
+"GET /external-approvals/status_pending/?page=2 HTTP/1.1" 200 101912
+"GET /external-approvals/ HTTP/1.1" 200 75391
+"GET /external-approvals/early/ HTTP/1.1" 200 367252
+"GET /patient-search/ HTTP/1.1" 200 812607
+"GET /patient-search/?attachment_type=%D8%B3%D9%8A%D9%84%D8%B2&company=&sub_account=&doctor=&specialty=&date_from=&date_to= HTTP/1.1" 200 412881
+"GET /patient-search/?attachment_type=%D8%B3%D9%8A%D9%84%D8%B2&company=&sub_account=&doctor=%D8%AF%2F%D8%A7%D8%AD%D9%85%D8%AF+%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D9%85%D8%B9%D8%B2&specialty=&date_from=&date_to= HTTP/1.1" 200 78782
