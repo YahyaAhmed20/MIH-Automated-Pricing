@@ -806,6 +806,7 @@
         </div>
 
         <!-- ===== القسم 2: تخفيض التكلفة ===== -->
+        {% if has_credit_full %}
         <div class="card shadow border-0 mt-3 fade-in">
             <div class="card-header accordion-header-custom" style="background: linear-gradient(135deg, #0dcaf0, #0d6efd); color: #fff;" onclick="toggleAccordion('pricingInfo')">
                 <h5 class="mb-0 d-flex justify-content-between align-items-center">
@@ -935,8 +936,10 @@
                 </div>
             </div>
         </div>
+        {% endif %}
 
         <!-- ===== القسم 3: معدلات الخصم المقترحة ===== -->
+        {% if has_credit_full %}
         <div class="card shadow border-0 mt-3 fade-in">
             <div class="card-header accordion-header-custom" style="background: linear-gradient(135deg, #0dcaf0, #0d6efd); color: #fff;" onclick="toggleAccordion('discountTable')">
                 <h5 class="mb-0 d-flex justify-content-between align-items-center">
@@ -977,6 +980,7 @@
                 </div>
             </div>
         </div>
+        {% endif %}
 
         <!-- ===== القسم 4: المرفقات ===== -->
         <div class="card shadow border-0 mt-3 fade-in">
@@ -1377,7 +1381,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <!-- ============================================ -->
 <!-- ✅ Script تخفيض السعر ومعالجة الملاحظات -->
 <!-- ============================================ -->
-{% if selected_package %}
+{% if selected_package and has_credit_full %}
 <script>
 function formatMoney(value) {
     if (value % 1 === 0) {

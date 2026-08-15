@@ -209,155 +209,420 @@
         </div>
     </div>
 
-    <!-- ============================================ -->
-    <!-- ✅ البوكسات الإحصائية - مع كاونتر -->
-    <!-- ============================================ -->
-    <div class="row g-4 mb-4">
-        
-        <div class="col-md-2-4 col-lg-2 col-md-4 col-sm-6">
-            <div class="stats-box" style="background: {{ box_colors.total }};">
-                <div class="stats-icon"><i class="fas fa-file-medical-alt"></i></div>
-                <div class="stats-number counter" data-target="{{ total_cases }}">0</div>
-                <div class="stats-label">إجمالي الحالات المرسلة للتسعير</div>
-                <a href="{% url 'external_approvals_detail' 'total' %}" class="btn-show-details">
-                    <i class="fas fa-eye me-1"></i> عرض المزيد
-                </a>
-            </div>
-        </div>
-        
-        <div class="col-md-2-4 col-lg-2 col-md-4 col-sm-6">
-            <div class="stats-box" style="background: {{ box_colors.accounts }};">
-                <div class="stats-icon"><i class="fas fa-exclamation-triangle"></i></div>
-                <div class="stats-number counter" data-target="{{ pending_accounts }}">0</div>
-                <div class="stats-label">الحالات المعطلة طرف الحسابات</div>
-                <a href="{% url 'external_approvals_detail' 'accounts' %}" class="btn-show-details">
-                    <i class="fas fa-eye me-1"></i> عرض المزيد
-                </a>
-            </div>
-        </div>
-        
-        <div class="col-md-2-4 col-lg-2 col-md-4 col-sm-6">
-            <div class="stats-box" style="background: {{ box_colors.coordinator }};">
-                <div class="stats-icon"><i class="fas fa-user-md"></i></div>
-                <div class="stats-number counter" data-target="{{ pending_coordinator }}">0</div>
-                <div class="stats-label">الحالات المعطلة طرف منسق العيادات</div>
-                <a href="{% url 'external_approvals_detail' 'coordinator' %}" class="btn-show-details">
-                    <i class="fas fa-eye me-1"></i> عرض المزيد
-                </a>
-            </div>
-        </div>
-        
-        <div class="col-md-2-4 col-lg-2 col-md-4 col-sm-6">
-            <div class="stats-box" style="background: {{ box_colors.without_approval }};">
-                <div class="stats-icon"><i class="fas fa-file-circle-xmark"></i></div>
-                <div class="stats-number counter" data-target="{{ cases_without_approval }}">0</div>
-                <div class="stats-label">حالات بدون موافقة</div>
-                <a href="{% url 'external_approvals_detail' 'without_approval' %}" class="btn-show-details">
-                    <i class="fas fa-eye me-1"></i> عرض المزيد
-                </a>
-            </div>
-        </div>
-        
-        <div class="col-md-2-4 col-lg-2 col-md-4 col-sm-6">
-            <div class="stats-box" style="background: {{ box_colors.early }};">
-                <div class="stats-icon"><i class="fas fa-calendar-check"></i></div>
-                <div class="stats-number counter" data-target="{{ early_admissions }}">0</div>
-                <div class="stats-label">حالات دخول باكر (غداً)</div>
-                <a href="{% url 'external_approvals_detail' 'early' %}" class="btn-show-details">
-                    <i class="fas fa-eye me-1"></i> عرض المزيد
-                </a>
-            </div>
-        </div>
-        
-        <div class="col-md-2-4 col-lg-2 col-md-4 col-sm-6">
-            <div class="stats-box" style="background: {{ box_colors.overview }};">
-                <div class="stats-icon"><i class="fas fa-chart-pie"></i></div>
-                <div class="stats-number counter" data-target="{{ total_cases }}">0</div>
-                <div class="stats-label">نظرة عامة على موقف الحالات</div>
-                <a href="{% url 'external_approvals_detail' 'total' %}" class="btn-show-details">
-                    <i class="fas fa-eye me-1"></i> عرض المزيد
-                </a>
-            </div>
-        </div>
-        
-    </div>
+    {% if request.user.role.name == "Admission" %}
 
     <!-- ============================================ -->
-    <!-- ✅ توزيع الحالات حسب الحالة - مع Doughnut Chart + Counters -->
+    <!-- Admission - متابعة موافقات الخارجي -->
     <!-- ============================================ -->
+
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body text-center py-5">
+
+            <div class="mb-3">
+                <i class="fas fa-calendar-check text-primary"
+                   style="font-size: 3.5rem;"></i>
+            </div>
+
+            <h3 class="fw-bold mb-2">
+                متابعة موافقات الخارجي
+            </h3>
+
+            <p class="text-muted mb-4">
+                حالات الدخول الخاصة بيوم غد فقط
+            </p>
+
+            <div class="stats-box mx-auto"
+                 style="
+                    background: {{ box_colors.early }};
+                    max-width: 420px;
+                    min-height: 240px;
+                 ">
+
+                <div class="stats-icon">
+                    <i class="fas fa-calendar-check"></i>
+                </div>
+
+                <div class="stats-number counter"
+                     data-target="{{ early_admissions }}">
+                    0
+                </div>
+
+                <div class="stats-label">
+                    حالات دخول باكر (غداً)
+                </div>
+
+                <a href="{% url 'external_approvals_detail' 'early' %}"
+                   class="btn-show-details mt-3">
+
+                    <i class="fas fa-eye me-1"></i>
+                    متابعة الموافقات
+
+                </a>
+
+            </div>
+
+        </div>
+    </div>
+
+
+{% else %}
+
+    <!-- ============================================ -->
+    <!-- Dashboard العادية لباقي الأدوار -->
+    <!-- ============================================ -->
+
+    <div class="row g-4 mb-4">
+
+        <div class="col-md-2-4 col-lg-2 col-md-4 col-sm-6">
+            <div class="stats-box"
+                 style="background: {{ box_colors.total }};">
+
+                <div class="stats-icon">
+                    <i class="fas fa-file-medical-alt"></i>
+                </div>
+
+                <div class="stats-number counter"
+                     data-target="{{ total_cases }}">
+                    0
+                </div>
+
+                <div class="stats-label">
+                    إجمالي الحالات المرسلة للتسعير
+                </div>
+
+                <a href="{% url 'external_approvals_detail' 'total' %}"
+                   class="btn-show-details">
+
+                    <i class="fas fa-eye me-1"></i>
+                    عرض المزيد
+
+                </a>
+            </div>
+        </div>
+
+
+        <div class="col-md-2-4 col-lg-2 col-md-4 col-sm-6">
+            <div class="stats-box"
+                 style="background: {{ box_colors.accounts }};">
+
+                <div class="stats-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+
+                <div class="stats-number counter"
+                     data-target="{{ pending_accounts }}">
+                    0
+                </div>
+
+                <div class="stats-label">
+                    الحالات المعطلة طرف الحسابات
+                </div>
+
+                <a href="{% url 'external_approvals_detail' 'accounts' %}"
+                   class="btn-show-details">
+
+                    <i class="fas fa-eye me-1"></i>
+                    عرض المزيد
+
+                </a>
+            </div>
+        </div>
+
+
+        <div class="col-md-2-4 col-lg-2 col-md-4 col-sm-6">
+            <div class="stats-box"
+                 style="background: {{ box_colors.coordinator }};">
+
+                <div class="stats-icon">
+                    <i class="fas fa-user-md"></i>
+                </div>
+
+                <div class="stats-number counter"
+                     data-target="{{ pending_coordinator }}">
+                    0
+                </div>
+
+                <div class="stats-label">
+                    الحالات المعطلة طرف منسق العيادات
+                </div>
+
+                <a href="{% url 'external_approvals_detail' 'coordinator' %}"
+                   class="btn-show-details">
+
+                    <i class="fas fa-eye me-1"></i>
+                    عرض المزيد
+
+                </a>
+            </div>
+        </div>
+
+
+        <div class="col-md-2-4 col-lg-2 col-md-4 col-sm-6">
+            <div class="stats-box"
+                 style="background: {{ box_colors.without_approval }};">
+
+                <div class="stats-icon">
+                    <i class="fas fa-file-circle-xmark"></i>
+                </div>
+
+                <div class="stats-number counter"
+                     data-target="{{ cases_without_approval }}">
+                    0
+                </div>
+
+                <div class="stats-label">
+                    حالات بدون موافقة
+                </div>
+
+                <a href="{% url 'external_approvals_detail' 'without_approval' %}"
+                   class="btn-show-details">
+
+                    <i class="fas fa-eye me-1"></i>
+                    عرض المزيد
+
+                </a>
+            </div>
+        </div>
+
+
+        <div class="col-md-2-4 col-lg-2 col-md-4 col-sm-6">
+            <div class="stats-box"
+                 style="background: {{ box_colors.early }};">
+
+                <div class="stats-icon">
+                    <i class="fas fa-calendar-check"></i>
+                </div>
+
+                <div class="stats-number counter"
+                     data-target="{{ early_admissions }}">
+                    0
+                </div>
+
+                <div class="stats-label">
+                    حالات دخول باكر (غداً)
+                </div>
+
+                <a href="{% url 'external_approvals_detail' 'early' %}"
+                   class="btn-show-details">
+
+                    <i class="fas fa-eye me-1"></i>
+                    عرض المزيد
+
+                </a>
+            </div>
+        </div>
+
+
+        <div class="col-md-2-4 col-lg-2 col-md-4 col-sm-6">
+            <div class="stats-box"
+                 style="background: {{ box_colors.overview }};">
+
+                <div class="stats-icon">
+                    <i class="fas fa-chart-pie"></i>
+                </div>
+
+                <div class="stats-number counter"
+                     data-target="{{ total_cases }}">
+                    0
+                </div>
+
+                <div class="stats-label">
+                    نظرة عامة على موقف الحالات
+                </div>
+
+                <a href="{% url 'external_approvals_detail' 'total' %}"
+                   class="btn-show-details">
+
+                    <i class="fas fa-eye me-1"></i>
+                    عرض المزيد
+
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- ============================================ -->
+    <!-- توزيع الحالات حسب الحالة -->
+    <!-- ============================================ -->
+
     <div class="card shadow-sm border-0">
+
         <div class="card-header bg-white d-flex justify-content-between align-items-center">
+
             <div>
                 <h5 class="fw-bold mb-0">
                     <i class="fas fa-chart-pie text-primary me-2"></i>
                     توزيع الحالات حسب الحالة
                 </h5>
+
                 <small class="text-muted">
-                    إجمالي <span class="fw-bold">{{ total_cases }}</span> حالة
+                    إجمالي
+                    <span class="fw-bold">
+                        {{ total_cases }}
+                    </span>
+                    حالة
                 </small>
             </div>
-            <!-- ✅ زر عرض كل الحالات -->
-            <a href="{% url 'external_approvals_detail' 'total' %}" class="btn btn-outline-primary btn-sm">
+
+            <a href="{% url 'external_approvals_detail' 'total' %}"
+               class="btn btn-outline-primary btn-sm">
+
                 <i class="fas fa-eye me-1"></i>
                 عرض المزيد
-                <span class="badge bg-secondary ms-1">{{ total_cases }}</span>
+
+                <span class="badge bg-secondary ms-1">
+                    {{ total_cases }}
+                </span>
+
             </a>
+
         </div>
+
+
         <div class="card-body">
+
             <div class="row align-items-center">
-                <!-- ✅ العمود الأيمن: Doughnut Chart -->
+
                 <div class="col-lg-5 text-center">
+
                     <div class="payment-chart-wrapper">
                         <canvas id="statusChart"></canvas>
                     </div>
+
                 </div>
-                <!-- ✅ العمود الأيسر: قائمة الحالات -->
+
+
                 <div class="col-lg-7">
+
                     <div class="row g-2">
+
                         {% for status in status_data %}
+
                         <div class="col-md-6">
-                            <div class="status-item" style="border: 1px solid {{ status.color }}20; border-radius: 10px; padding: 10px 14px; transition: all 0.3s ease; background: {{ status.color }}05;">
+
+                            <div class="status-item"
+                                 style="
+                                    border: 1px solid {{ status.color }}20;
+                                    border-radius: 10px;
+                                    padding: 10px 14px;
+                                    background: {{ status.color }}05;
+                                 ">
+
                                 <div class="d-flex justify-content-between align-items-center w-100">
+
                                     <div>
+
                                         <div class="d-flex align-items-center gap-2">
-                                            <span class="badge" style="background: {{ status.color }}; width: 12px; height: 12px; border-radius: 50%; padding: 0;"></span>
-                                            <span class="status-badge" style="background: {{ status.color }}; font-size: 0.7rem;">
-                                                {{ status.name }}
+
+                                            <span class="badge"
+                                                  style="
+                                                    background: {{ status.color }};
+                                                    width: 12px;
+                                                    height: 12px;
+                                                    border-radius: 50%;
+                                                    padding: 0;
+                                                  ">
                                             </span>
+
+                                            <span class="status-badge"
+                                                  style="
+                                                    background: {{ status.color }};
+                                                    font-size: 0.7rem;
+                                                  ">
+
+                                                {{ status.name }}
+
+                                            </span>
+
                                         </div>
+
                                     </div>
+
+
                                     <div class="text-end">
-                                        <span class="fw-bold fs-5 counter-status" style="color: {{ status.color }};" data-target="{{ status.count }}">0</span>
+
+                                        <span class="fw-bold fs-5 counter-status"
+                                              style="color: {{ status.color }};"
+                                              data-target="{{ status.count }}">
+                                            0
+                                        </span>
+
                                         <br>
-                                        <small class="text-muted">{{ status.percentage }}%</small>
+
+                                        <small class="text-muted">
+                                            {{ status.percentage }}%
+                                        </small>
+
                                     </div>
+
                                 </div>
-                                <div class="progress mt-1" style="height: 4px;">
-                                    <div class="progress-bar" style="width: {{ status.percentage }}%; background: {{ status.color }};"></div>
+
+
+                                <div class="progress mt-1"
+                                     style="height: 4px;">
+
+                                    <div class="progress-bar"
+                                         style="
+                                            width: {{ status.percentage }}%;
+                                            background: {{ status.color }};
+                                         ">
+                                    </div>
+
                                 </div>
-                                <!-- ✅ زر عرض المزيد لكل حالة -->
+
+
                                 <div class="text-center mt-1">
-                                    <a href="{% url 'external_approvals_detail' status.filter %}" class="btn btn-sm btn-outline-primary" style="font-size: 0.6rem; border-radius: 20px; padding: 0.1rem 0.6rem;">
-                                        <i class="fas fa-eye me-1"></i> عرض
+
+                                    <a href="{% url 'external_approvals_detail' status.filter %}"
+                                       class="btn btn-sm btn-outline-primary"
+                                       style="
+                                            font-size: 0.6rem;
+                                            border-radius: 20px;
+                                            padding: 0.1rem 0.6rem;
+                                       ">
+
+                                        <i class="fas fa-eye me-1"></i>
+                                        عرض
+
                                     </a>
+
                                 </div>
+
                             </div>
+
                         </div>
+
                         {% empty %}
+
                         <div class="col-12">
+
                             <div class="text-center py-4">
+
                                 <i class="fas fa-inbox fa-2x text-muted mb-2 d-block"></i>
-                                <p class="text-muted mb-0">لا توجد حالات</p>
+
+                                <p class="text-muted mb-0">
+                                    لا توجد حالات
+                                </p>
+
                             </div>
+
                         </div>
+
                         {% endfor %}
+
                     </div>
+
                 </div>
+
             </div>
+
         </div>
+
     </div>
 
-</div>
+{% endif %}
 
 <!-- ============================================ -->
 <!-- ✅ Chart.js -->

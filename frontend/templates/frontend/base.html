@@ -147,6 +147,27 @@ body {
     min-height: 100vh;
     transition: all var(--transition-speed) ease;
 }
+/* ============================================================
+   ===== Login Mode =====
+   ============================================================ */
+
+body.login-mode .sidebar,
+body.login-mode .sidebar-toggle,
+body.login-mode .sidebar-overlay,
+body.login-mode .page-transition,
+body.login-mode .scroll-top-btn,
+body.login-mode .whatsapp-btn,
+body.login-mode .topbar,
+body.login-mode .footer {
+    display: none !important;
+}
+
+body.login-mode .content {
+    margin-right: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100vh;
+}
 
 /* ============================================================ */
 /* ===== Sidebar Toggle Button (Mobile) ===== */
@@ -1023,8 +1044,7 @@ body {
 
 </head>
 
-<body>
-
+<body class="{% if not user.is_authenticated %}login-mode{% endif %}">
 <!-- ========== Page Transition Overlay ========== -->
 <div class="page-transition" id="pageTransition">
     <div class="transition-logo-wrapper">
@@ -1081,80 +1101,114 @@ body {
     <!-- Menu -->
     <ul class="menu-list">
 
-        <!-- لوحة التحكم -->
-        <li class="menu-item">
-            <a class="menu-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'home' %}">
-                <i class="bi bi-speedometer2"></i>
-                لوحة التحكم
-            </a>
-        </li>
-
+   
         <!-- 1. الباكدجات -->
+        {% if can_packages_credit_basic or can_packages_credit_full or can_packages_cash_full %}
         <li class="menu-item">
-            <a class="menu-link {% if request.resolver_match.url_name in 'credit_package_pricing,cash_packages,packages_price_list,package_create' %}active{% endif %}"
-               data-bs-toggle="collapse"
-               href="#packagesMenu"
-               role="button"
-               aria-expanded="{% if request.resolver_match.url_name in 'credit_package_pricing,cash_packages,packages_price_list,package_create' %}true{% else %}false{% endif %}">
+
+            <a class="menu-link
+                {% if request.resolver_match.url_name in 'credit_package_pricing,cash_packages,packages_price_list,package_create' %}
+                    active
+                {% endif %}"
+                data-bs-toggle="collapse"
+                href="#packagesMenu"
+                role="button"
+                aria-expanded="{% if request.resolver_match.url_name in 'credit_package_pricing,cash_packages,packages_price_list,package_create' %}true{% else %}false{% endif %}">
 
                 <i class="bi bi-box"></i>
                 الباكدجات
                 <i class="bi bi-chevron-down menu-arrow"></i>
+
             </a>
 
-            <div class="collapse submenu {% if request.resolver_match.url_name in 'credit_package_pricing,cash_packages,packages_price_list,package_create' %}show{% endif %}" id="packagesMenu">
-                <!-- باكدجات الآجل -->
-                <a href="{% url 'credit_package_pricing' %}" class="{% if request.resolver_match.url_name == 'credit_package_pricing' %}active{% endif %}">
-                    <i class="bi bi-box-seam"></i> باكدجات الآجل
-                </a>
-                <!-- باكدجات النقدي -->
-                <a href="{% url 'cash_packages' %}" class="{% if request.resolver_match.url_name == 'cash_packages' %}active{% endif %}">
-                    <i class="bi bi-cash-coin"></i> باكدجات النقدي
-                </a>
+            <div class="collapse submenu
+                {% if request.resolver_match.url_name in 'credit_package_pricing,cash_packages,packages_price_list,package_create' %}
+                    show
+                {% endif %}"
+                id="packagesMenu">
+
+                {% if can_packages_credit_basic or can_packages_credit_full %}
+                    <a href="{% url 'credit_package_pricing' %}"
+                       class="{% if request.resolver_match.url_name == 'credit_package_pricing' %}active{% endif %}">
+
+                        <i class="bi bi-box-seam"></i>
+                        باكدجات الآجل
+
+                    </a>
+                {% endif %}
+
+               {% if can_packages_cash_full %}
+                    <a href="{% url 'cash_packages' %}"
+                       class="{% if request.resolver_match.url_name == 'cash_packages' %}active{% endif %}">
+
+                        <i class="bi bi-cash-coin"></i>
+                        باكدجات النقدي
+
+                    </a>
+                {% endif %}
+
             </div>
+
         </li>
+        {% endif %}
 
         <!-- 2. الجهات المتعاقدة -->
+        {% if can_financial_full %}
         <li class="menu-item">
             <a class="menu-link {% if request.resolver_match.url_name == 'contract_entities' %}active{% endif %}" href="{% url 'contract_entities' %}">
                 <i class="bi bi-buildings"></i>
                 الجهات المتعاقدة
             </a>
         </li>
+        {% endif %}
 
         <!-- 3. خصومات الشركات -->
+        {% if can_financial_full %}
         <li class="menu-item">
             <a class="menu-link {% if request.resolver_match.url_name == 'company_discounts' %}active{% endif %}" href="{% url 'company_discounts' %}">
                 <i class="bi bi-percent"></i>
                 خصومات الشركات
             </a>
         </li>
+        {% endif %}
 
         <!-- 4. العروض -->
+        {% if can_financial_full %}
         <li class="menu-item">
             <a class="menu-link {% if request.resolver_match.url_name == 'special_offers' %}active{% endif %}" href="{% url 'special_offers' %}">
                 <i class="bi bi-megaphone"></i>
                 العروض
             </a>
         </li>
+        {% endif %}
 
         <!-- 5. البحث عن خدمة -->
+        {% if can_patients_search %}
         <li class="menu-item">
             <a class="menu-link {% if request.resolver_match.url_name == 'service_search' %}active{% endif %}" href="{% url 'service_search' %}">
                 <i class="bi bi-search"></i>
                 البحث عن خدمة
             </a>
         </li>
+        {% endif %}
 
         <!-- الأطباء -->
+        {% if can_doctors_view_all or can_doctors_view_own %}
         <li class="menu-item">
-            <a class="menu-link {% if request.resolver_match.url_name == 'doctors_list' %}active{% endif %}" href="{% url 'doctors_list' %}">
+
+            <a class="menu-link {% if request.resolver_match.url_name == 'doctors_list' %}active{% endif %}"
+               href="{% url 'doctors_list' %}">
+
                 <i class="bi bi-person-badge"></i>
                 الأطباء
+
             </a>
+
         </li>
+        {% endif %}
 
         <!-- 6. توصيفات العمليات -->
+        {% if can_financial_full %}
         <li class="menu-item">
             <a class="menu-link {% if request.resolver_match.url_name in 'procedures,procedure_fees' %}active{% endif %}"
                data-bs-toggle="collapse"
@@ -1176,24 +1230,30 @@ body {
                 </a>
             </div>
         </li>
+        {% endif %}
 
         <!-- 7. تفاصيل التسعير -->
+        {% if can_financial_full %}
         <li class="menu-item">
             <a class="menu-link {% if request.resolver_match.url_name == 'pricing_details' %}active{% endif %}" href="{% url 'pricing_details' %}">
                 <i class="bi bi-cash-stack"></i>
                 تفاصيل التسعير
             </a>
         </li>
+        {% endif %}
 
         <!-- 8. فواتير مماثلة -->
+        {% if is_admin %}
         <li class="menu-item">
             <a class="menu-link {% if request.resolver_match.url_name == 'similar_invoices' %}active{% endif %}" href="{% url 'similar_invoices' %}">
                 <i class="bi bi-receipt"></i>
                 فواتير مماثلة
             </a>
         </li>
+        {% endif %}
 
         <!-- متابعة الباكدجات -->
+        {% if can_financial_full %}
         <li class="menu-item">
             <a class="menu-link {% if request.resolver_match.url_name in 'reports,package_comparison' %}active{% endif %}"
                data-bs-toggle="collapse"
@@ -1217,42 +1277,71 @@ body {
                 </a>
             </div>
         </li>
+        {% endif %}
 
         <!-- 10. جودة البيانات -->
-        <li class="menu-item">
-            <a class="menu-link {% if request.resolver_match.url_name == 'quality_dashboard' %}active{% endif %}" href="{% url 'quality_dashboard' %}">
-                <i class="bi bi-shield-check"></i>
-                جودة البيانات
-            </a>
-        </li>
+        {% if authz.is_admin %}
+    <li class="menu-item">
+        <a class="menu-link {% if request.resolver_match.url_name == 'quality_dashboard' %}active{% endif %}" href="{% url 'quality_dashboard' %}">
+            <i class="bi bi-shield-check"></i>
+            جودة البيانات
+        </a>
+    </li>
+{% endif %}
 
-        <!-- 11. متابعة موافقات الخارجي -->
-        <li class="menu-item">
-            <a class="menu-link {% if request.resolver_match.url_name in 'patient_search,external_approvals,pending_analysis' %}active{% endif %}"
-               data-bs-toggle="collapse"
-               href="#approvalMenu"
-               role="button"
-               aria-expanded="{% if request.resolver_match.url_name in 'patient_search,external_approvals,pending_analysis' %}true{% else %}false{% endif %}">
+      {% if can_patients_search or can_approvals_view or can_approvals_statistics %}
+    <li class="menu-item">
 
-                <i class="bi bi-file-medical"></i>
-                متابعة موافقات الخارجي
-                <i class="bi bi-chevron-down menu-arrow"></i>
-            </a>
+        <a class="menu-link
+            {% if request.resolver_match.url_name in 'patient_search,external_approvals,pending_analysis' %}
+                active
+            {% endif %}"
+            data-bs-toggle="collapse"
+            href="#approvalMenu"
+            role="button"
+            aria-expanded="{% if request.resolver_match.url_name in 'patient_search,external_approvals,pending_analysis' %}true{% else %}false{% endif %}">
 
-            <div class="collapse submenu {% if request.resolver_match.url_name in 'patient_search,external_approvals,pending_analysis' %}show{% endif %}" id="approvalMenu">
-                <a href="{% url 'patient_search' %}" class="{% if request.resolver_match.url_name == 'patient_search' %}active{% endif %}">
-                    <i class="bi bi-search"></i> بحث عن مريض
+            <i class="bi bi-file-medical"></i>
+            متابعة موافقات الخارجي
+            <i class="bi bi-chevron-down menu-arrow"></i>
+
+        </a>
+
+        <div class="collapse submenu
+            {% if request.resolver_match.url_name in 'patient_search,external_approvals,pending_analysis' %}
+                show
+            {% endif %}"
+            id="approvalMenu">
+
+            {% if can_patients_search %}
+                <a href="{% url 'patient_search' %}"
+                   class="{% if request.resolver_match.url_name == 'patient_search' %}active{% endif %}">
+                    <i class="bi bi-search"></i>
+                    بحث عن مريض
                 </a>
-                <a href="{% url 'external_approvals' %}" class="{% if request.resolver_match.url_name == 'external_approvals' %}active{% endif %}">
-                    <i class="bi bi-list"></i> متابعة الموافقات 
-                </a>
-                <a href="{% url 'pending_analysis' %}" class="{% if request.resolver_match.url_name == 'pending_analysis' %}active{% endif %}">
-                    <i class="bi bi-clock-history"></i> احصائيات الموافقات  
-                </a>
-            </div>
-        </li>
+            {% endif %}
 
+            {% if can_approvals_view %}
+                <a href="{% url 'external_approvals' %}"
+                   class="{% if request.resolver_match.url_name == 'external_approvals' %}active{% endif %}">
+                    <i class="bi bi-list"></i>
+                    متابعة الموافقات
+                </a>
+            {% endif %}
+
+            {% if can_approvals_statistics %}
+                <a href="{% url 'pending_analysis' %}"
+                   class="{% if request.resolver_match.url_name == 'pending_analysis' %}active{% endif %}">
+                    <i class="bi bi-clock-history"></i>
+                    إحصائيات الموافقات
+                </a>
+            {% endif %}
+
+        </div>
+    </li>
+{% endif %}
         <!-- 13. قوائم الأسعار -->
+        {% if can_financial_full %}
         <li class="menu-item">
             <a class="menu-link {% if request.resolver_match.url_name in 'price_lists' %}active{% endif %}"
                data-bs-toggle="collapse"
@@ -1277,27 +1366,45 @@ body {
                 </a>
             </div>
         </li>
+        {% endif %}
 
         <!-- 14. إدارة النظام -->
+       {% if is_admin %}
         <li class="menu-item">
-            <a class="menu-link {% if request.resolver_match.url_name in 'system_update' %}active{% endif %}"
-               data-bs-toggle="collapse"
-               href="#systemMenu"
-               role="button"
-               aria-expanded="{% if request.resolver_match.url_name in 'system_update' %}true{% else %}false{% endif %}">
+
+            <a class="menu-link
+                {% if request.resolver_match.url_name in 'system_update' %}
+                    active
+                {% endif %}"
+                data-bs-toggle="collapse"
+                href="#systemMenu"
+                role="button"
+                aria-expanded="{% if request.resolver_match.url_name in 'system_update' %}true{% else %}false{% endif %}">
 
                 <i class="bi bi-gear-fill"></i>
                 إدارة النظام
                 <i class="bi bi-chevron-down menu-arrow"></i>
+
             </a>
 
-            <div class="collapse submenu {% if request.resolver_match.url_name in 'system_update' %}show{% endif %}" id="systemMenu">
-                <a href="{% url 'system_update' %}" class="{% if request.resolver_match.url_name == 'system_update' %}active{% endif %}">
+            <div class="collapse submenu
+                {% if request.resolver_match.url_name in 'system_update' %}
+                    show
+                {% endif %}"
+                id="systemMenu">
+
+                <a href="{% url 'system_update' %}"
+                   class="{% if request.resolver_match.url_name == 'system_update' %}active{% endif %}">
+
                     <i class="bi bi-arrow-repeat"></i>
                     تحديث البيانات
+
                 </a>
+
             </div>
+
         </li>
+        {% endif %}
 
     </ul>
 

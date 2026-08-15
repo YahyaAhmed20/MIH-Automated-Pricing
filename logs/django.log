@@ -13603,3 +13603,2008 @@ Watching for file changes with StatReloader
 "GET /patient-search/ HTTP/1.1" 200 812607
 "GET /patient-search/?attachment_type=%D8%B3%D9%8A%D9%84%D8%B2&company=&sub_account=&doctor=&specialty=&date_from=&date_to= HTTP/1.1" 200 412881
 "GET /patient-search/?attachment_type=%D8%B3%D9%8A%D9%84%D8%B2&company=&sub_account=&doctor=%D8%AF%2F%D8%A7%D8%AD%D9%85%D8%AF+%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D9%85%D8%B9%D8%B2&specialty=&date_from=&date_to= HTTP/1.1" 200 78782
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 69070
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 15295
+"GET /credit-package-pricing/ HTTP/1.1" 200 86945
+"GET /credit-package-pricing/?company_search=%D8%A7%D8%A8%D8%A7%D8%AA%D8%B4%D9%89+%D9%85%D8%B5%D8%B1&company=135&specialty=&package_search=&package= HTTP/1.1" 200 234117
+"GET /credit-package-pricing/?company=135&package=93838&company_search=%D8%A7%D8%A8%D8%A7%D8%AA%D8%B4%D9%89%20%D9%85%D8%B5%D8%B1&package_search=&specialty= HTTP/1.1" 200 117968
+"GET /external-approvals/ HTTP/1.1" 200 75393
+Watching for file changes with StatReloader
+Not Found: /
+"GET / HTTP/1.1" 404 15762
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 15813
+D:\desktop\rphospital\src\accounts\urls.py changed, reloading.
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 48244
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+"GET /contract-entities/ HTTP/1.1" 200 65837
+"GET / HTTP/1.1" 200 48801
+"POST / HTTP/1.1" 200 48921
+Watching for file changes with StatReloader
+"GET /admin HTTP/1.1" 301 0
+"GET /admin/ HTTP/1.1" 302 0
+"GET /admin/login/?next=/admin/ HTTP/1.1" 200 4455
+"GET /static/admin/css/dark_mode.css HTTP/1.1" 200 2808
+"GET /static/admin/css/base.css HTTP/1.1" 200 22120
+"GET /static/admin/css/nav_sidebar.css HTTP/1.1" 200 2810
+"GET /static/admin/js/theme.js HTTP/1.1" 200 1653
+"GET /static/admin/css/responsive_rtl.css HTTP/1.1" 200 1991
+"GET /static/admin/js/nav_sidebar.js HTTP/1.1" 200 3063
+"GET /static/admin/css/rtl.css HTTP/1.1" 200 4772
+"GET /static/admin/css/responsive.css HTTP/1.1" 200 16565
+"GET /static/admin/css/login.css HTTP/1.1" 200 951
+"POST /admin/login/?next=/admin/ HTTP/1.1" 302 0
+"GET /admin/ HTTP/1.1" 200 22558
+"GET /static/admin/css/dashboard.css HTTP/1.1" 200 441
+"GET /static/admin/img/icon-addlink.svg HTTP/1.1" 200 331
+"GET /static/admin/img/icon-changelink.svg HTTP/1.1" 200 380
+"GET /admin/accounts/role/ HTTP/1.1" 200 20266
+"GET /static/admin/css/changelists.css HTTP/1.1" 200 6878
+"GET /static/admin/js/core.js HTTP/1.1" 200 6208
+"GET /static/admin/js/jquery.init.js HTTP/1.1" 200 347
+"GET /static/admin/js/urlify.js HTTP/1.1" 200 7887
+"GET /static/admin/js/actions.js HTTP/1.1" 200 8076
+"GET /static/admin/js/prepopulate.js HTTP/1.1" 200 1531
+"GET /static/admin/img/search.svg HTTP/1.1" 200 458
+"GET /static/admin/js/admin/RelatedObjectLookups.js HTTP/1.1" 200 9777
+"GET /static/admin/js/vendor/jquery/jquery.js HTTP/1.1" 200 285314
+"GET /static/admin/js/vendor/xregexp/xregexp.js HTTP/1.1" 200 325171
+"GET /static/admin/js/filters.js HTTP/1.1" 200 978
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"GET /static/admin/img/tooltag-add.svg HTTP/1.1" 200 331
+- Broken pipe from ('127.0.0.1', 65192)
+"GET /admin/accounts/role/add/ HTTP/1.1" 200 41395
+"GET /static/admin/js/prepopulate_init.js HTTP/1.1" 200 586
+"GET /static/admin/css/forms.css HTTP/1.1" 200 8525
+"GET /static/admin/css/widgets.css HTTP/1.1" 200 11973
+"GET /static/admin/js/change_form.js HTTP/1.1" 200 606
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+D:\desktop\rphospital\src\accounts\admin.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\accounts\models.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET /admin/ HTTP/1.1" 200 22558
+- Broken pipe from ('127.0.0.1', 51248)
+"GET /admin/accounts/role/add/ HTTP/1.1" 200 43276
+"GET /static/admin/js/SelectBox.js HTTP/1.1" 200 4530
+"GET /static/admin/js/SelectFilter2.js HTTP/1.1" 200 15845
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"GET /static/admin/img/selector-icons.svg HTTP/1.1" 200 3291
+Forbidden (CSRF token from POST incorrect.): /
+"POST / HTTP/1.1" 403 2529
+D:\desktop\rphospital\src\accounts\models.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\project\settings.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 302 0
+Internal Server Error: /dashboard/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\smartif.py", line 180, in translate_token
+    op = OPERATORS[token]
+         ~~~~~~~~~^^^^^^^
+KeyError: 'authz.can("packages_credit_basic")'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 209, in home
+    return render(
+           ^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 172, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 164, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\loader_tags.py", line 134, in render
+    compiled_parent = self.get_parent(context)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\loader_tags.py", line 131, in get_parent
+    return self.find_template(parent, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\loader_tags.py", line 109, in find_template
+    template, origin = context.template.engine.find_template(
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\engine.py", line 159, in find_template
+    template = loader.get_template(name, skip=skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\loaders\cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\loaders\base.py", line 28, in get_template
+    return Template(
+           ^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 155, in __init__
+    self.nodelist = self.compile_nodelist()
+                    ^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 197, in compile_nodelist
+    nodelist = parser.parse()
+               ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 519, in parse
+    raise self.error(token, e)
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 517, in parse
+    compiled_result = compile_func(self, token)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\defaulttags.py", line 961, in do_if
+    condition = TemplateIfParser(parser, bits).parse()
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\defaulttags.py", line 894, in __init__
+    super().__init__(*args, **kwargs)
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\smartif.py", line 171, in __init__
+    mapped_tokens.append(self.translate_token(token))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\smartif.py", line 182, in translate_token
+    return self.create_var(token)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\defaulttags.py", line 897, in create_var
+    return TemplateLiteral(self.template_parser.compile_filter(value), value)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 610, in compile_filter
+    return FilterExpression(token, self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 711, in __init__
+    raise TemplateSyntaxError(
+django.template.exceptions.TemplateSyntaxError: Could not parse the remainder: '("packages_credit_basic")' from 'authz.can("packages_credit_basic")'
+"GET /dashboard/ HTTP/1.1" 500 312324
+"GET /admin/accounts/role/add/ HTTP/1.1" 200 43276
+D:\desktop\rphospital\src\accounts\context_processors.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /dashboard/ HTTP/1.1" 200 70279
+"GET / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 70279
+"POST /admin/logout/ HTTP/1.1" 200 3885
+"GET /dashboard/ HTTP/1.1" 200 66986
+"GET / HTTP/1.1" 200 46150
+"POST / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 70279
+Forbidden (CSRF token from POST incorrect.): /admin/logout/
+"POST /admin/logout/ HTTP/1.1" 403 2529
+Method Not Allowed (GET): /admin/logout/
+"GET /admin/logout/ HTTP/1.1" 405 0
+Method Not Allowed (GET): /admin/logout/
+"GET /admin/logout/ HTTP/1.1" 405 0
+"GET /dashboard/ HTTP/1.1" 200 70279
+Not Found: /admin/l
+"GET /admin/l HTTP/1.1" 404 23981
+"GET /admin/ HTTP/1.1" 200 22558
+"GET /credit-package-pricing/ HTTP/1.1" 200 88230
+"GET /credit-package-pricing/?company_search=%D8%A7%D9%83%D8%B3%D9%88%D9%86+%D9%84%D9%84%D8%AD%D9%84%D9%88%D9%84+%D8%A7%D9%84%D9%85%D8%AA%D9%83%D8%A7%D9%85%D9%84%D9%87&company=24&specialty=&package_search=&package= HTTP/1.1" 200 238056
+"GET /credit-package-pricing/?company=24&package=174088&company_search=%D8%A7%D9%83%D8%B3%D9%88%D9%86%20%D9%84%D9%84%D8%AD%D9%84%D9%88%D9%84%20%D8%A7%D9%84%D9%85%D8%AA%D9%83%D8%A7%D9%85%D9%84%D9%87&package_search=&specialty= HTTP/1.1" 200 119499
+"GET /cash-packages/ HTTP/1.1" 200 506219
+"GET /contract-entities/ HTTP/1.1" 200 67036
+"GET /contract-entities/1/ HTTP/1.1" 200 78031
+"GET /admin/accounts/role/add/ HTTP/1.1" 200 43276
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"GET /company-discounts/?entity=1 HTTP/1.1" 200 68466
+"GET /company-discounts/?tab=compare&entity=1&search=%D8%A7%D9%84%D8%A8%D9%86%D9%83%20%D8%A7%D9%84%D8%B9%D9%82%D8%A7%D8%B1%D9%89%20%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%89%20%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%89 HTTP/1.1" 200 74049
+"GET /company-discounts/?tab=ranking&entity=1&search=%D8%A7%D9%84%D8%A8%D9%86%D9%83%20%D8%A7%D9%84%D8%B9%D9%82%D8%A7%D8%B1%D9%89%20%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%89%20%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%89 HTTP/1.1" 200 68103
+"GET /company-discounts/?tab=exceptions&entity=1&search=%D8%A7%D9%84%D8%A8%D9%86%D9%83%20%D8%A7%D9%84%D8%B9%D9%82%D8%A7%D8%B1%D9%89%20%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%89%20%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%89 HTTP/1.1" 200 101617
+"GET /special-offers/ HTTP/1.1" 200 151188
+"GET /service-search/ HTTP/1.1" 200 64085
+"GET /doctors/ HTTP/1.1" 200 233489
+"GET /doctors/%D8%A7.%D8%AF%20/%20%D9%88%D8%A7%D8%A6%D9%84%20%D8%A7%D8%A8%D8%B1%D8%A7%D9%87%D9%8A%D9%85%20%D8%B5%D8%A7%D8%A8%D8%B1/ HTTP/1.1" 200 107690
+"GET /procedures/ HTTP/1.1" 200 90981
+"GET /admin/accounts/user/ HTTP/1.1" 200 31980
+"GET /static/admin/img/icon-yes.svg HTTP/1.1" 200 436
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"GET /static/admin/img/sorting-icons.svg HTTP/1.1" 200 1097
+"GET /static/admin/img/icon-viewlink.svg HTTP/1.1" 200 581
+"GET /admin/accounts/user/15/change/ HTTP/1.1" 200 57060
+"GET /static/admin/js/calendar.js HTTP/1.1" 200 9141
+"GET /static/admin/js/admin/DateTimeShortcuts.js HTTP/1.1" 200 19319
+"GET /static/admin/img/icon-deletelink.svg HTTP/1.1" 200 392
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"GET /static/admin/img/icon-calendar.svg HTTP/1.1" 200 1086
+"GET /static/admin/img/icon-clock.svg HTTP/1.1" 200 677
+"GET /admin/accounts/role/ HTTP/1.1" 200 23805
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"GET /admin/accounts/role/add/ HTTP/1.1" 200 43276
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"GET /admin/ HTTP/1.1" 200 22558
+"GET /admin/accounts/user/add/ HTTP/1.1" 200 29225
+"GET /static/admin/css/unusable_password_field.css HTTP/1.1" 200 663
+"GET /static/admin/js/unusable_password_field.js HTTP/1.1" 200 1480
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"POST /admin/accounts/user/add/ HTTP/1.1" 200 29681
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+D:\desktop\rphospital\src\project\settings.py changed, reloading.
+Watching for file changes with StatReloader
+"POST /admin/accounts/user/add/ HTTP/1.1" 200 28882
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"POST /admin/accounts/user/add/ HTTP/1.1" 302 0
+"GET /admin/accounts/user/16/change/ HTTP/1.1" 200 57282
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"GET /procedures/ HTTP/1.1" 200 90981
+"GET / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 70279
+"POST /admin/logout/ HTTP/1.1" 200 3885
+"GET /dashboard/ HTTP/1.1" 200 66986
+"GET / HTTP/1.1" 200 46150
+"POST / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 69077
+"GET /credit-package-pricing/ HTTP/1.1" 200 87028
+"GET /credit-package-pricing/?company_search=%D8%A7%D9%83%D8%B3%D9%88%D9%86+%D9%84%D9%84%D8%AD%D9%84%D9%88%D9%84+%D8%A7%D9%84%D9%85%D8%AA%D9%83%D8%A7%D9%85%D9%84%D9%87&company=24&specialty=&package_search=&package= HTTP/1.1" 200 236854
+"GET /credit-package-pricing/?company=24&package=174088&company_search=%D8%A7%D9%83%D8%B3%D9%88%D9%86%20%D9%84%D9%84%D8%AD%D9%84%D9%88%D9%84%20%D8%A7%D9%84%D9%85%D8%AA%D9%83%D8%A7%D9%85%D9%84%D9%87&package_search=&specialty= HTTP/1.1" 200 103884
+"GET / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 69077
+"GET /dashboard/ HTTP/1.1" 200 65087
+"GET /external-approvals/ HTTP/1.1" 200 71485
+"GET /dashboard/ HTTP/1.1" 200 65087
+"GET /patient-search/ HTTP/1.1" 200 811232
+"GET / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 65087
+"GET /dashboard/ HTTP/1.1" 200 64840
+"GET /dashboard/ HTTP/1.1" 200 64733
+"GET /dashboard/ HTTP/1.1" 200 64732
+"GET /dashboard/ HTTP/1.1" 200 64731
+"GET /dashboard/ HTTP/1.1" 200 64603
+"GET /cash-packages/ HTTP/1.1" 200 500549
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 302 0
+- Broken pipe from ('127.0.0.1', 57908)
+- Broken pipe from ('127.0.0.1', 57904)
+"GET / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 302 0
+"GET /packages/ HTTP/1.1" 200 68810
+"GET /credit-package-pricing/ HTTP/1.1" 200 82560
+"GET / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 302 0
+"GET /packages/ HTTP/1.1" 200 68810
+"GET /packages/?search=&type=cash HTTP/1.1" 200 69215
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 302 0
+- Broken pipe from ('127.0.0.1', 58990)
+"GET /dashboard/ HTTP/1.1" 200 64603
+"GET /admin/ HTTP/1.1" 302 0
+"GET /admin/login/?next=/admin/ HTTP/1.1" 200 3956
+"GET /static/admin/css/login.css HTTP/1.1" 200 951
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 64603
+"GET / HTTP/1.1" 302 0
+- Broken pipe from ('127.0.0.1', 54250)
+"GET /dashboard/ HTTP/1.1" 200 64603
+"GET /admin/login/?next=/admin/ HTTP/1.1" 200 3956
+"GET /admin/ HTTP/1.1" 302 0
+"GET /admin/login/?next=/admin/ HTTP/1.1" 200 3956
+"POST /admin/login/?next=/admin/ HTTP/1.1" 302 0
+"GET /admin/ HTTP/1.1" 200 22965
+"GET /static/admin/css/dashboard.css HTTP/1.1" 200 441
+"GET /static/admin/img/icon-addlink.svg HTTP/1.1" 200 331
+"GET /static/admin/img/icon-changelink.svg HTTP/1.1" 200 380
+"GET / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 69879
+"GET /service-search/ HTTP/1.1" 200 63691
+Watching for file changes with StatReloader
+"POST /admin/logout/ HTTP/1.1" 200 3885
+"GET /admin/ HTTP/1.1" 302 0
+"GET /admin/login/?next=/admin/ HTTP/1.1" 200 4455
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 41919
+"POST /admin/login/?next=/admin/ HTTP/1.1" 302 0
+Forbidden (CSRF token from POST incorrect.): /
+"POST / HTTP/1.1" 403 2529
+"GET /admin/ HTTP/1.1" 200 22965
+"GET / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 69879
+"GET /quality-dashboard/ HTTP/1.1" 200 46154
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET /admin/accounts/user/ HTTP/1.1" 200 32488
+"GET /static/admin/css/changelists.css HTTP/1.1" 200 6878
+"GET /static/admin/js/jquery.init.js HTTP/1.1" 200 347
+"GET /static/admin/js/core.js HTTP/1.1" 200 6208
+"GET /static/admin/js/actions.js HTTP/1.1" 200 8076
+"GET /static/admin/js/prepopulate.js HTTP/1.1" 200 1531
+"GET /static/admin/js/urlify.js HTTP/1.1" 200 7887
+"GET /static/admin/js/admin/RelatedObjectLookups.js HTTP/1.1" 200 9777
+"GET /static/admin/js/vendor/jquery/jquery.js HTTP/1.1" 200 285314
+"GET /static/admin/js/vendor/xregexp/xregexp.js HTTP/1.1" 200 325171
+"GET /static/admin/js/filters.js HTTP/1.1" 200 978
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"GET /static/admin/img/tooltag-add.svg HTTP/1.1" 200 331
+"GET /static/admin/img/sorting-icons.svg HTTP/1.1" 200 1097
+"GET /static/admin/img/icon-viewlink.svg HTTP/1.1" 200 581
+"GET /admin/accounts/user/16/change/ HTTP/1.1" 200 57059
+"GET /static/admin/js/calendar.js HTTP/1.1" 200 9141
+"GET /static/admin/js/admin/DateTimeShortcuts.js HTTP/1.1" 200 19319
+"GET /static/admin/css/forms.css HTTP/1.1" 200 8525
+"GET /static/admin/js/SelectFilter2.js HTTP/1.1" 200 15845
+"GET /static/admin/js/SelectBox.js HTTP/1.1" 200 4530
+"GET /static/admin/css/widgets.css HTTP/1.1" 200 11973
+"GET /static/admin/js/change_form.js HTTP/1.1" 200 606
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"GET /admin/accounts/user/16/password/ HTTP/1.1" 200 21218
+"GET /static/admin/css/unusable_password_field.css HTTP/1.1" 200 663
+"GET /static/admin/js/unusable_password_field.js HTTP/1.1" 200 1480
+"POST /admin/accounts/user/16/password/ HTTP/1.1" 302 0
+"GET /admin/accounts/user/16/change/ HTTP/1.1" 200 57214
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"POST /admin/logout/ HTTP/1.1" 200 3885
+"GET / HTTP/1.1" 200 41919
+"POST / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 64603
+Forbidden (Permission denied): /contract-entities/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\accounts\decorators.py", line 21, in wrapper
+    raise PermissionDenied
+django.core.exceptions.PermissionDenied
+"GET /contract-entities/ HTTP/1.1" 403 135
+Forbidden (Permission denied): /reports/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\accounts\decorators.py", line 21, in wrapper
+    raise PermissionDenied
+django.core.exceptions.PermissionDenied
+"GET /reports/ HTTP/1.1" 403 135
+Forbidden (Permission denied): /contract-entities/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\accounts\decorators.py", line 21, in wrapper
+    raise PermissionDenied
+django.core.exceptions.PermissionDenied
+"GET /contract-entities/ HTTP/1.1" 403 135
+"GET //credit-package-pricing/ HTTP/1.1" 200 82560
+"GET /cash-packages/ HTTP/1.1" 200 500549
+"GET /patient-search/ HTTP/1.1" 200 810754
+Not Found: /approvals_view
+"GET /approvals_view HTTP/1.1" 404 16074
+"GET /admin HTTP/1.1" 301 0
+"GET /admin/ HTTP/1.1" 302 0
+- Broken pipe from ('127.0.0.1', 61888)
+- Broken pipe from ('127.0.0.1', 61848)
+"GET /admin/ HTTP/1.1" 302 0
+"GET /admin/login/?next=/admin/ HTTP/1.1" 200 3956
+"POST /admin/login/?next=/admin/ HTTP/1.1" 302 0
+"GET /admin/ HTTP/1.1" 200 23341
+"GET /admin/accounts/user/add/ HTTP/1.1" 200 28609
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"POST /admin/accounts/user/add/ HTTP/1.1" 200 28933
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"POST /admin/accounts/user/add/ HTTP/1.1" 302 0
+"GET /admin/accounts/user/17/change/ HTTP/1.1" 200 57281
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"GET / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 69879
+"POST /admin/logout/ HTTP/1.1" 200 3885
+"GET / HTTP/1.1" 200 41919
+"POST / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 64753
+"GET /pending-analysis/ HTTP/1.1" 200 196729
+"GET /credit-package-pricing/ HTTP/1.1" 200 82710
+"GET /cash-packages/ HTTP/1.1" 200 500699
+"GET /pending-analysis/ HTTP/1.1" 200 196729
+Forbidden (Permission denied): /contract-entities/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\accounts\decorators.py", line 21, in wrapper
+    raise PermissionDenied
+django.core.exceptions.PermissionDenied
+"GET //contract-entities/ HTTP/1.1" 403 135
+"GET / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 64753
+Forbidden (Permission denied): /patients/359/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\accounts\decorators.py", line 21, in wrapper
+    raise PermissionDenied
+django.core.exceptions.PermissionDenied
+"GET /patients/359/ HTTP/1.1" 403 135
+"GET /patient-search/ HTTP/1.1" 200 810904
+"GET /pending-analysis/ HTTP/1.1" 200 196729
+"GET /external-approvals/total/ HTTP/1.1" 200 859867
+"GET /external-approvals/status_rejected/ HTTP/1.1" 200 420441
+"GET /admin/ HTTP/1.1" 302 0
+"GET /admin/login/?next=/admin/ HTTP/1.1" 200 3956
+"POST /admin/login/?next=/admin/ HTTP/1.1" 302 0
+"GET /admin/ HTTP/1.1" 200 23708
+"GET /admin/accounts/user/add/ HTTP/1.1" 200 28609
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"POST /admin/accounts/user/add/ HTTP/1.1" 200 29075
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"POST /admin/accounts/user/add/ HTTP/1.1" 302 0
+"GET /admin/accounts/user/18/change/ HTTP/1.1" 200 57274
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"GET / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 69879
+"POST /admin/logout/ HTTP/1.1" 200 3885
+"GET / HTTP/1.1" 200 41919
+"POST / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 64977
+"GET /credit-package-pricing/ HTTP/1.1" 200 82934
+"GET /credit-package-pricing/?company_search=%D8%A7%D9%84%D8%A8%D9%86%D9%83+%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%89+%D8%A7%D9%84%D8%A7%D9%81%D8%B1%D9%8A%D9%82%D9%89&company=144&specialty=&package_search=&package= HTTP/1.1" 200 232446
+"GET /credit-package-pricing/?company=144&package=94573&company_search=%D8%A7%D9%84%D8%A8%D9%86%D9%83%20%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%89%20%D8%A7%D9%84%D8%A7%D9%81%D8%B1%D9%8A%D9%82%D9%89&package_search=&specialty= HTTP/1.1" 200 99686
+"GET /doctors/ HTTP/1.1" 200 228193
+"GET /doctors/%D8%A7.%D8%AF%20/%20%D8%AE%D8%A7%D9%84%D8%AF%20%D8%AF%D9%8A%D8%A7%D8%A8/ HTTP/1.1" 200 106602
+"GET /doctor/%D8%A7.%D8%AF%20/%20%D8%AE%D8%A7%D9%84%D8%AF%20%D8%AF%D9%8A%D8%A7%D8%A8/status/pending/ HTTP/1.1" 200 63418
+"GET /doctor/%D8%A7.%D8%AF%20/%20%D8%AE%D8%A7%D9%84%D8%AF%20%D8%AF%D9%8A%D8%A7%D8%A8/status/cancelled/ HTTP/1.1" 200 59058
+"GET /doctors/?doctor_name=&specialty=%D8%A3%D9%86%D9%81+%D9%88%D8%A3%D8%B0%D9%86+%D9%88%D8%AD%D9%86%D8%AC%D8%B1%D8%A9&day_from=&month_from=&year_from=&day_to=&month_to=&year_to= HTTP/1.1" 200 68720
+"GET /pending-analysis/ HTTP/1.1" 200 196953
+"GET /credit-package-pricing/ HTTP/1.1" 200 82934
+"GET /cash-packages/ HTTP/1.1" 200 500923
+"GET /doctors/ HTTP/1.1" 200 228193
+"GET /pending-analysis/ HTTP/1.1" 200 196953
+Forbidden (Permission denied): /contract-entities/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\accounts\decorators.py", line 21, in wrapper
+    raise PermissionDenied
+django.core.exceptions.PermissionDenied
+"GET /contract-entities/ HTTP/1.1" 403 135
+"GET /admin/ HTTP/1.1" 302 0
+"GET /admin/login/?next=/admin/ HTTP/1.1" 200 3953
+"POST /admin/login/?next=/admin/ HTTP/1.1" 302 0
+"GET /admin/ HTTP/1.1" 200 24073
+"GET / HTTP/1.1" 200 41919
+"GET /admin/accounts/user/add/ HTTP/1.1" 302 0
+"GET /admin/login/?next=/admin/accounts/user/add/ HTTP/1.1" 200 4491
+"POST /admin/login/?next=/admin/accounts/user/add/ HTTP/1.1" 302 0
+"GET /admin/accounts/user/add/ HTTP/1.1" 200 28609
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"POST /admin/accounts/user/add/ HTTP/1.1" 200 28958
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"POST /admin/accounts/user/add/ HTTP/1.1" 302 0
+"GET /admin/accounts/user/19/change/ HTTP/1.1" 200 57264
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"POST /admin/logout/ HTTP/1.1" 200 3885
+"GET / HTTP/1.1" 200 41919
+"POST / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 67939
+"GET /dashboard/ HTTP/1.1" 200 67503
+"GET /dashboard/ HTTP/1.1" 200 67277
+Forbidden (Permission denied): /reports/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\accounts\decorators.py", line 21, in wrapper
+    raise PermissionDenied
+django.core.exceptions.PermissionDenied
+"GET /reports/ HTTP/1.1" 403 135
+"GET /package-comparison/ HTTP/1.1" 200 97284
+"GET /ajax/package-filters/?source=sheet15&year=2025 HTTP/1.1" 200 102
+"GET /ajax/package-filters/?source=sheet15&year=2025 HTTP/1.1" 200 102
+"GET /company-discounts/ HTTP/1.1" 200 133467
+"GET /contract-entities/ HTTP/1.1" 200 64040
+"GET /contract-entities/1/ HTTP/1.1" 200 75035
+- Broken pipe from ('127.0.0.1', 57946)
+"GET /company-discounts/?entity=1 HTTP/1.1" 200 65470
+"GET /company-discounts/?tab=compare&entity=1&search=%D8%A7%D9%84%D8%A8%D9%86%D9%83%20%D8%A7%D9%84%D8%B9%D9%82%D8%A7%D8%B1%D9%89%20%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%89%20%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%89 HTTP/1.1" 200 71053
+"GET /company-discounts/?tab=ranking&entity=1&search=%D8%A7%D9%84%D8%A8%D9%86%D9%83%20%D8%A7%D9%84%D8%B9%D9%82%D8%A7%D8%B1%D9%89%20%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%89%20%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%89 HTTP/1.1" 200 65107
+"GET /company-discounts/?tab=exceptions&entity=1&search=%D8%A7%D9%84%D8%A8%D9%86%D9%83%20%D8%A7%D9%84%D8%B9%D9%82%D8%A7%D8%B1%D9%89%20%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%89%20%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%89 HTTP/1.1" 200 98621
+"GET /special-offers/ HTTP/1.1" 200 148020
+- Broken pipe from ('127.0.0.1', 62841)
+Forbidden (Permission denied): /procedures/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\accounts\decorators.py", line 21, in wrapper
+    raise PermissionDenied
+django.core.exceptions.PermissionDenied
+"GET /procedures/ HTTP/1.1" 403 135
+"GET /procedure-fees/ HTTP/1.1" 200 62842
+Forbidden (Permission denied): /procedures/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\accounts\decorators.py", line 21, in wrapper
+    raise PermissionDenied
+django.core.exceptions.PermissionDenied
+"GET /procedures/ HTTP/1.1" 403 135
+"GET /procedure-fees/ HTTP/1.1" 200 62842
+"GET /pricing-details/ HTTP/1.1" 200 316689
+"GET /pricing-details/?group=&company=&doctor=&specialty=&accountant=%D9%87%D8%A7%D9%86%D9%89&date_from=&date_to= HTTP/1.1" 200 83872
+Forbidden (Permission denied): /reports/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\accounts\decorators.py", line 21, in wrapper
+    raise PermissionDenied
+django.core.exceptions.PermissionDenied
+"GET /reports/ HTTP/1.1" 403 135
+"GET /package-comparison/ HTTP/1.1" 200 97284
+"GET /ajax/package-filters/?source=sheet15&year=2025 HTTP/1.1" 200 102
+"GET /ajax/package-filters/?source=sheet15&year=2025 HTTP/1.1" 200 102
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /procedures/ HTTP/1.1" 200 87985
+Forbidden (Permission denied): /reports/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\accounts\decorators.py", line 21, in wrapper
+    raise PermissionDenied
+django.core.exceptions.PermissionDenied
+"GET /reports/ HTTP/1.1" 403 135
+D:\desktop\rphospital\src\accounts\permissions.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET /procedures/ HTTP/1.1" 200 87985
+Forbidden (Permission denied): /reports/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\accounts\decorators.py", line 21, in wrapper
+    raise PermissionDenied
+django.core.exceptions.PermissionDenied
+"GET /reports/ HTTP/1.1" 403 135
+"GET /admin/ HTTP/1.1" 302 0
+"GET /admin/login/?next=/admin/ HTTP/1.1" 200 3954
+"GET / HTTP/1.1" 302 0
+"GET / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 67277
+"GET /dashboard/ HTTP/1.1" 200 67277
+"GET /admin/ HTTP/1.1" 302 0
+"GET /admin/login/?next=/admin/ HTTP/1.1" 200 3954
+"GET / HTTP/1.1" 302 0
+- Broken pipe from ('127.0.0.1', 53337)
+- Broken pipe from ('127.0.0.1', 53772)
+"POST /admin/login/?next=/admin/ HTTP/1.1" 200 4205
+"POST /admin/login/?next=/admin/ HTTP/1.1" 302 0
+"GET /admin/ HTTP/1.1" 200 24438
+"GET /admin/accounts/user/ HTTP/1.1" 200 34033
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"GET /admin/accounts/user/19/change/ HTTP/1.1" 200 57049
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"GET /admin/accounts/user/19/password/ HTTP/1.1" 200 21196
+"POST /admin/accounts/user/19/password/ HTTP/1.1" 302 0
+"GET /admin/accounts/user/19/change/ HTTP/1.1" 200 57204
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"GET / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 69847
+"POST /admin/logout/ HTTP/1.1" 200 3885
+"GET / HTTP/1.1" 200 41919
+"POST / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 67277
+Forbidden (Permission denied): /reports/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\accounts\decorators.py", line 21, in wrapper
+    raise PermissionDenied
+django.core.exceptions.PermissionDenied
+"GET /reports/ HTTP/1.1" 403 135
+Watching for file changes with StatReloader
+"GET /pricing-details/ HTTP/1.1" 200 316689
+"GET /reports/ HTTP/1.1" 200 105959
+"GET /procedures/ HTTP/1.1" 200 87985
+"GET / HTTP/1.1" 302 0
+"GET /admin/ HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 67277
+"GET /admin/login/?next=/admin/ HTTP/1.1" 200 3954
+"POST /admin/login/?next=/admin/ HTTP/1.1" 302 0
+"GET /admin/ HTTP/1.1" 200 24806
+"GET /admin/accounts/user/ HTTP/1.1" 200 34033
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"GET /admin/accounts/user/add/ HTTP/1.1" 200 28609
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"POST /admin/accounts/user/add/ HTTP/1.1" 302 0
+"GET /admin/accounts/user/20/change/ HTTP/1.1" 200 57430
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"POST /admin/logout/ HTTP/1.1" 200 3885
+"GET / HTTP/1.1" 200 41919
+"POST / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 62963
+Forbidden (Permission denied): /doctors/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\accounts\decorators.py", line 21, in wrapper
+    raise PermissionDenied
+django.core.exceptions.PermissionDenied
+"GET /doctors/ HTTP/1.1" 403 135
+Forbidden (Permission denied): /doctors/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\accounts\decorators.py", line 21, in wrapper
+    raise PermissionDenied
+django.core.exceptions.PermissionDenied
+"GET /doctors/ HTTP/1.1" 403 135
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 62963
+"GET /doctors/ HTTP/1.1" 200 74482
+"GET /doctors/?doctor_name=%D8%A7.%D8%AF+%2F+%D8%A7%D8%AD%D9%85%D8%AF+%D8%B4%D8%B1%D9%8A%D9%81+%D9%83%D8%B1%D9%8A%D9%85&specialty=&day_from=&month_from=&year_from=&day_to=&month_to=&year_to= HTTP/1.1" 200 70588
+"GET /doctors/ HTTP/1.1" 200 74482
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /doctors/ HTTP/1.1" 200 74482
+"GET /doctors/?doctor_name=%D8%A7.%D8%AF+%2F+%D8%A7%D8%AD%D9%85%D8%AF+%D8%B5%D9%84%D8%A7%D8%AD+%D9%85%D8%AD%D9%85%D8%AF+%D9%85%D8%AD%D9%85%D8%AF+%D9%8A%D9%88%D9%86%D8%B3&specialty=&day_from=&month_from=&year_from=&day_to=&month_to=&year_to= HTTP/1.1" 200 70598
+"GET /doctors/ HTTP/1.1" 200 74482
+D:\desktop\rphospital\src\accounts\models.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\accounts\admin.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET /admin/ HTTP/1.1" 302 0
+"GET /admin/login/?next=/admin/ HTTP/1.1" 200 3952
+"POST /admin/login/?next=/admin/ HTTP/1.1" 302 0
+"GET /admin/ HTTP/1.1" 200 25174
+"GET /admin/accounts/user/ HTTP/1.1" 200 35445
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"GET /admin/accounts/user/20/change/ HTTP/1.1" 200 57390
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"GET /admin/accounts/user/ HTTP/1.1" 200 35445
+"GET /admin/accounts/user/add/ HTTP/1.1" 200 29267
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+Watching for file changes with StatReloader
+"GET /admin/accounts/user/add/ HTTP/1.1" 200 29267
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+D:\desktop\rphospital\src\accounts\admin.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\accounts\admin.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\accounts\admin.py changed, reloading.
+Watching for file changes with StatReloader
+Internal Server Error: /admin/accounts/user/add/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\admin\options.py", line 841, in get_form
+    return modelform_factory(self.model, **defaults)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\forms\models.py", line 654, in modelform_factory
+    return type(form)(class_name, (form,), form_class_attrs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\forms\models.py", line 334, in __new__
+    raise FieldError(message)
+django.core.exceptions.FieldError: Unknown field(s) (usable_password) specified for User
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\admin\options.py", line 720, in wrapper
+    return self.admin_site.admin_view(view)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\views\decorators\cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\admin\sites.py", line 246, in inner
+    return view(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\views\decorators\debug.py", line 143, in sensitive_post_parameters_wrapper
+    return view(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\auth\admin.py", line 121, in add_view
+    return self._add_view(request, form_url, extra_context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\auth\admin.py", line 152, in _add_view
+    return super().add_view(request, form_url, extra_context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\admin\options.py", line 1985, in add_view
+    return self.changeform_view(request, None, form_url, extra_context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\admin\options.py", line 1841, in changeform_view
+    return self._changeform_view(request, object_id, form_url, extra_context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\admin\options.py", line 1879, in _changeform_view
+    ModelForm = self.get_form(
+                ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\auth\admin.py", line 98, in get_form
+    return super().get_form(request, obj, **defaults)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\admin\options.py", line 843, in get_form
+    raise FieldError(
+django.core.exceptions.FieldError: Unknown field(s) (usable_password) specified for User. Check fields/fieldsets/exclude attributes of class CustomUserAdmin.
+"GET /admin/accounts/user/add/ HTTP/1.1" 500 195470
+D:\desktop\rphospital\src\accounts\admin.py changed, reloading.
+Watching for file changes with StatReloader
+Internal Server Error: /admin/accounts/user/add/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\admin\options.py", line 841, in get_form
+    return modelform_factory(self.model, **defaults)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\forms\models.py", line 654, in modelform_factory
+    return type(form)(class_name, (form,), form_class_attrs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\forms\models.py", line 334, in __new__
+    raise FieldError(message)
+django.core.exceptions.FieldError: Unknown field(s) (usable_password) specified for User
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\admin\options.py", line 720, in wrapper
+    return self.admin_site.admin_view(view)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\views\decorators\cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\admin\sites.py", line 246, in inner
+    return view(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\views\decorators\debug.py", line 143, in sensitive_post_parameters_wrapper
+    return view(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\auth\admin.py", line 121, in add_view
+    return self._add_view(request, form_url, extra_context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\auth\admin.py", line 152, in _add_view
+    return super().add_view(request, form_url, extra_context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\admin\options.py", line 1985, in add_view
+    return self.changeform_view(request, None, form_url, extra_context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\admin\options.py", line 1841, in changeform_view
+    return self._changeform_view(request, object_id, form_url, extra_context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\admin\options.py", line 1879, in _changeform_view
+    ModelForm = self.get_form(
+                ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\auth\admin.py", line 98, in get_form
+    return super().get_form(request, obj, **defaults)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\admin\options.py", line 843, in get_form
+    raise FieldError(
+django.core.exceptions.FieldError: Unknown field(s) (usable_password) specified for User. Check fields/fieldsets/exclude attributes of class CustomUserAdmin.
+"GET /admin/accounts/user/add/ HTTP/1.1" 500 195470
+Internal Server Error: /admin/accounts/user/add/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\admin\options.py", line 841, in get_form
+    return modelform_factory(self.model, **defaults)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\forms\models.py", line 654, in modelform_factory
+    return type(form)(class_name, (form,), form_class_attrs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\forms\models.py", line 334, in __new__
+    raise FieldError(message)
+django.core.exceptions.FieldError: Unknown field(s) (usable_password) specified for User
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\admin\options.py", line 720, in wrapper
+    return self.admin_site.admin_view(view)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\views\decorators\cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\admin\sites.py", line 246, in inner
+    return view(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\views\decorators\debug.py", line 143, in sensitive_post_parameters_wrapper
+    return view(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\auth\admin.py", line 121, in add_view
+    return self._add_view(request, form_url, extra_context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\auth\admin.py", line 152, in _add_view
+    return super().add_view(request, form_url, extra_context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\admin\options.py", line 1985, in add_view
+    return self.changeform_view(request, None, form_url, extra_context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\admin\options.py", line 1841, in changeform_view
+    return self._changeform_view(request, object_id, form_url, extra_context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\admin\options.py", line 1879, in _changeform_view
+    ModelForm = self.get_form(
+                ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\auth\admin.py", line 98, in get_form
+    return super().get_form(request, obj, **defaults)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\admin\options.py", line 843, in get_form
+    raise FieldError(
+django.core.exceptions.FieldError: Unknown field(s) (usable_password) specified for User. Check fields/fieldsets/exclude attributes of class CustomUserAdmin.
+"GET /admin/accounts/user/add/ HTTP/1.1" 500 195470
+"GET /admin/ HTTP/1.1" 200 25174
+Internal Server Error: /admin/accounts/user/add/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\admin\options.py", line 841, in get_form
+    return modelform_factory(self.model, **defaults)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\forms\models.py", line 654, in modelform_factory
+    return type(form)(class_name, (form,), form_class_attrs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\forms\models.py", line 334, in __new__
+    raise FieldError(message)
+django.core.exceptions.FieldError: Unknown field(s) (usable_password) specified for User
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\admin\options.py", line 720, in wrapper
+    return self.admin_site.admin_view(view)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\views\decorators\cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\admin\sites.py", line 246, in inner
+    return view(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\views\decorators\debug.py", line 143, in sensitive_post_parameters_wrapper
+    return view(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\auth\admin.py", line 121, in add_view
+    return self._add_view(request, form_url, extra_context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\auth\admin.py", line 152, in _add_view
+    return super().add_view(request, form_url, extra_context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\admin\options.py", line 1985, in add_view
+    return self.changeform_view(request, None, form_url, extra_context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\admin\options.py", line 1841, in changeform_view
+    return self._changeform_view(request, object_id, form_url, extra_context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\admin\options.py", line 1879, in _changeform_view
+    ModelForm = self.get_form(
+                ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\auth\admin.py", line 98, in get_form
+    return super().get_form(request, obj, **defaults)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\admin\options.py", line 843, in get_form
+    raise FieldError(
+django.core.exceptions.FieldError: Unknown field(s) (usable_password) specified for User. Check fields/fieldsets/exclude attributes of class CustomUserAdmin.
+"GET /admin/accounts/user/add/ HTTP/1.1" 500 195319
+Watching for file changes with StatReloader
+Internal Server Error: /admin/accounts/user/add/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\admin\options.py", line 841, in get_form
+    return modelform_factory(self.model, **defaults)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\forms\models.py", line 654, in modelform_factory
+    return type(form)(class_name, (form,), form_class_attrs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\forms\models.py", line 334, in __new__
+    raise FieldError(message)
+django.core.exceptions.FieldError: Unknown field(s) (usable_password) specified for User
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\admin\options.py", line 720, in wrapper
+    return self.admin_site.admin_view(view)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\views\decorators\cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\admin\sites.py", line 246, in inner
+    return view(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\views\decorators\debug.py", line 143, in sensitive_post_parameters_wrapper
+    return view(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\auth\admin.py", line 121, in add_view
+    return self._add_view(request, form_url, extra_context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\auth\admin.py", line 152, in _add_view
+    return super().add_view(request, form_url, extra_context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\admin\options.py", line 1985, in add_view
+    return self.changeform_view(request, None, form_url, extra_context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\admin\options.py", line 1841, in changeform_view
+    return self._changeform_view(request, object_id, form_url, extra_context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\admin\options.py", line 1879, in _changeform_view
+    ModelForm = self.get_form(
+                ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\auth\admin.py", line 98, in get_form
+    return super().get_form(request, obj, **defaults)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\admin\options.py", line 843, in get_form
+    raise FieldError(
+django.core.exceptions.FieldError: Unknown field(s) (usable_password) specified for User. Check fields/fieldsets/exclude attributes of class CustomUserAdmin.
+"GET /admin/accounts/user/add/ HTTP/1.1" 500 195456
+D:\desktop\rphospital\src\accounts\admin.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /admin/accounts/user/add/ HTTP/1.1" 200 40249
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+D:\desktop\rphospital\src\accounts\admin.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /admin/accounts/user/add/ HTTP/1.1" 200 40310
+"GET /static/admin/js/user_role_doctor.js HTTP/1.1" 404 2011
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"GET /admin/accounts/user/add/ HTTP/1.1" 200 40310
+"GET /static/admin/js/user_role_doctor.js HTTP/1.1" 404 2011
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+D:\desktop\rphospital\src\accounts\admin.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\accounts\admin.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /admin/accounts/user/add/ HTTP/1.1" 200 40310
+"GET /static/admin/js/user_role_doctor.js HTTP/1.1" 200 1302
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"GET /admin/accounts/user/ HTTP/1.1" 200 35445
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+Watching for file changes with StatReloader
+"GET /admin/accounts/user/20/change/ HTTP/1.1" 200 68183
+"GET /static/admin/js/user_role_doctor.js HTTP/1.1" 304 0
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"POST /admin/accounts/user/20/change/ HTTP/1.1" 302 0
+"GET /admin/accounts/user/ HTTP/1.1" 200 35673
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"GET /doctors/ HTTP/1.1" 200 233063
+"GET /admin/accounts/user/20/change/ HTTP/1.1" 200 68183
+"GET /static/admin/js/user_role_doctor.js HTTP/1.1" 304 0
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"GET /doctors/%D8%A7.%D8%AF%20/%20%D9%85%D8%AD%D9%85%D8%AF%20%D8%AD%D8%AC%D8%A7%D8%A8/ HTTP/1.1" 200 111860
+"GET /doctors/%D8%A7.%D8%AF%20/%20%D8%AE%D8%A7%D9%84%D8%AF%20%D8%AF%D9%8A%D8%A7%D8%A8/ HTTP/1.1" 200 111472
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /doctors/ HTTP/1.1" 200 232450
+"GET /doctors/%D8%A7.%D8%AF%20/%20%D9%85%D8%AD%D9%85%D8%AF%20%D8%AD%D8%AC%D8%A7%D8%A8/ HTTP/1.1" 200 111860
+"GET /doctors/?doctor_name=%D8%A7.%D8%AF+%2F+%D8%AE%D8%A7%D9%84%D8%AF+%D8%AF%D9%8A%D8%A7%D8%A8&specialty=&day_from=&month_from=&year_from=&day_to=&month_to=&year_to= HTTP/1.1" 200 78411
+"GET /doctors/%D8%A7.%D8%AF%20/%20%D8%AE%D8%A7%D9%84%D8%AF%20%D8%AF%D9%8A%D8%A7%D8%A8/ HTTP/1.1" 200 111472
+"GET /admin/accounts/user/20/change/ HTTP/1.1" 200 68183
+"GET /admin/accounts/user/add/ HTTP/1.1" 200 40310
+"GET /static/admin/js/user_role_doctor.js HTTP/1.1" 304 0
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"POST /admin/accounts/user/add/ HTTP/1.1" 302 0
+"GET /admin/accounts/user/21/change/ HTTP/1.1" 200 68393
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"POST /admin/logout/ HTTP/1.1" 200 3885
+"GET / HTTP/1.1" 200 41919
+"POST / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 62963
+"GET /doctors/ HTTP/1.1" 200 58102
+"GET /doctors/%D8%A7.%D8%AF%20/%20%D8%AE%D8%A7%D9%84%D8%AF%20%D8%AF%D9%8A%D8%A7%D8%A8/ HTTP/1.1" 200 104588
+"GET /doctor/%D8%A7.%D8%AF%20/%20%D8%AE%D8%A7%D9%84%D8%AF%20%D8%AF%D9%8A%D8%A7%D8%A8/status/pending/ HTTP/1.1" 200 61404
+"GET /doctors/%D8%A7.%D8%AF%20/%20%D9%85%D8%AD%D9%85%D8%AF%20%D9%81%D8%AA%D8%AD%20%D8%A7%D9%84%D9%84%D9%87 HTTP/1.1" 301 0
+Forbidden (Permission denied): /doctors/\u0627.\u062f / \u0645\u062d\u0645\u062f \u0641\u062a\u062d \u0627\u0644\u0644\u0647/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\accounts\decorators.py", line 51, in wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 3259, in doctor_detail
+    raise PermissionDenied
+django.core.exceptions.PermissionDenied
+"GET /doctors/%D8%A7.%D8%AF%20/%20%D9%85%D8%AD%D9%85%D8%AF%20%D9%81%D8%AA%D8%AD%20%D8%A7%D9%84%D9%84%D9%87/ HTTP/1.1" 403 135
+"GET /doctors/%D8%A7.%D8%AF%20/%20%D8%AE%D8%A7%D9%84%D8%AF%20%D8%AF%D9%8A%D8%A7%D8%A8/ HTTP/1.1" 200 104588
+"GET /doctors/%D8%A7.%D8%AF%20/%20%D8%AE%D8%A7%D9%84%D8%AF%20%D8%AF%D9%8A%D8%A7%D8%A8/ HTTP/1.1" 200 104588
+"GET /doctor/%D8%A7.%D8%AF%20/%20%D8%AE%D8%A7%D9%84%D8%AF%20%D8%AF%D9%8A%D8%A7%D8%A8/status/approved/ HTTP/1.1" 200 89669
+"GET /admin/ HTTP/1.1" 302 0
+"GET /admin/login/?next=/admin/ HTTP/1.1" 200 3950
+"POST /admin/login/?next=/admin/ HTTP/1.1" 302 0
+"GET /admin/ HTTP/1.1" 200 25912
+"GET /admin/accounts/user/add/ HTTP/1.1" 200 40310
+"GET /static/admin/js/user_role_doctor.js HTTP/1.1" 304 0
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"POST /admin/accounts/user/add/ HTTP/1.1" 302 0
+"GET /admin/accounts/user/22/change/ HTTP/1.1" 200 68400
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"POST /admin/logout/ HTTP/1.1" 200 3885
+"GET / HTTP/1.1" 200 41919
+"POST / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 63351
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 41919
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 16065
+"POST / HTTP/1.1" 200 42039
+"GET /admin HTTP/1.1" 301 0
+"GET /admin/ HTTP/1.1" 302 0
+"GET /admin/login/?next=/admin/ HTTP/1.1" 200 4455
+"GET /static/admin/css/dark_mode.css HTTP/1.1" 200 2808
+"GET /static/admin/css/base.css HTTP/1.1" 200 22120
+"GET /static/admin/css/login.css HTTP/1.1" 200 951
+"GET /static/admin/css/responsive.css HTTP/1.1" 200 16565
+"GET /static/admin/css/nav_sidebar.css HTTP/1.1" 200 2810
+"GET /static/admin/js/theme.js HTTP/1.1" 200 1653
+"GET /static/admin/css/rtl.css HTTP/1.1" 200 4772
+"GET /static/admin/css/responsive_rtl.css HTTP/1.1" 200 1991
+"GET /static/admin/js/nav_sidebar.js HTTP/1.1" 200 3063
+"POST /admin/login/?next=/admin/ HTTP/1.1" 302 0
+"GET /admin/ HTTP/1.1" 200 26280
+"GET /static/admin/css/dashboard.css HTTP/1.1" 200 441
+"GET /static/admin/img/icon-changelink.svg HTTP/1.1" 200 380
+"GET /static/admin/img/icon-addlink.svg HTTP/1.1" 200 331
+"GET /admin/accounts/user/ HTTP/1.1" 200 36580
+"GET /static/admin/js/jquery.init.js HTTP/1.1" 200 347
+"GET /static/admin/js/admin/RelatedObjectLookups.js HTTP/1.1" 200 9777
+"GET /static/admin/js/core.js HTTP/1.1" 200 6208
+"GET /static/admin/css/changelists.css HTTP/1.1" 200 6878
+"GET /static/admin/js/vendor/jquery/jquery.js HTTP/1.1" 200 285314
+"GET /static/admin/js/actions.js HTTP/1.1" 200 8076
+"GET /static/admin/js/prepopulate.js HTTP/1.1" 200 1531
+"GET /static/admin/js/urlify.js HTTP/1.1" 200 7887
+"GET /static/admin/img/search.svg HTTP/1.1" 200 458
+"GET /static/admin/js/vendor/xregexp/xregexp.js HTTP/1.1" 200 325171
+"GET /static/admin/img/icon-yes.svg HTTP/1.1" 200 436
+"GET /static/admin/js/filters.js HTTP/1.1" 200 978
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"GET /static/admin/img/tooltag-add.svg HTTP/1.1" 200 331
+"GET /static/admin/img/sorting-icons.svg HTTP/1.1" 200 1097
+"GET /static/admin/img/icon-viewlink.svg HTTP/1.1" 200 581
+"POST /admin/logout/ HTTP/1.1" 200 3885
+"GET / HTTP/1.1" 200 41919
+"POST / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 63351
+"GET / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 63351
+"GET / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 63351
+"GET /admin/ HTTP/1.1" 302 0
+"GET /admin/login/?next=/admin/ HTTP/1.1" 200 3951
+"GET / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 63351
+"GET /admin/ HTTP/1.1" 302 0
+"GET /admin/login/?next=/admin/ HTTP/1.1" 200 3951
+"POST /admin/login/?next=/admin/ HTTP/1.1" 200 4199
+"POST /admin/login/?next=/admin/ HTTP/1.1" 200 4199
+"POST /admin/login/?next=/admin/ HTTP/1.1" 302 0
+"GET /admin/ HTTP/1.1" 200 26280
+"GET / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 69847
+"GET /pending-analysis/ HTTP/1.1" 200 201900
+"GET /reports/ HTTP/1.1" 200 108529
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /admin/ HTTP/1.1" 200 26280
+"POST /admin/logout/ HTTP/1.1" 200 3885
+"GET / HTTP/1.1" 200 41919
+"POST / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 63351
+Not Found: /external
+"GET /external HTTP/1.1" 404 16056
+"GET /external-approvals HTTP/1.1" 301 0
+"GET /external-approvals/ HTTP/1.1" 200 54387
+"GET /external-approvals/ HTTP/1.1" 200 48087
+"GET /external-approvals/early/ HTTP/1.1" 200 123166
+- Broken pipe from ('127.0.0.1', 57077)
+"GET /external-approvals/early/?attachment_type=&company=&sub_account=%D8%A7%D9%84%D8%B2%D9%88%D8%AC%D9%87&doctor=&specialty=&main_status=&date_from=&date_to= HTTP/1.1" 200 77675
+"GET /external-approvals/early/ HTTP/1.1" 200 123166
+"GET / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 63351
+Not Found: /pending_analysis
+"GET /pending_analysis HTTP/1.1" 404 16080
+"GET /dashboard/ HTTP/1.1" 200 63492
+"GET /external-approvals/ HTTP/1.1" 200 48234
+"GET /dashboard/ HTTP/1.1" 200 63795
+"GET /external-approvals/early/ HTTP/1.1" 200 123669
+"GET /external-approvals/ HTTP/1.1" 200 48505
+"GET /external-approvals/early/ HTTP/1.1" 200 123669
+D:\desktop\rphospital\src\accounts\context_processors.py changed, reloading.
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 302 0
+- Broken pipe from ('127.0.0.1', 54669)
+"GET /dashboard/ HTTP/1.1" 200 63597
+"GET /external-approvals/early/ HTTP/1.1" 200 123471
+"GET /admin/ HTTP/1.1" 302 0
+"GET /admin/login/?next=/admin/ HTTP/1.1" 200 3951
+"POST /admin/login/?next=/admin/ HTTP/1.1" 302 0
+"GET /admin/ HTTP/1.1" 200 26280
+"GET / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 70286
+"GET /external-approvals/ HTTP/1.1" 200 90050
+"GET /external-approvals/ HTTP/1.1" 200 89730
+"GET /external-approvals/ HTTP/1.1" 200 89730
+"GET /admin/ HTTP/1.1" 200 26280
+"POST /admin/logout/ HTTP/1.1" 200 3885
+"GET / HTTP/1.1" 200 41852
+"POST / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 63410
+"GET /external-approvals/ HTTP/1.1" 200 48136
+"GET /external-approvals/early/ HTTP/1.1" 200 123225
+Watching for file changes with StatReloader
+Invalid HTTP_HOST header: 'erpnext.localhost:8000'. You may need to add 'erpnext.localhost' to ALLOWED_HOSTS.
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\deprecation.py", line 119, in __call__
+    response = self.process_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\middleware\common.py", line 48, in process_request
+    host = request.get_host()
+           ^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\http\request.py", line 203, in get_host
+    raise DisallowedHost(msg)
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: 'erpnext.localhost:8000'. You may need to add 'erpnext.localhost' to ALLOWED_HOSTS.
+"GET /desk/users HTTP/1.1" 400 77857
+Invalid HTTP_HOST header: 'erpnext.localhost:8000'. You may need to add 'erpnext.localhost' to ALLOWED_HOSTS.
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\deprecation.py", line 119, in __call__
+    response = self.process_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\middleware\common.py", line 48, in process_request
+    host = request.get_host()
+           ^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\http\request.py", line 203, in get_host
+    raise DisallowedHost(msg)
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: 'erpnext.localhost:8000'. You may need to add 'erpnext.localhost' to ALLOWED_HOSTS.
+"GET /favicon.ico HTTP/1.1" 400 77555
+"GET / HTTP/1.1" 200 41852
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 16065
+"POST / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 69950
+"GET /contract-entities/ HTTP/1.1" 200 66713
+"GET /contract-entities/ HTTP/1.1" 200 66713
+Internal Server Error: /contract-entities/5/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.OperationalError: server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\accounts\decorators.py", line 23, in wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 2636, in contract_entity_detail
+    ).count()
+      ^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 606, in count
+    return self.query.get_count(using=self.db)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\sql\query.py", line 646, in get_count
+    return obj.get_aggregation(using, {"__count": Count("*")})["__count"]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\sql\query.py", line 628, in get_aggregation
+    result = compiler.execute_sql(SINGLE)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\sql\compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+
+"GET /contract-entities/5/ HTTP/1.1" 500 136423
+Internal Server Error: /contract-entities/5/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\sessions\backends\base.py", line 244, in _get_session
+    return self._session_cache
+           ^^^^^^^^^^^^^^^^^^^
+AttributeError: 'SessionStore' object has no attribute '_session_cache'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 279, in ensure_connection
+    self.connect()
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\postgresql\base.py", line 332, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\psycopg2\__init__.py", line 135, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.OperationalError: could not translate host name "shortline.proxy.rlwy.net" to address: Name or service not known
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\accounts\decorators.py", line 20, in wrapper
+    if not authz.can(permission):
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\accounts\authorization.py", line 54, in can
+    if not self.is_authenticated:
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\accounts\authorization.py", line 20, in is_authenticated
+    and self.user.is_authenticated
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\functional.py", line 251, in inner
+    self._setup()
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\functional.py", line 404, in _setup
+    self._wrapped = self._setupfunc()
+                    ^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\auth\middleware.py", line 40, in <lambda>
+    request.user = SimpleLazyObject(lambda: get_user(request))
+                                            ^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\auth\middleware.py", line 20, in get_user
+    request._cached_user = auth.get_user(request)
+                           ^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\auth\__init__.py", line 304, in get_user
+    user_id = _get_user_session_key(request)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\auth\__init__.py", line 95, in _get_user_session_key
+    return get_user_model()._meta.pk.to_python(request.session[SESSION_KEY])
+                                               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\sessions\backends\base.py", line 55, in __getitem__
+    return self._session[key]
+           ^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\sessions\backends\base.py", line 249, in _get_session
+    self._session_cache = self.load()
+                          ^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\sessions\backends\db.py", line 55, in load
+    s = self._get_session_from_db()
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\sessions\backends\db.py", line 34, in _get_session_from_db
+    return self.model.objects.get(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 631, in get
+    num = len(clone)
+          ^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 368, in __len__
+    self._fetch_all()
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 1954, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 93, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\sql\compiler.py", line 1621, in execute_sql
+    cursor = self.connection.cursor()
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 320, in cursor
+    return self._cursor()
+           ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 296, in _cursor
+    self.ensure_connection()
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 278, in ensure_connection
+    with self.wrap_database_errors:
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 279, in ensure_connection
+    self.connect()
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\postgresql\base.py", line 332, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\psycopg2\__init__.py", line 135, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: could not translate host name "shortline.proxy.rlwy.net" to address: Name or service not known
+
+"GET /contract-entities/5/ HTTP/1.1" 500 232533
+"GET /contract-entities/5/ HTTP/1.1" 200 76883
+Internal Server Error: /company-discounts/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\sessions\backends\base.py", line 244, in _get_session
+    return self._session_cache
+           ^^^^^^^^^^^^^^^^^^^
+AttributeError: 'SessionStore' object has no attribute '_session_cache'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 279, in ensure_connection
+    self.connect()
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\postgresql\base.py", line 332, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\psycopg2\__init__.py", line 135, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.OperationalError: could not translate host name "shortline.proxy.rlwy.net" to address: Name or service not known
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\accounts\decorators.py", line 20, in wrapper
+    if not authz.can(permission):
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\accounts\authorization.py", line 54, in can
+    if not self.is_authenticated:
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\accounts\authorization.py", line 20, in is_authenticated
+    and self.user.is_authenticated
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\functional.py", line 251, in inner
+    self._setup()
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\functional.py", line 404, in _setup
+    self._wrapped = self._setupfunc()
+                    ^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\auth\middleware.py", line 40, in <lambda>
+    request.user = SimpleLazyObject(lambda: get_user(request))
+                                            ^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\auth\middleware.py", line 20, in get_user
+    request._cached_user = auth.get_user(request)
+                           ^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\auth\__init__.py", line 304, in get_user
+    user_id = _get_user_session_key(request)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\auth\__init__.py", line 95, in _get_user_session_key
+    return get_user_model()._meta.pk.to_python(request.session[SESSION_KEY])
+                                               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\sessions\backends\base.py", line 55, in __getitem__
+    return self._session[key]
+           ^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\sessions\backends\base.py", line 249, in _get_session
+    self._session_cache = self.load()
+                          ^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\sessions\backends\db.py", line 55, in load
+    s = self._get_session_from_db()
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\sessions\backends\db.py", line 34, in _get_session_from_db
+    return self.model.objects.get(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 631, in get
+    num = len(clone)
+          ^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 368, in __len__
+    self._fetch_all()
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 1954, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 93, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\sql\compiler.py", line 1621, in execute_sql
+    cursor = self.connection.cursor()
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 320, in cursor
+    return self._cursor()
+           ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 296, in _cursor
+    self.ensure_connection()
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 278, in ensure_connection
+    with self.wrap_database_errors:
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 279, in ensure_connection
+    self.connect()
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\postgresql\base.py", line 332, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\psycopg2\__init__.py", line 135, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: could not translate host name "shortline.proxy.rlwy.net" to address: Name or service not known
+
+"GET /company-discounts/?entity=5 HTTP/1.1" 500 232717
+"GET /company-discounts/?entity=5 HTTP/1.1" 200 67953
+Not Found: /adnin
+"GET /adnin HTTP/1.1" 404 16047
+"GET /admin HTTP/1.1" 301 0
+"GET /admin/ HTTP/1.1" 200 26280
+"GET /static/admin/css/nav_sidebar.css HTTP/1.1" 200 2810
+"GET /static/admin/js/theme.js HTTP/1.1" 200 1653
+"GET /static/admin/css/dark_mode.css HTTP/1.1" 200 2808
+"GET /static/admin/css/base.css HTTP/1.1" 200 22120
+"GET /static/admin/css/dashboard.css HTTP/1.1" 200 441
+"GET /static/admin/css/responsive_rtl.css HTTP/1.1" 200 1991
+"GET /static/admin/css/responsive.css HTTP/1.1" 200 16565
+"GET /static/admin/js/nav_sidebar.js HTTP/1.1" 200 3063
+"GET /static/admin/css/rtl.css HTTP/1.1" 200 4772
+"GET /static/admin/img/icon-addlink.svg HTTP/1.1" 200 331
+"GET /static/admin/img/icon-changelink.svg HTTP/1.1" 200 380
+"POST /admin/logout/ HTTP/1.1" 200 3885
+"GET / HTTP/1.1" 200 41852
+Invalid HTTP_HOST header: 'erpnext.localhost:8000'. You may need to add 'erpnext.localhost' to ALLOWED_HOSTS.
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\deprecation.py", line 119, in __call__
+    response = self.process_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\middleware\common.py", line 48, in process_request
+    host = request.get_host()
+           ^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\http\request.py", line 203, in get_host
+    raise DisallowedHost(msg)
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: 'erpnext.localhost:8000'. You may need to add 'erpnext.localhost' to ALLOWED_HOSTS.
+"GET /favicon.ico HTTP/1.1" 400 77555
+"GET / HTTP/1.1" 200 41852
+"GET / HTTP/1.1" 200 41852
+"GET / HTTP/1.1" 200 41852
+"GET / HTTP/1.1" 200 41852
+"GET / HTTP/1.1" 200 41852
+"POST / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 69950
+"GET /admin/ HTTP/1.1" 200 26280
+"GET /admin/accounts/user/add/ HTTP/1.1" 200 41492
+"GET /static/admin/css/forms.css HTTP/1.1" 200 8525
+"GET /static/admin/css/unusable_password_field.css HTTP/1.1" 200 663
+"GET /static/admin/css/widgets.css HTTP/1.1" 200 11973
+"GET /static/admin/js/jquery.init.js HTTP/1.1" 200 347
+"GET /static/admin/js/user_role_doctor.js HTTP/1.1" 200 1302
+"GET /static/admin/js/actions.js HTTP/1.1" 200 8076
+"GET /static/admin/js/admin/RelatedObjectLookups.js HTTP/1.1" 200 9777
+"GET /static/admin/js/core.js HTTP/1.1" 200 6208
+"GET /static/admin/js/urlify.js HTTP/1.1" 200 7887
+"GET /static/admin/js/vendor/jquery/jquery.js HTTP/1.1" 200 285314
+"GET /static/admin/js/prepopulate.js HTTP/1.1" 200 1531
+"GET /static/admin/js/prepopulate_init.js HTTP/1.1" 200 586
+"GET /static/admin/js/vendor/xregexp/xregexp.js HTTP/1.1" 200 325171
+"GET /static/admin/img/icon-deletelink.svg HTTP/1.1" 200 392
+"GET /static/admin/img/icon-viewlink.svg HTTP/1.1" 200 581
+"GET /static/admin/js/change_form.js HTTP/1.1" 200 606
+"GET /static/admin/js/unusable_password_field.js HTTP/1.1" 200 1480
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"POST /admin/accounts/user/add/ HTTP/1.1" 302 0
+"POST /admin/accounts/user/add/ HTTP/1.1" 200 42275
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"GET /static/admin/img/icon-yes.svg HTTP/1.1" 200 436
+- Broken pipe from ('127.0.0.1', 56461)
+"POST /admin/accounts/user/add/ HTTP/1.1" 302 0
+"GET /admin/accounts/user/add/ HTTP/1.1" 200 41765
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"POST /admin/logout/ HTTP/1.1" 200 3885
+"GET / HTTP/1.1" 200 41852
+"POST / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 63410
+"GET /external-approvals/ HTTP/1.1" 200 48200
+"GET /external-approvals/early/ HTTP/1.1" 200 287884
+"GET /admin/ HTTP/1.1" 302 0
+"GET /admin/login/?next=/admin/ HTTP/1.1" 200 3955
+"GET /static/admin/css/login.css HTTP/1.1" 200 951
+"POST /admin/login/?next=/admin/ HTTP/1.1" 302 0
+"GET /admin/ HTTP/1.1" 200 26277
+"GET /admin/accounts/user/add/ HTTP/1.1" 200 41492
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+Watching for file changes with StatReloader
+"POST /admin/accounts/user/add/ HTTP/1.1" 302 0
+"GET /admin/accounts/user/add/ HTTP/1.1" 200 41764
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"GET / HTTP/1.1" 302 0
+- Broken pipe from ('127.0.0.1', 61149)
+- Broken pipe from ('127.0.0.1', 60988)
+"POST /admin/logout/ HTTP/1.1" 302 0
+"GET /admin/ HTTP/1.1" 302 0
+"GET /admin/login/?next=/admin/ HTTP/1.1" 200 4455
+"GET / HTTP/1.1" 200 41852
+"POST / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 62896
+"GET /doctors/ HTTP/1.1" 200 58035
+"GET /doctors/%D8%A7.%D8%AF%20/%20%D8%AE%D8%A7%D9%84%D8%AF%20%D8%AF%D9%8A%D8%A7%D8%A8/ HTTP/1.1" 200 104771
+"GET /admin/ HTTP/1.1" 302 0
+"GET /admin/login/?next=/admin/ HTTP/1.1" 200 3955
+"POST /admin/login/?next=/admin/ HTTP/1.1" 302 0
+"GET /admin/ HTTP/1.1" 200 26282
+"GET /admin/accounts/user/add/ HTTP/1.1" 200 41492
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"POST /admin/accounts/user/add/ HTTP/1.1" 302 0
+"GET /admin/accounts/user/add/ HTTP/1.1" 200 41764
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"GET / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 69950
+Not Found: /dmin
+"GET /dmin HTTP/1.1" 404 16044
+Not Found: /ddmin
+"GET /ddmin HTTP/1.1" 404 16047
+"GET /admin/ HTTP/1.1" 200 26289
+"POST /admin/logout/ HTTP/1.1" 200 3885
+"GET / HTTP/1.1" 200 41852
+"POST / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 64852
+"GET /credit-package-pricing/ HTTP/1.1" 200 82809
+"GET /credit-package-pricing/?company_search=%D8%AC%D9%84%D9%88%D8%A8+%D9%85%D9%8A%D8%AF&company=48&specialty=&package_search=&package= HTTP/1.1" 200 228922
+"GET /credit-package-pricing/?company=48&package=176764&company_search=%D8%AC%D9%84%D9%88%D8%A8%20%D9%85%D9%8A%D8%AF&package_search=&specialty= HTTP/1.1" 200 99282
+"GET /cash-packages/ HTTP/1.1" 200 500798
+"GET /service-search/ HTTP/1.1" 200 58664
+"GET /patient-search/ HTTP/1.1" 200 822283
+Not Found: /patient-search/36447.pdf
+"GET /patient-search/36447.pdf HTTP/1.1" 404 16104
+Not Found: /patient-search/36447.pdf
+"GET /patient-search/36447.pdf HTTP/1.1" 404 16104
+Not Found: /patient-search/[NBE-MA
+"GET /patient-search/[NBE-MA HTTP/1.1" 404 16100
+Not Found: /patient-search/(MA-2049513)
+"GET /patient-search/(MA-2049513) HTTP/1.1" 404 16113
+Not Found: /patient-search/\u0639\u0645\u0631 \u0646 \u0639\u0628\u062f\u0627\u0644\u0631\u062d\u064a\u0645.pdf
+"GET /patient-search/%D8%B9%D9%85%D8%B1%20%D9%86%20%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D8%B1%D8%AD%D9%8A%D9%85.pdf HTTP/1.1" 404 16229
+"GET /external-approvals/ HTTP/1.1" 200 84633
+"GET /admin/ HTTP/1.1" 302 0
+- Broken pipe from ('127.0.0.1', 61177)
+"GET / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 64852
+Not Found: /ad
+"GET /ad HTTP/1.1" 404 16038
+"GET /admin/ HTTP/1.1" 302 0
+"GET /admin/login/?next=/admin/ HTTP/1.1" 200 3955
+"POST /admin/login/?next=/admin/ HTTP/1.1" 302 0
+"GET /admin/ HTTP/1.1" 200 26289
+"GET /admin/login/?next=/admin/ HTTP/1.1" 302 0
+"GET /admin/ HTTP/1.1" 200 26289
+"POST /admin/logout/ HTTP/1.1" 200 3885
+"GET /admin/ HTTP/1.1" 302 0
+"GET /admin/login/?next=/admin/ HTTP/1.1" 200 4455
+"POST /admin/login/?next=/admin/ HTTP/1.1" 200 4707
+"POST /admin/login/?next=/admin/ HTTP/1.1" 302 0
+"GET /admin/ HTTP/1.1" 200 26289
+"GET /admin/accounts/user/add/ HTTP/1.1" 200 41492
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"POST /admin/accounts/user/add/ HTTP/1.1" 200 41817
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"POST /admin/accounts/user/add/ HTTP/1.1" 302 0
+"GET /admin/accounts/user/add/ HTTP/1.1" 200 41764
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"GET /admin/accounts/user/ HTTP/1.1" 200 39407
+"GET /static/admin/css/changelists.css HTTP/1.1" 200 6878
+"GET /static/admin/img/search.svg HTTP/1.1" 200 458
+"GET /static/admin/js/filters.js HTTP/1.1" 200 978
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"GET /static/admin/img/tooltag-add.svg HTTP/1.1" 200 331
+"GET /static/admin/img/sorting-icons.svg HTTP/1.1" 200 1097
+"POST /admin/logout/ HTTP/1.1" 200 3885
+"GET /admin/ HTTP/1.1" 302 0
+"GET /admin/login/?next=/admin/ HTTP/1.1" 200 4455
+"GET / HTTP/1.1" 200 41852
+"POST / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 65072
+"GET /credit-package-pricing/ HTTP/1.1" 200 83029
+"GET /credit-package-pricing/?company_search=%D8%A7%D9%83%D8%B3%D8%A7&company=42&specialty=&package_search=&package= HTTP/1.1" 200 229045
+"GET /credit-package-pricing/?company=42&package=176014&company_search=%D8%A7%D9%83%D8%B3%D8%A7&package_search=&specialty= HTTP/1.1" 200 99715
+"GET /cash-packages/ HTTP/1.1" 200 501018
+"GET /pending-analysis/ HTTP/1.1" 200 197360
+"GET /external-approvals/status_patient_refused/ HTTP/1.1" 200 363782
+"GET /external-approvals/ HTTP/1.1" 200 84853
+"GET /patient-search/ HTTP/1.1" 200 822503
+Not Found: /patient-search/\u0627\u0633\u0645\u0627\u0621 \u0639 \u0627\u0644\u0633\u064a\u062f.pdf
+"GET /patient-search/%D8%A7%D8%B3%D9%85%D8%A7%D8%A1%20%D8%B9%20%D8%A7%D9%84%D8%B3%D9%8A%D8%AF.pdf HTTP/1.1" 404 16209
+"GET /patient-search/?search=%D9%88%D9%81%D8%A7%D8%A1+%D8%AD%D8%B3%D9%86+%D8%B0%D9%83%D9%89+%D8%A7%D9%84%D9%85%D9%84%D9%8A%D8%AC%D9%89+ HTTP/1.1" 200 55350
+"GET /patient-search/?search=%D9%88%D9%81%D8%A7%D8%A1 HTTP/1.1" 200 70956
+Not Found: /patient-search/20346252
+"GET /patient-search/20346252 HTTP/1.1" 404 16101
+"GET /admin/ HTTP/1.1" 302 0
+"GET /admin/login/?next=/admin/ HTTP/1.1" 200 3955
+"POST /admin/login/?next=/admin/ HTTP/1.1" 302 0
+"GET /admin/ HTTP/1.1" 200 26296
+"GET /admin/accounts/user/add/ HTTP/1.1" 200 41492
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"POST /admin/accounts/user/add/ HTTP/1.1" 200 41820
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"POST /admin/accounts/user/add/ HTTP/1.1" 302 0
+"GET /admin/accounts/user/add/ HTTP/1.1" 200 41762
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"POST /admin/logout/ HTTP/1.1" 200 3885
+"GET / HTTP/1.1" 200 41852
+"POST / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 65296
+"GET /credit-package-pricing/ HTTP/1.1" 200 83253
+"GET /credit-package-pricing/?company_search=%D8%A7%D9%83%D8%B3%D8%A7&company=42&specialty=&package_search=&package= HTTP/1.1" 200 229269
+"GET /credit-package-pricing/?company=42&package=176014&company_search=%D8%A7%D9%83%D8%B3%D8%A7&package_search=&specialty= HTTP/1.1" 200 99939
+"GET /doctors/ HTTP/1.1" 200 241309
+"GET /admin/ HTTP/1.1" 302 0
+"GET /admin/login/?next=/admin/ HTTP/1.1" 200 3955
+"POST /admin/login/?next=/admin/ HTTP/1.1" 302 0
+"GET /admin/ HTTP/1.1" 200 26298
+"GET /admin/accounts/user/add/ HTTP/1.1" 200 41492
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"POST /admin/accounts/user/add/ HTTP/1.1" 200 41824
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"POST /admin/accounts/user/add/ HTTP/1.1" 302 0
+"GET /admin/accounts/user/add/ HTTP/1.1" 200 41766
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"GET / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 69950
+"GET /credit-package-pricing/ HTTP/1.1" 200 87907
+"GET /credit-package-pricing/?company_search=%D8%A7%D9%84%D8%A8%D9%86%D9%83+%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%89+%D8%A7%D9%84%D8%A7%D9%81%D8%B1%D9%8A%D9%82%D9%89&company=144&specialty=&package_search=&package= HTTP/1.1" 200 237419
+"GET /credit-package-pricing/?company=144&package=94573&company_search=%D8%A7%D9%84%D8%A8%D9%86%D9%83%20%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%89%20%D8%A7%D9%84%D8%A7%D9%81%D8%B1%D9%8A%D9%82%D9%89&package_search=&specialty= HTTP/1.1" 200 119069
+"GET /contract-entities/ HTTP/1.1" 200 66713
+"GET /company-discounts/ HTTP/1.1" 200 136140
+"GET /special-offers/ HTTP/1.1" 200 150705
+"GET /special-offers/?company=%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%8A%D9%87%20%D9%84%D9%84%D8%A7%D8%AA%D8%B5%D8%A7%D9%84%D8%A7%D8%AA HTTP/1.1" 200 79002
+"GET /doctors/ HTTP/1.1" 200 245963
+"GET /procedures/ HTTP/1.1" 200 90658
+"GET /procedure-fees/ HTTP/1.1" 200 65515
+"GET /admin/ HTTP/1.1" 200 26304
+"GET /admin/accounts/user/ HTTP/1.1" 200 40534
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"GET /admin/accounts/user/?q=yahya HTTP/1.1" 200 26465
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"GET /admin/accounts/user/add/ HTTP/1.1" 200 41492
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"POST /admin/accounts/user/add/ HTTP/1.1" 302 0
+"GET /admin/accounts/user/add/ HTTP/1.1" 200 41762
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"GET / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 69950
+- Broken pipe from ('127.0.0.1', 52605)
+"GET /reports/ HTTP/1.1" 200 108632
+"GET / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 69950
+"GET /reports/ HTTP/1.1" 200 108632
+"GET /admin/ HTTP/1.1" 200 26303
+"POST /admin/logout/ HTTP/1.1" 200 3885
+"GET / HTTP/1.1" 200 41852

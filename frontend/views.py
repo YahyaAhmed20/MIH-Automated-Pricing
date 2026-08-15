@@ -8,6 +8,7 @@ from django.db.models import Count
 from contracts.models import (
     CompanyDiscountProfile,
 )
+from django.core.exceptions import PermissionDenied
 from frontend.services.company_comparison_service import (
     CompanyComparisonService,
 )
@@ -95,9 +96,16 @@ from contracts.models import ContractEntity
 from pricing_requests.models import PricingRequest
 from django.db.models import Sum, Count
 from django.shortcuts import render
+from accounts.decorators import (
+    permission_required,
+    permission_required_any,
+)
 
+from accounts.permissions import Permissions
+from accounts.authorization import Authorization
 def home(request):
 
+    
     total_requested = (
         PricingRequest.objects.aggregate(
             total=Sum("requested_cost")
@@ -206,6 +214,11 @@ def home(request):
     )
 
 
+@permission_required_any(
+    Permissions.PACKAGES_CASH_FULL,
+    Permissions.PACKAGES_CREDIT_BASIC,
+    Permissions.PACKAGES_CREDIT_FULL,
+)
 def packages(request):
 
     search = request.GET.get("search", "")
@@ -266,11 +279,17 @@ def packages(request):
     )
 
 # views.py
+@permission_required_any(
+    Permissions.PACKAGES_CASH_FULL,
+    Permissions.PACKAGES_CREDIT_BASIC,
+    Permissions.PACKAGES_CREDIT_FULL,
+)
 def package_create(request):
     # مجرد عرض رسالة
     messages.info(request, 'سيتم إضافة صفحة إضافة الباكدج قريباً 📦')
     return redirect('frontend:packages')
 
+@permission_required(Permissions.FINANCIAL_FULL)
 def contracts(request):
     return render(
         request,
@@ -278,13 +297,14 @@ def contracts(request):
     )
 
 
+@permission_required(Permissions.FINANCIAL_FULL)
 def discounts(request):
     return render(
         request,
         "frontend/discounts.html"
     )
 
-
+@permission_required(Permissions.FINANCIAL_FULL)
 def offers(request):
     return render(
         request,
@@ -292,6 +312,7 @@ def offers(request):
     )
 
 
+@permission_required(Permissions.PACKAGES_CREDIT_FULL)
 def operations(request):
     return render(
         request,
@@ -301,7 +322,7 @@ def operations(request):
 
 
 
-
+@permission_required(Permissions.APPROVALS_VIEW)
 def approvals(request):
     return render(
         request,
@@ -310,7 +331,7 @@ def approvals(request):
 
 
 
-
+@permission_required(Permissions.FINANCIAL_FULL)
 def price_lists(request):
     return render(
         request,
@@ -322,6 +343,7 @@ def price_lists(request):
 
 
 
+@permission_required(Permissions.FINANCIAL_FULL)
 def contract_entities(request):
 
     search = request.GET.get("search", "")
@@ -394,13 +416,21 @@ from django.db.models import Count, Q
 from django.utils import timezone
 from datetime import timedelta
 
+@permission_required(Permissions.APPROVALS_VIEW)
 def external_approvals(request):
     """
     صفحة متابعة موافقات الخارجي - شيت 12
     عرض 6 بوكسات إحصائية + توزيع الحالات
     """
     
-    all_records = ExternalApproval.objects.all()
+    if request.user.role and request.user.role.name == "Admission":
+        tomorrow = timezone.localtime().date() + timedelta(days=1)
+
+        all_records = ExternalApproval.objects.filter(
+            admission_date=tomorrow
+        )
+    else:
+        all_records = ExternalApproval.objects.all()
     total_cases = all_records.count()
     
     # ✅ الإحصائيات
@@ -507,11 +537,18 @@ def external_approvals(request):
     return render(request, 'frontend/external_approvals.html', context)
 
 # frontend/views.py
-
+@permission_required(Permissions.APPROVALS_VIEW)
 def external_approvals_detail(request, filter_type):
     """صفحة تفاصيل الموافقات الخارجية"""
     
-    all_records = ExternalApproval.objects.all()
+    if request.user.role and request.user.role.name == "Admission":
+        tomorrow = timezone.localtime().date() + timedelta(days=1)
+
+        all_records = ExternalApproval.objects.filter(
+            admission_date=tomorrow
+        )
+    else:
+        all_records = ExternalApproval.objects.all()
     total_cases = all_records.count()
     
     # ✅ الفلتر حسب النوع
@@ -700,6 +737,8 @@ def external_approvals_detail(request, filter_type):
     }
     
     return render(request, 'frontend/external_approvals_detail.html', context)
+
+@permission_required(Permissions.APPROVALS_VIEW)
 def approval_detail(request, pk):
 
     
@@ -805,7 +844,7 @@ SECTOR_COLORS = [
     "#6c757d",   # رمادي
 ]
 
-
+@permission_required(Permissions.REPORTS_VIEW)
 def reports_statistics(request):
 
     selected_month = request.GET.get("month", "")
@@ -1277,6 +1316,7 @@ import json
 from django.core.paginator import Paginator
 
 # التخصص
+@permission_required(Permissions.APPROVALS_STATISTICS)
 def specialty_detail(request, specialty_name):
     """صفحة تفاصيل التخصص - عرض جميع السجلات"""
     
@@ -1425,6 +1465,8 @@ from pricing_requests.models import ReportStatistic
 
 #  الباكجات حسب نوع الدفع
 
+@permission_required(Permissions.APPROVALS_STATISTICS)
+
 def payment_details(request):
     """صفحة تفاصيل الباكدجات حسب نوع الدفع"""
     
@@ -1502,6 +1544,9 @@ from django.core.paginator import Paginator
 from pricing_requests.models import ReportStatistic
 
 # الباكجات حسب القطاع (آجل فقط)
+
+@permission_required(Permissions.APPROVALS_STATISTICS)
+
 def sector_details(request):
     """صفحة تفاصيل الباكجات حسب القطاع (آجل فقط)"""
     
@@ -1712,6 +1757,7 @@ from django.core.paginator import Paginator
 from pricing_requests.models import ReportStatistic
 
 
+@permission_required(Permissions.APPROVALS_STATISTICS)
 def entities_details(request):
     """صفحة تفاصيل الجهات (آجل فقط) - أعلى وأقل"""
     
@@ -1819,7 +1865,7 @@ from django.shortcuts import render
 from django.core.paginator import Paginator
 from pricing_requests.models import ReportStatistic
 
-
+@permission_required(Permissions.APPROVALS_STATISTICS)
 def sub_companies_details(request):
     """صفحة تفاصيل الشركات الفرعية (آجل فقط) - أعلى وأقل"""
     
@@ -1920,7 +1966,7 @@ def sub_companies_details(request):
     return render(request, 'frontend/sub_companies_details.html', context)
 
 # frontend/views.py - الجزء الخاص بـ pending_analysis
-
+@permission_required(Permissions.APPROVALS_STATISTICS)
 def pending_analysis(request):
     """
     تحليل الحالات - ExternalApproval (شيت 12)
@@ -2130,6 +2176,9 @@ def pending_analysis(request):
     }
     
     return render(request, "frontend/pending_analysis.html", context)
+
+
+@permission_required(Permissions.APPROVALS_STATISTICS)
 def report_statistic_detail(request, pk):
     """
     صفحة تفاصيل سجل من شيت 12 (ReportStatistic)
@@ -2171,6 +2220,7 @@ from django.db.models import Count
 
 
 
+@permission_required(Permissions.FINANCIAL_FULL)
 def company_discounts(request):
 
     search = request.GET.get("search", "")
@@ -2524,6 +2574,8 @@ def company_discounts(request):
             "exceptions": exceptions,
         }
     )
+    
+@permission_required(Permissions.FINANCIAL_FULL)
 def contract_entity_detail(request, pk):
 
     entity = get_object_or_404(
@@ -2806,7 +2858,8 @@ def contract_entity_detail(request, pk):
         "frontend/contract_entity_detail.html",
         context
     )
-    
+@permission_required(Permissions.SYSTEM_MANAGE)
+
 def quality_dashboard(request):
 
     duplicate_entities = (
@@ -2869,7 +2922,7 @@ def quality_dashboard(request):
     
     
 
-
+@permission_required(Permissions.PATIENTS_VIEW)
 def patient_detail(request, pk):
 
     patient = get_object_or_404(
@@ -2966,6 +3019,12 @@ from django.shortcuts import render, get_object_or_404
 from pricing_requests.models import ExternalApproval
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
+
+
+@permission_required_any(
+    Permissions.DOCTORS_VIEW_ALL,
+    Permissions.DOCTORS_VIEW_OWN,
+)
 def doctors_list(request):
     """صفحة الأطباء - عرض جميع الأطباء مع إحصائياتهم"""
     
@@ -2976,7 +3035,7 @@ def doctors_list(request):
     # 🔍 الفلترة (اختياري)
     search_query = request.GET.get('search', '').strip()
     specialty_filter = request.GET.get('specialty', '').strip()
-    selected_doctor = request.GET.get('doctor_name', '').strip()  # ✅ اسم الدكتور المختار من datalist
+    selected_doctor = request.GET.get('doctor_name', '').strip()
     
     # ✅ تجميع التاريخ من ثلاث خانات
     day_from = request.GET.get('day_from', '').strip()
@@ -2994,12 +3053,9 @@ def doctors_list(request):
             return None
         
         try:
-            # محاولة إنشاء كائن تاريخ
             dt = datetime(int(year), int(month), int(day))
-            # لو نجح، نرجع بصيغة YYYY-MM-DD
             return dt.strftime('%Y-%m-%d')
         except (ValueError, TypeError):
-            # تاريخ غير صحيح
             return None
     
     # ✅ دمج الخانات في تاريخ واحد (مع التحقق)
@@ -3019,10 +3075,23 @@ def doctors_list(request):
             date_error = "⚠️ تاريخ النهاية غير صحيح. تأكد من إدخال يوم وشهر وسنة صحيحة."
     
     # 📊 الاستعلام الأساسي
-    # ✅ ✅ ✅ استبعاد Serv. Done من الإحصائيات
+    # استبعاد Serv. Done من الإحصائيات
     queryset = ExternalApproval.objects.all().exclude(
         main_status__iexact='serv. done'
     )
+    
+    authz = Authorization(request.user)
+    
+    # ✅ متغير واضح لتحديد إذا كان المستخدم طبيب يرى نفسه فقط
+    is_doctor_own = (
+        authz.can(Permissions.DOCTORS_VIEW_OWN)
+        and not authz.can(Permissions.DOCTORS_VIEW_ALL)
+    )
+    
+    if is_doctor_own:
+        queryset = queryset.filter(
+            doctor_name__iexact=request.user.doctor_name
+        )
     
     # ============================================================
     # ✅ الترتيب الجديد: التخصص أولاً، ثم الدكتور
@@ -3032,7 +3101,7 @@ def doctors_list(request):
     if specialty_filter:
         queryset = queryset.filter(specialty__icontains=specialty_filter)
     
-    # 2️⃣ فلترة حسب الدكتور المختار من datalist (لو موجود) - ضمن التخصص المفلتر
+    # 2️⃣ فلترة حسب الدكتور المختار من datalist (لو موجود)
     if selected_doctor:
         queryset = queryset.filter(doctor_name__icontains=selected_doctor)
     
@@ -3065,53 +3134,80 @@ def doctors_list(request):
     total_cost_all = doctors_data.aggregate(total=Sum('total_cost'))['total'] or Decimal('0.00')
     
     # ============================================================
-    # 🏷️ قائمة التخصصات - تتغير حسب الاختيار
+    # 🏷️ قائمة التخصصات
     # ============================================================
-    if selected_doctor:
-        # ✅ لو اختار دكتور، نجيب التخصصات بتاعته بس
+    
+    if selected_doctor and not is_doctor_own:
         specialties = ExternalApproval.objects.filter(
             doctor_name__icontains=selected_doctor
         ).exclude(
             specialty__isnull=True
         ).exclude(
             specialty=''
-        ).values_list('specialty', flat=True).distinct().order_by('specialty')
+        ).values_list(
+            'specialty',
+            flat=True
+        ).distinct().order_by('specialty')
+    
     elif specialty_filter:
-        # ✅ لو اختار تخصص، نجيب التخصصات اللي زي الفلتر (عشان يظهر في السليكت)
         specialties = ExternalApproval.objects.filter(
             specialty__icontains=specialty_filter
         ).exclude(
             specialty__isnull=True
         ).exclude(
             specialty=''
-        ).values_list('specialty', flat=True).distinct().order_by('specialty')
+        ).values_list(
+            'specialty',
+            flat=True
+        ).distinct().order_by('specialty')
+    
     else:
-        # ✅ لو ماختارش حاجة، نجيب كل التخصصات
-        specialties = ExternalApproval.objects.exclude(
+        specialties = queryset.exclude(
             specialty__isnull=True
         ).exclude(
             specialty=''
-        ).values_list('specialty', flat=True).distinct().order_by('specialty')
+        ).values_list(
+            'specialty',
+            flat=True
+        ).distinct().order_by('specialty')
     
     # ============================================================
-    # 📋 قائمة كل الأطباء للـ datalist
+    # 📋 قائمة الأطباء للـ datalist
     # ============================================================
-    # ✅ لو في تخصص محدد، نجيب الدكاترة بتوعه بس للـ datalist
-    if specialty_filter:
+    
+    if is_doctor_own:
+        # الدكتور يرى نفسه فقط
+        all_doctors = queryset.filter(
+            doctor_name__isnull=False
+        ).exclude(
+            doctor_name=''
+        ).values_list(
+            'doctor_name',
+            flat=True
+        ).distinct().order_by('doctor_name')
+    
+    elif specialty_filter:
+        # المستخدم الذي لديه صلاحية رؤية كل الأطباء
         all_doctors = ExternalApproval.objects.filter(
             specialty__icontains=specialty_filter
         ).exclude(
             doctor_name__isnull=True
         ).exclude(
             doctor_name=''
-        ).values_list('doctor_name', flat=True).distinct().order_by('doctor_name')
+        ).values_list(
+            'doctor_name',
+            flat=True
+        ).distinct().order_by('doctor_name')
+    
     else:
-        # ✅ كل الدكاترة
         all_doctors = ExternalApproval.objects.exclude(
             doctor_name__isnull=True
         ).exclude(
             doctor_name=''
-        ).values_list('doctor_name', flat=True).distinct().order_by('doctor_name')
+        ).values_list(
+            'doctor_name',
+            flat=True
+        ).distinct().order_by('doctor_name')
     
     # ✅ دالة تنسيق الأرقام
     def format_number(value):
@@ -3135,26 +3231,29 @@ def doctors_list(request):
     
     context = {
         'doctors': formatted_doctors,
-        'total_cases_all': total_cases_all,  # ✅ رقم بدون فواصل للكاونتر
-        'total_cost_all': format_number(total_cost_all),  # ✅ للعرض (مع فواصل)
-        'total_cost_all_raw': int(total_cost_all),  # ✅ ✅ ✅ للكاونتر (بدون فواصل)
-        'specialties': specialties,  # 🔥 هتتغير حسب الاختيار
-        'all_doctors': all_doctors,  # ✅ الدكاترة للـ datalist (مصفاة حسب التخصص لو موجود)
+        'total_cases_all': total_cases_all,
+        'total_cost_all': format_number(total_cost_all),
+        'total_cost_all_raw': int(total_cost_all),
+        'specialties': specialties,
+        'all_doctors': all_doctors,
         'search_query': search_query,
         'specialty_filter': specialty_filter,
-        'selected_doctor': selected_doctor,  # ✅ الدكتور المختار
-        # ✅ خانات التاريخ منفصلة (للحفاظ على القيم المدخلة)
+        'selected_doctor': selected_doctor,
         'day_from': day_from,
         'month_from': month_from,
         'year_from': year_from,
         'day_to': day_to,
         'month_to': month_to,
         'year_to': year_to,
-        # ✅ رسالة الخطأ
         'date_error': date_error,
     }
     
     return render(request, 'frontend/doctors.html', context)
+
+@permission_required_any(
+    Permissions.DOCTORS_VIEW_ALL,
+    Permissions.DOCTORS_VIEW_OWN,
+)
 def doctor_detail(request, doctor_name):
     """صفحة تفاصيل الطبيب"""
     
@@ -3164,6 +3263,14 @@ def doctor_detail(request, doctor_name):
     from django.utils import timezone
     from datetime import timedelta
     
+    authz = Authorization(request.user)
+
+    if (
+        authz.can(Permissions.DOCTORS_VIEW_OWN)
+        and not authz.can(Permissions.DOCTORS_VIEW_ALL)
+        and doctor_name.strip().lower() != request.user.doctor_name.strip().lower()
+    ):
+        raise PermissionDenied
     # 🔍 جلب جميع حالات الطبيب
     doctor_cases = ExternalApproval.objects.filter(
         doctor_name__iexact=doctor_name
@@ -3291,6 +3398,11 @@ def doctor_detail(request, doctor_name):
     }
     
     return render(request, 'frontend/doctor_detail.html', context)
+
+@permission_required_any(
+    Permissions.DOCTORS_VIEW_ALL,
+    Permissions.DOCTORS_VIEW_OWN,
+)
 def doctor_status_detail(request, doctor_name, status_type):
     """
     صفحة تفاصيل حالات الطبيب حسب نوع الحالة (مرفوضه، موافقة، إلخ)
@@ -3305,6 +3417,15 @@ def doctor_status_detail(request, doctor_name, status_type):
     
     # ✅ فك تشفير اسم الدكتور
     doctor_name = unquote(doctor_name)
+    
+    authz = Authorization(request.user)
+
+    if (
+        authz.can(Permissions.DOCTORS_VIEW_OWN)
+        and not authz.can(Permissions.DOCTORS_VIEW_ALL)
+        and doctor_name.strip().lower() != request.user.doctor_name.strip().lower()
+    ):
+        raise PermissionDenied
     
     # 🔍 جلب حالات الطبيب حسب النوع
     doctor_cases = ExternalApproval.objects.filter(
@@ -3935,7 +4056,14 @@ from django.shortcuts import render, get_object_or_404
 from django.core.cache import cache
 from django.utils import timezone
 
+
+@permission_required_any(
+    Permissions.PACKAGES_CREDIT_BASIC,
+    Permissions.PACKAGES_CREDIT_FULL,
+)
 def credit_package_pricing(request):
+    authz = Authorization(request.user)
+    has_credit_full = authz.can(Permissions.PACKAGES_CREDIT_FULL)
     # ============================================================
     # ✅ جلب المعاملات من الطلب
     # ============================================================
@@ -4020,7 +4148,7 @@ def credit_package_pricing(request):
         # ============================================================
         # ✅ جلب الباكدجات من Package مباشرة (بدون ContractPackage)
         # ============================================================
-        cache_key = f'packages_company_{company_id}'
+        cache_key = f'packages_company_{company_id}_{"full" if has_credit_full else "basic"}'
         cached_packages = cache.get(cache_key)
         
         if cached_packages is not None:
@@ -4049,9 +4177,17 @@ def credit_package_pricing(request):
                     'specialty_name': p.specialty.name if p.specialty else None,
                     'stay_duration': p.stay_duration,
                     'package_note': p.package_note,
-                    'cash_price': str(p.cash_price) if p.cash_price else None,
+                    'cash_price': (
+                        str(p.cash_price)
+                        if has_credit_full and p.cash_price
+                        else None
+                    ),
                     'price': str(p.base_price) if p.base_price else None,
-                    'base_price': str(p.base_price) if p.base_price else None,
+                    'base_price': (
+                        str(p.base_price)
+                        if has_credit_full and p.base_price
+                        else None
+                    ),
                     'is_cash_package': p.is_cash_package,
                 }
                 for p in package_objects
@@ -4212,46 +4348,120 @@ def credit_package_pricing(request):
                     return str(value)
             
             # ============================================================
-            # ✅ تنسيق الأسعار (من الـ ContractPackage لو موجود)
+            # ✅ البيانات الأساسية
             # ============================================================
+            
             if selected_contract_package:
-                # ✅ استخدم بيانات الـ ContractPackage
-                selected_package.formatted_price = format_price(selected_contract_package.package_price)
-                selected_package.formatted_cash = format_price(selected_contract_package.cash_price)
-                selected_package.formatted_total_before = format_price(selected_contract_package.total_before_discount)
-                selected_package.formatted_special_offer = format_price(selected_contract_package.special_offer_price)
-                selected_package.formatted_current_price = format_price(selected_contract_package.package_price)
-                selected_package.formatted_discount = format_percentage(selected_contract_package.current_discount_rate)
-                selected_package.current_discount_label = (
-                    (selected_contract_package.current_discount_text or "").strip()
-                    or selected_package.formatted_discount
+            
+                # السعر الأساسي الذي يسمح للـBasic برؤيته
+                selected_package.formatted_price = format_price(
+                    selected_contract_package.package_price
                 )
-                selected_package.formatted_suggested_price = format_price(selected_contract_package.suggested_price)
-                selected_package.formatted_suggested_discount = format_percentage(selected_contract_package.suggested_discount_rate)
-                # ✅ إضافة effective_from
-                selected_package.effective_from = selected_contract_package.effective_from
+            
+                selected_package.effective_from = (
+                    selected_contract_package.effective_from
+                )
+            
+                # ========================================================
+                # 🔒 بيانات التسعير الكامل - Full فقط
+                # ========================================================
+            
+                if has_credit_full:
+            
+                    selected_package.formatted_cash = format_price(
+                        selected_contract_package.cash_price
+                    )
+            
+                    selected_package.formatted_total_before = format_price(
+                        selected_contract_package.total_before_discount
+                    )
+            
+                    selected_package.formatted_special_offer = format_price(
+                        selected_contract_package.special_offer_price
+                    )
+            
+                    selected_package.formatted_current_price = format_price(
+                        selected_contract_package.package_price
+                    )
+            
+                    selected_package.formatted_discount = format_percentage(
+                        selected_contract_package.current_discount_rate
+                    )
+            
+                    selected_package.current_discount_label = (
+                        (selected_contract_package.current_discount_text or "").strip()
+                        or selected_package.formatted_discount
+                    )
+            
+                    selected_package.formatted_suggested_price = format_price(
+                        selected_contract_package.suggested_price
+                    )
+            
+                    selected_package.formatted_suggested_discount = format_percentage(
+                        selected_contract_package.suggested_discount_rate
+                    )
+            
             else:
-                # ✅ استخدم بيانات الـ Package (مع getattr لتجنب الأخطاء)
-                selected_package.formatted_price = format_price(selected_package.base_price)
-                selected_package.formatted_cash = format_price(selected_package.cash_price)
-                selected_package.formatted_total_before = format_price(selected_package.total_without_discount)
-                selected_package.formatted_special_offer = format_price(selected_package.special_offer_price)
-                selected_package.formatted_current_price = format_price(selected_package.base_price)
-                selected_package.formatted_discount = format_percentage(
-                    getattr(selected_package, 'current_discount', None)
+            
+                # ============================================================
+                # ✅ البيانات الأساسية
+                # ============================================================
+            
+                selected_package.formatted_price = format_price(
+                    selected_package.base_price
                 )
-                selected_package.current_discount_label = (
-                    getattr(selected_package, 'current_discount_text', None) or 
-                    selected_package.formatted_discount or "-"
+            
+                selected_package.effective_from = (
+                    selected_package.effective_from
                 )
-                selected_package.formatted_suggested_price = format_price(
-                    getattr(selected_package, 'suggested_price', None)
-                )
-                selected_package.formatted_suggested_discount = format_percentage(
-                    getattr(selected_package, 'suggested_discount_rate', None)
-                )
-                # ✅ effective_from من الـ Package
-                selected_package.effective_from = selected_package.effective_from
+            
+                # ========================================================
+                # 🔒 بيانات التسعير الكامل - Full فقط
+                # ========================================================
+            
+                if has_credit_full:
+            
+                    selected_package.formatted_cash = format_price(
+                        selected_package.cash_price
+                    )
+            
+                    selected_package.formatted_total_before = format_price(
+                        selected_package.total_without_discount
+                    )
+            
+                    selected_package.formatted_special_offer = format_price(
+                        selected_package.special_offer_price
+                    )
+            
+                    selected_package.formatted_current_price = format_price(
+                        selected_package.base_price
+                    )
+            
+                    selected_package.formatted_discount = format_percentage(
+                        getattr(selected_package, "current_discount", None)
+                    )
+            
+                    selected_package.current_discount_label = (
+                        getattr(
+                            selected_package,
+                            "current_discount_text",
+                            None
+                        )
+                        or selected_package.formatted_discount
+                        or "-"
+                    )
+            
+                    selected_package.formatted_suggested_price = format_price(
+                        getattr(selected_package, "suggested_price", None)
+                    )
+            
+                    selected_package.formatted_suggested_discount = format_percentage(
+                        getattr(
+                            selected_package,
+                            "suggested_discount_rate",
+                            None
+                        )
+                    )
             
             # ============================================================
             # ✅ إضافة معلومات التخصص للباكدج المحدد
@@ -4278,14 +4488,15 @@ def credit_package_pricing(request):
             "selected_package": selected_package,
             "selected_contract_package": selected_contract_package,
             "selected_company": selected_company,
-            "selected_attachment": selected_attachment,  # ✅ تمت الإضافة
+            "selected_attachment": selected_attachment,
             "company_search": company_search,
             "package_search": package_search,
             "specialties": specialties,
             "selected_specialty": specialty_id,
+            "has_credit_full": has_credit_full,
         }
     )
-    
+@permission_required(Permissions.PACKAGES_CASH_FULL)
 def cash_packages(request):
 
     search = request.GET.get("search", "")
@@ -4332,7 +4543,10 @@ def cash_packages(request):
         }
     )
     
-    
+@permission_required_any(
+Permissions.PACKAGES_CREDIT_BASIC,
+Permissions.PACKAGES_CREDIT_FULL,
+)
 def packages_price_list(request):
     """
     عرض الباكدجات بقائمة الأسعار (اسم الباكدج والسعر فقط)
@@ -4427,6 +4641,8 @@ def packages_price_list(request):
         'selected_specialty': specialty_id,
         'package_search': package_search,
     })
+    
+@permission_required(Permissions.FINANCIAL_FULL)
 def special_offers(request):
 
     search = request.GET.get("search", "").strip()
@@ -4479,6 +4695,7 @@ from django.db.models.functions import Coalesce
 
 # pricing_requests/views.py
 
+@permission_required(Permissions.PATIENTS_SEARCH)
 def service_search(request):
 
     search = request.GET.get("search", "").strip()
@@ -4758,7 +4975,7 @@ def pricing_details(request):
     )
     
 # frontend/views.py
-
+@permission_required(Permissions.PATIENTS_VIEW)
 def similar_invoices(request):
 
     search = request.GET.get("search", "").strip()
@@ -4909,7 +5126,10 @@ from medical_catalog.models import Procedure
 
 
 # frontend/views.py
-
+@permission_required_any(
+    Permissions.PACKAGES_CREDIT_BASIC,
+    Permissions.PACKAGES_CREDIT_FULL,
+)
 def procedures(request):
 
     search = request.GET.get("search", "").strip()
@@ -5007,7 +5227,7 @@ from pricing_requests.models import ProcedureFee
 # frontend/views.py - procedure_fees
 
 # frontend/views.py - procedure_fees
-
+@permission_required(Permissions.FINANCIAL_FULL)
 def procedure_fees(request):
 
     # ============================================
@@ -5226,6 +5446,7 @@ from pricing_requests.models import ExternalApproval
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
+@permission_required(Permissions.PATIENTS_SEARCH)
 def patient_search(request):
     """صفحة البحث عن مريض"""
     
