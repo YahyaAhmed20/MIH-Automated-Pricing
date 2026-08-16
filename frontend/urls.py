@@ -45,6 +45,8 @@ urlpatterns = [
     ),
     
     path('api/update-progress/', views.update_progress, name='update_progress'),  # ✅ أضف هذا
+    path('api/progress-stream/', views.progress_stream, name='progress_stream'),  # ✅ جديد
+
     
     path(
     'api/cancel-update/',

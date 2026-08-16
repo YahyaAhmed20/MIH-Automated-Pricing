@@ -519,6 +519,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const progressDetail = document.getElementById('progressDetail');
     const timeDisplay = document.getElementById('timeDisplay');
     const logsCard = document.getElementById('logsCard');
+    const logsContent = document.getElementById('logsContent');
 
     // ✅ أسماء الأوامر بالترتيب (18 أمر)
     const COMMANDS = [
@@ -590,7 +591,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     .then(data => {
                         if (data.logs && data.logs != 'None') {
                             logsCard.style.display = 'block';
-                            document.getElementById('logsContent').textContent = data.logs;
+                            logsContent.textContent = data.logs;
                         }
                     })
                     .catch(() => {});
@@ -621,7 +622,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     .then(data => {
                         if (data.logs && data.logs != 'None') {
                             logsCard.style.display = 'block';
-                            document.getElementById('logsContent').textContent = data.logs;
+                            logsContent.textContent = data.logs;
                         }
                     })
                     .catch(() => {});
@@ -652,7 +653,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     .then(data => {
                         if (data.logs && data.logs != 'None') {
                             logsCard.style.display = 'block';
-                            document.getElementById('logsContent').textContent = data.logs;
+                            logsContent.textContent = data.logs;
                         }
                     })
                     .catch(() => {});
@@ -990,6 +991,212 @@ document.addEventListener('DOMContentLoaded', function() {
     {% endif %}
 
 });
+
+// ✅ ==========================================================
+// ✅ SSE - Server-Sent Events (بديل الـ Polling)
+// ✅ ==========================================================
+
+(function() {
+    let sseConnection = null;
+    let isSSEActive = false;
+    
+    function startSSE() {
+        if (isSSEActive) return;
+        
+        console.log('🟢 Starting SSE connection...');
+        isSSEActive = true;
+        
+        try {
+            sseConnection = new EventSource('/api/progress-stream/');
+            
+            sseConnection.onmessage = function(event) {
+                try {
+                    const data = JSON.parse(event.data);
+                    console.log('📡 SSE received:', data);
+                    
+                    // ✅ تحديث الـ UI باستخدام البيانات من SSE
+                    updateUIFromSSE(data);
+                } catch (e) {
+                    console.error('SSE parse error:', e);
+                }
+            };
+            
+            sseConnection.onerror = function(error) {
+                console.log('⚠️ SSE error:', error);
+                
+                // ✅ حاول إعادة الاتصال بعد 5 ثواني
+                setTimeout(function() {
+                    console.log('🔄 Reconnecting SSE...');
+                    if (sseConnection) {
+                        sseConnection.close();
+                        sseConnection = null;
+                    }
+                    isSSEActive = false;
+                    startSSE();
+                }, 5000);
+            };
+            
+        } catch (e) {
+            console.error('SSE init error:', e);
+            isSSEActive = false;
+        }
+    }
+    
+    function stopSSE() {
+        if (sseConnection) {
+            console.log('🔴 Stopping SSE connection...');
+            sseConnection.close();
+            sseConnection = null;
+            isSSEActive = false;
+        }
+    }
+    
+    function updateUIFromSSE(data) {
+        const completed = data.completed || 0;
+        const total = data.total || 18;
+        const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
+        const status = data.status || 'idle';
+        const currentCommand = data.current_command || '';
+        const logs = data.logs || '';
+        
+        // ✅ تحديث الشريط
+        const progressBar = document.getElementById('progressBar');
+        if (progressBar) {
+            progressBar.style.width = Math.min(percentage, 100) + '%';
+            progressBar.innerHTML = Math.min(percentage, 100) + '%';
+            
+            if (percentage >= 100 && status === 'completed') {
+                progressBar.classList.remove('progress-bar-animated', 'bg-warning', 'bg-danger');
+                progressBar.classList.add('bg-success');
+            } else if (status === 'running') {
+                progressBar.classList.remove('bg-success', 'bg-danger');
+                progressBar.classList.add('bg-warning', 'progress-bar-animated');
+            } else if (status === 'error') {
+                progressBar.classList.remove('progress-bar-animated', 'bg-success', 'bg-warning');
+                progressBar.classList.add('bg-danger');
+                progressBar.innerHTML = '❌';
+            } else if (status === 'cancelled') {
+                progressBar.classList.remove('progress-bar-animated', 'bg-success', 'bg-danger');
+                progressBar.classList.add('bg-warning');
+                progressBar.innerHTML = '🛑';
+            }
+        }
+        
+        // ✅ تحديث النص
+        const progressText = document.getElementById('progressText');
+        const progressDetail = document.getElementById('progressDetail');
+        const statusBadge = document.getElementById('statusBadge');
+        const updateButton = document.getElementById('updateButton');
+        const cancelButton = document.getElementById('cancelButton');
+        const logsCard = document.getElementById('logsCard');
+        const logsContent = document.getElementById('logsContent');
+        
+        if (progressText) {
+            if (status === 'running') {
+                progressText.innerHTML = `⏳ جاري التنفيذ: ${currentCommand || '...'} (${completed}/${total})`;
+            } else if (status === 'completed') {
+                progressText.innerHTML = '✅ تم الانتهاء من جميع الأوامر بنجاح!';
+            } else if (status === 'cancelled') {
+                progressText.innerHTML = '🛑 تم إلغاء العملية';
+            } else if (status === 'error') {
+                progressText.innerHTML = '❌ حدث خطأ أثناء التحديث';
+            }
+        }
+        
+        if (progressDetail) {
+            if (status === 'running') {
+                progressDetail.innerHTML = `تم تنفيذ ${completed} من ${total} أمر`;
+            } else if (status === 'completed') {
+                progressDetail.innerHTML = '🎉 اكتمل التحديث';
+            } else if (status === 'cancelled') {
+                progressDetail.innerHTML = 'تم إلغاء التحديث بواسطة المستخدم';
+            } else if (status === 'error') {
+                progressDetail.innerHTML = 'راجع سجل الأخطاء';
+            }
+        }
+        
+        // ✅ تحديث حالة النظام
+        if (statusBadge) {
+            const statusMap = {
+                'idle': '✅ جاهز',
+                'running': '🔄 جاري التحديث',
+                'completed': '✅ مكتمل',
+                'cancelled': '🛑 ملغي',
+                'error': '❌ فشل'
+            };
+            statusBadge.innerHTML = statusMap[status] || status;
+            
+            const classMap = {
+                'idle': 'text-success',
+                'running': 'text-warning',
+                'completed': 'text-success',
+                'cancelled': 'text-warning',
+                'error': 'text-danger'
+            };
+            statusBadge.className = classMap[status] || '';
+        }
+        
+        // ✅ تحديث الأزرار
+        if (updateButton) {
+            if (status === 'running') {
+                updateButton.disabled = true;
+                updateButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> جاري التحديث...';
+            } else if (status === 'completed') {
+                updateButton.disabled = false;
+                updateButton.innerHTML = '<i class="bi bi-arrow-repeat"></i> تحديث جميع البيانات';
+            } else if (status === 'cancelled' || status === 'error') {
+                updateButton.disabled = false;
+                updateButton.innerHTML = '<i class="bi bi-arrow-repeat"></i> إعادة المحاولة';
+            }
+        }
+        
+        if (cancelButton) {
+            if (status === 'running') {
+                cancelButton.classList.remove('d-none');
+                cancelButton.disabled = false;
+                cancelButton.innerHTML = '<i class="bi bi-x-circle"></i> إلغاء التحديث';
+            } else {
+                cancelButton.classList.add('d-none');
+            }
+        }
+        
+        // ✅ تحديث الـ Logs
+        if (logs && logs != 'None' && logsCard && logsContent) {
+            logsCard.style.display = 'block';
+            logsContent.textContent = logs;
+            logsContent.scrollTop = logsContent.scrollHeight;
+        } else if (status === 'running' && logsCard) {
+            logsCard.style.display = 'none';
+        }
+        
+        // ✅ لو خلصت، أوقف SSE
+        if (status === 'completed' || status === 'cancelled' || status === 'error') {
+            setTimeout(function() {
+                stopSSE();
+            }, 3000);
+        }
+    }
+    
+    // ✅ بدء SSE عند تحميل الصفحة
+    startSSE();
+    
+    // ✅ عند إرسال الفورم، تأكد من تشغيل SSE
+    document.addEventListener('submit', function(e) {
+        if (e.target.id === 'updateForm') {
+            setTimeout(function() {
+                if (!isSSEActive) {
+                    startSSE();
+                }
+            }, 500);
+        }
+    });
+    
+    // ✅ عند الخروج من الصفحة، أوقف SSE
+    window.addEventListener('beforeunload', function() {
+        stopSSE();
+    });
+    
+})();
 </script>
 
 {% endblock %}

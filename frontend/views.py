@@ -5789,6 +5789,8 @@ def system_update(request):
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.http import require_http_methods
+from django.http import StreamingHttpResponse
+from django.views.decorators.cache import cache_control
 
 @csrf_protect
 @require_http_methods(["POST"])
@@ -5809,6 +5811,7 @@ def clear_logs(request):
         
         
 from django.views.decorators.http import require_POST
+import time
 
 @require_POST
 def cancel_update(request):
@@ -5829,3 +5832,42 @@ def cancel_update(request):
         "success": True,
         "message": "تم إرسال طلب الإلغاء."
     })
+    
+# ✅ أضف الـ View الجديد ده في آخر الملف
+@cache_control(no_cache=True, no_store=True, must_revalidate=True)
+def progress_stream(request):
+    """بث التقدم مباشرة للعميل باستخدام Server-Sent Events (SSE)"""
+    
+    def event_stream():
+        last_logs = ""
+        last_completed = -1
+        
+        while True:
+            progress = ProgressService.get()
+            current_logs = progress.get("logs", "")
+            current_completed = progress.get("completed", 0)
+            status = progress.get("status", "idle")
+            
+            # ✅ لو في تغيير، ابعت البيانات
+            if (current_logs != last_logs) or (current_completed != last_completed):
+                last_logs = current_logs
+                last_completed = current_completed
+                
+                # ✅ أضف الوقت الحالي عشان العميل يعرف إنها بيانات جديدة
+                progress['timestamp'] = time.time()
+                
+                yield f"data: {json.dumps(progress, ensure_ascii=False)}\n\n"
+            
+            # ✅ لو خلصت، وقف البث
+            if status in ["completed", "cancelled", "error"]:
+                # ابعت آخر تحديث
+                yield f"data: {json.dumps(progress, ensure_ascii=False)}\n\n"
+                break
+            
+            # ✅ انتظر 1.5 ثانية قبل الفحص الجديد
+            time.sleep(1.5)
+    
+    return StreamingHttpResponse(
+        event_stream(),
+        content_type='text/event-stream'
+    )
