@@ -7,6 +7,7 @@ class Permissions:
     PACKAGES_CASH_FULL = "packages_cash_full"
     PACKAGES_CREDIT_BASIC = "packages_credit_basic"
     PACKAGES_CREDIT_FULL = "packages_credit_full"
+    PACKAGES_CREDIT_ATTACHMENTS = "packages_credit_attachments"
 
     # ==========================
     # PATIENTS

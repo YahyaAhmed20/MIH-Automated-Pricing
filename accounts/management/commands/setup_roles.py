@@ -15,7 +15,6 @@ class Command(BaseCommand):
             "packages_cash_full",
             "packages_credit_basic",
             "patients_search",
-            "approvals_view",
         ],
 
         # ==========================================
@@ -62,6 +61,7 @@ class Command(BaseCommand):
         # Packages
         "packages_cash_full",
         "packages_credit_full",
+        "packages_credit_attachments",
 
         # Financial / Contracts
         "financial_full",
@@ -81,6 +81,8 @@ class Command(BaseCommand):
             "packages_cash_full",
             "packages_credit_basic",
             "packages_credit_full",
+            "packages_credit_attachments",
+
 
             "patients_search",
             "patients_view",

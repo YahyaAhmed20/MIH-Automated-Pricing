@@ -16569,3 +16569,146 @@ Watching for file changes with StatReloader
 "GET /api/update-progress/ HTTP/1.1" 200 167
 "GET /system/update/ HTTP/1.1" 200 84016
 "GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+Watching for file changes with StatReloader
+"GET /admin HTTP/1.1" 301 0
+"GET /admin/ HTTP/1.1" 302 0
+"GET /admin/login/?next=/admin/ HTTP/1.1" 200 4455
+"GET /static/admin/css/base.css HTTP/1.1" 200 22120
+"GET /static/admin/css/responsive.css HTTP/1.1" 200 16565
+"GET /static/admin/css/nav_sidebar.css HTTP/1.1" 200 2810
+"GET /static/admin/css/dark_mode.css HTTP/1.1" 200 2808
+"GET /static/admin/js/theme.js HTTP/1.1" 200 1653
+"GET /static/admin/css/responsive_rtl.css HTTP/1.1" 200 1991
+"GET /static/admin/css/rtl.css HTTP/1.1" 200 4772
+"GET /static/admin/js/nav_sidebar.js HTTP/1.1" 200 3063
+"GET /static/admin/css/login.css HTTP/1.1" 200 951
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 16342
+"POST /admin/login/?next=/admin/ HTTP/1.1" 302 0
+"GET /admin/ HTTP/1.1" 200 26309
+"GET /static/admin/css/dashboard.css HTTP/1.1" 200 441
+"GET /static/admin/img/icon-changelink.svg HTTP/1.1" 200 380
+"GET /static/admin/img/icon-addlink.svg HTTP/1.1" 200 331
+"GET /admin/accounts/user/ HTTP/1.1" 200 41648
+"GET /static/admin/css/changelists.css HTTP/1.1" 200 6878
+"GET /static/admin/js/core.js HTTP/1.1" 200 6208
+"GET /static/admin/js/jquery.init.js HTTP/1.1" 200 347
+"GET /static/admin/js/urlify.js HTTP/1.1" 200 7887
+"GET /static/admin/js/prepopulate.js HTTP/1.1" 200 1531
+"GET /static/admin/img/search.svg HTTP/1.1" 200 458
+"GET /static/admin/img/icon-yes.svg HTTP/1.1" 200 436
+"GET /static/admin/js/actions.js HTTP/1.1" 200 8076
+"GET /static/admin/js/admin/RelatedObjectLookups.js HTTP/1.1" 200 9777
+"GET /static/admin/js/vendor/jquery/jquery.js HTTP/1.1" 200 285314
+"GET /static/admin/js/vendor/xregexp/xregexp.js HTTP/1.1" 200 325171
+"GET /static/admin/js/filters.js HTTP/1.1" 200 978
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"GET /static/admin/img/tooltag-add.svg HTTP/1.1" 200 331
+"GET /static/admin/img/sorting-icons.svg HTTP/1.1" 200 1097
+"GET /static/admin/img/icon-viewlink.svg HTTP/1.1" 200 581
+"POST /admin/logout/ HTTP/1.1" 200 3885
+"GET /admin/ HTTP/1.1" 302 0
+"GET /admin/login/?next=/admin/ HTTP/1.1" 200 4455
+"GET / HTTP/1.1" 200 41852
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+"POST / HTTP/1.1" 200 41972
+"POST / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 64852
+"GET /dashboard/ HTTP/1.1" 200 64591
+"GET /credit-package-pricing/ HTTP/1.1" 200 82548
+"GET /credit-package-pricing/?company_search=%D8%A7%D9%84%D8%A7%D9%87%D9%84%D9%89+%D9%84%D9%84%D8%AE%D8%AF%D9%85%D8%A7%D8%AA+%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%D9%87&company=45&specialty=&package_search=&package= HTTP/1.1" 200 232169
+"GET /credit-package-pricing/?company=45&package=176441&company_search=%D8%A7%D9%84%D8%A7%D9%87%D9%84%D9%89%20%D9%84%D9%84%D8%AE%D8%AF%D9%85%D8%A7%D8%AA%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%D9%87&package_search=&specialty= HTTP/1.1" 200 99399
+Watching for file changes with StatReloader
+"GET /credit-package-pricing/?company=45&package=176441&company_search=%D8%A7%D9%84%D8%A7%D9%87%D9%84%D9%89%20%D9%84%D9%84%D8%AE%D8%AF%D9%85%D8%A7%D8%AA%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%D9%87&package_search=&specialty= HTTP/1.1" 200 99190
+"GET /patient-search/ HTTP/1.1" 200 827151
+"GET /credit-package-pricing/ HTTP/1.1" 200 82339
+"GET /credit-package-pricing/?company_search=%D8%A7%D9%84%D8%A8%D9%86%D9%83+%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%89+%D8%A7%D9%84%D8%A7%D9%81%D8%B1%D9%8A%D9%82%D9%89&company=144&specialty=&package_search=&package= HTTP/1.1" 200 231851
+"GET /credit-package-pricing/?company=144&package=94585&company_search=%D8%A7%D9%84%D8%A8%D9%86%D9%83%20%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%89%20%D8%A7%D9%84%D8%A7%D9%81%D8%B1%D9%8A%D9%82%D9%89&package_search=&specialty= HTTP/1.1" 200 99129
+D:\desktop\rphospital\src\accounts\permissions.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\accounts\permissions.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET /credit-package-pricing/?company=144&package=94585&company_search=%D8%A7%D9%84%D8%A8%D9%86%D9%83%20%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%89%20%D8%A7%D9%84%D8%A7%D9%81%D8%B1%D9%8A%D9%82%D9%89&package_search=&specialty= HTTP/1.1" 500 254498
+"GET /credit-package-pricing/?company=144&package=94585&company_search=%D8%A7%D9%84%D8%A8%D9%86%D9%83%20%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%89%20%D8%A7%D9%84%D8%A7%D9%81%D8%B1%D9%8A%D9%82%D9%89&package_search=&specialty= HTTP/1.1" 200 94341
+"GET / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 64382
+"GET /cash-packages/ HTTP/1.1" 200 500328
+"GET /patient-search/ HTTP/1.1" 200 827151
+"GET /admin/ HTTP/1.1" 302 0
+"GET /admin/login/?next=/admin/ HTTP/1.1" 200 3955
+"POST /admin/login/?next=/admin/ HTTP/1.1" 302 0
+"GET /admin/ HTTP/1.1" 200 26309
+"GET /admin/accounts/user/ HTTP/1.1" 200 41648
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"POST /admin/logout/ HTTP/1.1" 200 3885
+"GET / HTTP/1.1" 200 41807
+"POST / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 64811
+"GET /credit-package-pricing/ HTTP/1.1" 200 82020
+"GET /credit-package-pricing/?company_search=%D8%A7%D9%84%D8%A8%D9%86%D9%83+%D8%A7%D9%84%D9%85%D8%B1%D9%83%D8%B2%D9%89+%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%89&company=56&specialty=&package_search=&package= HTTP/1.1" 200 85879
+"GET /credit-package-pricing/?company_search=&company=&package= HTTP/1.1" 200 82020
+"GET /credit-package-pricing/?company_search=%D8%A7%D9%84%D8%B3%D9%88%D9%8A%D8%B3+%D9%84%D9%84%D8%A7%D8%B3%D9%85%D9%86%D8%AA+%28+%D8%A7%D8%B3%D9%85%D9%86%D8%AA+%D8%A7%D9%84%D8%B3%D9%88%D9%8A%D8%B3+%26+%D8%B7%D8%B1%D9%87+%26+%D8%AD%D9%84%D9%88%D8%A7%D9%86+%29&company=129&specialty=&package_search=&package= HTTP/1.1" 200 86385
+"GET /credit-package-pricing/?company_search=%D8%A7%D9%84%D8%B3%D9%88%D9%8A%D8%B3+%D9%84%D9%84%D8%A7%D8%B3%D9%85%D9%86%D8%AA+%28+%D8%A7%D8%B3%D9%85%D9%86%D8%AA+%D8%A7%D9%84%D8%B3%D9%88%D9%8A%D8%B3+%26+%D8%B7%D8%B1%D9%87+%26+%D8%AD%D9%84%D9%88%D8%A7%D9%86+%29&company=129&specialty=&package_search=%D8%A7%D8%B3%D8%AA%D8%A6%D8%B5%D8%A7%D9%84+%D8%A7%D9%84%D8%BA%D8%B6%D8%B1%D9%88%D9%81+%D8%A7%D9%84%D8%B9%D9%86%D9%82%D9%8A+%D9%85%D8%B9+%D8%A7%D9%84%D8%AA%D8%AB%D8%A8%D9%8A%D8%AA+-+%D9%85%D8%B3%D8%AA%D9%88%D9%8A%D9%8A%D9%86&package=103989 HTTP/1.1" 200 74728
+"GET /credit-package-pricing/?company_search=%D8%A7%D9%84%D8%B3%D9%88%D9%8A%D8%B3+%D9%84%D9%84%D8%A7%D8%B3%D9%85%D9%86%D8%AA+%28+%D8%A7%D8%B3%D9%85%D9%86%D8%AA+%D8%A7%D9%84%D8%B3%D9%88%D9%8A%D8%B3+%26+%D8%B7%D8%B1%D9%87+%26+%D8%AD%D9%84%D9%88%D8%A7%D9%86+%29&company=129&specialty=&package_search=%D8%A7%D8%B3%D8%AA%D8%A6%D8%B5%D8%A7%D9%84+%D8%A7%D9%84%D8%BA%D8%B6%D8%B1%D9%88%D9%81+%D8%A7%D9%84%D8%B9%D9%86%D9%82%D9%8A+%D9%85%D8%B9+%D8%A7%D9%84%D8%AA%D8%AB%D8%A8%D9%8A%D8%AA+-+%D9%85%D8%B3%D8%AA%D9%88%D9%8A%D9%8A%D9%86&package=103989 HTTP/1.1" 500 239882
+Watching for file changes with StatReloader
+"GET /credit-package-pricing/?company_search=%D8%A7%D9%84%D8%B3%D9%88%D9%8A%D8%B3+%D9%84%D9%84%D8%A7%D8%B3%D9%85%D9%86%D8%AA+%28+%D8%A7%D8%B3%D9%85%D9%86%D8%AA+%D8%A7%D9%84%D8%B3%D9%88%D9%8A%D8%B3+%26+%D8%B7%D8%B1%D9%87+%26+%D8%AD%D9%84%D9%88%D8%A7%D9%86+%29&company=129&specialty=&package_search=%D8%A7%D8%B3%D8%AA%D8%A6%D8%B5%D8%A7%D9%84+%D8%A7%D9%84%D8%BA%D8%B6%D8%B1%D9%88%D9%81+%D8%A7%D9%84%D8%B9%D9%86%D9%82%D9%8A+%D9%85%D8%B9+%D8%A7%D9%84%D8%AA%D8%AB%D8%A8%D9%8A%D8%AA+-+%D9%85%D8%B3%D8%AA%D9%88%D9%8A%D9%8A%D9%86&package=103989 HTTP/1.1" 500 247631
+"GET /credit-package-pricing/?company_search=%D8%A7%D9%84%D8%B3%D9%88%D9%8A%D8%B3+%D9%84%D9%84%D8%A7%D8%B3%D9%85%D9%86%D8%AA+%28+%D8%A7%D8%B3%D9%85%D9%86%D8%AA+%D8%A7%D9%84%D8%B3%D9%88%D9%8A%D8%B3+%26+%D8%B7%D8%B1%D9%87+%26+%D8%AD%D9%84%D9%88%D8%A7%D9%86+%29&company=129&specialty=&package_search=%D8%A7%D8%B3%D8%AA%D8%A6%D8%B5%D8%A7%D9%84+%D8%A7%D9%84%D8%BA%D8%B6%D8%B1%D9%88%D9%81+%D8%A7%D9%84%D8%B9%D9%86%D9%82%D9%8A+%D9%85%D8%B9+%D8%A7%D9%84%D8%AA%D8%AB%D8%A8%D9%8A%D8%AA+-+%D9%85%D8%B3%D8%AA%D9%88%D9%8A%D9%8A%D9%86&package=103989 HTTP/1.1" 200 74737
+"GET /credit-package-pricing/ HTTP/1.1" 200 82777
+"GET /credit-package-pricing/?company_search=%D8%A7%D9%84%D8%AC%D9%87%D8%A7%D8%B2+%D8%A7%D9%84%D9%85%D8%B1%D9%83%D8%B2%D9%8A+%D9%84%D9%84%D9%85%D8%AD%D8%A7%D8%B3%D8%A8%D8%A7%D8%AA&company=123&specialty=&package_search=&package= HTTP/1.1" 200 232967
+"GET /credit-package-pricing/?company_search=%D8%A7%D9%84%D8%AC%D9%87%D8%A7%D8%B2+%D8%A7%D9%84%D9%85%D8%B1%D9%83%D8%B2%D9%8A+%D9%84%D9%84%D9%85%D8%AD%D8%A7%D8%B3%D8%A8%D8%A7%D8%AA&company=123&specialty=&package_search=&package= HTTP/1.1" 500 246082
+"GET /credit-package-pricing/?company_search=%D8%A7%D9%84%D8%AC%D9%87%D8%A7%D8%B2+%D8%A7%D9%84%D9%85%D8%B1%D9%83%D8%B2%D9%8A+%D9%84%D9%84%D9%85%D8%AD%D8%A7%D8%B3%D8%A8%D8%A7%D8%AA&company=123&specialty=&package_search=&package= HTTP/1.1" 200 233010
+"GET /credit-package-pricing/?company=123&package=93078&company_search=%D8%A7%D9%84%D8%AC%D9%87%D8%A7%D8%B2%20%D8%A7%D9%84%D9%85%D8%B1%D9%83%D8%B2%D9%8A%20%D9%84%D9%84%D9%85%D8%AD%D8%A7%D8%B3%D8%A8%D8%A7%D8%AA&package_search=&specialty= HTTP/1.1" 200 94887
+"GET /credit-package-pricing/ HTTP/1.1" 200 82820
+"GET /credit-package-pricing/?company_search=%D8%A7%D9%84%D8%B4%D8%B1%D9%82+%D8%A7%D9%84%D8%A7%D9%88%D8%B3%D8%B7+%D9%84%D8%AA%D9%83%D8%B1%D9%8A%D8%B1+%D8%A7%D9%84%D8%A8%D8%AA%D8%B1%D9%88%D9%84-+%D9%85%D9%8A%D8%AF%D9%88%D8%B1&company=84&specialty=&package_search=&package= HTTP/1.1" 200 235003
+"GET /credit-package-pricing/?company=84&package=179472&company_search=%D8%A7%D9%84%D8%B4%D8%B1%D9%82%20%D8%A7%D9%84%D8%A7%D9%88%D8%B3%D8%B7%20%D9%84%D8%AA%D9%83%D8%B1%D9%8A%D8%B1%20%D8%A7%D9%84%D8%A8%D8%AA%D8%B1%D9%88%D9%84-%20%D9%85%D9%8A%D8%AF%D9%88%D8%B1&package_search=&specialty= HTTP/1.1" 200 95279
+"GET /admin/ HTTP/1.1" 302 0
+"GET /admin/login/?next=/admin/ HTTP/1.1" 200 3955
+"POST /admin/login/?next=/admin/ HTTP/1.1" 302 0
+"GET /admin/ HTTP/1.1" 200 26309
+"GET /admin/accounts/user/ HTTP/1.1" 200 41648
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"POST /admin/logout/ HTTP/1.1" 200 3885
+"GET / HTTP/1.1" 200 41807
+"POST / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 67165
+"GET /credit-package-pricing/ HTTP/1.1" 200 85174
+"GET /credit-package-pricing/?company_search=%D8%A7%D9%84%D8%AA%D8%B9%D8%A7%D9%88%D9%86+%D9%84%D9%84%D8%A8%D8%AA%D8%B1%D9%88%D9%84&company=25&specialty=&package_search=&package= HTTP/1.1" 200 233530
+"GET /credit-package-pricing/?company=25&package=174210&company_search=%D8%A7%D9%84%D8%AA%D8%B9%D8%A7%D9%88%D9%86%20%D9%84%D9%84%D8%A8%D8%AA%D8%B1%D9%88%D9%84&package_search=&specialty= HTTP/1.1" 200 111704
+Watching for file changes with StatReloader
+"GET /credit-package-pricing/?company=25&package=174210&company_search=%D8%A7%D9%84%D8%AA%D8%B9%D8%A7%D9%88%D9%86%20%D9%84%D9%84%D8%A8%D8%AA%D8%B1%D9%88%D9%84&package_search=&specialty= HTTP/1.1" 200 111704
+"GET /credit-package-pricing/ HTTP/1.1" 200 85174
+"GET /credit-package-pricing/?company_search=%D8%A7%D9%84%D8%A8%D9%86%D9%83+%D8%A7%D9%84%D8%B9%D9%82%D8%A7%D8%B1%D9%89+%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%89+%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%89&company=1&specialty=&package_search=&package= HTTP/1.1" 200 234320
+"GET /credit-package-pricing/?company=1&package=179135&company_search=%D8%A7%D9%84%D8%A8%D9%86%D9%83%20%D8%A7%D9%84%D8%B9%D9%82%D8%A7%D8%B1%D9%89%20%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%89%20%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%89&package_search=&specialty= HTTP/1.1" 200 111602
+Watching for file changes with StatReloader
+"GET /admin/ HTTP/1.1" 302 0
+"GET /admin/login/?next=/admin/ HTTP/1.1" 200 3957
+"POST /admin/login/?next=/admin/ HTTP/1.1" 302 0
+"GET /admin/ HTTP/1.1" 200 26309
+"GET /admin/accounts/user/add/ HTTP/1.1" 200 42442
+"GET /static/admin/js/user_role_doctor.js HTTP/1.1" 200 1302
+"GET /static/admin/js/prepopulate_init.js HTTP/1.1" 200 586
+"GET /static/admin/css/unusable_password_field.css HTTP/1.1" 200 663
+"GET /static/admin/css/forms.css HTTP/1.1" 200 8525
+"GET /static/admin/img/icon-deletelink.svg HTTP/1.1" 200 392
+"GET /static/admin/css/widgets.css HTTP/1.1" 200 11973
+"GET /static/admin/js/change_form.js HTTP/1.1" 200 606
+"GET /static/admin/js/unusable_password_field.js HTTP/1.1" 200 1480
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"POST /admin/accounts/user/add/ HTTP/1.1" 302 0
+"GET /admin/accounts/user/add/ HTTP/1.1" 200 42712
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"POST /admin/logout/ HTTP/1.1" 200 3885
+"GET / HTTP/1.1" 200 41807
+"POST / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 67165
+"GET /credit-package-pricing/ HTTP/1.1" 200 85174
+"GET /credit-package-pricing/?company_search=%D8%A7%D9%84%D8%B3%D9%87%D8%A7%D9%85+%D8%A7%D9%84%D8%A8%D8%AA%D8%B1%D9%88%D9%84%D9%8A%D9%87&company=44&specialty=&package_search=&package= HTTP/1.1" 200 233752
+"GET /credit-package-pricing/?company=44&package=176351&company_search=%D8%A7%D9%84%D8%B3%D9%87%D8%A7%D9%85%20%D8%A7%D9%84%D8%A8%D8%AA%D8%B1%D9%88%D9%84%D9%8A%D9%87&package_search=&specialty= HTTP/1.1" 200 111702
+D:\desktop\rphospital\src\accounts\models.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /credit-package-pricing/?company=44&package=176351&company_search=%D8%A7%D9%84%D8%B3%D9%87%D8%A7%D9%85%20%D8%A7%D9%84%D8%A8%D8%AA%D8%B1%D9%88%D9%84%D9%8A%D9%87&package_search=&specialty= HTTP/1.1" 200 116396
+D:\desktop\rphospital\src\accounts\context_processors.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /credit-package-pricing/?company=44&package=176351&company_search=%D8%A7%D9%84%D8%B3%D9%87%D8%A7%D9%85%20%D8%A7%D9%84%D8%A8%D8%AA%D8%B1%D9%88%D9%84%D9%8A%D9%87&package_search=&specialty= HTTP/1.1" 200 116172
+"GET /credit-package-pricing/?company=44&package=176351&company_search=%D8%A7%D9%84%D8%B3%D9%87%D8%A7%D9%85%20%D8%A7%D9%84%D8%A8%D8%AA%D8%B1%D9%88%D9%84%D9%8A%D9%87&package_search=&specialty= HTTP/1.1" 200 115208

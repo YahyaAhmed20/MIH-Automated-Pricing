@@ -96,6 +96,10 @@ class User(AbstractUser):
                 "packages_credit_full",
                 "صلاحية كاملة على الباكدجات الآجلة",
             ),
+            (
+                "packages_credit_attachments",
+                "عرض مرفقات الباكدجات الآجلة",
+            ),
 
             # PATIENTS
             (

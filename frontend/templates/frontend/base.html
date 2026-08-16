@@ -1182,7 +1182,7 @@ body.login-mode .content {
         </li>
         {% endif %}
 
-        <!-- 5. البحث عن خدمة -->
+        {% comment %} <!-- 5. البحث عن خدمة -->
         {% if can_patients_search %}
         <li class="menu-item">
             <a class="menu-link {% if request.resolver_match.url_name == 'service_search' %}active{% endif %}" href="{% url 'service_search' %}">
@@ -1190,7 +1190,7 @@ body.login-mode .content {
                 البحث عن خدمة
             </a>
         </li>
-        {% endif %}
+        {% endif %} {% endcomment %}
 
         <!-- الأطباء -->
         {% if can_doctors_view_all or can_doctors_view_own %}
@@ -1233,7 +1233,8 @@ body.login-mode .content {
         {% endif %}
 
         <!-- 7. تفاصيل التسعير -->
-        {% if can_financial_full %}
+        {% if can_financial_full and not is_accountant %}
+
         <li class="menu-item">
             <a class="menu-link {% if request.resolver_match.url_name == 'pricing_details' %}active{% endif %}" href="{% url 'pricing_details' %}">
                 <i class="bi bi-cash-stack"></i>
@@ -1253,7 +1254,8 @@ body.login-mode .content {
         {% endif %}
 
         <!-- متابعة الباكدجات -->
-        {% if can_financial_full %}
+        {% if can_financial_full and not is_accountant %}
+
         <li class="menu-item">
             <a class="menu-link {% if request.resolver_match.url_name in 'reports,package_comparison' %}active{% endif %}"
                data-bs-toggle="collapse"

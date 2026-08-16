@@ -983,24 +983,19 @@
         {% endif %}
 
         <!-- ===== القسم 4: المرفقات ===== -->
+        {% if can_packages_credit_attachments %}
         <div class="card shadow border-0 mt-3 fade-in">
-
             <div
                 class="card-header accordion-header-custom"
                 style="background: linear-gradient(135deg, #0dcaf0, #0d6efd); color: #fff;"
                 onclick="toggleAccordion('attachments')"
             >
-
                 <h5 class="mb-0 d-flex justify-content-between align-items-center">
-
                     <span>
                         <i class="bi bi-paperclip me-2"></i>
                         مرفقات الباكدج
-
                         <span class="badge bg-light text-dark ms-3">
-
                             <i class="bi bi-file-earmark-pdf"></i>
-
                             {% if selected_attachment %}
                                 {% if selected_attachment.package_pdf_url or selected_attachment.operation_instruction_url %}
                                     مرفقات متاحة
@@ -1010,45 +1005,30 @@
                             {% else %}
                                 لا يوجد
                             {% endif %}
-
                         </span>
                     </span>
-
                     <span class="accordion-icon" id="attachmentsIcon">
                         <i class="bi bi-chevron-down"></i>
                     </span>
-
                 </h5>
-
             </div>
 
-
             <div id="attachmentsContent" class="collapse">
-
                 <div class="card-body">
-
                     {% if selected_attachment %}
-
                         <div class="row g-3">
-
                             <!-- 📄 ملف الباكدج -->
                             {% if selected_attachment.package_pdf_url %}
-
                                 <div class="col-md-6">
-
                                     <div class="info-card">
-
                                         <div class="card-title">
                                             <i class="bi bi-file-earmark-pdf text-danger"></i>
                                             ملف الباكدج
                                         </div>
-
                                         <div class="value">
-
                                             <div class="mb-2">
                                                 {{ selected_attachment.package_pdf_name|default:"ملف الباكدج" }}
                                             </div>
-
                                             <a
                                                 href="{{ selected_attachment.package_pdf_url }}"
                                                 target="_blank"
@@ -1058,34 +1038,23 @@
                                                 <i class="bi bi-box-arrow-up-right me-1"></i>
                                                 فتح ملف PDF
                                             </a>
-
                                         </div>
-
                                     </div>
-
                                 </div>
-
                             {% endif %}
-
 
                             <!-- 📘 تعليمات التشغيل -->
                             {% if selected_attachment.operation_instruction_url %}
-
                                 <div class="col-md-6">
-
                                     <div class="info-card">
-
                                         <div class="card-title">
                                             <i class="bi bi-file-earmark-text text-primary"></i>
                                             تعليمات التشغيل
                                         </div>
-
                                         <div class="value">
-
                                             <div class="mb-2">
                                                 {{ selected_attachment.operation_instruction_name|default:"تعليمات التشغيل" }}
                                             </div>
-
                                             <a
                                                 href="{{ selected_attachment.operation_instruction_url }}"
                                                 target="_blank"
@@ -1095,64 +1064,33 @@
                                                 <i class="bi bi-box-arrow-up-right me-1"></i>
                                                 فتح تعليمات التشغيل
                                             </a>
-
                                         </div>
-
                                     </div>
-
                                 </div>
-
                             {% endif %}
-
 
                             <!-- لا توجد روابط -->
                             {% if not selected_attachment.package_pdf_url and not selected_attachment.operation_instruction_url %}
-
                                 <div class="col-12">
-
                                     <div class="alert alert-warning mb-0 text-center py-4">
-
-                                        <i
-                                            class="bi bi-exclamation-triangle"
-                                            style="font-size: 2rem;"
-                                        ></i>
-
-                                        <h6 class="mt-2">
-                                            لا توجد مرفقات متاحة
-                                        </h6>
-
+                                        <i class="bi bi-exclamation-triangle" style="font-size: 2rem;"></i>
+                                        <h6 class="mt-2">لا توجد مرفقات متاحة</h6>
                                     </div>
-
                                 </div>
-
                             {% endif %}
-
                         </div>
-
                     {% else %}
-
                         <div class="alert alert-warning mb-0 text-center py-4">
-
-                            <i
-                                class="bi bi-exclamation-triangle"
-                                style="font-size: 2rem;"
-                            ></i>
-
-                            <h6 class="mt-2">
-                                لا توجد مرفقات لهذا الباكدج
-                            </h6>
-
+                            <i class="bi bi-exclamation-triangle" style="font-size: 2rem;"></i>
+                            <h6 class="mt-2">لا توجد مرفقات لهذا الباكدج</h6>
                         </div>
-
                     {% endif %}
-
                 </div>
-
             </div>
-
         </div>
-
         {% endif %}
+        
+        {% endif %}  <!-- ✅ يغلق if selected_package -->
 
         <!-- ============================================ -->
         <!-- ✅ عرض جميع الباكدجات للشركة المختارة -->
@@ -1242,6 +1180,7 @@
             <p class="text-muted small">استخدم الفلاتر أعلاه للبحث</p>
         </div>
         {% endif %}
+        
     </div>
 </div>
 

@@ -21,6 +21,11 @@ def authorization(request):
             Permissions.PACKAGES_CREDIT_FULL
         ),
 
+        # 👇 أضف هذا السطر الجديد
+        "can_packages_credit_attachments": authz.can(
+            Permissions.PACKAGES_CREDIT_ATTACHMENTS
+        ),
+
         # Patients
         "can_patients_search": authz.can(
             Permissions.PATIENTS_SEARCH
@@ -64,4 +69,5 @@ def authorization(request):
         ),
         # Admission
         "is_admission": authz.role_name == "Admission",
+        "is_accountant": authz.role_name == "Accountant",
     }
