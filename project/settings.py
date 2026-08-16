@@ -296,20 +296,60 @@ GOOGLE_SPREADSHEET_ID = (
 )
 TEMP_DIR = BASE_DIR / "temp"
 TEMP_EXCEL_FILE = TEMP_DIR / "APP.xlsx"
-
+# ==========================================================
+# Celery & Redis Settings
+# ==========================================================
 
 CELERY_BROKER_URL = os.getenv("REDIS_URL")
-
 CELERY_RESULT_BACKEND = os.getenv("REDIS_URL")
 
 CELERY_ACCEPT_CONTENT = ["json"]
-
 CELERY_TASK_SERIALIZER = "json"
-
 CELERY_RESULT_SERIALIZER = "json"
-
 CELERY_TIMEZONE = "Africa/Cairo"
-
 CELERY_TASK_TRACK_STARTED = True
 
-CELERY_TASK_TIME_LIMIT = 60 * 60
+# ✅ إعدادات Timeout محسّنة للـ Broker
+CELERY_BROKER_TRANSPORT_OPTIONS = {
+    'visibility_timeout': 3600,          # ساعة
+    'socket_timeout': 600,               # ✅ 10 دقائق (زودناها)
+    'socket_connect_timeout': 600,       # ✅ 10 دقائق (زودناها)
+    'retry_on_timeout': True,
+    'max_retries': 10,
+    'socket_keepalive': True,            # يحافظ على الاتصال
+    'health_check_interval': 30,         # فحص الصحة كل 30 ثانية
+}
+
+# ✅ إعدادات Timeout محسّنة للـ Result Backend (جديدة)
+CELERY_RESULT_BACKEND_TRANSPORT_OPTIONS = {
+    'socket_timeout': 600,               # 10 دقائق
+    'socket_connect_timeout': 600,       # 10 دقائق
+    'retry_on_timeout': True,
+    'socket_keepalive': True,
+}
+
+# ✅ وقت تنفيذ المهمة (ساعتين)
+CELERY_TASK_TIME_LIMIT = 60 * 60 * 2      # ساعتين
+CELERY_TASK_SOFT_TIME_LIMIT = 60 * 60 * 2 # ساعتين
+
+# ✅ إعدادات إضافية
+CELERY_TASK_ACKS_LATE = True
+CELERY_WORKER_PREFETCH_MULTIPLIER = 1
+CELERY_TASK_REJECT_ON_WORKER_LOST = True
+CELERY_RESULT_EXTENDED = True             # ✅ معلومات إضافية عن النتيجة
+
+# ✅ إعدادات Redis Connection Pool (اختياري ولكن مفيد)
+CELERY_REDIS_MAX_CONNECTIONS = 20
+
+
+# CELERY_ACCEPT_CONTENT = ["json"]
+
+# CELERY_TASK_SERIALIZER = "json"
+
+# CELERY_RESULT_SERIALIZER = "json"
+
+# CELERY_TIMEZONE = "Africa/Cairo"
+
+# CELERY_TASK_TRACK_STARTED = True
+
+# CELERY_TASK_TIME_LIMIT = 60 * 60

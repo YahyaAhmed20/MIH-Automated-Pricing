@@ -5745,7 +5745,7 @@ def system_update(request):
         # ✅ خلي الـ logs فاضية عشان تبدأ من جديد
         ProgressService.update(logs=None)
         
-        task = update_all_data_task.delay()
+        task = update_all_data_task.apply_async(queue='local')
         
         # ✅ إرجاع JSON للـ fetch
         return JsonResponse({
