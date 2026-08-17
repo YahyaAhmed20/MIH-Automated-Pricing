@@ -16881,3 +16881,12 @@ Watching for file changes with StatReloader
 "GET /doctors/%D8%A7.%D8%AF%20/%20%D8%AE%D8%A7%D9%84%D8%AF%20%D8%AF%D9%8A%D8%A7%D8%A8/ HTTP/1.1" 200 104265
 "GET /doctor/%D8%A7.%D8%AF%20/%20%D8%AE%D8%A7%D9%84%D8%AF%20%D8%AF%D9%8A%D8%A7%D8%A8/status/approved/ HTTP/1.1" 200 97973
 "GET /doctors/%D8%A7.%D8%AF%20/%20%D8%AE%D8%A7%D9%84%D8%AF%20%D8%AF%D9%8A%D8%A7%D8%A8/ HTTP/1.1" 200 104224
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 41807
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 16342
+"POST / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 69704
+"GET /static/pdf/price_2023.pdf HTTP/1.1" 200 5925191
+"GET /static/pdf/price_2024.pdf HTTP/1.1" 200 4505971

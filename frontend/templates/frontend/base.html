@@ -1356,17 +1356,22 @@ body.login-mode .content {
                 <i class="bi bi-chevron-down menu-arrow"></i>
             </a>
 
-            <div class="collapse submenu {% if request.resolver_match.url_name in 'price_lists' %}show{% endif %}" id="priceListMenu">
-                <a href="#" class="{% if request.resolver_match.url_name == 'price_lists' %}active{% endif %}">
-                    <i class="bi bi-calendar"></i> أسعار 2023
-                </a>
-                <a href="#">
-                    <i class="bi bi-calendar"></i> أسعار 2024
-                </a>
-                <a href="#">
-                    <i class="bi bi-calendar"></i> أسعار 2025
-                </a>
-            </div>
+           <div class="collapse submenu {% if request.resolver_match.url_name in 'price_lists' %}show{% endif %}" id="priceListMenu">
+
+    <a href="{% static 'pdf/price_2023.pdf' %}" target="_blank"
+       class="{% if request.resolver_match.url_name == 'price_lists' %}active{% endif %}">
+        <i class="bi bi-calendar"></i> أسعار 2023
+    </a>
+
+    <a href="{% static 'pdf/price_2024.pdf' %}" target="_blank">
+        <i class="bi bi-calendar"></i> أسعار 2024
+    </a>
+
+    <a href="{% static 'pdf/price_2025.pdf' %}" target="_blank">
+        <i class="bi bi-calendar"></i> أسعار 2025
+    </a>
+
+</div>
         </li>
         {% endif %}
 
