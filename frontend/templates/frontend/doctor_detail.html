@@ -733,7 +733,7 @@
                         {{ status_filter }}
                     </span>
                     <span class="badge bg-light text-dark ms-2">
-                        {{ cases|length }} حالة
+                        {{ paginator.count }} حالة
                     </span>
                 </span>
                 <a href="{% url 'doctor_detail' doctor_name %}" class="btn btn-sm btn-outline-secondary">
@@ -758,9 +758,9 @@
                             </span>
                         {% endif %}
                     </h5>
-                    <span class="badge bg-light text-primary fs-6">
-                        {{ cases|length }} حالة
-                    </span>
+                   <span class="badge bg-light text-primary fs-6">
+    {{ paginator.count }} حالة
+</span>
                 </div>
                 <div class="card-body p-3">
                     <!-- ✅ table-wrapper بدل الـ inline style -->
@@ -821,7 +821,7 @@
                             <tfoot class="table-secondary fw-bold">
                                 <tr>
                                     <td colspan="6" class="text-center">الإجمالي</td>
-                                    <td>{{ cases|length }}</td>
+                                    <td>{{ paginator.count }}</td>
                                     <td></td>
                                 </tr>
                             </tfoot>

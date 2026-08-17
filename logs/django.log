@@ -16712,3 +16712,172 @@ D:\desktop\rphospital\src\accounts\context_processors.py changed, reloading.
 Watching for file changes with StatReloader
 "GET /credit-package-pricing/?company=44&package=176351&company_search=%D8%A7%D9%84%D8%B3%D9%87%D8%A7%D9%85%20%D8%A7%D9%84%D8%A8%D8%AA%D8%B1%D9%88%D9%84%D9%8A%D9%87&package_search=&specialty= HTTP/1.1" 200 116172
 "GET /credit-package-pricing/?company=44&package=176351&company_search=%D8%A7%D9%84%D8%B3%D9%87%D8%A7%D9%85%20%D8%A7%D9%84%D8%A8%D8%AA%D8%B1%D9%88%D9%84%D9%8A%D9%87&package_search=&specialty= HTTP/1.1" 200 115208
+Watching for file changes with StatReloader
+"GET /admin HTTP/1.1" 301 0
+"GET /admin/ HTTP/1.1" 302 0
+"GET /admin/login/?next=/admin/ HTTP/1.1" 200 4455
+"GET /static/admin/css/base.css HTTP/1.1" 200 22120
+"GET /static/admin/css/responsive_rtl.css HTTP/1.1" 200 1991
+"GET /static/admin/css/rtl.css HTTP/1.1" 200 4772
+"GET /static/admin/css/dark_mode.css HTTP/1.1" 200 2808
+"GET /static/admin/css/responsive.css HTTP/1.1" 200 16565
+"GET /static/admin/css/login.css HTTP/1.1" 200 951
+"GET /static/admin/css/nav_sidebar.css HTTP/1.1" 200 2810
+"GET /static/admin/js/theme.js HTTP/1.1" 200 1653
+"GET /static/admin/js/nav_sidebar.js HTTP/1.1" 200 3063
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 16342
+"POST /admin/login/?next=/admin/ HTTP/1.1" 302 0
+"GET /admin/ HTTP/1.1" 200 26311
+"GET /static/admin/css/dashboard.css HTTP/1.1" 200 441
+"GET /static/admin/img/icon-changelink.svg HTTP/1.1" 200 380
+"GET /static/admin/img/icon-addlink.svg HTTP/1.1" 200 331
+"GET /admin/accounts/user/add/ HTTP/1.1" 200 72594
+"GET /static/admin/js/jquery.init.js HTTP/1.1" 200 347
+"GET /static/admin/css/forms.css HTTP/1.1" 200 8525
+"GET /static/admin/js/core.js HTTP/1.1" 200 6208
+"GET /static/admin/js/user_role_doctor.js HTTP/1.1" 200 2204
+"GET /static/admin/js/vendor/jquery/jquery.js HTTP/1.1" 200 285314
+"GET /static/admin/js/admin/RelatedObjectLookups.js HTTP/1.1" 200 9777
+"GET /static/admin/js/actions.js HTTP/1.1" 200 8076
+"GET /static/admin/js/urlify.js HTTP/1.1" 200 7887
+"GET /static/admin/css/unusable_password_field.css HTTP/1.1" 200 663
+"GET /static/admin/js/prepopulate.js HTTP/1.1" 200 1531
+"GET /static/admin/css/widgets.css HTTP/1.1" 200 11973
+"GET /static/admin/js/vendor/xregexp/xregexp.js HTTP/1.1" 200 325171
+"GET /static/admin/js/prepopulate_init.js HTTP/1.1" 200 586
+"GET /static/admin/img/icon-deletelink.svg HTTP/1.1" 200 392
+"GET /static/admin/img/icon-viewlink.svg HTTP/1.1" 200 581
+"GET /static/admin/js/change_form.js HTTP/1.1" 200 606
+"GET /static/admin/js/unusable_password_field.js HTTP/1.1" 200 1480
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"GET /admin/accounts/user/ HTTP/1.1" 200 42204
+"GET /static/admin/img/icon-yes.svg HTTP/1.1" 200 436
+"GET /static/admin/css/changelists.css HTTP/1.1" 200 6878
+"GET /static/admin/img/search.svg HTTP/1.1" 200 458
+"GET /static/admin/js/filters.js HTTP/1.1" 200 978
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"GET /static/admin/img/tooltag-add.svg HTTP/1.1" 200 331
+"GET /static/admin/img/sorting-icons.svg HTTP/1.1" 200 1097
+"GET /admin/accounts/user/add/ HTTP/1.1" 200 72594
+"GET /static/admin/js/user_role_doctor.js HTTP/1.1" 304 0
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+- Broken pipe from ('127.0.0.1', 58443)
+"GET /admin/accounts/user/add/ HTTP/1.1" 200 72594
+"GET /static/admin/js/user_role_doctor.js HTTP/1.1" 200 3288
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+D:\desktop\rphospital\src\accounts\admin.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\accounts\admin.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\accounts\admin.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /admin/accounts/user/add/ HTTP/1.1" 200 72594
+"GET /static/admin/js/user_role_doctor.js HTTP/1.1" 304 0
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"GET /admin/accounts/user/add/ HTTP/1.1" 200 72594
+"GET /static/admin/js/user_role_doctor.js HTTP/1.1" 200 3884
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /admin/accounts/user/add/ HTTP/1.1" 200 72594
+"GET /static/admin/js/user_role_doctor.js HTTP/1.1" 200 4253
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\accounts\authorization.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+- Broken pipe from ('127.0.0.1', 60790)
+- Broken pipe from ('127.0.0.1', 60810)
+"GET /admin/accounts/user/add/ HTTP/1.1" 200 72594
+"GET /static/admin/js/user_role_doctor.js HTTP/1.1" 304 0
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"POST /admin/accounts/user/add/ HTTP/1.1" 302 0
+"GET /admin/accounts/user/add/ HTTP/1.1" 200 72865
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"POST /admin/logout/ HTTP/1.1" 200 3885
+"GET / HTTP/1.1" 200 41807
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+"POST / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 62851
+"GET /doctors/ HTTP/1.1" 200 63149
+"GET /admin/ HTTP/1.1" 302 0
+"GET /admin/login/?next=/admin/ HTTP/1.1" 200 3954
+"POST /admin/login/?next=/admin/ HTTP/1.1" 302 0
+"GET /admin/ HTTP/1.1" 200 26309
+"GET /admin/accounts/user/ HTTP/1.1" 200 42784
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"GET /admin/accounts/user/32/change/ HTTP/1.1" 200 100592
+"GET /static/admin/js/user_role_doctor.js HTTP/1.1" 304 0
+"GET /static/admin/js/SelectBox.js HTTP/1.1" 200 4530
+"GET /static/admin/js/calendar.js HTTP/1.1" 200 9141
+"GET /static/admin/js/admin/DateTimeShortcuts.js HTTP/1.1" 200 19319
+"GET /static/admin/js/SelectFilter2.js HTTP/1.1" 200 15845
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"GET /static/admin/img/icon-calendar.svg HTTP/1.1" 200 1086
+"GET /static/admin/img/selector-icons.svg HTTP/1.1" 200 3291
+"GET /static/admin/img/icon-clock.svg HTTP/1.1" 200 677
+"GET /admin/accounts/role/ HTTP/1.1" 200 23805
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"GET /admin/accounts/user/ HTTP/1.1" 200 42784
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"GET /admin/accounts/user/?o=5.1 HTTP/1.1" 200 44345
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"GET /admin/accounts/user/?q=doctor&o=5.1 HTTP/1.1" 200 26647
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+- Broken pipe from ('127.0.0.1', 62896)
+"GET /admin/accounts/user/33/change/?_changelist_filters=q%3Ddoctor%26o%3D5.1 HTTP/1.1" 200 100574
+"GET /static/admin/js/user_role_doctor.js HTTP/1.1" 304 0
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"POST /admin/logout/ HTTP/1.1" 200 3885
+"GET / HTTP/1.1" 200 41807
+"POST / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 62851
+"GET /doctors/ HTTP/1.1" 200 63149
+Watching for file changes with StatReloader
+"GET /admin/ HTTP/1.1" 302 0
+"GET /admin/login/?next=/admin/ HTTP/1.1" 200 3954
+"POST /admin/login/?next=/admin/ HTTP/1.1" 302 0
+"GET /admin/ HTTP/1.1" 200 26309
+"GET /admin/accounts/user/ HTTP/1.1" 200 42784
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"GET /admin/accounts/user/?q=doctor HTTP/1.1" 200 25967
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"GET /admin/accounts/user/33/change/?_changelist_filters=q%3Ddoctor HTTP/1.1" 200 100544
+"GET /static/admin/js/user_role_doctor.js HTTP/1.1" 304 0
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"POST /admin/accounts/user/33/change/?_changelist_filters=q%3Ddoctor HTTP/1.1" 302 0
+"GET /admin/accounts/user/?q=doctor HTTP/1.1" 200 26174
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"POST /admin/logout/ HTTP/1.1" 200 3885
+"GET / HTTP/1.1" 200 41807
+"POST / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 62851
+"GET /doctors/ HTTP/1.1" 200 62043
+Watching for file changes with StatReloader
+"GET /doctors/ HTTP/1.1" 200 62358
+"GET /doctors/ HTTP/1.1" 200 62358
+"GET /doctors/%D8%A7.%D8%AF%20/%20%D8%AE%D8%A7%D9%84%D8%AF%20%D8%AF%D9%8A%D8%A7%D8%A8/ HTTP/1.1" 200 104179
+"GET /doctors/%D8%A7.%D8%AF%20/%20%D8%AE%D8%A7%D9%84%D8%AF%20%D8%AF%D9%8A%D8%A7%D8%A8/ HTTP/1.1" 200 104179
+"GET /doctor/%D8%A7.%D8%AF%20/%20%D8%AE%D8%A7%D9%84%D8%AF%20%D8%AF%D9%8A%D8%A7%D8%A8/status/approved/ HTTP/1.1" 200 97973
+"GET /doctors/%D8%A7.%D8%AF/%D8%A7%D8%AD%D9%85%D8%AF%20%D8%B3%D9%85%D9%8A%D8%B1%20%D8%B9%D8%A8%D8%AF%20%D8%A7%D9%84%D9%85%D9%86%D8%B9%D9%85%20%D8%A8%D8%B4%D9%86%D8%AF%D9%89/ HTTP/1.1" 200 73905
+"GET /doctors/%D8%A7.%D8%AF/%D8%A7%D8%AD%D9%85%D8%AF%20%D8%B3%D9%85%D9%8A%D8%B1%20%D8%B9%D8%A8%D8%AF%20%D8%A7%D9%84%D9%85%D9%86%D8%B9%D9%85%20%D8%A8%D8%B4%D9%86%D8%AF%D9%89/ HTTP/1.1" 200 73905
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /doctors/%D8%A7.%D8%AF/%D8%A7%D8%AD%D9%85%D8%AF%20%D8%B3%D9%85%D9%8A%D8%B1%20%D8%B9%D8%A8%D8%AF%20%D8%A7%D9%84%D9%85%D9%86%D8%B9%D9%85%20%D8%A8%D8%B4%D9%86%D8%AF%D9%89/ HTTP/1.1" 200 74078
+"GET /doctor/%D8%A7.%D8%AF/%D8%A7%D8%AD%D9%85%D8%AF%20%D8%B3%D9%85%D9%8A%D8%B1%20%D8%B9%D8%A8%D8%AF%20%D8%A7%D9%84%D9%85%D9%86%D8%B9%D9%85%20%D8%A8%D8%B4%D9%86%D8%AF%D9%89/status/bending_by_patient/ HTTP/1.1" 200 61560
+"GET /doctors/%D8%A7.%D8%AF%20/%20%D8%AE%D8%A7%D9%84%D8%AF%20%D8%AF%D9%8A%D8%A7%D8%A8/ HTTP/1.1" 200 104265
+"GET /doctor/%D8%A7.%D8%AF%20/%20%D8%AE%D8%A7%D9%84%D8%AF%20%D8%AF%D9%8A%D8%A7%D8%A8/status/approved/ HTTP/1.1" 200 97973
+"GET /doctors/%D8%A7.%D8%AF%20/%20%D8%AE%D8%A7%D9%84%D8%AF%20%D8%AF%D9%8A%D8%A7%D8%A8/ HTTP/1.1" 200 104224

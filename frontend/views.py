@@ -3075,23 +3075,46 @@ def doctors_list(request):
             date_error = "⚠️ تاريخ النهاية غير صحيح. تأكد من إدخال يوم وشهر وسنة صحيحة."
     
     # 📊 الاستعلام الأساسي
-    # استبعاد Serv. Done من الإحصائيات
-    queryset = ExternalApproval.objects.all().exclude(
-        main_status__iexact='serv. done'
-    )
+    queryset = ExternalApproval.objects.all()
     
     authz = Authorization(request.user)
     
-    # ✅ متغير واضح لتحديد إذا كان المستخدم طبيب يرى نفسه فقط
+    # ============================================================
+    # 👨‍⚕️ تحديد الأطباء المسموح للدكتور بمتابعتهم
+    # ============================================================
+    
     is_doctor_own = (
         authz.can(Permissions.DOCTORS_VIEW_OWN)
         and not authz.can(Permissions.DOCTORS_VIEW_ALL)
     )
     
     if is_doctor_own:
-        queryset = queryset.filter(
-            doctor_name__iexact=request.user.doctor_name
-        )
+        allowed_doctors = authz.allowed_doctors()
+        
+        if allowed_doctors:
+            doctor_filter = Q()
+            
+            for doctor in allowed_doctors:
+                doctor_filter |= Q(
+                    doctor_name__iexact=doctor
+                )
+            
+            queryset = queryset.filter(doctor_filter)
+        
+        else:
+            queryset = queryset.none()
+    
+    else:
+        # المستخدمين الذين يرون كل الأطباء
+        queryset = queryset
+    
+    # ============================================================
+    # استبعاد Serv. Done من إحصائيات الحالات
+    # ============================================================
+    
+    stats_queryset = queryset.exclude(
+        main_status__iexact='serv. done'
+    )
     
     # ============================================================
     # ✅ الترتيب الجديد: التخصص أولاً، ثم الدكتور
@@ -3100,10 +3123,12 @@ def doctors_list(request):
     # 1️⃣ فلترة حسب التخصص (لو موجود)
     if specialty_filter:
         queryset = queryset.filter(specialty__icontains=specialty_filter)
+        stats_queryset = stats_queryset.filter(specialty__icontains=specialty_filter)
     
     # 2️⃣ فلترة حسب الدكتور المختار من datalist (لو موجود)
     if selected_doctor:
         queryset = queryset.filter(doctor_name__icontains=selected_doctor)
+        stats_queryset = stats_queryset.filter(doctor_name__icontains=selected_doctor)
     
     # 3️⃣ فلترة حسب البحث العام (لو موجود)
     if search_query:
@@ -3111,16 +3136,25 @@ def doctors_list(request):
             Q(doctor_name__icontains=search_query) |
             Q(specialty__icontains=search_query)
         )
+        stats_queryset = stats_queryset.filter(
+            Q(doctor_name__icontains=search_query) |
+            Q(specialty__icontains=search_query)
+        )
     
     # 4️⃣ فلترة حسب التاريخ
     if date_from:
         queryset = queryset.filter(date__gte=date_from)
+        stats_queryset = stats_queryset.filter(date__gte=date_from)
     
     if date_to:
         queryset = queryset.filter(date__lte=date_to)
+        stats_queryset = stats_queryset.filter(date__lte=date_to)
     
     # 📊 تجميع البيانات حسب الطبيب
-    doctors_data = queryset.values('doctor_name', 'specialty').annotate(
+    doctors_data = stats_queryset.values(
+        'doctor_name',
+        'specialty'
+    ).annotate(
         total_cases=Count('id'),
         total_cost=Sum('initial_cost')
     ).filter(
@@ -3268,9 +3302,14 @@ def doctor_detail(request, doctor_name):
     if (
         authz.can(Permissions.DOCTORS_VIEW_OWN)
         and not authz.can(Permissions.DOCTORS_VIEW_ALL)
-        and doctor_name.strip().lower() != request.user.doctor_name.strip().lower()
     ):
-        raise PermissionDenied
+        allowed_doctors = authz.allowed_doctors()
+
+        if not any(
+            doctor_name.strip().lower() == allowed.strip().lower()
+            for allowed in allowed_doctors
+        ):
+            raise PermissionDenied
     # 🔍 جلب جميع حالات الطبيب
     doctor_cases = ExternalApproval.objects.filter(
         doctor_name__iexact=doctor_name
@@ -3298,7 +3337,7 @@ def doctor_detail(request, doctor_name):
         'cancelled': doctor_cases.filter(main_status__iexact='cancelled').count(),
         'patient_refused': doctor_cases.filter(main_status__iexact='patient refused').count(),
         'pending': doctor_cases.filter(main_status__iexact='pending').count(),
-        'bending_by_patient': doctor_cases.filter(main_status__iexact='bending by patient').count(),
+        'bending_by_patient': doctor_cases.filter(main_status__iexact='pending by pat.').count(),
         'rejected': doctor_cases.filter(main_status__iexact='rejected').count(),
         'serv_done': doctor_cases.filter(main_status__iexact='serv. done').count(),
     }
@@ -3423,9 +3462,14 @@ def doctor_status_detail(request, doctor_name, status_type):
     if (
         authz.can(Permissions.DOCTORS_VIEW_OWN)
         and not authz.can(Permissions.DOCTORS_VIEW_ALL)
-        and doctor_name.strip().lower() != request.user.doctor_name.strip().lower()
     ):
-        raise PermissionDenied
+        allowed_doctors = authz.allowed_doctors()
+
+        if not any(
+            doctor_name.strip().lower() == allowed.strip().lower()
+            for allowed in allowed_doctors
+        ):
+            raise PermissionDenied
     
     # 🔍 جلب حالات الطبيب حسب النوع
     doctor_cases = ExternalApproval.objects.filter(
@@ -3444,7 +3488,7 @@ def doctor_status_detail(request, doctor_name, status_type):
         'cancelled': 'cancelled',
         'patient_refused': 'patient refused',
         'pending': 'pending',
-        'bending_by_patient': 'bending by patient',
+        'bending_by_patient': 'pending by pat.',
         'rejected': 'rejected',
         'serv_done': 'serv. done',
         'early': 'early',  # ✅ ✅ ✅ جديد - دخول باكر
@@ -3504,7 +3548,7 @@ def doctor_status_detail(request, doctor_name, status_type):
         'cancelled': 'ملغاه',
         'patient refused': 'رفض المريض',
         'pending': 'قيد الانتظار',
-        'bending by patient': 'مؤجل بمعرفة المريض',
+        'pending by pat.': 'مؤجل بمعرفة المريض',
         'rejected': 'مرفوضه',
         'serv. done': 'خدمة منتهية',
         'early': 'دخول باكر (غداً)',  # ✅ جديد

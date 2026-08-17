@@ -65,3 +65,45 @@ class Authorization:
         return self.user.role.permissions.filter(
             codename=permission
         ).exists()
+
+    def allowed_doctors(self):
+        """
+        إرجاع قائمة الأطباء الذين يسمح لهذا المستخدم بمتابعة حالاتهم.
+
+        Doctor:
+        - الطبيب المرتبط بالحساب
+        - الأطباء الإضافيين المحددين من الـ Admin
+
+        باقي المستخدمين:
+        - لا يتم تطبيق هذا القيد هنا.
+        """
+
+        if not self.is_authenticated:
+            return []
+
+        # Admin / Superuser ليس عليه قيد الأطباء
+        if self.is_admin:
+            return None
+
+        # القيد يخص حسابات Doctor فقط
+        if self.role_name != "Doctor":
+            return None
+
+        doctors = []
+
+        # الطبيب الأساسي
+        if self.user.doctor_name:
+            doctors.append(
+                self.user.doctor_name.strip()
+            )
+
+        # الأطباء الإضافيين
+        if self.user.allowed_doctors:
+            doctors.extend(
+                doctor.strip()
+                for doctor in self.user.allowed_doctors
+                if doctor and doctor.strip()
+            )
+
+        # إزالة التكرار
+        return list(dict.fromkeys(doctors))

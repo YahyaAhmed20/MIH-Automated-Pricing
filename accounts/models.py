@@ -70,6 +70,11 @@ class User(AbstractUser):
     default="",
     verbose_name="الطبيب المرتبط بالحساب"
 )
+    allowed_doctors = models.JSONField(
+    default=list,
+    blank=True,
+    verbose_name="الأطباء الإضافيين المسموح بمتابعتهم"
+)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

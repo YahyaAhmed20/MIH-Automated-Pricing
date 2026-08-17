@@ -56,6 +56,13 @@ class CustomUserForm(forms.ModelForm):
         choices=(),
     )
 
+    allowed_doctors = forms.MultipleChoiceField(
+        label="الأطباء الإضافيين المسموح بمتابعتهم",
+        required=False,
+        choices=(),
+        widget=forms.CheckboxSelectMultiple,
+    )
+
     class Meta:
         model = User
         fields = "__all__"
@@ -63,7 +70,21 @@ class CustomUserForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.fields["doctor_name"].choices = get_doctor_choices()
+        choices = get_doctor_choices()
+
+        self.fields["doctor_name"].choices = choices
+
+        selected_doctor = (
+            self.data.get("doctor_name")
+            if self.data
+            else self.initial.get("doctor_name", "")
+        )
+
+        self.fields["allowed_doctors"].choices = [
+            choice
+            for choice in choices
+            if choice[0] and choice[0] != selected_doctor
+        ]
 
     def clean(self):
         cleaned_data = super().clean()
@@ -72,8 +93,22 @@ class CustomUserForm(forms.ModelForm):
 
         if not role or role.name != "Doctor":
             cleaned_data["doctor_name"] = ""
+            cleaned_data["allowed_doctors"] = []
 
         return cleaned_data
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+
+        user.allowed_doctors = self.cleaned_data.get(
+            "allowed_doctors",
+            []
+        )
+
+        if commit:
+            user.save()
+
+        return user
 
     class Media:
         js = ("admin/js/user_role_doctor.js",)
@@ -91,6 +126,13 @@ class CustomUserCreationForm(UserCreationForm):
         choices=(),
     )
 
+    allowed_doctors = forms.MultipleChoiceField(
+        label="الأطباء الإضافيين المسموح بمتابعتهم",
+        required=False,
+        choices=(),
+        widget=forms.CheckboxSelectMultiple,
+    )
+
     class Meta:
         model = User
         fields = (
@@ -102,12 +144,27 @@ class CustomUserCreationForm(UserCreationForm):
             "phone",
             "role",
             "doctor_name",
+            "allowed_doctors",
         )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.fields["doctor_name"].choices = get_doctor_choices()
+        choices = get_doctor_choices()
+
+        self.fields["doctor_name"].choices = choices
+
+        selected_doctor = (
+            self.data.get("doctor_name")
+            if self.data
+            else self.initial.get("doctor_name", "")
+        )
+
+        self.fields["allowed_doctors"].choices = [
+            choice
+            for choice in choices
+            if choice[0] and choice[0] != selected_doctor
+        ]
 
     def clean(self):
         cleaned_data = super().clean()
@@ -116,8 +173,22 @@ class CustomUserCreationForm(UserCreationForm):
 
         if not role or role.name != "Doctor":
             cleaned_data["doctor_name"] = ""
+            cleaned_data["allowed_doctors"] = []
 
         return cleaned_data
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+
+        user.allowed_doctors = self.cleaned_data.get(
+            "allowed_doctors",
+            []
+        )
+
+        if commit:
+            user.save()
+
+        return user
 
     class Media:
         js = ("admin/js/user_role_doctor.js",)
@@ -176,6 +247,7 @@ class CustomUserAdmin(UserAdmin):
                     "phone",
                     "role",
                     "doctor_name",
+                    "allowed_doctors",
                 )
             },
         ),
@@ -222,6 +294,7 @@ class CustomUserAdmin(UserAdmin):
                     "phone",
                     "role",
                     "doctor_name",
+                    "allowed_doctors",
                 )
             },
         ),
