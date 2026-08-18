@@ -1,440 +1,1778 @@
 {% extends 'frontend/base.html' %}
 
+
 {% block page_title %}
 لوحة التحكم
 {% endblock %}
 
+
 {% block content %}
+<div class="home-dashboard">
+<style>
+    /* =========================================================
+       HOME DASHBOARD — MODERN UI
+    ========================================================= */
 
-<!-- ============================================ -->
-<!-- 0. أعلى جهة استخداماً + أكثر طبيب نشاطاً (جديد) -->
-<!-- ============================================ -->
-<div class="row g-4 mb-4">
+    .home-dashboard {
+        --home-primary: #2563eb;
+        --home-primary-dark: #1d4ed8;
+        --home-text: #0f172a;
+        --home-muted: #64748b;
+        --home-border: rgba(15, 23, 42, 0.06);
+        --home-card: #ffffff;
 
-    <div class="col-md-6">
-        <div class="card border-primary shadow h-100 hover-shadow">
-            <div class="card-body text-center">
-                <div class="icon-circle bg-primary bg-opacity-10 mb-2 mx-auto">
-                    <i class="bi bi-building text-primary"></i>
-                </div>
-                <h6 class="text-muted">أعلى جهة استخداماً</h6>
-                <h3 class="text-primary">
-                    {% if top_entity %}
-                        {{ top_entity.entity__name }}
-                    {% else %}
-                        لا توجد بيانات
-                    {% endif %}
-                </h3>
-                {% if top_entity %}
-                    <span class="badge bg-primary rounded-pill">
-                        {{ top_entity.total }} طلب
-                    </span>
-                {% endif %}
-            </div>
+        animation: homeFadeIn .55s ease both;
+    }
+
+
+    /* =========================================================
+       HERO
+    ========================================================= */
+
+    .home-welcome {
+        position: relative;
+        overflow: hidden;
+        min-height: 235px;
+
+        display: flex;
+        align-items: center;
+
+        background:
+            radial-gradient(
+                circle at 85% 20%,
+                rgba(96, 165, 250, .25),
+                transparent 28%
+            ),
+            radial-gradient(
+                circle at 15% 90%,
+                rgba(59, 130, 246, .18),
+                transparent 30%
+            ),
+            linear-gradient(
+                135deg,
+                #0f172a 0%,
+                #172554 48%,
+                #1d4ed8 100%
+            );
+
+        background-size: 200% 200%;
+        animation: heroGradient 8s ease-in-out infinite alternate;
+
+        border-radius: 20px;
+        padding: 36px 38px;
+
+        color: #fff;
+
+        margin-bottom: 30px;
+
+        box-shadow:
+            0 18px 45px rgba(15, 23, 42, .16);
+
+        isolation: isolate;
+    }
+
+    /* حركة الخلفية المتدرجة */
+    @keyframes heroGradient {
+        0% {
+            background-position: 0% 50%;
+        }
+        50% {
+            background-position: 100% 50%;
+        }
+        100% {
+            background-position: 0% 50%;
+        }
+    }
+
+    /* Animated glow */
+
+    .home-welcome::before {
+        content: "";
+
+        position: absolute;
+
+        width: 340px;
+        height: 340px;
+
+        border-radius: 50%;
+
+        top: -180px;
+        right: -100px;
+
+        background:
+            radial-gradient(
+                circle,
+                rgba(255,255,255,.13),
+                rgba(255,255,255,0) 70%
+            );
+
+        animation:
+            heroGlow 8s ease-in-out infinite;
+    }
+
+
+    .home-welcome::after {
+        content: "";
+
+        position: absolute;
+
+        width: 260px;
+        height: 260px;
+
+        border-radius: 50%;
+
+        bottom: -150px;
+        left: -80px;
+
+        background:
+            radial-gradient(
+                circle,
+                rgba(96,165,250,.16),
+                transparent 70%
+            );
+
+        animation:
+            heroGlowReverse 10s ease-in-out infinite;
+    }
+
+
+    .home-welcome-content {
+        position: relative;
+        z-index: 3;
+
+        max-width: 760px;
+    }
+
+    /* Particles - نقاط متحركة */
+    .home-welcome-content::before {
+        content: "";
+        position: absolute;
+        top: -40px;
+        right: -40px;
+        width: 120px;
+        height: 120px;
+        background: radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px);
+        background-size: 20px 20px;
+        opacity: 0.5;
+        animation: particleMove 20s linear infinite;
+        z-index: -1;
+    }
+
+    .home-welcome-content::after {
+        content: "";
+        position: absolute;
+        bottom: -30px;
+        left: -30px;
+        width: 80px;
+        height: 80px;
+        background: radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px);
+        background-size: 15px 15px;
+        opacity: 0.4;
+        animation: particleMove 15s linear infinite reverse;
+        z-index: -1;
+    }
+
+    @keyframes particleMove {
+        0% {
+            transform: translate(0, 0) rotate(0deg);
+        }
+        100% {
+            transform: translate(30px, 20px) rotate(360deg);
+        }
+    }
+
+    /* =========================================================
+       HERO ICON
+    ========================================================= */
+
+    .welcome-icon {
+        width: 60px;
+        height: 60px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 17px;
+
+        background: rgba(255,255,255,.11);
+
+        border: 1px solid rgba(255,255,255,.12);
+
+        backdrop-filter: blur(10px);
+
+        font-size: 27px;
+
+        margin-bottom: 20px;
+
+        box-shadow:
+            0 8px 25px rgba(0,0,0,.12);
+
+        animation:
+            welcomeIconIn .7s cubic-bezier(.22,1,.36,1) both;
+    }
+
+
+    .welcome-icon i {
+        animation:
+            iconFloat 3.5s ease-in-out infinite;
+    }
+
+
+    /* =========================================================
+       HERO TEXT
+    ========================================================= */
+
+    .welcome-title {
+        font-size: 29px;
+        font-weight: 750;
+
+        letter-spacing: -.4px;
+
+        margin-bottom: 9px;
+
+        animation:
+            textReveal .7s .08s cubic-bezier(.22,1,.36,1) both;
+    }
+
+
+    .welcome-description {
+        color: rgba(255,255,255,.76);
+
+        font-size: 13px;
+
+        line-height: 1.9;
+
+        margin-bottom: 19px;
+
+        animation:
+            textReveal .7s .16s cubic-bezier(.22,1,.36,1) both;
+    }
+
+
+    .welcome-description strong {
+        color: rgba(255,255,255,.96);
+        font-weight: 700;
+    }
+
+
+    /* =========================================================
+       ROLE BADGE
+    ========================================================= */
+
+    .welcome-role {
+        display: inline-flex;
+
+        align-items: center;
+        gap: 8px;
+
+        padding: 8px 15px;
+
+        border-radius: 999px;
+
+        background: rgba(255,255,255,.10);
+
+        border: 1px solid rgba(255,255,255,.12);
+
+        backdrop-filter: blur(8px);
+
+        color: rgba(255,255,255,.92);
+
+        font-size: 11px;
+        font-weight: 600;
+
+        animation:
+            textReveal .7s .24s cubic-bezier(.22,1,.36,1) both;
+    }
+
+
+    .welcome-role i {
+        font-size: 14px;
+    }
+
+
+    /* =========================================================
+       SECTION HEADER
+    ========================================================= */
+
+    .home-section-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+        margin: 4px 0 17px;
+
+        color: var(--home-text);
+
+        animation:
+            sectionReveal .55s .25s ease both;
+    }
+
+
+    .home-section-title i {
+        width: 35px;
+        height: 35px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 10px;
+
+        background: #eff6ff;
+
+        color: var(--home-primary);
+
+        font-size: 16px;
+    }
+
+
+    .home-section-title h5 {
+        margin: 0;
+
+        font-size: 16px;
+        font-weight: 700;
+    }
+
+
+    /* =========================================================
+       CARD
+    ========================================================= */
+
+    .dashboard-card-wrapper {
+        animation:
+            cardReveal .65s cubic-bezier(.22,1,.36,1) both;
+
+        animation-delay:
+            calc(var(--card-index) * 70ms);
+    }
+
+
+    .dashboard-card {
+        position: relative;
+
+        height: 100%;
+
+        display: flex;
+        flex-direction: column;
+
+        text-decoration: none;
+
+        color: inherit;
+
+        background:
+            linear-gradient(
+                180deg,
+                #ffffff 0%,
+                #fcfdff 100%
+            );
+
+        border: 1px solid var(--home-border);
+
+        border-radius: 15px;
+
+        padding: 21px;
+
+        overflow: hidden;
+
+        box-shadow:
+            0 5px 20px rgba(15,23,42,.045);
+
+        transition:
+            transform .28s cubic-bezier(.22,1,.36,1),
+            box-shadow .28s ease,
+            border-color .28s ease;
+    }
+
+    /* تأثير نبض خفيف للبطاقة */
+    .dashboard-card-wrapper:nth-child(1) .dashboard-card {
+        animation: cardPulse 4s ease-in-out infinite 0.1s;
+    }
+    .dashboard-card-wrapper:nth-child(2) .dashboard-card {
+        animation: cardPulse 4s ease-in-out infinite 0.3s;
+    }
+    .dashboard-card-wrapper:nth-child(3) .dashboard-card {
+        animation: cardPulse 4s ease-in-out infinite 0.5s;
+    }
+    .dashboard-card-wrapper:nth-child(4) .dashboard-card {
+        animation: cardPulse 4s ease-in-out infinite 0.7s;
+    }
+    .dashboard-card-wrapper:nth-child(5) .dashboard-card {
+        animation: cardPulse 4s ease-in-out infinite 0.9s;
+    }
+    .dashboard-card-wrapper:nth-child(6) .dashboard-card {
+        animation: cardPulse 4s ease-in-out infinite 1.1s;
+    }
+    .dashboard-card-wrapper:nth-child(7) .dashboard-card {
+        animation: cardPulse 4s ease-in-out infinite 1.3s;
+    }
+    .dashboard-card-wrapper:nth-child(8) .dashboard-card {
+        animation: cardPulse 4s ease-in-out infinite 1.5s;
+    }
+    .dashboard-card-wrapper:nth-child(9) .dashboard-card {
+        animation: cardPulse 4s ease-in-out infinite 1.7s;
+    }
+    .dashboard-card-wrapper:nth-child(10) .dashboard-card {
+        animation: cardPulse 4s ease-in-out infinite 1.9s;
+    }
+    .dashboard-card-wrapper:nth-child(11) .dashboard-card {
+        animation: cardPulse 4s ease-in-out infinite 2.1s;
+    }
+    .dashboard-card-wrapper:nth-child(12) .dashboard-card {
+        animation: cardPulse 4s ease-in-out infinite 2.3s;
+    }
+    .dashboard-card-wrapper:nth-child(13) .dashboard-card {
+        animation: cardPulse 4s ease-in-out infinite 2.5s;
+    }
+    .dashboard-card-wrapper:nth-child(14) .dashboard-card {
+        animation: cardPulse 4s ease-in-out infinite 2.7s;
+    }
+    .dashboard-card-wrapper:nth-child(15) .dashboard-card {
+        animation: cardPulse 4s ease-in-out infinite 2.9s;
+    }
+    .dashboard-card-wrapper:nth-child(16) .dashboard-card {
+        animation: cardPulse 4s ease-in-out infinite 3.1s;
+    }
+    .dashboard-card-wrapper:nth-child(17) .dashboard-card {
+        animation: cardPulse 4s ease-in-out infinite 3.3s;
+    }
+
+    @keyframes cardPulse {
+        0%, 100% {
+            transform: translateY(0px);
+            box-shadow: 0 5px 20px rgba(15,23,42,.045);
+        }
+        50% {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(37,99,235,.08);
+        }
+    }
+
+    /* تأثير لمعان متحرك على البطاقات */
+    .dashboard-card::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 60%;
+        height: 100%;
+        background: linear-gradient(
+            90deg,
+            transparent,
+            rgba(255,255,255,0.2),
+            transparent
+        );
+        transform: skewX(-25deg);
+        animation: shimmerMove 5s ease-in-out infinite;
+        pointer-events: none;
+    }
+
+    @keyframes shimmerMove {
+        0% {
+            left: -100%;
+        }
+        50% {
+            left: 150%;
+        }
+        100% {
+            left: 150%;
+        }
+    }
+
+    /* إيقاف الشيمر عند hover */
+    .dashboard-card:hover::after {
+        animation-play-state: paused;
+    }
+
+    /* top accent */
+
+    .dashboard-card::before {
+        content: "";
+
+        position: absolute;
+
+        top: 0;
+        left: 0;
+        right: 0;
+
+        height: 2px;
+
+        background:
+            linear-gradient(
+                90deg,
+                transparent,
+                var(--home-primary),
+                transparent
+            );
+
+        opacity: 0;
+
+        transform: scaleX(.5);
+
+        transition:
+            opacity .3s ease,
+            transform .3s ease;
+    }
+
+
+    .dashboard-card:hover {
+        color: inherit;
+        text-decoration: none;
+
+        transform:
+            translateY(-6px);
+
+        border-color:
+            rgba(37,99,235,.12);
+
+        box-shadow:
+            0 18px 40px rgba(15,23,42,.10);
+    }
+
+
+    .dashboard-card:hover::before {
+        opacity: 1;
+        transform: scaleX(1);
+    }
+
+
+    /* =========================================================
+       CARD ICON
+    ========================================================= */
+
+    .dashboard-card-icon {
+        position: relative;
+
+        width: 48px;
+        height: 48px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 13px;
+
+        background:
+            linear-gradient(
+                135deg,
+                #eff6ff,
+                #dbeafe
+            );
+
+        color: var(--home-primary);
+
+        font-size: 20px;
+
+        margin-bottom: 16px;
+
+        transition:
+            transform .3s cubic-bezier(.22,1,.36,1),
+            box-shadow .3s ease;
+    }
+
+    /* حركة مستمرة للأيقونات */
+    .dashboard-card-icon i {
+        display: inline-block;
+        animation: iconFloatContinuous 3s ease-in-out infinite;
+    }
+
+    @keyframes iconFloatContinuous {
+        0%, 100% {
+            transform: translateY(0px) scale(1);
+        }
+        50% {
+            transform: translateY(-4px) scale(1.05);
+        }
+    }
+
+    /* تأخير مختلف لكل أيقونة */
+    .dashboard-card-wrapper:nth-child(1) .dashboard-card-icon i { animation-delay: 0s; }
+    .dashboard-card-wrapper:nth-child(2) .dashboard-card-icon i { animation-delay: 0.2s; }
+    .dashboard-card-wrapper:nth-child(3) .dashboard-card-icon i { animation-delay: 0.4s; }
+    .dashboard-card-wrapper:nth-child(4) .dashboard-card-icon i { animation-delay: 0.6s; }
+    .dashboard-card-wrapper:nth-child(5) .dashboard-card-icon i { animation-delay: 0.8s; }
+    .dashboard-card-wrapper:nth-child(6) .dashboard-card-icon i { animation-delay: 1.0s; }
+    .dashboard-card-wrapper:nth-child(7) .dashboard-card-icon i { animation-delay: 1.2s; }
+    .dashboard-card-wrapper:nth-child(8) .dashboard-card-icon i { animation-delay: 1.4s; }
+    .dashboard-card-wrapper:nth-child(9) .dashboard-card-icon i { animation-delay: 1.6s; }
+    .dashboard-card-wrapper:nth-child(10) .dashboard-card-icon i { animation-delay: 1.8s; }
+    .dashboard-card-wrapper:nth-child(11) .dashboard-card-icon i { animation-delay: 2.0s; }
+    .dashboard-card-wrapper:nth-child(12) .dashboard-card-icon i { animation-delay: 2.2s; }
+    .dashboard-card-wrapper:nth-child(13) .dashboard-card-icon i { animation-delay: 2.4s; }
+    .dashboard-card-wrapper:nth-child(14) .dashboard-card-icon i { animation-delay: 2.6s; }
+    .dashboard-card-wrapper:nth-child(15) .dashboard-card-icon i { animation-delay: 2.8s; }
+    .dashboard-card-wrapper:nth-child(16) .dashboard-card-icon i { animation-delay: 3.0s; }
+    .dashboard-card-wrapper:nth-child(17) .dashboard-card-icon i { animation-delay: 3.2s; }
+
+
+    .dashboard-card:hover .dashboard-card-icon {
+        transform:
+            translateY(-2px)
+            scale(1.06)
+            rotate(-2deg);
+
+        box-shadow:
+            0 8px 20px rgba(37,99,235,.14);
+    }
+
+
+    /* =========================================================
+       CARD CONTENT
+    ========================================================= */
+
+    .dashboard-card h6 {
+        margin: 0 0 7px;
+
+        color: #1e293b;
+
+        font-size: 14px;
+        font-weight: 700;
+    }
+
+
+    .dashboard-card p {
+        margin: 0;
+
+        color: #94a3b8;
+
+        font-size: 11.5px;
+
+        line-height: 1.8;
+    }
+
+
+    .dashboard-card-action {
+        margin-top: auto;
+        padding-top: 17px;
+
+        color: var(--home-primary);
+
+        font-size: 10.5px;
+        font-weight: 700;
+    }
+
+
+    .dashboard-card-action i {
+        display: inline-block;
+
+        margin-right: 5px;
+
+        transition:
+            transform .25s ease;
+    }
+
+
+    .dashboard-card:hover
+    .dashboard-card-action i {
+        transform:
+            translateX(-5px);
+    }
+
+
+    /* =========================================================
+       USER INFO
+    ========================================================= */
+
+    .user-info-card {
+        position: relative;
+
+        margin-top: 30px;
+
+        padding: 21px 23px;
+
+        background: #fff;
+
+        border:
+            1px solid var(--home-border);
+
+        border-radius: 15px;
+
+        box-shadow:
+            0 5px 20px rgba(15,23,42,.045);
+
+        animation:
+            cardReveal .7s .55s cubic-bezier(.22,1,.36,1) both;
+    }
+
+
+    .user-info-title {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+
+        font-size: 13px;
+        font-weight: 700;
+
+        color: #1e293b;
+
+        margin-bottom: 18px;
+    }
+
+
+    .user-info-title i {
+        color: var(--home-primary);
+    }
+
+
+    .user-info-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+        color: #64748b;
+
+        font-size: 11.5px;
+    }
+
+
+    .user-info-item i {
+        width: 32px;
+        height: 32px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 9px;
+
+        background: #f8fafc;
+
+        color: var(--home-primary);
+
+        font-size: 14px;
+    }
+
+
+    .user-info-item strong {
+        color: #334155;
+        font-weight: 650;
+    }
+
+
+    /* =========================================================
+       EMPTY STATE
+    ========================================================= */
+
+    .home-empty {
+        padding: 38px 20px;
+
+        text-align: center;
+
+        background: #fff;
+
+        border:
+            1px dashed #cbd5e1;
+
+        border-radius: 15px;
+
+        color: #94a3b8;
+
+        animation:
+            cardReveal .6s ease both;
+    }
+
+
+    .home-empty i {
+        display: block;
+
+        font-size: 34px;
+
+        color: #cbd5e1;
+
+        margin-bottom: 11px;
+    }
+
+
+    .home-empty p {
+        margin: 0;
+
+        font-size: 12px;
+    }
+
+
+    /* =========================================================
+       ANIMATIONS
+    ========================================================= */
+
+    @keyframes homeFadeIn {
+
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+
+    }
+
+
+    @keyframes welcomeIconIn {
+
+        from {
+            opacity: 0;
+            transform:
+                translateY(12px)
+                scale(.92);
+        }
+
+        to {
+            opacity: 1;
+            transform:
+                translateY(0)
+                scale(1);
+        }
+
+    }
+
+
+    @keyframes textReveal {
+
+        from {
+            opacity: 0;
+            transform:
+                translateY(12px);
+        }
+
+        to {
+            opacity: 1;
+            transform:
+                translateY(0);
+        }
+
+    }
+
+
+    @keyframes sectionReveal {
+
+        from {
+            opacity: 0;
+            transform:
+                translateY(8px);
+        }
+
+        to {
+            opacity: 1;
+            transform:
+                translateY(0);
+        }
+
+    }
+
+
+    @keyframes cardReveal {
+
+        from {
+            opacity: 0;
+            transform:
+                translateY(18px)
+                scale(.985);
+        }
+
+        to {
+            opacity: 1;
+            transform:
+                translateY(0)
+                scale(1);
+        }
+
+    }
+
+
+    @keyframes iconFloat {
+
+        0%, 100% {
+            transform: translateY(0);
+        }
+
+        50% {
+            transform: translateY(-3px);
+        }
+
+    }
+
+
+    @keyframes heroGlow {
+
+        0%, 100% {
+            transform:
+                translate(0, 0)
+                scale(1);
+        }
+
+        50% {
+            transform:
+                translate(-25px, 20px)
+                scale(1.08);
+        }
+
+    }
+
+
+    @keyframes heroGlowReverse {
+
+        0%, 100% {
+            transform:
+                translate(0, 0);
+        }
+
+        50% {
+            transform:
+                translate(25px, -15px);
+        }
+
+    }
+
+
+    /* =========================================================
+       ACCESSIBILITY — REDUCE MOTION
+    ========================================================= */
+
+    @media (prefers-reduced-motion: reduce) {
+
+        .home-dashboard *,
+        .home-dashboard *::before,
+        .home-dashboard *::after {
+            animation-duration: .01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: .01ms !important;
+        }
+
+        .home-welcome {
+            animation: none !important;
+            background-size: 100% 100% !important;
+        }
+
+        .dashboard-card,
+        .dashboard-card-wrapper .dashboard-card,
+        .dashboard-card-icon i,
+        .home-welcome-content::before,
+        .home-welcome-content::after,
+        .dashboard-card::after {
+            animation: none !important;
+            animation-duration: .01ms !important;
+        }
+
+        .dashboard-card-icon i {
+            transform: none !important;
+        }
+
+    }
+
+
+    /* =========================================================
+       MOBILE
+    ========================================================= */
+
+    @media (max-width: 768px) {
+
+        .home-welcome {
+            min-height: 210px;
+            padding: 25px;
+            border-radius: 15px;
+        }
+
+        .welcome-title {
+            font-size: 22px;
+        }
+
+        .welcome-description {
+            font-size: 11.5px;
+        }
+
+        .dashboard-card {
+            padding: 18px;
+        }
+
+    }
+</style>
+
+<!-- =========================================================
+     Welcome
+========================================================= -->
+
+<div class="home-welcome">
+
+    <div class="home-welcome-content">
+
+        <div class="welcome-icon">
+            <i class="bi bi-stars"></i>
         </div>
-    </div>
 
-    <div class="col-md-6">
-        <div class="card border-success shadow h-100 hover-shadow">
-            <div class="card-body text-center">
-                <div class="icon-circle bg-success bg-opacity-10 mb-2 mx-auto">
-                    <i class="bi bi-person-badge text-success"></i>
-                </div>
-                <h6 class="text-muted">أكثر طبيب نشاطاً</h6>
-                <h3 class="text-success">
-                    {% if top_doctor %}
-                        {{ top_doctor.doctor_name }}
-                    {% else %}
-                        لا توجد بيانات
-                    {% endif %}
-                </h3>
-                {% if top_doctor %}
-                    <span class="badge bg-success rounded-pill">
-                        {{ top_doctor.total }} طلب
-                    </span>
-                {% endif %}
-            </div>
+        <div class="welcome-title">
+
+            مرحبًا بك،
+            {{ user.full_name|default:user.username }}
+            👋
+
         </div>
+
+        <div class="welcome-description">
+
+            أهلاً بك في
+            <strong>MIH Automated Pricing System</strong>.
+
+            <br>
+
+            هذه هي لوحة التحكم الرئيسية الخاصة بك،
+            ويمكنك من خلالها الوصول إلى الوظائف المتاحة لحسابك.
+
+        </div>
+
+
+        <div class="welcome-role">
+
+            <i class="bi bi-person-badge"></i>
+
+            {% if authz.role_name %}
+                {{ authz.role_name }}
+            {% else %}
+                مستخدم
+            {% endif %}
+
+        </div>
+
     </div>
 
 </div>
 
-<!-- ============================================ -->
-<!-- 1. KPIs الرئيسية -->
-<!-- ============================================ -->
-<div class="row g-4">
 
-    <div class="col-md-3">
-        <div class="card shadow border-0 hover-shadow">
-            <div class="card-body text-center">
-                <div class="icon-circle bg-primary bg-opacity-10 mb-2 mx-auto">
-                    <i class="bi bi-people text-primary"></i>
-                </div>
-                <h6 class="text-muted">إجمالي المرضى</h6>
-                <h2 class="text-primary">{{ patients }}</h2>
-            </div>
-        </div>
-    </div>
 
-    <div class="col-md-3">
-        <div class="card shadow border-0 hover-shadow">
-            <div class="card-body text-center">
-                <div class="icon-circle bg-info bg-opacity-10 mb-2 mx-auto">
-                    <i class="bi bi-file-medical text-info"></i>
-                </div>
-                <h6 class="text-muted">إجمالي الطلبات</h6>
-                <h2 class="text-info">{{ requests }}</h2>
-            </div>
-        </div>
-    </div>
+<!-- =========================================================
+     Quick Access
+========================================================= -->
 
-    <div class="col-md-3">
-        <div class="card shadow border-0 hover-shadow">
-            <div class="card-body text-center">
-                <div class="icon-circle bg-warning bg-opacity-10 mb-2 mx-auto">
-                    <i class="bi bi-sticky text-warning"></i>
-                </div>
-                <h6 class="text-muted">إجمالي الملاحظات</h6>
-                <h2 class="text-warning">{{ notes }}</h2>
-            </div>
-        </div>
-    </div>
+<div class="home-section-title">
 
-    <div class="col-md-3">
-        <div class="card shadow border-0 hover-shadow">
-            <div class="card-body text-center">
-                <div class="icon-circle bg-success bg-opacity-10 mb-2 mx-auto">
-                    <i class="bi bi-file-earmark-text text-success"></i>
-                </div>
-                <h6 class="text-muted">إجمالي التعاقدات</h6>
-                <h2 class="text-success">{{ contracts }}</h2>
-            </div>
-        </div>
-    </div>
+    <i class="bi bi-grid"></i>
+
+    <h5>
+        الوصول السريع
+    </h5>
 
 </div>
 
-<!-- ============================================ -->
-<!-- 2. KPIs الحالات -->
-<!-- ============================================ -->
-<hr class="my-4">
 
-<div class="row g-4">
+<div class="row g-3">
 
-    <div class="col-md-3">
-        <div class="card border-success shadow hover-shadow">
-            <div class="card-body text-center">
-                <div class="icon-circle bg-success bg-opacity-10 mb-2 mx-auto">
-                    <i class="bi bi-check-circle text-success"></i>
-                </div>
-                <h6 class="text-muted">تمت الموافقة</h6>
-                <h2 class="text-success">{{ approved }}</h2>
+
+    <!-- =====================================================
+         Packages
+    ====================================================== -->
+
+    {% if can_packages_credit_basic or can_packages_credit_full %}
+
+    <div class="col-xl-3 col-lg-4 col-md-6 dashboard-card-wrapper"
+         style="--card-index: 1;">
+
+        <a href="{% url 'credit_package_pricing' %}"
+           class="dashboard-card">
+
+            <div class="dashboard-card-icon">
+                <i class="bi bi-box-seam"></i>
             </div>
-        </div>
+
+            <h6>
+                باكدجات الآجل
+            </h6>
+
+            <p>
+                استعراض ومتابعة باكدجات الآجل
+                المتاحة حسب صلاحيات حسابك.
+            </p>
+
+            <div class="dashboard-card-action">
+                فتح الصفحة
+                <i class="bi bi-arrow-left"></i>
+            </div>
+
+        </a>
+
     </div>
 
-    <div class="col-md-3">
-        <div class="card border-warning shadow hover-shadow">
-            <div class="card-body text-center">
-                <div class="icon-circle bg-warning bg-opacity-10 mb-2 mx-auto">
-                    <i class="bi bi-clock text-warning"></i>
-                </div>
-                <h6 class="text-muted">قيد الانتظار</h6>
-                <h2 class="text-warning">{{ pending }}</h2>
+    {% endif %}
+
+
+
+    {% if can_packages_cash_full %}
+
+    <div class="col-xl-3 col-lg-4 col-md-6 dashboard-card-wrapper"
+         style="--card-index: 2;">
+
+        <a href="{% url 'cash_packages' %}"
+           class="dashboard-card">
+
+            <div class="dashboard-card-icon">
+                <i class="bi bi-cash-coin"></i>
             </div>
-        </div>
+
+            <h6>
+                باكدجات النقدي
+            </h6>
+
+            <p>
+                إدارة واستعراض الباكدجات النقدية
+                المتاحة في النظام.
+            </p>
+
+            <div class="dashboard-card-action">
+                فتح الصفحة
+                <i class="bi bi-arrow-left"></i>
+            </div>
+
+        </a>
+
     </div>
 
-    <div class="col-md-3">
-        <div class="card border-danger shadow hover-shadow">
-            <div class="card-body text-center">
-                <div class="icon-circle bg-danger bg-opacity-10 mb-2 mx-auto">
-                    <i class="bi bi-x-circle text-danger"></i>
-                </div>
-                <h6 class="text-muted">مرفوضة</h6>
-                <h2 class="text-danger">{{ rejected }}</h2>
+    {% endif %}
+
+
+
+    <!-- =====================================================
+         Contract Entities
+    ====================================================== -->
+
+    {% if can_financial_full %}
+
+    <div class="col-xl-3 col-lg-4 col-md-6 dashboard-card-wrapper"
+         style="--card-index: 3;">
+
+        <a href="{% url 'contract_entities' %}"
+           class="dashboard-card">
+
+            <div class="dashboard-card-icon">
+                <i class="bi bi-buildings"></i>
             </div>
-        </div>
+
+            <h6>
+                الجهات المتعاقدة
+            </h6>
+
+            <p>
+                إدارة واستعراض الجهات المتعاقدة
+                وبياناتها.
+            </p>
+
+            <div class="dashboard-card-action">
+                فتح الصفحة
+                <i class="bi bi-arrow-left"></i>
+            </div>
+
+        </a>
+
     </div>
 
-    <div class="col-md-3">
-        <div class="card border-primary shadow hover-shadow">
-            <div class="card-body text-center">
-                <div class="icon-circle bg-primary bg-opacity-10 mb-2 mx-auto">
-                    <i class="bi bi-check2-all text-primary"></i>
-                </div>
-                <h6 class="text-muted">تم تنفيذ الخدمة</h6>
-                <h2 class="text-primary">{{ service_done }}</h2>
+
+
+    <!-- =====================================================
+         Company Discounts
+    ====================================================== -->
+
+    <div class="col-xl-3 col-lg-4 col-md-6 dashboard-card-wrapper"
+         style="--card-index: 4;">
+
+        <a href="{% url 'company_discounts' %}"
+           class="dashboard-card">
+
+            <div class="dashboard-card-icon">
+                <i class="bi bi-percent"></i>
             </div>
-        </div>
+
+            <h6>
+                خصومات الشركات
+            </h6>
+
+            <p>
+                إدارة ومتابعة خصومات الشركات
+                والتعاقدات المرتبطة بها.
+            </p>
+
+            <div class="dashboard-card-action">
+                فتح الصفحة
+                <i class="bi bi-arrow-left"></i>
+            </div>
+
+        </a>
+
     </div>
+
+
+
+    <!-- =====================================================
+         Special Offers
+    ====================================================== -->
+
+    <div class="col-xl-3 col-lg-4 col-md-6 dashboard-card-wrapper"
+         style="--card-index: 5;">
+
+        <a href="{% url 'special_offers' %}"
+           class="dashboard-card">
+
+            <div class="dashboard-card-icon">
+                <i class="bi bi-megaphone"></i>
+            </div>
+
+            <h6>
+                العروض
+            </h6>
+
+            <p>
+                استعراض وإدارة العروض الخاصة
+                داخل النظام.
+            </p>
+
+            <div class="dashboard-card-action">
+                فتح الصفحة
+                <i class="bi bi-arrow-left"></i>
+            </div>
+
+        </a>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         Procedures
+    ====================================================== -->
+
+    <div class="col-xl-3 col-lg-4 col-md-6 dashboard-card-wrapper"
+         style="--card-index: 6;">
+
+        <a href="{% url 'procedures' %}"
+           class="dashboard-card">
+
+            <div class="dashboard-card-icon">
+                <i class="bi bi-clipboard2-pulse"></i>
+            </div>
+
+            <h6>
+                توصيفات العمليات
+            </h6>
+
+            <p>
+                استعراض توصيفات العمليات
+                المسجلة بالنظام.
+            </p>
+
+            <div class="dashboard-card-action">
+                فتح الصفحة
+                <i class="bi bi-arrow-left"></i>
+            </div>
+
+        </a>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         Procedure Fees
+    ====================================================== -->
+
+    <div class="col-xl-3 col-lg-4 col-md-6 dashboard-card-wrapper"
+         style="--card-index: 7;">
+
+        <a href="{% url 'procedure_fees' %}"
+           class="dashboard-card">
+
+            <div class="dashboard-card-icon">
+                <i class="bi bi-calculator"></i>
+            </div>
+
+            <h6>
+                احتساب أتعاب العملية
+            </h6>
+
+            <p>
+                مراجعة واحتساب أتعاب العمليات
+                وفق بيانات النظام.
+            </p>
+
+            <div class="dashboard-card-action">
+                فتح الصفحة
+                <i class="bi bi-arrow-left"></i>
+            </div>
+
+        </a>
+
+    </div>
+
+    {% endif %}
+
+
+
+    <!-- =====================================================
+         Doctors
+    ====================================================== -->
+
+    {% if can_doctors_view_all or can_doctors_view_own %}
+
+    <div class="col-xl-3 col-lg-4 col-md-6 dashboard-card-wrapper"
+         style="--card-index: 8;">
+
+        <a href="{% url 'doctors_list' %}"
+           class="dashboard-card">
+
+            <div class="dashboard-card-icon">
+                <i class="bi bi-person-badge"></i>
+            </div>
+
+            <h6>
+                الأطباء
+            </h6>
+
+            <p>
+                استعراض الأطباء والحالات المسموح
+                لحسابك بمتابعتها.
+            </p>
+
+            <div class="dashboard-card-action">
+                فتح الصفحة
+                <i class="bi bi-arrow-left"></i>
+            </div>
+
+        </a>
+
+    </div>
+
+    {% endif %}
+
+
+
+    <!-- =====================================================
+         Pricing Details
+    ====================================================== -->
+
+    {% if can_financial_full and not is_accountant %}
+
+    <div class="col-xl-3 col-lg-4 col-md-6 dashboard-card-wrapper"
+         style="--card-index: 9;">
+
+        <a href="{% url 'pricing_details' %}"
+           class="dashboard-card">
+
+            <div class="dashboard-card-icon">
+                <i class="bi bi-cash-stack"></i>
+            </div>
+
+            <h6>
+                تفاصيل التسعير
+            </h6>
+
+            <p>
+                الوصول إلى تفاصيل وبيانات
+                التسعير.
+            </p>
+
+            <div class="dashboard-card-action">
+                فتح الصفحة
+                <i class="bi bi-arrow-left"></i>
+            </div>
+
+        </a>
+
+    </div>
+
+    {% endif %}
+
+
+
+    <!-- =====================================================
+         Similar Invoices
+    ====================================================== -->
+
+    {% if is_admin %}
+
+    <div class="col-xl-3 col-lg-4 col-md-6 dashboard-card-wrapper"
+         style="--card-index: 10;">
+
+        <a href="{% url 'similar_invoices' %}"
+           class="dashboard-card">
+
+            <div class="dashboard-card-icon">
+                <i class="bi bi-receipt"></i>
+            </div>
+
+            <h6>
+                فواتير مماثلة
+            </h6>
+
+            <p>
+                مراجعة ومتابعة الفواتير المماثلة
+                داخل النظام.
+            </p>
+
+            <div class="dashboard-card-action">
+                فتح الصفحة
+                <i class="bi bi-arrow-left"></i>
+            </div>
+
+        </a>
+
+    </div>
+
+    {% endif %}
+
+
+
+    <!-- =====================================================
+         Reports
+    ====================================================== -->
+
+    {% if can_financial_full and not is_accountant %}
+
+    <div class="col-xl-3 col-lg-4 col-md-6 dashboard-card-wrapper"
+         style="--card-index: 11;">
+
+        <a href="{% url 'reports' %}"
+           class="dashboard-card">
+
+            <div class="dashboard-card-icon">
+                <i class="bi bi-bar-chart"></i>
+            </div>
+
+            <h6>
+                إحصائيات الباكدجات
+            </h6>
+
+            <p>
+                متابعة وتحليل إحصائيات
+                وأداء الباكدجات.
+            </p>
+
+            <div class="dashboard-card-action">
+                فتح الصفحة
+                <i class="bi bi-arrow-left"></i>
+            </div>
+
+        </a>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         Package Comparison
+    ====================================================== -->
+
+    <div class="col-xl-3 col-lg-4 col-md-6 dashboard-card-wrapper"
+         style="--card-index: 12;">
+
+        <a href="{% url 'package_comparison' %}"
+           class="dashboard-card">
+
+            <div class="dashboard-card-icon">
+                <i class="bi bi-graph-up-arrow"></i>
+            </div>
+
+            <h6>
+                مقارنة أداء الباكدجات
+            </h6>
+
+            <p>
+                مقارنة وتحليل أداء الباكدجات
+                المختلفة.
+            </p>
+
+            <div class="dashboard-card-action">
+                فتح الصفحة
+                <i class="bi bi-arrow-left"></i>
+            </div>
+
+        </a>
+
+    </div>
+
+    {% endif %}
+
+
+
+    <!-- =====================================================
+         Patient Search
+    ====================================================== -->
+
+    {% if can_patients_search %}
+
+    <div class="col-xl-3 col-lg-4 col-md-6 dashboard-card-wrapper"
+         style="--card-index: 13;">
+
+        <a href="{% url 'patient_search' %}"
+           class="dashboard-card">
+
+            <div class="dashboard-card-icon">
+                <i class="bi bi-search"></i>
+            </div>
+
+            <h6>
+                بحث عن مريض
+            </h6>
+
+            <p>
+                البحث عن بيانات المرضى المتاحة
+                لحسابك.
+            </p>
+
+            <div class="dashboard-card-action">
+                فتح الصفحة
+                <i class="bi bi-arrow-left"></i>
+            </div>
+
+        </a>
+
+    </div>
+
+    {% endif %}
+
+
+
+    <!-- =====================================================
+         External Approvals
+    ====================================================== -->
+
+    {% if can_approvals_view %}
+
+    <div class="col-xl-3 col-lg-4 col-md-6 dashboard-card-wrapper"
+         style="--card-index: 14;">
+
+        <a href="{% url 'external_approvals' %}"
+           class="dashboard-card">
+
+            <div class="dashboard-card-icon">
+                <i class="bi bi-file-medical"></i>
+            </div>
+
+            <h6>
+                متابعة الموافقات            </h6>
+
+            <p>
+                متابعة الموافقات الخارجية
+                وحالتها الحالية.
+            </p>
+
+            <div class="dashboard-card-action">
+                فتح الصفحة
+                <i class="bi bi-arrow-left"></i>
+            </div>
+
+        </a>
+
+    </div>
+
+    {% endif %}
+
+
+
+    <!-- =====================================================
+         Approval Statistics
+    ====================================================== -->
+
+    {% if can_approvals_statistics %}
+
+    <div class="col-xl-3 col-lg-4 col-md-6 dashboard-card-wrapper"
+         style="--card-index: 15;">
+
+        <a href="{% url 'pending_analysis' %}"
+           class="dashboard-card">
+
+            <div class="dashboard-card-icon">
+                <i class="bi bi-clock-history"></i>
+            </div>
+
+            <h6>
+                إحصائيات الموافقات
+            </h6>
+
+            <p>
+                متابعة وتحليل إحصائيات
+                الموافقات الخارجية.
+            </p>
+
+            <div class="dashboard-card-action">
+                فتح الصفحة
+                <i class="bi bi-arrow-left"></i>
+            </div>
+
+        </a>
+
+    </div>
+
+    {% endif %}
+
+
+
+    <!-- =====================================================
+         Quality Dashboard
+    ====================================================== -->
+
+    {% if is_admin %}
+
+    <div class="col-xl-3 col-lg-4 col-md-6 dashboard-card-wrapper"
+         style="--card-index: 16;">
+
+        <a href="{% url 'quality_dashboard' %}"
+           class="dashboard-card">
+
+            <div class="dashboard-card-icon">
+                <i class="bi bi-shield-check"></i>
+            </div>
+
+            <h6>
+                جودة البيانات
+            </h6>
+
+            <p>
+                مراجعة جودة البيانات ومؤشرات
+                النظام.
+            </p>
+
+            <div class="dashboard-card-action">
+                فتح الصفحة
+                <i class="bi bi-arrow-left"></i>
+            </div>
+
+        </a>
+
+    </div>
+
+    {% endif %}
+
+
+
+    <!-- =====================================================
+         System Update
+    ====================================================== -->
+
+    {% if is_admin %}
+
+    <div class="col-xl-3 col-lg-4 col-md-6 dashboard-card-wrapper"
+         style="--card-index: 17;">
+
+        <a href="{% url 'system_update' %}"
+           class="dashboard-card">
+
+            <div class="dashboard-card-icon">
+                <i class="bi bi-gear-fill"></i>
+            </div>
+
+            <h6>
+                إدارة النظام
+            </h6>
+
+            <p>
+                تحديث وإدارة بيانات النظام
+                والعمليات الإدارية.
+            </p>
+
+            <div class="dashboard-card-action">
+                فتح الصفحة
+                <i class="bi bi-arrow-left"></i>
+            </div>
+
+        </a>
+
+    </div>
+
+    {% endif %}
 
 </div>
 
-<!-- ============================================ -->
-<!-- 3. KPIs المالية -->
-<!-- ============================================ -->
-<hr class="my-4">
 
-<div class="row g-4">
 
-    <div class="col-md-4">
-        <div class="card border-success shadow hover-shadow">
-            <div class="card-body text-center">
-                <div class="icon-circle bg-success bg-opacity-10 mb-2 mx-auto">
-                    <i class="bi bi-arrow-up-circle text-success"></i>
-                </div>
-                <h6 class="text-muted">إجمالي التكلفة المطلوبة</h6>
-                <h3 class="text-success">{{ total_requested }} <small>ج.م</small></h3>
-            </div>
-        </div>
-    </div>
+<!-- =========================================================
+     No Permissions
+========================================================= -->
 
-    <div class="col-md-4">
-        <div class="card border-primary shadow hover-shadow">
-            <div class="card-body text-center">
-                <div class="icon-circle bg-primary bg-opacity-10 mb-2 mx-auto">
-                    <i class="bi bi-arrow-down-circle text-primary"></i>
-                </div>
-                <h6 class="text-muted">إجمالي التكلفة المستلمة</h6>
-                <h3 class="text-primary">{{ total_received }} <small>ج.م</small></h3>
-            </div>
-        </div>
-    </div>
+{% if not can_packages_credit_basic and not can_packages_credit_full and not can_packages_cash_full and not can_financial_full and not can_doctors_view_all and not can_doctors_view_own and not can_patients_search and not can_approvals_view and not can_approvals_statistics and not is_admin %}
 
-    <div class="col-md-4">
-        <div class="card border-{% if difference >= 0 %}info{% else %}danger{% endif %} shadow hover-shadow">
-            <div class="card-body text-center">
-                <div class="icon-circle bg-{% if difference >= 0 %}info{% else %}danger{% endif %} bg-opacity-10 mb-2 mx-auto">
-                    <i class="bi bi-arrow-left-right text-{% if difference >= 0 %}info{% else %}danger{% endif %}"></i>
-                </div>
-                <h6 class="text-muted">فرق التكاليف</h6>
-                <h3 class="text-{% if difference >= 0 %}info{% else %}danger{% endif %}">
-                    {{ difference }} <small>ج.م</small>
-                </h3>
-            </div>
-        </div>
-    </div>
+<div class="home-empty mt-3">
+
+    <i class="bi bi-lock"></i>
+
+    <p>
+        لا توجد وظائف متاحة حاليًا لهذا الحساب.
+    </p>
 
 </div>
 
-<!-- ============================================ -->
-<!-- 4. أعلى الجهات المعلقة + أعلى الأطباء بالحالات المعلقة -->
-<!-- ============================================ -->
-<hr class="my-4">
+{% endif %}
 
-<div class="row g-4">
 
-    <div class="col-md-6">
 
-        <div class="card shadow border-0 h-100 hover-shadow">
+<!-- =========================================================
+     User Information
+========================================================= -->
 
-            <div class="card-header bg-warning bg-opacity-10 d-flex justify-content-between align-items-center">
+<div class="user-info-card">
+
+    <div class="user-info-title">
+        <i class="bi bi-person-circle me-1"></i>
+        معلومات الحساب
+    </div>
+
+    <div class="row g-3">
+
+        <div class="col-md-4">
+
+            <div class="user-info-item">
+
+                <i class="bi bi-person"></i>
+
                 <span>
-                    <i class="bi bi-building"></i>
-                    أعلى الجهات المعلقة
+                    المستخدم:
+                    <strong>
+                        {{ user.full_name|default:user.username }}
+                    </strong>
                 </span>
-                <span class="badge bg-warning text-dark rounded-pill">
-                    {{ top_pending_entities|length }}
-                </span>
-            </div>
-
-            <div class="card-body p-0">
-
-                <div class="list-group list-group-flush">
-
-                    {% for item in top_pending_entities %}
-
-                    <div class="list-group-item d-flex justify-content-between align-items-center">
-                        <span>
-                            <span class="badge bg-warning text-dark rounded-circle me-2">
-                                {{ forloop.counter }}
-                            </span>
-                            {{ item.entity__name }}
-                        </span>
-                        <span class="badge bg-warning text-dark rounded-pill">
-                            {{ item.total }}
-                        </span>
-                    </div>
-
-                    {% empty %}
-
-                    <div class="list-group-item text-center text-muted py-4">
-                        <i class="bi bi-inbox"></i>
-                        لا توجد جهات
-                    </div>
-
-                    {% endfor %}
-
-                </div>
 
             </div>
 
         </div>
 
-    </div>
 
-    <div class="col-md-6">
+        <div class="col-md-4">
 
-        <div class="card shadow border-0 h-100 hover-shadow">
+            <div class="user-info-item">
 
-            <div class="card-header bg-info bg-opacity-10 d-flex justify-content-between align-items-center">
+                <i class="bi bi-person-badge"></i>
+
                 <span>
-                    <i class="bi bi-person-badge"></i>
-                    أعلى الأطباء بالحالات المعلقة
+                    الدور:
+                    <strong>
+                        {{ authz.role_name|default:"User" }}
+                    </strong>
                 </span>
-                <span class="badge bg-info rounded-pill">
-                    {{ top_pending_doctors|length }}
-                </span>
-            </div>
-
-            <div class="card-body p-0">
-
-                <div class="list-group list-group-flush">
-
-                    {% for item in top_pending_doctors %}
-
-                    <div class="list-group-item d-flex justify-content-between align-items-center">
-                        <span>
-                            <span class="badge bg-info rounded-circle me-2">
-                                {{ forloop.counter }}
-                            </span>
-                            <a href="{% url 'doctor_detail' item.doctor_name %}" class="text-decoration-none text-dark">
-                                {{ item.doctor_name }}
-                            </a>
-                        </span>
-                        <span class="badge bg-info rounded-pill">
-                            {{ item.total }}
-                        </span>
-                    </div>
-
-                    {% empty %}
-
-                    <div class="list-group-item text-center text-muted py-4">
-                        <i class="bi bi-inbox"></i>
-                        لا يوجد أطباء
-                    </div>
-
-                    {% endfor %}
-
-                </div>
 
             </div>
 
         </div>
 
-    </div>
 
-</div>
+        {% if user.email %}
 
-<!-- ============================================ -->
-<!-- 5. آخر الطلبات -->
-<!-- ============================================ -->
-<hr class="my-5">
+        <div class="col-md-4">
 
-<div class="card shadow border-0 hover-shadow">
+            <div class="user-info-item">
 
-    <div class="card-header d-flex justify-content-between align-items-center">
-        <h5 class="mb-0">
-            <i class="bi bi-clock-history"></i>
-            آخر الطلبات
-        </h5>
-        <span class="badge bg-secondary rounded-pill">
-            {{ latest_requests|length }}
-        </span>
-    </div>
+                <i class="bi bi-envelope"></i>
 
-    <div class="card-body">
+                <span>
+                    البريد:
+                    <strong>
+                        {{ user.email }}
+                    </strong>
+                </span>
 
-        <div class="table-responsive">
-
-            <table class="table table-striped table-hover align-middle">
-
-                <thead class="table-light">
-                    <tr>
-                        <th>#</th>
-                        <th>المريض</th>
-                        <th>الجهة</th>
-                        <th>التخصص</th>
-                        <th>الحالة</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-
-                    {% for item in latest_requests %}
-
-                    <tr>
-
-                        <td>
-                            <span class="badge bg-secondary rounded-circle">
-                                {{ item.id }}
-                            </span>
-                        </td>
-
-                        <td>
-                            <a href="{% url 'patient_detail' item.patient.id %}" class="text-decoration-none">
-                                {{ item.patient.full_name }}
-                            </a>
-                        </td>
-
-                        <td>
-                            {{ item.entity.name }}
-                        </td>
-
-                        <td>
-                            {{ item.specialty.name }}
-                        </td>
-
-                        <td>
-                            {% if item.status == "approved" %}
-                                <span class="badge rounded-pill bg-success">
-                                    <i class="bi bi-check-circle"></i> تمت الموافقة
-                                </span>
-                            {% elif item.status == "pending" %}
-                                <span class="badge rounded-pill bg-warning text-dark">
-                                    <i class="bi bi-clock"></i> قيد الانتظار
-                                </span>
-                            {% elif item.status == "rejected" %}
-                                <span class="badge rounded-pill bg-danger">
-                                    <i class="bi bi-x-circle"></i> مرفوض
-                                </span>
-                            {% elif item.status == "service_done" %}
-                                <span class="badge rounded-pill bg-primary">
-                                    <i class="bi bi-check2-all"></i> تم تنفيذ الخدمة
-                                </span>
-                            {% elif item.status == "patient_refused" %}
-                                <span class="badge rounded-pill bg-secondary">
-                                    <i class="bi bi-person-x"></i> رفض المريض
-                                </span>
-                            {% else %}
-                                <span class="badge rounded-pill bg-dark">
-                                    {{ item.status }}
-                                </span>
-                            {% endif %}
-                        </td>
-
-                    </tr>
-
-                    {% empty %}
-
-                    <tr>
-                        <td colspan="5" class="text-center text-muted py-4">
-                            <i class="bi bi-inbox"></i>
-                            لا توجد طلبات حالياً
-                        </td>
-                    </tr>
-
-                    {% endfor %}
-
-                </tbody>
-
-            </table>
+            </div>
 
         </div>
 
+        {% endif %}
+
     </div>
 
 </div>
+</div>
+
 
 {% endblock %}
