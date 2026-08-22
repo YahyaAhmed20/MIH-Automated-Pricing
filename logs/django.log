@@ -17530,3 +17530,79 @@ Watching for file changes with StatReloader
 Watching for file changes with StatReloader
 "GET /dashboard/ HTTP/1.1" 200 69504
 "GET /dashboard/ HTTP/1.1" 200 69504
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 41807
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 16342
+"POST / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 80346
+"GET / HTTP/1.1" 200 41807
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 16342
+"GET /admin HTTP/1.1" 301 0
+"GET /admin/ HTTP/1.1" 200 26310
+"GET /static/admin/css/nav_sidebar.css HTTP/1.1" 200 2810
+"GET /static/admin/css/dark_mode.css HTTP/1.1" 200 2808
+"GET /static/admin/css/responsive_rtl.css HTTP/1.1" 200 1991
+"GET /static/admin/css/responsive.css HTTP/1.1" 200 16565
+"GET /static/admin/js/theme.js HTTP/1.1" 200 1653
+"GET /static/admin/css/rtl.css HTTP/1.1" 200 4772
+"GET /static/admin/css/dashboard.css HTTP/1.1" 200 441
+"GET /static/admin/css/base.css HTTP/1.1" 200 22120
+"GET /static/admin/img/icon-changelink.svg HTTP/1.1" 200 380
+"GET /static/admin/img/icon-addlink.svg HTTP/1.1" 200 331
+"GET /static/admin/js/nav_sidebar.js HTTP/1.1" 200 3063
+"POST /admin/logout/ HTTP/1.1" 200 3885
+"GET / HTTP/1.1" 200 41807
+"GET /admin/ HTTP/1.1" 302 0
+"GET /admin/login/?next=/admin/ HTTP/1.1" 200 4455
+"GET /static/admin/css/login.css HTTP/1.1" 200 951
+"GET /dashboard/ HTTP/1.1" 302 0
+"GET /login/?next=/dashboard/ HTTP/1.1" 200 41807
+"GET /login/?next=/dashboard/ HTTP/1.1" 200 41807
+"GET /login/?next=/dashboard/ HTTP/1.1" 200 41807
+"GET / HTTP/1.1" 200 41807
+D:\desktop\rphospital\src\accounts\decorators.py changed, reloading.
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 41807
+"POST / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 80346
+"GET //packages HTTP/1.1" 301 0
+"GET /packages/ HTTP/1.1" 200 73911
+"GET /credit-package-pricing/ HTTP/1.1" 200 87713
+"GET /credit-package-pricing/ HTTP/1.1" 200 87713
+"GET /admin/ HTTP/1.1" 200 26310
+"POST /admin/logout/ HTTP/1.1" 200 3885
+"GET / HTTP/1.1" 200 41807
+"GET /credit-package-pricing/ HTTP/1.1" 302 0
+"GET /login/?next=/credit-package-pricing/ HTTP/1.1" 200 41807
+"GET /contracts/ HTTP/1.1" 302 0
+"GET /login/?next=/contracts/ HTTP/1.1" 200 41807
+D:\desktop\rphospital\src\accounts\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\accounts\views.py changed, reloading.
+Watching for file changes with StatReloader
+"POST / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 83693
+"GET /similar-invoices/ HTTP/1.1" 200 108430
+"POST /logout/ HTTP/1.1" 302 0
+"GET / HTTP/1.1" 200 45154
+"GET / HTTP/1.1" 200 45936
+D:\desktop\rphospital\src\accounts\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 45936
+"POST / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 83693
+D:\desktop\rphospital\src\accounts\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /dashboard/ HTTP/1.1" 200 83693
+"POST /logout/ HTTP/1.1" 302 0
+"GET / HTTP/1.1" 200 45954
+"GET /contract-entities/ HTTP/1.1" 302 0
+"GET /login/?next=/contract-entities/ HTTP/1.1" 200 46146
+"POST /login/?next=/contract-entities/ HTTP/1.1" 302 0
+"GET /contract-entities/ HTTP/1.1" 200 67878
+"POST /logout/ HTTP/1.1" 302 0
+"GET / HTTP/1.1" 200 45954

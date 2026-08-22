@@ -1,5 +1,5 @@
 from xml.dom.minidom import Entity
-
+from accounts.decorators import login_required
 from django.db.models.functions import TruncMonth
 from contracts.services.pricing_engine import PricingEngine
 from django.db.models import Count
@@ -103,6 +103,7 @@ from accounts.decorators import (
 
 from accounts.permissions import Permissions
 from accounts.authorization import Authorization
+@login_required
 def home(request):
     return render(
         request,
