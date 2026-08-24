@@ -1,9 +1,6 @@
-# imports/services/update_all_data_service.py
-
 from time import perf_counter
 
 from django.core.management import call_command
-from django.core.management.base import CommandError
 from django.core.cache import cache
 
 from imports.services.excel_provider import ExcelProvider
@@ -11,10 +8,10 @@ from imports.services.progress_service import ProgressService
 from imports.exceptions import TaskCancelled
 
 
-# ✅ الأوامر اللي بتدعم --no-confirm
 COMMANDS_WITH_NO_CONFIRM = [
     "import_report_statistics_sheet15",
 ]
+
 
 IMPORT_COMMANDS = [
     ("Package Catalog", "import_package_catalog"),
@@ -25,6 +22,7 @@ IMPORT_COMMANDS = [
     ("Special Offers", "import_special_offers"),
     ("Service Records", "import_service_records"),
     ("Pricing Details", "import_pricing_details"),
+    ("Pricing Requests", "import_pricing_requests"),
     ("Similar Invoices", "import_similar_invoices"),
     ("Procedures", "import_procedures"),
     ("Medical Procedures", "import_medical_procedures"),
@@ -34,18 +32,34 @@ IMPORT_COMMANDS = [
     ("Report Statistics", "import_report_statistics"),
     ("External Approvals", "import_external_approvals"),
     ("Report Statistics Sheet 15", "import_report_statistics_sheet15"),
-    ("Effective Dates", "import_effective_dates"),  # ✅ إضافة
+    ("Effective Dates", "import_effective_dates"),
 ]
+
 
 POST_IMPORT_COMMANDS = [
     ("Normalize Categories", "normalize_categories"),
 ]
 
 
+# ⚡ تحديث سريع: Sheet 7 + Sheet 12
+QUICK_UPDATE_COMMANDS = [
+    ("Pricing Details", "import_pricing_details"),
+    ("Pricing Requests", "import_pricing_requests"),
+    ("External Approvals", "import_external_approvals"),
+]
+
+
+PACKAGE_COUNT_COMMANDS = {
+    "import_package_catalog",
+    "migrate_contract_entities",
+    "import_cash_packages",
+}
+
+
 class UpdateAllDataService:
 
     @classmethod
-    def run(cls, stdout, progress_callback=None):
+    def run(cls, stdout, progress_callback=None, commands=None):
 
         stdout.write("")
         stdout.write("=" * 70)
@@ -55,20 +69,28 @@ class UpdateAllDataService:
 
         total_start = perf_counter()
 
-        # ✅ مسح Cache الـ Excel
         ExcelProvider.clear_cache()
 
         results = []
-        total_commands = len(IMPORT_COMMANDS) + len(POST_IMPORT_COMMANDS)
+
+        if commands is None:
+            commands = IMPORT_COMMANDS + POST_IMPORT_COMMANDS
+
+        commands = list(commands)
+        total_commands = len(commands)
 
         try:
 
             # ============================================================
-            # ✅ 1. تنفيذ أوامر الاستيراد
+            # تنفيذ الأوامر
             # ============================================================
-            for idx, (title, command_name) in enumerate(IMPORT_COMMANDS):
 
-                # ✅ إذا طلب المستخدم الإلغاء، لا تبدأ أمرًا جديدًا
+            for idx, (title, command_name) in enumerate(commands):
+
+                # --------------------------------------------------------
+                # فحص الإلغاء قبل بدء الأمر
+                # --------------------------------------------------------
+
                 if ProgressService.is_cancel_requested():
                     raise TaskCancelled()
 
@@ -80,151 +102,238 @@ class UpdateAllDataService:
                 stdout.write(f"▶ START : {title}")
                 stdout.flush()
 
-                # ✅ عرض اسم الأمر قبل التنفيذ
-                stdout.write(f"RUNNING => {command_name}")
+                stdout.write(
+                    f"RUNNING => {command_name}"
+                )
                 stdout.flush()
 
                 start = perf_counter()
 
                 try:
 
+                    # ----------------------------------------------------
+                    # تشغيل Command
+                    # ----------------------------------------------------
+
                     if command_name in COMMANDS_WITH_NO_CONFIRM:
+
                         call_command(
                             command_name,
                             stdout=stdout,
                             no_confirm=True,
                         )
+
                     else:
+
                         call_command(
                             command_name,
                             stdout=stdout,
                         )
 
-                    # ✅ عرض اسم الأمر بعد الانتهاء
-                    stdout.write(f"FINISHED => {command_name}")
+                    stdout.write(
+                        f"FINISHED => {command_name}"
+                    )
                     stdout.flush()
 
-                    # ✅ إضافة Package Count بعد أوامر معينة
-                    if title == "Package Catalog":
-                        from medical_catalog.models import Package
-                        stdout.write(f"Packages Count = {Package.objects.count()}")
-                    elif title == "Contract Migration":
-                        from medical_catalog.models import Package
-                        stdout.write(f"Packages Count = {Package.objects.count()}")
-                    elif title == "Cash Packages":
-                        from medical_catalog.models import Package
-                        stdout.write(f"Packages Count = {Package.objects.count()}")
+                    # ----------------------------------------------------
+                    # Package Count
+                    # ----------------------------------------------------
 
-                    # ✅ فحص الإلغاء بعد انتهاء الأمر الحالي
+                    if command_name in PACKAGE_COUNT_COMMANDS:
+
+                        from medical_catalog.models import Package
+
+                        stdout.write(
+                            f"Packages Count = "
+                            f"{Package.objects.count()}"
+                        )
+
+                    # ----------------------------------------------------
+                    # فحص الإلغاء بعد انتهاء الأمر
+                    # ----------------------------------------------------
+
                     if ProgressService.is_cancel_requested():
                         raise TaskCancelled()
 
                     elapsed = perf_counter() - start
-                    results.append({"title": title, "status": "✅", "time": elapsed})
-                    stdout.write(f"✅ END : {title} ({elapsed:.2f} sec)")
 
-                except TaskCancelled:
-                    raise
+                    results.append({
+                        "title": title,
+                        "status": "✅",
+                        "time": elapsed,
+                    })
 
-                except Exception as exc:
-
-                    elapsed = perf_counter() - start
-                    results.append({"title": title, "status": "❌", "time": elapsed})
-                    stdout.write(f"❌ {title} Failed")
-                    stdout.write(f"   Error: {str(exc)}")
-                    stdout.write("   Continuing with remaining commands...")
-
-                stdout.flush()
-
-            # ============================================================
-            # ✅ 2. تنفيذ أوامر ما بعد الاستيراد (توحيد البيانات)
-            # ============================================================
-            stdout.write("")
-            stdout.write("=" * 70)
-            stdout.write("📋 POST-IMPORT: توحيد البيانات...")
-            stdout.write("=" * 70)
-
-            for idx, (title, command_name) in enumerate(POST_IMPORT_COMMANDS):
-
-                # ✅ إذا طلب المستخدم الإلغاء، لا تبدأ أمرًا جديدًا
-                if ProgressService.is_cancel_requested():
-                    raise TaskCancelled()
-
-                if progress_callback:
-                    progress_callback(title, len(IMPORT_COMMANDS) + idx)
-
-                stdout.write("")
-                stdout.write("-" * 70)
-                stdout.write(f"▶ START : {title}")
-                stdout.flush()
-
-                start = perf_counter()
-
-                try:
-                    call_command(
-                        command_name,
-                        stdout=stdout,
+                    stdout.write(
+                        f"✅ END : "
+                        f"{title} "
+                        f"({elapsed:.2f} sec)"
                     )
 
-                    # ✅ فحص الإلغاء بعد انتهاء الأمر الحالي
-                    if ProgressService.is_cancel_requested():
-                        raise TaskCancelled()
-
-                    elapsed = perf_counter() - start
-                    results.append({"title": title, "status": "✅", "time": elapsed})
-                    stdout.write(f"✅ END : {title} ({elapsed:.2f} sec)")
-
                 except TaskCancelled:
                     raise
 
                 except Exception as exc:
 
                     elapsed = perf_counter() - start
-                    results.append({"title": title, "status": "⚠️", "time": elapsed})
-                    stdout.write(f"⚠️ {title} Failed (skipping)")
-                    stdout.write(f"   Error: {str(exc)}")
-                    stdout.write("   Continuing with remaining commands...")
+
+                    results.append({
+                        "title": title,
+                        "status": "❌",
+                        "time": elapsed,
+                        "error": str(exc),
+                    })
+
+                    stdout.write(
+                        f"❌ {title} Failed"
+                    )
+
+                    stdout.write(
+                        f"   Error: {str(exc)}"
+                    )
+
+                    stdout.write(
+                        "   Continuing with remaining commands..."
+                    )
 
                 stdout.flush()
 
         finally:
 
-            # ✅ مسح Cache الـ Excel
+            # ============================================================
+            # تنظيف الـCache
+            # ============================================================
+
             ExcelProvider.clear_cache()
 
-            # ✅ مسح Cache الـ Django بالكامل
             try:
-                cache.clear()
-                stdout.write("\n✅ Django cache cleared successfully")
-            except Exception as e:
-                stdout.write(f"\n⚠️ Failed to clear Django cache: {str(e)}")
 
-            # ✅ مسح Cache المخصص للشركات والباكدجات (باستخدام delete فقط)
-            try:
-                cache.delete('active_companies_list')
-                # ✅ مسح كل مفاتيح Cache اللي تبدأ بـ packages_company_
-                from django.core.cache import caches
-                for key in list(cache._cache.keys()):
-                    if key.startswith('packages_company_') or key.startswith('specialties_company_'):
-                        cache.delete(key)
-                stdout.write("\n✅ Company packages cache cleared successfully")
+                cache.clear()
+
+                stdout.write(
+                    "\n✅ Django cache cleared successfully"
+                )
+
             except Exception as e:
-                stdout.write(f"\n⚠️ Failed to clear company cache: {str(e)}")
+
+                stdout.write(
+                    "\n⚠️ Failed to clear Django cache: "
+                    f"{str(e)}"
+                )
+
+            try:
+
+                cache.delete(
+                    "active_companies_list"
+                )
+
+                from django.core.cache import caches
+
+                for key in list(cache._cache.keys()):
+
+                    if (
+                        key.startswith("packages_company_")
+                        or
+                        key.startswith("specialties_company_")
+                    ):
+                        cache.delete(key)
+
+                stdout.write(
+                    "\n✅ Company packages cache cleared successfully"
+                )
+
+            except Exception as e:
+
+                stdout.write(
+                    "\n⚠️ Failed to clear company cache: "
+                    f"{str(e)}"
+                )
 
             if progress_callback:
-                progress_callback("✅ تم الانتهاء", total_commands)
+                progress_callback(
+                    "✅ تم الانتهاء",
+                    total_commands
+                )
+
+        # ================================================================
+        # تحليل النتيجة النهائية
+        # ================================================================
 
         total_elapsed = perf_counter() - total_start
 
+        success_count = sum(
+            1
+            for result in results
+            if result["status"] == "✅"
+        )
+
+        failed_count = sum(
+            1
+            for result in results
+            if result["status"] == "❌"
+        )
+
+        has_errors = failed_count > 0
+
+        # ================================================================
+        # الرسالة النهائية
+        # ================================================================
+
         stdout.write("")
         stdout.write("=" * 70)
-        stdout.write("✓ ALL IMPORTS COMPLETED SUCCESSFULLY")
-        stdout.write(f"Total Time : {total_elapsed:.2f} sec")
+
+        if has_errors:
+
+            stdout.write(
+                "⚠️ UPDATE COMPLETED WITH ERRORS"
+            )
+
+        else:
+
+            stdout.write(
+                "✓ ALL IMPORTS COMPLETED SUCCESSFULLY"
+            )
+
+        stdout.write(
+            f"Total Time : "
+            f"{total_elapsed:.2f} sec"
+        )
+
         stdout.write("=" * 70)
+
+        # ================================================================
+        # SUMMARY
+        # ================================================================
 
         stdout.write("")
         stdout.write("📊 SUMMARY:")
-        for r in results:
-            stdout.write(f"   {r['status']} {r['title']} ({r['time']:.2f}s)")
+
+        for result in results:
+
+            stdout.write(
+                f"   {result['status']} "
+                f"{result['title']} "
+                f"({result['time']:.2f}s)"
+            )
+
+            if result.get("error"):
+
+                stdout.write(
+                    f"      Error: "
+                    f"{result['error']}"
+                )
+
         stdout.write("=" * 70)
         stdout.write("")
+
+        # ================================================================
+        # Return للـCelery Task
+        # ================================================================
+
+        return {
+            "results": results,
+            "total": total_commands,
+            "success_count": success_count,
+            "failed_count": failed_count,
+            "success": not has_errors,
+            "total_time": total_elapsed,
+        }

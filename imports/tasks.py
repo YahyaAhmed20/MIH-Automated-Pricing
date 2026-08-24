@@ -1,5 +1,7 @@
 from io import StringIO
+import threading
 import time
+
 from celery import shared_task
 from django.core.cache import cache
 
@@ -8,103 +10,288 @@ from imports.services.update_all_data_service import (
     UpdateAllDataService,
     IMPORT_COMMANDS,
     POST_IMPORT_COMMANDS,
+    QUICK_UPDATE_COMMANDS,
 )
 from imports.exceptions import TaskCancelled
 
 
+HEARTBEAT_INTERVAL = 10
+
+
 @shared_task(bind=True)
-def update_all_data_task(self):
-    
+def update_all_data_task(
+    self,
+    update_type="full",
+):
+    """
+    تنفيذ تحديث بيانات النظام.
+
+    Lifecycle:
+
+        QUEUED
+           ↓
+        RUNNING
+           ↓
+        COMPLETED / ERROR / CANCELLED
+
+    ملاحظة:
+    الـView هو المسؤول عن تسجيل QUEUED.
+    الـCelery Worker هو المسؤول عن تحويلها إلى RUNNING.
+    """
+
     output = StringIO()
-    
-    total = len(IMPORT_COMMANDS) + len(POST_IMPORT_COMMANDS)
-    
-    # ✅ إعادة تعيين التقدم
-    ProgressService.reset()
-    
-    # ✅ ضبط الحالة الأولية
-    ProgressService.update(
-        status="running",
-        is_running=True,
+
+    # ============================================================
+    # تحديد الأوامر
+    # ============================================================
+
+    if update_type == "quick":
+        commands = QUICK_UPDATE_COMMANDS
+    else:
+        commands = IMPORT_COMMANDS + POST_IMPORT_COMMANDS
+
+    commands = list(commands)
+    total = len(commands)
+
+    task_id = self.request.id
+
+    # ============================================================
+    # Worker بدأ فعليًا
+    # ============================================================
+
+    ProgressService.mark_running(
+        task_id=task_id,
+        update_type=update_type,
         total=total,
-        logs=None,
-        completed=0,
-        current_command="⏳ جاري التهيئة...",
     )
-    
+
+    # ============================================================
+    # Heartbeat Thread
+    # ============================================================
+
+    heartbeat_stop = threading.Event()
+
+    def heartbeat_loop():
+        """
+        تحديث heartbeat بشكل مستقل أثناء تنفيذ الـimports.
+
+        مهم:
+        الـcommand الواحد ممكن يستغرق أكثر من 60 ثانية،
+        لذلك لا نعتمد على progress_callback وحده.
+        """
+
+        while not heartbeat_stop.wait(HEARTBEAT_INTERVAL):
+
+            try:
+
+                # لو العملية انتهت، لا داعي لأي heartbeat إضافي
+                progress = ProgressService.get()
+
+                if progress.get("task_id") != task_id:
+                    break
+
+                if progress.get("status") != "running":
+                    break
+
+                ProgressService.heartbeat()
+
+            except Exception as exc:
+
+                print(
+                    f"⚠️ Heartbeat thread error: {exc}"
+                )
+
+    heartbeat_thread = threading.Thread(
+        target=heartbeat_loop,
+        name=f"update-heartbeat-{task_id}",
+        daemon=True,
+    )
+
+    heartbeat_thread.start()
+
+    # ============================================================
+    # Main Task
+    # ============================================================
+
     try:
-        
-        def progress_callback(command_name, completed):
-            # ✅ التحقق من طلب الإلغاء
+
+        # ========================================================
+        # Progress Callback
+        # ========================================================
+
+        def progress_callback(
+            command_name,
+            completed,
+        ):
+            """
+            يتم استدعاؤها من UpdateAllDataService
+            قبل كل Command.
+            """
+
+            # ----------------------------------------------------
+            # Check Cancel
+            # ----------------------------------------------------
+
             if ProgressService.is_cancel_requested():
                 raise TaskCancelled()
-            
-            # ✅ تأخير بسيط لتقليل الضغط على Redis
-            time.sleep(0.05)
-            
-            # ✅ تحديث التقدم
+
+            # ----------------------------------------------------
+            # Heartbeat فوري
+            # ----------------------------------------------------
+
+            ProgressService.heartbeat()
+
+            # ----------------------------------------------------
+            # تحديث Progress
+            # ----------------------------------------------------
+
             ProgressService.update(
                 current_command=command_name,
                 completed=completed,
+                total=total,
             )
-        
-        # ✅ تشغيل التحديث
-        UpdateAllDataService.run(
+
+        # ========================================================
+        # تشغيل الـImports
+        # ========================================================
+
+        run_result = UpdateAllDataService.run(
             stdout=output,
             progress_callback=progress_callback,
+            commands=commands,
         )
-        
+
         logs = output.getvalue()
-        
-        # ✅ مسح الـ Cache
+
+        results = run_result["results"]
+        has_errors = not run_result["success"]
+
+        # ========================================================
+        # Cache
+        # ========================================================
+
         try:
+
             cache.clear()
-            logs += "\n\n✅ تم مسح الـ Cache بنجاح"
+
+            logs += (
+                "\n\n"
+                "✅ تم مسح الـ Cache بنجاح"
+            )
+
         except Exception as e:
-            logs += f"\n\n⚠️ فشل مسح الـ Cache: {str(e)}"
-        
-        # ✅ تحديث الحالة النهائية
-        ProgressService.update(
-            status="completed",
-            is_running=False,
-            completed=total,
-            total=total,
-            logs=logs,
-            current_command="✅ تم الانتهاء من جميع الأوامر بنجاح!",
-        )
-        
+
+            logs += (
+                "\n\n"
+                f"⚠️ فشل مسح الـ Cache: {str(e)}"
+            )
+
+        # ========================================================
+        # إيقاف Heartbeat
+        # ========================================================
+
+        heartbeat_stop.set()
+
+        # ========================================================
+        # Final State
+        # ========================================================
+
+        if has_errors:
+
+            ProgressService.mark_error(
+                message="اكتمل التحديث مع وجود أخطاء.",
+                logs=logs,
+                results=results,
+            )
+
+            ProgressService.update(
+                completed=total,
+                total=total,
+                current_command=(
+                    "⚠️ اكتمل التحديث مع وجود أخطاء"
+                ),
+                update_type=update_type,
+            )
+
+        else:
+
+            ProgressService.update(
+                completed=total,
+                total=total,
+                update_type=update_type,
+            )
+
+            ProgressService.mark_completed(
+                logs=logs,
+                results=results,
+            )
+
+            # ----------------------------------------------------
+            # حفظ آخر تحديث ناجح
+            # ----------------------------------------------------
+
+            ProgressService.set_last_successful_update(
+                update_type=update_type
+            )
+
         return {
-            "status": "success",
+            "status": (
+                "error"
+                if has_errors
+                else "success"
+            ),
+            "update_type": update_type,
             "logs": logs,
+            "results": results,
         }
-        
+
+    # ============================================================
+    # CANCELLED
+    # ============================================================
+
     except TaskCancelled:
-        
+
+        heartbeat_stop.set()
+
         logs = output.getvalue()
-        
-        # ✅ تحديث حالة الإلغاء
-        ProgressService.update(
-            status="cancelled",
-            is_running=False,
-            completed=ProgressService.get().get("completed", 0),
-            logs=logs + "\n\n🛑 تم إلغاء العملية بواسطة المستخدم.",
-            current_command="🛑 تم الإلغاء",
+
+        logs += (
+            "\n\n"
+            "🛑 تم إلغاء العملية بواسطة المستخدم."
         )
-        
+
+        ProgressService.mark_cancelled(
+            logs=logs,
+        )
+
         return {
             "status": "cancelled",
+            "update_type": update_type,
         }
-        
+
+    # ============================================================
+    # UNEXPECTED ERROR
+    # ============================================================
+
     except Exception as exc:
-        
-        error_logs = output.getvalue()
-        
-        # ✅ تحديث حالة الخطأ
-        ProgressService.update(
-            status="error",
-            is_running=False,
-            logs=error_logs + f"\n\n❌ خطأ: {exc}",
-            current_command=f"❌ خطأ: {str(exc)[:50]}...",
+
+        heartbeat_stop.set()
+
+        logs = output.getvalue()
+
+        logs += (
+            "\n\n"
+            f"❌ خطأ: {exc}"
         )
-        
+
+        ProgressService.mark_error(
+            message=str(exc),
+            logs=logs,
+        )
+
         raise
+
+    finally:
+
+        # ضمان إيقاف الـheartbeat مهما حصل
+        heartbeat_stop.set()

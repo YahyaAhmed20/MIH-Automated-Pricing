@@ -152,6 +152,23 @@
     }
 
     /* ✅ تحسين الأزرار */
+    .btn-primary {
+        background: linear-gradient(135deg, #0d6efd, #0dcaf0);
+        border: none;
+        box-shadow: 0 4px 15px rgba(13, 110, 253, 0.3);
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 30px rgba(13, 110, 253, 0.4);
+    }
+
+    .btn-primary:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+        transform: none !important;
+    }
+
     .btn-success {
         background: linear-gradient(135deg, #28a745, #20c997);
         border: none;
@@ -317,6 +334,48 @@
 
                 <hr>
 
+                <!-- ✅ آخر تحديث ناجح -->
+                <div
+                    id="lastSuccessfulUpdateCard"
+                    class="alert alert-light border shadow-sm d-flex align-items-center justify-content-between mb-4"
+                >
+                    <div class="d-flex align-items-center">
+                        <div class="me-3" style="font-size: 24px;">
+                            🕐
+                        </div>
+
+                        <div>
+                            <div class="fw-bold">
+                                آخر تحديث ناجح
+                            </div>
+
+                            <small
+                                id="lastSuccessfulUpdateText"
+                                class="text-muted"
+                            >
+                                {% if last_successful_update %}
+                                    {{ last_successful_update.display }}
+                                {% else %}
+                                    لم يتم تنفيذ أي تحديث ناجح حتى الآن
+                                {% endif %}
+                            </small>
+                        </div>
+                    </div>
+
+                    <span
+                        id="lastSuccessfulUpdateType"
+                        class="badge bg-primary"
+                    >
+                        {% if last_successful_update %}
+                            {% if last_successful_update.update_type == "quick" %}
+                                ⚡ تحديث سريع
+                            {% else %}
+                                🔄 تحديث كامل
+                            {% endif %}
+                        {% endif %}
+                    </span>
+                </div>
+
                 <div class="row text-center">
 
                     <div class="col-md-3">
@@ -334,7 +393,7 @@
                     <div class="col-md-3">
 
                         <h5>
-                            {{ total_commands|default:18 }}
+                            {{ total_commands|default:0 }}
                         </h5>
 
                         <small class="text-muted">
@@ -377,10 +436,30 @@
 
                         {% csrf_token %}
 
+                        <!-- ⚡ Quick Update -->
+                        <button
+                            id="quickUpdateButton"
+                            type="button"
+                            class="btn btn-primary btn-lg px-4">
+
+                            <i class="bi bi-lightning-charge-fill"></i>
+
+                            تحديث سريع
+
+                            <small
+                                class="d-block"
+                                style="font-size: 11px;"
+                            >
+                                Sheet 7 + Sheet 12
+                            </small>
+
+                        </button>
+
+                        <!-- 🔄 Full Update -->
                         <button
                             id="updateButton"
-                            type="submit"
-                            class="btn btn-success btn-lg px-5">
+                            type="button"
+                            class="btn btn-success btn-lg px-4 ms-2">
 
                             <i class="bi bi-arrow-repeat"></i>
 
@@ -388,10 +467,11 @@
 
                         </button>
 
+                        <!-- 🛑 Cancel -->
                         <button
                             id="cancelButton"
                             type="button"
-                            class="btn btn-cancel btn-lg px-5 ms-2 d-none">
+                            class="btn btn-cancel btn-lg px-4 ms-2 d-none">
 
                             <i class="bi bi-x-circle"></i>
 
@@ -511,6 +591,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const form = document.getElementById('updateForm');
     const button = document.getElementById('updateButton');
+    const quickUpdateButton = document.getElementById('quickUpdateButton');
     const cancelButton = document.getElementById('cancelButton');
     const statusBadge = document.getElementById('statusBadge');
     const progressContainer = document.getElementById('progressContainer');
@@ -521,29 +602,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const logsCard = document.getElementById('logsCard');
     const logsContent = document.getElementById('logsContent');
 
-    // ✅ أسماء الأوامر بالترتيب (18 أمر)
-    const COMMANDS = [
-        'Package Catalog',
-        'Cash Packages',
-        'Contract Migration',
-        'Company Contracts',
-        'Company Discounts',
-        'Special Offers',
-        'Service Records',
-        'Pricing Details',
-        'Similar Invoices',
-        'Procedures',
-        'Medical Procedures',
-        'Procedure Fees',
-        'Company Discount Rank',
-        'Company Exceptions',
-        'Report Statistics',
-        'External Approvals',
-        'Report Statistics Sheet 15',
-        'Normalize Categories'
-    ];
-
-    const totalCommands = {{ total_commands|default:18 }};
+    // ✅ المتغيرات
+    let totalCommands = {{ total_commands|default:0 }};
+    let selectedUpdateType = 'full';
     let progressInterval = null;
     let checkInterval = null;
     let startTime = null;
@@ -564,9 +625,15 @@ document.addEventListener('DOMContentLoaded', function() {
         completed,
         currentCommand,
         isRunning,
-        status
+        status,
+        total
     ) {
-        const progress = Math.min(Math.round((completed / totalCommands) * 100), 100);
+        totalCommands = Number(total) || 1;
+
+        const progress = Math.min(
+            Math.round((completed / totalCommands) * 100),
+            100
+        );
         progressBar.style.width = progress + '%';
         progressBar.innerHTML = progress + '%';
 
@@ -580,6 +647,8 @@ document.addEventListener('DOMContentLoaded', function() {
             statusBadge.className = 'text-success';
             button.disabled = false;
             button.innerHTML = '<i class="bi bi-arrow-repeat"></i> تحديث جميع البيانات';
+            quickUpdateButton.disabled = false;
+            quickUpdateButton.innerHTML = '<i class="bi bi-lightning-charge-fill"></i> تحديث سريع <small class="d-block" style="font-size: 11px;">Sheet 7 + Sheet 12</small>';
             cancelButton.classList.add('d-none');
             clearInterval(checkInterval);
             clearInterval(timerInterval);
@@ -611,6 +680,8 @@ document.addEventListener('DOMContentLoaded', function() {
             statusBadge.className = 'text-warning';
             button.disabled = false;
             button.innerHTML = '<i class="bi bi-arrow-repeat"></i> إعادة المحاولة';
+            quickUpdateButton.disabled = false;
+            quickUpdateButton.innerHTML = '<i class="bi bi-lightning-charge-fill"></i> تحديث سريع <small class="d-block" style="font-size: 11px;">Sheet 7 + Sheet 12</small>';
             cancelButton.classList.add('d-none');
             clearInterval(checkInterval);
             clearInterval(timerInterval);
@@ -642,6 +713,8 @@ document.addEventListener('DOMContentLoaded', function() {
             statusBadge.className = 'text-danger';
             button.disabled = false;
             button.innerHTML = '<i class="bi bi-arrow-repeat"></i> إعادة المحاولة';
+            quickUpdateButton.disabled = false;
+            quickUpdateButton.innerHTML = '<i class="bi bi-lightning-charge-fill"></i> تحديث سريع <small class="d-block" style="font-size: 11px;">Sheet 7 + Sheet 12</small>';
             cancelButton.classList.add('d-none');
             clearInterval(checkInterval);
             clearInterval(timerInterval);
@@ -663,7 +736,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // ✅ إذا كان التحديث جاري
         if (isRunning) {
-            const currentName = currentCommand || COMMANDS[completed] || '...';
+            const currentName = currentCommand || '...';
             progressText.innerHTML = `⏳ جاري التنفيذ: ${currentName} (${completed}/${totalCommands})`;
             progressDetail.innerHTML = `تم تنفيذ ${completed} من ${totalCommands} أمر`;
             
@@ -694,7 +767,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     completed,
                     currentCommand,
                     isRunning,
-                    status
+                    status,
+                    data.total || totalCommands
                 );
                 
                 // ✅ إذا انتهى التحديث، نوقف الـ polling
@@ -708,21 +782,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             })
             .catch(error => {
-                console.error('Error fetching progress:', error);
-                // ✅ Fallback: زيادة تدريجية وهمية
-                if (!progressInterval) {
-                    let fakeProgress = parseInt(progressBar.innerHTML) || 0;
-                    progressInterval = setInterval(function() {
-                        fakeProgress = Math.min(fakeProgress + 1, 95);
-                        progressBar.style.width = fakeProgress + '%';
-                        progressBar.innerHTML = fakeProgress + '%';
-                        if (fakeProgress >= 95) {
-                            clearInterval(progressInterval);
-                            progressInterval = null;
-                        }
-                    }, 3000);
-                }
-            })
+    console.error('Error fetching progress:', error);
+})
             .finally(() => {
                 isFetching = false;
             });
@@ -765,87 +826,78 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // ✅ عند إرسال الفورم باستخدام fetch
-    form.addEventListener('submit', function(e) {
-        e.preventDefault();
-
-        if (button.disabled) {
+    // ✅ دالة بدء التحديث
+    function startUpdate(updateType) {
+        if (button.disabled && quickUpdateButton.disabled) {
             return;
         }
 
-        // ✅ تعطيل الزر وتحديث واجهة المستخدم
+        selectedUpdateType = updateType;
+
+        // ✅ تعطيل الأزرار
         button.disabled = true;
-        button.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> جاري التحديث...';
+        quickUpdateButton.disabled = true;
+
+        button.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> ' + (updateType === 'quick' ? 'جاري التحديث السريع...' : 'جاري التحديث الكامل...');
+        quickUpdateButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> ' + (updateType === 'quick' ? 'جاري التحديث السريع...' : 'جاري التحديث الكامل...');
+
         cancelButton.classList.remove('d-none');
         cancelButton.disabled = false;
         cancelButton.innerHTML = '<i class="bi bi-x-circle"></i> إلغاء التحديث';
         cancelButton.onclick = requestCancel;
-        statusBadge.innerHTML = '🔄 جاري التحديث';
+
+        statusBadge.innerHTML = updateType === 'quick' ? '⚡ تحديث سريع' : '🔄 تحديث كامل';
         statusBadge.className = 'text-warning';
+
         progressContainer.classList.remove('d-none');
         progressBar.style.width = '0%';
         progressBar.innerHTML = '0%';
         progressBar.classList.remove('bg-danger', 'bg-warning');
         progressBar.classList.add('bg-success', 'progress-bar-animated');
-        progressText.innerHTML = '⏳ جاري التحديث...';
-        progressDetail.innerHTML = 'بدء التنفيذ...';
-        
-        // ✅ إخفاء الـ Logs أثناء التحديث
+
+        progressText.innerHTML = updateType === 'quick' ? '⚡ بدء التحديث السريع...' : '⏳ بدء التحديث الكامل...';
+        progressDetail.innerHTML = 'جاري تجهيز العملية...';
+
         logsCard.style.display = 'none';
 
-        // ✅ بدء计时器
         startTime = Date.now();
-        if (timerInterval) clearInterval(timerInterval);
+        if (timerInterval) {
+            clearInterval(timerInterval);
+        }
         timerInterval = setInterval(updateTimer, 1000);
 
-        // ✅ إرسال الطلب بـ fetch
         const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
         const formData = new FormData(form);
+        formData.set('update_type', updateType);
 
         fetch(window.location.pathname, {
-            method: "POST",
+            method: 'POST',
             body: formData,
             headers: {
-                "X-CSRFToken": csrfToken
+                'X-CSRFToken': csrfToken
             }
         })
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                // ✅ بدء التحقق من التقدم
-                if (checkInterval) clearInterval(checkInterval);
-                setTimeout(checkProgress, 500);
+                if (data.update_type === 'quick') {
+                    progressDetail.innerHTML = 'Sheet 7 + Sheet 12';
+                }
+
+                if (checkInterval) {
+                    clearInterval(checkInterval);
+                }
+                setTimeout(checkProgress, 300);
                 checkInterval = setInterval(checkProgress, 2000);
             } else {
-                // ✅ فشل بدء المهمة
                 handleError(data.message || 'حدث خطأ أثناء بدء التحديث');
             }
         })
         .catch(error => {
             console.error('Fetch error:', error);
-            handleError('فشل الاتصال بالخادم. تأكد من اتصال الإنترنت.');
+            handleError('فشل الاتصال بالخادم.');
         });
-
-        // ✅ Auto-cleanup بعد 10 دقائق
-        setTimeout(function() {
-            if (checkInterval) {
-                clearInterval(checkInterval);
-                checkInterval = null;
-            }
-            if (progressInterval) {
-                clearInterval(progressInterval);
-                progressInterval = null;
-            }
-            if (timerInterval) {
-                clearInterval(timerInterval);
-                timerInterval = null;
-            }
-            if (!progressBar.innerHTML.includes('100%') && !progressBar.innerHTML.includes('❌') && !progressBar.innerHTML.includes('🛑')) {
-                progressText.innerHTML = '⏳ جاري التحديث (قد يستغرق وقتاً أطول)...';
-                progressDetail.innerHTML = 'العملية ما زالت قيد التنفيذ';
-            }
-        }, 600000);
-    });
+    }
 
     // ✅ دالة معالجة الأخطاء
     function handleError(message) {
@@ -855,6 +907,8 @@ document.addEventListener('DOMContentLoaded', function() {
         statusBadge.className = 'text-danger';
         button.disabled = false;
         button.innerHTML = '<i class="bi bi-arrow-repeat"></i> إعادة المحاولة';
+        quickUpdateButton.disabled = false;
+        quickUpdateButton.innerHTML = '<i class="bi bi-lightning-charge-fill"></i> تحديث سريع <small class="d-block" style="font-size: 11px;">Sheet 7 + Sheet 12</small>';
         cancelButton.classList.add('d-none');
         progressBar.classList.remove('progress-bar-animated');
         progressBar.classList.add('bg-danger');
@@ -863,6 +917,15 @@ document.addEventListener('DOMContentLoaded', function() {
         clearInterval(timerInterval);
         clearInterval(checkInterval);
     }
+
+    // ✅ مستمعي الأحداث
+    quickUpdateButton.addEventListener('click', function() {
+        startUpdate('quick');
+    });
+
+    button.addEventListener('click', function() {
+        startUpdate('full');
+    });
 
     // ✅ مسح السجل
     window.clearLogs = function() {
@@ -882,9 +945,7 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                // ✅ إخفاء الـ Logs مباشرة
                 logsCard.style.display = 'none';
-                // ✅ عرض رسالة نجاح
                 const alertDiv = document.createElement('div');
                 alertDiv.className = 'alert alert-success alert-dismissible fade show mt-3';
                 alertDiv.innerHTML = `
@@ -892,8 +953,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 `;
                 document.querySelector('.col-lg-8').appendChild(alertDiv);
-                
-                // ✅ إخفاء الرسالة بعد 3 ثواني
                 setTimeout(() => {
                     alertDiv.remove();
                 }, 3000);
@@ -936,6 +995,8 @@ document.addEventListener('DOMContentLoaded', function() {
             statusBadge.className = 'text-warning';
             button.disabled = false;
             button.innerHTML = '<i class="bi bi-arrow-repeat"></i> إعادة المحاولة';
+            quickUpdateButton.disabled = false;
+            quickUpdateButton.innerHTML = '<i class="bi bi-lightning-charge-fill"></i> تحديث سريع <small class="d-block" style="font-size: 11px;">Sheet 7 + Sheet 12</small>';
             cancelButton.classList.add('d-none');
             logsCard.style.display = 'block';
         } else if (status === "error") {
@@ -949,6 +1010,8 @@ document.addEventListener('DOMContentLoaded', function() {
             statusBadge.className = 'text-danger';
             button.disabled = false;
             button.innerHTML = '<i class="bi bi-arrow-repeat"></i> إعادة المحاولة';
+            quickUpdateButton.disabled = false;
+            quickUpdateButton.innerHTML = '<i class="bi bi-lightning-charge-fill"></i> تحديث سريع <small class="d-block" style="font-size: 11px;">Sheet 7 + Sheet 12</small>';
             cancelButton.classList.add('d-none');
             logsCard.style.display = 'block';
         } else if (status === "completed") {
@@ -962,9 +1025,9 @@ document.addEventListener('DOMContentLoaded', function() {
             statusBadge.className = 'text-success';
             button.disabled = false;
             button.innerHTML = '<i class="bi bi-arrow-repeat"></i> تحديث جميع البيانات';
+            quickUpdateButton.disabled = false;
+            quickUpdateButton.innerHTML = '<i class="bi bi-lightning-charge-fill"></i> تحديث سريع <small class="d-block" style="font-size: 11px;">Sheet 7 + Sheet 12</small>';
             cancelButton.classList.add('d-none');
-            
-            // ✅ إظهار الـ Logs
             logsCard.style.display = 'block';
         }
     }, 500);
@@ -974,7 +1037,9 @@ document.addEventListener('DOMContentLoaded', function() {
     {% if is_running %}
     progressContainer.classList.remove('d-none');
     button.disabled = true;
-    button.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> جاري التحديث...';
+    button.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> جاري التحديث...';
+    quickUpdateButton.disabled = true;
+    quickUpdateButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> جاري التحديث...';
     cancelButton.classList.remove('d-none');
     cancelButton.disabled = false;
     cancelButton.innerHTML = '<i class="bi bi-x-circle"></i> إلغاء التحديث';
@@ -985,8 +1050,6 @@ document.addEventListener('DOMContentLoaded', function() {
     timerInterval = setInterval(updateTimer, 1000);
     checkInterval = setInterval(checkProgress, 2000);
     setTimeout(checkProgress, 500);
-    
-    // ✅ إخفاء الـ Logs أثناء التحديث
     logsCard.style.display = 'none';
     {% endif %}
 
@@ -1013,8 +1076,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 try {
                     const data = JSON.parse(event.data);
                     console.log('📡 SSE received:', data);
-                    
-                    // ✅ تحديث الـ UI باستخدام البيانات من SSE
                     updateUIFromSSE(data);
                 } catch (e) {
                     console.error('SSE parse error:', e);
@@ -1023,8 +1084,6 @@ document.addEventListener('DOMContentLoaded', function() {
             
             sseConnection.onerror = function(error) {
                 console.log('⚠️ SSE error:', error);
-                
-                // ✅ حاول إعادة الاتصال بعد 5 ثواني
                 setTimeout(function() {
                     console.log('🔄 Reconnecting SSE...');
                     if (sseConnection) {
@@ -1052,8 +1111,33 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function updateUIFromSSE(data) {
+        // ✅ تحديث آخر تحديث ناجح
+        const lastUpdate = data.last_successful_update;
+
+        const lastUpdateText = document.getElementById(
+            'lastSuccessfulUpdateText'
+        );
+
+        const lastUpdateType = document.getElementById(
+            'lastSuccessfulUpdateType'
+        );
+
+        if (lastUpdate && lastUpdateText) {
+            lastUpdateText.textContent = lastUpdate.display;
+
+            if (lastUpdateType) {
+                if (lastUpdate.update_type === 'quick') {
+                    lastUpdateType.innerHTML = '⚡ تحديث سريع';
+                    lastUpdateType.className = 'badge bg-primary';
+                } else {
+                    lastUpdateType.innerHTML = '🔄 تحديث كامل';
+                    lastUpdateType.className = 'badge bg-success';
+                }
+            }
+        }
+
         const completed = data.completed || 0;
-        const total = data.total || 18;
+        const total = Number(data.total) || 0;
         const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
         const status = data.status || 'idle';
         const currentCommand = data.current_command || '';
@@ -1087,12 +1171,15 @@ document.addEventListener('DOMContentLoaded', function() {
         const progressDetail = document.getElementById('progressDetail');
         const statusBadge = document.getElementById('statusBadge');
         const updateButton = document.getElementById('updateButton');
+        const quickUpdateButton = document.getElementById('quickUpdateButton');
         const cancelButton = document.getElementById('cancelButton');
         const logsCard = document.getElementById('logsCard');
         const logsContent = document.getElementById('logsContent');
         
         if (progressText) {
-            if (status === 'running') {
+            if (status === 'queued') {
+                progressText.innerHTML = '⏳ العملية في انتظار Celery...';
+            } else if (status === 'running') {
                 progressText.innerHTML = `⏳ جاري التنفيذ: ${currentCommand || '...'} (${completed}/${total})`;
             } else if (status === 'completed') {
                 progressText.innerHTML = '✅ تم الانتهاء من جميع الأوامر بنجاح!';
@@ -1104,7 +1191,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         if (progressDetail) {
-            if (status === 'running') {
+            if (status === 'queued') {
+                progressDetail.innerHTML = '📋 تم إرسال العملية إلى Celery، في انتظار بدء التنفيذ...';
+            } else if (status === 'running') {
                 progressDetail.innerHTML = `تم تنفيذ ${completed} من ${total} أمر`;
             } else if (status === 'completed') {
                 progressDetail.innerHTML = '🎉 اكتمل التحديث';
@@ -1119,6 +1208,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (statusBadge) {
             const statusMap = {
                 'idle': '✅ جاهز',
+                'queued': '⏳ في الانتظار',
                 'running': '🔄 جاري التحديث',
                 'completed': '✅ مكتمل',
                 'cancelled': '🛑 ملغي',
@@ -1128,6 +1218,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             const classMap = {
                 'idle': 'text-success',
+                'queued': 'text-info',
                 'running': 'text-warning',
                 'completed': 'text-success',
                 'cancelled': 'text-warning',
@@ -1138,15 +1229,22 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // ✅ تحديث الأزرار
         if (updateButton) {
-            if (status === 'running') {
+            if (status === 'running' || status === 'queued') {
                 updateButton.disabled = true;
                 updateButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> جاري التحديث...';
-            } else if (status === 'completed') {
+            } else if (status === 'completed' || status === 'cancelled' || status === 'error') {
                 updateButton.disabled = false;
                 updateButton.innerHTML = '<i class="bi bi-arrow-repeat"></i> تحديث جميع البيانات';
-            } else if (status === 'cancelled' || status === 'error') {
-                updateButton.disabled = false;
-                updateButton.innerHTML = '<i class="bi bi-arrow-repeat"></i> إعادة المحاولة';
+            }
+        }
+        
+        if (quickUpdateButton) {
+            if (status === 'running' || status === 'queued') {
+                quickUpdateButton.disabled = true;
+                quickUpdateButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> جاري التحديث...';
+            } else if (status === 'completed' || status === 'cancelled' || status === 'error') {
+                quickUpdateButton.disabled = false;
+                quickUpdateButton.innerHTML = '<i class="bi bi-lightning-charge-fill"></i> تحديث سريع <small class="d-block" style="font-size: 11px;">Sheet 7 + Sheet 12</small>';
             }
         }
         

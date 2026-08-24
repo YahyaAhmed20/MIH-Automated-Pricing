@@ -5616,199 +5616,631 @@ def patient_search(request):
 
     
     return render(request, 'frontend/patient_search.html', context)
-
+import json
 import re
-import io
-import traceback
-from django.http import JsonResponse
-from django.contrib import messages
-from django.shortcuts import render
+import time
 
-from imports.services.update_all_data_service import UpdateAllDataService
+from django.http import JsonResponse, StreamingHttpResponse
+from django.shortcuts import render
+from django.views.decorators.cache import cache_control
+from django.views.decorators.csrf import csrf_protect
+from django.views.decorators.http import require_http_methods, require_POST
+
 from imports.tasks import update_all_data_task
 from imports.services.progress_service import ProgressService
+from imports.services.update_all_data_service import (
+    IMPORT_COMMANDS,
+    POST_IMPORT_COMMANDS,
+    QUICK_UPDATE_COMMANDS,
+)
+
+
+# ================================================================
+# Helpers
+# ================================================================
 
 def clean_logs(text):
     """
     Remove ANSI terminal color codes from command output.
     """
-    ansi_escape = re.compile(r'\x1B\[[0-?]*[ -/]*[@-~]')
-    return ansi_escape.sub("", text)
+    ansi_escape = re.compile(
+        r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])'
+    )
 
+    return ansi_escape.sub("", text or "")
 
-# ✅ متغير لتتبع التقدم
-_update_progress = {
-    "completed": 0,
-    "current_command": "",
-    "total": 18,
-    "is_running": False,
-    "results": [],
-}
-from imports.services.progress_service import ProgressService
-
-
-def update_progress(request):
-    """API لتحديث التقدم"""
-    return JsonResponse(ProgressService.get())
 
 def extract_results_from_logs(logs):
-    """استخراج النتائج من الـ logs"""
+    """
+    استخراج نتائج الـ imports من الـ logs.
+    """
     results = []
-    lines = logs.split('\n')
-    
+
+    if not logs:
+        return results
+
+    lines = logs.split("\n")
+
     for line in lines:
-        # ✅ البحث عن سطر النتيجة
-        if '✅ END :' in line or '❌ END :' in line:
-            is_success = '✅' in line
-            # استخراج الاسم والوقت
-            parts = line.split('END :')
-            if len(parts) > 1:
-                name_time = parts[1].strip()
-                if '(' in name_time and ')' in name_time:
-                    name = name_time[:name_time.rindex('(')].strip()
-                    time_str = name_time[name_time.rindex('(')+1:name_time.rindex(')')]
-                    results.append({
-                        'name': name,
-                        'time': time_str,
-                        'status': 'success' if is_success else 'error'
-                    })
-    
+
+        # البحث عن سطر النتيجة
+        if "✅ END :" in line or "❌ END :" in line:
+
+            is_success = "✅" in line
+
+            parts = line.split("END :")
+
+            if len(parts) <= 1:
+                continue
+
+            name_time = parts[1].strip()
+
+            if "(" not in name_time or ")" not in name_time:
+                continue
+
+            name = name_time[
+                :name_time.rindex("(")
+            ].strip()
+
+            time_str = name_time[
+                name_time.rindex("(") + 1:
+                name_time.rindex(")")
+            ]
+
+            results.append({
+                "name": name,
+                "time": time_str,
+                "status": (
+                    "success"
+                    if is_success
+                    else "error"
+                ),
+            })
+
     return results
 
-from django.http import JsonResponse
 
+# ================================================================
+# Progress API
+# ================================================================
+
+def update_progress(request):
+    """
+    API للحصول على حالة التحديث الحالية.
+    """
+    return JsonResponse(
+        ProgressService.get()
+    )
+
+
+# ================================================================
+# System Update
+# ================================================================
+@csrf_protect
+@require_http_methods(["GET", "POST"])
 def system_update(request):
-    """عرض صفحة تحديث النظام"""
-    
-    if request.method == "POST":
-        # ✅ إعادة تعيين التقدم ومسح الـ Logs القديمة
-        ProgressService.reset()
-        # ✅ خلي الـ logs فاضية عشان تبدأ من جديد
-        ProgressService.update(logs=None)
-        
-        task = update_all_data_task.apply_async(queue='local')
-        
-        # ✅ إرجاع JSON للـ fetch
-        return JsonResponse({
-            "success": True,
-            "task_id": task.id,
-        })
+    """
+    صفحة إدارة تحديث بيانات النظام.
 
-    # ✅ GET - عرض الصفحة مع النتائج الحالية
+    POST:
+        يبدأ Task في Celery بحالة QUEUED.
+
+    GET:
+        يعرض الحالة الحالية من Redis.
+    """
+
+    # ============================================================
+    # POST → Start Update
+    # ============================================================
+
+    if request.method == "POST":
+
+        update_type = request.POST.get(
+            "update_type",
+            "full",
+        )
+
+        # --------------------------------------------------------
+        # Validate update type
+        # --------------------------------------------------------
+
+        if update_type not in ["quick", "full"]:
+
+            return JsonResponse(
+                {
+                    "success": False,
+                    "message": "نوع التحديث غير صالح.",
+                },
+                status=400,
+            )
+
+        # --------------------------------------------------------
+        # Get current progress
+        # --------------------------------------------------------
+
+        current_progress = ProgressService.get()
+
+        current_status = current_progress.get(
+            "status",
+            "idle",
+        )
+
+        # ============================================================
+        # Recover stale RUNNING task
+        # ============================================================
+
+        if current_status == "running" and ProgressService.is_stale():
+
+            print(
+                "⚠️ Detected stale update. "
+                "Resetting abandoned task."
+            )
+
+            ProgressService.reset()
+
+            current_progress = ProgressService.get()
+            current_status = current_progress.get(
+                "status",
+                "idle",
+            )
+
+        # --------------------------------------------------------
+        # Prevent duplicate updates
+        #
+        # queued = Task registered but worker has not started it yet
+        # running = Worker is executing it
+        # --------------------------------------------------------
+
+        if current_status in [
+            "queued",
+            "running",
+        ]:
+
+            return JsonResponse(
+                {
+                    "success": False,
+                    "message": (
+                        "يوجد تحديث قيد الانتظار أو التنفيذ. "
+                        "انتظر حتى ينتهي التحديث الحالي."
+                    ),
+                    "status": current_status,
+                },
+                status=409,
+            )
+
+        # --------------------------------------------------------
+        # Determine REAL commands
+        # --------------------------------------------------------
+
+        if update_type == "quick":
+            commands = QUICK_UPDATE_COMMANDS
+        else:
+            commands = IMPORT_COMMANDS + POST_IMPORT_COMMANDS
+
+        commands = list(commands)
+        total_commands = len(commands)
+
+        # ============================================================
+        # IMPORTANT:
+        # Create the Celery task ID BEFORE dispatching the task.
+        #
+        # This prevents a race condition where the worker starts
+        # before the View has registered the QUEUED state.
+        # ============================================================
+
+        from uuid import uuid4
+
+        task_id = str(uuid4())
+
+        # --------------------------------------------------------
+        # Register QUEUED state BEFORE sending to Celery
+        # --------------------------------------------------------
+
+        try:
+
+            ProgressService.mark_queued(
+                task_id=task_id,
+                update_type=update_type,
+                total=total_commands,
+            )
+
+        except Exception as exc:
+
+            print(
+                f"❌ Failed to register queued task: {exc}"
+            )
+
+            return JsonResponse(
+                {
+                    "success": False,
+                    "message": (
+                        "تعذر تجهيز عملية التحديث."
+                    ),
+                    "error": str(exc),
+                },
+                status=500,
+            )
+
+        # ============================================================
+        # Send Task to Celery
+        # ============================================================
+
+        try:
+
+            task = update_all_data_task.apply_async(
+                kwargs={
+                    "update_type": update_type,
+                },
+                task_id=task_id,
+                queue="local",
+            )
+
+        except Exception as exc:
+
+            # --------------------------------------------------------
+            # Celery failed to accept the task.
+            # Do NOT leave the system stuck in QUEUED.
+            # --------------------------------------------------------
+
+            ProgressService.mark_error(
+                message=f"Celery dispatch error: {exc}",
+                logs=(
+                    "❌ تعذر إرسال مهمة التحديث إلى Celery.\n\n"
+                    f"Error: {exc}"
+                ),
+            )
+
+            return JsonResponse(
+                {
+                    "success": False,
+                    "message": (
+                        "تعذر إرسال مهمة التحديث إلى Celery."
+                    ),
+                    "error": str(exc),
+                },
+                status=500,
+            )
+
+        # ============================================================
+        # Celery accepted the task
+        #
+        # task.id should equal our generated task_id.
+        # We intentionally keep the original task_id because it is
+        # the ID already registered in ProgressService.
+        # ============================================================
+
+        print(
+            f"📥 ProgressService: Task queued: {task_id}"
+        )
+
+        # --------------------------------------------------------
+        # Response
+        # --------------------------------------------------------
+
+        return JsonResponse(
+            {
+                "success": True,
+                "task_id": task_id,
+                "update_type": update_type,
+                "status": "queued",
+                "total": total_commands,
+                "message": (
+                    "تم إرسال التحديث إلى Celery "
+                    "وهو في انتظار Worker."
+                ),
+            }
+        )
+
+    # ============================================================
+    # GET → Display Page
+    # ============================================================
+
     progress = ProgressService.get()
-    print("Progress:", progress)
-    results = progress.get("results", [])
-    logs = progress.get("logs", None)
+
+    results = progress.get(
+        "results",
+        [],
+    )
+
+    logs = progress.get(
+        "logs",
+        None,
+    )
+
+    # ------------------------------------------------------------
+    # Success / Error counts
+    # ------------------------------------------------------------
 
     success_count = sum(
-        1 for r in results
-        if r.get("status") == "success"
+        1
+        for r in results
+        if r.get("status") in [
+            "success",
+            "✅",
+        ]
     )
 
     error_count = sum(
-        1 for r in results
-        if r.get("status") == "error"
+        1
+        for r in results
+        if r.get("status") in [
+            "error",
+            "❌",
+        ]
     )
-    print("=" * 50)
-    print(progress)
-    print("=" * 50)
+
+    # ------------------------------------------------------------
+    # Last successful update
+    # ------------------------------------------------------------
+
+    last_successful_update = (
+        ProgressService.get_last_successful_update()
+    )
+
+    # ------------------------------------------------------------
+    # Render
+    # ------------------------------------------------------------
+
     return render(
         request,
         "frontend/system_update.html",
         {
             "results": results,
             "logs": logs,
-            "total_commands": progress.get("total", 18),
+
+            "total_commands": progress.get(
+                "total",
+                0,
+            ),
+
             "success_count": success_count,
             "error_count": error_count,
-            "is_running": progress.get("is_running", False),
-            "completed": progress.get("completed", 0),
-            "status": progress.get("status", "idle"),  # ✅ تمت الإضافة
-        }
+
+            "is_running": progress.get(
+                "is_running",
+                False,
+            ),
+
+            "completed": progress.get(
+                "completed",
+                0,
+            ),
+
+            "status": progress.get(
+                "status",
+                "idle",
+            ),
+
+            "update_type": progress.get(
+                "update_type",
+                "full",
+            ),
+
+            "task_id": progress.get(
+                "task_id",
+                None,
+            ),
+
+            "last_successful_update": (
+                last_successful_update
+            ),
+        },
     )
-    
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_protect
-from django.views.decorators.http import require_http_methods
-from django.http import StreamingHttpResponse
-from django.views.decorators.cache import cache_control
+
+# ================================================================
+# Clear Logs
+# ================================================================
 
 @csrf_protect
 @require_http_methods(["POST"])
 def clear_logs(request):
-    """API لمسح سجل التحديث"""
+    """
+    API لمسح سجل التحديث فقط.
+    """
+
     try:
-        ProgressService.update(logs=None)
-        return JsonResponse({
-            "success": True,
-            "message": "تم مسح السجل بنجاح"
-        })
+
+        ProgressService.update(
+            logs=None,
+        )
+
+        return JsonResponse(
+            {
+                "success": True,
+                "message": "تم مسح السجل بنجاح",
+            }
+        )
+
     except Exception as e:
-        return JsonResponse({
-            "success": False,
-            "message": f"حدث خطأ: {str(e)}"
-        }, status=500)
-        
-        
-        
-from django.views.decorators.http import require_POST
-import time
+
+        return JsonResponse(
+            {
+                "success": False,
+                "message": f"حدث خطأ: {str(e)}",
+            },
+            status=500,
+        )
+
+
+# ================================================================
+# Cancel Update
+# ================================================================
 
 @require_POST
 def cancel_update(request):
     """
     طلب إلغاء عملية التحديث الحالية.
+
+    يعمل سواء كانت:
+        queued
+        running
     """
+
     progress = ProgressService.get()
 
-    if not progress.get("is_running"):
-        return JsonResponse({
-            "success": False,
-            "message": "لا توجد عملية قيد التشغيل."
-        }, status=400)
+    status = progress.get(
+        "status",
+        "idle",
+    )
+
+    # ------------------------------------------------------------
+    # No active update
+    # ------------------------------------------------------------
+
+    if status not in [
+        "queued",
+        "running",
+    ]:
+
+        return JsonResponse(
+            {
+                "success": False,
+                "message": (
+                    "لا توجد عملية تحديث "
+                    "قيد الانتظار أو التنفيذ."
+                ),
+            },
+            status=400,
+        )
+
+    # ------------------------------------------------------------
+    # Request cancellation
+    # ------------------------------------------------------------
 
     ProgressService.request_cancel()
 
-    return JsonResponse({
-        "success": True,
-        "message": "تم إرسال طلب الإلغاء."
-    })
-    
-# ✅ أضف الـ View الجديد ده في آخر الملف
-@cache_control(no_cache=True, no_store=True, must_revalidate=True)
+    return JsonResponse(
+        {
+            "success": True,
+            "message": "تم إرسال طلب الإلغاء.",
+        }
+    )
+
+
+# ================================================================
+# SSE Progress Stream
+# ================================================================
+
+@cache_control(
+    no_cache=True,
+    no_store=True,
+    must_revalidate=True,
+)
 def progress_stream(request):
-    """بث التقدم مباشرة للعميل باستخدام Server-Sent Events (SSE)"""
-    
+    """
+    Server-Sent Events stream.
+
+    يرسل التحديثات للواجهة عند تغير:
+        - logs
+        - completed
+        - status
+        - heartbeat
+    """
+
     def event_stream():
+
         last_logs = ""
         last_completed = -1
-        
+        last_status = None
+        last_heartbeat = None
+
         while True:
+
             progress = ProgressService.get()
-            current_logs = progress.get("logs", "")
-            current_completed = progress.get("completed", 0)
-            status = progress.get("status", "idle")
-            
-            # ✅ لو في تغيير، ابعت البيانات
-            if (current_logs != last_logs) or (current_completed != last_completed):
+
+            # ----------------------------------------------------
+            # Last successful update
+            # ----------------------------------------------------
+
+            progress[
+                "last_successful_update"
+            ] = (
+                ProgressService
+                .get_last_successful_update()
+            )
+
+            # ----------------------------------------------------
+            # Current values
+            # ----------------------------------------------------
+
+            current_logs = progress.get(
+                "logs",
+                "",
+            )
+
+            current_completed = progress.get(
+                "completed",
+                0,
+            )
+
+            status = progress.get(
+                "status",
+                "idle",
+            )
+
+            heartbeat = progress.get(
+                "heartbeat_at",
+
+                None,
+            )
+
+            # ----------------------------------------------------
+            # Detect changes
+            # ----------------------------------------------------
+
+            changed = (
+                current_logs != last_logs
+                or current_completed != last_completed
+                or status != last_status
+                or heartbeat != last_heartbeat
+            )
+
+            if changed:
+
                 last_logs = current_logs
                 last_completed = current_completed
-                
-                # ✅ أضف الوقت الحالي عشان العميل يعرف إنها بيانات جديدة
-                progress['timestamp'] = time.time()
-                
-                yield f"data: {json.dumps(progress, ensure_ascii=False)}\n\n"
-            
-            # ✅ لو خلصت، وقف البث
-            if status in ["completed", "cancelled", "error"]:
-                # ابعت آخر تحديث
-                yield f"data: {json.dumps(progress, ensure_ascii=False)}\n\n"
+                last_status = status
+                last_heartbeat = heartbeat
+
+                progress["timestamp"] = time.time()
+
+                yield (
+                    "data: "
+                    + json.dumps(
+                        progress,
+                        ensure_ascii=False,
+                    )
+                    + "\n\n"
+                )
+
+            # ----------------------------------------------------
+            # Stop stream on terminal states
+            # ----------------------------------------------------
+
+            if status in [
+                "completed",
+                "cancelled",
+                "error",
+            ]:
+
+                yield (
+                    "data: "
+                    + json.dumps(
+                        progress,
+                        ensure_ascii=False,
+                    )
+                    + "\n\n"
+                )
+
                 break
-            
-            # ✅ انتظر 1.5 ثانية قبل الفحص الجديد
+
+            # ----------------------------------------------------
+            # Poll interval
+            # ----------------------------------------------------
+
             time.sleep(1.5)
-    
+
     return StreamingHttpResponse(
         event_stream(),
-        content_type='text/event-stream'
+        content_type="text/event-stream",
     )

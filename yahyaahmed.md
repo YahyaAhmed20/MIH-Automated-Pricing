@@ -1,3 +1,11 @@
+
+celery -A project worker --loglevel=info --concurrency=1 --pool=prefork --time-limit=7200 --soft-time-limit=6000 --queues=local
+from imports.services.progress_service import ProgressService
+
+ProgressService.reset()
+ProgressService.get()
+
+
  مؤجل بمعرفة المريض
 
 مش بتتحسل ف doctors
