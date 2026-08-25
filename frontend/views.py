@@ -8,6 +8,7 @@ from django.db.models import Count
 from contracts.models import (
     CompanyDiscountProfile,
 )
+from django.conf import settings
 from django.core.exceptions import PermissionDenied
 from frontend.services.company_comparison_service import (
     CompanyComparisonService,
@@ -5872,7 +5873,8 @@ def system_update(request):
                     "update_type": update_type,
                 },
                 task_id=task_id,
-                queue="local",
+                queue=settings.CELERY_QUEUE,
+
             )
 
         except Exception as exc:

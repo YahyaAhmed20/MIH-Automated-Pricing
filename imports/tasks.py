@@ -1,9 +1,9 @@
 from io import StringIO
 import threading
-import time
 
 from celery import shared_task
 from django.core.cache import cache
+from django.utils import timezone
 
 from imports.services.progress_service import ProgressService
 from imports.services.update_all_data_service import (
@@ -34,9 +34,8 @@ def update_all_data_task(
            ↓
         COMPLETED / ERROR / CANCELLED
 
-    ملاحظة:
-    الـView هو المسؤول عن تسجيل QUEUED.
-    الـCelery Worker هو المسؤول عن تحويلها إلى RUNNING.
+    الـView مسؤول عن QUEUED.
+    الـWorker مسؤول عن RUNNING والـFinal State.
     """
 
     output = StringIO()
@@ -74,22 +73,19 @@ def update_all_data_task(
     def heartbeat_loop():
         """
         تحديث heartbeat بشكل مستقل أثناء تنفيذ الـimports.
-
-        مهم:
-        الـcommand الواحد ممكن يستغرق أكثر من 60 ثانية،
-        لذلك لا نعتمد على progress_callback وحده.
         """
 
         while not heartbeat_stop.wait(HEARTBEAT_INTERVAL):
 
             try:
 
-                # لو العملية انتهت، لا داعي لأي heartbeat إضافي
                 progress = ProgressService.get()
 
+                # Task مختلفة → توقف
                 if progress.get("task_id") != task_id:
                     break
 
+                # لم تعد Running → توقف
                 if progress.get("status") != "running":
                     break
 
@@ -123,10 +119,6 @@ def update_all_data_task(
             command_name,
             completed,
         ):
-            """
-            يتم استدعاؤها من UpdateAllDataService
-            قبل كل Command.
-            """
 
             # ----------------------------------------------------
             # Check Cancel
@@ -136,13 +128,13 @@ def update_all_data_task(
                 raise TaskCancelled()
 
             # ----------------------------------------------------
-            # Heartbeat فوري
+            # Heartbeat
             # ----------------------------------------------------
 
             ProgressService.heartbeat()
 
             # ----------------------------------------------------
-            # تحديث Progress
+            # Progress
             # ----------------------------------------------------
 
             ProgressService.update(
@@ -164,6 +156,7 @@ def update_all_data_task(
         logs = output.getvalue()
 
         results = run_result["results"]
+
         has_errors = not run_result["success"]
 
         # ========================================================
@@ -187,7 +180,7 @@ def update_all_data_task(
             )
 
         # ========================================================
-        # إيقاف Heartbeat
+        # إيقاف Heartbeat قبل Final State
         # ========================================================
 
         heartbeat_stop.set()
@@ -196,43 +189,55 @@ def update_all_data_task(
         # Final State
         # ========================================================
 
-        if has_errors:
+        final_status = (
+            "error"
+            if has_errors
+            else "completed"
+        )
 
-            ProgressService.mark_error(
-                message="اكتمل التحديث مع وجود أخطاء.",
-                logs=logs,
-                results=results,
-            )
+        final_command = (
+            "⚠️ اكتمل التحديث مع وجود أخطاء"
+            if has_errors
+            else "✅ تم الانتهاء من التحديث بنجاح!"
+        )
 
-            ProgressService.update(
-                completed=total,
-                total=total,
-                current_command=(
-                    "⚠️ اكتمل التحديث مع وجود أخطاء"
-                ),
-                update_type=update_type,
-            )
+        final_error = (
+            "اكتمل التحديث مع وجود أخطاء."
+            if has_errors
+            else None
+        )
 
-        else:
+        # --------------------------------------------------------
+        # حفظ الحالة النهائية مرة واحدة
+        # --------------------------------------------------------
 
-            ProgressService.update(
-                completed=total,
-                total=total,
-                update_type=update_type,
-            )
+        ProgressService.update(
+            status=final_status,
+            is_running=False,
+            completed=total,
+            total=total,
+            logs=logs,
+            results=results,
+            current_command=final_command,
+            update_type=update_type,
+            finished_at=timezone.now().isoformat(),
+            error=final_error,
+            heartbeat_at=timezone.now().isoformat(),
+        )
 
-            ProgressService.mark_completed(
-                logs=logs,
-                results=results,
-            )
+        # ========================================================
+        # آخر تحديث ناجح
+        # ========================================================
 
-            # ----------------------------------------------------
-            # حفظ آخر تحديث ناجح
-            # ----------------------------------------------------
+        if not has_errors:
 
             ProgressService.set_last_successful_update(
                 update_type=update_type
             )
+
+        # ========================================================
+        # Return
+        # ========================================================
 
         return {
             "status": (
@@ -260,8 +265,18 @@ def update_all_data_task(
             "🛑 تم إلغاء العملية بواسطة المستخدم."
         )
 
-        ProgressService.mark_cancelled(
+        # --------------------------------------------------------
+        # حالة الإلغاء النهائية
+        # --------------------------------------------------------
+
+        ProgressService.update(
+            status="cancelled",
+            is_running=False,
             logs=logs,
+            current_command="🛑 تم الإلغاء",
+            update_type=update_type,
+            finished_at=timezone.now().isoformat(),
+            error=None,
         )
 
         return {
@@ -284,14 +299,39 @@ def update_all_data_task(
             f"❌ خطأ: {exc}"
         )
 
-        ProgressService.mark_error(
-            message=str(exc),
-            logs=logs,
-        )
+        # --------------------------------------------------------
+        # حفظ Error State
+        # --------------------------------------------------------
 
+        try:
+
+            ProgressService.update(
+                status="error",
+                is_running=False,
+                logs=logs,
+                current_command=(
+                    f"❌ خطأ: {str(exc)[:100]}"
+                ),
+                update_type=update_type,
+                finished_at=timezone.now().isoformat(),
+                error=str(exc),
+            )
+
+        except Exception as progress_exc:
+
+            print(
+                "❌ Failed to save error state: "
+                f"{progress_exc}"
+            )
+
+        # مهم:
+        # نخلي Celery تعتبر الـTask FAILURE
         raise
 
     finally:
 
-        # ضمان إيقاف الـheartbeat مهما حصل
+        # ========================================================
+        # ضمان إيقاف Heartbeat
+        # ========================================================
+
         heartbeat_stop.set()
