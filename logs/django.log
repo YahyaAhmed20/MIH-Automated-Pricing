@@ -21167,3 +21167,144 @@ Watching for file changes with StatReloader
 "GET /api/update-progress/ HTTP/1.1" 200 463
 "GET /api/update-progress/ HTTP/1.1" 200 3301
 "GET /api/update-progress/ HTTP/1.1" 200 3301
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 45954
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 16342
+"POST / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 83693
+"GET /credit-package-pricing/ HTTP/1.1" 200 90938
+"GET /credit-package-pricing/?company_search=%D8%A7%D9%84%D8%A7%D9%87%D9%84%D9%89+%D9%84%D9%84%D8%AE%D8%AF%D9%85%D8%A7%D8%AA+%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%D9%87&company=45&specialty=&package_search=&package= HTTP/1.1" 200 240681
+"GET /credit-package-pricing/?company=45&package=176441&company_search=%D8%A7%D9%84%D8%A7%D9%87%D9%84%D9%89%20%D9%84%D9%84%D8%AE%D8%AF%D9%85%D8%A7%D8%AA%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%D9%87&package_search=&specialty= HTTP/1.1" 200 122308
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /credit-package-pricing/?company_search=%D8%A7%D9%84%D8%A7%D9%87%D9%84%D9%89+%D9%84%D9%84%D8%AE%D8%AF%D9%85%D8%A7%D8%AA+%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%D9%87&company=45&specialty=&package_search=&package= HTTP/1.1" 200 240681
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /credit-package-pricing/?company=45&package=176457&company_search=%D8%A7%D9%84%D8%A7%D9%87%D9%84%D9%89%20%D9%84%D9%84%D8%AE%D8%AF%D9%85%D8%A7%D8%AA%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%D9%87&package_search=&specialty= HTTP/1.1" 200 122334
+"GET /credit-package-pricing/?company=45&package=176457&company_search=%D8%A7%D9%84%D8%A7%D9%87%D9%84%D9%89%20%D9%84%D9%84%D8%AE%D8%AF%D9%85%D8%A7%D8%AA%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%D9%87&package_search=&specialty= HTTP/1.1" 200 122339
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 45954
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 16342
+"POST / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 83693
+"GET /contract-entities/ HTTP/1.1" 200 67878
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /contract-entities/1/ HTTP/1.1" 200 80809
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /company-discounts/?entity=1 HTTP/1.1" 200 71244
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /contract-entities/3/ HTTP/1.1" 200 80766
+"GET /credit-package-pricing/?entity=3 HTTP/1.1" 200 91210
+"GET /credit-package-pricing/?company_search=%D8%A8%D9%86%D9%83+%D9%81%D9%8A%D8%B5%D9%84+%D8%A7%D9%84%D8%A7%D8%B3%D9%84%D8%A7%D9%85%D9%8A&company=156&specialty=&package_search=&package= HTTP/1.1" 200 239688
+"GET /contract-entities/1/ HTTP/1.1" 200 80809
+"GET /credit-package-pricing/?entity=1 HTTP/1.1" 200 257029
+"GET /doctors/ HTTP/1.1" 200 284344
+"GET /doctors/%D8%A7.%D8%AF%20/%20%D8%AE%D8%A7%D9%84%D8%AF%20%D8%B4%D9%87%D9%8A%D8%A8/ HTTP/1.1" 200 114851
+"GET /procedures/ HTTP/1.1" 200 133015
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+- Broken pipe from ('127.0.0.1', 52473)
+"GET /pricing-details/ HTTP/1.1" 200 333262
+"GET /similar-invoices/ HTTP/1.1" 200 334096
+"GET /reports/ HTTP/1.1" 200 146682
+"GET /reports/?month=%D9%8A%D9%88%D9%86%D9%8A%D9%88 HTTP/1.1" 200 135876
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /reports/? HTTP/1.1" 200 146682
+"GET /reports/?month=%D9%8A%D9%88%D9%84%D9%8A%D9%88 HTTP/1.1" 200 112741
+"GET /reports/specialty/%D8%A7%D9%84%D8%A7%D9%86%D9%81%20%D9%88%D8%A7%D9%84%D8%A7%D8%B0%D9%86/?month=%D9%8A%D9%88%D9%86%D9%8A%D9%88 HTTP/1.1" 200 70446
+"GET /reports/specialty/%D8%A7%D9%84%D8%A7%D9%86%D9%81%20%D9%88%D8%A7%D9%84%D8%A7%D8%B0%D9%86/?month= HTTP/1.1" 200 186028
+- Broken pipe from ('127.0.0.1', 55965)
+"GET /reports/ HTTP/1.1" 200 146682
+"GET /reports/payment-details/ HTTP/1.1" 200 113860
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /pending-analysis/ HTTP/1.1" 200 206327
+- Broken pipe from ('127.0.0.1', 54150)
+"GET /external-approvals/total/ HTTP/1.1" 200 920378
+"GET /external-approvals/ HTTP/1.1" 200 92839
+"GET /external-approvals/total/ HTTP/1.1" 200 920378
+"GET /external-approvals/total/ HTTP/1.1" 200 920378
+"GET /external-approvals/total/ HTTP/1.1" 200 920378
+"GET /pending-analysis/ HTTP/1.1" 200 206327
+"GET /external-approvals/ HTTP/1.1" 200 92839
+"GET /pending-analysis/ HTTP/1.1" 200 206327
+"GET /external-approvals/status_patient_refused/ HTTP/1.1" 200 841201
+"GET /pending-analysis/ HTTP/1.1" 200 206327
+"GET /external-approvals/status_pending/ HTTP/1.1" 200 812885
+"GET /external-approvals/total/ HTTP/1.1" 200 920378
+"GET /external-approvals/total/ HTTP/1.1" 200 920378
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 46001
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 16342
+"POST / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 83956
+"GET /service-search/ HTTP/1.1" 200 777250
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET /service-search/ HTTP/1.1" 200 777250
+"POST /logout/ HTTP/1.1" 302 0
+"GET / HTTP/1.1" 200 46001
+"GET / HTTP/1.1" 200 46001
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+"GET /admin HTTP/1.1" 301 0
+"GET /admin/ HTTP/1.1" 302 0
+"GET /admin/login/?next=/admin/ HTTP/1.1" 200 4455
+"GET /static/admin/css/base.css HTTP/1.1" 200 22120
+"GET /static/admin/css/login.css HTTP/1.1" 200 951
+"GET /static/admin/css/responsive_rtl.css HTTP/1.1" 200 1991
+"GET /static/admin/css/dark_mode.css HTTP/1.1" 200 2808
+"GET /static/admin/css/nav_sidebar.css HTTP/1.1" 200 2810
+"GET /static/admin/js/theme.js HTTP/1.1" 200 1653
+"GET /static/admin/css/responsive.css HTTP/1.1" 200 16565
+"GET /static/admin/css/rtl.css HTTP/1.1" 200 4772
+"GET /static/admin/js/nav_sidebar.js HTTP/1.1" 200 3063
+"POST /admin/login/?next=/admin/ HTTP/1.1" 302 0
+"GET /admin/ HTTP/1.1" 200 26310
+"GET /static/admin/css/dashboard.css HTTP/1.1" 200 441
+"GET /static/admin/img/icon-changelink.svg HTTP/1.1" 200 380
+"GET /static/admin/img/icon-addlink.svg HTTP/1.1" 200 331
+"GET /admin/accounts/user/ HTTP/1.1" 200 43849
+"GET /static/admin/css/changelists.css HTTP/1.1" 200 6878
+"GET /static/admin/js/core.js HTTP/1.1" 200 6208
+"GET /static/admin/js/actions.js HTTP/1.1" 200 8076
+"GET /static/admin/js/jquery.init.js HTTP/1.1" 200 347
+"GET /static/admin/js/admin/RelatedObjectLookups.js HTTP/1.1" 200 9777
+"GET /static/admin/js/urlify.js HTTP/1.1" 200 7887
+"GET /static/admin/img/search.svg HTTP/1.1" 200 458
+"GET /static/admin/js/prepopulate.js HTTP/1.1" 200 1531
+"GET /static/admin/js/vendor/jquery/jquery.js HTTP/1.1" 200 285314
+"GET /static/admin/img/icon-yes.svg HTTP/1.1" 200 436
+"GET /static/admin/js/vendor/xregexp/xregexp.js HTTP/1.1" 200 325171
+"GET /static/admin/js/filters.js HTTP/1.1" 200 978
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"GET /static/admin/img/tooltag-add.svg HTTP/1.1" 200 331
+"GET /static/admin/img/sorting-icons.svg HTTP/1.1" 200 1097
+"GET /static/admin/img/icon-viewlink.svg HTTP/1.1" 200 581
+"GET / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 83956
+"POST /logout/ HTTP/1.1" 302 0
+"GET / HTTP/1.1" 200 46001
+"POST / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 73114
+"GET /service-search/ HTTP/1.1" 200 773536
+"POST /logout/ HTTP/1.1" 302 0
+"GET / HTTP/1.1" 200 46001
+"POST / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 64889
+"POST /logout/ HTTP/1.1" 302 0
+"GET / HTTP/1.1" 200 46001
+"POST / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 65424

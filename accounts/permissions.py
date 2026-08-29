@@ -10,6 +10,12 @@ class Permissions:
     PACKAGES_CREDIT_ATTACHMENTS = "packages_credit_attachments"
 
     # ==========================
+    # SERVICES
+    # ==========================
+
+    SERVICE_SEARCH = "service_search"
+
+    # ==========================
     # PATIENTS
     # ==========================
 
@@ -37,10 +43,7 @@ class Permissions:
     # ==========================
 
     FINANCIAL_FULL = "financial_full"
-    
     REPORTS_VIEW = "reports_view"
-
-
 
     # ==========================
     # SYSTEM

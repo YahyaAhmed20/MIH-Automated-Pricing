@@ -1288,15 +1288,15 @@ body.login-mode .content {
         </li>
         {% endif %}
 
-        {% comment %} <!-- 5. البحث عن خدمة -->
-        {% if can_patients_search %}
+         <!-- 5. البحث عن خدمة -->
+        {% if can_service_search %}
         <li class="menu-item">
             <a class="menu-link {% if request.resolver_match.url_name == 'service_search' %}active{% endif %}" href="{% url 'service_search' %}">
                 <i class="bi bi-search"></i>
                 البحث عن خدمة
             </a>
         </li>
-        {% endif %} {% endcomment %}
+        {% endif %} 
 
         <!-- الأطباء -->
         {% if can_doctors_view_all or can_doctors_view_own %}

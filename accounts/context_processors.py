@@ -30,6 +30,10 @@ def authorization(request):
         "can_patients_search": authz.can(
             Permissions.PATIENTS_SEARCH
         ),
+        # Services
+        "can_service_search": authz.can(
+            Permissions.SERVICE_SEARCH
+        ),
 
         # Approvals
         "can_approvals_view": authz.can(

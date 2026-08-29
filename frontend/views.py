@@ -4637,7 +4637,7 @@ from django.db.models.functions import Coalesce
 
 # pricing_requests/views.py
 
-@permission_required(Permissions.PATIENTS_SEARCH)
+@permission_required(Permissions.SERVICE_SEARCH)
 def service_search(request):
 
     search = request.GET.get("search", "").strip()

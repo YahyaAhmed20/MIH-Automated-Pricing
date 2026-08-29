@@ -62,6 +62,9 @@ class Command(BaseCommand):
         "packages_cash_full",
         "packages_credit_full",
         "packages_credit_attachments",
+        
+        # Services
+        "service_search",
 
         # Financial / Contracts
         "financial_full",
@@ -82,6 +85,8 @@ class Command(BaseCommand):
             "packages_credit_basic",
             "packages_credit_full",
             "packages_credit_attachments",
+            
+            "service_search",
 
 
             "patients_search",

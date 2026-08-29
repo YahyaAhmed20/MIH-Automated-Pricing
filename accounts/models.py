@@ -105,6 +105,11 @@ class User(AbstractUser):
                 "packages_credit_attachments",
                 "عرض مرفقات الباكدجات الآجلة",
             ),
+             # SERVICES
+            (
+                "service_search",
+                "البحث عن خدمة",
+            ),
 
             # PATIENTS
             (
