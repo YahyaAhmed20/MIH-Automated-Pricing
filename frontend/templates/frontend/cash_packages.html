@@ -61,6 +61,30 @@
         transform: translateY(-2px);
     }
     
+    /* ===== جعل الفلاتر في نفس المستوى ===== */
+    .filter-card .row.g-3 {
+        align-items: stretch;
+    }
+    
+    .filter-card .row.g-3 > [class*="col-"] {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .filter-card .row.g-3 > [class*="col-"] .form-label {
+        flex-shrink: 0;
+    }
+    
+    .filter-card .row.g-3 > [class*="col-"] .input-group,
+    .filter-card .row.g-3 > [class*="col-"] .form-select,
+    .filter-card .row.g-3 > [class*="col-"] .d-flex {
+        flex: 1;
+    }
+    
+    .filter-card .row.g-3 > [class*="col-"] .d-flex {
+        align-items: flex-end;
+    }
+    
     /* ===== Results Count ===== */
     .results-count {
         background: #f8f9fa;
@@ -303,6 +327,16 @@
             padding: 0.3rem 0.6rem;
         }
         
+        .filter-card .row.g-3 > [class*="col-"] {
+            min-height: auto;
+        }
+        
+        .filter-card .row.g-3 > [class*="col-"] .form-select,
+        .filter-card .row.g-3 > [class*="col-"] .input-group,
+        .filter-card .row.g-3 > [class*="col-"] .d-flex {
+            flex: 0 1 auto;
+        }
+        
         .package-card .card-body {
             padding: 1.25rem;
         }
@@ -389,9 +423,9 @@
 <div class="filter-card">
     <div class="card-body">
         <form method="get" id="searchForm">
-            <div class="row g-3 align-items-end">
-                <!-- البحث -->
-                <div class="col-lg-5 col-md-12">
+            <div class="row g-3 align-items-stretch">
+                <!-- ✅ البحث -->
+                <div class="col-lg-5 col-md-6">
                     <label class="form-label">
                         <i class="fas fa-search text-primary"></i>
                         بحث
@@ -422,7 +456,7 @@
                     </div>
                 </div>
 
-                <!-- التخصص -->
+                <!-- ✅ التخصص -->
                 <div class="col-lg-4 col-md-6">
                     <label class="form-label">
                         <i class="fas fa-stethoscope text-primary"></i>
@@ -453,8 +487,8 @@
                     </small>
                 </div>
 
-                <!-- ✅ زر مسح الكل فقط -->
-                <div class="col-lg-3 col-md-6">
+                <!-- ✅ أزرار -->
+                <div class="col-lg-3 col-md-12">
                     <label class="form-label">
                         &nbsp;
                     </label>

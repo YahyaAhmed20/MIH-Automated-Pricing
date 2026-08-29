@@ -63,12 +63,15 @@
     .search-wrapper {
         position: relative;
     }
+    
     .search-wrapper .form-control {
-        padding-right: 45px;
+        padding-left: 45px;
+        padding-right: 0.8rem;
     }
+    
     .search-wrapper .search-icon {
         position: absolute;
-        right: 15px;
+        left: 15px;
         top: 50%;
         transform: translateY(-50%);
         color: #adb5bd;
@@ -139,6 +142,16 @@
         font-weight: 600;
         color: #1a1a2e;
     }
+    
+    .package-name-highlight {
+        background: linear-gradient(120deg, #e3f2fd 0%, #e3f2fd 40%, transparent 80%);
+        padding: 4px 12px;
+        border-radius: 8px;
+        font-weight: 700;
+        display: inline-block;
+        border-right: 4px solid #0d6efd;
+    }
+    
     .package-price {
         font-weight: 700;
         color: #0d6efd;
@@ -418,7 +431,18 @@
         }
         
         .package-name {
-            font-size: 0.75rem;
+            font-size: 0.95rem !important;
+            font-weight: 700;
+        }
+        
+        .package-name-highlight {
+            background: #e3f2fd;
+            padding: 6px 10px;
+            border-radius: 8px;
+            border-right: 4px solid #0d6efd;
+            display: block;
+            width: 100%;
+            font-size: 1rem;
         }
         
         .badge-code,
@@ -456,6 +480,17 @@
         .info-card .value.small {
             font-size: 0.85rem !important;
         }
+
+        /* ===== Search Icon Mobile ===== */
+        .search-wrapper .form-control {
+            padding-left: 40px;
+            padding-right: 0.6rem;
+        }
+        
+        .search-wrapper .search-icon {
+            left: 12px;
+            font-size: 1rem;
+        }
     }
 </style>
 
@@ -474,10 +509,6 @@
                     <i class="bi bi-cash-stack me-2"></i>
                     الباكدجات النقدية
                 </a>
-                {% comment %} <a href="{% url 'packages_price_list' %}" class="btn btn-warning text-dark">
-                    <i class="bi bi-list-ul me-2"></i>
-                    عرض بقائمة الأسعار
-                </a> {% endcomment %}
             </div>
         </div>
     </div>
@@ -861,10 +892,6 @@
                                 <div class="value">{{ selected_package.current_discount_label }}</div>
                             </div>
                         </div>
-                        <!-- ✅ مؤقت للاختبار -->
-<div style="display: none;">
-    DEBUG: {{ selected_contract_package.package_price }}
-</div>
 
                         <div class="col-md-4">
                             <div class="info-card">
@@ -1119,43 +1146,17 @@
                             <th>اسم الباكدج</th>
                             <th>الكود</th>
                             <th>التخصص</th>
-                            <th>الشركة</th>
                             <th class="text-end">صافي السعر</th>
-                            <th>معدل الخصم</th>
-                            <th>الحالة</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for cp in packages %}
                         <tr onclick="window.location.href='?company={{ selected_company.id }}&package={{ cp.id }}&company_search={{ company_search }}&package_search={{ package_search }}&specialty={{ selected_specialty }}'">
                             <td>{{ forloop.counter }}</td>
-                            <td class="package-name">{{ cp.package.name }}</td>
-                            <td>
-                                <span class="badge badge-code">{{ cp.package.code|default:"-" }}</span>
-                            </td>
-                            <td>
-                                {% if cp.package.specialty %}
-                                    <span class="badge badge-specialty">{{ cp.package.specialty.name }}</span>
-                                {% else %}
-                                    <span class="badge badge-code">-</span>
-                                {% endif %}
-                            </td>
-                            <td>{{ cp.contract.entity.name }}</td>
+                            <td class="package-name"><span class="package-name-highlight">{{ cp.package.name }}</span></td>
+                            <td><span class="badge badge-code">{{ cp.package.code|default:"-" }}</span></td>
+                            <td>{% if cp.package.specialty %}<span class="badge badge-specialty">{{ cp.package.specialty.name }}</span>{% else %}<span class="badge badge-code">-</span>{% endif %}</td>
                             <td class="text-end package-price">{{ cp.formatted_price }} ج.م</td>
-                            <td>
-                                {% if cp.formatted_discount %}
-                                    <span class="badge badge-specialty">{{ cp.formatted_discount }}</span>
-                                {% else %}
-                                    <span class="badge badge-code">-</span>
-                                {% endif %}
-                            </td>
-                            <td>
-                                {% if cp.is_expired %}
-                                    <span class="badge bg-danger">منتهي</span>
-                                {% else %}
-                                    <span class="badge bg-success">ساري</span>
-                                {% endif %}
-                            </td>
                         </tr>
                         {% endfor %}
                     </tbody>
