@@ -967,15 +967,29 @@
 // ============================================
 // ✅ تشغيل البحث عند الضغط على Enter
 // ============================================
+// ============================================
+// ✅ تشغيل البحث عند الضغط على Enter أو Paste
+// ============================================
+
 document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.querySelector('input[name="search"]');
-    if (searchInput) {
-        searchInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                this.form.submit();
-            }
-        });
-    }
+
+    if (!searchInput) return;
+
+    // البحث عند الضغط على Enter
+    searchInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            this.form.requestSubmit();
+        }
+    });
+
+    // البحث مباشرة بعد Paste
+    searchInput.addEventListener('paste', function() {
+        setTimeout(() => {
+            this.form.requestSubmit();
+        }, 0);
+    });
 });
 
 // ============================================
