@@ -6,7 +6,6 @@ ProgressService.reset()
 ProgressService.get()
 
 
-1 - البحث عن خدمه المفروض تبقي عند admin , accountant
 
 ف الادمن بس لما يجي يسجل ميفتحش ع dashboard يفتح ع التقارير والاحصائيات الباقي الصلحيات ع صفحه dashboard عادي
 

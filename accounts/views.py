@@ -8,6 +8,9 @@ from django.utils.http import url_has_allowed_host_and_scheme
 def login_view(request):
     # إذا كان المستخدم مسجل دخول بالفعل، لا نعيده إلى صفحة Login
     if request.user.is_authenticated:
+        if request.user.is_superuser:
+            return redirect("reports")
+
         return redirect("home")
 
     if request.method == "POST":
@@ -33,9 +36,14 @@ def login_view(request):
                 # تنتهي عند إغلاق المتصفح
                 request.session.set_expiry(0)
 
-            # ===== Redirect to requested page =====
+            # ===== Redirect =====
             next_url = request.POST.get("next") or request.GET.get("next")
 
+            # إذا كان Admin ولم يطلب صفحة محددة
+            if user.is_superuser and not next_url:
+                return redirect("reports")
+
+            # إذا كان هناك next، نرجع للصفحة المطلوبة
             if next_url and url_has_allowed_host_and_scheme(
                 next_url,
                 allowed_hosts={request.get_host()},
@@ -43,6 +51,7 @@ def login_view(request):
             ):
                 return redirect(next_url)
 
+            # باقي المستخدمين
             return redirect("home")
 
         # Authentication فشل

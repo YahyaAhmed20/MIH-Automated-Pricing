@@ -21308,3 +21308,30 @@ Watching for file changes with StatReloader
 "GET / HTTP/1.1" 200 46001
 "POST / HTTP/1.1" 302 0
 "GET /dashboard/ HTTP/1.1" 200 65424
+Watching for file changes with StatReloader
+- Broken pipe from ('127.0.0.1', 53835)
+- Broken pipe from ('127.0.0.1', 53767)
+"POST /logout/ HTTP/1.1" 302 0
+"GET / HTTP/1.1" 200 46001
+"POST / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 83956
+"GET /external-approvals/ HTTP/1.1" 200 93102
+"GET /pending-analysis/ HTTP/1.1" 200 206708
+"GET /reports/ HTTP/1.1" 200 127656
+D:\desktop\rphospital\src\accounts\views.py changed, reloading.
+Watching for file changes with StatReloader
+"POST /logout/ HTTP/1.1" 302 0
+"GET / HTTP/1.1" 200 46001
+"POST / HTTP/1.1" 302 0
+"GET /reports/ HTTP/1.1" 200 127656
+"GET / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 83956
+"POST /logout/ HTTP/1.1" 302 0
+"GET / HTTP/1.1" 200 46001
+"POST / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 64889
+"POST /logout/ HTTP/1.1" 302 0
+"GET / HTTP/1.1" 200 46001
+"POST / HTTP/1.1" 302 0
+Watching for file changes with StatReloader
+"GET /dashboard/ HTTP/1.1" 200 73114
