@@ -21467,3 +21467,9 @@ server closed the connection unexpectedly
 "GET /patient-search/?search=%D8%A7%D8%B3%D9%84%D8%A7%D9%85+%D8%A7%D8%AD%D9%85%D8%AF+%D8%B3%D9%84%D9%8A%D9%85%D8%A7%D9%86+%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D9%88%D8%A7%D8%AD%D8%AF HTTP/1.1" 200 79736
 - Broken pipe from ('127.0.0.1', 54628)
 "GET /patient-search/?search=janky+taneka+morasi HTTP/1.1" 200 79580
+Watching for file changes with StatReloader
+"GET /credit-package-pricing/ HTTP/1.1" 200 91003
+"GET /credit-package-pricing/?company_search=%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D8%B4%D8%A7%D8%B1%D9%8A%D9%88%D9%86+%D9%84%D9%84%D8%B1%D8%B9%D8%A7%D9%8A%D8%A9+%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%D8%A9&company=142&specialty=&package_search=&package= HTTP/1.1" 200 241769
+"GET /credit-package-pricing/?company=142&package=94399&company_search=%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D8%B4%D8%A7%D8%B1%D9%8A%D9%88%D9%86%20%D9%84%D9%84%D8%B1%D8%B9%D8%A7%D9%8A%D8%A9%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%D8%A9&package_search=&specialty= HTTP/1.1" 200 122326
+Watching for file changes with StatReloader
+"GET /credit-package-pricing/?company=142&package=94399&company_search=%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D8%B4%D8%A7%D8%B1%D9%8A%D9%88%D9%86%20%D9%84%D9%84%D8%B1%D8%B9%D8%A7%D9%8A%D8%A9%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%D8%A9&package_search=&specialty= HTTP/1.1" 200 122326

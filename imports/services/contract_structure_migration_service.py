@@ -437,7 +437,7 @@ class ContractStructureMigrationService:
                 defaults = {
                     "package_price": price,
                     "total_before_discount": ContractStructureMigrationService.clean_decimal(
-                        row.get(10, None)
+                        row.get(11, None)
                     ),
                     "current_discount_rate": ContractStructureMigrationService.clean_percentage(
                         row.get(12, None)
