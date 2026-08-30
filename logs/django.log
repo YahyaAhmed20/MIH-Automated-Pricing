@@ -21525,3 +21525,267 @@ Not Found: /.well-known/appspecific/com.chrome.devtools.json
 "GET /cash-packages/ HTTP/1.1" 200 534211
 Not Found: /.well-known/appspecific/com.chrome.devtools.json
 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 46001
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 16342
+"POST / HTTP/1.1" 302 0
+"GET /reports/ HTTP/1.1" 200 127656
+"GET /contract-entities/ HTTP/1.1" 200 68141
+"GET /contract-entities/3/ HTTP/1.1" 200 81029
+"GET /contract-entities/3/ HTTP/1.1" 200 81029
+"GET /credit-package-pricing/?entity=3 HTTP/1.1" 200 92175
+"GET /credit-package-pricing/?entity=3 HTTP/1.1" 200 92175
+"GET /credit-package-pricing/?company_search=%D8%A8%D9%86%D9%83+%D9%81%D9%8A%D8%B5%D9%84+%D8%A7%D9%84%D8%A7%D8%B3%D9%84%D8%A7%D9%85%D9%8A&company=156&specialty=&package_search=&package= HTTP/1.1" 200 173104
+Watching for file changes with StatReloader
+"GET /contract-entities/ HTTP/1.1" 200 68141
+"GET /contract-entities/1/ HTTP/1.1" 200 81072
+"GET /credit-package-pricing/?entity=1 HTTP/1.1" 200 191069
+"GET /contract-entities/2/ HTTP/1.1" 200 81032
+"GET /credit-package-pricing/?entity=2 HTTP/1.1" 200 92181
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+- Broken pipe from ('127.0.0.1', 56527)
+"GET /contract-entities/ HTTP/1.1" 200 68141
+"GET /contract-entities/2/ HTTP/1.1" 200 81032
+"GET /credit-package-pricing/?entity=2 HTTP/1.1" 200 92181
+Watching for file changes with StatReloader
+"GET /credit-package-pricing/?entity=2 HTTP/1.1" 200 92181
+Watching for file changes with StatReloader
+"GET /contract-entities/3/ HTTP/1.1" 200 81029
+"GET /credit-package-pricing/?entity=3 HTTP/1.1" 200 92175
+"GET /contract-entities/2/ HTTP/1.1" 200 81032
+"GET /credit-package-pricing/?entity=2 HTTP/1.1" 200 92181
+"GET /contract-entities/1/ HTTP/1.1" 200 81072
+"GET /credit-package-pricing/?entity=1 HTTP/1.1" 200 190130
+"GET /cash-packages/ HTTP/1.1" 200 534211
+"GET /contract-entities/ HTTP/1.1" 200 68141
+"GET /contract-entities/1/ HTTP/1.1" 200 81072
+"GET /credit-package-pricing/?entity=1 HTTP/1.1" 200 190130
+"GET /credit-package-pricing/ HTTP/1.1" 200 91903
+"GET /credit-package-pricing/?company_search=%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%81+%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%8A+%D8%A7%D9%84%D8%AF%D9%88%D9%84%D9%8A&company=140&specialty=&package_search=&package= HTTP/1.1" 200 172796
+"GET /credit-package-pricing/ HTTP/1.1" 200 91903
+"GET /credit-package-pricing/?company_search=%D8%A8%D9%86%D9%83+%D9%81%D9%8A%D8%B5%D9%84+%D8%A7%D9%84%D8%A7%D8%B3%D9%84%D8%A7%D9%85%D9%8A&company=156&specialty=&package_search=&package= HTTP/1.1" 200 172133
+"GET /contract-entities/ HTTP/1.1" 200 68141
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /credit-package-pricing/?entity=2 HTTP/1.1" 200 190818
+"GET /contract-entities/ HTTP/1.1" 200 68141
+- Broken pipe from ('127.0.0.1', 60188)
+"GET /contract-entities/2/ HTTP/1.1" 200 81032
+Internal Server Error: /contract-entities/1/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\sessions\backends\base.py", line 244, in _get_session
+    return self._session_cache
+           ^^^^^^^^^^^^^^^^^^^
+AttributeError: 'SessionStore' object has no attribute '_session_cache'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 279, in ensure_connection
+    self.connect()
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\postgresql\base.py", line 332, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\psycopg2\__init__.py", line 135, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.OperationalError: connection to server at "shortline.proxy.rlwy.net" (66.33.22.244), port 40857 failed: timeout expired
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\accounts\decorators.py", line 44, in wrapper
+    if not request.user.is_authenticated:
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\functional.py", line 251, in inner
+    self._setup()
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\functional.py", line 404, in _setup
+    self._wrapped = self._setupfunc()
+                    ^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\auth\middleware.py", line 40, in <lambda>
+    request.user = SimpleLazyObject(lambda: get_user(request))
+                                            ^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\auth\middleware.py", line 20, in get_user
+    request._cached_user = auth.get_user(request)
+                           ^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\auth\__init__.py", line 304, in get_user
+    user_id = _get_user_session_key(request)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\auth\__init__.py", line 95, in _get_user_session_key
+    return get_user_model()._meta.pk.to_python(request.session[SESSION_KEY])
+                                               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\sessions\backends\base.py", line 55, in __getitem__
+    return self._session[key]
+           ^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\sessions\backends\base.py", line 249, in _get_session
+    self._session_cache = self.load()
+                          ^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\sessions\backends\db.py", line 55, in load
+    s = self._get_session_from_db()
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\sessions\backends\db.py", line 34, in _get_session_from_db
+    return self.model.objects.get(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 631, in get
+    num = len(clone)
+          ^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 368, in __len__
+    self._fetch_all()
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 1954, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 93, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\sql\compiler.py", line 1621, in execute_sql
+    cursor = self.connection.cursor()
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 320, in cursor
+    return self._cursor()
+           ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 296, in _cursor
+    self.ensure_connection()
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 278, in ensure_connection
+    with self.wrap_database_errors:
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 279, in ensure_connection
+    self.connect()
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\postgresql\base.py", line 332, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\psycopg2\__init__.py", line 135, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: connection to server at "shortline.proxy.rlwy.net" (66.33.22.244), port 40857 failed: timeout expired
+
+- Broken pipe from ('127.0.0.1', 59635)
+"GET /contract-entities/1/ HTTP/1.1" 200 81072
+"GET /credit-package-pricing/?entity=1 HTTP/1.1" 200 190130
+Internal Server Error: /contract-entities/2/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.OperationalError: server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\accounts\decorators.py", line 56, in wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 2538, in contract_entity_detail
+    ).count()
+      ^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 606, in count
+    return self.query.get_count(using=self.db)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\sql\query.py", line 646, in get_count
+    return obj.get_aggregation(using, {"__count": Count("*")})["__count"]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\sql\query.py", line 628, in get_aggregation
+    result = compiler.execute_sql(SINGLE)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\sql\compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+
+"GET /contract-entities/2/ HTTP/1.1" 500 138075
+"GET /contract-entities/2/ HTTP/1.1" 200 81032
+"GET /credit-package-pricing/?entity=2 HTTP/1.1" 200 190818
+"GET /contract-entities/3/ HTTP/1.1" 200 81029
+"GET /credit-package-pricing/?entity=3 HTTP/1.1" 200 190809
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /contract-entities/ HTTP/1.1" 200 68141
+"GET /contract-entities/1/ HTTP/1.1" 200 81072
+"GET /credit-package-pricing/?entity=1 HTTP/1.1" 200 190130
+"GET /credit-package-pricing/?company=1&package=179120&company_search=&package_search=&specialty= HTTP/1.1" 200 145045
+"GET /contract-entities/2/ HTTP/1.1" 200 81032
+"GET /credit-package-pricing/?entity=2 HTTP/1.1" 200 190818
+"GET /credit-package-pricing/?company=2&package=94237&company_search=&package_search=&specialty= HTTP/1.1" 200 145138
+"GET /contract-entities/3/ HTTP/1.1" 200 81029
+"GET /credit-package-pricing/?entity=3 HTTP/1.1" 200 190809
+"GET /credit-package-pricing/?company=3&package=104123&company_search=&package_search=&specialty= HTTP/1.1" 200 145558
+"GET /credit-package-pricing/?company_search=&company=3&specialty=215&package_search=&package= HTTP/1.1" 200 105290
+"GET /company-discounts/?entity=3 HTTP/1.1" 200 71412
+"GET /company-discounts/?tab=compare&entity=3&search=%D8%A8%D9%86%D9%83%20%D9%81%D9%8A%D8%B5%D9%84%20%D8%A7%D9%84%D8%A7%D8%B3%D9%84%D8%A7%D9%85%D9%89 HTTP/1.1" 200 77014
+"GET /company-discounts/?tab=ranking&entity=3&search=%D8%A8%D9%86%D9%83%20%D9%81%D9%8A%D8%B5%D9%84%20%D8%A7%D9%84%D8%A7%D8%B3%D9%84%D8%A7%D9%85%D9%89 HTTP/1.1" 200 71067
+"GET /company-discounts/?tab=exceptions&entity=3&search=%D8%A8%D9%86%D9%83%20%D9%81%D9%8A%D8%B5%D9%84%20%D8%A7%D9%84%D8%A7%D8%B3%D9%84%D8%A7%D9%85%D9%89 HTTP/1.1" 200 104582
+"GET /special-offers/?entity=3 HTTP/1.1" 200 91681
+"GET /special-offers/?search=%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%8A%D9%87+%D9%84%D9%84%D8%A7%D8%AA%D8%B5%D8%A7%D9%84%D8%A7%D8%AA HTTP/1.1" 200 83165

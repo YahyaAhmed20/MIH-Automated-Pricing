@@ -13,6 +13,7 @@ from django.core.exceptions import PermissionDenied
 from frontend.services.company_comparison_service import (
     CompanyComparisonService,
 )
+from imports.utils.import_helpers import ImportHelpers
 from pricing_requests.models import Procedure
 from django.db.models import Q, Sum, Avg
 from pricing_requests.models import PricingDetail
@@ -3997,8 +3998,6 @@ from django.shortcuts import get_object_or_404
 from django.shortcuts import render, get_object_or_404
 from django.core.cache import cache
 from django.utils import timezone
-
-
 @permission_required_any(
     Permissions.PACKAGES_CREDIT_BASIC,
     Permissions.PACKAGES_CREDIT_FULL,
@@ -4027,6 +4026,32 @@ def credit_package_pricing(request):
             ContractEntity,
             pk=company_id
         )
+    
+    # ============================================================
+    # الجهات المرتبطة ببيانات الباكدجات الآجلة
+    # ============================================================
+        # ============================================================
+    # 🔗 اكتشاف كل سجلات الـEntity التي تمثل نفس الجهة
+    # ============================================================
+    package_entity_ids = []
+
+    if company_id:
+        normalized_company_name = (
+            ImportHelpers.normalize_company_name(
+                selected_company.name
+            )
+        )
+
+        for entity in ContractEntity.objects.only("id", "name"):
+            if (
+                ImportHelpers.normalize_company_name(entity.name)
+                == normalized_company_name
+            ):
+                package_entity_ids.append(entity.id)
+
+        # ضمان وجود الـEntity المختارة دائمًا
+        if selected_company.id not in package_entity_ids:
+            package_entity_ids.append(selected_company.id)
     
     # ============================================================
     # ✅ جلب الشركات مع Cache
@@ -4064,9 +4089,12 @@ def credit_package_pricing(request):
         if specialties is None:
             # ✅ جلب الـ Package IDs النشطة للشركة من ContractPackage
             active_package_ids = ContractPackage.objects.filter(
-                contract__entity_id=company_id,
+                contract__entity_id__in=package_entity_ids,
                 is_active=True
-            ).values_list('package_id', flat=True).distinct()
+            ).values_list(
+                'package_id',
+                flat=True
+            ).distinct()
             
             # ✅ جلب التخصصات المرتبطة بهذه الـ Packages
             specialties = list(
@@ -4088,157 +4116,290 @@ def credit_package_pricing(request):
     
     if company_id:
         # ============================================================
-        # ✅ جلب الباكدجات من Package مباشرة (بدون ContractPackage)
+        # ✅ جلب الباكدجات الآجل من ContractPackage
+        #    العلاقة الصحيحة:
+        #    ContractPackage → Contract → ContractEntity
         # ============================================================
-        cache_key = f'packages_company_{company_id}_{"full" if has_credit_full else "basic"}'
+        cache_key = (
+            f'packages_company_{company_id}_'
+            f'{"full" if has_credit_full else "basic"}'
+        )
+
         cached_packages = cache.get(cache_key)
-        
+
         if cached_packages is not None:
-            # ✅ استخدام Cache
             packages = cached_packages
+
         else:
-            # ✅ جلب من قاعدة البيانات - من Package مباشرة
             package_objects = list(
-                Package.objects
+                ContractPackage.objects
                 .filter(
-                    entity_id=company_id,
-                    is_active=True
+                    contract__entity_id__in=package_entity_ids,
+                    is_active=True,
                 )
-                .select_related('specialty')
-                .order_by('name')
+                .select_related(
+                    "package",
+                    "package__specialty",
+                    "contract",
+                    "contract__entity",
+                )
+                .order_by("package__name")
             )
-            
-            # ✅ تخزين في Cache
+
+            # ============================================================
+            # 🔍 DEBUG - نقاط التصحيح
+            # ============================================================
+            print("DEBUG company_id =", company_id)
+            print("DEBUG package_entity_ids =", package_entity_ids)
+            print("DEBUG package_objects count =", len(package_objects))
+            print(
+                "DEBUG package IDs =",
+                [cp.package_id for cp in package_objects[:10]]
+            )
+            # ============================================================
+
             cache_data = [
                 {
-                    'id': p.id,
-                    'package_id': p.id,
-                    'name': p.name,
-                    'code': p.code,
-                    'specialty_id': p.specialty_id,
-                    'specialty_name': p.specialty.name if p.specialty else None,
-                    'stay_duration': p.stay_duration,
-                    'package_note': p.package_note,
-                    'cash_price': (
-                        str(p.cash_price)
-                        if has_credit_full and p.cash_price
+                    # مهم:
+                    # الـ template يستخدم cp.id كـ package id
+                    "id": cp.package_id,
+                    "package_id": cp.package_id,
+
+                    "name": cp.package.name,
+                    "code": cp.package.code,
+
+                    "specialty_id": (
+                        cp.package.specialty_id
+                        if cp.package.specialty_id
                         else None
                     ),
-                    'price': str(p.base_price) if p.base_price else None,
-                    'base_price': (
-                        str(p.base_price)
-                        if has_credit_full and p.base_price
+
+                    "specialty_name": (
+                        cp.package.specialty.name
+                        if cp.package.specialty
                         else None
                     ),
-                    'is_cash_package': p.is_cash_package,
+
+                    "stay_duration": cp.package.stay_duration,
+                    "package_note": cp.package.package_note,
+
+                    # السعر الخاص بالعقد هو المصدر الصحيح
+                    "cash_price": (
+                        str(cp.cash_price)
+                        if has_credit_full and cp.cash_price is not None
+                        else None
+                    ),
+
+                    "price": (
+                        str(cp.package_price)
+                        if cp.package_price is not None
+                        else None
+                    ),
+
+                    "base_price": (
+                        str(cp.package_price)
+                        if has_credit_full and cp.package_price is not None
+                        else None
+                    ),
+
+                    "is_cash_package": cp.package.is_cash_package,
+                    
+                    # ✅ حفظ الـ contract_package_id للاستخدام لاحقاً
+                    "contract_package_id": cp.id,
                 }
-                for p in package_objects
+                for cp in package_objects
             ]
-            cache.set(cache_key, cache_data, 60 * 10)
+
+            cache.set(
+                cache_key,
+                cache_data,
+                60 * 10
+            )
+
             packages = cache_data
-        
-        # ✅ تطبيق فلتر البحث على الباكدجات
+
+        # ============================================================
+        # ✅ فلتر البحث
+        # ============================================================
         if package_search:
             packages = [
-                p for p in packages 
-                if package_search.lower() in p.get('name', '').lower()
+                p for p in packages
+                if package_search.lower()
+                in p.get("name", "").lower()
             ]
-        
-        # ✅ تطبيق فلتر التخصص
+
+        # ============================================================
+        # ✅ فلتر التخصص
+        # ============================================================
         if specialty_id:
             try:
                 specialty_id = int(specialty_id)
+
                 packages = [
                     p for p in packages
-                    if p.get('specialty_id') == specialty_id
+                    if p.get("specialty_id") == specialty_id
                 ]
+
             except (ValueError, TypeError):
                 pass
-        
+
         # ============================================================
-        # ✅ تحويل الـ packages إلى كائنات قابلة للتنسيق
+        # ✅ Wrapper للتوافق مع الـTemplate الحالي
         # ============================================================
         class PackageWrapper:
+
             def __init__(self, data):
-                self.id = data.get('id')
-                self.package_id = data.get('package_id')
-                self.name = data.get('name')
-                self.code = data.get('code')
-                self.specialty_id = data.get('specialty_id')
-                self.specialty_name = data.get('specialty_name')
-                self.stay_duration = data.get('stay_duration')
-                self.package_note = data.get('package_note')
-                self.cash_price = data.get('cash_price')
-                self.price = data.get('price') or data.get('base_price')
-                self.is_cash_package = data.get('is_cash_package', False)
-                
-                # ✅ حقل package لازم يكون موجود عشان الـ template
-                self.package = type('obj', (object,), {
-                    'id': self.package_id,
-                    'name': self.name,
-                    'code': self.code,
-                    'specialty_id': self.specialty_id,
-                    'specialty': type('obj', (object,), {
-                        'name': self.specialty_name,
-                        'id': self.specialty_id,
-                    }) if self.specialty_id else None,
-                })()
-                
-                # ✅ حقل contract عشان التوافق مع الـ template القديم
-                self.contract = type('obj', (object,), {
-                    'entity': type('obj', (object,), {
-                        'name': 'نقدي' if self.is_cash_package else 'أجل',
-                    })()
-                })()
-        
-        # ✅ تحويل البيانات إلى Wrapper
-        packages = [PackageWrapper(p) for p in packages]
-        
+
+                self.id = data.get("id")
+                self.package_id = data.get("package_id")
+                self.contract_package_id = data.get("contract_package_id")
+
+                self.name = data.get("name")
+                self.code = data.get("code")
+
+                self.specialty_id = data.get("specialty_id")
+                self.specialty_name = data.get("specialty_name")
+
+                self.stay_duration = data.get("stay_duration")
+                self.package_note = data.get("package_note")
+
+                self.cash_price = data.get("cash_price")
+                self.price = (
+                    data.get("price")
+                    or data.get("base_price")
+                )
+
+                self.is_cash_package = data.get(
+                    "is_cash_package",
+                    False
+                )
+
+                # --------------------------------------------
+                # توافق مع الـTemplate
+                # --------------------------------------------
+                self.package = type(
+                    "obj",
+                    (object,),
+                    {
+                        "id": self.package_id,
+                        "name": self.name,
+                        "code": self.code,
+                        "specialty_id": self.specialty_id,
+                        "specialty": (
+                            type(
+                                "obj",
+                                (object,),
+                                {
+                                    "name": self.specialty_name,
+                                    "id": self.specialty_id,
+                                },
+                            )()
+                            if self.specialty_id
+                            else None
+                        ),
+                    },
+                )()
+
+                self.contract = type(
+                    "obj",
+                    (object,),
+                    {
+                        "entity": type(
+                            "obj",
+                            (object,),
+                            {
+                                "name": (
+                                    "نقدي"
+                                    if self.is_cash_package
+                                    else "أجل"
+                                ),
+                            },
+                        )(),
+                    },
+                )()
+
+        packages = [
+            PackageWrapper(p)
+            for p in packages
+        ]
+
         # ============================================================
-        # ✅ Helper functions لتنسيق الأرقام
+        # 🔍 DEBUG - نقاط التصحيح
+        # ============================================================
+        print("DEBUG final packages count =", len(packages))
+        if packages:
+            print("DEBUG first package name =", packages[0].name)
+            print("DEBUG first package price =", packages[0].price)
+        # ============================================================
+
+        # ============================================================
+        # ✅ تنسيق الأسعار
         # ============================================================
         def format_price(value):
+
             if value is None:
                 return "-"
+
             try:
                 return f"{int(float(value)):,}"
+
             except (ValueError, TypeError):
                 return str(value)
-        
+
         def format_percentage(value):
+
             if value is None:
                 return "-"
+
             try:
                 value = float(value)
+
                 if value == int(value):
                     return f"{int(value)}%"
+
                 return f"{value:.1f}%"
+
             except (ValueError, TypeError):
                 return str(value)
-        
-        # ✅ تنسيق الباكدجات
+
         for cp in packages:
-            cp.formatted_price = format_price(cp.price)
-            cp.formatted_cash = format_price(cp.cash_price)
+
+            cp.formatted_price = format_price(
+                cp.price
+            )
+
+            cp.formatted_cash = format_price(
+                cp.cash_price
+            )
+
             cp.formatted_discount = "-"
             cp.current_discount_label = "-"
-            
-            # ✅ إضافة معلومات التخصص للباكدج
-            if cp.package and hasattr(cp.package, 'specialty') and cp.package.specialty:
-                cp.specialty_name = cp.package.specialty.name
-                cp.specialty_id = cp.package.specialty.id
+
+            if (
+                cp.package
+                and hasattr(cp.package, "specialty")
+                and cp.package.specialty
+            ):
+                cp.specialty_name = (
+                    cp.package.specialty.name
+                )
+
+                cp.specialty_id = (
+                    cp.package.specialty.id
+                )
+
             else:
                 cp.specialty_name = "غير محدد"
                 cp.specialty_id = None
-            
+
             cp.is_expired = False
     
     # ✅ معالجة الباكدج المحدد
-    if package_id:
+    if package_id and company_id:
         # ✅ جلب الـ ContractPackage من package_id + company_id
         contract_package = ContractPackage.objects.filter(
             package_id=package_id,
-            contract__entity_id=company_id,
+            contract__entity_id__in=package_entity_ids,
             is_active=True
         ).select_related(
             'package',
@@ -4250,7 +4411,7 @@ def credit_package_pricing(request):
             selected_package = contract_package.package
             selected_contract_package = contract_package
         else:
-            # ✅ لو مش موجود، جرب في Package مباشرة
+            # ✅ لو مش موجود، جرب في Package مباشرة (كحل احتياطي)
             selected_package = get_object_or_404(
                 Package.objects.select_related('specialty'),
                 id=package_id,
@@ -4346,7 +4507,7 @@ def credit_package_pricing(request):
             else:
             
                 # ============================================================
-                # ✅ البيانات الأساسية
+                # ✅ البيانات الأساسية (حالة احتياطية)
                 # ============================================================
             
                 selected_package.formatted_price = format_price(

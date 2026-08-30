@@ -177,9 +177,14 @@ class ImportHelpers:
     @staticmethod
     def normalize_company_name(value):
         """
-        تنظيف اسم الشركة
+        تنظيف وتوحيد اسم الشركة للمطابقة.
         """
-        return ImportHelpers.normalize_text(value)
+        normalized = ImportHelpers.normalize_text(value)
+
+        # توحيد الياء والألف المقصورة في أسماء الجهات
+        normalized = normalized.replace("ى", "ي")
+
+        return normalized
 
     @staticmethod
     def package_lookup_key(
