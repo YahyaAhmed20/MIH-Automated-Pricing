@@ -700,6 +700,11 @@ class SimilarInvoice(models.Model):
         default=0
     )
 
+    operation_description = models.TextField(
+    blank=True,
+    null=True,
+    verbose_name="توصيف العملية"
+    )
     discount = models.DecimalField(
         max_digits=14,
         decimal_places=2,

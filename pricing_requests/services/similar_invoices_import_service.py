@@ -84,10 +84,10 @@ class SimilarInvoicesImportService:
             patient_name = ImportHelpers.normalize_text(row.get(2, ""))
             
             # العمود 3: تاريخ الدخول
-            admission_date = ImportHelpers.clean_date(row.get(3, None))
+            admission_date = ImportHelpers.clean_date_dmy(row.get(3, None))
             
             # العمود 4: تاريخ الخروج
-            discharge_date = ImportHelpers.clean_date(row.get(4, None))
+            discharge_date = ImportHelpers.clean_date_dmy(row.get(4, None))
             
             # العمود 5: مدة الاقامه
             raw_value = row.get(5)

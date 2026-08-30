@@ -516,9 +516,90 @@
         color: #dee2e6;
         margin-bottom: 1rem;
     }
+
+    /* ✅ ========================================= */
+    /* ✅ 📱 Mobile Filter Toggle Button 📱 */
+    /* ✅ ========================================= */
+    .filter-toggle-btn {
+        display: none;
+        width: 100%;
+        padding: 12px 20px;
+        background: #0d6efd;
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 12px;
+    }
+
+    .filter-toggle-btn:hover {
+        background: #0b5ed7;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(13, 110, 253, 0.3);
+    }
+
+    .filter-toggle-btn i {
+        font-size: 18px;
+    }
+
+    .filter-toggle-btn .badge-count {
+        background: rgba(255,255,255,0.2);
+        padding: 2px 10px;
+        border-radius: 20px;
+        font-size: 13px;
+    }
     
     /* ✅ Mobile Responsive */
     @media (max-width: 768px) {
+        /* ✅ إخفاء الفلاتر في الموبايل وإظهار الزر */
+        .filter-toggle-btn {
+            display: flex !important;
+        }
+
+        .filter-card .card-body {
+            padding: 0 !important;
+        }
+
+        .filter-body-inner {
+            padding: 12px 16px 20px !important;
+            display: none;
+        }
+
+        .filter-body-inner.show {
+            display: block !important;
+        }
+
+        .filter-body-inner .row {
+            margin: 0 !important;
+        }
+
+        .filter-body-inner .col-md-2 {
+            padding: 0 6px !important;
+            margin-bottom: 10px !important;
+        }
+
+        .filter-body-inner .col-12 {
+            padding: 0 !important;
+        }
+
+        .filter-body-inner .btn-filter {
+            margin-top: 4px !important;
+            padding: 0.5rem 1rem !important;
+            font-size: 0.8rem !important;
+        }
+
+        /* ✅ إخفاء الـ header القديم في الموبايل */
+        .filter-card .card-body > .row:first-child {
+            display: none !important;
+        }
+
+        /* ✅ تحسينات الجدول */
         .patients-table thead th,
         .patients-table tbody td {
             padding: 0.3rem 0.35rem !important;
@@ -555,10 +636,6 @@
             padding: 1rem;
         }
         
-        .filter-card .card-body {
-            padding: 0.75rem;
-        }
-        
         .search-wrapper .input-group .form-control {
             font-size: 0.85rem;
             padding: 0.6rem 1rem;
@@ -580,6 +657,12 @@
         .patients-table tbody td {
             padding: 0.4rem 0.5rem !important;
             font-size: 0.7rem !important;
+        }
+    }
+
+    @media (min-width: 769px) {
+        .filter-body-inner {
+            display: block !important;
         }
     }
 
@@ -632,17 +715,15 @@
                 {{ results_count }} فاتورة
             </p>
         </div>
-        <div>
-            <span class="badge bg-primary rounded-pill fs-6 px-3 py-2">
-                <i class="fas fa-calendar-alt me-1"></i>
-                آخر تحديث: {% now "Y-m-d" %}
-            </span>
-        </div>
+       
     </div>
 
     <!-- ✅ Search Box -->
     <div class="search-wrapper">
         <form method="GET" class="input-group" id="searchForm">
+            {% if group %}
+                <input type="hidden" name="group" value="{{ group }}">
+            {% endif %}
             <!-- ✅ الحفاظ على الفلاتر في البحث -->
             {% if patient_name %}
             <input type="hidden" name="patient_name" value="{{ patient_name }}">
@@ -695,116 +776,136 @@
     <!-- ============================================ -->
     <div class="card filter-card">
         <div class="card-body">
-            <form method="GET" class="row g-3 align-items-end">
-                
-                <!-- ✅ فلتر 1: اسم المريض -->
-                <div class="col-md-2">
-                    <label class="form-label">👤 المريض</label>
-                    <input type="text" 
-                           name="patient_name" 
-                           class="form-control" 
-                           placeholder="اسم المريض..." 
-                           value="{{ patient_name }}">
-                </div>
-                
-                <!-- ✅ فلتر 2: التخصص -->
-                <div class="col-md-2">
-                    <label class="form-label">📚 التخصص</label>
-                    <input type="text" 
-                           name="specialty" 
-                           list="specialty-suggestions"
-                           class="form-control" 
-                           placeholder="التخصص..." 
-                           value="{{ specialty }}">
-                    <datalist id="specialty-suggestions">
-                        {% for item in specialties %}
-                            <option value="{{ item }}">{{ item }}</option>
-                        {% endfor %}
-                    </datalist>
-                </div>
-                
-                <!-- ✅ فلتر 3: الجهة -->
-                <div class="col-md-2">
-                    <label class="form-label">🏢 الجهة</label>
-                    <input type="text" 
-                           name="entity" 
-                           list="entity-suggestions"
-                           class="form-control" 
-                           placeholder="الجهة..." 
-                           value="{{ entity }}">
-                    <datalist id="entity-suggestions">
-                        {% for item in entities %}
-                            <option value="{{ item }}">{{ item }}</option>
-                        {% endfor %}
-                    </datalist>
-                </div>
-                
-                <!-- ✅ فلتر 4: الطبيب -->
-                <div class="col-md-2">
-                    <label class="form-label">👨‍⚕️ الطبيب</label>
-                    <input type="text" 
-                           name="doctor" 
-                           list="doctor-suggestions"
-                           class="form-control" 
-                           placeholder="الطبيب..." 
-                           value="{{ doctor }}">
-                    <datalist id="doctor-suggestions">
-                        {% for item in doctors %}
-                            <option value="{{ item }}">{{ item }}</option>
-                        {% endfor %}
-                    </datalist>
-                </div>
-                
-                <!-- ✅ فلتر 5: الحالة -->
-                <div class="col-md-2">
-                    <label class="form-label">📌 الحالة</label>
-                    <input type="text" 
-                           name="status" 
-                           list="status-suggestions"
-                           class="form-control" 
-                           placeholder="الحالة..." 
-                           value="{{ status }}">
-                    <datalist id="status-suggestions">
-                        {% for item in statuses %}
-                            <option value="{{ item }}">{{ item }}</option>
-                        {% endfor %}
-                    </datalist>
-                </div>
-                
-                <!-- ✅ فلتر 6: النطاق السعري -->
-                <div class="col-md-2">
-                    <label class="form-label">💰 النطاق السعري</label>
-                    <select name="price_range" class="form-select">
-                        <option value="">كل المبالغ</option>
-                        {% for range in price_ranges %}
-                            <option value="{{ range.value }}" {% if price_range == range.value %}selected{% endif %}>
-                                {{ range.label }}
-                            </option>
-                        {% endfor %}
-                    </select>
-                </div>
-                
-                <!-- ✅ فلتر 7: التاريخ من - إلى -->
-                <div class="col-md-2">
-                    <label class="form-label">📅 من</label>
-                    <input type="date" name="date_from" class="form-control" value="{{ date_from }}">
-                </div>
-                <div class="col-md-2">
-                    <label class="form-label">📅 إلى</label>
-                    <input type="date" name="date_to" class="form-control" value="{{ date_to }}">
-                </div>
-                
-                <!-- ✅ أزرار الفلاتر -->
-                <div class="col-12 mt-3 d-flex gap-2">
-                    <button type="submit" class="btn btn-primary btn-filter">
-                        <i class="fas fa-filter me-1"></i> تطبيق الفلاتر
-                    </button>
-                    <a href="{% url 'similar_invoices' %}" class="btn btn-secondary btn-filter">
-                        <i class="fas fa-undo me-1"></i> إعادة تعيين
-                    </a>
-                </div>
-                
-            </form>
+            <!-- Mobile Toggle Button -->
+            <button id="filterToggleBtn" class="filter-toggle-btn">
+                <i class="fas fa-sliders-h"></i>
+                فلاتر البحث المتقدم
+                <span class="badge-count">{{ results_count }} نتيجة</span>
+                <i class="fas fa-chevron-down"></i>
+            </button>
+
+            <!-- Filter Body -->
+            <div id="filterBodyInner" class="filter-body-inner">
+                <form method="GET" class="row g-3 align-items-end">
+                    {% if search %}
+                        <input type="hidden" name="search" value="{{ search }}">
+                    {% endif %}
+                    
+                    <!-- ✅ فلتر 1: اسم المريض -->
+                    <div class="col-md-2">
+                        <label class="form-label">👤 المريض</label>
+                        <input type="text"
+                               name="patient_name"
+                               list="patient-suggestions"
+                               class="form-control"
+                               placeholder="اسم المريض..."
+                               value="{{ patient_name }}">
+                        <datalist id="patient-suggestions">
+                            {% for item in patient_names %}
+                                <option value="{{ item }}">{{ item }}</option>
+                            {% endfor %}
+                        </datalist>
+                    </div>
+                    
+                    <!-- ✅ فلتر 2: التخصص -->
+                    <div class="col-md-2">
+                        <label class="form-label">📚 التخصص</label>
+                        <input type="text" 
+                               name="specialty" 
+                               list="specialty-suggestions"
+                               class="form-control" 
+                               placeholder="التخصص..." 
+                               value="{{ specialty }}">
+                        <datalist id="specialty-suggestions">
+                            {% for item in specialties %}
+                                <option value="{{ item }}">{{ item }}</option>
+                            {% endfor %}
+                        </datalist>
+                    </div>
+                    
+                    <!-- ✅ فلتر 3: الجهة -->
+                    <div class="col-md-2">
+                        <label class="form-label">🏢 الجهة</label>
+                        <input type="text" 
+                               name="entity" 
+                               list="entity-suggestions"
+                               class="form-control" 
+                               placeholder="الجهة..." 
+                               value="{{ entity }}">
+                        <datalist id="entity-suggestions">
+                            {% for item in entities %}
+                                <option value="{{ item }}">{{ item }}</option>
+                            {% endfor %}
+                        </datalist>
+                    </div>
+                    
+                    <!-- ✅ فلتر 4: الطبيب -->
+                    <div class="col-md-2">
+                        <label class="form-label">👨‍⚕️ الطبيب</label>
+                        <input type="text" 
+                               name="doctor" 
+                               list="doctor-suggestions"
+                               class="form-control" 
+                               placeholder="الطبيب..." 
+                               value="{{ doctor }}">
+                        <datalist id="doctor-suggestions">
+                            {% for item in doctors %}
+                                <option value="{{ item }}">{{ item }}</option>
+                            {% endfor %}
+                        </datalist>
+                    </div>
+                    
+                    <!-- ✅ فلتر 5: الحالة -->
+                    <div class="col-md-2">
+                        <label class="form-label">📌 الحالة</label>
+                        <input type="text" 
+                               name="status" 
+                               list="status-suggestions"
+                               class="form-control" 
+                               placeholder="الحالة..." 
+                               value="{{ status }}">
+                        <datalist id="status-suggestions">
+                            {% for item in statuses %}
+                                <option value="{{ item }}">{{ item }}</option>
+                            {% endfor %}
+                        </datalist>
+                    </div>
+                    
+                    <!-- ✅ فلتر 6: النطاق السعري -->
+                    <div class="col-md-2">
+                        <label class="form-label">💰 النطاق السعري</label>
+                        <select name="price_range" class="form-select">
+                            <option value="">كل المبالغ</option>
+                            {% for range in price_ranges %}
+                                <option value="{{ range.value }}" {% if price_range == range.value %}selected{% endif %}>
+                                    {{ range.label }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <!-- ✅ فلتر 7: التاريخ من - إلى -->
+                    <div class="col-md-2">
+                        <label class="form-label">📅 من</label>
+                        <input type="date" name="date_from" class="form-control" value="{{ date_from }}">
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">📅 إلى</label>
+                        <input type="date" name="date_to" class="form-control" value="{{ date_to }}">
+                    </div>
+                    
+                    <!-- ✅ أزرار الفلاتر -->
+                    <div class="col-12 mt-3 d-flex gap-2">
+                        <button type="submit" class="btn btn-primary btn-filter">
+                            <i class="fas fa-filter me-1"></i> تطبيق الفلاتر
+                        </button>
+                        <a href="{% url 'similar_invoices' %}" class="btn btn-secondary btn-filter">
+                            <i class="fas fa-undo me-1"></i> إعادة تعيين
+                        </a>
+                    </div>
+                    
+                </form>
+            </div>
         </div>
     </div>
 
@@ -1017,7 +1118,7 @@
             <ul class="pagination pagination-sm">
                 {% if page_obj.has_previous %}
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if search %}&search={{ search }}{% endif %}{% if patient_name %}&patient_name={{ patient_name }}{% endif %}{% if specialty %}&specialty={{ specialty }}{% endif %}{% if entity %}&entity={{ entity }}{% endif %}{% if doctor %}&doctor={{ doctor }}{% endif %}{% if status %}&status={{ status }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}{% if price_range %}&price_range={{ price_range }}{% endif %}">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if search %}&search={{ search }}{% endif %}{% if group %}&group={{ group }}{% endif %}{% if patient_name %}&patient_name={{ patient_name }}{% endif %}{% if specialty %}&specialty={{ specialty }}{% endif %}{% if entity %}&entity={{ entity }}{% endif %}{% if doctor %}&doctor={{ doctor }}{% endif %}{% if status %}&status={{ status }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}{% if price_range %}&price_range={{ price_range }}{% endif %}">
                         <i class="fas fa-chevron-right"></i>
                     </a>
                 </li>
@@ -1026,7 +1127,7 @@
                 {% for num in page_obj.paginator.page_range %}
                     {% if num >= page_obj.number|add:'-2' and num <= page_obj.number|add:'2' %}
                     <li class="page-item {% if num == page_obj.number %}active{% endif %}">
-                        <a class="page-link" href="?page={{ num }}{% if search %}&search={{ search }}{% endif %}{% if patient_name %}&patient_name={{ patient_name }}{% endif %}{% if specialty %}&specialty={{ specialty }}{% endif %}{% if entity %}&entity={{ entity }}{% endif %}{% if doctor %}&doctor={{ doctor }}{% endif %}{% if status %}&status={{ status }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}{% if price_range %}&price_range={{ price_range }}{% endif %}">
+                        <a class="page-link" href="?page={{ num }}{% if search %}&search={{ search }}{% endif %}{% if group %}&group={{ group }}{% endif %}{% if patient_name %}&patient_name={{ patient_name }}{% endif %}{% if specialty %}&specialty={{ specialty }}{% endif %}{% if entity %}&entity={{ entity }}{% endif %}{% if doctor %}&doctor={{ doctor }}{% endif %}{% if status %}&status={{ status }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}{% if price_range %}&price_range={{ price_range }}{% endif %}">
                             {{ num }}
                         </a>
                     </li>
@@ -1035,7 +1136,7 @@
                 
                 {% if page_obj.has_next %}
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if search %}&search={{ search }}{% endif %}{% if patient_name %}&patient_name={{ patient_name }}{% endif %}{% if specialty %}&specialty={{ specialty }}{% endif %}{% if entity %}&entity={{ entity }}{% endif %}{% if doctor %}&doctor={{ doctor }}{% endif %}{% if status %}&status={{ status }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}{% if price_range %}&price_range={{ price_range }}{% endif %}">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if search %}&search={{ search }}{% endif %}{% if group %}&group={{ group }}{% endif %}{% if patient_name %}&patient_name={{ patient_name }}{% endif %}{% if specialty %}&specialty={{ specialty }}{% endif %}{% if entity %}&entity={{ entity }}{% endif %}{% if doctor %}&doctor={{ doctor }}{% endif %}{% if status %}&status={{ status }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}{% if price_range %}&price_range={{ price_range }}{% endif %}">
                         <i class="fas fa-chevron-left"></i>
                     </a>
                 </li>
@@ -1323,6 +1424,36 @@ document.addEventListener('DOMContentLoaded', function() {
                 this.form.submit();
             }
         });
+    }
+
+    // ===== Mobile Filter Toggle =====
+    const toggleBtn = document.getElementById('filterToggleBtn');
+    const filterBody = document.getElementById('filterBodyInner');
+
+    if (toggleBtn && filterBody) {
+        toggleBtn.addEventListener('click', function() {
+            filterBody.classList.toggle('show');
+            const icon = this.querySelector('i:last-child');
+            if (filterBody.classList.contains('show')) {
+                icon.className = 'fas fa-chevron-up';
+            } else {
+                icon.className = 'fas fa-chevron-down';
+            }
+        });
+
+        // Auto-close on filter submit (mobile)
+        const filterForm = document.querySelector('.filter-body-inner form');
+        if (filterForm) {
+            filterForm.addEventListener('submit', function() {
+                if (window.innerWidth <= 768) {
+                    filterBody.classList.remove('show');
+                    const icon = toggleBtn.querySelector('i:last-child');
+                    if (icon) {
+                        icon.className = 'fas fa-chevron-down';
+                    }
+                }
+            });
+        }
     }
 });
 </script>

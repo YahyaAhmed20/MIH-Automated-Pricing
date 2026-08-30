@@ -5133,10 +5133,16 @@ def similar_invoices(request):
 
     # ✅ تطبيق الفلاتر
     if search:
-        invoices = invoices.filter(operation_name__icontains=search)
+        invoices = invoices.filter(
+            Q(operation_name__icontains=search) |
+            Q(patient_name__icontains=search) |
+            Q(specialty_name__icontains=search)
+        )
 
     if patient_name:
-        invoices = invoices.filter(patient_name__icontains=patient_name)
+        invoices = invoices.filter(
+            patient_name__icontains=patient_name
+        )
 
     if specialty:
         invoices = invoices.filter(specialty_name=specialty)
@@ -5222,6 +5228,14 @@ def similar_invoices(request):
         .distinct()
         .order_by("invoice_status")
     )
+    
+    patient_names = (
+        invoices
+        .exclude(patient_name="")
+        .values_list("patient_name", flat=True)
+        .distinct()
+        .order_by("patient_name")
+    )
 
     # ✅ ✅ ✅ نطاقات الأسعار المحددة مسبقاً
     PRICE_RANGES = [
@@ -5251,6 +5265,7 @@ def similar_invoices(request):
             "date_to": date_to,
             "price_range": price_range,  # ✅ جديد
             "price_ranges": PRICE_RANGES,  # ✅ جديد
+            "patient_names": patient_names,
             "specialties": specialties,
             "entities": entities,
             "doctors": doctors,
