@@ -5226,9 +5226,8 @@ def similar_invoices(request):
 from django.db.models import Q
 from django.shortcuts import render
 from medical_catalog.models import Procedure
-
-
-# frontend/views.py
+from django.db.models import Q, F, Value
+from django.db.models.functions import Replace
 @permission_required_any(
     Permissions.PACKAGES_CREDIT_BASIC,
     Permissions.PACKAGES_CREDIT_FULL,
@@ -5236,48 +5235,79 @@ from medical_catalog.models import Procedure
 def procedures(request):
 
     search = request.GET.get("search", "").strip()
-    specialty = request.GET.get("specialty", "").strip()  # ✅ اسم التخصص (نص)
+    specialty = request.GET.get("specialty", "").strip()
     category = request.GET.get("category", "").strip()
     show_all = request.GET.get("show_all")
 
-    # ✅ استخدام select_related للـ Specialty
-    procedures = Procedure.objects.select_related('specialty').all()
+    # ============================================================
+    # جميع العمليات
+    # ============================================================
+    procedures = Procedure.objects.select_related("specialty").all()
 
-    # ==========================================
-    # ✅ Search - باستخدام الحقول الصحيحة
-    # ==========================================
+    # ============================================================
+    # 🔍 Search
+    # ============================================================
     if search:
-        procedures = procedures.filter(
-            Q(name_ar__icontains=search) |      # ✅ اسم العملية بالعربي
-            Q(name_en__icontains=search) |      # ✅ اسم العملية بالإنجليزي
-            Q(code__icontains=search)           # ✅ الكود
+
+        # الصيغة الأصلية
+        search_variants = {search}
+
+        # تطبيع الاختلافات الإملائية الشائعة
+        normalized_search = (
+            search
+            .replace("ة", "ه")
+            .replace("ه", "ة")
+            .replace("ى", "ي")
+            .replace("ي", "ى")
+            .replace("أ", "ا")
+            .replace("إ", "ا")
+            .replace("آ", "ا")
         )
 
-    # ==========================================
-    # ✅ ✅ ✅ Specialty Filter - باستخدام specialty__name (النص)
-    # ==========================================
+        search_variants.add(normalized_search)
+
+        search_query = Q()
+
+        for term in search_variants:
+            search_query |= (
+                Q(name_ar__icontains=term)
+                | Q(name_en__icontains=term)
+                | Q(code__icontains=term)
+            )
+
+        procedures = procedures.filter(search_query)
+
+    # ============================================================
+    # 📚 Specialty Filter
+    # ============================================================
     if specialty:
-        procedures = procedures.filter(specialty__name=specialty)  # ✅ بدلاً من specialty_id
+        procedures = procedures.filter(
+            specialty__name=specialty
+        )
 
-    # ==========================================
-    # ✅ Category Filter - باستخدام classification
-    # ==========================================
+    # ============================================================
+    # 📂 Category Filter
+    # ============================================================
     if category:
-        procedures = procedures.filter(classification=category)
+        procedures = procedures.filter(
+            classification=category
+        )
 
-    # ==========================================
-    # ✅ التخصصات من النتائج المفلترة
-    # ==========================================
+    # ============================================================
+    # 📚 التخصصات من النتائج الحالية
+    # ============================================================
     specialties = (
         procedures
+        .exclude(specialty__isnull=True)
+        .exclude(specialty__name="")
         .values_list("specialty__name", flat=True)
         .distinct()
         .order_by("specialty__name")
     )
 
-    # ==========================================
-    # ✅ التصنيفات من النتائج المفلترة
-    # ==========================================
+    # ============================================================
+    # 📂 التصنيفات من النتائج الحالية
+    # ============================================================
     categories = (
         procedures
         .exclude(classification="")
@@ -5286,21 +5316,31 @@ def procedures(request):
         .order_by("classification")
     )
 
-    # ==========================================
-    # ✅ عدد العمليات لكل تخصص
-    # ==========================================
+    # ============================================================
+    # 🔢 عدد العمليات لكل تخصص
+    # ============================================================
     specialties_with_count = []
+
     for spec in specialties:
-        count = procedures.filter(specialty__name=spec).count()
+        count = procedures.filter(
+            specialty__name=spec
+        ).count()
+
         specialties_with_count.append({
             "name": spec,
-            "count": count
+            "count": count,
         })
 
+    # ============================================================
+    # 📋 النتائج
+    # ============================================================
     procedures_list = list(procedures)
+
     total_count = len(procedures_list)
 
-    # ✅ لو show_all = 1، اعرض الكل، وإلا اعرض 24
+    # ============================================================
+    # عرض 24 عملية افتراضيًا
+    # ============================================================
     if show_all:
         display_procedures = procedures_list
     else:
@@ -5316,7 +5356,7 @@ def procedures(request):
             "categories": categories,
             "specialties_with_count": specialties_with_count,
             "search": search,
-            "specialty": specialty,  # ✅ اسم التخصص (نص)
+            "specialty": specialty,
             "category": category,
             "show_all": show_all,
             "total_count": total_count,
@@ -5380,11 +5420,18 @@ def procedure_fees(request):
         # ✅ بناء الـ Query مع البحث في التخصص والتصنيف
         query = Q()
         
-        if procedure_search:
-            query |= Q(name_ar__icontains=procedure_search)
-            query |= Q(name_en__icontains=procedure_search)
-            query |= Q(code__icontains=procedure_search)
-            query |= Q(classification__icontains=procedure_search)
+    if procedure_search:
+        # الصيغة الأصلية
+        query |= Q(name_ar__icontains=procedure_search)
+        query |= Q(name_en__icontains=procedure_search)
+        query |= Q(code__icontains=procedure_search)
+        query |= Q(classification__icontains=procedure_search)
+
+        # دعم ه ↔ ة في البحث العربي
+        normalized_procedure_search = procedure_search.replace("ه", "ة")
+
+        if normalized_procedure_search != procedure_search:
+            query |= Q(name_ar__icontains=normalized_procedure_search)
         
         if specialty_search:
             query |= Q(specialty__name__icontains=specialty_search)

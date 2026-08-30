@@ -21830,3 +21830,295 @@ Watching for file changes with StatReloader
 "GET /doctors/%D8%A7.%D8%AF%20/%20%D8%AE%D8%A7%D9%84%D8%AF%20%D8%AF%D9%8A%D8%A7%D8%A8/ HTTP/1.1" 200 195775
 Watching for file changes with StatReloader
 "GET /doctors/%D8%A7.%D8%AF%20/%20%D8%AE%D8%A7%D9%84%D8%AF%20%D8%AF%D9%8A%D8%A7%D8%A8/ HTTP/1.1" 200 201133
+Watching for file changes with StatReloader
+Internal Server Error: /procedures/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.OperationalError: server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\accounts\decorators.py", line 92, in wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5300, in procedures
+    procedures_list = list(procedures)
+                      ^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 386, in __iter__
+    self._fetch_all()
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 1954, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 93, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\sql\compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+
+"GET /procedures/ HTTP/1.1" 500 143941
+"GET /procedures/ HTTP/1.1" 200 133278
+"GET /procedures/?search=%D9%85%D8%B1%D8%A7%D8%B1%D9%87 HTTP/1.1" 200 65557
+"GET /procedures/?search=%D9%85%D8%B1%D8%A7 HTTP/1.1" 200 92424
+"GET /procedures/?search=%D9%85%D8%B1%D8%A7 HTTP/1.1" 200 93149
+"GET /procedures/?search=%D9%85%D8%B1%D8%A7 HTTP/1.1" 200 93149
+"GET /procedures/?search=%D9%85%D8%B1%D8%A7 HTTP/1.1" 200 93149
+- Broken pipe from ('127.0.0.1', 64896)
+- Broken pipe from ('127.0.0.1', 64905)
+- Broken pipe from ('127.0.0.1', 64922)
+"GET /procedures/?search=%D9%85%D8%B1%D8%A7%D8%B1%D9%87 HTTP/1.1" 200 66282
+"GET /procedures/?search=%D9%85%D8%B1%D8%A7%D8%B1 HTTP/1.1" 200 87908
+"GET /procedures/?search=%D9%85%D8%B1%D8%A7%D8%B1%D9%87 HTTP/1.1" 200 66282
+"GET /procedures/?search=%D9%85%D8%B1%D8%A7%D8%B1 HTTP/1.1" 200 87908
+- Broken pipe from ('127.0.0.1', 64925)
+- Broken pipe from ('127.0.0.1', 65292)
+- Broken pipe from ('127.0.0.1', 65309)
+"GET /procedures/?search=%D8%A7%D9%84%D9%85%D8%B1%D8%A7%D8%B1 HTTP/1.1" 200 82620
+- Broken pipe from ('127.0.0.1', 65328)
+"GET /procedures/?search=%D9%85%D8%B1%D8%A7%D8%B1%D9%87 HTTP/1.1" 200 66282
+- Broken pipe from ('127.0.0.1', 65444)
+"GET /procedures/?search=%D9%85%D8%B1%D8%A7%D8%B1 HTTP/1.1" 200 87908
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+Internal Server Error: /procedures/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\accounts\decorators.py", line 92, in wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5298, in procedures
+    .exclude(specialty_name="")
+     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 1503, in exclude
+    return self._filter_or_exclude(True, args, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 1513, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 1521, in _filter_or_exclude_inplace
+    self._query.add_q(~Q(*args, **kwargs))
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\sql\query.py", line 1648, in add_q
+    clause, _ = self._add_q(q_object, can_reuse)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\sql\query.py", line 1680, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\sql\query.py", line 1528, in build_filter
+    lookups, parts, reffed_expression = self.solve_lookup_type(arg, summarize)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\sql\query.py", line 1335, in solve_lookup_type
+    _, field, _, lookup_parts = self.names_to_path(lookup_splitted, self.get_meta())
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\sql\query.py", line 1813, in names_to_path
+    raise FieldError(
+django.core.exceptions.FieldError: Cannot resolve keyword 'specialty_name' into field. Choices are: classification, code, created_at, id, is_active, name_ar, name_en, packages, specialty, specialty_id, updated_at
+"GET /procedures/? HTTP/1.1" 500 128110
+Internal Server Error: /procedures/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\accounts\decorators.py", line 92, in wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5298, in procedures
+    .exclude(specialty_name="")
+     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 1503, in exclude
+    return self._filter_or_exclude(True, args, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 1513, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 1521, in _filter_or_exclude_inplace
+    self._query.add_q(~Q(*args, **kwargs))
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\sql\query.py", line 1648, in add_q
+    clause, _ = self._add_q(q_object, can_reuse)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\sql\query.py", line 1680, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\sql\query.py", line 1528, in build_filter
+    lookups, parts, reffed_expression = self.solve_lookup_type(arg, summarize)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\sql\query.py", line 1335, in solve_lookup_type
+    _, field, _, lookup_parts = self.names_to_path(lookup_splitted, self.get_meta())
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\sql\query.py", line 1813, in names_to_path
+    raise FieldError(
+django.core.exceptions.FieldError: Cannot resolve keyword 'specialty_name' into field. Choices are: classification, code, created_at, id, is_active, name_ar, name_en, packages, specialty, specialty_id, updated_at
+"GET /procedures/ HTTP/1.1" 500 127910
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /procedures/ HTTP/1.1" 200 134003
+"GET /procedures/ HTTP/1.1" 200 134003
+- Broken pipe from ('127.0.0.1', 54988)
+"GET /procedures/?search=%D9%85%D8%B1%D8%A7%D8%B1%D9%87 HTTP/1.1" 200 66282
+- Broken pipe from ('127.0.0.1', 55175)
+"GET /procedures/?search=%D9%85%D8%B1%D8%A7%D8%B1 HTTP/1.1" 200 87908
+- Broken pipe from ('127.0.0.1', 55350)
+"GET /procedures/?search=%D9%85%D8%B1%D8%A7%D8%B1%D9%87 HTTP/1.1" 200 66282
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+Internal Server Error: /procedures/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\accounts\decorators.py", line 92, in wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5325, in procedures
+    .exclude(specialty_name="")
+     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 1503, in exclude
+    return self._filter_or_exclude(True, args, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 1513, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 1521, in _filter_or_exclude_inplace
+    self._query.add_q(~Q(*args, **kwargs))
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\sql\query.py", line 1648, in add_q
+    clause, _ = self._add_q(q_object, can_reuse)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\sql\query.py", line 1680, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\sql\query.py", line 1528, in build_filter
+    lookups, parts, reffed_expression = self.solve_lookup_type(arg, summarize)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\sql\query.py", line 1335, in solve_lookup_type
+    _, field, _, lookup_parts = self.names_to_path(lookup_splitted, self.get_meta())
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\sql\query.py", line 1813, in names_to_path
+    raise FieldError(
+django.core.exceptions.FieldError: Cannot resolve keyword 'specialty_name' into field. Choices are: classification, code, created_at, id, is_active, name_ar, name_en, packages, specialty, specialty_id, updated_at
+"GET /procedures/? HTTP/1.1" 500 128247
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+Internal Server Error: /procedures/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\accounts\decorators.py", line 92, in wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5302, in procedures
+    .exclude(None)
+     ^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 1503, in exclude
+    return self._filter_or_exclude(True, args, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 1513, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 1521, in _filter_or_exclude_inplace
+    self._query.add_q(~Q(*args, **kwargs))
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\sql\query.py", line 1648, in add_q
+    clause, _ = self._add_q(q_object, can_reuse)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\sql\query.py", line 1680, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\sql\query.py", line 1525, in build_filter
+    arg, value = filter_expr
+    ^^^^^^^^^^
+TypeError: cannot unpack non-iterable NoneType object
+"GET /procedures/? HTTP/1.1" 500 115980
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /procedures/? HTTP/1.1" 200 134003
+- Broken pipe from ('127.0.0.1', 59024)
+"GET /procedures/?search=%D9%85%D8%B1%D8%A7%D8%B1%D9%87 HTTP/1.1" 200 79942
+- Broken pipe from ('127.0.0.1', 59028)
+"GET /procedures/?search=%D8%A7%D9%84%D9%85%D8%B1%D8%A7%D8%B1%D9%87 HTTP/1.1" 200 74654
+- Broken pipe from ('127.0.0.1', 59433)
+"GET /procedures/?search= HTTP/1.1" 200 134003
+- Broken pipe from ('127.0.0.1', 59443)
+"GET /procedures/?search=%D9%85%D8%B1%D8%A7%D8%B1%D9%87 HTTP/1.1" 200 79942
+"GET /procedures/? HTTP/1.1" 200 134003
+"GET /procedures/? HTTP/1.1" 200 134285
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+- Broken pipe from ('127.0.0.1', 61474)
+"GET /procedures/?search=ES-002 HTTP/1.1" 200 69558
+"GET /procedures/? HTTP/1.1" 200 134285
+- Broken pipe from ('127.0.0.1', 61865)
+- Broken pipe from ('127.0.0.1', 61864)
+- Broken pipe from ('127.0.0.1', 62054)
+"GET /procedures/?search=%D9%85%D8%B1%D8%A7%D8%B1%D9%87 HTTP/1.1" 200 80224
+"GET /procedures/? HTTP/1.1" 200 134285
+"GET /procedures/?search=&specialty=&category=&show_all=1 HTTP/1.1" 200 5881197
+- Broken pipe from ('127.0.0.1', 62065)
+"GET /procedures/?show_all=1&search=%D9%85%D8%B1%D8%A7%D8%B1%D9%87 HTTP/1.1" 200 88083
+"GET /procedures/?show_all=1& HTTP/1.1" 200 5881197
+"GET /procedure-fees/ HTTP/1.1" 200 88887
+"GET /procedure-fees/ HTTP/1.1" 200 88890
+"GET /procedure-fees/ HTTP/1.1" 200 88890
+"GET /procedure-fees/ HTTP/1.1" 200 88885
+"GET /procedure-fees/?procedure_search=%D9%85%D9%86%D8%B8%D8%A7%D8%B1+%D9%85%D8%B1%D9%89%D8%A1&specialty_search=&classification_search=&search= HTTP/1.1" 200 92117
+"GET /procedure-fees/?procedure_search=%D9%85%D8%B1%D8%A7%D8%B1&specialty_search=&classification_search=&search= HTTP/1.1" 200 92074
+"GET /procedure-fees/?procedure_search=%D9%85%D8%B1%D8%A7%D8%B1%D9%87&specialty_search=&classification_search=&search= HTTP/1.1" 200 89936
+"GET /procedure-fees/?procedure_search=%D9%85%D8%B1%D8%A7%D8%B1%D9%87&specialty_search=&classification_search=&search= HTTP/1.1" 200 89936
+"GET /procedure-fees/?procedure_search=&specialty_search=&classification_search=&search= HTTP/1.1" 200 88885
+"GET /procedure-fees/?procedure_search=%D9%85%D8%B1%D8%A7%D8%B1%D9%87&specialty_search=&classification_search=&search= HTTP/1.1" 200 89936
+"GET /procedure-fees/?procedure_search=%D8%A7%D9%84%D9%85%D8%B1%D8%A7%D8%B1%D9%87&specialty_search=&classification_search=&search= HTTP/1.1" 200 89944
+"GET /procedure-fees/?procedure_search=%D9%85%D8%B1%D8%A7%D8%B1%D9%87&specialty_search=&classification_search=&search= HTTP/1.1" 200 89936
+"GET /procedure-fees/?procedure_search=%D9%85%D8%B1%D8%A7&specialty_search=&classification_search=&search= HTTP/1.1" 200 92070
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /procedure-fees/ HTTP/1.1" 200 88885
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+"GET /procedure-fees/ HTTP/1.1" 200 88885
+"GET /procedure-fees/?procedure_search=%D9%85%D8%B1%D8%A7%D8%B1%D9%87&specialty_search=&classification_search=&search= HTTP/1.1" 200 92078
+"GET /procedure-fees/?procedure_search=%D8%A7%D9%84%D9%85%D8%B1%D8%A7%D8%B1%D9%87&specialty_search=&classification_search=&search= HTTP/1.1" 200 92106
