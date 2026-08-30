@@ -71,7 +71,8 @@ class PricingDetailsImportService:
 
             # ✅ أرقام الأعمدة حسب ترتيب الشيت
             # العمود 0: تاريخ التسعير
-            pricing_date = ImportHelpers.clean_date(row.get(0, None))
+            # pricing_date = ImportHelpers.clean_date(row.get(0, None))
+            pricing_date = ImportHelpers.clean_date_dmy(row.get(0, None))
             
             # العمود 1: الجروب
             group_name = ImportHelpers.normalize_text(row.get(1, ""))

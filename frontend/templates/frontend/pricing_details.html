@@ -313,6 +313,7 @@
         vertical-align: middle !important;
         color: #000000 !important;
         font-weight: 400 !important;
+        white-space: nowrap !important;
     }
 
     /* ===== Badges ===== */
@@ -418,6 +419,154 @@
     .modal-header .modal-title {
         color: white !important;
     }
+
+    .selected-filters {
+        background: #f8f9fa;
+        border: 1px solid #e9ecef;
+        border-radius: 12px;
+        padding: 12px 16px;
+    }
+
+    .selected-filters-title {
+        font-size: 13px;
+        font-weight: 700;
+        color: #495057;
+        margin-bottom: 8px;
+    }
+
+    .selected-filters-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .selected-filter {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: #fff;
+        border: 1px solid #dee2e6;
+        border-radius: 20px;
+        padding: 6px 12px;
+        font-size: 13px;
+        color: #495057;
+    }
+
+    .selected-filter i {
+        color: #0d6efd;
+    }
+
+    .selected-filter strong {
+        color: #212529;
+    }
+
+    /* ===== Mobile Filter Toggle Button ===== */
+    .filter-toggle-btn {
+        display: none;
+        width: 100%;
+        padding: 12px 20px;
+        background: #0d6efd;
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .filter-toggle-btn:hover {
+        background: #0b5ed7;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(13, 110, 253, 0.3);
+    }
+
+    .filter-toggle-btn i {
+        font-size: 18px;
+    }
+
+    .filter-toggle-btn .badge-count {
+        background: rgba(255,255,255,0.2);
+        padding: 2px 10px;
+        border-radius: 20px;
+        font-size: 13px;
+    }
+
+    /* ===== Force Table Row to Stay in One Line ===== */
+    .table thead th,
+    .table tbody td {
+        white-space: nowrap !important;
+    }
+
+    /* ===== Mobile Responsive ===== */
+    @media (max-width: 768px) {
+        .filter-toggle-btn {
+            display: flex !important;
+        }
+
+        .filter-body {
+            padding: 0 !important;
+        }
+
+        .filter-body-inner {
+            padding: 20px 16px !important;
+            display: none;
+        }
+
+        .filter-body-inner.show {
+            display: block !important;
+        }
+
+        .filter-body-inner .row {
+            margin: 0 !important;
+        }
+
+        .filter-body-inner .col-6 {
+            padding: 0 8px !important;
+        }
+
+        .filter-body-inner .col-12 {
+            padding: 0 !important;
+        }
+
+        .filter-body-inner .btn-filter {
+            margin-top: 8px !important;
+        }
+
+        .filter-header {
+            display: none !important;
+        }
+
+        .filter-card {
+            border-radius: 12px !important;
+        }
+
+        /* ===== Fix: Table No Line Break in Mobile ===== */
+        .table {
+            min-width: 900px !important;
+            width: auto !important;
+        }
+
+        .table thead th,
+        .table tbody td {
+            white-space: nowrap !important;
+            padding: 8px 10px !important;
+            font-size: 12px !important;
+        }
+
+        .table-responsive::after {
+            display: none !important;
+        }
+    }
+
+    @media (min-width: 769px) {
+        .filter-body-inner {
+            display: block !important;
+        }
+    }
 </style>
 
 <div class="container-fluid">
@@ -436,13 +585,6 @@
                     <i class="fas fa-arrow-left me-1"></i>
                     عرض وتحليل تفاصيل التسعير من شيت رقم 7
                 </p>
-            </div>
-            <div class="flex-shrink-0">
-                <span class="badge bg-primary rounded-pill fs-6 px-3 py-2 d-inline-flex align-items-center gap-1">
-                    <i class="fas fa-calendar-alt"></i>
-                    <span class="d-none d-sm-inline">آخر تحديث:</span>
-                    {% now "Y-m-d" %}
-                </span>
             </div>
         </div>
     </div>
@@ -500,6 +642,36 @@
                     }
                 });
             }
+
+            // ===== Mobile Filter Toggle =====
+            const toggleBtn = document.getElementById('filterToggleBtn');
+            const filterBody = document.getElementById('filterBodyInner');
+
+            if (toggleBtn && filterBody) {
+                toggleBtn.addEventListener('click', function() {
+                    filterBody.classList.toggle('show');
+                    const icon = this.querySelector('i:last-child');
+                    if (filterBody.classList.contains('show')) {
+                        icon.className = 'fas fa-chevron-up';
+                    } else {
+                        icon.className = 'fas fa-chevron-down';
+                    }
+                });
+
+                // Auto-close on filter submit (mobile)
+                const filterForm = document.getElementById('filterForm');
+                if (filterForm) {
+                    filterForm.addEventListener('submit', function() {
+                        if (window.innerWidth <= 768) {
+                            filterBody.classList.remove('show');
+                            const icon = toggleBtn.querySelector('i:last-child');
+                            if (icon) {
+                                icon.className = 'fas fa-chevron-down';
+                            }
+                        }
+                    });
+                }
+            }
         });
     </script>
 
@@ -535,13 +707,93 @@
                     <i class="fas fa-undo"></i>
                 </a>
             </div>
+            <!-- ✅ تمرير price_range عند البحث -->
+            {% if price_range %}
+                <input type="hidden" name="price_range" value="{{ price_range }}">
+            {% endif %}
         </form>
     </div>
+
+    <!-- ============================================ -->
+    <!-- ✅ الاختيارات الحالية -->
+    <!-- ============================================ -->
+    {% if search or group or company or doctor or specialty or accountant or date_from or date_to or price_range %}
+    <div class="selected-filters mb-4">
+        <div class="selected-filters-title">
+            <i class="fas fa-filter me-1"></i>
+            الاختيارات الحالية:
+        </div>
+        <div class="selected-filters-list">
+            {% if search %}
+            <span class="selected-filter">
+                <i class="fas fa-search"></i>
+                البحث: <strong>{{ search }}</strong>
+            </span>
+            {% endif %}
+            {% if group %}
+            <span class="selected-filter">
+                <i class="fas fa-layer-group"></i>
+                الجروب: <strong>{{ group }}</strong>
+            </span>
+            {% endif %}
+            {% if company %}
+            <span class="selected-filter">
+                <i class="fas fa-building"></i>
+                الشركة: <strong>{{ company }}</strong>
+            </span>
+            {% endif %}
+            {% if doctor %}
+            <span class="selected-filter">
+                <i class="fas fa-user-md"></i>
+                الطبيب: <strong>{{ doctor }}</strong>
+            </span>
+            {% endif %}
+            {% if specialty %}
+            <span class="selected-filter">
+                <i class="fas fa-stethoscope"></i>
+                التخصص: <strong>{{ specialty }}</strong>
+            </span>
+            {% endif %}
+            {% if accountant %}
+            <span class="selected-filter">
+                <i class="fas fa-user-tie"></i>
+                المحاسب: <strong>{{ accountant }}</strong>
+            </span>
+            {% endif %}
+            {% if date_from %}
+            <span class="selected-filter">
+                <i class="fas fa-calendar-alt"></i>
+                من: <strong>{{ date_from }}</strong>
+            </span>
+            {% endif %}
+            {% if date_to %}
+            <span class="selected-filter">
+                <i class="fas fa-calendar-alt"></i>
+                إلى: <strong>{{ date_to }}</strong>
+            </span>
+            {% endif %}
+            {% if price_range %}
+            <span class="selected-filter">
+                <i class="fas fa-money-bill-wave"></i>
+                النطاق السعري:
+                <strong>
+                    {% for range in price_ranges %}
+                        {% if range.value == price_range %}
+                            {{ range.label }}
+                        {% endif %}
+                    {% endfor %}
+                </strong>
+            </span>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
 
     <!-- ============================================ -->
     <!-- ✅ كارت الفلاتر -->
     <!-- ============================================ -->
     <div class="filter-card mb-4">
+        <!-- Header Desktop -->
         <div class="filter-header">
             <div class="d-flex align-items-center flex-wrap gap-2">
                 <i class="fas fa-sliders-h me-2"></i>
@@ -552,130 +804,169 @@
                 </span>
             </div>
         </div>
-        
+
+        <!-- Mobile Toggle Button -->
+        <button id="filterToggleBtn" class="filter-toggle-btn">
+            <i class="fas fa-sliders-h"></i>
+            فلاتر البحث المتقدم
+            <span class="badge-count">{{ results_count }} نتيجة</span>
+            <i class="fas fa-chevron-down"></i>
+        </button>
+
+        <!-- Filter Body -->
         <div class="filter-body">
-            <form method="get" id="filterForm">
-                <div class="row g-3">
-                    <div class="col-6 col-md-3">
-                        <label class="filter-label">
-                            <i class="fas fa-layer-group me-1"></i> الجروب
-                        </label>
-                        <input type="text" 
-                               name="group" 
-                               list="group-suggestions"
-                               class="filter-control" 
-                               placeholder="ابحث عن جروب..." 
-                               value="{{ group }}" 
-                               onchange="this.form.submit()"
-                               autocomplete="off">
-                        <datalist id="group-suggestions">
-                            {% for item in groups %}
-                                <option value="{{ item }}">{{ item }}</option>
-                            {% endfor %}
-                        </datalist>
+            <div id="filterBodyInner" class="filter-body-inner">
+                <form method="get" id="filterForm">
+                    <input type="hidden" name="search" value="{{ search }}">
+                    {% if price_range %}
+                        <input type="hidden" name="price_range" value="{{ price_range }}">
+                    {% endif %}
+
+                    <div class="row g-3">
+                        <div class="col-6 col-md-3">
+                            <label class="filter-label">
+                                <i class="fas fa-layer-group me-1"></i> الجروب
+                            </label>
+                            <input type="text" 
+                                   name="group" 
+                                   list="group-suggestions"
+                                   class="filter-control" 
+                                   placeholder="ابحث عن جروب..." 
+                                   value="{{ group }}" 
+                                   onchange="this.form.submit()"
+                                   autocomplete="off">
+                            <datalist id="group-suggestions">
+                                {% for item in groups %}
+                                    <option value="{{ item }}">{{ item }}</option>
+                                {% endfor %}
+                            </datalist>
+                        </div>
+
+                        <div class="col-6 col-md-3">
+                            <label class="filter-label">
+                                <i class="fas fa-building me-1"></i> الشركة
+                            </label>
+                            <input type="text" 
+                                   name="company" 
+                                   list="company-suggestions"
+                                   class="filter-control" 
+                                   placeholder="ابحث عن شركة..." 
+                                   value="{{ company }}" 
+                                   onchange="this.form.submit()"
+                                   autocomplete="off">
+                            <datalist id="company-suggestions">
+                                {% for item in companies %}
+                                    <option value="{{ item }}">{{ item }}</option>
+                                {% endfor %}
+                            </datalist>
+                        </div>
+
+                        <div class="col-6 col-md-3">
+                            <label class="filter-label">
+                                <i class="fas fa-user-md me-1"></i> الطبيب
+                            </label>
+                            <input type="text" 
+                                   name="doctor" 
+                                   list="doctor-suggestions"
+                                   class="filter-control" 
+                                   placeholder="ابحث عن طبيب..." 
+                                   value="{{ doctor }}" 
+                                   onchange="this.form.submit()"
+                                   autocomplete="off">
+                            <datalist id="doctor-suggestions">
+                                {% for item in doctors %}
+                                    <option value="{{ item }}">{{ item }}</option>
+                                {% endfor %}
+                            </datalist>
+                        </div>
+
+                        <div class="col-6 col-md-3">
+                            <label class="filter-label">
+                                <i class="fas fa-stethoscope me-1"></i> التخصص
+                            </label>
+                            <input type="text" 
+                                   name="specialty" 
+                                   list="specialty-suggestions"
+                                   class="filter-control" 
+                                   placeholder="ابحث عن تخصص..." 
+                                   value="{{ specialty }}" 
+                                   onchange="this.form.submit()"
+                                   autocomplete="off">
+                            <datalist id="specialty-suggestions">
+                                {% for item in specialties %}
+                                    <option value="{{ item }}">{{ item }}</option>
+                                {% endfor %}
+                            </datalist>
+                        </div>
                     </div>
 
-                    <div class="col-6 col-md-3">
-                        <label class="filter-label">
-                            <i class="fas fa-building me-1"></i> الشركة
-                        </label>
-                        <input type="text" 
-                               name="company" 
-                               list="company-suggestions"
-                               class="filter-control" 
-                               placeholder="ابحث عن شركة..." 
-                               value="{{ company }}" 
-                               onchange="this.form.submit()"
-                               autocomplete="off">
-                        <datalist id="company-suggestions">
-                            {% for item in companies %}
-                                <option value="{{ item }}">{{ item }}</option>
-                            {% endfor %}
-                        </datalist>
+                    <div class="row g-3 mt-2">
+                        <div class="col-6 col-md-3">
+                            <label class="filter-label">
+                                <i class="fas fa-user-tie me-1"></i> المحاسب
+                            </label>
+                            <input type="text" 
+                                   name="accountant" 
+                                   list="accountant-suggestions"
+                                   class="filter-control" 
+                                   placeholder="ابحث عن محاسب..." 
+                                   value="{{ accountant }}" 
+                                   onchange="this.form.submit()"
+                                   autocomplete="off">
+                            <datalist id="accountant-suggestions">
+                                {% for item in accountants %}
+                                    <option value="{{ item }}">{{ item }}</option>
+                                {% endfor %}
+                            </datalist>
+                        </div>
+
+                        <div class="col-6 col-md-3">
+                            <label class="filter-label">
+                                <i class="fas fa-calendar-alt me-1"></i> من تاريخ
+                            </label>
+                            <input type="date" name="date_from" class="filter-control" value="{{ date_from }}" onchange="this.form.submit()">
+                        </div>
+
+                        <div class="col-6 col-md-3">
+                            <label class="filter-label">
+                                <i class="fas fa-calendar-alt me-1"></i> إلى تاريخ
+                            </label>
+                            <input type="date" name="date_to" class="filter-control" value="{{ date_to }}" onchange="this.form.submit()">
+                        </div>
+
+                        <div class="col-6 col-md-3">
+                            <label class="filter-label">
+                                <i class="fas fa-money-bill-wave me-1"></i> النطاق السعري
+                            </label>
+                            <select
+                                name="price_range"
+                                class="filter-control"
+                                onchange="this.form.submit()"
+                            >
+                                <option value="">كل الأسعار</option>
+                                {% for range in price_ranges %}
+                                    <option
+                                        value="{{ range.value }}"
+                                        {% if price_range == range.value %}selected{% endif %}
+                                    >
+                                        {{ range.label }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
                     </div>
 
-                    <div class="col-6 col-md-3">
-                        <label class="filter-label">
-                            <i class="fas fa-user-md me-1"></i> الطبيب
-                        </label>
-                        <input type="text" 
-                               name="doctor" 
-                               list="doctor-suggestions"
-                               class="filter-control" 
-                               placeholder="ابحث عن طبيب..." 
-                               value="{{ doctor }}" 
-                               onchange="this.form.submit()"
-                               autocomplete="off">
-                        <datalist id="doctor-suggestions">
-                            {% for item in doctors %}
-                                <option value="{{ item }}">{{ item }}</option>
-                            {% endfor %}
-                        </datalist>
+                    <div class="row g-3 mt-2">
+                        <div class="col-12">
+                            <button class="btn-filter" type="submit" form="filterForm">
+                                <i class="fas fa-search me-1"></i> 
+                                <span class="d-none d-sm-inline">تطبيق الفلاتر</span>
+                                <span class="d-inline d-sm-none">فلتر</span>
+                            </button>
+                        </div>
                     </div>
-
-                    <div class="col-6 col-md-3">
-                        <label class="filter-label">
-                            <i class="fas fa-stethoscope me-1"></i> التخصص
-                        </label>
-                        <input type="text" 
-                               name="specialty" 
-                               list="specialty-suggestions"
-                               class="filter-control" 
-                               placeholder="ابحث عن تخصص..." 
-                               value="{{ specialty }}" 
-                               onchange="this.form.submit()"
-                               autocomplete="off">
-                        <datalist id="specialty-suggestions">
-                            {% for item in specialties %}
-                                <option value="{{ item }}">{{ item }}</option>
-                            {% endfor %}
-                        </datalist>
-                    </div>
-                </div>
-
-                <div class="row g-3 mt-2">
-                    <div class="col-6 col-md-3">
-                        <label class="filter-label">
-                            <i class="fas fa-user-tie me-1"></i> المحاسب
-                        </label>
-                        <input type="text" 
-                               name="accountant" 
-                               list="accountant-suggestions"
-                               class="filter-control" 
-                               placeholder="ابحث عن محاسب..." 
-                               value="{{ accountant }}" 
-                               onchange="this.form.submit()"
-                               autocomplete="off">
-                        <datalist id="accountant-suggestions">
-                            {% for item in accountants %}
-                                <option value="{{ item }}">{{ item }}</option>
-                            {% endfor %}
-                        </datalist>
-                    </div>
-
-                    <div class="col-6 col-md-3">
-                        <label class="filter-label">
-                            <i class="fas fa-calendar-alt me-1"></i> من تاريخ
-                        </label>
-                        <input type="date" name="date_from" class="filter-control" value="{{ date_from }}" onchange="this.form.submit()">
-                    </div>
-
-                    <div class="col-6 col-md-3">
-                        <label class="filter-label">
-                            <i class="fas fa-calendar-alt me-1"></i> إلى تاريخ
-                        </label>
-                        <input type="date" name="date_to" class="filter-control" value="{{ date_to }}" onchange="this.form.submit()">
-                    </div>
-
-                    <div class="col-6 col-md-3">
-                        <button class="btn-filter" type="submit" form="filterForm">
-                            <i class="fas fa-search me-1"></i> 
-                            <span class="d-none d-sm-inline">تطبيق الفلاتر</span>
-                            <span class="d-inline d-sm-none">فلتر</span>
-                        </button>
-                    </div>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
 
@@ -713,8 +1004,8 @@
                     <i class="fas fa-calculator"></i>
                 </div>
                 <div class="stat-content">
-                    <div class="stat-value">{{ average_cost }}</div>
-                    <div class="stat-label">متوسط التكلفة</div>
+                    <div class="stat-value">{{ specialties_count }}</div>
+                    <div class="stat-label">عدد التخصصات</div>
                 </div>
             </div>
         </div>
@@ -733,7 +1024,7 @@
     </div>
 
     <!-- ============================================ -->
-    <!-- ✅ جدول النتائج - بدون المحاسب، رقم الكارنية، نوع التسعير -->
+    <!-- ✅ جدول النتائج -->
     <!-- ============================================ -->
     <div class="table-container">
         <div class="table-wrapper">
@@ -775,8 +1066,6 @@
                             </td>
                             <td class="text-center">
                                 <div class="d-flex justify-content-center align-items-center gap-2 flex-wrap">
-
-                                    <!-- زر عرض التفاصيل -->
                                     <button class="btn-details" 
                                             data-bs-toggle="modal" 
                                             data-bs-target="#detailsModal"
@@ -793,22 +1082,17 @@
                                             data-cost-notes="{{ item.cost_notes|default:'-' }}"
                                             data-procedure="{{ item.procedure_name|default:'-' }}"
                                             data-procedure-name="{{ item.procedure_name|default:'' }}">
-
                                         <i class="fas fa-eye"></i> عرض
                                     </button>
-
-                                    <!-- زر التقرير -->
                                     {% if item.report_url %}
                                         <a href="{{ item.report_url }}"
                                            target="_blank"
                                            rel="noopener noreferrer"
                                            class="btn-details"
                                            title="فتح التقرير">
-
                                             <i class="fas fa-file-alt"></i> التقرير
                                         </a>
                                     {% endif %}
-
                                 </div>
                             </td>
                         </tr>
@@ -828,7 +1112,7 @@
     </div>
 
     <!-- ============================================ -->
-    <!-- ✅ Modal للتفاصيل (كل الأعمدة موجودة هنا) -->
+    <!-- ✅ Modal للتفاصيل -->
     <!-- ============================================ -->
     <div class="modal fade" id="detailsModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -845,44 +1129,36 @@
                             <label class="text-muted small fw-bold">اسم المريض</label>
                             <p class="fw-bold" id="modal-patient">-</p>
                         </div>
-                        
                         <div class="col-12 col-md-6">
                             <label class="text-muted small fw-bold">رقم الكارنية</label>
                             <p class="fw-bold text-primary" id="modal-card">-</p>
                         </div>
-                        
                         <div class="col-12 col-md-6">
                             <label class="text-muted small fw-bold">الشركة</label>
                             <p id="modal-company">-</p>
                         </div>
-                        
                         <div class="col-12 col-md-6">
                             <label class="text-muted small fw-bold">الطبيب</label>
                             <p id="modal-doctor">-</p>
                         </div>
-                        
                         <div class="col-12 col-md-6">
                             <label class="text-muted small fw-bold">المحاسب</label>
                             <p id="modal-accountant">-</p>
                         </div>
-                        
                         <div class="col-12 col-md-6">
                             <label class="text-muted small fw-bold">التخصص</label>
                             <p id="modal-specialty">-</p>
                         </div>
-                        
                         <div class="col-12 col-md-6">
                             <label class="text-muted small fw-bold">نوع التسعير</label>
                             <p id="modal-pricing-type">-</p>
                         </div>
-
                         <div class="col-12 col-md-6">
                             <label class="text-muted small fw-bold">
                                 <i class="fas fa-procedures me-1"></i> الإجراء
                             </label>
                             <p class="fw-bold text-primary" id="modal-procedure">-</p>
                         </div>
-                        
                         <div class="col-12">
                             <hr>
                             <label class="text-muted small fw-bold">
@@ -890,14 +1166,12 @@
                             </label>
                             <div class="p-2 bg-light rounded" id="modal-report">-</div>
                         </div>
-
                         <div class="col-12">
                             <label class="text-muted small fw-bold">
                                 <i class="fas fa-list-ul me-1"></i> التفاصيل
                             </label>
                             <div class="p-2 bg-light rounded" style="white-space: pre-line;" id="modal-details">-</div>
                         </div>
-
                         <div class="col-12">
                             <label class="text-muted small fw-bold">
                                 <i class="fas fa-sticky-note me-1"></i> ملاحظات التكلفة
@@ -924,107 +1198,67 @@
 
             if (modal) {
                 modal.addEventListener('show.bs.modal', function (event) {
-
                     const button = event.relatedTarget;
 
                     document.getElementById('modal-patient').textContent =
                         button.getAttribute('data-patient') || '-';
-
                     document.getElementById('modal-card').textContent =
                         button.getAttribute('data-card') || '-';
-
                     document.getElementById('modal-company').textContent =
                         button.getAttribute('data-company') || '-';
-
                     document.getElementById('modal-doctor').textContent =
                         button.getAttribute('data-doctor') || '-';
-
                     document.getElementById('modal-accountant').textContent =
                         button.getAttribute('data-accountant') || '-';
-
                     document.getElementById('modal-specialty').textContent =
                         button.getAttribute('data-specialty') || '-';
-
                     document.getElementById('modal-pricing-type').textContent =
                         button.getAttribute('data-pricing-type') || '-';
-
                     document.getElementById('modal-procedure').textContent =
                         button.getAttribute('data-procedure') || '-';
 
-
-                    // ==============================
-                    // 📄 REPORT
-                    // ==============================
-
-                    const reportName =
-                        button.getAttribute('data-report') || '-';
-
-                    const reportUrl =
-                        button.getAttribute('data-report-url') || '';
-
-                    const modalReport =
-                        document.getElementById('modal-report');
+                    // Report
+                    const reportName = button.getAttribute('data-report') || '-';
+                    const reportUrl = button.getAttribute('data-report-url') || '';
+                    const modalReport = document.getElementById('modal-report');
 
                     if (reportUrl) {
-
                         modalReport.innerHTML = `
                             <div class="d-flex align-items-center justify-content-between gap-2 flex-wrap">
-
                                 <span>
                                     <i class="fas fa-file-alt me-2 text-primary"></i>
                                     ${reportName}
                                 </span>
-
                                 <a href="${reportUrl}"
                                    target="_blank"
                                    rel="noopener noreferrer"
                                    class="btn btn-primary btn-sm">
-
                                     <i class="fas fa-external-link-alt me-1"></i>
                                     فتح التقرير
-
                                 </a>
-
                             </div>
                         `;
-
                     } else {
-
                         modalReport.textContent = reportName;
-
                     }
 
-
-                    // ==============================
-                    // DETAILS
-                    // ==============================
-
-                    document.getElementById('modal-details').textContent =
-                        button.getAttribute('data-details') || '-';
-
+                    // Details
+                    const details = button.getAttribute('data-details') || '-';
+                    const formattedDetails = details
+                        .replace(/\s*-\s*/g, '\n- ')
+                        .replace(/^\n/, '')
+                        .trim();
+                    document.getElementById('modal-details').textContent = formattedDetails;
                     document.getElementById('modal-cost-notes').textContent =
                         button.getAttribute('data-cost-notes') || '-';
 
-
-                    // ==============================
-                    // CREDIT PACKAGE LINK
-                    // ==============================
-
-                    const procedureName =
-                        button.getAttribute('data-procedure-name') || '';
-
-                    const creditLink =
-                        document.getElementById('modal-credit-link');
-
+                    // Credit Package Link
+                    const procedureName = button.getAttribute('data-procedure-name') || '';
+                    const creditLink = document.getElementById('modal-credit-link');
                     if (creditLink) {
-
-                        const baseUrl =
-                            "{% url 'credit_package_pricing' %}";
-
-                        creditLink.href =
-                            `${baseUrl}?procedure_search=${encodeURIComponent(procedureName)}`;
+                        const baseUrl = "{% url 'credit_package_pricing' %}";
+                        creditLink.href = `${baseUrl}?procedure_search=${encodeURIComponent(procedureName)}`;
                     }
-
                 });
             }
         });
@@ -1038,7 +1272,7 @@
         <ul class="pagination justify-content-center flex-wrap gap-1">
             {% if page_obj.has_previous %}
             <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.previous_page_number }}&search={{ search }}&group={{ group }}&company={{ company }}&doctor={{ doctor }}&specialty={{ specialty }}&accountant={{ accountant }}&date_from={{ date_from }}&date_to={{ date_to }}">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}&search={{ search }}&group={{ group }}&company={{ company }}&doctor={{ doctor }}&specialty={{ specialty }}&accountant={{ accountant }}&date_from={{ date_from }}&date_to={{ date_to }}&price_range={{ price_range }}">
                     <i class="fas fa-chevron-right"></i>
                     <span class="d-none d-sm-inline">السابق</span>
                 </a>
@@ -1049,7 +1283,7 @@
             </li>
             {% if page_obj.has_next %}
             <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.next_page_number }}&search={{ search }}&group={{ group }}&company={{ company }}&doctor={{ doctor }}&specialty={{ specialty }}&accountant={{ accountant }}&date_from={{ date_from }}&date_to={{ date_to }}">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}&search={{ search }}&group={{ group }}&company={{ company }}&doctor={{ doctor }}&specialty={{ specialty }}&accountant={{ accountant }}&date_from={{ date_from }}&date_to={{ date_to }}&price_range={{ price_range }}">
                     <span class="d-none d-sm-inline">التالي</span>
                     <i class="fas fa-chevron-left"></i>
                 </a>
@@ -1066,18 +1300,16 @@
     .header-wrapper {
         padding: 0 4px;
     }
-    
+
     @media (max-width: 576px) {
         .search-wrapper {
             border-radius: 16px !important;
             padding: 8px !important;
             gap: 8px !important;
         }
-        
         .search-input-group {
             flex-wrap: wrap !important;
         }
-        
         .search-input {
             padding: 12px 16px !important;
             font-size: 14px !important;
@@ -1087,173 +1319,111 @@
             min-width: unset !important;
             width: 100% !important;
         }
-        
         .btn-search {
             padding: 10px 16px !important;
             font-size: 14px !important;
             margin: 0 !important;
             flex: 1 !important;
         }
-        
         .btn-search-clear {
             width: 42px !important;
             height: 42px !important;
             margin: 0 !important;
         }
-    }
-    
-    @media (max-width: 576px) {
-        .filter-header {
-            padding: 12px 16px !important;
-        }
-        
-        .filter-header .badge {
-            font-size: 11px !important;
-            padding: 4px 8px !important;
-        }
-        
-        .filter-body {
-            padding: 12px !important;
-        }
-        
-        .filter-label {
-            font-size: 12px !important;
-        }
-        
-        .filter-control {
-            padding: 8px 12px !important;
-            font-size: 13px !important;
-        }
-        
-        .btn-filter {
-            padding: 8px 12px !important;
-            font-size: 13px !important;
-        }
-    }
-    
-    @media (max-width: 576px) {
         .stat-card {
             padding: 12px 14px !important;
             gap: 10px !important;
         }
-        
         .stat-icon {
             width: 36px !important;
             height: 36px !important;
             font-size: 16px !important;
         }
-        
         .stat-value {
             font-size: 16px !important;
         }
-        
         .stat-label {
             font-size: 11px !important;
         }
     }
-    
+
     @media (max-width: 768px) {
         .table-container {
             border-radius: 12px !important;
         }
-        
         .table {
             font-size: 12px !important;
-            min-width: 700px !important;
+            min-width: 900px !important;
+            width: auto !important;
         }
-        
         .table thead th {
             padding: 8px 10px !important;
             font-size: 11px !important;
+            white-space: nowrap !important;
         }
-        
         .table tbody td {
             padding: 8px 10px !important;
             font-size: 12px !important;
+            white-space: nowrap !important;
         }
-        
         .table .badge {
             font-size: 10px !important;
             padding: 2px 8px !important;
         }
-        
         .btn-details {
             padding: 4px 10px !important;
             font-size: 11px !important;
         }
-        
-        .table-responsive::after {
-            content: '⇄ اسحب للتمرير لعرض جميع الأعمدة' !important;
-            display: block !important;
-            text-align: center !important;
-            font-size: 11px !important;
-            color: #6c757d !important;
-            padding: 8px !important;
-            background: #f8f9fa !important;
-            border-top: 1px solid #e9ecef !important;
-        }
-    }
-    
-    @media (min-width: 769px) {
         .table-responsive::after {
             display: none !important;
         }
-    }
-    
-    @media (max-width: 576px) {
         .pagination .page-link {
             padding: 6px 12px !important;
             font-size: 13px !important;
             margin: 0 2px !important;
         }
-    }
-    
-    @media (max-width: 576px) {
         .modal-dialog {
             margin: 8px !important;
         }
-        
         .modal-header {
             padding: 12px 16px !important;
         }
-        
         .modal-header h5 {
             font-size: 16px !important;
         }
-        
         .modal-body {
             padding: 12px 16px !important;
         }
-        
         .modal-footer {
             padding: 12px 16px !important;
         }
-        
         .modal-footer .btn {
             font-size: 13px !important;
             padding: 8px 12px !important;
         }
     }
-    
+
+    @media (min-width: 769px) {
+        .table-responsive::after {
+            display: none !important;
+        }
+    }
+
     .table-responsive {
         -webkit-overflow-scrolling: touch;
         scroll-behavior: smooth;
     }
-    
     .table-responsive::-webkit-scrollbar {
         height: 8px !important;
     }
-    
     .table-responsive::-webkit-scrollbar-track {
         background: #f1f1f1 !important;
         border-radius: 10px !important;
     }
-    
     .table-responsive::-webkit-scrollbar-thumb {
         background: #0d6efd !important;
         border-radius: 10px !important;
     }
-    
     .table-responsive::-webkit-scrollbar-thumb:hover {
         background: #0b5ed7 !important;
     }

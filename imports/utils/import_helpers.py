@@ -351,3 +351,45 @@ class ImportHelpers:
             return ImportHelpers.normalize_category(procedure.classification)
         
         return None
+    
+    
+    
+    @staticmethod
+    def clean_date_dmy(value):
+        """
+        تنظيف تاريخ Sheet 7 بصيغة DD/MM/YYYY
+        """
+        if pd.isna(value):
+            return None
+
+        if value in ("", None):
+            return None
+
+        if isinstance(value, str):
+            value = value.strip()
+
+            if not value or value in ["0", "NULL", "null", "None"]:
+                return None
+
+            for fmt in (
+                "%d/%m/%Y",
+                "%d-%m-%Y",
+                "%d.%m.%Y",
+                "%Y/%m/%d",
+                "%Y-%m-%d",
+            ):
+                try:
+                    return datetime.strptime(value, fmt).date()
+                except (ValueError, TypeError):
+                    continue
+
+        if isinstance(value, (int, float)):
+            if value == 0:
+                return None
+
+            try:
+                return pd.to_datetime(value, unit="d").date()
+            except:
+                return None
+
+        return None

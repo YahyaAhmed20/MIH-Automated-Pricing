@@ -22122,3 +22122,67 @@ Watching for file changes with StatReloader
 "GET /procedure-fees/ HTTP/1.1" 200 88885
 "GET /procedure-fees/?procedure_search=%D9%85%D8%B1%D8%A7%D8%B1%D9%87&specialty_search=&classification_search=&search= HTTP/1.1" 200 92078
 "GET /procedure-fees/?procedure_search=%D8%A7%D9%84%D9%85%D8%B1%D8%A7%D8%B1%D9%87&specialty_search=&classification_search=&search= HTTP/1.1" 200 92106
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 46001
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 16342
+"POST / HTTP/1.1" 302 0
+"GET /reports/ HTTP/1.1" 200 127656
+"GET /pricing-details/ HTTP/1.1" 200 334323
+"GET /pricing-details/ HTTP/1.1" 200 333971
+- Broken pipe from ('127.0.0.1', 57890)
+"GET /pricing-details/?search=%D9%85%D9%8A%D8%AA+%D9%84%D8%A7%D9%8A%D9%81 HTTP/1.1" 200 277161
+"GET /pricing-details/?search=%D9%85%D9%8A%D8%AA+%D9%84%D8%A7%D9%8A%D9%81 HTTP/1.1" 200 277234
+"GET /pricing-details/ HTTP/1.1" 200 334029
+"GET /pricing-details/?search=%D9%85%D9%8A%D8%AA+%D9%84%D8%A7%D9%8A%D9%81 HTTP/1.1" 200 277234
+"GET /pricing-details/?search=%D9%85%D9%8A%D8%AA+%D9%84%D8%A7%D9%8A%D9%81&group=%D8%A7%D9%84%D8%AA%D8%B3%D8%B9%D9%8A%D8%B1+%D9%88%D8%A7%D9%84%D8%AA%D9%83%D8%A7%D9%84%D9%8A%D9%81&company=&doctor=&specialty=&accountant=&date_from=&date_to= HTTP/1.1" 200 272181
+"GET /pricing-details/?search=%D9%85%D9%8A%D8%AA+%D9%84%D8%A7%D9%8A%D9%81&group=%D8%A7%D9%84%D8%AA%D8%B3%D8%B9%D9%8A%D8%B1+%D9%88%D8%A7%D9%84%D8%AA%D9%83%D8%A7%D9%84%D9%8A%D9%81&company=&doctor=%D8%AF+%D8%A7%D9%8A%D9%87%D8%A7%D8%A8+%D8%B5%D8%A7%D9%84%D8%AD&specialty=&accountant=&date_from=&date_to= HTTP/1.1" 200 88881
+"GET /pricing-details/?search=%D9%85%D9%8A%D8%AA+%D9%84%D8%A7%D9%8A%D9%81&group=%D8%A7%D9%84%D8%AA%D8%B3%D8%B9%D9%8A%D8%B1+%D9%88%D8%A7%D9%84%D8%AA%D9%83%D8%A7%D9%84%D9%8A%D9%81&company=&doctor=%D8%AF+%D8%A7%D9%8A%D9%87%D8%A7%D8%A8+%D8%B5%D8%A7%D9%84%D8%AD&specialty=&accountant=&date_from=&date_to= HTTP/1.1" 200 89730
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /pricing-details/?search=%D9%85%D9%8A%D8%AA+%D9%84%D8%A7%D9%8A%D9%81&group=%D8%A7%D9%84%D8%AA%D8%B3%D8%B9%D9%8A%D8%B1+%D9%88%D8%A7%D9%84%D8%AA%D9%83%D8%A7%D9%84%D9%8A%D9%81&company=&doctor=%D8%AF+%D8%A7%D9%8A%D9%87%D8%A7%D8%A8+%D8%B5%D8%A7%D9%84%D8%AD&specialty=&accountant=&date_from=&date_to= HTTP/1.1" 200 90382
+"GET /pricing-details/ HTTP/1.1" 200 334688
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /pricing-details/ HTTP/1.1" 200 334634
+"GET / HTTP/1.1" 302 0
+"GET /reports/ HTTP/1.1" 200 127656
+"GET /pricing-details/ HTTP/1.1" 200 334634
+"GET /similar-invoices/ HTTP/1.1" 200 334359
+"GET /similar-invoices/ HTTP/1.1" 200 334359
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+- Broken pipe from ('127.0.0.1', 60268)
+"GET /pricing-details/ HTTP/1.1" 200 337171
+"GET /pricing-details/?search=&group=&company=&doctor=&specialty=&accountant=&date_from=&date_to=&price_range=0-49999 HTTP/1.1" 200 278995
+"GET /pricing-details/?search=&price_range=0-49999&group=&company=&doctor=&specialty=&accountant=&date_from=&date_to=&price_range=50000-100000 HTTP/1.1" 200 340254
+"GET /pricing-details/?search=&price_range=50000-100000&group=&company=&doctor=&specialty=&accountant=&date_from=&date_to=&price_range= HTTP/1.1" 200 337171
+"GET /pricing-details/?search=&group=&company=&doctor=&specialty=&accountant=&date_from=&date_to=&price_range=0-49999 HTTP/1.1" 200 278995
+"GET /pricing-details/?page=2&search=&group=&company=&doctor=&specialty=&accountant=&date_from=&date_to=&price_range=0-49999 HTTP/1.1" 200 279360
+"GET /pricing-details/?page=1&search=&group=&company=&doctor=&specialty=&accountant=&date_from=&date_to=&price_range=0-49999 HTTP/1.1" 200 278995
+"GET /pricing-details/ HTTP/1.1" 200 337171
+"GET /pricing-details/ HTTP/1.1" 200 337171
+- Broken pipe from ('127.0.0.1', 65472)
+- Broken pipe from ('127.0.0.1', 50213)
+"GET /pricing-details/?search=&group=%D8%A7%D9%84%D8%AA%D8%B3%D8%B9%D9%8A%D8%B1+%D9%88%D8%A7%D9%84%D8%AA%D9%83%D8%A7%D9%84%D9%8A%D9%81&company=&doctor=&specialty=&accountant=&date_from=&date_to=&price_range= HTTP/1.1" 200 346712
+"GET /pricing-details/?search=&group=%D8%A7%D9%84%D8%AA%D8%B3%D8%B9%D9%8A%D8%B1+%D9%88%D8%A7%D9%84%D8%AA%D9%83%D8%A7%D9%84%D9%8A%D9%81&company=&doctor=&specialty=&accountant=&date_from=&date_to=&price_range= HTTP/1.1" 200 346811
+- Broken pipe from ('127.0.0.1', 53244)
+"GET /pricing-details/ HTTP/1.1" 200 338598
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /pricing-details/?search=&group=&company=&doctor=%D8%A7%D8%AD%D9%85%D8%AF+%D8%B9%D8%B3%D9%82%D8%A7%D9%84%D9%86%D9%89&specialty=&accountant=&date_from=&date_to=&price_range= HTTP/1.1" 200 99721
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+D:\desktop\rphospital\src\imports\utils\import_helpers.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /pricing-details/?search=&group=&company=&doctor=%D8%A7%D8%AD%D9%85%D8%AF+%D8%B9%D8%B3%D9%82%D8%A7%D9%84%D9%86%D9%89&specialty=&accountant=&date_from=&date_to=&price_range= HTTP/1.1" 200 99721
+"GET /pricing-details/?search=&group=&company=&doctor=%D8%A7%D8%AD%D9%85%D8%AF+%D8%B9%D8%B3%D9%82%D8%A7%D9%84%D9%86%D9%89&specialty=&accountant=&date_from=&date_to=&price_range= HTTP/1.1" 200 100065
+"GET /pricing-details/ HTTP/1.1" 200 338942
+"GET /pricing-details/?search=&group=&company=&doctor=&specialty=&accountant=%D8%A8%D9%84%D8%A7%D9%84&date_from=&date_to=&price_range= HTTP/1.1" 200 301569
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453

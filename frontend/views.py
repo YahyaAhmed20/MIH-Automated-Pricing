@@ -1,3 +1,4 @@
+from decimal import Decimal
 from xml.dom.minidom import Entity
 from accounts.decorators import login_required
 from django.db.models.functions import TruncMonth
@@ -4955,6 +4956,7 @@ def pricing_details(request):
     accountant = request.GET.get("accountant", "").strip()
     date_from = request.GET.get("date_from", "").strip()
     date_to = request.GET.get("date_to", "").strip()
+    price_range = request.GET.get("price_range", "").strip()
 
     details = (
         PricingDetail.objects
@@ -5006,8 +5008,32 @@ def pricing_details(request):
     if date_to:
         details = details.filter(pricing_date__lte=date_to)
 
+    # فلتر النطاق السعري
+    if price_range:
+        try:
+            if price_range.endswith("+"):
+                min_price = Decimal(price_range[:-1])
+                details = details.filter(cost__gte=min_price)
+            else:
+                min_price, max_price = price_range.split("-")
+                details = details.filter(
+                    cost__gte=Decimal(min_price),
+                    cost__lte=Decimal(max_price),
+                )
+        except (ValueError, TypeError, ArithmeticError):
+            pass
+
     total_cost = details.aggregate(total=Sum("cost"))["total"] or 0
-    average_cost = details.aggregate(avg=Avg("cost"))["avg"] or 0
+
+    # عدد النتائج = الصفوف التي لها تاريخ تسعير فقط
+    results_count = details.filter(
+        pricing_date__isnull=False
+    ).count()
+
+    # عدد التخصصات المختلفة
+    specialties_count = details.exclude(
+        specialty_name=""
+    ).values("specialty_name").distinct().count()
 
     paginator = Paginator(details, 50)
     page_obj = paginator.get_page(request.GET.get("page"))
@@ -5053,14 +5079,23 @@ def pricing_details(request):
         .order_by("accountant_name")
     )
 
+    PRICE_RANGES = [
+        {"label": "أقل من 50,000", "value": "0-49999"},
+        {"label": "50,000 - 100,000", "value": "50000-100000"},
+        {"label": "100,000 - 200,000", "value": "100000-200000"},
+        {"label": "200,000 - 500,000", "value": "200000-500000"},
+        {"label": "500,000 - 1,000,000", "value": "500000-1000000"},
+        {"label": "أكثر من 1,000,000", "value": "1000000+"},
+    ]
+
     return render(
         request,
         "frontend/pricing_details.html",
         {
             "page_obj": page_obj,
-            "results_count": details.count(),
+            "results_count": results_count,
+            "specialties_count": specialties_count,
             "total_cost": f"{total_cost:,.0f}",
-            "average_cost": f"{average_cost:,.0f}",
             "groups": groups,
             "companies": companies,
             "doctors": doctors,
@@ -5074,9 +5109,10 @@ def pricing_details(request):
             "accountant": accountant,
             "date_from": date_from,
             "date_to": date_to,
+            "price_range": price_range,
+            "price_ranges": PRICE_RANGES,
         }
     )
-    
 # frontend/views.py
 @permission_required(Permissions.PATIENTS_VIEW)
 def similar_invoices(request):
