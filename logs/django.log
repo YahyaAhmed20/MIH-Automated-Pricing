@@ -21789,3 +21789,32 @@ Watching for file changes with StatReloader
 "GET /company-discounts/?tab=exceptions&entity=3&search=%D8%A8%D9%86%D9%83%20%D9%81%D9%8A%D8%B5%D9%84%20%D8%A7%D9%84%D8%A7%D8%B3%D9%84%D8%A7%D9%85%D9%89 HTTP/1.1" 200 104582
 "GET /special-offers/?entity=3 HTTP/1.1" 200 91681
 "GET /special-offers/?search=%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%8A%D9%87+%D9%84%D9%84%D8%A7%D8%AA%D8%B5%D8%A7%D9%84%D8%A7%D8%AA HTTP/1.1" 200 83165
+Watching for file changes with StatReloader
+"GET /company-discounts/ HTTP/1.1" 200 138350
+"GET /company-discounts/?tab=compare HTTP/1.1" 200 76743
+"GET /company-discounts/?tab=ranking HTTP/1.1" 200 70871
+"GET /company-discounts/?tab=compare HTTP/1.1" 200 76743
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 46001
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 16342
+"POST / HTTP/1.1" 302 0
+"GET /reports/ HTTP/1.1" 200 127656
+"GET /company-discounts/ HTTP/1.1" 200 138350
+"GET /company-discounts/ HTTP/1.1" 200 138514
+"GET /company-discounts/ HTTP/1.1" 200 138350
+"GET /company-discounts/ HTTP/1.1" 200 138275
+"GET /contract-entities/ HTTP/1.1" 200 68141
+"GET /cash-packages/ HTTP/1.1" 200 534211
+"GET /company-discounts/ HTTP/1.1" 200 138275
+"GET /company-discounts/ HTTP/1.1" 200 139532
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /company-discounts/?tab=compare HTTP/1.1" 200 76743
+"GET /company-discounts/?tab=compare HTTP/1.1" 200 80355
+- Broken pipe from ('127.0.0.1', 63194)
+- Broken pipe from ('127.0.0.1', 51768)
+"GET /company-discounts/?tab=compare&company1=%D8%A8%D9%86%D9%83+%D9%85%D8%B5%D8%B1&company2=%D9%88%D8%B2%D8%A7%D8%B1%D8%A9+%D8%A7%D9%84%D8%B9%D8%AF%D9%84&compare_section=all HTTP/1.1" 200 95869
+"GET /company-discounts/?tab=ranking HTTP/1.1" 200 70871
+"GET /company-discounts/?tab=ranking HTTP/1.1" 200 71419

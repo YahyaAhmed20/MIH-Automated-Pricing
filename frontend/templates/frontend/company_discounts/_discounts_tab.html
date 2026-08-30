@@ -42,7 +42,6 @@
             font-size: 1rem;
         }
         
-        /* تحسين عرض البطاقات في الموبايل */
         .company-card {
             padding: 12px !important;
         }
@@ -68,7 +67,6 @@
         }
     }
     
-    /* أنيميشن للبطاقات */
     .company-card {
         transition: all 0.3s ease;
         border-radius: 15px;
@@ -81,7 +79,6 @@
         border-color: var(--primary-color);
     }
     
-    /* تحسينات الـ UI */
     .search-wrapper {
         position: relative;
     }
@@ -124,6 +121,65 @@
         appearance: none;
         border-radius: 12px;
     }
+
+    /* ✅ تعديل: جعل البحث والقسم والزر في نفس المستوى */
+    .filter-group {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    
+    .filter-group .search-col {
+        flex: 1;
+    }
+    
+    .filter-group .section-col {
+        flex: 0 0 180px;
+    }
+    
+    .filter-group .button-col {
+        flex: 0 0 120px;
+    }
+    
+    /* ✅ توحيد ارتفاع الحقول */
+    .search-wrapper .form-control,
+    .section-select-wrapper select,
+    .btn-search {
+        height: 48px;
+    }
+
+    /* ✅ جعل النص المساعد تحت البحث وليس بجانبه */
+    .search-helper {
+        display: block;
+        margin-top: 4px;
+        font-size: 0.75rem;
+        height: 20px;
+        line-height: 20px;
+    }
+
+    /* ✅ توحيد ارتفاع الـ Labels */
+    .filter-group .form-label {
+        margin-bottom: 4px;
+        height: 20px;
+        line-height: 20px;
+        display: block;
+    }
+
+    /* ✅ الموبايل: تكدس العناصر عمودياً */
+    @media (max-width: 767px) {
+        .filter-group {
+            flex-direction: column;
+            align-items: stretch;
+        }
+        .filter-group .section-col,
+        .filter-group .button-col {
+            flex: 1 1 auto;
+        }
+        .search-helper {
+            height: auto;
+            margin-bottom: 4px;
+        }
+    }
 </style>
 
 <!-- ============================================ -->
@@ -139,16 +195,14 @@
 
     <div class="card-body p-3 p-md-4">
         <form method="get" id="searchForm">
-            <!-- ✅ الحفاظ على التبويب النشط -->
             <input type="hidden" name="tab" value="{{ active_tab }}">
-            
-            <!-- ✅ الحفاظ على الجهة المختارة -->
             {% if entity_id %}
             <input type="hidden" name="entity" value="{{ entity_id }}">
             {% endif %}
 
-            <div class="row g-2 g-md-3 align-items-end">
-                <div class="col-12 col-md-6">
+            <div class="filter-group">
+                <!-- عمود البحث -->
+                <div class="search-col">
                     <label class="form-label fw-bold text-muted small mb-1">
                         <i class="fas fa-building me-1"></i>
                         بحث
@@ -159,7 +213,6 @@
                             <i class="fas fa-search text-primary"></i>
                         </span>
                         
-                        <!-- ✅ حقل البحث مع Datalist -->
                         <input
                             type="text"
                             name="search"
@@ -172,12 +225,9 @@
                             autofocus
                         >
                         
-                        <!-- ✅ قائمة الاقتراحات Datalist -->
                         <datalist id="companiesList">
                             {% for company_name in all_companies %}
-                                <option value="{{ company_name }}">
-                                    {{ company_name }}
-                                </option>
+                                <option value="{{ company_name }}">{{ company_name }}</option>
                             {% endfor %}
                         </datalist>
                         
@@ -192,13 +242,15 @@
                         {% endif %}
                     </div>
                     
-                    <small class="text-muted mt-1 d-none d-md-block">
+                    <!-- ✅ النص المساعد تحت البحث مباشرة -->
+                    <small class="text-muted search-helper">
                         <i class="fas fa-info-circle text-primary"></i>
                         اختار من القائمة أو اضغط Enter للبحث
                     </small>
                 </div>
 
-                <div class="col-6 col-md-3">
+                <!-- عمود القسم -->
+                <div class="section-col">
                     <label class="form-label fw-bold text-muted small mb-1">
                         <i class="fas fa-filter me-1"></i>
                         القسم
@@ -211,34 +263,39 @@
                             id="sectionSelect"
                             style="border-radius: 12px;"
                         >
-                            <option value="">
-                                <i class="fas fa-asterisk"></i> الكل
-                            </option>
-                            <option
-                                value="internal"
-                                {% if selected_section == "internal" %}selected{% endif %}
-                            >
-                                🏥 داخلي
-                            </option>
-                            <option
-                                value="external"
-                                {% if selected_section == "external" %}selected{% endif %}
-                            >
-                                🚑 خارجي
-                            </option>
+                            <option value="">الكل</option>
+                            <option value="internal" {% if selected_section == "internal" %}selected{% endif %}>🏥 داخلي</option>
+                            <option value="external" {% if selected_section == "external" %}selected{% endif %}>🚑 خارجي</option>
                         </select>
                     </div>
+                    
+                    <!-- ✅ نص مساعد فارغ للحفاظ على الارتفاع -->
+                    <small class="search-helper text-transparent" style="visibility: hidden;">
+                        <i class="fas fa-info-circle"></i>
+                        نص مساعد مخفي
+                    </small>
                 </div>
 
-                <div class="col-6 col-md-3">
+                <!-- عمود زر البحث -->
+                <div class="button-col">
+                    <label class="form-label fw-bold text-muted small mb-1" style="visibility: hidden;">
+                        <i class="fas fa-filter me-1"></i>
+                        بحث
+                    </label>
                     <button
-                        class="btn btn-primary w-100 shadow-sm"
+                        class="btn btn-primary w-100 shadow-sm btn-search"
                         type="submit"
-                        style="border-radius: 12px; padding: 10px 15px;"
+                        style="border-radius: 12px;"
                     >
                         <i class="fas fa-search me-1"></i>
                         بحث
                     </button>
+                    
+                    <!-- ✅ نص مساعد فارغ للحفاظ على الارتفاع -->
+                    <small class="search-helper text-transparent" style="visibility: hidden;">
+                        <i class="fas fa-info-circle"></i>
+                        نص مساعد مخفي
+                    </small>
                 </div>
             </div>
         </form>
@@ -259,7 +316,7 @@
 </div>
 
 <!-- ============================================ -->
-<!-- ✅ عرض بيانات الشركات (باستخدام الـ Include) -->
+<!-- ✅ عرض بيانات الشركات -->
 <!-- ============================================ -->
 {% for company in companies %}
     <div class="company-card card shadow-sm border-0 mb-3 p-2 p-md-3">
@@ -274,7 +331,7 @@
 {% endfor %}
 
 <!-- ============================================ -->
-<!-- ✅ JavaScript - بحث فقط عند اختيار من القائمة أو Enter -->
+<!-- ✅ JavaScript -->
 <!-- ============================================ -->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -283,7 +340,6 @@
         const companiesList = document.getElementById('companiesList');
         const sectionSelect = document.getElementById('sectionSelect');
         
-        // ✅ إظهار/إخفاء زر المسح
         const clearBtn = document.querySelector('.clear-search-btn');
         if (searchInput && clearBtn) {
             searchInput.addEventListener('input', function() {
@@ -295,7 +351,6 @@
             });
         }
         
-        // ✅ البحث فقط عند اختيار عنصر من الـ Datalist أو الضغط Enter
         if (searchInput) {
             let lastSelectedValue = searchInput.value;
             
@@ -320,7 +375,6 @@
             });
         }
         
-        // ✅ التصفية التلقائية عند تغيير القسم
         if (sectionSelect) {
             sectionSelect.addEventListener('change', function() {
                 searchForm.submit();

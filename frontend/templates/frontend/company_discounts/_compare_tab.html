@@ -78,6 +78,29 @@
     .animate-delay-4 { animation-delay: 0.4s; }
     
     /* تحسين شكل الفورم */
+    .form-control-custom {
+        border: 2px solid #e9ecef;
+        border-radius: 14px !important;
+        padding: 0.75rem 1rem !important;
+        transition: all 0.3s ease;
+        background-color: #ffffff;
+        font-size: 0.95rem !important;
+        min-height: 50px;
+        width: 100%;
+    }
+    
+    .form-control-custom:focus {
+        border-color: #0dcaf0;
+        box-shadow: 0 0 0 4px rgba(13, 202, 240, 0.15);
+        transform: scale(1.01);
+        border-color: #0dcaf0 !important;
+    }
+    
+    .form-control-custom:hover {
+        border-color: #d6efd;
+        box-shadow: 0 4px 15px rgba(13, 202, 240, 0.1);
+    }
+    
     .form-select-custom {
         border: 2px solid #e9ecef;
         border-radius: 14px !important;
@@ -102,48 +125,6 @@
     
     .form-select-custom option {
         padding: 8px;
-    }
-    
-    /* زر المقارنة - مخفي الآن */
-    .btn-compare {
-        background: linear-gradient(135deg, #d6efd 0%, #0dcaf0 100%) !important;
-        border: none !important;
-        border-radius: 14px !important;
-        padding: 0.75rem !important;
-        font-weight: 700;
-        letter-spacing: 0.5px;
-        transition: all 0.3s ease;
-        min-height: 50px;
-        color: #1a2a3a !important;
-        box-shadow: 0 4px 15px rgba(13, 202, 240, 0.3);
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .btn-compare::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -200%;
-        width: 200%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-        transition: all 0.6s ease;
-    }
-    
-    .btn-compare:hover::before {
-        left: 200%;
-    }
-    
-    .btn-compare:hover {
-        transform: translateY(-2px) scale(1.02);
-        box-shadow: 0 8px 25px rgba(13, 202, 240, 0.5);
-        color: #1a2a3a !important;
-        background: linear-gradient(135deg, #c5dfc5 0%, #0ab8dc 100%) !important;
-    }
-    
-    .btn-compare:active {
-        transform: scale(0.95);
     }
     
     /* تحسين الجداول للأجهزة المحمولة */
@@ -316,6 +297,28 @@
         border-color: #0dcaf0;
     }
     
+    /* ✅ إضافة: توحيد ارتفاع الحقول */
+    .form-control-custom,
+    .form-select-custom {
+        height: 50px;
+    }
+    
+    /* ✅ تحسين النصوص المساعدة */
+    .search-helper {
+        display: block;
+        margin-top: 4px;
+        font-size: 0.75rem;
+        height: 20px;
+        line-height: 20px;
+    }
+    
+    .filter-group .form-label {
+        margin-bottom: 4px;
+        height: 20px;
+        line-height: 20px;
+        display: block;
+    }
+    
     /* تحسين للشاشات الصغيرة جداً */
     @media (max-width: 576px) {
         .compare-card {
@@ -330,17 +333,16 @@
             font-size: 1.1rem !important;
         }
         
-        .form-select-custom {
+        .form-control-custom {
             font-size: 0.9rem !important;
             padding: 0.6rem 0.8rem !important;
             min-height: 44px;
         }
         
-        .btn-compare {
-            font-size: 0.95rem !important;
-            padding: 0.6rem !important;
+        .form-select-custom {
+            font-size: 0.9rem !important;
+            padding: 0.6rem 0.8rem !important;
             min-height: 44px;
-            margin-top: 0.5rem;
         }
         
         .table-compare {
@@ -384,13 +386,13 @@
             border-radius: 16px !important;
         }
         
-        .form-select-custom {
+        .form-control-custom {
             font-size: 0.9rem !important;
             min-height: 46px;
         }
         
-        .btn-compare {
-            font-size: 0.95rem !important;
+        .form-select-custom {
+            font-size: 0.9rem !important;
             min-height: 46px;
         }
     }
@@ -400,10 +402,6 @@
         .compare-card {
             box-shadow: none !important;
             border: 1px solid #ddd !important;
-        }
-        
-        .btn-compare {
-            display: none !important;
         }
         
         .card-header-gradient {
@@ -424,30 +422,47 @@
     
     <div class="card-body p-3 p-md-4">
         
-        <!-- ✅ تم إزالة method="get" وأضفنا id عشان الـ JavaScript -->
         <form id="compareForm" class="mb-4 animate-fade-in">
             
-            <!-- الحفاظ على الـ Tab والـ Entity -->
             <input type="hidden" name="tab" value="compare">
             {% if entity_id %}
                 <input type="hidden" name="entity" value="{{ entity_id }}">
             {% endif %}
             
-            <div class="row g-3 g-md-4">
+            <div class="row g-3 g-md-4 align-items-start">
                 
                 <div class="col-12 col-md-5 animate-fade-in animate-delay-1">
                     <label class="form-label fw-bold small text-muted" style="color: #1a2a3a !important;">
                         <i class="fas fa-building me-1" style="color: #0dcaf0;"></i>
                         الجهة الأولى
                     </label>
-                    <select name="company1" class="form-select form-select-custom" onchange="autoCompare()">
-                        <option value="">اختر الجهة الأولى</option>
-                        {% for item in company_names %}
-                            <option value="{{ item }}" {% if compare_company_1 == item %}selected{% endif %}>
-                                {{ item }}
-                            </option>
-                        {% endfor %}
-                    </select>
+                    
+                    <div class="search-wrapper">
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-0 rounded-start-3">
+                                <i class="fas fa-search text-primary"></i>
+                            </span>
+                            <input
+                                type="text"
+                                name="company1"
+                                value="{{ compare_company_1 }}"
+                                class="form-control border-0 shadow-sm form-control-custom"
+                                placeholder="ابحث عن الجهة الأولى..."
+                                id="company1Input"
+                                list="companiesList"
+                                autocomplete="off"
+                            >
+                            <datalist id="companiesList">
+                                {% for item in company_names %}
+                                    <option value="{{ item }}">{{ item }}</option>
+                                {% endfor %}
+                            </datalist>
+                        </div>
+                        <small class="text-muted search-helper">
+                            <i class="fas fa-info-circle text-primary"></i>
+                            اختر من القائمة أو اكتب واضغط Enter
+                        </small>
+                    </div>
                 </div>
                 
                 <div class="col-12 col-md-5 animate-fade-in animate-delay-2">
@@ -455,23 +470,53 @@
                         <i class="fas fa-building me-1" style="color: #0dcaf0;"></i>
                         الجهة الثانية
                     </label>
-                    <select name="company2" class="form-select form-select-custom" onchange="autoCompare()">
-                        <option value="">اختر الجهة الثانية</option>
-                        {% for item in company_names %}
-                            <option value="{{ item }}" {% if compare_company_2 == item %}selected{% endif %}>
-                                {{ item }}
-                            </option>
-                        {% endfor %}
-                    </select>
+                    
+                    <div class="search-wrapper">
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-0 rounded-start-3">
+                                <i class="fas fa-search text-primary"></i>
+                            </span>
+                            <input
+                                type="text"
+                                name="company2"
+                                value="{{ compare_company_2 }}"
+                                class="form-control border-0 shadow-sm form-control-custom"
+                                placeholder="ابحث عن الجهة الثانية..."
+                                id="company2Input"
+                                list="companiesList"
+                                autocomplete="off"
+                            >
+                            <datalist id="companiesList">
+                                {% for item in company_names %}
+                                    <option value="{{ item }}">{{ item }}</option>
+                                {% endfor %}
+                            </datalist>
+                        </div>
+                        <small class="text-muted search-helper">
+                            <i class="fas fa-info-circle text-primary"></i>
+                            اختر من القائمة أو اكتب واضغط Enter
+                        </small>
+                    </div>
                 </div>
                 
-                <!-- ✅ إخفاء زر المقارنة -->
-                <div class="col-12 col-md-2 animate-fade-in animate-delay-3" style="display: none;">
-                    <label class="form-label fw-bold small text-muted d-none d-md-block" style="color: #1a2a3a !important;">&nbsp;</label>
-                    <button class="btn btn-compare w-100" type="submit">
-                        <i class="fas fa-balance-scale me-2"></i>
+                <!-- ✅ عمود فارغ للحفاظ على التنسيق -->
+                <div class="col-12 col-md-2 animate-fade-in animate-delay-3">
+                    <label class="form-label fw-bold small text-muted" style="visibility: hidden;">
+                        <i class="fas fa-filter me-1"></i>
+                        القسم
+                    </label>
+                    <button
+                        class="btn btn-primary w-100 shadow-sm btn-search"
+                        type="submit"
+                        style="border-radius: 14px; height: 50px;"
+                    >
+                        <i class="fas fa-balance-scale me-1"></i>
                         مقارنة
                     </button>
+                    <small class="search-helper text-transparent" style="visibility: hidden;">
+                        <i class="fas fa-info-circle"></i>
+                        نص مساعد مخفي
+                    </small>
                 </div>
                 
             </div>
@@ -482,7 +527,7 @@
                         <i class="fas fa-filter me-1" style="color: #0dcaf0;"></i>
                         القسم
                     </label>
-                    <select name="compare_section" class="form-select form-select-custom" onchange="autoCompare()">
+                    <select name="compare_section" class="form-select form-select-custom" id="sectionSelect">
                         <option value="all" {% if compare_section == "all" %}selected{% endif %}>
                             الكل
                         </option>
@@ -493,15 +538,18 @@
                             🚑 خارجي
                         </option>
                     </select>
+                    <small class="text-muted search-helper">
+                        <i class="fas fa-info-circle text-primary"></i>
+                        اختر القسم للتصفية
+                    </small>
                 </div>
             </div>
             
         </form>
         
-        <!-- عرض النتائج -->
+        <!-- عرض النتائج (نفس الكود السابق) -->
         {% if company_1 and company_2 %}
         
-        <!-- عنوان القسم المختار -->
         <div class="alert alert-custom alert-info mb-3 animate-fade-in">
             <i class="fas fa-info-circle me-2" style="color: #0dcaf0;"></i>
             <strong>نتيجة المقارنة</strong>
@@ -514,7 +562,6 @@
             {% endif %}
         </div>
         
-        <!-- جدول المقارنة -->
         <div class="table-responsive mb-4 animate-fade-in">
             <table class="table table-compare table-bordered align-middle">
                 <thead>
@@ -719,14 +766,46 @@
 <!-- ✅ JavaScript للتشغيل التلقائي -->
 <!-- ============================================ -->
 <script>
-function autoCompare() {
-    var form = document.getElementById('compareForm');
-    var company1 = form.querySelector('select[name="company1"]').value;
-    var company2 = form.querySelector('select[name="company2"]').value;
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('compareForm');
+    const company1Input = document.getElementById('company1Input');
+    const company2Input = document.getElementById('company2Input');
+    const sectionSelect = document.getElementById('sectionSelect');
+    const companiesList = document.getElementById('companiesList');
     
-    // ✅ لو تم اختيار الجهتين
-    if (company1 && company2) {
-        form.submit();
+    // ✅ البحث عند اختيار من القائمة أو الضغط Enter
+    function setupSearchInput(input) {
+        let lastSelectedValue = input.value;
+        
+        input.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                form.submit();
+            }
+        });
+        
+        input.addEventListener('change', function(e) {
+            if (e.target.value !== lastSelectedValue) {
+                lastSelectedValue = e.target.value;
+                
+                const options = Array.from(companiesList.options);
+                const selectedOption = options.find(opt => opt.value === e.target.value);
+                
+                if (selectedOption && e.target.value.trim() !== '') {
+                    form.submit();
+                }
+            }
+        });
     }
-}
+    
+    if (company1Input) setupSearchInput(company1Input);
+    if (company2Input) setupSearchInput(company2Input);
+    
+    // ✅ التصفية التلقائية عند تغيير القسم
+    if (sectionSelect) {
+        sectionSelect.addEventListener('change', function() {
+            form.submit();
+        });
+    }
+});
 </script>
