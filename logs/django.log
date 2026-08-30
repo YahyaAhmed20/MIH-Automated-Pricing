@@ -21818,3 +21818,15 @@ Not Found: /.well-known/appspecific/com.chrome.devtools.json
 "GET /company-discounts/?tab=compare&company1=%D8%A8%D9%86%D9%83+%D9%85%D8%B5%D8%B1&company2=%D9%88%D8%B2%D8%A7%D8%B1%D8%A9+%D8%A7%D9%84%D8%B9%D8%AF%D9%84&compare_section=all HTTP/1.1" 200 95869
 "GET /company-discounts/?tab=ranking HTTP/1.1" 200 70871
 "GET /company-discounts/?tab=ranking HTTP/1.1" 200 71419
+Watching for file changes with StatReloader
+"GET /doctors/ HTTP/1.1" 200 291175
+"GET /package-comparison/ HTTP/1.1" 200 2290908
+"GET /doctors/ HTTP/1.1" 200 290769
+"GET /doctors/%D8%AF%20/%20%D8%A7%D8%AD%D9%85%D8%AF%20%D8%B4%D8%AD%D8%AA%D9%87%20%D8%B9%D9%86%D8%A7%D9%86/ HTTP/1.1" 200 116270
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /doctors/%D8%AF%20/%20%D8%A7%D8%AD%D9%85%D8%AF%20%D8%B4%D8%AD%D8%AA%D9%87%20%D8%B9%D9%86%D8%A7%D9%86/ HTTP/1.1" 200 120728
+"GET /doctors/?doctor_name=%D8%A7.%D8%AF+%2F+%D8%AE%D8%A7%D9%84%D8%AF+%D8%AF%D9%8A%D8%A7%D8%A8&specialty=&day_from=&month_from=&year_from=&day_to=&month_to=&year_to= HTTP/1.1" 200 87156
+"GET /doctors/%D8%A7.%D8%AF%20/%20%D8%AE%D8%A7%D9%84%D8%AF%20%D8%AF%D9%8A%D8%A7%D8%A8/ HTTP/1.1" 200 195775
+Watching for file changes with StatReloader
+"GET /doctors/%D8%A7.%D8%AF%20/%20%D8%AE%D8%A7%D9%84%D8%AF%20%D8%AF%D9%8A%D8%A7%D8%A8/ HTTP/1.1" 200 201133

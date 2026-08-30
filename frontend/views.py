@@ -3291,7 +3291,7 @@ def doctor_detail(request, doctor_name):
         ).order_by('-date', '-id')
     
     # Pagination (10 حالات في الصفحة)
-    paginator = Paginator(cases_list, 10)
+    paginator = Paginator(cases_list, 50)
     page = request.GET.get('page', 1)
     
     try:
