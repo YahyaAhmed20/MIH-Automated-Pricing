@@ -22386,3 +22386,404 @@ Watching for file changes with StatReloader
 "GET /reports/sector-details/? HTTP/1.1" 200 72610
 "GET /reports/sector-details/? HTTP/1.1" 200 71480
 "GET /reports/sector-details/?month=%D9%8A%D9%88%D9%86%D9%8A%D9%88 HTTP/1.1" 200 72864
+Watching for file changes with StatReloader
+"GET /reports/ HTTP/1.1" 200 128743
+"GET /reports/payment-details/?month= HTTP/1.1" 200 115641
+"GET /reports/payment-details/?month= HTTP/1.1" 200 115641
+"GET /reports/sector-details/?month= HTTP/1.1" 200 71480
+"GET /reports/specialty/%D8%A7%D9%84%D9%82%D8%B3%D8%B7%D8%B1%D9%87%20%D9%88%D8%AC%D8%B1%D8%A7%D8%AD%D8%A7%D8%AA%20%D8%A7%D9%84%D9%82%D9%84%D8%A8/?month= HTTP/1.1" 200 90240
+"GET /reports/ HTTP/1.1" 200 128743
+"GET /external-approvals/ HTTP/1.1" 200 93142
+"GET /external-approvals/accounts/ HTTP/1.1" 200 850456
+"GET /pending-analysis/ HTTP/1.1" 200 206953
+"GET /reports/ HTTP/1.1" 200 128743
+Internal Server Error: /reports/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\accounts\decorators.py", line 56, in wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 1186, in reports_statistics
+    return render(
+           ^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 172, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 164, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 164, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\defaulttags.py", line 480, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\urls\base.py", line 98, in reverse
+    resolved_url = resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\urls\resolvers.py", line 831, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'specialty_details' not found. 'specialty_details' is not a valid view function or pattern name.
+"GET /reports/ HTTP/1.1" 500 363551
+Watching for file changes with StatReloader
+Internal Server Error: /reports/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\accounts\decorators.py", line 56, in wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 1186, in reports_statistics
+    return render(
+           ^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 172, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 164, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 164, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\defaulttags.py", line 480, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\urls\base.py", line 98, in reverse
+    resolved_url = resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\urls\resolvers.py", line 831, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'specialty_details' not found. 'specialty_details' is not a valid view function or pattern name.
+"GET /reports/ HTTP/1.1" 500 363551
+"GET /reports/ HTTP/1.1" 200 128743
+"GET /reports/entities-details/ HTTP/1.1" 200 58380
+"GET /similar-invoices/?patient_name=%D8%A7%D8%A8%D8%AA%D8%B3%D8%A7%D9%85+%D8%A7%D8%AD%D9%85%D8%AF+%D9%85%D8%AD%D9%85%D8%AF+%D8%B9%D8%A8%D8%A7%D8%B3&specialty=&entity=&doctor=&status=&price_range=&date_from=&date_to= HTTP/1.1" 200 88146
+Internal Server Error: /reports/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\accounts\decorators.py", line 56, in wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 1186, in reports_statistics
+    return render(
+           ^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 172, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 164, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 164, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\defaulttags.py", line 480, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\urls\base.py", line 98, in reverse
+    resolved_url = resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\urls\resolvers.py", line 831, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'specialty_details' not found. 'specialty_details' is not a valid view function or pattern name.
+"GET /reports/ HTTP/1.1" 500 361761
+Internal Server Error: /reports/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\accounts\decorators.py", line 56, in wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 1186, in reports_statistics
+    return render(
+           ^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 172, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 164, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 164, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\defaulttags.py", line 480, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\urls\base.py", line 98, in reverse
+    resolved_url = resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\urls\resolvers.py", line 831, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'specialty_details' not found. 'specialty_details' is not a valid view function or pattern name.
+"GET /reports/ HTTP/1.1" 500 361645
+"GET /reports/ HTTP/1.1" 200 128743
+Internal Server Error: /reports/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\accounts\decorators.py", line 56, in wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 1186, in reports_statistics
+    return render(
+           ^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 172, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 164, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 164, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\defaulttags.py", line 480, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\urls\base.py", line 98, in reverse
+    resolved_url = resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\urls\resolvers.py", line 831, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'specialties_details' not found. 'specialties_details' is not a valid view function or pattern name.
+"GET /reports/ HTTP/1.1" 500 363379
+"GET /reports/ HTTP/1.1" 200 138239
+"GET /packages/ HTTP/1.1" 200 77654
+"GET /reports/specialty/all/ HTTP/1.1" 200 65835
+"GET /packages/ HTTP/1.1" 200 77654
+Watching for file changes with StatReloader
+"GET /reports/ HTTP/1.1" 200 138238
+"GET /reports/ HTTP/1.1" 200 138238
+"GET /reports/ HTTP/1.1" 200 138239
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
