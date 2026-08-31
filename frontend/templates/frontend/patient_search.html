@@ -371,8 +371,65 @@
     
     /* ✅ Mobile Responsive */
     @media (max-width: 768px) {
+
+        /* ============================================
+           Mobile: Advanced Search Filters
+           ============================================ */
+
+        .advanced-filters-toggle {
+            display: flex;
+            width: 100%;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.9rem 1rem;
+            background: #fff;
+            border: none;
+            border-radius: 16px;
+            color: #212529;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .advanced-filters-toggle:focus {
+            outline: none;
+        }
+
+        .advanced-filters-icon {
+            transition: transform 0.3s ease;
+            color: #0d6efd;
+        }
+
+        .filter-card.filters-open .advanced-filters-icon {
+            transform: rotate(180deg);
+        }
+
+        .advanced-filters-body {
+            display: none;
+        }
+
+        .filter-card.filters-open .advanced-filters-body {
+            display: block;
+        }
+
         .patients-table {
             font-size: 0.75rem;
+
+            /* Horizontal scroll on mobile */
+            overflow-x: auto;
+            overflow-y: hidden;
+            -webkit-overflow-scrolling: touch;
+            width: 100%;
+        }
+
+        .patients-table table {
+            min-width: 1100px;
+            width: max-content;
+        }
+
+        .patients-table th,
+        .patients-table td {
+            white-space: nowrap;
         }
         
         .patients-table thead th,
@@ -384,17 +441,34 @@
             font-size: 0.65rem;
             padding: 0.15rem 0.5rem;
         }
-        
-        .info-item {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 2px;
-            padding: 4px 6px;
+
+        .details-container .row > [class*="col-"] {
+            width: 100%;
+            flex: 0 0 100%;
+            max-width: 100%;
         }
         
+        .info-item {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 6px;
+            padding: 4px 6px;
+        }
+
+        .info-item .label {
+            flex-shrink: 0;
+            font-size: 0.75rem;
+        }
+
         .info-item .value {
-            max-width: 100%;
-            width: 100%;
+            max-width: none;
+            width: auto;
+            flex: 1;
+            font-size: 0.8rem;
+            text-align: left;
+            word-break: break-word;
         }
     }
 </style>
@@ -469,7 +543,19 @@
     <!-- ✅ الفلاتر -->
     <!-- ============================================ -->
     <div class="card filter-card">
-        <div class="card-body">
+
+        <!-- Mobile: Advanced Search Filters Toggle -->
+        <button type="button"
+                class="advanced-filters-toggle"
+                onclick="toggleAdvancedFilters()">
+            <span>
+                <i class="fas fa-sliders-h me-2"></i>
+                فلاتر البحث المتقدم
+            </span>
+            <i class="fas fa-chevron-down advanced-filters-icon"></i>
+        </button>
+
+        <div class="card-body advanced-filters-body">
             <form method="GET" class="row g-3 align-items-end" id="filterForm">
                 
                 <!-- ✅ فلتر 1: ملحق او رئيسى -->
@@ -662,7 +748,7 @@
                             {{ patient.main_status|default:"-" }}
                         </span>
                     </td>
-                    <td>{{ patient.date|date:"Y-m-d"|default:"-" }}</td>
+                    <td>{{ patient.date|date:"d/m/Y"|default:"-" }}</td>
                     <td>
                         <button class="btn-view-details" onclick="toggleDetails({{ patient.id }})">
                             <i class="fas fa-chevron-down me-1"></i> عرض المزيد
@@ -729,7 +815,7 @@
                                         </div>
                                         <div class="info-item">
                                             <span class="label">تاريخ الاجراء</span>
-                                            <span class="value">{{ patient.date|date:"Y-m-d"|default:"-" }}</span>
+                                            <span class="value">{{ patient.date|date:"d/m/Y"|default:"-" }}</span>
                                         </div>
                                         <div class="info-item">
                                             <span class="label">اسم الاجراء</span>
@@ -820,11 +906,11 @@
                                         </div>
                                         <div class="info-item">
                                             <span class="label">تاريخ الموافقه</span>
-                                            <span class="value">{{ patient.approval_date|date:"Y-m-d"|default:"-" }}</span>
+                                            <span class="value">{{ patient.approval_date|date:"d/m/Y"|default:"-" }}</span>
                                         </div>
                                         <div class="info-item">
                                             <span class="label">صلاحيه الموافقه</span>
-                                            <span class="value">{{ patient.expiry_date|date:"Y-m-d"|default:"-" }}</span>
+                                            <span class="value">{{ patient.expiry_date|date:"d/m/Y"|default:"-" }}</span>
                                         </div>
                                         <div class="info-item">
                                             <span class="label">رد الحسابات</span>
@@ -832,7 +918,7 @@
                                         </div>
                                         <div class="info-item">
                                             <span class="label">تاريخ الدخول</span>
-                                            <span class="value">{{ patient.admission_date|date:"Y-m-d"|default:"-" }}</span>
+                                            <span class="value">{{ patient.admission_date|date:"d/m/Y"|default:"-" }}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -1044,6 +1130,14 @@ function toggleDetails(patientId) {
             }
         }
     }
+}
+
+function toggleAdvancedFilters() {
+    const filterCard = document.querySelector('.filter-card');
+
+    if (!filterCard) return;
+
+    filterCard.classList.toggle('filters-open');
 }
 </script>
 

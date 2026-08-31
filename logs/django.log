@@ -22787,3 +22787,161 @@ Watching for file changes with StatReloader
 "GET /reports/ HTTP/1.1" 200 138239
 Not Found: /.well-known/appspecific/com.chrome.devtools.json
 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 46001
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 16342
+"POST / HTTP/1.1" 302 0
+"GET /reports/ HTTP/1.1" 200 138239
+"GET /patient-search/ HTTP/1.1" 200 881062
+"GET /patient-search/ HTTP/1.1" 200 881062
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /patient-search/ HTTP/1.1" 200 913301
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /patient-search/ HTTP/1.1" 200 913301
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /patient-search/? HTTP/1.1" 200 913301
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+- Broken pipe from ('127.0.0.1', 53807)
+"GET /patient-search/?attachment_type=%D9%85%D9%84%D8%AD%D9%82&company=&sub_account=&doctor=&specialty=&date_from=&date_to= HTTP/1.1" 200 797341
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /patient-search/?attachment_type=%D9%85%D9%84%D8%AD%D9%82&company=&sub_account=&doctor=&specialty=&date_from=&date_to= HTTP/1.1" 200 806478
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /patient-search/?attachment_type=%D9%85%D9%84%D8%AD%D9%82&company=&sub_account=&doctor=&specialty=&date_from=&date_to= HTTP/1.1" 200 741623
+"GET /patient-search/? HTTP/1.1" 200 860891
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /patient-search/? HTTP/1.1" 200 922310
+"GET /patient-search/? HTTP/1.1" 200 913301
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /patient-search/? HTTP/1.1" 200 913301
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /patient-search/? HTTP/1.1" 200 881062
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /patient-search/? HTTP/1.1" 200 881450
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /patient-search/? HTTP/1.1" 200 881638
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /patient-search/? HTTP/1.1" 200 881720
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /patient-search/? HTTP/1.1" 200 881720
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /patient-search/? HTTP/1.1" 200 881720
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /patient-search/? HTTP/1.1" 200 881720
+"GET /patient-search/? HTTP/1.1" 200 881720
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /patient-search/? HTTP/1.1" 200 881865
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /patient-search/? HTTP/1.1" 200 911243
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /patient-search/? HTTP/1.1" 200 883539
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /patient-search/? HTTP/1.1" 200 883539
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /external-approvals/ HTTP/1.1" 200 93142
+"GET /external-approvals/status_approved/ HTTP/1.1" 200 847719
+"GET /external-approvals/status_approved/ HTTP/1.1" 200 847719
+"GET /external-approvals/status_approved/ HTTP/1.1" 200 847719
+"GET /external-approvals/status_undefined/ HTTP/1.1" 200 87008
+"GET /external-approvals/total/ HTTP/1.1" 200 928816
+"GET /external-approvals/total/ HTTP/1.1" 200 928816
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /external-approvals/ HTTP/1.1" 200 93173
+"GET /external-approvals/status_cancelled/ HTTP/1.1" 200 311512
+"GET /external-approvals/status_pending_by_patient/ HTTP/1.1" 200 528412
+"GET /external-approvals/accounts/ HTTP/1.1" 200 850456
+"GET /external-approvals/without_approval/ HTTP/1.1" 200 899594
+"GET /external-approvals/status_serv_done/ HTTP/1.1" 200 873274
+"GET /external-approvals/status_serv_done/ HTTP/1.1" 200 882741
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /external-approvals/status_cancelled/ HTTP/1.1" 200 314643
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /external-approvals/total/ HTTP/1.1" 200 943195
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /external-approvals/total/ HTTP/1.1" 200 943716
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /package-comparison/ HTTP/1.1" 200 103357
+"GET /ajax/package-filters/?source=sheet15&year=2025 HTTP/1.1" 200 102
+"GET /ajax/package-filters/?source=sheet15&year=2025 HTTP/1.1" 200 102
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /package-comparison/ HTTP/1.1" 200 102103
+"GET /ajax/package-filters/?year=2025 HTTP/1.1" 200 102
+"GET /ajax/package-filters/?year=2025 HTTP/1.1" 200 102
+"GET /ajax/package-filters/?year=2026 HTTP/1.1" 200 102
+- Broken pipe from ('127.0.0.1', 53512)
+"GET /ajax/package-filters/?year=2025 HTTP/1.1" 200 102
+"GET /ajax/package-filters/?year=2026 HTTP/1.1" 200 102
+- Broken pipe from ('127.0.0.1', 53642)
+"GET /package-comparison/?year1=2025&quarter1=&month1=&sector1=&entity1=&sub_company1=&specialty1=&doctor_name1=&package_type1=&year2=2026&quarter2=&month2=&sector2=&entity2=&sub_company2=&specialty2=&doctor_name2=&package_type2= HTTP/1.1" 200 1267593
+"GET /ajax/package-filters/?year=2025 HTTP/1.1" 200 102
+"GET /ajax/package-filters/?year=2026 HTTP/1.1" 200 102
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /package-comparison/?year1=2025&quarter1=&month1=&sector1=&entity1=&sub_company1=&specialty1=&doctor_name1=&package_type1=&year2=2026&quarter2=&month2=&sector2=&entity2=&sub_company2=&specialty2=&doctor_name2=&package_type2= HTTP/1.1" 200 1268567
+"GET /ajax/package-filters/?year=2025 HTTP/1.1" 200 102
+"GET /ajax/package-filters/?year=2026 HTTP/1.1" 200 25614
+"GET /ajax/package-filters/?year=2025 HTTP/1.1" 200 102
+"GET /package-comparison/?year1=2025&quarter1=&month1=&sector1=&entity1=&sub_company1=&specialty1=&doctor_name1=&package_type1=&year2=2025&quarter2=&month2=&sector2=&entity2=&sub_company2=&specialty2=&doctor_name2=&package_type2= HTTP/1.1" 200 102103
+"GET /ajax/package-filters/?year=2025 HTTP/1.1" 200 102
+"GET /ajax/package-filters/?year=2025 HTTP/1.1" 200 102
+"GET /ajax/package-filters/?year=2025&quarter=%D8%A7%D9%84%D8%A7%D9%88%D9%84 HTTP/1.1" 200 102
+- Broken pipe from ('127.0.0.1', 56171)
+"GET /ajax/package-filters/?year=2025&month=%D9%8A%D9%86%D8%A7%D9%8A%D8%B1&quarter=%D8%A7%D9%84%D8%A7%D9%88%D9%84 HTTP/1.1" 200 102
+"GET /package-comparison/?year1=2025&quarter1=%D8%A7%D9%84%D8%A7%D9%88%D9%84&month1=%D9%8A%D9%86%D8%A7%D9%8A%D8%B1&sector1=&entity1=&sub_company1=&specialty1=&doctor_name1=&package_type1=&year2=2025&quarter2=&month2=&sector2=&entity2=&sub_company2=&specialty2=&doctor_name2=&package_type2= HTTP/1.1" 200 102119
+"GET /ajax/package-filters/?year=2025 HTTP/1.1" 200 102
+"GET /ajax/package-filters/?year=2025&month=%D9%8A%D9%86%D8%A7%D9%8A%D8%B1&quarter=%D8%A7%D9%84%D8%A7%D9%88%D9%84 HTTP/1.1" 200 102
+"GET /ajax/package-filters/?year=2026&month=%D9%8A%D9%86%D8%A7%D9%8A%D8%B1&quarter=%D8%A7%D9%84%D8%A7%D9%88%D9%84 HTTP/1.1" 200 11471
+"GET /package-comparison/?year1=2026&quarter1=%D8%A7%D9%84%D8%A7%D9%88%D9%84&month1=%D9%8A%D9%86%D8%A7%D9%8A%D8%B1&sector1=&entity1=&sub_company1=&specialty1=&doctor_name1=&package_type1=&year2=2025&quarter2=&month2=&sector2=&entity2=&sub_company2=&specialty2=&doctor_name2=&package_type2= HTTP/1.1" 200 448388
+"GET /ajax/package-filters/?year=2025 HTTP/1.1" 200 102
+"GET /ajax/package-filters/?year=2026&month=%D9%8A%D9%86%D8%A7%D9%8A%D8%B1&quarter=%D8%A7%D9%84%D8%A7%D9%88%D9%84 HTTP/1.1" 200 11471
+"GET /ajax/package-filters/?year=2026 HTTP/1.1" 200 25614
+"GET /package-comparison/?year1=2026&quarter1=%D8%A7%D9%84%D8%A7%D9%88%D9%84&month1=%D9%8A%D9%86%D8%A7%D9%8A%D8%B1&sector1=&entity1=&sub_company1=&specialty1=&doctor_name1=&package_type1=&year2=2026&quarter2=&month2=&sector2=&entity2=&sub_company2=&specialty2=&doctor_name2=&package_type2= HTTP/1.1" 200 1398252
+"GET /ajax/package-filters/?year=2026&month=%D9%8A%D9%86%D8%A7%D9%8A%D8%B1&quarter=%D8%A7%D9%84%D8%A7%D9%88%D9%84 HTTP/1.1" 200 11471
+"GET /ajax/package-filters/?year=2026 HTTP/1.1" 200 25614
+"GET /ajax/package-filters/?year=2025&month=%D9%8A%D9%86%D8%A7%D9%8A%D8%B1&quarter=%D8%A7%D9%84%D8%A7%D9%88%D9%84 HTTP/1.1" 200 102
+"GET /package-comparison/?year1=2025&quarter1=%D8%A7%D9%84%D8%A7%D9%88%D9%84&month1=%D9%8A%D9%86%D8%A7%D9%8A%D8%B1&sector1=&entity1=&sub_company1=&specialty1=&doctor_name1=&package_type1=&year2=2026&quarter2=&month2=&sector2=&entity2=&sub_company2=&specialty2=&doctor_name2=&package_type2= HTTP/1.1" 200 1268583
+"GET /ajax/package-filters/?year=2025&month=%D9%8A%D9%86%D8%A7%D9%8A%D8%B1&quarter=%D8%A7%D9%84%D8%A7%D9%88%D9%84 HTTP/1.1" 200 102
+"GET /ajax/package-filters/?year=2026 HTTP/1.1" 200 25614
+"GET /ajax/package-filters/?year=2026&doctor_name=%D8%A7%D9%84%D9%88%D8%A7%D8%AC%D9%87%D9%87+*+%D9%8A%D8%AA%D9%85+%D8%A7%D8%AF%D8%B1%D8%A7%D8%AC+%D8%A7%D9%8A%D9%82%D9%88%D9%86%D9%87+%D9%84%D9%84%D8%A8%D8%A7%D9%83%D8%AF%D8%AC%D8%A7%D8%AA+%D8%AA%D8%AD%D8%AA%D9%87%D8%A7+%D8%B9%D8%AF%D8%A7%D8%AF+%D9%85%D8%AA%D8%AD%D8%B1%D9%83+%D8%A8%D8%A7%D8%AC%D9%85%D8%A7%D9%84%D9%8A+%D8%A7%D9%84%D8%A8%D8%A7%D9%83%D8%AF%D8%AC%D8%A7%D8%AA+%D9%8A%D8%B3%D8%AD%D8%A8+%D9%85%D9%86+%D8%A7%D9%84%D8%B4%D9%8A%D8%AA+%D8%AF%D9%87+%D9%88%D8%A7%D9%86%D8%A7+%D9%87%D8%AD%D8%AF%D8%AB%D9%87+%D9%81%D9%8A+%D9%86%D9%87%D8%A7%D9%8A%D8%A9+%D9%83%D9%84+%D9%8A%D9%88%D9%85+%D9%88%D9%83%D8%B0%D9%84%D9%83+%D8%A7%D9%8A%D9%82%D9%88%D9%86%D8%A7%D8%AA+%D9%84%D8%A8%D8%A7%D9%82%D9%8A+%D8%A7%D9%84%D8%AA%D8%AE%D8%B5%D8%B5%D8%A7%D8%AA+%D9%88%D9%81%D9%82%D8%A7+%D9%84%D9%84%D8%AA%D8%AE%D8%B5%D8%B5+%D9%85%D9%86+%D8%A7%D9%84%D8%AC%D8%AF%D9%88%D9%84+%D8%A8%D8%A7%D9%84%D8%B9%D8%AF%D8%AF+%D8%B9%D9%84%D9%8A+%D8%A7%D9%84%D8%AC%D9%86%D8%A8+%D8%B2%D8%B1%D8%A7%D8%B1+%D9%84%D8%B9%D8%B1%D8%B6+%D8%A7%D9%84%D8%B1%D8%B3%D9%85+%D8%A7%D9%84%D8%A8%D9%8A%D8%A7%D9%86%D9%8A+%D9%8A%D9%88%D8%B6%D8%AD+%D8%AD%D8%B1%D9%83%D8%A9+%D8%A7%D9%84%D8%B9%D8%AF%D8%AF+%D8%AF%D9%87+%D8%B9%D9%84%D9%8A+%D9%85%D8%AF%D8%A7%D8%B1+%D8%A7%D9%84%D8%B4%D9%87%D9%88%D8%B1+%D8%AA%D8%B5%D8%A7%D8%B9%D8%AF%D9%8A+%2F+%D8%AA%D9%86%D8%A7 HTTP/1.1" 200 1685
+"GET /package-comparison/?year1=2025&quarter1=%D8%A7%D9%84%D8%A7%D9%88%D9%84&month1=%D9%8A%D9%86%D8%A7%D9%8A%D8%B1&sector1=&entity1=&sub_company1=&specialty1=&doctor_name1=&package_type1=&year2=2026&quarter2=&month2=&sector2=&entity2=&sub_company2=&specialty2=&doctor_name2=%D8%A7%D9%84%D9%88%D8%A7%D8%AC%D9%87%D9%87+*+%D9%8A%D8%AA%D9%85+%D8%A7%D8%AF%D8%B1%D8%A7%D8%AC+%D8%A7%D9%8A%D9%82%D9%88%D9%86%D9%87+%D9%84%D9%84%D8%A8%D8%A7%D9%83%D8%AF%D8%AC%D8%A7%D8%AA+%D8%AA%D8%AD%D8%AA%D9%87%D8%A7+%D8%B9%D8%AF%D8%A7%D8%AF+%D9%85%D8%AA%D8%AD%D8%B1%D9%83+%D8%A8%D8%A7%D8%AC%D9%85%D8%A7%D9%84%D9%8A+%D8%A7%D9%84%D8%A8%D8%A7%D9%83%D8%AF%D8%AC%D8%A7%D8%AA+%D9%8A%D8%B3%D8%AD%D8%A8+%D9%85%D9%86+%D8%A7%D9%84%D8%B4%D9%8A%D8%AA+%D8%AF%D9%87+%D9%88%D8%A7%D9%86%D8%A7+%D9%87%D8%AD%D8%AF%D8%AB%D9%87+%D9%81%D9%8A+%D9%86%D9%87%D8%A7%D9%8A%D8%A9+%D9%83%D9%84+%D9%8A%D9%88%D9%85+%D9%88%D9%83%D8%B0%D9%84%D9%83+%D8%A7%D9%8A%D9%82%D9%88%D9%86%D8%A7%D8%AA+%D9%84%D8%A8%D8%A7%D9%82%D9%8A+%D8%A7%D9%84%D8%AA%D8%AE%D8%B5%D8%B5%D8%A7%D8%AA+%D9%88%D9%81%D9%82%D8%A7+%D9%84%D9%84%D8%AA%D8%AE%D8%B5%D8%B5+%D9%85%D9%86+%D8%A7%D9%84%D8%AC%D8%AF%D9%88%D9%84+%D8%A8%D8%A7%D9%84%D8%B9%D8%AF%D8%AF+%D8%B9%D9%84%D9%8A+%D8%A7%D9%84%D8%AC%D9%86%D8%A8+%D8%B2%D8%B1%D8%A7%D8%B1+%D9%84%D8%B9%D8%B1%D8%B6+%D8%A7%D9%84%D8%B1%D8%B3%D9%85+%D8%A7%D9%84%D8%A8%D9%8A%D8%A7%D9%86%D9%8A+%D9%8A%D9%88%D8%B6%D8%AD+%D8%AD%D8%B1%D9%83%D8%A9+%D8%A7%D9%84%D8%B9%D8%AF%D8%AF+%D8%AF%D9%87+%D8%B9%D9%84%D9%8A+%D9%85%D8%AF%D8%A7%D8%B1+%D8%A7%D9%84%D8%B4%D9%87%D9%88%D8%B1+%D8%AA%D8%B5%D8%A7%D8%B9%D8%AF%D9%8A+%2F+%D8%AA%D9%86%D8%A7&package_type2= HTTP/1.1" 200 188422
+"GET /ajax/package-filters/?year=2026&doctor_name=%D8%A7%D9%84%D9%88%D8%A7%D8%AC%D9%87%D9%87+*+%D9%8A%D8%AA%D9%85+%D8%A7%D8%AF%D8%B1%D8%A7%D8%AC+%D8%A7%D9%8A%D9%82%D9%88%D9%86%D9%87+%D9%84%D9%84%D8%A8%D8%A7%D9%83%D8%AF%D8%AC%D8%A7%D8%AA+%D8%AA%D8%AD%D8%AA%D9%87%D8%A7+%D8%B9%D8%AF%D8%A7%D8%AF+%D9%85%D8%AA%D8%AD%D8%B1%D9%83+%D8%A8%D8%A7%D8%AC%D9%85%D8%A7%D9%84%D9%8A+%D8%A7%D9%84%D8%A8%D8%A7%D9%83%D8%AF%D8%AC%D8%A7%D8%AA+%D9%8A%D8%B3%D8%AD%D8%A8+%D9%85%D9%86+%D8%A7%D9%84%D8%B4%D9%8A%D8%AA+%D8%AF%D9%87+%D9%88%D8%A7%D9%86%D8%A7+%D9%87%D8%AD%D8%AF%D8%AB%D9%87+%D9%81%D9%8A+%D9%86%D9%87%D8%A7%D9%8A%D8%A9+%D9%83%D9%84+%D9%8A%D9%88%D9%85+%D9%88%D9%83%D8%B0%D9%84%D9%83+%D8%A7%D9%8A%D9%82%D9%88%D9%86%D8%A7%D8%AA+%D9%84%D8%A8%D8%A7%D9%82%D9%8A+%D8%A7%D9%84%D8%AA%D8%AE%D8%B5%D8%B5%D8%A7%D8%AA+%D9%88%D9%81%D9%82%D8%A7+%D9%84%D9%84%D8%AA%D8%AE%D8%B5%D8%B5+%D9%85%D9%86+%D8%A7%D9%84%D8%AC%D8%AF%D9%88%D9%84+%D8%A8%D8%A7%D9%84%D8%B9%D8%AF%D8%AF+%D8%B9%D9%84%D9%8A+%D8%A7%D9%84%D8%AC%D9%86%D8%A8+%D8%B2%D8%B1%D8%A7%D8%B1+%D9%84%D8%B9%D8%B1%D8%B6+%D8%A7%D9%84%D8%B1%D8%B3%D9%85+%D8%A7%D9%84%D8%A8%D9%8A%D8%A7%D9%86%D9%8A+%D9%8A%D9%88%D8%B6%D8%AD+%D8%AD%D8%B1%D9%83%D8%A9+%D8%A7%D9%84%D8%B9%D8%AF%D8%AF+%D8%AF%D9%87+%D8%B9%D9%84%D9%8A+%D9%85%D8%AF%D8%A7%D8%B1+%D8%A7%D9%84%D8%B4%D9%87%D9%88%D8%B1+%D8%AA%D8%B5%D8%A7%D8%B9%D8%AF%D9%8A+%2F+%D8%AA%D9%86%D8%A7 HTTP/1.1" 200 1685
+"GET /ajax/package-filters/?year=2025&month=%D9%8A%D9%86%D8%A7%D9%8A%D8%B1&quarter=%D8%A7%D9%84%D8%A7%D9%88%D9%84 HTTP/1.1" 200 102

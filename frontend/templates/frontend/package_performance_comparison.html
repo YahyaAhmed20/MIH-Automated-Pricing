@@ -472,45 +472,19 @@
             <p class="text-muted small mb-0">
                 <i class="fas fa-info-circle me-1"></i>
                 قارن أداء الباكدجات بين فترتين مختلفتين
+                <span class="badge bg-info text-white ms-2">2025 ← شيت 15</span>
+                <span class="badge bg-success text-white">2026 ← شيت 11</span>
             </p>
         </div>
     </div>
 
-    <!-- 🔍 اختيار المصدر -->
-    <div class="row mb-3">
-        <div class="col-12">
-            <div class="card filter-card">
-                <div class="card-header">
-                    <i class="fas fa-database me-2"></i>
-                    اختيار مصدر البيانات
-                </div>
-                <div class="card-body">
-                    <form method="GET" class="row g-2 align-items-end" id="sourceForm">
-                        <div class="col-md-6 col-sm-8">
-                            <label class="form-label">المصدر:</label>
-                            <select name="source" class="form-select form-select-sm" onchange="this.form.submit()">
-                                <option value="sheet15" {% if source == 'sheet15' %}selected{% endif %}>
-                                    📊 شيت 15 (السعر + الفاتورة)
-                                </option>
-                                <option value="sheet11" {% if source == 'sheet11' %}selected{% endif %}>
-                                    📊 شيت 11 (المبلغ فقط)
-                                </option>
-                            </select>
-                        </div>
-                        <div class="col-md-6 col-sm-4 text-end">
-                            <button type="submit" class="btn btn-primary btn-sm w-100">
-                                <i class="fas fa-sync-alt me-1"></i> تحديث
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+    <!-- ============================================ -->
+    <!-- ✅ تم حذف بلوك اختيار المصدر بالكامل          -->
+    <!-- ============================================ -->
 
     <!-- 📅 البوكسين جنب بعض -->
     <form id="comparisonForm" method="GET">
-        <input type="hidden" name="source" value="{{ source }}">
+        <!-- ✅ تم حذف hidden field الخاص بـ source -->
         
         <div class="row g-3">
             <!-- البوكس الأول - الفترة الأولى -->
@@ -525,14 +499,20 @@
                     </div>
                     <div class="card-body">
                         <div class="row g-2">
-                            <!-- ✅ السنة -->
+                            <!-- ✅ السنة مع توضيح الـ Sheet -->
                             <div class="col-md-6">
                                 <label class="form-label">السنة:</label>
                                 <select name="year1" class="form-select form-select-sm form-select-submit">
                                     <option value="">الكل</option>
                                     {% for year in years %}
                                     <option value="{{ year }}" {% if year == year1 %}selected{% endif %}>
-                                        {{ year }}
+                                        {% if year == '2025' %}
+                                            2025 — Sheet 15
+                                        {% elif year == '2026' %}
+                                            2026 — Sheet 11
+                                        {% else %}
+                                            {{ year }}
+                                        {% endif %}
                                     </option>
                                     {% endfor %}
                                 </select>
@@ -676,14 +656,20 @@
                     </div>
                     <div class="card-body">
                         <div class="row g-2">
-                            <!-- ✅ السنة -->
+                            <!-- ✅ السنة مع توضيح الـ Sheet -->
                             <div class="col-md-6">
                                 <label class="form-label">السنة:</label>
                                 <select name="year2" class="form-select form-select-sm form-select-submit">
                                     <option value="">الكل</option>
                                     {% for year in years %}
                                     <option value="{{ year }}" {% if year == year2 %}selected{% endif %}>
-                                        {{ year }}
+                                        {% if year == '2025' %}
+                                            2025 — Sheet 15
+                                        {% elif year == '2026' %}
+                                            2026 — Sheet 11
+                                        {% else %}
+                                            {{ year }}
+                                        {% endif %}
                                     </option>
                                     {% endfor %}
                                 </select>
@@ -822,7 +808,8 @@
                 <button type="submit" class="btn btn-primary">
                     <i class="fas fa-play me-2"></i> عرض النتائج
                 </button>
-                <a href="{% url 'package_comparison' %}?source={{ source }}" class="btn btn-secondary">
+                <!-- ✅ تم إزالة ?source={{ source }} -->
+                <a href="{% url 'package_comparison' %}" class="btn btn-secondary">
                     <i class="fas fa-undo me-2"></i> إعادة تعيين
                 </a>
             </div>
@@ -1332,27 +1319,51 @@ function initPackageFilters(prefix) {
     const specialty = document.getElementById(`specialty${prefix}`);
     const doctor = document.getElementById(`doctor_name${prefix}`);
     const packageType = document.getElementById(`package_type${prefix}`);
-    const source = document.querySelector("select[name='source']");
-    
+
+    // ✅ السنة هي التي تحدد الـ Sheet (تم إزالة source)
     const year = document.querySelector(`select[name='year${prefix}']`);
     const month = document.querySelector(`select[name='month${prefix}']`);
     const quarter = document.querySelector(`select[name='quarter${prefix}']`);
-    
-    if (!entity || !sector || !subCompany || !specialty || !doctor || !packageType || !source) return;
+
+    if (!entity || !sector || !subCompany || !specialty || !doctor || !packageType || !year) {
+        return;
+    }
 
     async function refreshFilters() {
         const params = new URLSearchParams();
-        params.append("source", source.value);
-        
-        if (entity.value) params.append("entity", entity.value);
-        if (sector.value) params.append("sector", sector.value);
-        if (subCompany.value) params.append("sub_company", subCompany.value);
-        if (specialty.value) params.append("specialty", specialty.value);
-        if (doctor.value) params.append("doctor_name", doctor.value);
-        
-        if (year && year.value) params.append("year", year.value);
-        if (month && month.value) params.append("month", month.value);
-        if (quarter && quarter.value) params.append("quarter", quarter.value);
+
+        // ✅ السنة هي التي تحدد الـSheet
+        if (year.value) {
+            params.append("year", year.value);
+        }
+
+        if (entity.value) {
+            params.append("entity", entity.value);
+        }
+
+        if (sector.value) {
+            params.append("sector", sector.value);
+        }
+
+        if (subCompany.value) {
+            params.append("sub_company", subCompany.value);
+        }
+
+        if (specialty.value) {
+            params.append("specialty", specialty.value);
+        }
+
+        if (doctor.value) {
+            params.append("doctor_name", doctor.value);
+        }
+
+        if (month && month.value) {
+            params.append("month", month.value);
+        }
+
+        if (quarter && quarter.value) {
+            params.append("quarter", quarter.value);
+        }
 
         try {
             const response = await fetch(`/ajax/package-filters/?${params}`);
@@ -1364,7 +1375,7 @@ function initPackageFilters(prefix) {
             updateDatalist(`specialtyList${prefix}`, data.specialties || []);
             updateDatalist(`doctorList${prefix}`, data.doctors || []);
             updateDatalist(`packageTypeList${prefix}`, data.packages || []);
-            
+
         } catch (error) {
             console.error('Error refreshing filters:', error);
         }
@@ -1374,17 +1385,17 @@ function initPackageFilters(prefix) {
     entity.addEventListener("input", function() {
         if (this.value === "") refreshFilters();
     });
-    
+
     sector.addEventListener("change", refreshFilters);
     sector.addEventListener("input", function() {
         if (this.value === "") refreshFilters();
     });
-    
+
     subCompany.addEventListener("change", refreshFilters);
     subCompany.addEventListener("input", function() {
         if (this.value === "") refreshFilters();
     });
-    
+
     specialty.addEventListener("change", refreshFilters);
     specialty.addEventListener("input", function() {
         if (this.value === "") refreshFilters();
@@ -1395,12 +1406,16 @@ function initPackageFilters(prefix) {
         if (this.value === "") refreshFilters();
     });
 
-    if (year) year.addEventListener("change", refreshFilters);
-    if (month) month.addEventListener("change", refreshFilters);
-    if (quarter) quarter.addEventListener("change", refreshFilters);
+    year.addEventListener("change", refreshFilters);
 
-    source.addEventListener("change", refreshFilters);
-    
+    if (month) {
+        month.addEventListener("change", refreshFilters);
+    }
+
+    if (quarter) {
+        quarter.addEventListener("change", refreshFilters);
+    }
+
     setTimeout(() => refreshFilters(), 300);
 }
 

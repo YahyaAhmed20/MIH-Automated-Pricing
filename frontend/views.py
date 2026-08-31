@@ -370,8 +370,10 @@ def external_approvals(request):
         "Serv. Done": "status_serv_done",
         "Rejected": "status_rejected",
         "Pending": "status_pending",
+        "Pending by pat.": "status_pending_by_patient",
         "Patient refused": "status_patient_refused",
         "Approved": "status_approved",
+        "Cancelled": "status_cancelled",
         "غير محدد": "status_undefined",
     }
     
@@ -492,6 +494,12 @@ def external_approvals_detail(request, filter_type):
     elif filter_type == "status_approved":
         patients = all_records.filter(main_status="Approved")
         title = "حالات Approved"
+    elif filter_type == "status_pending_by_patient":
+        patients = all_records.filter(main_status="Pending by pat.")
+        title = "حالات Pending by pat."
+    elif filter_type == "status_cancelled":
+        patients = all_records.filter(main_status="Cancelled")
+        title = "حالات Cancelled"
     elif filter_type == "status_undefined":
         patients = all_records.filter(Q(main_status__isnull=True) | Q(main_status=""))
         title = "حالات غير محددة"
@@ -3633,58 +3641,40 @@ from pricing_requests.models import  ReportStatistic
 
 from django.http import JsonResponse
 from frontend.models import ReportStatisticSheet15
-
 def package_performance_comparison(request):
     """مقارنة أداء الباكدجات بين فترتين - تدعم شيت 11 و شيت 15"""
     
-    from django.db.models import Sum, Count, Q
+    from django.db.models import Q
     from decimal import Decimal
     from frontend.models import ReportStatisticSheet15
+    from pricing_requests.models import ReportStatistic
     import json
     
-    # 📅 الفلاتر - الفترة الأولى
-    year1 = request.GET.get('year1', '2025')
-    month1 = request.GET.get('month1', '')
-    quarter1 = request.GET.get('quarter1', '')
-    sector1 = request.GET.get('sector1', '')
-    entity1 = request.GET.get('entity1', '')
-    sub_company1 = request.GET.get('sub_company1', '')
-    specialty1 = request.GET.get('specialty1', '')
-    package_type1 = request.GET.get('package_type1', '')
-    doctor_name1 = request.GET.get('doctor_name1', '')
+    # ========== التوابع المساعدة ==========
+    def get_model_and_price_field(year):
+        """تحديد النموذج وحقل السعر حسب السنة"""
+        if str(year) == '2025':
+            return ReportStatisticSheet15, 'service_price'
+        elif str(year) == '2026':
+            return ReportStatistic, 'amount'
+        return None, None
     
-    # 📅 الفلاتر - الفترة الثانية
-    year2 = request.GET.get('year2', '2025')
-    month2 = request.GET.get('month2', '')
-    quarter2 = request.GET.get('quarter2', '')
-    sector2 = request.GET.get('sector2', '')
-    entity2 = request.GET.get('entity2', '')
-    sub_company2 = request.GET.get('sub_company2', '')
-    specialty2 = request.GET.get('specialty2', '')
-    package_type2 = request.GET.get('package_type2', '')
-    doctor_name2 = request.GET.get('doctor_name2', '')
-    
-    # 📊 اختيار المصدر
-    source = request.GET.get('source', 'sheet15')
-    
-    if source == 'sheet11':
-        from pricing_requests.models import ReportStatistic
-        Model = ReportStatistic
-        price_field = 'amount'
-    else:
-        Model = ReportStatisticSheet15
-        price_field = 'service_price'
-    
-    # 📊 بناء الفلاتر
-    def build_filters(year, month, quarter, sector, entity, sub_company, specialty, package_type, doctor_name):
+    def build_filters(year, month, quarter, sector, entity, sub_company, specialty, package_type, doctor_name, model):
+        """بناء فلتر Q ديناميكي حسب النموذج"""
         filters = Q()
+        
+        # السنة
         if year:
             try:
                 filters &= Q(admission_date__year=int(year))
-            except:
+            except (ValueError, TypeError):
                 pass
+        
+        # الشهر
         if month:
             filters &= Q(month=month)
+        
+        # الربع
         if quarter:
             quarter_months = {
                 'الاول': ['يناير', 'فبراير', 'مارس'],
@@ -3694,6 +3684,8 @@ def package_performance_comparison(request):
             }
             if quarter in quarter_months:
                 filters &= Q(month__in=quarter_months[quarter])
+        
+        # باقي الفلاتر النصية
         if sector and sector.strip():
             filters &= Q(sector__icontains=sector)
         if entity and entity.strip():
@@ -3702,33 +3694,32 @@ def package_performance_comparison(request):
             filters &= Q(sub_company__icontains=sub_company)
         if specialty and specialty.strip():
             filters &= Q(specialty__icontains=specialty)
+        if doctor_name and doctor_name.strip():
+            filters &= Q(doctor_name__icontains=doctor_name)
+        
+        # package_type - نقطة التحول الرئيسية
         if package_type and package_type.strip():
+            # استخراج الكود من بين الأقواس إن وجد
             if "(" in package_type and ")" in package_type:
                 package_type = package_type.split("(")[-1].replace(")", "").strip()
             
-            # ✅ البحث في package_name دائماً
-            filters &= Q(package_name__icontains=package_type)
-            
-            # ✅ لو المصدر شيت 15، نضيف البحث في code
-            if source == 'sheet15':
-                filters |= Q(code__icontains=package_type)
+            # البحث في package_name دائماً، وفي code فقط لشيت 15
+            if model == ReportStatisticSheet15:
+                filters &= (
+                    Q(package_name__icontains=package_type) |
+                    Q(code__icontains=package_type)
+                )
+            else:
+                filters &= Q(package_name__icontains=package_type)
         
-        if doctor_name and doctor_name.strip():
-            filters &= Q(doctor_name__icontains=doctor_name)
         return filters
     
-    filters1 = build_filters(year1, month1, quarter1, sector1, entity1, sub_company1, specialty1, package_type1, doctor_name1)
-    filters2 = build_filters(year2, month2, quarter2, sector2, entity2, sub_company2, specialty2, package_type2, doctor_name2)
-    
-    # 📊 جلب البيانات
-    queryset1 = Model.objects.filter(filters1)
-    queryset2 = Model.objects.filter(filters2)
-    
-    # 📊 تجميع البيانات مع التفاصيل الكاملة
-    def aggregate_packages_with_details(queryset):
+    def aggregate_packages_with_details(queryset, price_field):
+        """تجميع الباكدجات مع التفاصيل الكاملة"""
         packages = {}
         for stat in queryset:
             pkg_name = stat.package_name or 'غير محدد'
+            
             if pkg_name not in packages:
                 packages[pkg_name] = {
                     'count': 0,
@@ -3742,12 +3733,13 @@ def package_performance_comparison(request):
                     'doctor_name': getattr(stat, 'doctor_name', ''),
                     'details': []
                 }
-            packages[pkg_name]['count'] += 1
-            amount = getattr(stat, price_field) or Decimal('0.00')
-            if amount:
-                packages[pkg_name]['total_amount'] += amount
             
-            # ✅ إضافة التفاصيل لكل عملية (مع الرقم الحسابي)
+            packages[pkg_name]['count'] += 1
+            
+            # استخدام price_field المُمرر
+            amount = getattr(stat, price_field, Decimal('0.00'))
+            packages[pkg_name]['total_amount'] += amount
+            
             packages[pkg_name]['details'].append({
                 'patient_name': getattr(stat, 'patient_name', ''),
                 'account_number': getattr(stat, 'account_number', ''),
@@ -3762,12 +3754,88 @@ def package_performance_comparison(request):
                 'specialty': getattr(stat, 'specialty', ''),
                 'doctor_name': getattr(stat, 'doctor_name', ''),
             })
+        
         return packages
     
-    packages1 = aggregate_packages_with_details(queryset1)
-    packages2 = aggregate_packages_with_details(queryset2)
+    def get_distinct_values(model, field):
+        """جلب القيم المميزة من النموذج"""
+        return list(
+            model.objects
+            .exclude(**{f"{field}__isnull": True})
+            .exclude(**{field: ""})
+            .order_by()
+            .values_list(field, flat=True)
+            .distinct()
+        )
     
-    # 📊 دمج البيانات للمقارنة
+    def get_package_types_for_model(model):
+        """جلب أنواع الباكدجات مع الكود إن وجد"""
+        packages_qs = (
+            model.objects
+            .exclude(package_name__isnull=True)
+            .exclude(package_name="")
+            .order_by()
+            .values("package_name", "code")
+            .distinct()
+        )
+        
+        result = []
+        for pkg in packages_qs:
+            pkg_name = pkg["package_name"] or ""
+            pkg_code = pkg["code"] or ""
+            if pkg_name:
+                display = f"{pkg_name} ({pkg_code})" if pkg_code else pkg_name
+                result.append(display)
+        
+        return sorted(set(result))
+    
+    # ========== قراءة المدخلات ==========
+    year1 = request.GET.get('year1', '2025')
+    month1 = request.GET.get('month1', '')
+    quarter1 = request.GET.get('quarter1', '')
+    sector1 = request.GET.get('sector1', '')
+    entity1 = request.GET.get('entity1', '')
+    sub_company1 = request.GET.get('sub_company1', '')
+    specialty1 = request.GET.get('specialty1', '')
+    package_type1 = request.GET.get('package_type1', '')
+    doctor_name1 = request.GET.get('doctor_name1', '')
+    
+    year2 = request.GET.get('year2', '2025')
+    month2 = request.GET.get('month2', '')
+    quarter2 = request.GET.get('quarter2', '')
+    sector2 = request.GET.get('sector2', '')
+    entity2 = request.GET.get('entity2', '')
+    sub_company2 = request.GET.get('sub_company2', '')
+    specialty2 = request.GET.get('specialty2', '')
+    package_type2 = request.GET.get('package_type2', '')
+    doctor_name2 = request.GET.get('doctor_name2', '')
+    
+    # ========== تحديد النماذج حسب السنة ==========
+    Model1, price_field1 = get_model_and_price_field(year1)
+    Model2, price_field2 = get_model_and_price_field(year2)
+    
+    # ========== بناء الفلاتر ==========
+    filters1 = build_filters(
+        year1, month1, quarter1, sector1, entity1, 
+        sub_company1, specialty1, package_type1, doctor_name1,
+        Model1
+    )
+    
+    filters2 = build_filters(
+        year2, month2, quarter2, sector2, entity2,
+        sub_company2, specialty2, package_type2, doctor_name2,
+        Model2
+    )
+    
+    # ========== جلب البيانات ==========
+    queryset1 = Model1.objects.filter(filters1) if Model1 else Model1.objects.none()
+    queryset2 = Model2.objects.filter(filters2) if Model2 else Model2.objects.none()
+    
+    # ========== التجميع ==========
+    packages1 = aggregate_packages_with_details(queryset1, price_field1)
+    packages2 = aggregate_packages_with_details(queryset2, price_field2)
+    
+    # ========== دمج البيانات للمقارنة ==========
     all_packages = set(packages1.keys()) | set(packages2.keys())
     comparison_data = []
     
@@ -3784,9 +3852,10 @@ def package_performance_comparison(request):
             'doctor_name': '',
             'details': []
         }
-        data1 = packages1.get(pkg, default_data)
-        data2 = packages2.get(pkg, default_data)
+        data1 = packages1.get(pkg, default_data.copy())
+        data2 = packages2.get(pkg, default_data.copy())
         
+        # حساب نسبة التغيير
         change_percent = 0
         if data1['total_amount'] > 0:
             change = data2['total_amount'] - data1['total_amount']
@@ -3807,6 +3876,7 @@ def package_performance_comparison(request):
             'amount1': float(data1['total_amount']),
             'count2': data2['count'],
             'amount2': float(data2['total_amount']),
+            'diff': float(data2['total_amount'] - data1['total_amount']),
             'change_percent': round(change_percent, 1),
             'change_direction': 'up' if change_percent > 0 else 'down' if change_percent < 0 else 'same',
             'details1': data1['details'],
@@ -3815,81 +3885,49 @@ def package_performance_comparison(request):
     
     comparison_data.sort(key=lambda x: abs(x['change_percent']), reverse=True)
     
-    # ✅ حساب الإجماليات
+    # ========== الإجماليات ==========
     total_amount1 = sum(item['amount1'] for item in comparison_data)
     total_amount2 = sum(item['amount2'] for item in comparison_data)
     total_count1 = sum(item['count1'] for item in comparison_data)
     total_count2 = sum(item['count2'] for item in comparison_data)
     
-    # 📋 قيم الفلاتر
-    sectors = (
-        Model.objects.exclude(sector__isnull=True)
-        .exclude(sector="")
-        .order_by()
-        .values_list("sector", flat=True)
-        .distinct()
-    )
+    # ========== قيم الفلاتر من كلا النموذجين ==========
+    # دمج القيم من النموذجين
+    all_models = [m for m in [Model1, Model2] if m]
     
-    entities = (
-        Model.objects.exclude(entity_name__isnull=True)
-        .exclude(entity_name="")
-        .order_by()
-        .values_list("entity_name", flat=True)
-        .distinct()
-    )
-    
-    sub_companies = (
-        Model.objects.exclude(sub_company__isnull=True)
-        .exclude(sub_company="")
-        .order_by()
-        .values_list("sub_company", flat=True)
-        .distinct()
-    )
-    
-    specialties = (
-        Model.objects.exclude(specialty__isnull=True)
-        .exclude(specialty="")
-        .order_by()
-        .values_list("specialty", flat=True)
-        .distinct()
-    )
-    
-    doctors = (
-        Model.objects.exclude(doctor_name__isnull=True)
-        .exclude(doctor_name="")
-        .order_by()
-        .values_list("doctor_name", flat=True)
-        .distinct()
-    )
-    
+    sectors = []
+    entities = []
+    sub_companies = []
+    specialties = []
+    doctors = []
     package_types = []
-    packages_qs = (
-        Model.objects.exclude(package_name__isnull=True)
-        .exclude(package_name="")
-        .order_by()
-        .values("package_name", "code")
-        .distinct()
-    )
     
-    for pkg in packages_qs:
-        pkg_name = pkg["package_name"] or ""
-        pkg_code = pkg["code"] or ""
-        if pkg_name:
-            if source == 'sheet15' and pkg_code:
-                display = f"{pkg_name} ({pkg_code})"
-            else:
-                display = pkg_name
-            package_types.append(display)
-    package_types = sorted(list(set(package_types)))
+    for model in all_models:
+        sectors.extend(get_distinct_values(model, 'sector'))
+        entities.extend(get_distinct_values(model, 'entity_name'))
+        sub_companies.extend(get_distinct_values(model, 'sub_company'))
+        specialties.extend(get_distinct_values(model, 'specialty'))
+        doctors.extend(get_distinct_values(model, 'doctor_name'))
+        package_types.extend(get_package_types_for_model(model))
     
-    years = ['2024', '2025', '2026', '2027']
+    # إزالة التكرار
+    sectors = sorted(set(sectors))
+    entities = sorted(set(entities))
+    sub_companies = sorted(set(sub_companies))
+    specialties = sorted(set(specialties))
+    doctors = sorted(set(doctors))
+    package_types = sorted(set(package_types))
+    
+    # ========== البيانات الثابتة ==========
+    years = ['2025', '2026']
     months = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 
               'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر']
     quarters = ['الاول', 'الثاني', 'الثالث', 'الرابع']
     
-    # ✅ تحويل Decimal إلى float و JSON
+    # ========== تحويل للـ JSON ==========
     comparison_data_json = json.dumps(comparison_data, default=str)
     
+    # ========== السياق ==========
     context = {
         'comparison_data': comparison_data,
         'comparison_data_json': comparison_data_json,
@@ -3902,8 +3940,7 @@ def package_performance_comparison(request):
         'specialties': specialties,
         'doctors': doctors,
         'package_types': package_types,
-        'source': source,
-        # القيم المحددة
+        # قيم الفلاتر المحددة
         'year1': year1,
         'year2': year2,
         'quarter1': quarter1,
@@ -3931,46 +3968,71 @@ def package_performance_comparison(request):
     
     return render(request, 'frontend/package_performance_comparison.html', context)
 
-
 def get_package_filters(request):
-    """API لإرجاع الفلاتر المترابطة (متسلسلة)"""
+    """API لإرجاع الفلاتر المترابطة حسب السنة"""
 
-    source = request.GET.get("source", "sheet15")
     entity = request.GET.get("entity", "").strip()
     sector = request.GET.get("sector", "").strip()
     sub_company = request.GET.get("sub_company", "").strip()
     specialty = request.GET.get("specialty", "").strip()
     doctor_name = request.GET.get("doctor_name", "").strip()
-    
-    # ✅ الفلاتر الزمنية
+
+    # الفلاتر الزمنية
     year = request.GET.get("year", "").strip()
     month = request.GET.get("month", "").strip()
     quarter = request.GET.get("quarter", "").strip()
 
-    if source == "sheet11":
+    # ============================================
+    # تحديد الـ Model حسب السنة
+    # 2025 → Sheet 15
+    # 2026 → Sheet 11
+    # ============================================
+    if year == "2025":
+        Model = ReportStatisticSheet15
+    elif year == "2026":
         from pricing_requests.models import ReportStatistic
         Model = ReportStatistic
     else:
+        # لا يوجد سنة محددة
+        # نستخدم Sheet 15 كافتراضي
         Model = ReportStatisticSheet15
 
-    # ✅ قاعدة البيانات الأساسية
+    # ============================================
+    # QuerySet الأساسي
+    # ============================================
     filtered_queryset = Model.objects.all()
 
-    # ==========================
-    # 1️⃣ تطبيق الفلاتر (ما عدا السنة)
-    # ==========================
+    # ============================================
+    # الفلاتر
+    # ============================================
     if entity:
-        filtered_queryset = filtered_queryset.filter(entity_name__icontains=entity)
+        filtered_queryset = filtered_queryset.filter(
+            entity_name__icontains=entity
+        )
+
     if sector:
-        filtered_queryset = filtered_queryset.filter(sector__icontains=sector)
+        filtered_queryset = filtered_queryset.filter(
+            sector__icontains=sector
+        )
+
     if sub_company:
-        filtered_queryset = filtered_queryset.filter(sub_company__icontains=sub_company)
+        filtered_queryset = filtered_queryset.filter(
+            sub_company__icontains=sub_company
+        )
+
     if specialty:
-        filtered_queryset = filtered_queryset.filter(specialty__icontains=specialty)
+        filtered_queryset = filtered_queryset.filter(
+            specialty__icontains=specialty
+        )
+
     if doctor_name:
-        filtered_queryset = filtered_queryset.filter(doctor_name__icontains=doctor_name)
+        filtered_queryset = filtered_queryset.filter(
+            doctor_name__icontains=doctor_name
+        )
+
     if month:
         filtered_queryset = filtered_queryset.filter(month=month)
+
     if quarter:
         quarter_months = {
             'الاول': ['يناير', 'فبراير', 'مارس'],
@@ -3978,70 +4040,80 @@ def get_package_filters(request):
             'الثالث': ['يوليو', 'أغسطس', 'سبتمبر'],
             'الرابع': ['أكتوبر', 'نوفمبر', 'ديسمبر'],
         }
+
         if quarter in quarter_months:
-            filtered_queryset = filtered_queryset.filter(month__in=quarter_months[quarter])
-    
-    # ==========================
-    # 2️⃣ جلب القطاعات (من filtered_queryset بدون سنة)
-    # ==========================
+            filtered_queryset = filtered_queryset.filter(
+                month__in=quarter_months[quarter]
+            )
+
+    # ============================================
+    # القطاعات
+    # ============================================
     sectors = list(
-        filtered_queryset.exclude(sector__isnull=True)
+        filtered_queryset
+        .exclude(sector__isnull=True)
         .exclude(sector="")
         .order_by()
         .values_list("sector", flat=True)
         .distinct()
     )
 
-    # ==========================
-    # 3️⃣ جلب الجهات (من filtered_queryset بدون سنة)
-    # ==========================
+    # ============================================
+    # الجهات
+    # ============================================
     entities = list(
-        filtered_queryset.exclude(entity_name__isnull=True)
+        filtered_queryset
+        .exclude(entity_name__isnull=True)
         .exclude(entity_name="")
         .order_by()
         .values_list("entity_name", flat=True)
         .distinct()
     )
 
-    # ==========================
-    # 4️⃣ جلب الشركات الفرعية (من filtered_queryset بدون سنة)
-    # ==========================
+    # ============================================
+    # الشركات الفرعية
+    # ============================================
     sub_companies = list(
-        filtered_queryset.exclude(sub_company__isnull=True)
+        filtered_queryset
+        .exclude(sub_company__isnull=True)
         .exclude(sub_company="")
         .order_by()
         .values_list("sub_company", flat=True)
         .distinct()
     )
 
-    # ==========================
-    # 5️⃣ جلب التخصصات (من filtered_queryset بدون سنة)
-    # ==========================
+    # ============================================
+    # التخصصات
+    # ============================================
     specialties = list(
-        filtered_queryset.exclude(specialty__isnull=True)
+        filtered_queryset
+        .exclude(specialty__isnull=True)
         .exclude(specialty="")
         .order_by()
         .values_list("specialty", flat=True)
         .distinct()
     )
 
-    # ==========================
-    # 6️⃣ جلب الأطباء
-    # ==========================
+    # ============================================
+    # الأطباء
+    # ============================================
     doctors = list(
-        filtered_queryset.exclude(doctor_name__isnull=True)
+        filtered_queryset
+        .exclude(doctor_name__isnull=True)
         .exclude(doctor_name="")
         .order_by()
         .values_list("doctor_name", flat=True)
         .distinct()
     )
 
-    # ==========================
-    # 7️⃣ جلب الباكدجات (من filtered_queryset بدون سنة)
-    # ==========================
+    # ============================================
+    # الباكدجات
+    # ============================================
     package_list = []
+
     packages = (
-        filtered_queryset.exclude(package_name__isnull=True)
+        filtered_queryset
+        .exclude(package_name__isnull=True)
         .exclude(package_name="")
         .order_by()
         .values("package_name", "code")
@@ -4051,9 +4123,9 @@ def get_package_filters(request):
     for item in packages:
         package_name = item["package_name"] or ""
         code = item["code"] or ""
-        
-        # ✅ لو المصدر شيت 15، نضيف الكود
-        if source == "sheet15" and code:
+
+        # Sheet 15 فقط نعرض الكود بجانب اسم الباكدج
+        if year == "2025" and code:
             package_list.append(f"{package_name} ({code})")
         else:
             package_list.append(package_name)
@@ -4066,7 +4138,6 @@ def get_package_filters(request):
         "doctors": sorted(doctors),
         "packages": sorted(package_list),
     })
-    
 from django.utils import timezone  # ✅ أضف هذا السطر
 
 from django.shortcuts import render
