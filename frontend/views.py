@@ -1236,7 +1236,10 @@ def specialty_detail(request, specialty_name):
         records = records.filter(month=selected_month)
     
     if package_search:
-        records = records.filter(package_name__icontains=package_search)
+        records = records.filter(
+            Q(package_name__icontains=package_search) |
+            Q(code__icontains=package_search)
+        )
     
     if entity_search:
         records = records.filter(entity_name__icontains=entity_search)
@@ -1309,12 +1312,16 @@ def specialty_detail(request, specialty_name):
     )
     
     # ✅ قائمة الباكدجات للاقتراحات
-    package_suggestions = list(set(
+    package_suggestions = list(
         records
-        .values_list('package_name', flat=True)
-        .filter(package_name__isnull=False)
-        .exclude(package_name='')
-    ))[:50]
+        .filter(
+            Q(package_name__isnull=False, package_name__gt='') |
+            Q(code__isnull=False, code__gt='')
+        )
+        .values('package_name', 'code')
+        .distinct()
+        .order_by('package_name', 'code')[:100]
+    )
     
     # ✅ قائمة الجهات للاقتراحات
     entity_suggestions = list(set(
@@ -1364,40 +1371,70 @@ from django.core.paginator import Paginator
 from pricing_requests.models import ReportStatistic
 
 #  الباكجات حسب نوع الدفع
-
 @permission_required(Permissions.APPROVALS_STATISTICS)
-
 def payment_details(request):
     """صفحة تفاصيل الباكدجات حسب نوع الدفع"""
-    
+
+    # ✅ فلتر الشهر
+    selected_month = request.GET.get("month", "")
+
     # ✅ فلتر نوع الدفع
     payment_type = request.GET.get("payment_type", "")
-    
+
     # ✅ فلتر التخصص
     specialty_search = request.GET.get("specialty_search", "")
-    
+
     # ✅ جلب جميع السجلات
     records = ReportStatistic.objects.all()
-    
+
+    # ✅ قائمة الشهور الموجودة في البيانات ومرتبة
+    months_raw = list(
+        ReportStatistic.objects
+        .values_list("month", flat=True)
+        .distinct()
+    )
+
+    months = [
+        month
+        for month in MONTH_ORDER
+        if month in months_raw
+    ]
+
+    # ✅ تطبيق فلتر الشهر
+    if selected_month:
+        records = records.filter(month=selected_month)
+
+    # ✅ تطبيق فلتر نوع الدفع
     if payment_type:
         records = records.filter(payment_type=payment_type)
-    
+
+    # ✅ تطبيق فلتر التخصص
     if specialty_search:
         records = records.filter(specialty__icontains=specialty_search)
-    
+
     # ✅ إحصائيات
     total_count = records.count()
-    cash_count = records.filter(payment_type="نقدي").count()
-    credit_count = records.filter(payment_type="اجل").count()
-    total_amount = records.aggregate(total=Sum('amount'))['total'] or 0
-    
+
+    cash_count = records.filter(
+        payment_type="نقدي"
+    ).count()
+
+    credit_count = records.filter(
+        payment_type="اجل"
+    ).count()
+
+    total_amount = records.aggregate(
+        total=Sum('amount')
+    )['total'] or 0
+
     # ✅ التوزيع حسب نوع الدفع
     payment_distribution = (
-        records.values('payment_type')
+        records
+        .values('payment_type')
         .annotate(total=Count('id'))
         .order_by('-total')
     )
-    
+
     # ✅ التوزيع حسب القطاع (للآجل فقط)
     sector_distribution = (
         records
@@ -1406,20 +1443,24 @@ def payment_details(request):
         .annotate(total=Count('id'))
         .order_by('-total')
     )
-    
-    # ✅ ✅ ✅ قائمة التخصصات للاقتراحات (فريدة)
+
+    # ✅ قائمة التخصصات للاقتراحات
     specialty_suggestions = list(set(
         records
         .values_list('specialty', flat=True)
         .filter(specialty__isnull=False)
         .exclude(specialty='')
     ))[:50]
-    
+
     # ✅ Pagination
-    paginator = Paginator(records.order_by('-admission_date'), 50)
+    paginator = Paginator(
+        records.order_by('-admission_date'),
+        50
+    )
+
     page_number = request.GET.get('page', 1)
     page_obj = paginator.get_page(page_number)
-    
+
     context = {
         'records': page_obj,
         'total_count': total_count,
@@ -1431,10 +1472,15 @@ def payment_details(request):
         'payment_distribution': payment_distribution,
         'sector_distribution': sector_distribution,
         'specialty_suggestions': specialty_suggestions,
+        'selected_month': selected_month,
+        'months': months,
     }
-    
-    return render(request, 'frontend/payment_details.html', context)
-#  الباكجات حسب القطاع (آجل فقط)
+
+    return render(
+        request,
+        'frontend/payment_details.html',
+        context
+    )
 
 # frontend/views.py
 
@@ -1444,11 +1490,12 @@ from django.core.paginator import Paginator
 from pricing_requests.models import ReportStatistic
 
 # الباكجات حسب القطاع (آجل فقط)
-
 @permission_required(Permissions.APPROVALS_STATISTICS)
-
 def sector_details(request):
     """صفحة تفاصيل الباكجات حسب القطاع (آجل فقط)"""
+    
+    # ✅ فلتر الشهر
+    selected_month = request.GET.get("month", "")
     
     # ✅ فلتر القطاع
     sector_search = request.GET.get("sector_search", "")
@@ -1473,6 +1520,28 @@ def sector_details(request):
     
     # ✅ جلب السجلات (آجل فقط)
     records = ReportStatistic.objects.filter(payment_type="اجل")
+    
+    # ✅ قائمة الشهور الموجودة في البيانات ومرتبة
+    months_raw = list(
+        ReportStatistic.objects
+        .values_list("month", flat=True)
+        .distinct()
+    )
+    
+    MONTH_ORDER = [
+        "يناير", "فبراير", "مارس", "ابريل", "مايو", "يونيو",
+        "يوليو", "اغسطس", "سبتمبر", "اكتوبر", "نوفمبر", "ديسمبر"
+    ]
+    
+    months = [
+        month
+        for month in MONTH_ORDER
+        if month in months_raw
+    ]
+    
+    # ✅ تطبيق فلتر الشهر
+    if selected_month:
+        records = records.filter(month=selected_month)
     
     if sector_search:
         records = records.filter(sector__icontains=sector_search)
@@ -1629,24 +1698,31 @@ def sector_details(request):
         'total_amount': total_amount,
         'total_sectors': total_sectors,
         'total_entities': total_entities,
+        
         'sector_search': sector_search,
         'specialty_search': specialty_search,
         'entity_search': entity_search,
         'sub_company_search': sub_company_search,
         'package_search': package_search,
+        
         'date_from': date_from,
         'date_to': date_to,
+        
         'sector_distribution': sector_distribution,
         'entity_details': entity_details,  # ✅ بيانات منظمة
+        
         'sector_suggestions': sector_suggestions,
         'specialty_suggestions': specialty_suggestions,
         'entity_suggestions': entity_suggestions,
         'sub_company_suggestions': sub_company_suggestions,
         'package_suggestions': package_suggestions,
+        
+        # ✅ الشهور
+        'selected_month': selected_month,
+        'months': months,
     }
     
     return render(request, 'frontend/sector_details.html', context)
-
 # 🏆 أعلى الجهات                          📉 أقل الجهات
 
 # frontend/views.py

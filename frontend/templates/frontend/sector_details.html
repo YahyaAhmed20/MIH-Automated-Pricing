@@ -291,32 +291,30 @@
     <div class="card shadow-sm mb-4 border-0">
         <div class="card-body">
             
-            <!-- ✅ فلتر التواريخ (أفقي) -->
+            <!-- ✅ فلتر الشهر -->
             <div class="mb-3">
                 <div class="d-flex align-items-center mb-2">
                     <i class="fas fa-calendar-alt text-primary me-2"></i>
-                    <h6 class="mb-0 fw-bold">فلتر التواريخ</h6>
+                    <h6 class="mb-0 fw-bold">فلتر الشهر</h6>
                 </div>
                 <div class="filter-scroll">
-                    <a href="?{% if sector_search %}&sector_search={{ sector_search }}{% endif %}{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}{% if entity_search %}&entity_search={{ entity_search }}{% endif %}{% if sub_company_search %}&sub_company_search={{ sub_company_search }}{% endif %}{% if package_search %}&package_search={{ package_search }}{% endif %}" 
-                       class="filter-pill all-pill {% if not date_from and not date_to %}active{% endif %}">
-                        <i class="fas fa-undo me-1"></i> الكل
+                    <!-- الكل -->
+                    <a href="?{% if sector_search %}sector_search={{ sector_search }}&{% endif %}{% if specialty_search %}specialty_search={{ specialty_search }}&{% endif %}{% if entity_search %}entity_search={{ entity_search }}&{% endif %}{% if sub_company_search %}sub_company_search={{ sub_company_search }}&{% endif %}{% if package_search %}package_search={{ package_search }}&{% endif %}{% if date_from %}date_from={{ date_from }}&{% endif %}{% if date_to %}date_to={{ date_to }}{% endif %}"
+                       class="filter-pill all-pill {% if not selected_month %}active{% endif %}">
+                        <i class="fas fa-undo me-1"></i>
+                        الكل
                     </a>
-                    <a href="?date_from=2026-01-01&date_to=2026-01-31{% if sector_search %}&sector_search={{ sector_search }}{% endif %}{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}{% if entity_search %}&entity_search={{ entity_search }}{% endif %}{% if sub_company_search %}&sub_company_search={{ sub_company_search }}{% endif %}{% if package_search %}&package_search={{ package_search }}{% endif %}" 
-                       class="filter-pill {% if date_from == '2026-01-01' and date_to == '2026-01-31' %}active{% endif %}">
-                        يناير
-                    </a>
-                    <a href="?date_from=2026-02-01&date_to=2026-02-28{% if sector_search %}&sector_search={{ sector_search }}{% endif %}{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}{% if entity_search %}&entity_search={{ entity_search }}{% endif %}{% if sub_company_search %}&sub_company_search={{ sub_company_search }}{% endif %}{% if package_search %}&package_search={{ package_search }}{% endif %}" 
-                       class="filter-pill {% if date_from == '2026-02-01' and date_to == '2026-02-28' %}active{% endif %}">
-                        فبراير
-                    </a>
-                    <a href="?date_from=2026-03-01&date_to=2026-03-31{% if sector_search %}&sector_search={{ sector_search }}{% endif %}{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}{% if entity_search %}&entity_search={{ entity_search }}{% endif %}{% if sub_company_search %}&sub_company_search={{ sub_company_search }}{% endif %}{% if package_search %}&package_search={{ package_search }}{% endif %}" 
-                       class="filter-pill {% if date_from == '2026-03-01' and date_to == '2026-03-31' %}active{% endif %}">
-                        مارس
-                    </a>
+                    <!-- الشهور -->
+                    {% for month in months %}
+                        <a href="?month={{ month }}{% if sector_search %}&sector_search={{ sector_search }}{% endif %}{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}{% if entity_search %}&entity_search={{ entity_search }}{% endif %}{% if sub_company_search %}&sub_company_search={{ sub_company_search }}{% endif %}{% if package_search %}&package_search={{ package_search }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}"
+                           class="filter-pill {% if selected_month == month %}active{% endif %}">
+                            {{ month }}
+                        </a>
+                    {% endfor %}
                 </div>
             </div>
             
+          
             <div class="row g-3">
                 
                 <!-- ✅ فلتر القطاع -->
@@ -334,13 +332,16 @@
                                value="{{ sector_search }}"
                                list="sectorSuggestions"
                                autocomplete="off">
+                        {% if selected_month %}
+                        <input type="hidden" name="month" value="{{ selected_month }}">
+                        {% endif %}
                         <datalist id="sectorSuggestions">
                             {% for suggestion in sector_suggestions %}
                             <option value="{{ suggestion }}">
                             {% endfor %}
                         </datalist>
                         {% if sector_search %}
-                        <a href="?{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}{% if entity_search %}&entity_search={{ entity_search }}{% endif %}{% if sub_company_search %}&sub_company_search={{ sub_company_search }}{% endif %}{% if package_search %}&package_search={{ package_search }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}" class="clear-btn">
+                        <a href="?{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}{% if entity_search %}&entity_search={{ entity_search }}{% endif %}{% if sub_company_search %}&sub_company_search={{ sub_company_search }}{% endif %}{% if package_search %}&package_search={{ package_search }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}{% if selected_month %}&month={{ selected_month }}{% endif %}" class="clear-btn">
                             <i class="fas fa-times me-1"></i> إلغاء
                         </a>
                         {% endif %}
@@ -380,13 +381,16 @@
                                value="{{ entity_search }}"
                                list="entitySuggestions"
                                autocomplete="off">
+                        {% if selected_month %}
+                        <input type="hidden" name="month" value="{{ selected_month }}">
+                        {% endif %}
                         <datalist id="entitySuggestions">
                             {% for suggestion in entity_suggestions %}
                             <option value="{{ suggestion }}">
                             {% endfor %}
                         </datalist>
                         {% if entity_search %}
-                        <a href="?{% if sector_search %}&sector_search={{ sector_search }}{% endif %}{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}{% if sub_company_search %}&sub_company_search={{ sub_company_search }}{% endif %}{% if package_search %}&package_search={{ package_search }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}" class="clear-btn">
+                        <a href="?{% if sector_search %}&sector_search={{ sector_search }}{% endif %}{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}{% if sub_company_search %}&sub_company_search={{ sub_company_search }}{% endif %}{% if package_search %}&package_search={{ package_search }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}{% if selected_month %}&month={{ selected_month }}{% endif %}" class="clear-btn">
                             <i class="fas fa-times me-1"></i> إلغاء
                         </a>
                         {% endif %}
@@ -426,13 +430,16 @@
                                value="{{ sub_company_search }}"
                                list="subCompanySuggestions"
                                autocomplete="off">
+                        {% if selected_month %}
+                        <input type="hidden" name="month" value="{{ selected_month }}">
+                        {% endif %}
                         <datalist id="subCompanySuggestions">
                             {% for suggestion in sub_company_suggestions %}
                             <option value="{{ suggestion }}">
                             {% endfor %}
                         </datalist>
                         {% if sub_company_search %}
-                        <a href="?{% if sector_search %}&sector_search={{ sector_search }}{% endif %}{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}{% if entity_search %}&entity_search={{ entity_search }}{% endif %}{% if package_search %}&package_search={{ package_search }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}" class="clear-btn">
+                        <a href="?{% if sector_search %}&sector_search={{ sector_search }}{% endif %}{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}{% if entity_search %}&entity_search={{ entity_search }}{% endif %}{% if package_search %}&package_search={{ package_search }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}{% if selected_month %}&month={{ selected_month }}{% endif %}" class="clear-btn">
                             <i class="fas fa-times me-1"></i> إلغاء
                         </a>
                         {% endif %}
@@ -472,13 +479,16 @@
                                value="{{ package_search }}"
                                list="packageSuggestions"
                                autocomplete="off">
+                        {% if selected_month %}
+                        <input type="hidden" name="month" value="{{ selected_month }}">
+                        {% endif %}
                         <datalist id="packageSuggestions">
                             {% for suggestion in package_suggestions %}
                             <option value="{{ suggestion }}">
                             {% endfor %}
                         </datalist>
                         {% if package_search %}
-                        <a href="?{% if sector_search %}&sector_search={{ sector_search }}{% endif %}{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}{% if entity_search %}&entity_search={{ entity_search }}{% endif %}{% if sub_company_search %}&sub_company_search={{ sub_company_search }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}" class="clear-btn">
+                        <a href="?{% if sector_search %}&sector_search={{ sector_search }}{% endif %}{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}{% if entity_search %}&entity_search={{ entity_search }}{% endif %}{% if sub_company_search %}&sub_company_search={{ sub_company_search }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}{% if selected_month %}&month={{ selected_month }}{% endif %}" class="clear-btn">
                             <i class="fas fa-times me-1"></i> إلغاء
                         </a>
                         {% endif %}
@@ -518,13 +528,16 @@
                                value="{{ specialty_search }}"
                                list="specialtySuggestions"
                                autocomplete="off">
+                        {% if selected_month %}
+                        <input type="hidden" name="month" value="{{ selected_month }}">
+                        {% endif %}
                         <datalist id="specialtySuggestions">
                             {% for suggestion in specialty_suggestions %}
                             <option value="{{ suggestion }}">
                             {% endfor %}
                         </datalist>
                         {% if specialty_search %}
-                        <a href="?{% if sector_search %}&sector_search={{ sector_search }}{% endif %}{% if entity_search %}&entity_search={{ entity_search }}{% endif %}{% if sub_company_search %}&sub_company_search={{ sub_company_search }}{% endif %}{% if package_search %}&package_search={{ package_search }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}" class="clear-btn">
+                        <a href="?{% if sector_search %}&sector_search={{ sector_search }}{% endif %}{% if entity_search %}&entity_search={{ entity_search }}{% endif %}{% if sub_company_search %}&sub_company_search={{ sub_company_search }}{% endif %}{% if package_search %}&package_search={{ package_search }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}{% if selected_month %}&month={{ selected_month }}{% endif %}" class="clear-btn">
                             <i class="fas fa-times me-1"></i> إلغاء
                         </a>
                         {% endif %}
@@ -552,14 +565,24 @@
             </div>
             
             <!-- ✅ عرض الفلاتر النشطة -->
-            {% if sector_search or specialty_search or entity_search or sub_company_search or package_search or date_from or date_to %}
+            {% if sector_search or specialty_search or entity_search or sub_company_search or package_search or date_from or date_to or selected_month %}
             <div class="row mt-3">
                 <div class="col-12">
                     <div class="d-flex flex-wrap gap-2">
+                        {% if selected_month %}
+                        <span class="badge bg-secondary p-2">
+                            <i class="fas fa-calendar-alt me-1"></i>
+                            الشهر: {{ selected_month }}
+                            <a href="?{% if sector_search %}&sector_search={{ sector_search }}{% endif %}{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}{% if entity_search %}&entity_search={{ entity_search }}{% endif %}{% if sub_company_search %}&sub_company_search={{ sub_company_search }}{% endif %}{% if package_search %}&package_search={{ package_search }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}" 
+                               class="text-white ms-1 text-decoration-none">
+                                <i class="fas fa-times-circle"></i>
+                            </a>
+                        </span>
+                        {% endif %}
                         {% if sector_search %}
                         <span class="badge bg-warning text-dark p-2">
                             <i class="fas fa-building me-1"></i> القطاع: {{ sector_search }}
-                            <a href="?{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}{% if entity_search %}&entity_search={{ entity_search }}{% endif %}{% if sub_company_search %}&sub_company_search={{ sub_company_search }}{% endif %}{% if package_search %}&package_search={{ package_search }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}" class="text-dark ms-1 text-decoration-none">
+                            <a href="?{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}{% if entity_search %}&entity_search={{ entity_search }}{% endif %}{% if sub_company_search %}&sub_company_search={{ sub_company_search }}{% endif %}{% if package_search %}&package_search={{ package_search }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}{% if selected_month %}&month={{ selected_month }}{% endif %}" class="text-dark ms-1 text-decoration-none">
                                 <i class="fas fa-times-circle"></i>
                             </a>
                         </span>
@@ -567,7 +590,7 @@
                         {% if specialty_search %}
                         <span class="badge bg-info p-2">
                             <i class="fas fa-stethoscope me-1"></i> التخصص: {{ specialty_search }}
-                            <a href="?{% if sector_search %}&sector_search={{ sector_search }}{% endif %}{% if entity_search %}&entity_search={{ entity_search }}{% endif %}{% if sub_company_search %}&sub_company_search={{ sub_company_search }}{% endif %}{% if package_search %}&package_search={{ package_search }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}" class="text-white ms-1 text-decoration-none">
+                            <a href="?{% if sector_search %}&sector_search={{ sector_search }}{% endif %}{% if entity_search %}&entity_search={{ entity_search }}{% endif %}{% if sub_company_search %}&sub_company_search={{ sub_company_search }}{% endif %}{% if package_search %}&package_search={{ package_search }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}{% if selected_month %}&month={{ selected_month }}{% endif %}" class="text-white ms-1 text-decoration-none">
                                 <i class="fas fa-times-circle"></i>
                             </a>
                         </span>
@@ -575,7 +598,7 @@
                         {% if entity_search %}
                         <span class="badge bg-primary p-2">
                             <i class="fas fa-users me-1"></i> النقابة: {{ entity_search }}
-                            <a href="?{% if sector_search %}&sector_search={{ sector_search }}{% endif %}{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}{% if sub_company_search %}&sub_company_search={{ sub_company_search }}{% endif %}{% if package_search %}&package_search={{ package_search }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}" class="text-white ms-1 text-decoration-none">
+                            <a href="?{% if sector_search %}&sector_search={{ sector_search }}{% endif %}{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}{% if sub_company_search %}&sub_company_search={{ sub_company_search }}{% endif %}{% if package_search %}&package_search={{ package_search }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}{% if selected_month %}&month={{ selected_month }}{% endif %}" class="text-white ms-1 text-decoration-none">
                                 <i class="fas fa-times-circle"></i>
                             </a>
                         </span>
@@ -583,7 +606,7 @@
                         {% if sub_company_search %}
                         <span class="badge bg-secondary p-2">
                             <i class="fas fa-building me-1"></i> الشركة: {{ sub_company_search }}
-                            <a href="?{% if sector_search %}&sector_search={{ sector_search }}{% endif %}{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}{% if entity_search %}&entity_search={{ entity_search }}{% endif %}{% if package_search %}&package_search={{ package_search }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}" class="text-white ms-1 text-decoration-none">
+                            <a href="?{% if sector_search %}&sector_search={{ sector_search }}{% endif %}{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}{% if entity_search %}&entity_search={{ entity_search }}{% endif %}{% if package_search %}&package_search={{ package_search }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}{% if selected_month %}&month={{ selected_month }}{% endif %}" class="text-white ms-1 text-decoration-none">
                                 <i class="fas fa-times-circle"></i>
                             </a>
                         </span>
@@ -591,7 +614,7 @@
                         {% if package_search %}
                         <span class="badge bg-success p-2">
                             <i class="fas fa-box me-1"></i> الباكدج: {{ package_search }}
-                            <a href="?{% if sector_search %}&sector_search={{ sector_search }}{% endif %}{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}{% if entity_search %}&entity_search={{ entity_search }}{% endif %}{% if sub_company_search %}&sub_company_search={{ sub_company_search }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}" class="text-white ms-1 text-decoration-none">
+                            <a href="?{% if sector_search %}&sector_search={{ sector_search }}{% endif %}{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}{% if entity_search %}&entity_search={{ entity_search }}{% endif %}{% if sub_company_search %}&sub_company_search={{ sub_company_search }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}{% if selected_month %}&month={{ selected_month }}{% endif %}" class="text-white ms-1 text-decoration-none">
                                 <i class="fas fa-times-circle"></i>
                             </a>
                         </span>
@@ -599,7 +622,7 @@
                         {% if date_from %}
                         <span class="badge bg-success p-2">
                             <i class="fas fa-calendar-alt me-1"></i> من: {{ date_from }}
-                            <a href="?{% if sector_search %}&sector_search={{ sector_search }}{% endif %}{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}{% if entity_search %}&entity_search={{ entity_search }}{% endif %}{% if sub_company_search %}&sub_company_search={{ sub_company_search }}{% endif %}{% if package_search %}&package_search={{ package_search }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}" class="text-white ms-1 text-decoration-none">
+                            <a href="?{% if sector_search %}&sector_search={{ sector_search }}{% endif %}{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}{% if entity_search %}&entity_search={{ entity_search }}{% endif %}{% if sub_company_search %}&sub_company_search={{ sub_company_search }}{% endif %}{% if package_search %}&package_search={{ package_search }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}{% if selected_month %}&month={{ selected_month }}{% endif %}" class="text-white ms-1 text-decoration-none">
                                 <i class="fas fa-times-circle"></i>
                             </a>
                         </span>
@@ -607,7 +630,7 @@
                         {% if date_to %}
                         <span class="badge bg-danger p-2">
                             <i class="fas fa-calendar-alt me-1"></i> إلى: {{ date_to }}
-                            <a href="?{% if sector_search %}&sector_search={{ sector_search }}{% endif %}{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}{% if entity_search %}&entity_search={{ entity_search }}{% endif %}{% if sub_company_search %}&sub_company_search={{ sub_company_search }}{% endif %}{% if package_search %}&package_search={{ package_search }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}" class="text-white ms-1 text-decoration-none">
+                            <a href="?{% if sector_search %}&sector_search={{ sector_search }}{% endif %}{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}{% if entity_search %}&entity_search={{ entity_search }}{% endif %}{% if sub_company_search %}&sub_company_search={{ sub_company_search }}{% endif %}{% if package_search %}&package_search={{ package_search }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if selected_month %}&month={{ selected_month }}{% endif %}" class="text-white ms-1 text-decoration-none">
                                 <i class="fas fa-times-circle"></i>
                             </a>
                         </span>
@@ -875,7 +898,7 @@
             <ul class="pagination">
                 {% if records.has_previous %}
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ records.previous_page_number }}{% if sector_search %}&sector_search={{ sector_search }}{% endif %}{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}{% if entity_search %}&entity_search={{ entity_search }}{% endif %}{% if sub_company_search %}&sub_company_search={{ sub_company_search }}{% endif %}{% if package_search %}&package_search={{ package_search }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}">
+                    <a class="page-link" href="?page={{ records.previous_page_number }}{% if selected_month %}&month={{ selected_month }}{% endif %}{% if sector_search %}&sector_search={{ sector_search }}{% endif %}{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}{% if entity_search %}&entity_search={{ entity_search }}{% endif %}{% if sub_company_search %}&sub_company_search={{ sub_company_search }}{% endif %}{% if package_search %}&package_search={{ package_search }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}">
                         <i class="fas fa-chevron-right"></i>
                     </a>
                 </li>
@@ -883,7 +906,7 @@
                 
                 {% for num in records.paginator.page_range %}
                 <li class="page-item {% if num == records.number %}active{% endif %}">
-                    <a class="page-link" href="?page={{ num }}{% if sector_search %}&sector_search={{ sector_search }}{% endif %}{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}{% if entity_search %}&entity_search={{ entity_search }}{% endif %}{% if sub_company_search %}&sub_company_search={{ sub_company_search }}{% endif %}{% if package_search %}&package_search={{ package_search }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}">
+                    <a class="page-link" href="?page={{ num }}{% if selected_month %}&month={{ selected_month }}{% endif %}{% if sector_search %}&sector_search={{ sector_search }}{% endif %}{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}{% if entity_search %}&entity_search={{ entity_search }}{% endif %}{% if sub_company_search %}&sub_company_search={{ sub_company_search }}{% endif %}{% if package_search %}&package_search={{ package_search }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}">
                         {{ num }}
                     </a>
                 </li>
@@ -891,7 +914,7 @@
                 
                 {% if records.has_next %}
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ records.next_page_number }}{% if sector_search %}&sector_search={{ sector_search }}{% endif %}{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}{% if entity_search %}&entity_search={{ entity_search }}{% endif %}{% if sub_company_search %}&sub_company_search={{ sub_company_search }}{% endif %}{% if package_search %}&package_search={{ package_search }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}">
+                    <a class="page-link" href="?page={{ records.next_page_number }}{% if selected_month %}&month={{ selected_month }}{% endif %}{% if sector_search %}&sector_search={{ sector_search }}{% endif %}{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}{% if entity_search %}&entity_search={{ entity_search }}{% endif %}{% if sub_company_search %}&sub_company_search={{ sub_company_search }}{% endif %}{% if package_search %}&package_search={{ package_search }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}">
                         <i class="fas fa-chevron-left"></i>
                     </a>
                 </li>

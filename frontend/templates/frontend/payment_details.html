@@ -128,6 +128,7 @@
         display: inline-flex;
         align-items: center;
         gap: 6px;
+        border: 2px solid transparent;
     }
     
     .filter-pill:hover {
@@ -173,6 +174,18 @@
         color: #fff;
     }
     
+    /* ✅ Pill for months - different color */
+    .filter-pill.month-pill {
+        background: #f3e5f5;
+        color: #6a1b9a;
+        border: 2px solid #6a1b9a;
+    }
+    
+    .filter-pill.month-pill.active {
+        background: #6a1b9a;
+        color: #fff;
+    }
+    
     @media (max-width: 768px) {
         .stats-card .stats-number {
             font-size: 1.8rem;
@@ -212,6 +225,33 @@
     </div>
 
     <!-- ============================================ -->
+    <!-- ✅ فلتر الشهور -->
+    <!-- ============================================ -->
+    <div class="card shadow-sm mb-4 border-0">
+        <div class="card-body">
+            <div class="d-flex align-items-center mb-2">
+                <i class="fas fa-calendar-alt text-primary me-2"></i>
+                <h6 class="mb-0 fw-bold">فلتر الشهر</h6>
+            </div>
+            <div class="d-flex flex-wrap gap-2">
+                <!-- الكل -->
+                <a href="?{% if payment_type %}payment_type={{ payment_type }}&{% endif %}{% if specialty_search %}specialty_search={{ specialty_search }}{% endif %}"
+                   class="filter-pill month-pill {% if not selected_month %}active{% endif %}">
+                    <i class="fas fa-calendar me-1"></i>
+                    الكل
+                </a>
+                <!-- الشهور -->
+                {% for month in months %}
+                    <a href="?month={{ month }}{% if payment_type %}&payment_type={{ payment_type }}{% endif %}{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}"
+                       class="filter-pill month-pill {% if selected_month == month %}active{% endif %}">
+                        {{ month }}
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================ -->
     <!-- ✅ فلتر نوع الدفع + فلتر التخصص -->
     <!-- ============================================ -->
     <div class="card shadow-sm mb-4 border-0">
@@ -225,20 +265,20 @@
                         <h6 class="mb-0 fw-bold">فلتر نوع الدفع</h6>
                     </div>
                     <div class="d-flex flex-wrap gap-2">
-                        <a href="?{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}" 
+                        <a href="?month={{ selected_month }}{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}" 
                            class="filter-pill all {% if not payment_type %}active{% endif %}">
                             <i class="fas fa-undo me-1"></i> الكل
                         </a>
-                        <a href="?payment_type=نقدي{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}" 
+                        <a href="?month={{ selected_month }}&payment_type=نقدي{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}" 
                            class="filter-pill cash {% if payment_type == 'نقدي' %}active{% endif %}">
                             <i class="fas fa-money-bill-wave me-1"></i> نقدي
                         </a>
-                        <a href="?payment_type=اجل{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}" 
+                        <a href="?month={{ selected_month }}&payment_type=اجل{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}" 
                            class="filter-pill credit {% if payment_type == 'اجل' %}active{% endif %}">
                             <i class="fas fa-clock me-1"></i> آجل
                         </a>
                         {% if payment_type %}
-                        <a href="?{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}" 
+                        <a href="?month={{ selected_month }}{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}" 
                            class="filter-pill" style="background: #f8d7da; color: #dc3545; border: 2px solid #dc3545;">
                             <i class="fas fa-times me-1"></i> إلغاء
                         </a>
@@ -262,18 +302,19 @@
                                value="{{ specialty_search }}"
                                list="specialtySuggestions"
                                autocomplete="off">
+                        <input type="hidden" name="month" value="{{ selected_month }}">
+                        {% if payment_type %}
+                        <input type="hidden" name="payment_type" value="{{ payment_type }}">
+                        {% endif %}
                         <datalist id="specialtySuggestions">
                             {% for suggestion in specialty_suggestions %}
                             <option value="{{ suggestion }}">
                             {% endfor %}
                         </datalist>
                         {% if specialty_search %}
-                        <a href="?{% if payment_type %}&payment_type={{ payment_type }}{% endif %}" class="clear-btn">
+                        <a href="?month={{ selected_month }}{% if payment_type %}&payment_type={{ payment_type }}{% endif %}" class="clear-btn">
                             <i class="fas fa-times me-1"></i> إلغاء
                         </a>
-                        {% endif %}
-                        {% if payment_type %}
-                        <input type="hidden" name="payment_type" value="{{ payment_type }}">
                         {% endif %}
                     </form>
                     <small class="text-muted d-block mt-1" style="font-size: 0.7rem;">
@@ -285,15 +326,25 @@
             </div>
             
             <!-- ✅ عرض الفلاتر النشطة -->
-            {% if payment_type or specialty_search %}
+            {% if payment_type or specialty_search or selected_month %}
             <div class="row mt-3">
                 <div class="col-12">
                     <div class="d-flex flex-wrap gap-2">
+                        {% if selected_month %}
+                        <span class="badge bg-secondary p-2">
+                            <i class="fas fa-calendar-alt me-1"></i>
+                            الشهر: {{ selected_month }}
+                            <a href="?{% if payment_type %}&payment_type={{ payment_type }}{% endif %}{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}" 
+                               class="text-white ms-1 text-decoration-none">
+                                <i class="fas fa-times-circle"></i>
+                            </a>
+                        </span>
+                        {% endif %}
                         {% if payment_type %}
                         <span class="badge bg-primary p-2">
                             <i class="fas fa-credit-card me-1"></i>
                             نوع الدفع: {{ payment_type }}
-                            <a href="?{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}" 
+                            <a href="?month={{ selected_month }}{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}" 
                                class="text-white ms-1 text-decoration-none">
                                 <i class="fas fa-times-circle"></i>
                             </a>
@@ -303,7 +354,7 @@
                         <span class="badge bg-info p-2">
                             <i class="fas fa-stethoscope me-1"></i>
                             التخصص: {{ specialty_search }}
-                            <a href="?{% if payment_type %}&payment_type={{ payment_type }}{% endif %}" 
+                            <a href="?month={{ selected_month }}{% if payment_type %}&payment_type={{ payment_type }}{% endif %}" 
                                class="text-white ms-1 text-decoration-none">
                                 <i class="fas fa-times-circle"></i>
                             </a>
@@ -454,7 +505,7 @@
             <ul class="pagination">
                 {% if records.has_previous %}
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ records.previous_page_number }}{% if payment_type %}&payment_type={{ payment_type }}{% endif %}{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}">
+                    <a class="page-link" href="?page={{ records.previous_page_number }}{% if selected_month %}&month={{ selected_month }}{% endif %}{% if payment_type %}&payment_type={{ payment_type }}{% endif %}{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}">
                         <i class="fas fa-chevron-right"></i>
                     </a>
                 </li>
@@ -462,7 +513,7 @@
                 
                 {% for num in records.paginator.page_range %}
                 <li class="page-item {% if num == records.number %}active{% endif %}">
-                    <a class="page-link" href="?page={{ num }}{% if payment_type %}&payment_type={{ payment_type }}{% endif %}{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}">
+                    <a class="page-link" href="?page={{ num }}{% if selected_month %}&month={{ selected_month }}{% endif %}{% if payment_type %}&payment_type={{ payment_type }}{% endif %}{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}">
                         {{ num }}
                     </a>
                 </li>
@@ -470,7 +521,7 @@
                 
                 {% if records.has_next %}
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ records.next_page_number }}{% if payment_type %}&payment_type={{ payment_type }}{% endif %}{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}">
+                    <a class="page-link" href="?page={{ records.next_page_number }}{% if selected_month %}&month={{ selected_month }}{% endif %}{% if payment_type %}&payment_type={{ payment_type }}{% endif %}{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}">
                         <i class="fas fa-chevron-left"></i>
                     </a>
                 </li>

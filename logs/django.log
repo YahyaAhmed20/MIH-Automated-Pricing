@@ -22255,3 +22255,134 @@ Not Found: /.well-known/appspecific/com.chrome.devtools.json
 Not Found: /.well-known/appspecific/com.chrome.devtools.json
 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
 "GET /similar-invoices/?patient_name=%D8%A7%D8%A8%D8%AA%D8%B3%D8%A7%D9%85+%D8%A7%D8%AD%D9%85%D8%AF+%D9%85%D8%AD%D9%85%D8%AF+%D8%B9%D8%A8%D8%A7%D8%B3&specialty=&entity=&doctor=&status=&price_range=&date_from=&date_to= HTTP/1.1" 200 93533
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 46001
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 16342
+"POST / HTTP/1.1" 302 0
+"GET /reports/ HTTP/1.1" 200 127692
+"GET /reports/ HTTP/1.1" 200 127692
+"GET /reports/ HTTP/1.1" 200 126301
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /reports/ HTTP/1.1" 200 128723
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /reports/specialty/%D8%A7%D9%84%D8%A7%D9%86%D9%81%20%D9%88%D8%A7%D9%84%D8%A7%D8%B0%D9%86/?month= HTTP/1.1" 200 195898
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /reports/specialty/%D8%A7%D9%84%D8%A7%D9%86%D9%81%20%D9%88%D8%A7%D9%84%D8%A7%D8%B0%D9%86/?month= HTTP/1.1" 200 196268
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /reports/ HTTP/1.1" 200 128723
+"GET /reports/specialty/%D8%A7%D9%84%D8%A7%D9%86%D9%81%20%D9%88%D8%A7%D9%84%D8%A7%D8%B0%D9%86/?month= HTTP/1.1" 200 196268
+"GET /reports/ HTTP/1.1" 200 128723
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+Not Found: /sector_details.html
+"GET /sector_details.html HTTP/1.1" 404 16366
+"GET / HTTP/1.1" 302 0
+"GET /reports/ HTTP/1.1" 200 128723
+"GET /reports/payment-details/ HTTP/1.1" 200 113334
+Not Found: /reports/sector_details.html
+"GET /reports/sector_details.html HTTP/1.1" 404 16390
+Not Found: /reports/sector_details
+"GET /reports/sector_details HTTP/1.1" 404 16375
+"GET /reports/sector-details HTTP/1.1" 301 0
+"GET /reports/sector-details/ HTTP/1.1" 200 70638
+"GET /reports/ HTTP/1.1" 200 128723
+"GET /reports/specialty/%D8%A7%D9%84%D8%A7%D9%86%D9%81%20%D9%88%D8%A7%D9%84%D8%A7%D8%B0%D9%86/?month= HTTP/1.1" 200 194672
+"GET /reports/specialty/%D8%A7%D9%84%D8%A7%D9%86%D9%81%20%D9%88%D8%A7%D9%84%D8%A7%D8%B0%D9%86/?package_search=OPR-050 HTTP/1.1" 200 67003
+"GET /reports/specialty/%D8%A7%D9%84%D8%A7%D9%86%D9%81%20%D9%88%D8%A7%D9%84%D8%A7%D8%B0%D9%86/?package_search=HAE004 HTTP/1.1" 200 66998
+"GET /reports/specialty/%D8%A7%D9%84%D8%A7%D9%86%D9%81%20%D9%88%D8%A7%D9%84%D8%A7%D8%B0%D9%86/?package_search= HTTP/1.1" 200 194672
+"GET /reports/specialty/%D8%A7%D9%84%D8%A7%D9%86%D9%81%20%D9%88%D8%A7%D9%84%D8%A7%D8%B0%D9%86/?package_search=%D8%A8%D8%A7%D9%83%D8%AF%D8%AC+%D8%A7%D8%B5%D9%84%D8%A7%D8%AD+%D8%A7%D9%84%D9%81%D8%AA%D9%82+%D8%A8%D8%A7%D8%B3%D8%AA%D8%AE%D8%AF%D8%A7%D9%85+%D8%A7%D9%84%D8%B4%D8%A8%D9%83%D9%87 HTTP/1.1" 200 67278
+"GET /reports/specialty/%D8%A7%D9%84%D8%A7%D9%86%D9%81%20%D9%88%D8%A7%D9%84%D8%A7%D8%B0%D9%86/?package_search=%D8%A8%D8%A7%D9%83%D8%AF%D8%AC+%D8%A7%D8%B5%D9%84%D8%A7%D8%AD+ HTTP/1.1" 200 67078
+"GET /reports/specialty/%D8%A7%D9%84%D8%A7%D9%86%D9%81%20%D9%88%D8%A7%D9%84%D8%A7%D8%B0%D9%86/?package_search=%D8%AC%D9%84%D8%B3%D8%A9+%D8%A7%D9%84%D8%BA%D8%B3%D9%8A%D9%84+%D8%A7%D9%84%D8%AF%D9%85%D9%88%D9%89 HTTP/1.1" 200 67138
+"GET /reports/specialty/%D8%A7%D9%84%D8%A7%D9%86%D9%81%20%D9%88%D8%A7%D9%84%D8%A7%D8%B0%D9%86/?package_search=d HTTP/1.1" 200 66973
+"GET /reports/specialty/%D8%A7%D9%84%D8%A7%D9%86%D9%81%20%D9%88%D8%A7%D9%84%D8%A7%D8%B0%D9%86/?package_search=%D8%AC HTTP/1.1" 200 170845
+"GET /reports/specialty/%D8%A7%D9%84%D8%A7%D9%86%D9%81%20%D9%88%D8%A7%D9%84%D8%A7%D8%B0%D9%86/?package_search=%D8%AC%D8%B1%D8%A7%D8%AD%D8%A9+%D9%88%D8%B8%D9%8A%D9%81%D9%8A%D8%A9 HTTP/1.1" 200 166606
+"GET /reports/specialty/%D8%A7%D9%84%D8%A7%D9%86%D9%81%20%D9%88%D8%A7%D9%84%D8%A7%D8%B0%D9%86/? HTTP/1.1" 200 194672
+"GET /reports/specialty/%D8%A7%D9%84%D8%A7%D9%86%D9%81%20%D9%88%D8%A7%D9%84%D8%A7%D8%B0%D9%86/? HTTP/1.1" 200 177185
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /reports/specialty/%D8%A7%D9%84%D8%A7%D9%86%D9%81%20%D9%88%D8%A7%D9%84%D8%A7%D8%B0%D9%86/? HTTP/1.1" 200 179654
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /reports/specialty/%D8%A7%D9%84%D8%A7%D9%86%D9%81%20%D9%88%D8%A7%D9%84%D8%A7%D8%B0%D9%86/? HTTP/1.1" 200 174834
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /reports/specialty/%D8%A7%D9%84%D8%A7%D9%86%D9%81%20%D9%88%D8%A7%D9%84%D8%A7%D8%B0%D9%86/? HTTP/1.1" 200 179654
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /reports/specialty/%D8%A7%D9%84%D8%A7%D9%86%D9%81%20%D9%88%D8%A7%D9%84%D8%A7%D8%B0%D9%86/? HTTP/1.1" 200 174834
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /reports/specialty/%D8%A7%D9%84%D8%A7%D9%86%D9%81%20%D9%88%D8%A7%D9%84%D8%A7%D8%B0%D9%86/? HTTP/1.1" 200 179654
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /reports/specialty/%D8%A7%D9%84%D8%A7%D9%86%D9%81%20%D9%88%D8%A7%D9%84%D8%A7%D8%B0%D9%86/? HTTP/1.1" 200 179654
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /reports/specialty/%D8%A7%D9%84%D8%A7%D9%86%D9%81%20%D9%88%D8%A7%D9%84%D8%A7%D8%B0%D9%86/? HTTP/1.1" 200 179654
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /reports/specialty/%D8%A7%D9%84%D8%A7%D9%86%D9%81%20%D9%88%D8%A7%D9%84%D8%A7%D8%B0%D9%86/? HTTP/1.1" 200 179654
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /reports/specialty/%D8%A7%D9%84%D8%A7%D9%86%D9%81%20%D9%88%D8%A7%D9%84%D8%A7%D8%B0%D9%86/? HTTP/1.1" 200 179654
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /reports/specialty/%D8%A7%D9%84%D8%A7%D9%86%D9%81%20%D9%88%D8%A7%D9%84%D8%A7%D8%B0%D9%86/? HTTP/1.1" 200 179621
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /reports/specialty/%D8%A7%D9%84%D8%A7%D9%86%D9%81%20%D9%88%D8%A7%D9%84%D8%A7%D8%B0%D9%86/? HTTP/1.1" 200 170474
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+- Broken pipe from ('127.0.0.1', 57437)
+"GET /reports/specialty/%D8%A7%D9%84%D8%A7%D9%86%D9%81%20%D9%88%D8%A7%D9%84%D8%A7%D8%B0%D9%86/? HTTP/1.1" 200 170510
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /reports HTTP/1.1" 301 0
+"GET /reports/ HTTP/1.1" 200 128723
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /reports/sector-details/ HTTP/1.1" 200 70638
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /reports/ HTTP/1.1" 200 128743
+"GET /reports/?month=%D9%85%D8%A7%D8%B1%D8%B3 HTTP/1.1" 200 128185
+"GET /reports/payment-details/?month=%D9%85%D8%A7%D8%B1%D8%B3 HTTP/1.1" 200 113334
+"GET /reports/ HTTP/1.1" 200 128743
+"GET /reports/?month=%D9%85%D8%A7%D8%B1%D8%B3 HTTP/1.1" 200 128185
+"GET /reports/payment-details/?month=%D9%85%D8%A7%D8%B1%D8%B3 HTTP/1.1" 200 113334
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /reports/payment-details/?month=%D9%85%D8%A7%D8%B1%D8%B3 HTTP/1.1" 200 109103
+"GET /reports/?month=%D9%85%D8%A7%D9%8A%D9%88 HTTP/1.1" 200 128208
+"GET /reports/payment-details/?month=%D9%85%D8%A7%D9%8A%D9%88 HTTP/1.1" 200 108769
+"GET /reports/payment-details/?month=&payment_type=%D8%A7%D8%AC%D9%84 HTTP/1.1" 200 61163
+"GET /reports/payment-details/?month= HTTP/1.1" 200 113422
+"GET /reports/payment-details/?month=%D9%85%D8%A7%D9%8A%D9%88 HTTP/1.1" 200 108769
+"GET /reports/ HTTP/1.1" 200 128743
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+- Broken pipe from ('127.0.0.1', 59572)
+- Broken pipe from ('127.0.0.1', 59659)
+"GET /reports/payment-details/?month= HTTP/1.1" 200 115641
+"GET /reports/payment-details/?month=%D9%85%D8%A7%D8%B1%D8%B3 HTTP/1.1" 200 112156
+"GET /reports/payment-details/?month=%D9%85%D8%A7%D9%8A%D9%88 HTTP/1.1" 200 111837
+"GET /reports/payment-details/?month=%D9%8A%D9%86%D8%A7%D9%8A%D8%B1 HTTP/1.1" 200 112830
+"GET /reports/payment-details/?month=%D9%8A%D9%88%D9%84%D9%8A%D9%88 HTTP/1.1" 200 113036
+"GET /reports/ HTTP/1.1" 200 128743
+"GET /reports/sector-details/?month= HTTP/1.1" 200 70638
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /reports/sector-details/?month= HTTP/1.1" 200 70638
+"GET /reports/sector-details/?month= HTTP/1.1" 200 72610
+"GET /reports/sector-details/?month=%D9%8A%D9%88%D9%84%D9%8A%D9%88 HTTP/1.1" 200 74062
+"GET /reports/sector-details/? HTTP/1.1" 200 72610
+"GET /reports/sector-details/? HTTP/1.1" 200 71480
+"GET /reports/sector-details/?month=%D9%8A%D9%88%D9%86%D9%8A%D9%88 HTTP/1.1" 200 72864
