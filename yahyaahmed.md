@@ -40,7 +40,6 @@ __________________________
 _____________________________
 
 
-______________________________________
 
 
 
@@ -109,1068 +108,1802 @@ UI Polish
 
 في اسم اسمه مصطففي ابو الفنتوج بيديني كزا id 
 
-
-old report
-{% extends 'frontend/base.html' %}
+base
 {% load static %}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
 
-{% block content %}
+<head>
 
-<style>
-    /* ============================================ */
-    /* ✅ Stats Cards - ثلاث بوكسات */
-    /* ============================================ */
-    .stats-card {
-        border-radius: 16px;
-        padding: 1.5rem 1.25rem;
-        text-align: center;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        border: none;
-        color: #fff;
-        position: relative;
-        overflow: hidden;
-        cursor: default;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>
+        MIH Automated Pricing
+    </title>
+
+    <!-- Cache Control for Images -->
+    <meta http-equiv="Cache-Control" content="max-age=31536000, public">
+
+    <!-- Google Font: Cairo -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css"
+          rel="stylesheet">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+          rel="stylesheet">
+
+          <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+
+        /* ============================================================ */
+/* ===== CSS Variables ===== */
+/* ============================================================ */
+:root {
+    --sidebar-bg: #0f172a;
+    --sidebar-hover: rgba(255,255,255,0.06);
+    --sidebar-active: #3b82f6;
+    --text-white: #f1f5f9;
+    --text-muted: #94a3b8;
+    --card-shadow: 0 2px 12px rgba(0,0,0,0.05);
+    --card-shadow-hover: 0 6px 25px rgba(0,0,0,0.1);
+    --border-radius: 12px;
+    --transition-speed: 0.3s;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Cairo', Tahoma, sans-serif;
+}
+
+html, body {
+    height: 100%;
+}
+
+body {
+    background: #f4f6f9;
+    font-family: 'Cairo', Tahoma, sans-serif;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ============================================================ */
+/* ===== Sidebar ===== */
+/* ============================================================ */
+.sidebar {
+    width: 250px;
+    min-height: 100vh;
+    height: 100vh;
+    max-height: 100vh;
+    background: var(--sidebar-bg);
+    color: var(--text-white);
+    position: fixed;
+    right: 0;
+    top: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    z-index: 1000;
+    padding-bottom: 15px;
+    transition: all var(--transition-speed) ease;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,.4) rgba(255,255,255,.05);
+}
+
+/* تأثير توهج خفيف للـ Sidebar */
+.sidebar::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 0% 0%, rgba(59, 130, 246, 0.05), transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* ===== Scrollbar Styles ===== */
+.sidebar::-webkit-scrollbar {
+    width: 8px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+    background: rgba(255,255,255,0.05);
+    border-radius: 10px;
+    margin: 5px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.3);
+    border-radius: 10px;
+    border: 2px solid rgba(255,255,255,0.05);
+    transition: all 0.3s ease;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+    background: rgba(255,255,255,0.6);
+    border-color: rgba(255,255,255,0.1);
+}
+
+/* للمتصفحات التي تدعم scrollbar-width */
+.sidebar {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,0.3) rgba(255,255,255,0.05);
+}
+
+/* إضافة شريط تمرير مرئي دائماً في Desktop */
+@media (min-width: 769px) {
+    .sidebar {
+        scrollbar-width: thin;
     }
     
-    .stats-card:hover {
-        transform: translateY(-8px) scale(1.02);
-        box-shadow: 0 12px 40px rgba(0,0,0,0.2);
+    .sidebar::-webkit-scrollbar-thumb {
+        background: rgba(255,255,255,0.25);
     }
     
-    .stats-card .stats-number {
-        font-size: 2.5rem;
-        font-weight: 700;
-        line-height: 1.2;
+    .sidebar:hover::-webkit-scrollbar-thumb {
+        background: rgba(255,255,255,0.5);
     }
-    
-    .stats-card .stats-label {
-        font-size: 0.85rem;
-        opacity: 0.9;
-        margin-top: 6px;
+}
+
+.content {
+    margin-right: 250px;
+    padding: 24px 28px;
+    flex: 1;
+    min-height: 100vh;
+    transition: all var(--transition-speed) ease;
+}
+/* ============================================================
+   ===== Login Mode =====
+   ============================================================ */
+
+body.login-mode .sidebar,
+body.login-mode .sidebar-toggle,
+body.login-mode .sidebar-overlay,
+body.login-mode .page-transition,
+body.login-mode .scroll-top-btn,
+body.login-mode .whatsapp-btn,
+body.login-mode .topbar,
+body.login-mode .footer {
+    display: none !important;
+}
+
+body.login-mode .content {
+    margin-right: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100vh;
+}
+
+/* ============================================================ */
+/* ===== Sidebar Toggle Button (Mobile) ===== */
+/* ============================================================ */
+.sidebar-toggle {
+    display: none;
+    position: fixed;
+    top: 12px;
+    right: 12px;
+    z-index: 1001;
+    background: var(--sidebar-bg);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 20px;
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(0,0,0,.2);
+    transition: all var(--transition-speed) ease;
+}
+
+.sidebar-toggle:hover {
+    background: #0d6efd;
+}
+
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,.5);
+    z-index: 999;
+    opacity: 0;
+    transition: opacity var(--transition-speed) ease;
+}
+
+/* ============================================================ */
+/* ===== Logo ===== */
+/* ============================================================ */
+.logo-box {
+    padding: 20px 15px 16px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255,255,255,.06);
+    position: relative;
+}
+
+/* توهج خلفي للشعار */
+.logo-box::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 110px;
+    height: 110px;
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.08), transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+    animation: glowPulse 4s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+    0%, 100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.5;
     }
-    
-    .stats-card .stats-icon {
-        font-size: 2rem;
-        opacity: 0.2;
-        position: absolute;
-        bottom: 10px;
-        right: 15px;
+    50% {
+        transform: translate(-50%, -50%) scale(1.2);
+        opacity: 1;
     }
-    
-    .stats-card-total {
-        background: linear-gradient(135deg, #1a237e, #0d47a1);
+}
+
+.logo-box::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 20%;
+    width: 60%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.3), transparent);
+}
+
+.logo-box img {
+    width: 75px;
+    height: 75px;
+    border-radius: 50%;
+    background: white;
+    padding: 5px;
+    object-fit: cover;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 4px 20px rgba(59, 130, 246, 0.15);
+    border: 2px solid rgba(255,255,255,0.05);
+    animation: logoPulse 3s ease-in-out infinite;
+    position: relative;
+    z-index: 1;
+}
+
+@keyframes logoPulse {
+    0%, 100% {
+        box-shadow: 0 4px 20px rgba(59, 130, 246, 0.15);
     }
-    
-    .stats-card-credit {
-        background: linear-gradient(135deg, #e65100, #f57c00);
+    50% {
+        box-shadow: 0 4px 30px rgba(59, 130, 246, 0.35), 0 0 60px rgba(59, 130, 246, 0.1);
     }
-    
-    .stats-card-cash {
-        background: linear-gradient(135deg, #2e7d32, #43a047);
+}
+
+.logo-box img:hover {
+    transform: scale(1.08) rotate(-3deg);
+    box-shadow: 0 6px 35px rgba(59, 130, 246, 0.35), 0 0 80px rgba(59, 130, 246, 0.15);
+}
+
+.logo-box h4 {
+    margin-top: 10px;
+    font-weight: 700;
+    font-size: 17px;
+    color: var(--text-white);
+    letter-spacing: 0.5px;
+    background: linear-gradient(135deg, #f1f5f9, #94a3b8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    position: relative;
+    z-index: 1;
+}
+
+/* شريط متحرك */
+@keyframes gradientMove {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 300% 0%; }
+}
+
+/* ============================================================ */
+/* ===== Menu ===== */
+/* ============================================================ */
+.menu-list {
+    list-style: none;
+    padding: 4px 0;
+    margin: 0;
+}
+
+.menu-item {
+    margin: 2px 8px;
+    position: relative;
+    z-index: 1;
+}
+
+.menu-link {
+    color: var(--text-white);
+    text-decoration: none;
+    display: block;
+    padding: 9px 14px;
+    transition: all var(--transition-speed) ease;
+    cursor: pointer;
+    font-size: 14px;
+    border-right: 3px solid transparent;
+    border-radius: 0 8px 8px 0;
+    font-weight: 400;
+    position: relative;
+}
+
+.menu-link:hover {
+    background: var(--sidebar-hover);
+    padding-right: 20px;
+    border-right-color: var(--sidebar-active);
+    color: var(--text-white);
+}
+
+.menu-link.active {
+    background: rgba(59, 130, 246, 0.15);
+    border-right: 4px solid var(--sidebar-active);
+    box-shadow: inset 0 0 20px rgba(59, 130, 246, 0.05);
+    padding-right: 18px;
+}
+
+/* نقطة نشاط للعنصر النشط */
+.menu-link.active::after {
+    content: '';
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--sidebar-active);
+    box-shadow: 0 0 12px rgba(59, 130, 246, 0.6);
+    animation: pulse-dot 2s infinite;
+}
+
+@keyframes pulse-dot {
+    0%, 100% {
+        opacity: 1;
+        transform: translateY(-50%) scale(1);
     }
-    
-    /* ============================================ */
-    /* ✅ Payment Chart */
-    /* ============================================ */
-    .payment-chart-wrapper {
-        width: 340px;
-        height: 340px;
-        margin: auto;
-        position: relative;
+    50% {
+        opacity: 0.5;
+        transform: translateY(-50%) scale(0.8);
     }
-    
-    @media (max-width: 992px) {
-        .payment-chart-wrapper {
-            width: 280px;
-            height: 280px;
-        }
-    }
-    
-    /* ============================================ */
-    /* ✅ Specialty Cards - محسّن */
-    /* ============================================ */
-    .specialty-card {
-        border-radius: 20px;
-        border: 1px solid #e9ecef;
-        overflow: hidden;
-        background: #fff;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-        margin-bottom: 1.5rem;
-        width: 100%;
-    }
-    
-    .specialty-card:hover {
-        transform: translateY(-6px);
-        box-shadow: 0 16px 48px rgba(0,0,0,0.1);
-    }
-    
-    .specialty-card .specialty-header {
-        padding: 1.25rem 1.5rem;
-        display: flex;
-        align-items: center;
-        gap: 1.25rem;
-        border-bottom: 2px solid #f1f3f5;
-        flex-wrap: wrap;
-    }
-    
-    .specialty-card .specialty-icon-wrapper {
-        width: 72px;
-        height: 72px;
-        min-width: 72px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 2.4rem;
-        color: #fff;
-        flex-shrink: 0;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 16px rgba(0,0,0,0.12);
-        position: relative;
-    }
-    
-    .specialty-card:hover .specialty-icon-wrapper {
-        transform: scale(1.08) rotate(-6deg);
-        box-shadow: 0 8px 32px rgba(0,0,0,0.2);
-    }
-    
-    .specialty-card .specialty-icon-wrapper::after {
-        content: '';
-        position: absolute;
-        inset: -4px;
-        border-radius: 50%;
-        border: 2px solid currentColor;
+}
+
+.menu-link i {
+    margin-left: 12px;
+    font-size: 18px;
+    width: 24px;
+    text-align: center;
+    color: var(--text-muted);
+    transition: all var(--transition-speed) ease;
+    background: linear-gradient(135deg, #64748b, #94a3b8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.menu-link:hover i {
+    background: linear-gradient(135deg, #60a5fa, #3b82f6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    transform: scale(1.1) rotate(-5deg);
+}
+
+.menu-link.active i {
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    transform: scale(1.15);
+    filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.4));
+}
+
+.menu-arrow {
+    float: left;
+    transition: transform var(--transition-speed) ease;
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.menu-link[aria-expanded="true"] .menu-arrow {
+    transform: rotate(180deg);
+    color: var(--text-white);
+}
+
+/* ============================================================ */
+/* ===== Submenu ===== */
+/* ============================================================ */
+.submenu {
+    background: rgba(0,0,0,.25);
+    backdrop-filter: blur(4px);
+    list-style: none;
+    padding: 2px 0;
+    margin: 0;
+    border-radius: 0 0 10px 10px;
+    margin-top: 2px;
+}
+
+.submenu a {
+    display: block;
+    padding: 7px 32px 7px 45px;
+    color: rgba(255,255,255,.7);
+    text-decoration: none;
+    font-size: 13px;
+    transition: all var(--transition-speed) ease;
+    border-right: 3px solid transparent;
+    border-radius: 0 8px 8px 0;
+    position: relative;
+}
+
+.submenu a:hover {
+    background: rgba(255,255,255,.06);
+    color: var(--text-white);
+    padding-right: 38px;
+    border-right-color: var(--sidebar-active);
+}
+
+.submenu a i {
+    margin-left: 10px;
+    font-size: 14px;
+    width: 22px;
+    text-align: center;
+    color: rgba(255,255,255,.4);
+    transition: all var(--transition-speed) ease;
+    background: linear-gradient(135deg, #64748b, #94a3b8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.submenu a:hover i {
+    background: linear-gradient(135deg, #60a5fa, #3b82f6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    transform: translateX(-3px) scale(1.1);
+}
+
+.submenu a.active {
+    background: rgba(59, 130, 246, 0.12);
+    border-right-color: var(--sidebar-active);
+    color: var(--text-white);
+}
+
+.submenu a.active i {
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    transform: scale(1.1);
+}
+
+.submenu a.active::before {
+    content: '';
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--sidebar-active);
+    box-shadow: 0 0 8px rgba(59, 130, 246, 0.4);
+}
+
+/* ============================================================ */
+/* ===== Alert Box ===== */
+/* ============================================================ */
+.sidebar-alert {
+    margin: 10px 12px 6px;
+}
+
+.sidebar-alert .alert {
+    font-size: 12px;
+    padding: 6px 8px !important;
+    border-radius: 8px;
+    background: rgba(255,255,255,.08) !important;
+    border: 1px solid rgba(255,255,255,.06);
+    color: var(--text-white);
+}
+
+.sidebar-alert .alert strong {
+    color: var(--text-white);
+}
+
+.sidebar-alert .alert small {
+    color: var(--text-muted);
+}
+
+/* ============================================================ */
+/* ===== Page Transition Overlay ===== */
+/* ============================================================ */
+.page-transition {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(15, 23, 42, 0.92);
+    backdrop-filter: blur(12px);
+    z-index: 99999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+}
+
+.page-transition.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.transition-logo-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+}
+
+.transition-logo {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: white;
+    padding: 10px;
+    object-fit: cover;
+    box-shadow: 0 0 60px rgba(59, 130, 246, 0.3), 0 0 120px rgba(59, 130, 246, 0.1);
+    animation: transitionLogoAnim 1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    transform: scale(0) rotate(-30deg);
+    opacity: 0;
+}
+
+@keyframes transitionLogoAnim {
+    0% {
+        transform: scale(0) rotate(-30deg);
         opacity: 0;
-        transition: all 0.4s ease;
     }
-    
-    .specialty-card:hover .specialty-icon-wrapper::after {
-        opacity: 0.3;
-        transform: scale(1.05);
+    50% {
+        transform: scale(1.1) rotate(5deg);
+        opacity: 1;
     }
-    
-    .specialty-card .specialty-info {
-        flex: 1;
-        min-width: 0;
+    70% {
+        transform: scale(0.95) rotate(-2deg);
     }
-    
-    .specialty-card .specialty-name {
-        font-size: 1.15rem;
-        font-weight: 700;
-        margin: 0;
-        line-height: 1.3;
+    100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
     }
-    
-    .specialty-card .specialty-stats {
-        display: flex;
-        gap: 1rem;
-        flex-wrap: wrap;
-        margin-top: 4px;
+}
+
+.transition-loader {
+    width: 60px;
+    height: 60px;
+    border: 3px solid rgba(255,255,255,0.05);
+    border-top: 3px solid #3b82f6;
+    border-right: 3px solid #8b5cf6;
+    border-radius: 50%;
+    animation: loaderSpin 0.8s linear infinite;
+    opacity: 0;
+    animation-delay: 0.3s;
+}
+
+@keyframes loaderSpin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.page-transition.active .transition-loader {
+    opacity: 1;
+}
+
+.transition-text {
+    color: rgba(255,255,255,0.8);
+    font-size: 18px;
+    font-weight: 400;
+    margin-top: 10px;
+    opacity: 0;
+    animation: fadeInText 0.5s ease forwards 0.6s;
+}
+
+@keyframes fadeInText {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== تأثير اختفاء الشعار ===== */
+.page-transition.fade-out .transition-logo {
+    animation: transitionLogoOut 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes transitionLogoOut {
+    0% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
     }
-    
-    .specialty-card .specialty-stats span {
-        font-size: 0.75rem;
-        color: #6c757d;
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
+    100% {
+        transform: scale(1.5) rotate(30deg);
+        opacity: 0;
     }
-    
-    .specialty-card .specialty-stats .stat-total {
-        color: #0d6efd;
-        font-weight: 600;
+}
+
+.page-transition.fade-out .transition-loader {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.page-transition.fade-out .transition-text {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+/* ============================================================ */
+/* ===== Scroll to Top Button ===== */
+/* ============================================================ */
+.scroll-top-btn {
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    color: white;
+    border: none;
+    font-size: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 9998;
+    box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4);
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    opacity: 0;
+    transform: translateY(20px) scale(0.8);
+    pointer-events: none;
+}
+
+.scroll-top-btn.visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: all;
+}
+
+.scroll-top-btn:hover {
+    transform: translateY(-3px) scale(1.1);
+    box-shadow: 0 6px 30px rgba(59, 130, 246, 0.6);
+    background: linear-gradient(135deg, #2563eb, #7c3aed);
+}
+
+.scroll-top-btn:active {
+    transform: scale(0.95);
+}
+
+/* ============================================================ */
+/* ===== Topbar ===== */
+/* ============================================================ */
+.topbar {
+    background: white;
+    padding: 12px 20px;
+    border-radius: var(--border-radius);
+    margin-bottom: 20px;
+    box-shadow: var(--card-shadow);
+    position: sticky;
+    top: 12px;
+    z-index: 500;
+    border: 1px solid rgba(0,0,0,0.02);
+}
+
+.topbar h4 {
+    font-size: 19px;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.topbar small {
+    font-size: 11.5px;
+    color: #94a3b8;
+}
+
+/* ============================================================ */
+/* ===== Cards ===== */
+/* ============================================================ */
+.card {
+    border: none;
+    border-radius: var(--border-radius);
+    box-shadow: var(--card-shadow);
+    transition: all var(--transition-speed) ease;
+    background: white;
+}
+
+.card:hover {
+    box-shadow: var(--card-shadow-hover);
+    transform: translateY(-2px);
+}
+
+/* ============================================================ */
+/* ===== WhatsApp ===== */
+/* ============================================================ */
+.whatsapp-btn {
+    position: fixed;
+    left: 20px;
+    bottom: 20px;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: #25D366;
+    color: white;
+    font-size: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    z-index: 9999;
+    box-shadow: 0 4px 18px rgba(37,211,102,.35);
+    transition: all var(--transition-speed) ease;
+    border: none;
+}
+
+.whatsapp-btn:hover {
+    transform: scale(1.1);
+    color: white;
+    box-shadow: 0 6px 25px rgba(37,211,102,.5);
+}
+
+/* ============================================================ */
+/* ===== Footer ===== */
+/* ============================================================ */
+.footer {
+    text-align: center;
+    padding: 16px 0 4px;
+    color: #94a3b8;
+    font-size: 12px;
+}
+
+.footer hr {
+    margin-bottom: 10px;
+    border-color: rgba(0,0,0,0.05);
+}
+
+/* ============================================================ */
+/* ===== Logout Button ===== */
+/* ============================================================ */
+.logout-btn {
+    background: transparent;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #ef4444;
+    padding: 5px 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Cairo', Tahoma, sans-serif;
+}
+
+.logout-btn i {
+    font-size: 16px;
+    transition: transform 0.3s ease;
+}
+
+.logout-btn:hover {
+    background: #ef4444;
+    color: white;
+    border-color: #ef4444;
+    box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+    transform: translateY(-2px);
+}
+
+.logout-btn:hover i {
+    transform: translateX(-3px);
+}
+
+.logout-btn:active {
+    transform: scale(0.95);
+}
+
+/* ============================================================ */
+/* ===== Sidebar Logout ===== */
+/* ============================================================ */
+.sidebar-logout {
+    padding: 12px 15px;
+    margin-top: 10px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+.logout-btn-sidebar {
+    width: 100%;
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    color: #fca5a5;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-family: 'Cairo', Tahoma, sans-serif;
+}
+
+.logout-btn-sidebar i {
+    font-size: 18px;
+    transition: transform 0.3s ease;
+}
+
+.logout-btn-sidebar:hover {
+    background: #ef4444;
+    color: white;
+    border-color: #ef4444;
+    box-shadow: 0 4px 20px rgba(239, 68, 68, 0.3);
+    transform: translateY(-2px);
+}
+
+.logout-btn-sidebar:hover i {
+    transform: translateX(-3px);
+}
+
+.logout-btn-sidebar:active {
+    transform: scale(0.97);
+}
+
+/* ============================================================ */
+/* ===== RESPONSIVE ===== */
+/* ============================================================ */
+
+/* ===== Tablet ===== */
+@media (max-width: 992px) {
+    .sidebar {
+        width: 220px;
     }
-    
-    .specialty-card .specialty-stats .stat-cash {
-        color: #2e7d32;
-        font-weight: 600;
+    .content {
+        margin-right: 220px;
+        padding: 18px 20px;
     }
-    
-    .specialty-card .specialty-stats .stat-credit {
-        color: #e65100;
-        font-weight: 600;
+    .menu-link {
+        font-size: 13px;
+        padding: 8px 12px;
     }
-    
-    /* ============================================ */
-    /* ✅ Sticky Filter */
-    /* ============================================ */
-    .filter-sticky {
-        position: sticky;
-        top: 10px;
-        z-index: 1050;
-        background: rgba(255,255,255,.96);
-        backdrop-filter: blur(10px);
-        border-radius: 18px;
-        transition: all .3s ease;
+
+    .scroll-top-btn {
+        bottom: 80px;
+        right: 16px;
+        width: 45px;
+        height: 45px;
+        font-size: 20px;
     }
-    
-    .filter-sticky.stuck{
-        box-shadow: 0 10px 30px rgba(0,0,0,.12);
+}
+
+/* ===== Mobile ===== */
+@media (max-width: 768px) {
+
+    .sidebar-toggle {
+        display: block;
     }
-    
-    /* ✅ Months Scroll - أفقي */
-    .months-scroll {
-        display: flex;
-        overflow-x: auto;
-        gap: 10px;
-        padding: 8px 0 12px 0;
-        scrollbar-width: none;
-        -webkit-overflow-scrolling: touch;
+
+    .sidebar {
+        width: 280px;
+        position: fixed;
+        right: -280px;
+        top: 0;
+        height: 100%;
+        min-height: 100vh;
+        max-height: 100vh;
+        transition: right var(--transition-speed) ease;
+        box-shadow: 0 0 40px rgba(0,0,0,0.4);
+        border-radius: 0 20px 20px 0;
     }
-    
-    .months-scroll::-webkit-scrollbar {
-        display: none;
+
+    /* شريط التمرير في الموبايل */
+    .sidebar::-webkit-scrollbar {
+        width: 6px;
     }
-    
-    .month-pill {
-        white-space: nowrap;
-        text-decoration: none;
-        padding: 8px 20px;
-        border-radius: 30px;
-        background: #f4f6f9;
-        color: #444;
-        font-weight: 600;
-        font-size: 0.85rem;
-        transition: all 0.25s ease;
-        border: 2px solid transparent;
-        flex-shrink: 0;
-        cursor: pointer;
+
+    .sidebar::-webkit-scrollbar-thumb {
+        background: rgba(255,255,255,0.4);
+        border-radius: 10px;
+        border: 1px solid rgba(255,255,255,0.1);
     }
-    
-    .month-pill:hover {
-        background: #0d6efd;
-        color: white;
-        transform: scale(1.05);
-        text-decoration: none;
+
+    .sidebar::-webkit-scrollbar-track {
+        background: rgba(255,255,255,0.05);
+        border-radius: 10px;
+        margin: 5px;
     }
-    
-    .month-pill.active {
-        background: #0d6efd;
-        color: white;
-        border-color: #0d6efd;
-        box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
+
+    .sidebar.open {
+        right: 0;
     }
-    
-    .month-pill.all-pill {
-        background: #6c757d;
-        color: white;
+
+    .content {
+        margin-right: 0;
+        padding: 14px 16px;
+        padding-top: 60px;
     }
-    
-    .month-pill.all-pill:hover {
-        background: #5a6268;
+
+    .sidebar-overlay.active {
+        display: block;
+        opacity: 1;
     }
-    
-    .month-pill.all-pill.active {
-        background: #0d6efd;
-        border-color: #0d6efd;
-    }
-    
-    /* ✅ Chart Placeholder */
-    .chart-placeholder {
-        height: 100px;
+
+    .topbar {
         position: relative;
+        top: 0;
+        margin-bottom: 14px;
+        padding: 10px 14px;
     }
-    
-    .chart-placeholder canvas {
-        width: 100% !important;
-        height: 100% !important;
+
+    .topbar h4 {
+        font-size: 17px;
     }
-    
-    /* ✅ Responsive */
-    @media (max-width: 768px) {
-        .stats-card .stats-number {
-            font-size: 1.8rem;
-        }
-        
-        .specialty-card .specialty-header {
-            flex-direction: column;
-            text-align: center;
-        }
-        
-        .specialty-card .specialty-icon-wrapper {
-            width: 56px;
-            height: 56px;
-            min-width: 56px;
-            font-size: 1.8rem;
-        }
-        
-        .specialty-card .specialty-stats {
-            justify-content: center;
-        }
-        
-        .month-pill {
-            padding: 6px 14px;
-            font-size: 0.75rem;
-        }
-        
-        .months-scroll {
-            gap: 6px;
-        }
+
+    .logo-box {
+        padding: 12px;
     }
-</style>
 
-<!-- ============================================ -->
-<!-- ✅ العنوان -->
-<!-- ============================================ -->
-<div class="container-fluid py-4">
-    
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h4 class="mb-0 fw-bold">
-                <i class="fas fa-chart-bar text-primary me-2"></i>
-                التقارير والإحصائيات
-            </h4>
-            <p class="text-muted small mb-0">حركة الباكجات الطبية</p>
-        </div>
-    </div>
+    .logo-box img {
+        width: 55px;
+        height: 55px;
+    }
 
-    <!-- ============================================ -->
-    <!-- ✅ فلتر الشهور (Sticky) -->
-    <!-- ============================================ -->
-    <div class="card shadow-sm mb-4 border-0 filter-sticky">
-        <div class="card-body">
-            <div class="d-flex align-items-center mb-2">
-                <i class="fas fa-calendar-alt text-primary me-2"></i>
-                <h6 class="mb-0 fw-bold">حركة الباكجات</h6>
-            </div>
-            <div class="months-scroll">
-                <a href="?" class="month-pill all-pill {% if not selected_month %}active{% endif %}">
-                    <i class="fas fa-undo me-1"></i> الكل
-                </a>
-                {% for month in months %}
-                <a href="?month={{ month }}" class="month-pill {% if month == selected_month %}active{% endif %}">
-                    {{ month }}
-                </a>
-                {% endfor %}
-            </div>
-        </div>
-    </div>
+    .logo-box h4 {
+        font-size: 14px;
+    }
 
-    <!-- ============================================ -->
-    <!-- ✅ ثلاث بوكسات مع كاونتر -->
-    <!-- ============================================ -->
-    <div class="row g-4 mb-4">
-        
-        <div class="col-md-4">
-            <div class="stats-card stats-card-total">
-                <div class="stats-number counter" data-target="{{ total_packages }}">0</div>
-                <div class="stats-label"><i class="fas fa-boxes me-1"></i>إجمالي الباكدجات</div>
-                <div class="stats-icon"><i class="fas fa-boxes"></i></div>
-            </div>
-        </div>
-        
-        <div class="col-md-4">
-            <div class="stats-card stats-card-cash">
-                <div class="stats-number counter" data-target="{{ cash_packages }}">0</div>
-                <div class="stats-label"><i class="fas fa-money-bill-wave me-1"></i>باكدجات النقدي</div>
-                <div class="stats-icon"><i class="fas fa-money-bill-wave"></i></div>
-            </div>
-        </div>
-        
-        <div class="col-md-4">
-            <div class="stats-card stats-card-credit">
-                <div class="stats-number counter" data-target="{{ credit_packages }}">0</div>
-                <div class="stats-label"><i class="fas fa-clock me-1"></i>باكدجات الآجل</div>
-                <div class="stats-icon"><i class="fas fa-clock"></i></div>
-            </div>
-        </div>
-        
-    </div>
+    .menu-link {
+        font-size: 12.5px;
+        padding: 7px 12px;
+    }
 
-   <!-- ============================================ -->
-<!-- ✅ التخصصات - محسّن -->
-<!-- ============================================ -->
-<div class="row g-4">
-    {% for specialty in specialties %}
-    
-    <div class="col-xl-4 col-lg-6">
-        <div class="card specialty-card h-100">
-            
-            <div class="specialty-header">
-                <div class="specialty-icon-wrapper" style="background: {{ specialty.color }};">
-                    <i class="{{ specialty.icon }}"></i>
-                </div>
-                <div class="specialty-info">
-                    <h5 class="specialty-name" style="color: {{ specialty.color }};">
-                        {{ specialty.name }}
-                    </h5>
-                    <div class="specialty-stats">
-                       
-                    </div>
-                </div>
-            </div>
-                
-                <div class="card-body">
-                    
-                    <!-- ✅ الرسم البياني -->
-                    <div class="chart-placeholder mb-3">
-                        <canvas id="chart{{ forloop.counter }}"></canvas>
-                    </div>
-                    
-                    <!-- ✅ إجمالي الباكجات (كاونتر متحرك) -->
-                    <div class="text-center mb-3">
-                        <div class="display-5 fw-bold text-primary counter" data-target="{{ specialty.total }}">
-                            0
-                        </div>
-                        <small class="text-muted">إجمالي الباكجات</small>
-                    </div>
-                    
-                    <div class="row g-2">
-                        <!-- ✅ باكجات نقدي -->
-                        <div class="col-6">
-                            <div class="card bg-success bg-opacity-10 border-0 h-100">
-                                <div class="card-body py-3 text-center">
-                                    <div class="fw-bold text-success">💰 نقدي</div>
-                                    <div class="fs-3 fw-bold">{{ specialty.cash }}</div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- ✅ باكجات آجل -->
-                        <div class="col-6">
-                            <div class="card bg-warning bg-opacity-10 border-0 h-100">
-                                <div class="card-body py-3 text-center">
-                                    <div class="fw-bold text-warning">📄 آجل</div>
-                                    <div class="fs-3 fw-bold">{{ specialty.credit }}</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- ✅ زر عرض المزيد -->
-                    <div class="mt-3">
-                        <a href="{% url 'specialty_detail' specialty.name %}?month={{ selected_month }}" 
-                           class="btn btn-outline-primary btn-sm w-100">
-                            <i class="fas fa-eye me-1"></i> عرض المزيد
-                            <span class="badge bg-secondary ms-1">{{ specialty.records|length }}</span>
-                        </a>
-                    </div>
-                    
-                </div>
-            </div>
-        </div>
-        
-        {% empty %}
-        
-        <div class="col-12">
-            <div class="alert alert-info text-center py-5">
-                <i class="fas fa-inbox fa-3x d-block mb-3 text-muted"></i>
-                <h5>لا توجد بيانات</h5>
-                <p class="text-muted small">لا توجد سجلات في قاعدة البيانات</p>
-            </div>
-        </div>
-        
-        {% endfor %}
-    </div>
+    .menu-link i {
+        font-size: 20px;
+        width: 28px;
+        margin-left: 14px;
+    }
 
-    <!-- ============================================ -->
-    <!-- ✅ الباكجات حسب نوع الدفع (Doughnut Chart) -->
-    <!-- ============================================ -->
-    <div class="card shadow-sm border-0 mb-4">
-        <div class="card-header bg-white border-0 py-3">
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <h5 class="fw-bold mb-1">
-                        <i class="fas fa-chart-pie text-primary me-2"></i>
-                        الباكجات حسب نوع الدفع
-                    </h5>
-                    <small class="text-muted">إجمالي الباكجات حسب طريقة الدفع</small>
-                </div>
-                <!-- ✅ زر عرض المزيد -->
-                <a href="{% url 'payment_details' %}" class="btn btn-outline-primary btn-sm">
-                    <i class="fas fa-eye me-1"></i>
-                    عرض المزيد
-                    <span class="badge bg-secondary ms-1">{{ total_packages }}</span>
-                </a>
-            </div>
-        </div>
-        <div class="card-body">
-            <div class="row align-items-center">
-                <div class="col-lg-6 text-center">
-                    <div class="payment-chart-wrapper">
-                        <canvas id="paymentChart"></canvas>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="card border-0 bg-success bg-opacity-10 mb-3">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <h5 class="fw-bold text-success mb-1">{{ cash_packages }}</h5>
-                                    <small class="text-muted">باكدج نقدي</small>
-                                </div>
-                                <div class="text-end">
-                                    <span class="badge bg-success rounded-pill fs-6">{{ cash_percentage }}%</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card border-0 bg-warning bg-opacity-10">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <h5 class="fw-bold text-warning mb-1">{{ credit_packages }}</h5>
-                                    <small class="text-muted">باكدج آجل</small>
-                                </div>
-                                <div class="text-end">
-                                    <span class="badge bg-warning text-dark rounded-pill fs-6">{{ credit_percentage }}%</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    .menu-link.active {
+        border-right-width: 5px;
+        padding-right: 20px;
+    }
 
-    <!-- ============================================ -->
-    <!-- ✅ الباكجات حسب القطاع (آجل فقط) - معدل -->
-    <!-- ============================================ -->
-    <div class="card shadow-sm border-0 mb-4">
-        <div class="card-header bg-white border-0 py-3">
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <h5 class="fw-bold mb-1">
-                        <i class="fas fa-chart-pie text-primary me-2"></i>
-                        الباكجات حسب القطاع (آجل فقط)
-                    </h5>
-                    <small class="text-muted">توزيع الباكجات الآجلة حسب القطاع</small>
-                </div>
-                <!-- ✅ زر عرض المزيد -->
-                <a href="{% url 'sector_details' %}" class="btn btn-outline-primary btn-sm">
-                    <i class="fas fa-eye me-1"></i>
-                    عرض المزيد
-                    <span class="badge bg-secondary ms-1">{{ credit_packages }}</span>
-                </a>
-            </div>
-        </div>
-        <div class="card-body">
-            <div class="row align-items-center">
-                <div class="col-lg-6">
-                    <div class="payment-chart-wrapper">
-                        <canvas id="sectorChart"></canvas>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    {% for sector in sector_data %}
-                    <div class="card border-0 mb-2" style="background: {{ sector.color }}20; border-left: 4px solid {{ sector.color }};">
-                        <div class="card-body py-2">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <div class="d-flex align-items-center gap-2">
-                                        <span class="badge" style="background: {{ sector.color }}; width: 12px; height: 12px; border-radius: 50%; padding: 0;"></span>
-                                        <strong style="color: {{ sector.color }};">{{ sector.name }}</strong>
-                                    </div>
-                                </div>
-                                <div class="text-end">
-                                    <div class="fw-bold" style="color: {{ sector.color }};">{{ sector.total }}</div>
-                                    <small class="text-muted">{{ sector.percentage }}%</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    {% empty %}
-                    <div class="text-center py-4">
-                        <i class="fas fa-inbox fa-2x text-muted mb-2 d-block"></i>
-                        <p class="text-muted mb-0">لا توجد بيانات للقطاعات</p>
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
-        </div>
-    </div>
+    .menu-link.active::after {
+        width: 8px;
+        height: 8px;
+        left: 10px;
+    }
 
-    <!-- ============================================ -->
-    <!-- ✅ أعلى وأقل 5 جهات (آجل فقط) -->
-    <!-- ============================================ -->
-    <div class="row g-4 mb-4">
+    .submenu a {
+        font-size: 12px;
+        padding: 5px 25px 5px 35px;
+    }
 
-        <!-- أعلى 5 جهات -->
-        <div class="col-lg-6">
-            <div class="card shadow-sm border-0 h-100">
-                <div class="card-header bg-white">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h5 class="fw-bold mb-0">🏆 أعلى 5 جهات (آجل)</h5>
-                        <a href="{% url 'entities_details' %}" class="btn btn-outline-primary btn-sm">
-                            <i class="fas fa-eye me-1"></i>
-                            عرض المزيد
-                        </a>
-                    </div>
-                </div>
-                <div class="card-body">
-                    {% for entity in top_entities %}
-                    <div class="mb-4">
-                        <div class="d-flex justify-content-between align-items-center mb-1">
-                            <div>
-                                {% if forloop.counter == 1 %}🥇
-                                {% elif forloop.counter == 2 %}🥈
-                                {% elif forloop.counter == 3 %}🥉
-                                {% else %}{{ forloop.counter }}.{% endif %}
-                                <strong>{{ entity.name }}</strong>
-                            </div>
-                            <span class="badge bg-success counter" data-target="{{ entity.percentage }}">0%</span>
-                        </div>
-                        <div class="progress mb-2" style="height:8px;">
-                            <div class="progress-bar bg-success" style="width: {{ entity.percentage }}%;"></div>
-                        </div>
-                        <small class="text-muted counter" data-target="{{ entity.total }}">0</small>
-                    </div>
-                    {% empty %}
-                    <div class="text-center text-muted">لا توجد بيانات</div>
-                    {% endfor %}
-                </div>
-            </div>
-        </div>
+    .submenu a i {
+        font-size: 16px;
+        width: 24px;
+    }
 
-        <!-- أقل 5 جهات -->
-        <div class="col-lg-6">
-            <div class="card shadow-sm border-0 h-100">
-                <div class="card-header bg-white">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h5 class="fw-bold mb-0">📉 أقل 5 جهات (آجل)</h5>
-                        <a href="{% url 'entities_details' %}" class="btn btn-outline-primary btn-sm">
-                            <i class="fas fa-eye me-1"></i>
-                            عرض المزيد
-                        </a>
-                    </div>
-                </div>
-                <div class="card-body">
-                    {% for entity in bottom_entities %}
-                    <div class="mb-4">
-                        <div class="d-flex justify-content-between align-items-center mb-1">
-                            <strong>{{ entity.name }}</strong>
-                            <span class="badge bg-danger counter" data-target="{{ entity.percentage }}">0%</span>
-                        </div>
-                        <div class="progress mb-2" style="height:8px;">
-                            <div class="progress-bar bg-danger" style="width: {{ entity.percentage }}%;"></div>
-                        </div>
-                        <small class="text-muted counter" data-target="{{ entity.total }}">0</small>
-                    </div>
-                    {% empty %}
-                    <div class="text-center text-muted">لا توجد بيانات</div>
-                    {% endfor %}
-                </div>
-            </div>
-        </div>
+    .whatsapp-btn {
+        width: 44px;
+        height: 44px;
+        font-size: 22px;
+        left: 12px;
+        bottom: 12px;
+    }
 
-    </div>
+    .sidebar-alert {
+        margin: 6px 8px;
+    }
 
-    <!-- ============================================ -->
-    <!-- ✅ أعلى وأقل 5 شركات فرعية (آجل فقط) -->
-    <!-- ============================================ -->
-    <div class="row g-4 mb-4">
+    .sidebar-alert .alert {
+        font-size: 11px;
+        padding: 4px !important;
+    }
 
-        <!-- أعلى 5 شركات فرعية -->
-        <div class="col-lg-6">
-            <div class="card shadow-sm border-0 h-100">
-                <div class="card-header bg-white">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h5 class="fw-bold mb-0">🏢 أعلى 5 شركات فرعية (آجل)</h5>
-                        <a href="{% url 'sub_companies_details' %}" class="btn btn-outline-primary btn-sm">
-                            <i class="fas fa-eye me-1"></i>
-                            عرض المزيد
-                        </a>
-                    </div>
-                </div>
-                <div class="card-body">
-                    {% for company in top_sub_companies %}
-                    <div class="mb-4">
-                        <div class="d-flex justify-content-between align-items-center mb-1">
-                            <div>
-                                {% if forloop.counter == 1 %}🥇
-                                {% elif forloop.counter == 2 %}🥈
-                                {% elif forloop.counter == 3 %}🥉
-                                {% else %}{{ forloop.counter }}.{% endif %}
-                                <strong>{{ company.name }}</strong>
-                            </div>
-                            <span class="badge bg-success counter" data-target="{{ company.percentage }}">0%</span>
-                        </div>
-                        <div class="progress mb-2" style="height:8px;">
-                            <div class="progress-bar bg-success" style="width: {{ company.percentage }}%;"></div>
-                        </div>
-                        <small class="text-muted counter" data-target="{{ company.total }}">0</small>
-                    </div>
-                    {% empty %}
-                    <div class="text-center text-muted">لا توجد بيانات</div>
-                    {% endfor %}
-                </div>
-            </div>
-        </div>
+    .scroll-top-btn {
+        bottom: 70px;
+        right: 12px;
+        width: 42px;
+        height: 42px;
+        font-size: 18px;
+    }
 
-        <!-- أقل 5 شركات فرعية -->
-        <div class="col-lg-6">
-            <div class="card shadow-sm border-0 h-100">
-                <div class="card-header bg-white">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h5 class="fw-bold mb-0">📉 أقل 5 شركات فرعية (آجل)</h5>
-                        <a href="{% url 'sub_companies_details' %}" class="btn btn-outline-primary btn-sm">
-                            <i class="fas fa-eye me-1"></i>
-                            عرض المزيد
-                        </a>
-                    </div>
-                </div>
-                <div class="card-body">
-                    {% for company in bottom_sub_companies %}
-                    <div class="mb-4">
-                        <div class="d-flex justify-content-between align-items-center mb-1">
-                            <strong>{{ company.name }}</strong>
-                            <span class="badge bg-danger counter" data-target="{{ company.percentage }}">0%</span>
-                        </div>
-                        <div class="progress mb-2" style="height:8px;">
-                            <div class="progress-bar bg-danger" style="width: {{ company.percentage }}%;"></div>
-                        </div>
-                        <small class="text-muted counter" data-target="{{ company.total }}">0</small>
-                    </div>
-                    {% empty %}
-                    <div class="text-center text-muted">لا توجد بيانات</div>
-                    {% endfor %}
-                </div>
-            </div>
-        </div>
+    .logout-btn {
+        padding: 5px 10px;
+        font-size: 13px;
+    }
 
-    </div>
+    .logout-btn i {
+        font-size: 14px;
+    }
+}
 
-    <!-- ============================================ -->
-    <!-- ✅ أعلى وأقل 5 تخصصات -->
-    <!-- ============================================ -->
-    <div class="row g-4 mb-4">
+/* ===== Small Mobile ===== */
+@media (max-width: 480px) {
+    .content {
+        padding: 10px 12px;
+        padding-top: 55px;
+    }
 
-        <!-- أعلى 5 تخصصات -->
-        <div class="col-lg-6">
-            <div class="card shadow-sm border-0 h-100">
-                <div class="card-header bg-white">
-                    <h5 class="fw-bold mb-0">🩺 أعلى 5 تخصصات</h5>
-                </div>
-                <div class="card-body">
-                    {% for specialty in top_specialties %}
-                    <div class="mb-4">
-                        <div class="d-flex justify-content-between align-items-center mb-1">
-                            <div>
-                                {% if forloop.counter == 1 %}🥇
-                                {% elif forloop.counter == 2 %}🥈
-                                {% elif forloop.counter == 3 %}🥉
-                                {% else %}{{ forloop.counter }}.{% endif %}
-                                <strong>{{ specialty.name }}</strong>
-                            </div>
-                            <span class="badge bg-success counter" data-target="{{ specialty.percentage }}">0%</span>
-                        </div>
-                        <div class="progress mb-2" style="height:8px;">
-                            <div class="progress-bar bg-success" style="width: {{ specialty.percentage }}%;"></div>
-                        </div>
-                        <small class="text-muted counter" data-target="{{ specialty.total }}">0</small>
-                    </div>
-                    {% empty %}
-                    <div class="text-center text-muted">لا توجد بيانات</div>
-                    {% endfor %}
-                </div>
-            </div>
-        </div>
+    .topbar {
+        padding: 8px 12px;
+        border-radius: 8px;
+    }
 
-        <!-- أقل 5 تخصصات -->
-        <div class="col-lg-6">
-            <div class="card shadow-sm border-0 h-100">
-                <div class="card-header bg-white">
-                    <h5 class="fw-bold mb-0">📉 أقل 5 تخصصات</h5>
-                </div>
-                <div class="card-body">
-                    {% for specialty in bottom_specialties %}
-                    <div class="mb-4">
-                        <div class="d-flex justify-content-between align-items-center mb-1">
-                            <strong>{{ specialty.name }}</strong>
-                            <span class="badge bg-danger counter" data-target="{{ specialty.percentage }}">0%</span>
-                        </div>
-                        <div class="progress mb-2" style="height:8px;">
-                            <div class="progress-bar bg-danger" style="width: {{ specialty.percentage }}%;"></div>
-                        </div>
-                        <small class="text-muted counter" data-target="{{ specialty.total }}">0</small>
-                    </div>
-                    {% empty %}
-                    <div class="text-center text-muted">لا توجد بيانات</div>
-                    {% endfor %}
-                </div>
-            </div>
-        </div>
+    .topbar h4 {
+        font-size: 15px;
+    }
 
-    </div>
+    .topbar small {
+        font-size: 10px;
+    }
 
-    <!-- ============================================ -->
-    <!-- ✅ أعلى وأقل 5 باكدجات -->
-    <!-- ============================================ -->
-    <div class="row g-4 mb-4">
+    .menu-link {
+        font-size: 11.5px;
+        padding: 6px 10px;
+    }
 
-        <!-- أعلى 5 باكدجات -->
-        <div class="col-lg-6">
-            <div class="card shadow-sm border-0 h-100">
-                <div class="card-header bg-white">
-                    <h5 class="fw-bold mb-0">📦 أعلى 5 باكدجات</h5>
-                </div>
-                <div class="card-body">
-                    {% for package in top_packages %}
-                    <div class="mb-4">
-                        <div class="d-flex justify-content-between align-items-center mb-1">
-                            <div>
-                                {% if forloop.counter == 1 %}🥇
-                                {% elif forloop.counter == 2 %}🥈
-                                {% elif forloop.counter == 3 %}🥉
-                                {% else %}{{ forloop.counter }}.{% endif %}
-                                <strong>{{ package.name }}</strong>
-                            </div>
-                            <span class="badge bg-success counter" data-target="{{ package.percentage }}">0%</span>
-                        </div>
-                        <div class="progress mb-2" style="height:8px;">
-                            <div class="progress-bar bg-success" style="width: {{ package.percentage }}%;"></div>
-                        </div>
-                        <small class="text-muted counter" data-target="{{ package.total }}">0</small>
-                    </div>
-                    {% empty %}
-                    <div class="text-center text-muted">لا توجد بيانات</div>
-                    {% endfor %}
-                </div>
-            </div>
-        </div>
+    .menu-link i {
+        font-size: 18px;
+        width: 24px;
+        margin-left: 10px;
+    }
 
-        <!-- أقل 5 باكدجات -->
-        <div class="col-lg-6">
-            <div class="card shadow-sm border-0 h-100">
-                <div class="card-header bg-white">
-                    <h5 class="fw-bold mb-0">📉 أقل 5 باكدجات</h5>
-                </div>
-                <div class="card-body">
-                    {% for package in bottom_packages %}
-                    <div class="mb-4">
-                        <div class="d-flex justify-content-between align-items-center mb-1">
-                            <strong>{{ package.name }}</strong>
-                            <span class="badge bg-danger counter" data-target="{{ package.percentage }}">0%</span>
-                        </div>
-                        <div class="progress mb-2" style="height:8px;">
-                            <div class="progress-bar bg-danger" style="width: {{ package.percentage }}%;"></div>
-                        </div>
-                        <small class="text-muted counter" data-target="{{ package.total }}">0</small>
-                    </div>
-                    {% empty %}
-                    <div class="text-center text-muted">لا توجد بيانات</div>
-                    {% endfor %}
-                </div>
-            </div>
-        </div>
+    .submenu a {
+        font-size: 11px;
+        padding: 4px 20px 4px 28px;
+    }
 
+    .submenu a i {
+        font-size: 14px;
+        width: 20px;
+    }
+
+    .logo-box img {
+        width: 45px;
+        height: 45px;
+    }
+
+    .logo-box h4 {
+        font-size: 12px;
+    }
+
+    .card {
+        border-radius: 8px;
+    }
+
+    .sidebar {
+        width: 280px;
+        right: -280px;
+    }
+
+    .sidebar.open {
+        right: 0;
+    }
+
+    .scroll-top-btn {
+        bottom: 65px;
+        right: 10px;
+        width: 38px;
+        height: 38px;
+        font-size: 16px;
+    }
+}
+
+/* ===== Ultra Small ===== */
+@media (max-width: 360px) {
+    .content {
+        padding: 8px;
+        padding-top: 50px;
+    }
+
+    .menu-link {
+        font-size: 10.5px;
+        padding: 5px 8px;
+    }
+
+    .menu-link i {
+        font-size: 16px;
+        width: 20px;
+    }
+
+    .submenu a {
+        font-size: 10px;
+        padding: 3px 16px 3px 22px;
+    }
+
+    .sidebar {
+        width: 260px;
+        right: -260px;
+    }
+
+    .sidebar.open {
+        right: 0;
+    }
+
+    .scroll-top-btn {
+        bottom: 60px;
+        right: 8px;
+        width: 35px;
+        height: 35px;
+        font-size: 14px;
+    }
+
+    .logout-btn {
+        padding: 4px 8px;
+        font-size: 12px;
+    }
+
+    .logout-btn i {
+        font-size: 13px;
+    }
+}
+    </style>
+
+</head>
+
+<body class="{% if not user.is_authenticated %}login-mode{% endif %}">
+<!-- ========== Page Transition Overlay ========== -->
+<div class="page-transition" id="pageTransition">
+    <div class="transition-logo-wrapper">
+        <img src="{% static 'images/logo.jpeg' %}?v=1.0" alt="MIH Logo" class="transition-logo">
+        <div class="transition-loader"></div>
+        <p class="transition-text" id="transitionText">جار التحميل...</p>
     </div>
 </div>
-<!-- ====== نهاية container-fluid ====== -->
 
-<!-- ============================================ -->
-<!-- ✅ Chart.js -->
-<!-- ============================================ -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- ========== Scroll to Top Button ========== -->
+<button class="scroll-top-btn" id="scrollTopBtn" aria-label="العودة للأعلى">
+    <i class="bi bi-chevron-up"></i>
+</button>
+
+<!-- ========== Sidebar Toggle Button (Mobile) ========== -->
+<button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle Sidebar">
+    <i class="bi bi-list"></i>
+</button>
+
+<!-- ========== Sidebar Overlay (Mobile) ========== -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<!-- ========== Sidebar ========== -->
+<div class="sidebar" id="sidebar">
+
+    <!-- Logo -->
+    <a href="/" class="text-decoration-none">
+        <div class="logo-box">
+
+            <img src="{% static 'images/logo.jpeg' %}?v=1.0"
+                 alt="MIH Logo">
+
+            <h4>
+                MIH
+                <br>
+                Automated Pricing
+            </h4>
+
+        </div>
+    </a>
+
+    <!-- شريط تزييني متحرك -->
+    <div style="height: 3px; background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899, #3b82f6); background-size: 300% 100%; margin: 0 15px 8px; border-radius: 0 0 10px 10px; animation: gradientMove 4s linear infinite;"></div>
+
+    <!-- Alert Box -->
+    <div class="sidebar-alert">
+        <div class="alert text-center py-1 mb-0">
+            <strong>MIH</strong>
+            <br>
+            <small>Automated Pricing</small>
+        </div>
+    </div>
+
+    <!-- Menu -->
+    <ul class="menu-list">
+
+   
+        <!-- 1. الباكدجات -->
+        {% if can_packages_credit_basic or can_packages_credit_full or can_packages_cash_full %}
+        <li class="menu-item">
+
+            <a class="menu-link
+                {% if request.resolver_match.url_name in 'credit_package_pricing,cash_packages,packages_price_list,package_create' %}
+                    active
+                {% endif %}"
+                data-bs-toggle="collapse"
+                href="#packagesMenu"
+                role="button"
+                aria-expanded="{% if request.resolver_match.url_name in 'credit_package_pricing,cash_packages,packages_price_list,package_create' %}true{% else %}false{% endif %}">
+
+                <i class="bi bi-box"></i>
+                الباكدجات
+                <i class="bi bi-chevron-down menu-arrow"></i>
+
+            </a>
+
+            <div class="collapse submenu
+                {% if request.resolver_match.url_name in 'credit_package_pricing,cash_packages,packages_price_list,package_create' %}
+                    show
+                {% endif %}"
+                id="packagesMenu">
+
+                {% if can_packages_credit_basic or can_packages_credit_full %}
+                    <a href="{% url 'credit_package_pricing' %}"
+                       class="{% if request.resolver_match.url_name == 'credit_package_pricing' %}active{% endif %}">
+
+                        <i class="bi bi-box-seam"></i>
+                        باكدجات الآجل
+
+                    </a>
+                {% endif %}
+
+               {% if can_packages_cash_full %}
+                    <a href="{% url 'cash_packages' %}"
+                       class="{% if request.resolver_match.url_name == 'cash_packages' %}active{% endif %}">
+
+                        <i class="bi bi-cash-coin"></i>
+                        باكدجات النقدي
+
+                    </a>
+                {% endif %}
+
+            </div>
+
+        </li>
+        {% endif %}
+
+        <!-- 2. الجهات المتعاقدة -->
+        {% if can_financial_full %}
+        <li class="menu-item">
+            <a class="menu-link {% if request.resolver_match.url_name == 'contract_entities' %}active{% endif %}" href="{% url 'contract_entities' %}">
+                <i class="bi bi-buildings"></i>
+                الجهات المتعاقدة
+            </a>
+        </li>
+        {% endif %}
+
+        <!-- 3. خصومات الشركات -->
+        {% if can_financial_full %}
+        <li class="menu-item">
+            <a class="menu-link {% if request.resolver_match.url_name == 'company_discounts' %}active{% endif %}" href="{% url 'company_discounts' %}">
+                <i class="bi bi-percent"></i>
+                خصومات الشركات
+            </a>
+        </li>
+        {% endif %}
+
+        <!-- 4. العروض -->
+        {% if can_financial_full %}
+        <li class="menu-item">
+            <a class="menu-link {% if request.resolver_match.url_name == 'special_offers' %}active{% endif %}" href="{% url 'special_offers' %}">
+                <i class="bi bi-megaphone"></i>
+                العروض
+            </a>
+        </li>
+        {% endif %}
+
+         <!-- 5. البحث عن خدمة -->
+        {% if can_service_search %}
+        <li class="menu-item">
+            <a class="menu-link {% if request.resolver_match.url_name == 'service_search' %}active{% endif %}" href="{% url 'service_search' %}">
+                <i class="bi bi-search"></i>
+                البحث عن خدمة
+            </a>
+        </li>
+        {% endif %} 
+
+        <!-- الأطباء -->
+        {% if can_doctors_view_all or can_doctors_view_own %}
+        <li class="menu-item">
+
+            <a class="menu-link {% if request.resolver_match.url_name == 'doctors_list' %}active{% endif %}"
+               href="{% url 'doctors_list' %}">
+
+                <i class="bi bi-person-badge"></i>
+                الأطباء
+
+            </a>
+
+        </li>
+        {% endif %}
+
+        <!-- 6. توصيفات العمليات -->
+        {% if can_financial_full %}
+        <li class="menu-item">
+            <a class="menu-link {% if request.resolver_match.url_name in 'procedures,procedure_fees' %}active{% endif %}"
+               data-bs-toggle="collapse"
+               href="#operationsMenu"
+               role="button"
+               aria-expanded="{% if request.resolver_match.url_name in 'procedures,procedure_fees' %}true{% else %}false{% endif %}">
+
+                <i class="bi bi-clipboard2-pulse"></i>
+                توصيفات العمليات
+                <i class="bi bi-chevron-down menu-arrow"></i>
+            </a>
+
+            <div class="collapse submenu {% if request.resolver_match.url_name in 'procedures,procedure_fees' %}show{% endif %}" id="operationsMenu">
+                <a href="{% url 'procedures' %}" class="{% if request.resolver_match.url_name == 'procedures' %}active{% endif %}">
+                    <i class="bi bi-file-text"></i> توصيف العمليات
+                </a>
+                <a href="{% url 'procedure_fees' %}" class="{% if request.resolver_match.url_name == 'procedure_fees' %}active{% endif %}">
+                    <i class="bi bi-calculator"></i> احتساب أتعاب العملية
+                </a>
+            </div>
+        </li>
+        {% endif %}
+
+        <!-- 7. تفاصيل التسعير -->
+        {% if can_financial_full and not is_accountant %}
+
+        <li class="menu-item">
+            <a class="menu-link {% if request.resolver_match.url_name == 'pricing_details' %}active{% endif %}" href="{% url 'pricing_details' %}">
+                <i class="bi bi-cash-stack"></i>
+                تفاصيل التسعير
+            </a>
+        </li>
+        {% endif %}
+
+        <!-- 8. فواتير مماثلة -->
+        {% if is_admin %}
+        <li class="menu-item">
+            <a class="menu-link {% if request.resolver_match.url_name == 'similar_invoices' %}active{% endif %}" href="{% url 'similar_invoices' %}">
+                <i class="bi bi-receipt"></i>
+                فواتير مماثلة
+            </a>
+        </li>
+        {% endif %}
+
+        <!-- متابعة الباكدجات -->
+        {% if can_financial_full and not is_accountant %}
+
+        <li class="menu-item">
+            <a class="menu-link {% if request.resolver_match.url_name in 'reports,package_comparison' %}active{% endif %}"
+               data-bs-toggle="collapse"
+               href="#packagesTrackingMenu"
+               role="button"
+               aria-expanded="{% if request.resolver_match.url_name in 'reports,package_comparison' %}true{% else %}false{% endif %}">
+
+                <i class="bi bi-bar-chart"></i>
+                متابعة الباكدجات
+                <i class="bi bi-chevron-down menu-arrow"></i>
+            </a>
+
+            <div class="collapse submenu {% if request.resolver_match.url_name in 'reports,package_comparison' %}show{% endif %}" id="packagesTrackingMenu">
+                <!-- احصائيات الباكدجات -->
+                <a href="{% url 'reports' %}" class="{% if request.resolver_match.url_name == 'reports' %}active{% endif %}">
+                    <i class="bi bi-pie-chart"></i> احصائيات الباكدجات
+                </a>
+                <!-- مقارنة أداء الباكدجات -->
+                <a href="{% url 'package_comparison' %}" class="{% if request.resolver_match.url_name == 'package_comparison' %}active{% endif %}">
+                    <i class="bi bi-graph-up-arrow"></i> مقارنة أداء الباكدجات
+                </a>
+            </div>
+        </li>
+        {% endif %}
+
+        <!-- 10. جودة البيانات -->
+        {% if authz.is_admin %}
+    <li class="menu-item">
+        <a class="menu-link {% if request.resolver_match.url_name == 'quality_dashboard' %}active{% endif %}" href="{% url 'quality_dashboard' %}">
+            <i class="bi bi-shield-check"></i>
+            جودة البيانات
+        </a>
+    </li>
+{% endif %}
+
+      {% if can_patients_search or can_approvals_view or can_approvals_statistics %}
+    <li class="menu-item">
+
+        <a class="menu-link
+            {% if request.resolver_match.url_name in 'patient_search,external_approvals,pending_analysis' %}
+                active
+            {% endif %}"
+            data-bs-toggle="collapse"
+            href="#approvalMenu"
+            role="button"
+            aria-expanded="{% if request.resolver_match.url_name in 'patient_search,external_approvals,pending_analysis' %}true{% else %}false{% endif %}">
+
+            <i class="bi bi-file-medical"></i>
+            متابعة موافقات الخارجي
+            <i class="bi bi-chevron-down menu-arrow"></i>
+
+        </a>
+
+        <div class="collapse submenu
+            {% if request.resolver_match.url_name in 'patient_search,external_approvals,pending_analysis' %}
+                show
+            {% endif %}"
+            id="approvalMenu">
+
+            {% if can_patients_search %}
+                <a href="{% url 'patient_search' %}"
+                   class="{% if request.resolver_match.url_name == 'patient_search' %}active{% endif %}">
+                    <i class="bi bi-search"></i>
+                    بحث عن مريض
+                </a>
+            {% endif %}
+
+            {% if can_approvals_view %}
+                <a href="{% url 'external_approvals' %}"
+                   class="{% if request.resolver_match.url_name == 'external_approvals' %}active{% endif %}">
+                    <i class="bi bi-list"></i>
+                    متابعة الموافقات
+                </a>
+            {% endif %}
+
+            {% if can_approvals_statistics %}
+                <a href="{% url 'pending_analysis' %}"
+                   class="{% if request.resolver_match.url_name == 'pending_analysis' %}active{% endif %}">
+                    <i class="bi bi-clock-history"></i>
+                    إحصائيات الموافقات
+                </a>
+            {% endif %}
+
+        </div>
+    </li>
+{% endif %}
+        <!-- 13. قوائم الأسعار -->
+        {% if can_financial_full %}
+        <li class="menu-item">
+            <a class="menu-link {% if request.resolver_match.url_name in 'price_lists' %}active{% endif %}"
+               data-bs-toggle="collapse"
+               href="#priceListMenu"
+               role="button"
+               aria-expanded="{% if request.resolver_match.url_name in 'price_lists' %}true{% else %}false{% endif %}">
+
+                <i class="bi bi-list-ul"></i>
+                قوائم الأسعار
+                <i class="bi bi-chevron-down menu-arrow"></i>
+            </a>
+
+           <div class="collapse submenu {% if request.resolver_match.url_name in 'price_lists' %}show{% endif %}" id="priceListMenu">
+
+    <a href="{% static 'pdf/price_2023.pdf' %}" target="_blank"
+       class="{% if request.resolver_match.url_name == 'price_lists' %}active{% endif %}">
+        <i class="bi bi-calendar"></i> قوائم اسعار  2023
+    </a>
+
+    <a href="{% static 'pdf/price_2024.pdf' %}" target="_blank">
+        <i class="bi bi-calendar"></i> قوائم اسعار  2024
+    </a>
+
+    <a href="{% static 'pdf/price_2025.pdf' %}" target="_blank">
+        <i class="bi bi-calendar"></i> قوائم اسعار  2025
+    </a>
+
+</div>
+        </li>
+        {% endif %}
+
+        <!-- 14. إدارة النظام -->
+       {% if is_admin %}
+        <li class="menu-item">
+
+            <a class="menu-link
+                {% if request.resolver_match.url_name in 'system_update' %}
+                    active
+                {% endif %}"
+                data-bs-toggle="collapse"
+                href="#systemMenu"
+                role="button"
+                aria-expanded="{% if request.resolver_match.url_name in 'system_update' %}true{% else %}false{% endif %}">
+
+                <i class="bi bi-gear-fill"></i>
+                إدارة النظام
+                <i class="bi bi-chevron-down menu-arrow"></i>
+
+            </a>
+
+            <div class="collapse submenu
+                {% if request.resolver_match.url_name in 'system_update' %}
+                    show
+                {% endif %}"
+                id="systemMenu">
+
+                <a href="{% url 'system_update' %}"
+                   class="{% if request.resolver_match.url_name == 'system_update' %}active{% endif %}">
+
+                    <i class="bi bi-arrow-repeat"></i>
+                    تحديث البيانات
+
+                </a>
+
+            </div>
+
+        </li>
+        {% endif %}
+
+    </ul>
+
+    <!-- ===== Logout in Sidebar (Mobile) ===== -->
+    <div class="sidebar-logout">
+        <form method="POST" action="{% url 'logout' %}" class="logout-form-sidebar">
+            {% csrf_token %}
+            <button type="submit" class="logout-btn-sidebar">
+                <i class="fas fa-sign-out-alt"></i>
+                تسجيل الخروج
+            </button>
+        </form>
+    </div>
+
+</div>
+
+<!-- ========== Content ========== -->
+<div class="content">
+
+    <!-- Topbar -->
+    <div class="topbar">
+
+        <div class="d-flex justify-content-between align-items-center">
+
+            <div>
+
+                <h4 class="mb-0">
+                    {% block page_title %}
+                    لوحة التحكم
+                    {% endblock %}
+                </h4>
+
+                <small class="text-muted">
+                    MIH Automated Pricing System
+                </small>
+
+            </div>
+
+            <div class="d-flex align-items-center gap-2">
+
+                <span class="badge bg-primary">
+                    v1.0
+                </span>
+
+                <!-- ===== Logout Button in Topbar ===== -->
+                <form method="POST" action="{% url 'logout' %}" class="logout-form d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span class="d-none d-sm-inline">تسجيل الخروج</span>
+                    </button>
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Page Content -->
+    {% block content %}
+    {% endblock %}
+
+    <!-- Footer -->
+    <footer class="footer">
+
+        <hr>
+
+        MIH Automated Pricing System © 2026
+
+    </footer>
+
+</div>
+
+<!-- ========== WhatsApp ========== -->
+<a href="#"
+   class="whatsapp-btn">
+
+    <i class="bi bi-whatsapp"></i>
+
+</a>
+
+<!-- ========== Scripts ========== -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+</script>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    
-    // ============================================
-    // ✅ 1. الكاونترات المتحركة - لكل الأرقام
-    // ============================================
-    const counters = document.querySelectorAll('.counter');
-    
-    counters.forEach(counter => {
-        const target = parseInt(counter.getAttribute('data-target'));
-        let current = 0;
-        const increment = Math.max(1, Math.ceil(target / 50));
-        
-        const updateCounter = () => {
-            if (current < target) {
-                current += increment;
-                if (current > target) current = target;
-                counter.textContent = current;
-                requestAnimationFrame(updateCounter);
+    document.addEventListener('DOMContentLoaded', function() {
+
+        // ===== Scroll to Top Button =====
+        const scrollTopBtn = document.getElementById('scrollTopBtn');
+
+        // إظهار/إخفاء الزر عند التمرير
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 300) {
+                scrollTopBtn.classList.add('visible');
             } else {
-                counter.textContent = target;
+                scrollTopBtn.classList.remove('visible');
             }
+        });
+
+        // العودة للأعلى عند الضغط
+        scrollTopBtn.addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // ===== Smooth Logo Effect on Page Load =====
+        const logo = document.querySelector('.logo-box img');
+        if (logo) {
+            logo.style.opacity = '0';
+            logo.style.transform = 'scale(0.8)';
+            setTimeout(() => {
+                logo.style.transition = 'all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)';
+                logo.style.opacity = '1';
+                logo.style.transform = 'scale(1)';
+            }, 100);
+        }
+
+        // ===== Page Transition =====
+        const transitionOverlay = document.getElementById('pageTransition');
+        const transitionText = document.getElementById('transitionText');
+        let isTransitioning = false;
+
+        // أسماء الصفحات بالعربية
+        const pageNames = {
+            'home': 'لوحة التحكم',
+            'contract_entities': 'الجهات المتعاقدة',
+            'company_discounts': 'خصومات الشركات',
+            'special_offers': 'العروض',
+            'service_search': 'البحث عن خدمة',
+            'doctors_list': 'الأطباء',
+            'pricing_details': 'تفاصيل التسعير',
+            'similar_invoices': 'فواتير مماثلة',
+            'quality_dashboard': 'جودة البيانات',
+            'reports': 'إحصائيات الباكدجات',
+            'package_comparison': 'مقارنة أداء الباكدجات',
+            'pending_analysis': 'احصائيات الموافقات',
+            'system_update': 'تحديث البيانات',
+            'procedures': 'توصيف العمليات',
+            'procedure_fees': 'احتساب أتعاب العملية',
+            'credit_package_pricing': 'باكدجات الآجل',
+            'cash_packages': 'باكدجات النقدي',
+            'patient_search': 'بحث عن مريض',
+            'external_approvals': 'متابعة الموافقات'
         };
-        
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    updateCounter();
-                    observer.unobserve(entry.target);
+
+        // جميع الروابط في الـ Sidebar (القوائم الرئيسية والفرعية)
+        const allLinks = document.querySelectorAll('.menu-link, .submenu a');
+
+        allLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                // تجاهل الروابط التي تحتوي على data-bs-toggle (collapse)
+                if (this.hasAttribute('data-bs-toggle')) return;
+
+                // تجاهل الروابط التي لا تحتوي على href أو href="#"
+                const href = this.getAttribute('href');
+                if (!href || href === '#' || href.startsWith('javascript:')) return;
+
+                e.preventDefault();
+
+                if (isTransitioning) return;
+                isTransitioning = true;
+
+                // تحديث النص حسب الصفحة
+                let pageName = 'جار التحميل...';
+                for (const [key, value] of Object.entries(pageNames)) {
+                    if (href.includes(key)) {
+                        pageName = value;
+                        break;
+                    }
+                }
+                transitionText.textContent = pageName;
+
+                // تفعيل الـ Overlay
+                transitionOverlay.classList.add('active');
+
+                // إعادة تعيين الأنيميشن بإزالة وإعادة إضافة الكلاس
+                const logo = transitionOverlay.querySelector('.transition-logo');
+                logo.style.animation = 'none';
+                logo.offsetHeight; // إعادة تعيين الـ animation
+                logo.style.animation = 'transitionLogoAnim 1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards';
+                logo.style.opacity = '0';
+
+                // إعادة تعيين نص التحميل
+                transitionText.style.opacity = '0';
+                setTimeout(() => {
+                    transitionText.style.opacity = '1';
+                }, 100);
+
+                // بعد 1.2 ثانية، نبدأ إخفاء الـ Overlay وننتقل للصفحة
+                setTimeout(() => {
+                    // إضافة fade-out
+                    transitionOverlay.classList.add('fade-out');
+
+                    setTimeout(() => {
+                        // الانتقال للصفحة
+                        window.location.href = href;
+
+                        // إعادة تعيين الحالة بعد 2 ثانية (احتياطي)
+                        setTimeout(() => {
+                            transitionOverlay.classList.remove('active', 'fade-out');
+                            isTransitioning = false;
+                        }, 500);
+                    }, 600);
+                }, 1200);
+            });
+        });
+
+        // إخفاء الـ Overlay إذا رجع المستخدم للصفحة عبر Back/Forward
+        window.addEventListener('pageshow', function() {
+            transitionOverlay.classList.remove('active', 'fade-out');
+            isTransitioning = false;
+        });
+
+        // ===== Sidebar Toggle =====
+        const sidebar = document.getElementById('sidebar');
+        const toggleBtn = document.getElementById('sidebarToggle');
+        const overlay = document.getElementById('sidebarOverlay');
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('active');
+
+            // تغيير الأيقونة
+            const icon = toggleBtn.querySelector('i');
+            if (sidebar.classList.contains('open')) {
+                icon.className = 'bi bi-x-lg';
+            } else {
+                icon.className = 'bi bi-list';
+            }
+        }
+
+        function closeSidebar() {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('active');
+            const icon = toggleBtn.querySelector('i');
+            icon.className = 'bi bi-list';
+        }
+
+        // زر التبديل
+        toggleBtn.addEventListener('click', toggleSidebar);
+
+        // الضغط على الـ Overlay يغلق الـ Sidebar
+        overlay.addEventListener('click', closeSidebar);
+
+        // إغلاق الـ Sidebar عند الضغط على أي رابط (باستثناء الـ collapse)
+        document.querySelectorAll('.menu-link').forEach(function(link) {
+            link.addEventListener('click', function() {
+                if (!this.hasAttribute('data-bs-toggle')) {
+                    closeSidebar();
                 }
             });
         });
-        
-        observer.observe(counter);
-    });
-    
-    // ============================================
-    // ✅ 2. Function to create Doughnut Chart
-    // ============================================
-    function createDoughnutChart(canvasId, labels, values, colors, centerTitle, centerValue) {
-        const ctx = document.getElementById(canvasId);
-        if (!ctx) return;
-        
-        const centerTextPlugin = {
-            id: "centerText",
-            beforeDraw(chart) {
-                const {ctx} = chart;
-                const meta = chart.getDatasetMeta(0);
-                if (!meta.data.length) return;
-                const x = meta.data[0].x;
-                const y = meta.data[0].y;
-                ctx.save();
-                ctx.textAlign = "center";
-                ctx.fillStyle = "#6c757d";
-                ctx.font = "18px Cairo";
-                ctx.fillText(centerTitle, x, y - 18);
-                ctx.fillStyle = "#212529";
-                ctx.font = "bold 42px Cairo";
-                ctx.fillText(centerValue, x, y + 12);
-                ctx.fillStyle = "#6c757d";
-                ctx.font = "16px Cairo";
-                ctx.fillText("باكدج", x, y + 38);
-                ctx.restore();
-            }
-        };
-        
-        new Chart(ctx, {
-            type: "doughnut",
-            data: {
-                labels: labels,
-                datasets: [{
-                    data: values,
-                    backgroundColor: colors,
-                    borderColor: "#ffffff",
-                    borderWidth: 4,
-                    hoverOffset: 20,
-                    hoverBorderWidth: 6
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                cutout: "68%",
-                animation: {
-                    animateRotate: true,
-                    animateScale: true,
-                    duration: 1800,
-                    easing: "easeOutQuart"
-                },
-                plugins: {
-                    legend: { display: false },
-                    tooltip: {
-                        callbacks: {
-                            label(context) {
-                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                const value = context.parsed;
-                                const percent = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
-                                return context.label + ": " + value + " (" + percent + "%)";
-                            }
-                        }
-                    }
-                }
-            },
-            plugins: [centerTextPlugin]
-        });
-    }
-    
-    // ============================================
-    // ✅ 3. Payment Type Doughnut Chart
-    // ============================================
-    createDoughnutChart(
-        "paymentChart",
-        ["نقدي", "آجل"],
-        [{{ cash_packages }}, {{ credit_packages }}],
-        ["#2e7d32", "#1976d2"],
-        "الإجمالي",
-        "{{ total_packages }}"
-    );
-    
-    // ============================================
-    // ✅ 4. Sector Doughnut Chart
-    // ============================================
-    const sectorLabels = {{ sector_labels|safe }};
-    const sectorValues = {{ sector_values|safe }};
-    const sectorColors = {{ sector_colors|safe }};
-    
-    if (sectorLabels.length > 0) {
-        createDoughnutChart(
-            "sectorChart",
-            sectorLabels,
-            sectorValues,
-            sectorColors.slice(0, sectorLabels.length),
-            "إجمالي الآجل",
-            "{{ credit_packages }}"
-        );
-    }
-    
-    // ============================================
-    // ✅ 5. الرسوم البيانية - Line Charts للتخصصات
-    // ============================================
-    {% for specialty in specialties %}
-    const ctx{{ forloop.counter }} = document.getElementById("chart{{ forloop.counter }}");
-    if (ctx{{ forloop.counter }}) {
-        new Chart(ctx{{ forloop.counter }}, {
-            type: "line",
-            data: {
-                labels: {{ specialty.chart_labels|safe }},
-                datasets: [{
-                    label: "{{ specialty.name }}",
-                    data: {{ specialty.chart_values|safe }},
-                    borderColor: "{{ specialty.color }}",
-                    backgroundColor: "{{ specialty.color }}20",
-                    borderWidth: 3,
-                    fill: true,
-                    tension: 0.35,
-                    pointBackgroundColor: "{{ specialty.color }}",
-                    pointBorderColor: "#fff",
-                    pointBorderWidth: 2,
-                    pointRadius: 4,
-                    pointHoverRadius: 6,
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { display: false },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context){
-                                return context.parsed.y + " باكج";
-                            }
-                        }
-                    }
-                },
-                interaction: {
-                    intersect: false,
-                    mode: "index"
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: { stepSize: 1, precision: 0 },
-                        grid: { color: "#f1f3f5" }
-                    },
-                    x: {
-                        grid: { display: false }
-                    }
-                }
+
+        // إغلاق عند تغيير حجم الشاشة إلى Desktop
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768) {
+                closeSidebar();
             }
         });
-    }
-    {% endfor %}
-    
-    // ============================================
-    // ✅ 6. Sticky Filter Shadow
-    // ============================================
-    const stickyFilter = document.querySelector(".filter-sticky");
-    window.addEventListener("scroll", function () {
-        if (window.scrollY > 40) {
-            stickyFilter.classList.add("stuck");
-        } else {
-            stickyFilter.classList.remove("stuck");
-        }
+
+        // ===== تتبع الـ Collapse في الهاتف =====
+        document.querySelectorAll('[data-bs-toggle="collapse"]').forEach(function(trigger) {
+            trigger.addEventListener('click', function() {
+                if (window.innerWidth <= 768) {
+                    setTimeout(function() {}, 500);
+                }
+            });
+        });
+
     });
-    
-});
 </script>
 
-{% endblock %}
+</body>
+</html>

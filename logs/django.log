@@ -22945,3 +22945,54 @@ Watching for file changes with StatReloader
 "GET /package-comparison/?year1=2025&quarter1=%D8%A7%D9%84%D8%A7%D9%88%D9%84&month1=%D9%8A%D9%86%D8%A7%D9%8A%D8%B1&sector1=&entity1=&sub_company1=&specialty1=&doctor_name1=&package_type1=&year2=2026&quarter2=&month2=&sector2=&entity2=&sub_company2=&specialty2=&doctor_name2=%D8%A7%D9%84%D9%88%D8%A7%D8%AC%D9%87%D9%87+*+%D9%8A%D8%AA%D9%85+%D8%A7%D8%AF%D8%B1%D8%A7%D8%AC+%D8%A7%D9%8A%D9%82%D9%88%D9%86%D9%87+%D9%84%D9%84%D8%A8%D8%A7%D9%83%D8%AF%D8%AC%D8%A7%D8%AA+%D8%AA%D8%AD%D8%AA%D9%87%D8%A7+%D8%B9%D8%AF%D8%A7%D8%AF+%D9%85%D8%AA%D8%AD%D8%B1%D9%83+%D8%A8%D8%A7%D8%AC%D9%85%D8%A7%D9%84%D9%8A+%D8%A7%D9%84%D8%A8%D8%A7%D9%83%D8%AF%D8%AC%D8%A7%D8%AA+%D9%8A%D8%B3%D8%AD%D8%A8+%D9%85%D9%86+%D8%A7%D9%84%D8%B4%D9%8A%D8%AA+%D8%AF%D9%87+%D9%88%D8%A7%D9%86%D8%A7+%D9%87%D8%AD%D8%AF%D8%AB%D9%87+%D9%81%D9%8A+%D9%86%D9%87%D8%A7%D9%8A%D8%A9+%D9%83%D9%84+%D9%8A%D9%88%D9%85+%D9%88%D9%83%D8%B0%D9%84%D9%83+%D8%A7%D9%8A%D9%82%D9%88%D9%86%D8%A7%D8%AA+%D9%84%D8%A8%D8%A7%D9%82%D9%8A+%D8%A7%D9%84%D8%AA%D8%AE%D8%B5%D8%B5%D8%A7%D8%AA+%D9%88%D9%81%D9%82%D8%A7+%D9%84%D9%84%D8%AA%D8%AE%D8%B5%D8%B5+%D9%85%D9%86+%D8%A7%D9%84%D8%AC%D8%AF%D9%88%D9%84+%D8%A8%D8%A7%D9%84%D8%B9%D8%AF%D8%AF+%D8%B9%D9%84%D9%8A+%D8%A7%D9%84%D8%AC%D9%86%D8%A8+%D8%B2%D8%B1%D8%A7%D8%B1+%D9%84%D8%B9%D8%B1%D8%B6+%D8%A7%D9%84%D8%B1%D8%B3%D9%85+%D8%A7%D9%84%D8%A8%D9%8A%D8%A7%D9%86%D9%8A+%D9%8A%D9%88%D8%B6%D8%AD+%D8%AD%D8%B1%D9%83%D8%A9+%D8%A7%D9%84%D8%B9%D8%AF%D8%AF+%D8%AF%D9%87+%D8%B9%D9%84%D9%8A+%D9%85%D8%AF%D8%A7%D8%B1+%D8%A7%D9%84%D8%B4%D9%87%D9%88%D8%B1+%D8%AA%D8%B5%D8%A7%D8%B9%D8%AF%D9%8A+%2F+%D8%AA%D9%86%D8%A7&package_type2= HTTP/1.1" 200 188422
 "GET /ajax/package-filters/?year=2026&doctor_name=%D8%A7%D9%84%D9%88%D8%A7%D8%AC%D9%87%D9%87+*+%D9%8A%D8%AA%D9%85+%D8%A7%D8%AF%D8%B1%D8%A7%D8%AC+%D8%A7%D9%8A%D9%82%D9%88%D9%86%D9%87+%D9%84%D9%84%D8%A8%D8%A7%D9%83%D8%AF%D8%AC%D8%A7%D8%AA+%D8%AA%D8%AD%D8%AA%D9%87%D8%A7+%D8%B9%D8%AF%D8%A7%D8%AF+%D9%85%D8%AA%D8%AD%D8%B1%D9%83+%D8%A8%D8%A7%D8%AC%D9%85%D8%A7%D9%84%D9%8A+%D8%A7%D9%84%D8%A8%D8%A7%D9%83%D8%AF%D8%AC%D8%A7%D8%AA+%D9%8A%D8%B3%D8%AD%D8%A8+%D9%85%D9%86+%D8%A7%D9%84%D8%B4%D9%8A%D8%AA+%D8%AF%D9%87+%D9%88%D8%A7%D9%86%D8%A7+%D9%87%D8%AD%D8%AF%D8%AB%D9%87+%D9%81%D9%8A+%D9%86%D9%87%D8%A7%D9%8A%D8%A9+%D9%83%D9%84+%D9%8A%D9%88%D9%85+%D9%88%D9%83%D8%B0%D9%84%D9%83+%D8%A7%D9%8A%D9%82%D9%88%D9%86%D8%A7%D8%AA+%D9%84%D8%A8%D8%A7%D9%82%D9%8A+%D8%A7%D9%84%D8%AA%D8%AE%D8%B5%D8%B5%D8%A7%D8%AA+%D9%88%D9%81%D9%82%D8%A7+%D9%84%D9%84%D8%AA%D8%AE%D8%B5%D8%B5+%D9%85%D9%86+%D8%A7%D9%84%D8%AC%D8%AF%D9%88%D9%84+%D8%A8%D8%A7%D9%84%D8%B9%D8%AF%D8%AF+%D8%B9%D9%84%D9%8A+%D8%A7%D9%84%D8%AC%D9%86%D8%A8+%D8%B2%D8%B1%D8%A7%D8%B1+%D9%84%D8%B9%D8%B1%D8%B6+%D8%A7%D9%84%D8%B1%D8%B3%D9%85+%D8%A7%D9%84%D8%A8%D9%8A%D8%A7%D9%86%D9%8A+%D9%8A%D9%88%D8%B6%D8%AD+%D8%AD%D8%B1%D9%83%D8%A9+%D8%A7%D9%84%D8%B9%D8%AF%D8%AF+%D8%AF%D9%87+%D8%B9%D9%84%D9%8A+%D9%85%D8%AF%D8%A7%D8%B1+%D8%A7%D9%84%D8%B4%D9%87%D9%88%D8%B1+%D8%AA%D8%B5%D8%A7%D8%B9%D8%AF%D9%8A+%2F+%D8%AA%D9%86%D8%A7 HTTP/1.1" 200 1685
 "GET /ajax/package-filters/?year=2025&month=%D9%8A%D9%86%D8%A7%D9%8A%D8%B1&quarter=%D8%A7%D9%84%D8%A7%D9%88%D9%84 HTTP/1.1" 200 102
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 302 0
+"GET /reports/ HTTP/1.1" 200 138239
+"POST /logout/ HTTP/1.1" 302 0
+"GET / HTTP/1.1" 200 46001
+"GET / HTTP/1.1" 200 47162
+"POST / HTTP/1.1" 302 0
+"GET /reports/ HTTP/1.1" 200 138239
+"GET /reports/ HTTP/1.1" 200 138640
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET / HTTP/1.1" 302 0
+- Broken pipe from ('127.0.0.1', 52660)
+"GET /reports/ HTTP/1.1" 200 138640
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET / HTTP/1.1" 302 0
+"GET /reports/ HTTP/1.1" 200 138640
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET / HTTP/1.1" 302 0
+"GET /reports/ HTTP/1.1" 200 138640
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 302 0
+"GET /reports/ HTTP/1.1" 200 138640
+"GET / HTTP/1.1" 200 47115
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+"POST / HTTP/1.1" 302 0
+"GET /reports/ HTTP/1.1" 200 138640
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /reports/ HTTP/1.1" 200 138644
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /reports/ HTTP/1.1" 200 138644
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /contract-entities/ HTTP/1.1" 200 68582
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /contract-entities/ HTTP/1.1" 200 68582
+"GET /contract-entities/ HTTP/1.1" 200 68582
+"GET /contract-entities/ HTTP/1.1" 200 71758
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET / HTTP/1.1" 302 0
+"GET /reports/ HTTP/1.1" 200 141820
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
