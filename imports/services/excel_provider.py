@@ -98,20 +98,19 @@ class ExcelProvider:
         # ==================================================
 
         if header is None:
-            # الوضع القديم: يرجع DataFrame بأرقام أعمدة
             dataframe = raw.copy()
             dataframe.columns = range(len(dataframe.columns))
 
         else:
-            # الوضع الطبيعي: احتفظ بالـ headers القادمة
-            # من GoogleSheetsService
+            # GoogleSheetsService already returns a DataFrame
+            # with the correct headers and real data.
             dataframe = raw.copy()
 
             # ضمان عدم وجود أسماء أعمدة مكررة
             dataframe.columns = cls.make_unique_columns(
                 dataframe.columns
             )
-            
+
         dataframe = dataframe.reset_index(drop=True)
 
         # Cache

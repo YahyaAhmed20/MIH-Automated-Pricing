@@ -22996,3 +22996,210 @@ Not Found: /.well-known/appspecific/com.chrome.devtools.json
 "GET /reports/ HTTP/1.1" 200 141820
 Not Found: /.well-known/appspecific/com.chrome.devtools.json
 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 50295
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 16342
+"POST / HTTP/1.1" 302 0
+"GET /reports/ HTTP/1.1" 200 166868
+"GET /reports/specialty/%D8%A7%D9%84%D8%A7%D9%86%D9%81%20%D9%88%D8%A7%D9%84%D8%A7%D8%B0%D9%86/?month= HTTP/1.1" 200 165408
+"GET /doctors/ HTTP/1.1" 200 96221
+"GET /pricing-details/ HTTP/1.1" 200 343329
+"GET /similar-invoices/ HTTP/1.1" 200 215804
+"GET /similar-invoices/?search=%D8%A8%D8%B3%D9%85%D8%A9+%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D8%B9%D8%B8%D9%8A%D9%85+%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D8%AA%D9%88%D8%A7%D8%A8+%D8%AE%D9%84%D9%8A%D9%81%D8%A9 HTTP/1.1" 200 98110
+"GET /similar-invoices/ HTTP/1.1" 200 215804
+"GET /similar-invoices/?search=%D8%A8%D8%B3%D9%85%D8%A9+%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D8%B9%D8%B8%D9%8A%D9%85+%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D8%AA%D9%88%D8%A7%D8%A8+%D8%AE%D9%84%D9%8A%D9%81%D8%A9 HTTP/1.1" 200 98110
+"GET /credit-package-pricing/ HTTP/1.1" 200 95520
+"GET /system/update/ HTTP/1.1" 200 78626
+"GET / HTTP/1.1" 302 0
+"GET /reports/ HTTP/1.1" 200 166868
+"GET /reports/? HTTP/1.1" 200 166868
+"GET /reports/specialty/%D8%A7%D9%84%D8%AC%D8%B1%D8%A7%D8%AD%D9%87/?month= HTTP/1.1" 200 188259
+"GET / HTTP/1.1" 302 0
+- Broken pipe from ('127.0.0.1', 50436)
+"GET /reports/ HTTP/1.1" 200 166868
+"GET /reports/sector-details/?month= HTTP/1.1" 200 1175906
+"GET /reports/sector-details/?month=%D9%8A%D9%88%D9%84%D9%8A%D9%88 HTTP/1.1" 200 557952
+"GET /reports/sector-details/?month=%D9%8A%D9%88%D9%86%D9%8A%D9%88 HTTP/1.1" 200 593107
+"GET /reports/sector-details/?month=%D9%8A%D9%88%D9%84%D9%8A%D9%88 HTTP/1.1" 200 557952
+"GET /reports/sector-details/?month=%D9%81%D8%A8%D8%B1%D8%A7%D9%8A%D8%B1 HTTP/1.1" 200 533655
+"GET / HTTP/1.1" 302 0
+- Broken pipe from ('127.0.0.1', 56755)
+"GET /reports/ HTTP/1.1" 200 166868
+- Broken pipe from ('127.0.0.1', 59968)
+"GET / HTTP/1.1" 302 0
+Internal Server Error: /reports/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.OperationalError: server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\accounts\decorators.py", line 56, in wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 1190, in reports_statistics
+    "records": list(records_list),
+               ^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 386, in __iter__
+    self._fetch_all()
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 1954, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 218, in __iter__
+    for row in compiler.results_iter(
+               ^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\sql\compiler.py", line 1572, in results_iter
+    results = self.execute_sql(
+              ^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\sql\compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+
+"GET /reports/ HTTP/1.1" 500 180323
+"GET /reports/ HTTP/1.1" 200 166868
+"GET / HTTP/1.1" 302 0
+"GET / HTTP/1.1" 302 0
+"GET /reports/ HTTP/1.1" 200 166868
+Internal Server Error: /reports/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.OperationalError: server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\accounts\decorators.py", line 56, in wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 1098, in reports_statistics
+    specialty_summary = {
+                        ^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 386, in __iter__
+    self._fetch_all()
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 1954, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 218, in __iter__
+    for row in compiler.results_iter(
+               ^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\sql\compiler.py", line 1572, in results_iter
+    results = self.execute_sql(
+              ^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\sql\compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+
+- Broken pipe from ('127.0.0.1', 64695)
+"GET /patient-search/ HTTP/1.1" 200 423465
+- Broken pipe from ('127.0.0.1', 49822)
+"GET /patient-search/?search=%D8%A7%D8%AD%D9%85%D8%AF+%D8%B9%D8%A8%D8%AF+%D8%A7%D9%84%D9%81%D8%AA%D8%A7%D8%AD+%D9%81%D8%A7%D8%B1%D8%B3 HTTP/1.1" 200 85531
+"GET /patient-search/? HTTP/1.1" 200 423465
+"GET /patient-search/?search=207699 HTTP/1.1" 200 85481
+- Broken pipe from ('127.0.0.1', 50655)
+"GET / HTTP/1.1" 302 0
+- Broken pipe from ('127.0.0.1', 50986)
+"GET /reports/ HTTP/1.1" 200 166868
+"GET /company-discounts/ HTTP/1.1" 200 143149
+"GET /company-discounts/?tab=ranking HTTP/1.1" 200 75036
+"GET /company-discounts/?tab=exceptions HTTP/1.1" 200 161009
+"GET /special-offers/ HTTP/1.1" 200 376102
+"GET /special-offers/?company=%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%8A%D9%87%20%D9%84%D9%84%D8%A7%D8%AA%D8%B5%D8%A7%D9%84%D8%A7%D8%AA HTTP/1.1" 200 86496
+"GET /special-offers/?company=%D9%85%D8%B5%D8%B1%20%D9%84%D9%84%D8%AA%D8%A3%D9%85%D9%8A%D9%86 HTTP/1.1" 200 293232
+"GET /special-offers/?company=%D9%86%D9%83%D8%B3%D8%AA%20%D9%83%D9%8A%D8%B1 HTTP/1.1" 200 147182
+"GET / HTTP/1.1" 302 0
+"GET /reports/ HTTP/1.1" 200 166868
+"GET /pricing-details/ HTTP/1.1" 200 343329
+"GET /similar-invoices/ HTTP/1.1" 200 215804
+"GET /similar-invoices/ HTTP/1.1" 200 221060
+"GET /similar-invoices/?search=%D8%A8%D8%B3%D9%85%D8%A9+%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D8%B9%D8%B8%D9%8A%D9%85+%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D8%AA%D9%88%D8%A7%D8%A8+%D8%AE%D9%84%D9%8A%D9%81%D8%A9 HTTP/1.1" 200 98703
+Watching for file changes with StatReloader
+"GET /similar-invoices/?search=%D8%A8%D8%B3%D9%85%D8%A9+%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D8%B9%D8%B8%D9%8A%D9%85+%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D8%AA%D9%88%D8%A7%D8%A8+%D8%AE%D9%84%D9%8A%D9%81%D8%A9 HTTP/1.1" 200 99152
+D:\desktop\rphospital\src\imports\services\excel_provider.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\imports\services\excel_provider.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\imports\services\excel_provider.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\imports\services\google_sheets_service.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\imports\services\google_sheets_service.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\imports\services\google_sheets_service.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\imports\services\google_sheets_service.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET /similar-invoices/ HTTP/1.1" 200 222368

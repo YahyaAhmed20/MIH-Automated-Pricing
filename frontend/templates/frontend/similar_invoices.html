@@ -1074,9 +1074,11 @@
                     data-medical="{{ invoice.medical_number|default:'-' }}"
                     data-patient="{{ invoice.patient_name }}"
                     data-entity="{{ invoice.entity_name|default:'-' }}"
+                    data-sub-company="{{ invoice.sub_company|default:'-' }}"
                     data-doctor="{{ invoice.doctor_name|default:'-' }}"
                     data-specialty="{{ invoice.specialty_name|default:'-' }}"
                     data-operation="{{ invoice.operation_name }}"
+                    data-operation-description="{{ invoice.operation_description|default:'-' }}"
                     data-admission="{{ invoice.admission_date|date:'Y-m-d' }}"
                     data-discharge="{{ invoice.discharge_date|date:'Y-m-d' }}"
                     data-stay="{{ invoice.stay_duration|default:'-' }}"
@@ -1231,6 +1233,10 @@
                                 <span class="label">الجهة</span>
                                 <span class="value" id="modal-entity">-</span>
                             </div>
+                            <div class="info-item">
+                                <span class="label">الشركة الفرعية</span>
+                                <span class="value" id="modal-sub-company">-</span>
+                            </div>
                         </div>
                     </div>
 
@@ -1252,6 +1258,10 @@
                             <div class="info-item">
                                 <span class="label">اسم العملية</span>
                                 <span class="value" id="modal-operation">-</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="label">توصيف العملية</span>
+                                <span class="value" id="modal-operation-description">-</span>
                             </div>
                         </div>
                     </div>
@@ -1389,32 +1399,34 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // ✅ Modal - ملء البيانات
-    const modal = document.getElementById('detailsModal');
-    if (modal) {
-        modal.addEventListener('show.bs.modal', function (event) {
-            const button = event.relatedTarget;
-            document.getElementById('modal-account').textContent = button.getAttribute('data-account') || '-';
-            document.getElementById('modal-medical').textContent = button.getAttribute('data-medical') || '-';
-            document.getElementById('modal-patient').textContent = button.getAttribute('data-patient') || '-';
-            document.getElementById('modal-entity').textContent = button.getAttribute('data-entity') || '-';
-            document.getElementById('modal-doctor').textContent = button.getAttribute('data-doctor') || '-';
-            document.getElementById('modal-specialty').textContent = button.getAttribute('data-specialty') || '-';
-            document.getElementById('modal-operation').textContent = button.getAttribute('data-operation') || '-';
-            document.getElementById('modal-admission').textContent = button.getAttribute('data-admission') || '-';
-            document.getElementById('modal-discharge').textContent = button.getAttribute('data-discharge') || '-';
-            document.getElementById('modal-stay').textContent = button.getAttribute('data-stay') || '-';
-            document.getElementById('modal-total').textContent = button.getAttribute('data-total') || '-';
-            document.getElementById('modal-discount').textContent = button.getAttribute('data-discount') || '-';
-            document.getElementById('modal-net').textContent = button.getAttribute('data-net') || '-';
-            document.getElementById('modal-company-share').textContent = button.getAttribute('data-company-share') || '-';
-            document.getElementById('modal-patient-share').textContent = button.getAttribute('data-patient-share') || '-';
-            document.getElementById('modal-payments').textContent = button.getAttribute('data-payments') || '-';
-            document.getElementById('modal-status').textContent = button.getAttribute('data-status') || '-';
-            document.getElementById('modal-closed-date').textContent = button.getAttribute('data-closed-date') || '-';
-            document.getElementById('modal-notes').textContent = button.getAttribute('data-notes') || '-';
+    // ✅ Modal - ملء البيانات مع الإضافات الجديدة
+    document.querySelectorAll(".btn-view-details").forEach(button => {
+        button.addEventListener("click", function () {
+            document.getElementById("modal-account").textContent = this.dataset.account || "-";
+            document.getElementById("modal-medical").textContent = this.dataset.medical || "-";
+            document.getElementById("modal-patient").textContent = this.dataset.patient || "-";
+            document.getElementById("modal-entity").textContent = this.dataset.entity || "-";
+            document.getElementById("modal-doctor").textContent = this.dataset.doctor || "-";
+            document.getElementById("modal-specialty").textContent = this.dataset.specialty || "-";
+            document.getElementById("modal-operation").textContent = this.dataset.operation || "-";
+            document.getElementById("modal-admission").textContent = this.dataset.admission || "-";
+            document.getElementById("modal-discharge").textContent = this.dataset.discharge || "-";
+            document.getElementById("modal-stay").textContent = this.dataset.stay || "-";
+            document.getElementById("modal-total").textContent = this.dataset.total || "-";
+            document.getElementById("modal-discount").textContent = this.dataset.discount || "-";
+            document.getElementById("modal-net").textContent = this.dataset.net || "-";
+            document.getElementById("modal-company-share").textContent = this.dataset.companyShare || "-";
+            document.getElementById("modal-patient-share").textContent = this.dataset.patientShare || "-";
+            document.getElementById("modal-payments").textContent = this.dataset.payments || "-";
+            document.getElementById("modal-status").textContent = this.dataset.status || "-";
+            document.getElementById("modal-closed-date").textContent = this.dataset.closedDate || "-";
+            document.getElementById("modal-notes").textContent = this.dataset.notes || "-";
+
+            // ✅ الإضافات الجديدة
+            document.getElementById("modal-sub-company").textContent = this.dataset.subCompany || "-";
+            document.getElementById("modal-operation-description").textContent = this.dataset.operationDescription || "-";
         });
-    }
+    });
 
     // ✅ تشغيل البحث عند الضغط على Enter
     const searchInput = document.querySelector('input[name="search"]');

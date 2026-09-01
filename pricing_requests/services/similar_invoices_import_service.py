@@ -15,21 +15,25 @@ class SimilarInvoicesImportService:
         "patient_name": "اسم المريض",
         "admission_date": "تاريخ الدخول",
         "discharge_date": "تاريخ الخروج",
-        "stay_duration": "مدة الاقامه",
-        "specialty_name": "التخصص",
-        "doctor_name": "اسم الطبيب",
-        "operation_name": "اسم العمليه",
         "entity_name": "الجهه",
-        "sub_company": "الشركة الفرعية",
-        "building": "الدور / المبني",
+        "building": "الدور",
+        "room": "الغرفة",
+        "doctor_name": "اسم الطبيب",
+        "specialty_name": "التخصص",
+        "admission_status": "حالة الدخول",
+        "admission_type": "نوع الدخول",
         "total_invoice": "اجمالي الفاتوره",
         "discount": "الخصم",
         "net_invoice": "صافي الفاتوره",
         "company_share": "حصة الشركه",
         "patient_share": "حصة المريض",
         "payments": "المدفوعات",
+        "balance": "الرصيد",
         "invoice_status": "حالة الفاتورة",
         "invoice_closed_date": "تاريخ انهاء الفاتوره",
+        "operating_room_opened": "فتح غرفة العمليات",
+        "operation_name": "اسم العمليه",
+        "sub_company": "الشركة الفرعية",
         "notes": "ملاحظات",
         "operation_description": "توصيف العمليه",
     }
@@ -83,27 +87,22 @@ class SimilarInvoicesImportService:
         }
 
         # ============================================================
-        # تحويل أول صف إلى Headers
+        # التحقق من وجود بيانات
         # ============================================================
 
         if len(dataframe) == 0:
             return result
 
-        headers = dataframe.iloc[0].tolist()
-
-        dataframe = dataframe.iloc[1:].copy()
-
-        # تنظيف الـ Headers وجعلها unique
-        dataframe.columns = ImportHelpers.make_unique_headers(
-            headers
-        )
+        # ============================================================
+        # ✅ استبدال: حذف تحويل أول صف إلى Headers
+        # ============================================================
 
         dataframe = dataframe.reset_index(drop=True)
 
-        # بناء Header Map
-        header_map = ImportHelpers.build_header_map(
-            dataframe
-        )
+        header_map = {
+            ImportHelpers.normalize_header(column): column
+            for column in dataframe.columns
+        }
 
         print("✅ Sheet 10 headers mapped successfully")
         print("   Headers:", list(header_map.keys()))
@@ -118,23 +117,27 @@ class SimilarInvoicesImportService:
             "اسم المريض",
             "تاريخ الدخول",
             "تاريخ الخروج",
-            "مدة الاقامه",
             "التخصص",
             "اسم الطبيب",
             "اسم العمليه",
             "الجهه",
             "الشركة الفرعية",
-            "الدور / المبني",
+            "الدور",
+            "الغرفة",
             "اجمالي الفاتوره",
             "الخصم",
             "صافي الفاتوره",
             "حصة الشركه",
             "حصة المريض",
             "المدفوعات",
+            "الرصيد",
             "حالة الفاتورة",
             "تاريخ انهاء الفاتوره",
             "ملاحظات",
             "توصيف العمليه",
+            "حالة الدخول",
+            "نوع الدخول",
+            "فتح غرفة العمليات",
         ]
 
         ImportHelpers.validate_required_columns(
@@ -243,14 +246,6 @@ class SimilarInvoicesImportService:
                 )
             )
 
-            stay_duration = ImportHelpers.normalize_text(
-                SimilarInvoicesImportService.get_value(
-                    row,
-                    header_map,
-                    "stay_duration",
-                )
-            )
-
             # ========================================================
             # بيانات الطبيب والتخصص والعملية
             # ========================================================
@@ -330,6 +325,21 @@ class SimilarInvoicesImportService:
                 )
             )
 
+            room = ImportHelpers.normalize_text(
+                SimilarInvoicesImportService.get_value(
+                    row,
+                    header_map,
+                    "room",
+                )
+            )
+
+            room = (
+                SimilarInvoicesImportService.truncate_text(
+                    room,
+                    255,
+                )
+            )
+
             sub_company = ImportHelpers.normalize_text(
                 SimilarInvoicesImportService.get_value(
                     row,
@@ -341,6 +351,40 @@ class SimilarInvoicesImportService:
             sub_company = (
                 SimilarInvoicesImportService.truncate_text(
                     sub_company,
+                    255,
+                )
+            )
+
+            # ========================================================
+            # حالة الدخول ونوعه
+            # ========================================================
+
+            admission_status = ImportHelpers.normalize_text(
+                SimilarInvoicesImportService.get_value(
+                    row,
+                    header_map,
+                    "admission_status",
+                )
+            )
+
+            admission_status = (
+                SimilarInvoicesImportService.truncate_text(
+                    admission_status,
+                    255,
+                )
+            )
+
+            admission_type = ImportHelpers.normalize_text(
+                SimilarInvoicesImportService.get_value(
+                    row,
+                    header_map,
+                    "admission_type",
+                )
+            )
+
+            admission_type = (
+                SimilarInvoicesImportService.truncate_text(
+                    admission_type,
                     255,
                 )
             )
@@ -421,6 +465,18 @@ class SimilarInvoicesImportService:
             if payments is None:
                 payments = Decimal("0.00")
 
+            balance = ImportHelpers.clean_decimal(
+                SimilarInvoicesImportService.get_value(
+                    row,
+                    header_map,
+                    "balance",
+                    default=None,
+                )
+            )
+
+            if balance is None:
+                balance = Decimal("0.00")
+
             # ========================================================
             # باقي البيانات
             # ========================================================
@@ -446,6 +502,21 @@ class SimilarInvoicesImportService:
                     header_map,
                     "invoice_closed_date",
                     default=None,
+                )
+            )
+
+            operating_room_opened = ImportHelpers.normalize_text(
+                SimilarInvoicesImportService.get_value(
+                    row,
+                    header_map,
+                    "operating_room_opened",
+                )
+            )
+
+            operating_room_opened = (
+                SimilarInvoicesImportService.truncate_text(
+                    operating_room_opened,
+                    255,
                 )
             )
 
@@ -534,17 +605,16 @@ class SimilarInvoicesImportService:
                     existing_record.discharge_date = discharge_date
                     changed = True
 
-                if hasattr(existing_record, "stay_duration"):
-                    if existing_record.stay_duration != stay_duration:
-                        existing_record.stay_duration = stay_duration
-                        changed = True
-
                 if existing_record.entity_name != entity_name:
                     existing_record.entity_name = entity_name
                     changed = True
 
                 if existing_record.building != building:
                     existing_record.building = building
+                    changed = True
+
+                if existing_record.room != room:
+                    existing_record.room = room
                     changed = True
 
                 if existing_record.sub_company != sub_company:
@@ -557,6 +627,14 @@ class SimilarInvoicesImportService:
 
                 if existing_record.specialty_name != specialty_name:
                     existing_record.specialty_name = specialty_name
+                    changed = True
+
+                if existing_record.admission_status != admission_status:
+                    existing_record.admission_status = admission_status
+                    changed = True
+
+                if existing_record.admission_type != admission_type:
+                    existing_record.admission_type = admission_type
                     changed = True
 
                 if existing_record.total_invoice != total_invoice:
@@ -583,12 +661,20 @@ class SimilarInvoicesImportService:
                     existing_record.payments = payments
                     changed = True
 
+                if existing_record.balance != balance:
+                    existing_record.balance = balance
+                    changed = True
+
                 if existing_record.invoice_status != invoice_status:
                     existing_record.invoice_status = invoice_status
                     changed = True
 
                 if existing_record.invoice_closed_date != invoice_closed_date:
                     existing_record.invoice_closed_date = invoice_closed_date
+                    changed = True
+
+                if existing_record.operating_room_opened != operating_room_opened:
+                    existing_record.operating_room_opened = operating_room_opened
                     changed = True
 
                 if existing_record.notes != notes:
@@ -617,6 +703,7 @@ class SimilarInvoicesImportService:
                     discharge_date=discharge_date,
                     entity_name=entity_name,
                     building=building,
+                    room=room,
                     specialty_name=specialty_name,
                     doctor_name=doctor_name,
                     operation_name=operation_name,
@@ -626,22 +713,19 @@ class SimilarInvoicesImportService:
                     company_share=company_share,
                     patient_share=patient_share,
                     payments=payments,
+                    balance=balance,
                     invoice_status=invoice_status,
                     invoice_closed_date=invoice_closed_date,
                     sub_company=sub_company,
+                    admission_status=admission_status,
+                    admission_type=admission_type,
+                    operating_room_opened=operating_room_opened,
                     notes=notes,
                     operation_description=operation_description,
                 )
 
-                # stay_duration موجود في Sheet،
-                # لكن نضيفه فقط إذا كان موجودًا في Model.
-                if hasattr(record, "stay_duration"):
-                    record.stay_duration = stay_duration
-
                 to_create.append(record)
-
                 records_cache[key] = record
-
                 result["created"] += 1
 
             if processed % 1000 == 0:
@@ -684,23 +768,25 @@ class SimilarInvoicesImportService:
                 "discharge_date",
                 "entity_name",
                 "building",
+                "room",
                 "doctor_name",
                 "specialty_name",
+                "admission_status",
+                "admission_type",
                 "total_invoice",
                 "discount",
                 "net_invoice",
                 "company_share",
                 "patient_share",
                 "payments",
+                "balance",
                 "invoice_status",
                 "invoice_closed_date",
                 "sub_company",
+                "operating_room_opened",
                 "notes",
                 "operation_description",
             ]
-
-            if hasattr(SimilarInvoice, "stay_duration"):
-                update_fields.append("stay_duration")
 
             for i in range(
                 0,

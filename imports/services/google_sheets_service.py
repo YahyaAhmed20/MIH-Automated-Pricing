@@ -360,18 +360,28 @@ class GoogleSheetsService:
 
         if force_reload:
             if cache_key in cls._cache:
-                print(f"🔄 Force reload for sheet {sheet_name} (was cached at {cls._cache_time.get(cache_key, 'unknown')})")
+                print(
+                    f"🔄 Force reload for sheet {sheet_name} "
+                    f"(was cached at "
+                    f"{cls._cache_time.get(cache_key, 'unknown')})"
+                )
                 del cls._cache[cache_key]
-                if cache_key in cls._cache_time:
-                    del cls._cache_time[cache_key]
+
+            if cache_key in cls._cache_time:
+                del cls._cache_time[cache_key]
 
             cls.get_spreadsheet(force_reload=True)
 
         if cache_key in cls._cache:
-            print(f"✅ Using cached data for sheet {sheet_name}")
+            print(
+                f"✅ Using cached data for sheet {sheet_name}"
+            )
             return cls._cache[cache_key].copy()
 
-        print(f"📥 Fetching fresh data from Google Sheets: {sheet_name}")
+        print(
+            f"📥 Fetching fresh data from Google Sheets: "
+            f"{sheet_name}"
+        )
 
         worksheet = cls.get_spreadsheet().worksheet(
             str(sheet_name)
@@ -380,22 +390,62 @@ class GoogleSheetsService:
         data = worksheet.get_all_values()
 
         if not data:
-            print(f"⚠️ Sheet {sheet_name} is empty")
+            print(
+                f"⚠️ Sheet {sheet_name} is empty"
+            )
             return pd.DataFrame()
 
-        headers = data[0]
-        rows = data[1:]
+        print(f"RAW ROWS: {len(data)}")
+        print(f"RAW ROW 0: {data[0]}")
+        print(f"RAW ROW 1: {data[1]}")
+        print(f"RAW ROW 2: {data[2]}")
 
-        dataframe = pd.DataFrame(rows, columns=headers)
-        dataframe = dataframe.replace("", pd.NA)
-        dataframe = dataframe.dropna(how="all")
+        # Row 0 = الـ Headers الصحيحة
+        headers = data[0]
+
+        # Row 1 = Header قديم
+        # Row 2 وما بعده = البيانات
+        rows = data[2:]
+
+        print(
+            f"DATA ROWS AFTER SKIP: {len(rows)}"
+        )
+        print(
+            f"FIRST DATA ROW: {rows[0]}"
+        )
+
+        dataframe = pd.DataFrame(
+            rows,
+            columns=headers,
+        )
+
+        dataframe = dataframe.replace(
+            "",
+            pd.NA,
+        )
+
+        dataframe = dataframe.dropna(
+            how="all"
+        )
+
         dataframe = dataframe.fillna("")
-        dataframe = dataframe.reset_index(drop=True)
+
+        dataframe = dataframe.reset_index(
+            drop=True
+        )
 
         cls._cache[cache_key] = dataframe
-        cls._cache_time[cache_key] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-        print(f"✅ Cached sheet {sheet_name} with {len(dataframe)} rows")
+        cls._cache_time[cache_key] = (
+            datetime.now().strftime(
+                "%Y-%m-%d %H:%M:%S"
+            )
+        )
+
+        print(
+            f"✅ Cached sheet {sheet_name} "
+            f"with {len(dataframe)} rows"
+        )
 
         return dataframe.copy()
 
