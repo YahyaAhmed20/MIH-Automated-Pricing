@@ -28,7 +28,7 @@ class Command(BaseCommand):
         dataframe = ExcelProvider.read(
             file_path=options["excel_file"],
             sheet_name="6",
-            header=None,
+            header=0,
             force_reload=True,
         )
 

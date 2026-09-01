@@ -1,11 +1,9 @@
-
 from django.core.management.base import BaseCommand
 
 from imports.services.excel_provider import ExcelProvider
 from imports.services.pricing_request_import_service import (
     PricingRequestImportService,
 )
-from imports.utils.import_helpers import ImportHelpers
 
 
 class Command(BaseCommand):
@@ -32,13 +30,9 @@ class Command(BaseCommand):
         dataframe = ExcelProvider.read(
             file_path=options["file_path"],
             sheet_name="12",
-            header=None,
+            header=0,
             force_reload=True,
         )
-
-        # ============================================================
-        # قراءة الـ Header الحقيقي من Sheet 12
-        # ============================================================
 
         if dataframe.empty:
             self.stdout.write(
@@ -46,25 +40,12 @@ class Command(BaseCommand):
             )
             return
 
-        headers = ImportHelpers.make_unique_headers(
-            dataframe.iloc[0].tolist()
-        )
-
-        # إزالة صف الـ Header
-        dataframe = dataframe.iloc[1:].copy()
-
-        # وضع أسماء الأعمدة الحقيقية
-        dataframe.columns = headers
-
-        # إعادة ترتيب الـ Index
-        dataframe = dataframe.reset_index(drop=True)
-
         self.stdout.write(
             f"📊 Importing {len(dataframe)} Pricing Requests..."
         )
 
         self.stdout.write(
-            f"📋 Detected {len(headers)} columns"
+            f"📋 Detected {len(dataframe.columns)} columns"
         )
 
         # ============================================================
@@ -109,4 +90,3 @@ class Command(BaseCommand):
         )
 
         self.stdout.write("=" * 60)
-

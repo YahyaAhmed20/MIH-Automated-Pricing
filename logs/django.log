@@ -23203,3 +23203,11 @@ D:\desktop\rphospital\src\imports\services\google_sheets_service.py changed, rel
 Watching for file changes with StatReloader
 Watching for file changes with StatReloader
 "GET /similar-invoices/ HTTP/1.1" 200 222368
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 50295
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 16342
+"POST / HTTP/1.1" 302 0
+"GET /reports/ HTTP/1.1" 200 166922

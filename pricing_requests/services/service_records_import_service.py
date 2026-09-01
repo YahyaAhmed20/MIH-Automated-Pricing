@@ -16,15 +16,15 @@ class ServiceRecordsImportService:
         "patient_name": "اسم المريض",
         "admission_date": "تاريخ الدخول",
         "discharge_date": "تاريخ الخروج",
-        "stay_duration": "مدة الاقامه",
+        "stay_duration": "مدة الاقامة",
         "department_name": "اسم القسم",
         "service_name": "اسم الخدمة",
         "service_code": "الكود",
         "service_date": "التاريخ",
-        "insurance_company": "شركة التامين",
-        "sub_company": "الشركة الفرعية",
+        "insurance_company": None,
+        "sub_company": "الشركه الفرعيه",
         "amount": "المبلغ",
-        "total_invoice": "اجمالي الفاتوره",
+        "total_invoice": "صافي الفاتورة",
     }
 
     @staticmethod
@@ -42,27 +42,29 @@ class ServiceRecordsImportService:
         }
 
         # ============================================================
-        # ✅ تحويل أول صف إلى Headers
+        # ✅ DataFrame already contains the real Sheet headers
         # ============================================================
         if len(dataframe) == 0:
             return result
 
-        headers = dataframe.iloc[0].tolist()
-
-        dataframe = dataframe.iloc[1:].copy()
-
-        # ============================================================
-        # تنظيف الـ Headers وإنشاء أسماء فريدة
-        # ============================================================
-        dataframe.columns = ImportHelpers.make_unique_headers(headers)
-
+        dataframe = dataframe.copy()
+        dataframe.columns = ImportHelpers.make_unique_headers(dataframe.columns)
         dataframe = dataframe.reset_index(drop=True)
 
         header_map = ImportHelpers.build_header_map(dataframe)
 
+        # ============================================================
+        # ✅ التحقق من الأعمدة المطلوبة (مع استبعاد الـ None)
+        # ============================================================
+        required_columns = [
+            column
+            for column in ServiceRecordsImportService.COLUMN_MAPPING.values()
+            if column
+        ]
+
         ImportHelpers.validate_required_columns(
             dataframe,
-            ServiceRecordsImportService.COLUMN_MAPPING.values(),
+            required_columns,
         )
 
         print("✅ Sheet 6 headers mapped successfully")
