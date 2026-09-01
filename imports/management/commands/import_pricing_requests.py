@@ -1,10 +1,11 @@
+
 from django.core.management.base import BaseCommand
 
 from imports.services.excel_provider import ExcelProvider
-
 from imports.services.pricing_request_import_service import (
     PricingRequestImportService,
 )
+from imports.utils.import_helpers import ImportHelpers
 
 
 class Command(BaseCommand):
@@ -19,8 +20,6 @@ class Command(BaseCommand):
             default=None,
             help="Path to Excel file (Optional)",
         )
-
-        # ✅ تم إزالة --no-confirm لأنه لم يعد مستخدمًا
 
     def handle(self, *args, **options):
 
@@ -37,56 +36,48 @@ class Command(BaseCommand):
             force_reload=True,
         )
 
-        columns = [
-            "",
-            "ملحق او رئيسى",
-            "اسم المريض",
-            "رقم الــكـارنية",
-            "الشــركــة",
-            "Sub Account",
-            "التاريخ",
-            "الرقم الطبي",
-            "الطبيب",
-            "التخصص",
-            "المطلوب",
-            "الاجراء",
-            "رقم التليفون",
-            "Agent 1",
-            "Status",
-            "Main Status",
-            "التكلفه المبدئية",
-            "تاريخ التسعير",
-            "مسئول التسعير",
-            "Billing Status",
-            "مسئول مراجعة الموافقة و التسعير",
-            "ملاحظات الحسابات",
-            "الرقم الحسابى",
-            "التكلفة المستلمه",
-            "Report",
-            "Approval",
-            "Request and Approval NO.",
-            "Approval Date",
-            "Expiry Date",
-            "الملاحظات",
-            "Last Update",
-            "Agent 2",
-            "Agent 2.1",
-            "تاريخ الدخول",
-            "ملاحظات الـ OR Coordinator",
-            "sales account",
-            "Head",
-            "USER",
-            "ملاحظات السيلز",
-        ]
+        # ============================================================
+        # قراءة الـ Header الحقيقي من Sheet 12
+        # ============================================================
 
-        dataframe.columns = columns
+        if dataframe.empty:
+            self.stdout.write(
+                self.style.WARNING("⚠️ Sheet 12 is empty.")
+            )
+            return
 
-        total_rows = len(dataframe)
-        self.stdout.write(f"📊 Importing {total_rows} Pricing Requests...")
+        headers = ImportHelpers.make_unique_headers(
+            dataframe.iloc[0].tolist()
+        )
+
+        # إزالة صف الـ Header
+        dataframe = dataframe.iloc[1:].copy()
+
+        # وضع أسماء الأعمدة الحقيقية
+        dataframe.columns = headers
+
+        # إعادة ترتيب الـ Index
+        dataframe = dataframe.reset_index(drop=True)
+
+        self.stdout.write(
+            f"📊 Importing {len(dataframe)} Pricing Requests..."
+        )
+
+        self.stdout.write(
+            f"📋 Detected {len(headers)} columns"
+        )
+
+        # ============================================================
+        # Import
+        # ============================================================
 
         result = PricingRequestImportService.import_data(
             dataframe
         )
+
+        # ============================================================
+        # Results
+        # ============================================================
 
         self.stdout.write("")
         self.stdout.write("=" * 60)
@@ -118,3 +109,4 @@ class Command(BaseCommand):
         )
 
         self.stdout.write("=" * 60)
+

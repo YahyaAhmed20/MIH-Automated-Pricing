@@ -10,6 +10,23 @@ from imports.utils.import_helpers import ImportHelpers
 
 class ServiceRecordsImportService:
 
+    COLUMN_MAPPING = {
+        "account_number": "الرقم الحسابى",
+        "patient_type": "نوع المريض",
+        "patient_name": "اسم المريض",
+        "admission_date": "تاريخ الدخول",
+        "discharge_date": "تاريخ الخروج",
+        "stay_duration": "مدة الاقامه",
+        "department_name": "اسم القسم",
+        "service_name": "اسم الخدمة",
+        "service_code": "الكود",
+        "service_date": "التاريخ",
+        "insurance_company": "شركة التامين",
+        "sub_company": "الشركة الفرعية",
+        "amount": "المبلغ",
+        "total_invoice": "اجمالي الفاتوره",
+    }
+
     @staticmethod
     @transaction.atomic
     def import_data(dataframe):
@@ -25,6 +42,33 @@ class ServiceRecordsImportService:
         }
 
         # ============================================================
+        # ✅ تحويل أول صف إلى Headers
+        # ============================================================
+        if len(dataframe) == 0:
+            return result
+
+        headers = dataframe.iloc[0].tolist()
+
+        dataframe = dataframe.iloc[1:].copy()
+
+        # ============================================================
+        # تنظيف الـ Headers وإنشاء أسماء فريدة
+        # ============================================================
+        dataframe.columns = ImportHelpers.make_unique_headers(headers)
+
+        dataframe = dataframe.reset_index(drop=True)
+
+        header_map = ImportHelpers.build_header_map(dataframe)
+
+        ImportHelpers.validate_required_columns(
+            dataframe,
+            ServiceRecordsImportService.COLUMN_MAPPING.values(),
+        )
+
+        print("✅ Sheet 6 headers mapped successfully")
+        print("   Headers:", list(header_map.keys()))
+
+        # ============================================================
         # ✅ Cache للـ Service Records
         # ============================================================
         records_cache = {}
@@ -32,6 +76,7 @@ class ServiceRecordsImportService:
             key = (
                 ImportHelpers.normalize_text(r.account_number),
                 ImportHelpers.normalize_text(r.service_code),
+                r.service_date,
             )
             records_cache[key] = r
 
@@ -43,7 +88,7 @@ class ServiceRecordsImportService:
         sheet_records = set()
 
         # ============================================================
-        # ✅ Loop - استخدام أرقام الأعمدة (بدون Header)
+        # ✅ Loop - استخدام أسماء الأعمدة
         # ============================================================
 
         total_rows = len(dataframe)
@@ -51,15 +96,23 @@ class ServiceRecordsImportService:
 
         for index, row in enumerate(dataframe.to_dict("records"), start=1):
 
-            # ✅ العمود 0: م (مفتاح) - لا نستخدمه
-            # ✅ العمود 1: الرقم الحسابى
+            # ✅ قراءة البيانات باستخدام أسماء الأعمدة
             account_number = ImportHelpers.normalize_text(
-                row.get(1, "")
+                ImportHelpers.get_mapped_value(
+                    row,
+                    header_map,
+                    "account_number",
+                    ServiceRecordsImportService.COLUMN_MAPPING,
+                )
             )
 
-            # ✅ العمود 9: الكود (service_code)
             service_code = ImportHelpers.normalize_text(
-                row.get(9, "")
+                ImportHelpers.get_mapped_value(
+                    row,
+                    header_map,
+                    "service_code",
+                    ServiceRecordsImportService.COLUMN_MAPPING,
+                )
             )
 
             if not account_number or not service_code:
@@ -69,72 +122,129 @@ class ServiceRecordsImportService:
             result["processed"] += 1
             processed = result["processed"]
 
-            # ✅ العمود 2: نوع المريض
             patient_type = ImportHelpers.normalize_text(
-                row.get(2, "")
+                ImportHelpers.get_mapped_value(
+                    row,
+                    header_map,
+                    "patient_type",
+                    ServiceRecordsImportService.COLUMN_MAPPING,
+                )
             )
 
-            # ✅ العمود 3: اسم المريض
             patient_name = ImportHelpers.normalize_text(
-                row.get(3, "")
+                ImportHelpers.get_mapped_value(
+                    row,
+                    header_map,
+                    "patient_name",
+                    ServiceRecordsImportService.COLUMN_MAPPING,
+                )
             )
 
-            # ✅ العمود 4: تاريخ الدخول
-            admission_date = ImportHelpers.clean_date(
-                row.get(4, None)
+            admission_date = ImportHelpers.clean_date_mdy(
+                ImportHelpers.get_mapped_value(
+                    row,
+                    header_map,
+                    "admission_date",
+                    ServiceRecordsImportService.COLUMN_MAPPING,
+                    default=None,
+                )
             )
 
-            # ✅ العمود 5: تاريخ الخروج
-            discharge_date = ImportHelpers.clean_date(
-                row.get(5, None)
+            discharge_date = ImportHelpers.clean_date_mdy(
+                ImportHelpers.get_mapped_value(
+                    row,
+                    header_map,
+                    "discharge_date",
+                    ServiceRecordsImportService.COLUMN_MAPPING,
+                    default=None,
+                )
             )
 
-            # ✅ العمود 6: مدة الاقامه
             stay_duration = ImportHelpers.normalize_text(
-                row.get(6, "")
+                ImportHelpers.get_mapped_value(
+                    row,
+                    header_map,
+                    "stay_duration",
+                    ServiceRecordsImportService.COLUMN_MAPPING,
+                )
             )
 
-            # ✅ العمود 7: اسم القسم
             department_name = ImportHelpers.normalize_text(
-                row.get(7, "")
+                ImportHelpers.get_mapped_value(
+                    row,
+                    header_map,
+                    "department_name",
+                    ServiceRecordsImportService.COLUMN_MAPPING,
+                )
             )
 
-            # ✅ العمود 8: اسم الخدمة
             service_name = ImportHelpers.normalize_text(
-                row.get(8, "")
+                ImportHelpers.get_mapped_value(
+                    row,
+                    header_map,
+                    "service_name",
+                    ServiceRecordsImportService.COLUMN_MAPPING,
+                )
             )
 
-            # ✅ العمود 10: التاريخ (service_date)
-            service_date = ImportHelpers.clean_date(
-                row.get(10, None)
+            service_date = ImportHelpers.clean_date_mdy(
+                ImportHelpers.get_mapped_value(
+                    row,
+                    header_map,
+                    "service_date",
+                    ServiceRecordsImportService.COLUMN_MAPPING,
+                    default=None,
+                )
             )
 
-            # ✅ العمود 11: شركة التامين (insurance_company)
             insurance_company = ImportHelpers.normalize_text(
-                row.get(11, "")
+                ImportHelpers.get_mapped_value(
+                    row,
+                    header_map,
+                    "insurance_company",
+                    ServiceRecordsImportService.COLUMN_MAPPING,
+                )
             )
 
-            # ✅ العمود 12: الشركة الفرعية (sub_company)
             sub_company = ImportHelpers.normalize_text(
-                row.get(12, "")
+                ImportHelpers.get_mapped_value(
+                    row,
+                    header_map,
+                    "sub_company",
+                    ServiceRecordsImportService.COLUMN_MAPPING,
+                )
             )
 
-            # ✅ العمود 13: المبلغ (amount)
             amount = ImportHelpers.clean_decimal(
-                row.get(13, None)
+                ImportHelpers.get_mapped_value(
+                    row,
+                    header_map,
+                    "amount",
+                    ServiceRecordsImportService.COLUMN_MAPPING,
+                    default=None,
+                )
             )
             if amount is None:
                 amount = Decimal('0.00')
 
-            # ✅ العمود 14: اجمالي الفاتورة (total_invoice)
             total_invoice = ImportHelpers.clean_decimal(
-                row.get(14, None)
+                ImportHelpers.get_mapped_value(
+                    row,
+                    header_map,
+                    "total_invoice",
+                    ServiceRecordsImportService.COLUMN_MAPPING,
+                    default=None,
+                )
             )
             if total_invoice is None:
                 total_invoice = Decimal('0.00')
 
             # ✅ البحث في Cache
-            key = (account_number, service_code)
+            key = (
+                account_number,
+                service_code,
+                service_date,
+            )
             sheet_records.add(key)
             
             record = records_cache.get(key)
@@ -267,6 +377,7 @@ class ServiceRecordsImportService:
             key = (
                 ImportHelpers.normalize_text(r.account_number),
                 ImportHelpers.normalize_text(r.service_code),
+                r.service_date,
             )
             records_cache[key] = r
 

@@ -10,24 +10,25 @@ from imports.utils.import_helpers import ImportHelpers
 
 class ReportStatisticSheet15ImportService:
 
-    @staticmethod
-    def clean_amount(value):
-        """تنظيف قيمة المبلغ"""
-        if value is None or pd.isna(value):
-            return Decimal('0.00')
-        
-        try:
-            if isinstance(value, (int, float)):
-                return Decimal(str(value)).quantize(Decimal('0.01'))
-            
-            cleaned = str(value).strip()
-            cleaned = cleaned.replace(',', '').replace('٬', '')
-            cleaned = cleaned.replace('٫', '.')
-            
-            return Decimal(cleaned).quantize(Decimal('0.01'))
-            
-        except (ValueError, TypeError):
-            return Decimal('0.00')
+    COLUMN_MAPPING = {
+        "medical_number": "الرقم الطبي",
+        "account_number": "الرقم الحسابي",
+        "patient_name": "اسم المريض",
+        "admission_date": "تاريخ الدخول",
+        "discharge_date": "تاريخ الخروج",
+        "month": "الشهر",
+        "specialty": "التخصص",
+        "package_name": "اسم الباكدج",
+        "entity_name": "الجهه",
+        "sector": "القطاع",
+        "payment_type": "نوع الدفع",
+        "sub_company": "الشركه الفرعيه",
+        "invoice_amount": "قيمة الفاتوره",
+        "code": "الكود",
+        "doctor_name": "اسم الطبيب",
+    }
+
+    REQUIRED_COLUMNS = list(COLUMN_MAPPING.values())
 
     @staticmethod
     @transaction.atomic
@@ -40,18 +41,29 @@ class ReportStatisticSheet15ImportService:
             "processed": 0,
             "created": 0,
             "updated": 0,
-            "deleted": 0,  # ✅ إضافة deleted
+            "deleted": 0,
             "skipped": 0,
             "errors": 0,
         }
 
         # ============================================================
-        # ✅ تخطي الصف الأول (العناوين)
+        # Header Validation & Mapping
         # ============================================================
-        data = dataframe.iloc[1:].copy()
-        data = data.reset_index(drop=True)
-        
-        print(f"📊 عدد الصفوف بعد تخطي العناوين: {len(data)}")
+        header_map = ImportHelpers.validate_required_columns(
+            dataframe,
+            ReportStatisticSheet15ImportService.REQUIRED_COLUMNS,
+        )
+
+        print("✅ Sheet 15 headers validated successfully")
+
+        # ============================================================
+        # Data
+        # ============================================================
+        # GoogleSheetsService already returns data rows
+        # with the first row used as headers.
+        data = dataframe.copy()
+
+        print(f"📊 عدد الصفوف: {len(data)}")
         print("=" * 50)
 
         # ============================================================
@@ -89,90 +101,159 @@ class ReportStatisticSheet15ImportService:
 
         for index, row in data.iterrows():
             try:
-                # ✅ أرقام الأعمدة في شيت 15
-                # العمود 0: الرقم الطبي
-                medical_number = ""
-                if len(row) > 0 and pd.notna(row.iloc[0]):
-                    medical_number = ImportHelpers.normalize_text(row.iloc[0])
                 
-                # العمود 1: الرقم الحسابي
-                account_number = ""
-                if len(row) > 1 and pd.notna(row.iloc[1]):
-                    account_number = ImportHelpers.normalize_text(row.iloc[1])
                 
-                # العمود 2: اسم المريض
-                patient_name = ""
-                if len(row) > 2 and pd.notna(row.iloc[2]):
-                    patient_name = ImportHelpers.normalize_text(row.iloc[2])
-                
+                # ====================================================
+                # قراءة الأعمدة بالاسم وليس بالترتيب
+                # ====================================================
+
+                medical_number = ImportHelpers.normalize_text(
+                    ImportHelpers.get_mapped_value(
+                        row,
+                        header_map,
+                        "medical_number",
+                        ReportStatisticSheet15ImportService.COLUMN_MAPPING,
+                    )
+                )
+
+                account_number = ImportHelpers.normalize_text(
+                    ImportHelpers.get_mapped_value(
+                        row,
+                        header_map,
+                        "account_number",
+                        ReportStatisticSheet15ImportService.COLUMN_MAPPING,
+                    )
+                )
+
+                patient_name = ImportHelpers.normalize_text(
+                    ImportHelpers.get_mapped_value(
+                        row,
+                        header_map,
+                        "patient_name",
+                        ReportStatisticSheet15ImportService.COLUMN_MAPPING,
+                    )
+                )
+
                 if not patient_name:
                     result["skipped"] += 1
                     continue
                 
-                # العمود 3: تاريخ الدخول
-                admission_date = None
-                if len(row) > 3 and pd.notna(row.iloc[3]):
-                    admission_date = ImportHelpers.clean_date(row.iloc[3])
-                
-                # العمود 4: تاريخ الخروج
-                discharge_date = None
-                if len(row) > 4 and pd.notna(row.iloc[4]):
-                    discharge_date = ImportHelpers.clean_date(row.iloc[4])
-                
-                # العمود 5: الشهر
-                month = ""
-                if len(row) > 5 and pd.notna(row.iloc[5]):
-                    month = ImportHelpers.normalize_text(row.iloc[5])
-                
-                # العمود 6: التخصص
-                specialty = ""
-                if len(row) > 6 and pd.notna(row.iloc[6]):
-                    specialty = ImportHelpers.normalize_text(row.iloc[6])
-                
-                # العمود 7: اسم الباكدج
-                package_name = ""
-                if len(row) > 7 and pd.notna(row.iloc[7]):
-                    package_name = ImportHelpers.normalize_text(row.iloc[7])
-                
-                # العمود 8: الجهه
-                entity_name = ""
-                if len(row) > 8 and pd.notna(row.iloc[8]):
-                    entity_name = ImportHelpers.normalize_text(row.iloc[8])
-                
-                # العمود 9: القطاع
-                sector = ""
-                if len(row) > 9 and pd.notna(row.iloc[9]):
-                    sector = ImportHelpers.normalize_text(row.iloc[9])
-                
-                # العمود 10: نوع الدفع
-                payment_type = ""
-                if len(row) > 10 and pd.notna(row.iloc[10]):
-                    payment_type = ImportHelpers.normalize_text(row.iloc[10])
-                
-                # العمود 11: الشركة الفرعية
-                sub_company = ""
-                if len(row) > 11 and pd.notna(row.iloc[11]):
-                    sub_company = ImportHelpers.normalize_text(row.iloc[11])
-                
-                # العمود 12: سعر الخدمه
-                service_price = Decimal('0.00')
-                if len(row) > 12 and pd.notna(row.iloc[12]):
-                    service_price = ReportStatisticSheet15ImportService.clean_amount(row.iloc[12])
-                
-                # العمود 13: قيمة الفاتوره
-                invoice_amount = Decimal('0.00')
-                if len(row) > 13 and pd.notna(row.iloc[13]):
-                    invoice_amount = ReportStatisticSheet15ImportService.clean_amount(row.iloc[13])
-                
-                # العمود 14: الكود
-                code = ""
-                if len(row) > 14 and pd.notna(row.iloc[14]):
-                    code = ImportHelpers.normalize_text(row.iloc[14])
-                
-                # ✅ العمود 15: اسم الطبيب (العمود الأخير)
-                doctor_name = ""
-                if len(row) > 15 and pd.notna(row.iloc[15]):
-                    doctor_name = ImportHelpers.normalize_text(row.iloc[15])
+
+                admission_date = ImportHelpers.clean_date(
+                    ImportHelpers.get_mapped_value(
+                        row,
+                        header_map,
+                        "admission_date",
+                        ReportStatisticSheet15ImportService.COLUMN_MAPPING,
+                        default=None,
+                    )
+                )
+
+                discharge_date = ImportHelpers.clean_date(
+                    ImportHelpers.get_mapped_value(
+                        row,
+                        header_map,
+                        "discharge_date",
+                        ReportStatisticSheet15ImportService.COLUMN_MAPPING,
+                        default=None,
+                    )
+                )
+
+                month = ImportHelpers.normalize_text(
+                    ImportHelpers.get_mapped_value(
+                        row,
+                        header_map,
+                        "month",
+                        ReportStatisticSheet15ImportService.COLUMN_MAPPING,
+                    )
+                )
+
+                specialty = ImportHelpers.normalize_text(
+                    ImportHelpers.get_mapped_value(
+                        row,
+                        header_map,
+                        "specialty",
+                        ReportStatisticSheet15ImportService.COLUMN_MAPPING,
+                    )
+                )
+
+                package_name = ImportHelpers.normalize_text(
+                    ImportHelpers.get_mapped_value(
+                        row,
+                        header_map,
+                        "package_name",
+                        ReportStatisticSheet15ImportService.COLUMN_MAPPING,
+                    )
+                )
+
+                entity_name = ImportHelpers.normalize_text(
+                    ImportHelpers.get_mapped_value(
+                        row,
+                        header_map,
+                        "entity_name",
+                        ReportStatisticSheet15ImportService.COLUMN_MAPPING,
+                    )
+                )
+
+                sector = ImportHelpers.normalize_text(
+                    ImportHelpers.get_mapped_value(
+                        row,
+                        header_map,
+                        "sector",
+                        ReportStatisticSheet15ImportService.COLUMN_MAPPING,
+                    )
+                )
+
+                payment_type = ImportHelpers.normalize_text(
+                    ImportHelpers.get_mapped_value(
+                        row,
+                        header_map,
+                        "payment_type",
+                        ReportStatisticSheet15ImportService.COLUMN_MAPPING,
+                    )
+                )
+
+                sub_company = ImportHelpers.normalize_text(
+                    ImportHelpers.get_mapped_value(
+                        row,
+                        header_map,
+                        "sub_company",
+                        ReportStatisticSheet15ImportService.COLUMN_MAPPING,
+                    )
+                )
+
+                # لا يوجد Mapping لـ service_price حاليًا
+                # لأن Sheet 15 يحتوي على "سعر الباكدج"
+                # وليس "سعر الخدمه".
+                service_price = Decimal("0.00")
+
+                invoice_amount = ImportHelpers.clean_decimal(
+                    ImportHelpers.get_mapped_value(
+                        row,
+                        header_map,
+                        "invoice_amount",
+                        ReportStatisticSheet15ImportService.COLUMN_MAPPING,
+                        default=0,
+                    )
+                )
+
+                code = ImportHelpers.normalize_text(
+                    ImportHelpers.get_mapped_value(
+                        row,
+                        header_map,
+                        "code",
+                        ReportStatisticSheet15ImportService.COLUMN_MAPPING,
+                    )
+                )
+
+                doctor_name = ImportHelpers.normalize_text(
+                    ImportHelpers.get_mapped_value(
+                        row,
+                        header_map,
+                        "doctor_name",
+                        ReportStatisticSheet15ImportService.COLUMN_MAPPING,
+                    )
+                )
 
                 result["processed"] += 1
                 processed = result["processed"]
@@ -341,7 +422,7 @@ class ReportStatisticSheet15ImportService:
         print(f"   📊 تمت المعالجة: {result['processed']}")
         print(f"   ✅ تم الإنشاء: {result['created']}")
         print(f"   🔄 تم التحديث: {result['updated']}")
-        print(f"   🗑️ تم الحذف: {result['deleted']}")  # ✅ إضافة deleted
+        print(f"   🗑️ تم الحذف: {result['deleted']}")
         print(f"   ⏭️ تم التخطي: {result['skipped']}")
         if result["errors"] > 0:
             print(f"   ❌ الأخطاء: {result['errors']}")

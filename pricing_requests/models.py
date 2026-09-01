@@ -452,6 +452,7 @@ class ServiceRecord(models.Model):
                 fields=[
                     "account_number",
                     "service_code",
+                    "service_date",
                 ],
                 name="unique_service_record"
             )
@@ -605,7 +606,6 @@ class PricingDetail(models.Model):
     def __str__(self):
         return f"{self.patient_name} - {self.procedure_name}"
 
-
 class SimilarInvoice(models.Model):
 
     account_number = models.CharField(
@@ -694,6 +694,27 @@ class SimilarInvoice(models.Model):
         verbose_name="الدور / المبنى"
     )
 
+    room = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        verbose_name="الغرفة"
+    )
+
+    admission_status = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        verbose_name="حالة الدخول"
+    )
+
+    admission_type = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        verbose_name="نوع الدخول"
+    )
+
     total_invoice = models.DecimalField(
         max_digits=14,
         decimal_places=2,
@@ -701,10 +722,11 @@ class SimilarInvoice(models.Model):
     )
 
     operation_description = models.TextField(
-    blank=True,
-    null=True,
-    verbose_name="توصيف العملية"
+        blank=True,
+        null=True,
+        verbose_name="توصيف العملية"
     )
+
     discount = models.DecimalField(
         max_digits=14,
         decimal_places=2,
@@ -735,6 +757,12 @@ class SimilarInvoice(models.Model):
         default=0
     )
 
+    balance = models.DecimalField(
+        max_digits=14,
+        decimal_places=2,
+        default=0
+    )
+
     invoice_status = models.CharField(
         max_length=100,
         blank=True,
@@ -747,6 +775,13 @@ class SimilarInvoice(models.Model):
         blank=True,
         null=True,
         verbose_name="تاريخ إنهاء الفاتورة"
+    )
+
+    operating_room_opened = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        verbose_name="فتح غرفة العمليات"
     )
 
     notes = models.TextField(
@@ -785,7 +820,6 @@ class SimilarInvoice(models.Model):
 
     def __str__(self):
         return f"{self.patient_name} - {self.operation_name}"
-    
 class Procedure(models.Model):
 
     code = models.CharField(
@@ -1359,6 +1393,26 @@ class ReportStatistic(models.Model):
         blank=True,
         null=True,
         verbose_name="نوع المريض"
+    )
+    department_name = models.CharField(
+    max_length=255,
+    blank=True,
+    null=True,
+    verbose_name="اسم القسم"
+    )
+
+    service_name_ar = models.CharField(
+        max_length=500,
+        blank=True,
+        null=True,
+        verbose_name="اسم الخدمة عربي"
+    )
+
+    procedure_date = models.DateTimeField(
+        blank=True,
+        null=True,
+        db_index=True,
+        verbose_name="تاريخ الإجراء"
     )
     
     stay_duration = models.CharField(

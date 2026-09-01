@@ -111,7 +111,7 @@ class ExcelProvider:
             dataframe.columns = cls.make_unique_columns(
                 dataframe.columns
             )
-
+            
         dataframe = dataframe.reset_index(drop=True)
 
         # Cache

@@ -26,59 +26,212 @@ class ImportHelpers:
     @staticmethod
     def clean_date(value):
         """
-        تنظيف قيمة التاريخ وتحويلها إلى كائن date أو None
-        ✅ يدعم جميع الصيغ الممكنة
-        ✅ يدعم الصيغة المصرية YYYY/MM/DD
-        ✅ يدعم الأرقام (timestamps)
+        تنظيف قيمة التاريخ وتحويلها إلى date أو None.
+
+        يدعم:
+        - YYYY/MM/DD
+        - YYYY-MM-DD
+        - DD/MM/YYYY
+        - DD-MM-YYYY
+        - MM/DD/YYYY
+        - YYYYMMDD
+        - Excel serial dates
+        - datetime / pandas Timestamp
+
+        ملاحظة:
+        يتم استخدام parsing صريح قبل Pandas لمنع اختلاف تفسير
+        التواريخ بين التشغيلات.
         """
+
         if pd.isna(value):
             return None
 
         if value in ("", None):
             return None
 
-        # ✅ لو كانت القيمة رقم 0 أو قيمة فارغة
+        # ------------------------------------------------------------
+        # datetime / pandas Timestamp
+        # ------------------------------------------------------------
+        if isinstance(value, (datetime, pd.Timestamp)):
+            return value.date()
+
+        # ------------------------------------------------------------
+        # Excel serial date / numeric timestamp
+        # ------------------------------------------------------------
         if isinstance(value, (int, float)):
             if value == 0:
                 return None
-            # لو كانت قيمة رقمية كبيرة (timestamp)
-            if value > 1000:
-                try:
-                    return pd.to_datetime(value, unit='d').date()
-                except:
-                    return None
 
-        # ✅ لو كانت نصاً
+            try:
+                return pd.to_datetime(
+                    value,
+                    unit="D",
+                    origin="1899-12-30",
+                ).date()
+            except (ValueError, TypeError, OverflowError):
+                return None
+
+        # ------------------------------------------------------------
+        # String
+        # ------------------------------------------------------------
         if isinstance(value, str):
             value = value.strip()
-            if not value or value in ['0', 'NULL', 'null', 'None', '']:
+
+            if value in ("", "0", "NULL", "null", "None"):
                 return None
 
-        # ✅ محاولة الصيغ المختلفة (الأولوية للصيغة المصرية)
-        for fmt in (
-            "%Y/%m/%d",     # 2026/8/10 (الصيغة المصرية)
-            "%Y-%m-%d",     # 2026-08-10
-            "%m/%d/%Y",     # 8/10/2026
-            "%d/%m/%Y",     # 10/8/2026
-            "%Y%m%d",       # 20260810
-            "%d-%m-%Y",     # 10-08-2026
-            "%m-%d-%Y",     # 08-10-2026
-            "%d.%m.%Y",     # 10.08.2026
-            "%m.%d.%Y",     # 08.10.2026
-        ):
-            try:
-                return datetime.strptime(str(value).strip(), fmt).date()
-            except (ValueError, TypeError):
-                continue
+            # ترتيب مهم:
+            # نضع DD/MM/YYYY قبل MM/DD/YYYY
+            # لأن بيانات المستشفى غالبًا مصرية.
+            formats = (
+                "%Y/%m/%d",
+                "%Y-%m-%d",
+                "%d/%m/%Y",
+                "%d-%m-%Y",
+                "%d.%m.%Y",
+                "%m/%d/%Y",
+                "%m-%d-%Y",
+                "%m.%d.%Y",
+                "%Y%m%d",
 
-        # ✅ المحاولة الأخيرة: استخدام Pandas (يتعامل مع صيغ متعددة)
+                # في حالة وجود وقت
+                "%Y/%m/%d %H:%M",
+                "%Y-%m-%d %H:%M",
+                "%d/%m/%Y %H:%M",
+                "%d-%m-%Y %H:%M",
+                "%m/%d/%Y %H:%M",
+                "%m-%d-%Y %H:%M",
+
+                "%Y/%m/%d %H:%M:%S",
+                "%Y-%m-%d %H:%M:%S",
+                "%d/%m/%Y %H:%M:%S",
+                "%d-%m-%Y %H:%M:%S",
+                "%m/%d/%Y %H:%M:%S",
+                "%m-%d-%Y %H:%M:%S",
+            )
+
+            for fmt in formats:
+                try:
+                    return datetime.strptime(
+                        value,
+                        fmt,
+                    ).date()
+                except (ValueError, TypeError):
+                    continue
+
+        # ------------------------------------------------------------
+        # Final fallback
+        # ------------------------------------------------------------
         try:
-            result = pd.to_datetime(value, errors='coerce')
+            result = pd.to_datetime(
+                value,
+                errors="coerce",
+                dayfirst=True,
+            )
+
             if pd.isna(result):
                 return None
+
             return result.date()
-        except:
+
+        except (ValueError, TypeError, OverflowError):
             return None
+
+    @staticmethod
+    def clean_datetime(value):
+        """
+        تنظيف التاريخ والوقت وتحويله إلى datetime timezone-aware أو None.
+
+        يدعم صيغ Sheet 11 مثل:
+        26/01/2025 17:17
+        01/01/2025 18:01
+        """
+
+        if pd.isna(value):
+            return None
+
+        if value in ("", None):
+            return None
+
+        if isinstance(value, str):
+            value = value.strip()
+
+            if not value or value in ["0", "NULL", "null", "None"]:
+                return None
+
+        # Excel / pandas datetime
+        if isinstance(value, pd.Timestamp):
+            result = value.to_pydatetime()
+
+        elif isinstance(value, datetime):
+            result = value
+
+        # Excel serial number
+        elif isinstance(value, (int, float)):
+            if value == 0:
+                return None
+
+            try:
+                result = pd.to_datetime(
+                    value,
+                    unit="d",
+                    origin="1899-12-30",
+                ).to_pydatetime()
+            except Exception:
+                return None
+
+        else:
+            # Sheet 11 datetime formats
+            result = None
+
+            for fmt in (
+                "%d/%m/%Y %H:%M",
+                "%d/%m/%Y %H:%M:%S",
+                "%Y/%m/%d %H:%M",
+                "%Y/%m/%d %H:%M:%S",
+                "%Y-%m-%d %H:%M",
+                "%Y-%m-%d %H:%M:%S",
+                "%m/%d/%Y %H:%M",
+                "%m/%d/%Y %H:%M:%S",
+            ):
+                try:
+                    result = datetime.strptime(
+                        str(value).strip(),
+                        fmt,
+                    )
+                    break
+                except (ValueError, TypeError):
+                    continue
+
+            # Fallback
+            if result is None:
+                try:
+                    parsed = pd.to_datetime(
+                        value,
+                        errors="coerce",
+                        dayfirst=True,
+                    )
+
+                    if pd.isna(parsed):
+                        return None
+
+                    result = parsed.to_pydatetime()
+
+                except Exception:
+                    return None
+
+        # ============================================================
+        # Convert naive datetime -> timezone-aware
+        # ============================================================
+        from django.utils import timezone
+
+        if timezone.is_naive(result):
+            result = timezone.make_aware(
+                result,
+                timezone.get_current_timezone(),
+            )
+
+        return result
 
     @staticmethod
     def clean_decimal(value):
@@ -352,8 +505,6 @@ class ImportHelpers:
         
         return None
     
-    
-    
     @staticmethod
     def clean_date_dmy(value):
         """
@@ -393,3 +544,264 @@ class ImportHelpers:
                 return None
 
         return None
+
+    @staticmethod
+    def clean_date_mdy(value):
+        """
+        تنظيف تاريخ Sheet 6 بصيغة MM/DD/YYYY
+        """
+        if pd.isna(value):
+            return None
+
+        if value in ("", None):
+            return None
+
+        if isinstance(value, (datetime, pd.Timestamp)):
+            return value.date()
+
+        if isinstance(value, str):
+            value = value.strip()
+
+            if not value or value in ["0", "NULL", "null", "None"]:
+                return None
+
+            for fmt in (
+                "%m/%d/%Y",
+                "%m-%d-%Y",
+                "%m.%d.%Y",
+                "%Y/%m/%d",
+                "%Y-%m-%d",
+            ):
+                try:
+                    return datetime.strptime(
+                        value,
+                        fmt,
+                    ).date()
+                except (ValueError, TypeError):
+                    continue
+
+        if isinstance(value, (int, float)):
+            if value == 0:
+                return None
+
+            try:
+                return pd.to_datetime(
+                    value,
+                    unit="D",
+                    origin="1899-12-30",
+                ).date()
+            except Exception:
+                return None
+
+        return None
+
+    # ============================================================
+    # Header Utilities
+    # ============================================================
+
+    @staticmethod
+    def normalize_header(value):
+        """
+        توحيد أسماء الأعمدة للمطابقة.
+
+        لا نغيّر اسم العمود الأصلي في الـ DataFrame،
+        وإنما نستخدم القيمة الموحدة للمقارنة فقط.
+        """
+        if value is None or pd.isna(value):
+            return ""
+
+        value = str(value)
+
+        # إزالة المسافات والأسطر الزائدة
+        value = " ".join(
+            value
+            .replace("\r", " ")
+            .replace("\n", " ")
+            .split()
+        )
+
+        # توحيد بعض الاختلافات العربية الشائعة
+        value = (
+            value
+            .replace("أ", "ا")
+            .replace("إ", "ا")
+            .replace("آ", "ا")
+            
+        )
+
+        return value.strip()
+
+    @staticmethod
+    def make_unique_headers(headers):
+        """
+        جعل أسماء الأعمدة فريدة مع الحفاظ على أسماء الـ Headers الأصلية.
+
+        مثال:
+            ["اسم المريض", "", "", ""]
+        
+        تصبح:
+            ["اسم المريض", "unnamed", "unnamed_2", "unnamed_3"]
+        """
+
+        result = []
+        counters = {}
+
+        for header in headers:
+
+            # تنظيف الـ Header
+            normalized = ImportHelpers.normalize_header(header)
+
+            # Header فارغ
+            if not normalized:
+                base_name = "unnamed"
+            else:
+                base_name = str(header)
+
+            # أول ظهور
+            if base_name not in counters:
+                counters[base_name] = 1
+                result.append(base_name)
+                continue
+
+            # ظهور مكرر
+            counters[base_name] += 1
+            result.append(
+                f"{base_name}_{counters[base_name]}"
+            )
+
+        return result
+
+    @staticmethod
+    def build_header_map(dataframe):
+        """
+        بناء خريطة للـ Headers بعد التطبيع.
+
+        Returns:
+            {
+                normalized_header: actual_dataframe_column
+            }
+
+        Raises:
+            ValueError إذا وُجد Header مكرر بعد التطبيع.
+        """
+        header_map = {}
+        duplicates = {}
+
+        for column in dataframe.columns:
+            actual_column = column
+            normalized_column = ImportHelpers.normalize_header(
+                actual_column
+            )
+
+            if not normalized_column:
+                continue
+
+            if normalized_column in header_map:
+                duplicates.setdefault(
+                    normalized_column,
+                    [
+                        header_map[normalized_column]
+                    ]
+                ).append(actual_column)
+                continue
+
+            header_map[normalized_column] = actual_column
+
+        if duplicates:
+            duplicate_details = ", ".join(
+                f"'{normalized}': {columns}"
+                for normalized, columns in duplicates.items()
+            )
+
+            raise ValueError(
+                "Duplicate sheet headers detected after normalization: "
+                f"{duplicate_details}"
+            )
+
+        return header_map
+
+    @staticmethod
+    def validate_required_columns(
+        dataframe,
+        required_columns,
+    ):
+        """
+        التأكد من وجود كل الأعمدة المطلوبة في الشيت.
+
+        required_columns:
+            أسماء Headers كما تظهر في الـ Sheet.
+
+        Returns:
+            header_map
+        """
+        header_map = ImportHelpers.build_header_map(
+            dataframe
+        )
+
+        normalized_required = {
+            ImportHelpers.normalize_header(column): column
+            for column in required_columns
+        }
+
+        missing_columns = [
+            original_name
+            for normalized_name, original_name
+            in normalized_required.items()
+            if normalized_name not in header_map
+        ]
+
+        if missing_columns:
+            raise ValueError(
+                "Missing required sheet columns: "
+                + ", ".join(missing_columns)
+            )
+
+        return header_map
+    
+    
+    @staticmethod
+    def get_mapped_value(
+        row,
+        header_map,
+        field_name,
+        column_mapping,
+        default="",
+    ):
+        """
+        الحصول على قيمة من الصف اعتمادًا على اسم الحقل
+        وليس ترتيب العمود.
+
+        field_name:
+            اسم الحقل في الـ Model / Mapping.
+
+        column_mapping:
+            خريطة الحقول إلى أسماء أعمدة الـ Sheet.
+
+        header_map:
+            الخريطة التي تم بناؤها من Headers الـ DataFrame.
+        """
+        column_name = column_mapping.get(field_name)
+
+        if not column_name:
+            return default
+
+        normalized_column = ImportHelpers.normalize_header(
+            column_name
+        )
+
+        actual_column = header_map.get(
+            normalized_column
+        )
+
+        if actual_column is None:
+            return default
+
+        value = row.get(
+            actual_column,
+            default,
+        )
+
+        if pd.isna(value):
+            return default
+
+        return value

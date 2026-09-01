@@ -33,15 +33,15 @@ class Command(BaseCommand):
         self.stdout.write("=" * 60)
         self.stdout.write("")
 
-        # ✅ استخدم header=None مع force_reload=True
+        # ✅ استخدام Header الصف الأول لتحديد الأعمدة بالاسم
         dataframe = ExcelProvider.read(
             file_path=options["file_path"],
-            sheet_name="15",      # ✅ شيت 15
-            header=None,          # ✅ مفيش Header
-            force_reload=True,    # ✅ إعادة تحميل البيانات من المصدر
+            sheet_name="15",
+            header=0,
+            force_reload=True,
         )
 
-        # ✅ حساب عدد الصفوف بشكل صحيح (بدون -1 لأن header=None)
+        # ✅ عدد صفوف البيانات الفعلية بعد استبعاد الـ Header
         total_rows = len(dataframe)
 
         if not options.get("no_confirm", False):

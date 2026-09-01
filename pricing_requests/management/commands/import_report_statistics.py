@@ -24,11 +24,11 @@ class Command(BaseCommand):
         self.stdout.write("")
         self.stdout.write("========== Report Statistics Import ==========")
 
-        # ✅ استخدم header=None مع force_reload=True
+        # ✅ استخدم header=0 مع force_reload=True
         dataframe = ExcelProvider.read(
             file_path=options["file_path"],
             sheet_name="11",  # ✅ شيت 11
-            header=None,      # ✅ مفيش Header
+            header=0,         # ✅ أول صف هو الـ Header
             force_reload=True,
         )
 
