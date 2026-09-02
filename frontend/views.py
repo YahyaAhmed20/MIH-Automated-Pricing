@@ -895,6 +895,7 @@ def reports_statistics(request):
             
         })
     
+    
     # أقل 5 جهات
     bottom_entities = []
     

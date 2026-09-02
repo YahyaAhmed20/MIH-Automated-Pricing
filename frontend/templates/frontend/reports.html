@@ -1160,34 +1160,75 @@
 document.addEventListener('DOMContentLoaded', function() {
     
     // ============================================
-    // ✅ 1. الكاونترات المتحركة - لكل الأرقام
+    // ✅ 1. الكاونترات المتحركة - لكل الأرقام (الإصدار المحسّن)
     // ============================================
     const counters = document.querySelectorAll('.counter');
-    
+
     counters.forEach(counter => {
-        const target = parseInt(counter.getAttribute('data-target'));
+        const target = parseFloat(
+    counter.getAttribute('data-target').replace(',', '.')
+);
+        console.log(
+    "COUNTER:",
+    counter,
+    "TARGET:",
+    counter.getAttribute('data-target'),
+    "PARSED:",
+    target
+);
+
         let current = 0;
-        const increment = Math.max(1, Math.ceil(target / 50));
-        
-        const updateCounter = () => {
-            if (current < target) {
-                current += increment;
-                if (current > target) current = target;
-                counter.textContent = current + (counter.classList.contains('badge-percent') ? '%' : '');
+
+        const duration = 1200;
+        const startTime = performance.now();
+
+        const isPercentage =
+            counter.classList.contains('badge-percent');
+
+        const updateCounter = (currentTime) => {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+
+            // Ease Out
+            const easedProgress =
+                1 - Math.pow(1 - progress, 3);
+
+            current = target * easedProgress;
+
+            if (isPercentage) {
+                counter.textContent =
+                    current.toFixed(1) + '%';
             } else {
-                counter.textContent = target + (counter.classList.contains('badge-percent') ? '%' : '');
+                counter.textContent =
+                    Math.floor(current).toLocaleString('en-US');
+            }
+
+            if (progress < 1) {
+                requestAnimationFrame(updateCounter);
+            } else {
+                if (isPercentage) {
+                    counter.textContent =
+                        target.toFixed(1) + '%';
+                } else {
+                    counter.textContent =
+                        target.toLocaleString('en-US');
+                }
             }
         };
-        
+
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    updateCounter();
+
+                    requestAnimationFrame(updateCounter);
+
                     observer.unobserve(entry.target);
                 }
             });
+        }, {
+            threshold: 0.2
         });
-        
+
         observer.observe(counter);
     });
     
