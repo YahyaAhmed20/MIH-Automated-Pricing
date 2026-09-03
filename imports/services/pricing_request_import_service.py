@@ -205,6 +205,7 @@ class PricingRequestImportService:
             "na",
             "none",
             "null",
+            "or",
         }:
             return ""
 
@@ -309,13 +310,9 @@ class PricingRequestImportService:
         patients_by_medical,
     ):
         """
-        ترتيب المطابقة:
-
-        1. الاسم + الكارنية
-        2. الكارنية إذا كان Unique
-        3. الرقم الطبي
-
-        الرقم الطبي لا يتم نقله من Patient إلى آخر.
+        مطابقة Patient بالاسم + الكارنية فقط.
+        لا نستخدم Card أو Medical Number وحدهما
+        حتى لا يتم ربط Patient مختلف بالخطأ.
         """
 
         identity_key = (
@@ -323,44 +320,7 @@ class PricingRequestImportService:
             card_number,
         )
 
-        # --------------------------------------------------------
-        # 1. Exact Identity
-        # --------------------------------------------------------
-
-        patient = patients_by_identity.get(
-            identity_key
-        )
-
-        if patient is not None:
-            return patient
-
-        # --------------------------------------------------------
-        # 2. Unique Card
-        # --------------------------------------------------------
-
-        if card_number:
-
-            patient = unique_patients_by_card.get(
-                card_number
-            )
-
-            if patient is not None:
-                return patient
-
-        # --------------------------------------------------------
-        # 3. Medical Number
-        # --------------------------------------------------------
-
-        if medical_number:
-
-            patient = patients_by_medical.get(
-                medical_number
-            )
-
-            if patient is not None:
-                return patient
-
-        return None
+        return patients_by_identity.get(identity_key)
 
     # ============================================================
     # Main Import
@@ -526,7 +486,7 @@ class PricingRequestImportService:
                 )
 
                 patient_card_key = (
-                    ImportHelpers.normalize_text(
+                    PricingRequestImportService.normalize_card_number(
                         request.patient.card_number
                     )
                 )
@@ -744,6 +704,15 @@ class PricingRequestImportService:
                 changed = False
 
                 # ------------------------------------------------
+                # حفظ الـ keys القديمة قبل التعديل
+                # ------------------------------------------------
+
+                old_name_key = ImportHelpers.normalize_text(patient.full_name)
+                old_card_key = PricingRequestImportService.normalize_card_number(
+                    patient.card_number
+                )
+
+                # ------------------------------------------------
                 # الاسم
                 #
                 # نثق بالاسم القادم من الشيت إذا وجدنا Patient
@@ -778,6 +747,18 @@ class PricingRequestImportService:
 
                         patient.phone = phone
                         changed = True
+
+                # ------------------------------------------------
+                # Remove old identity from cache
+                # ------------------------------------------------
+
+                old_identity_key = (
+                    old_name_key,
+                    old_card_key,
+                )
+
+                if patients_by_identity.get(old_identity_key) is patient:
+                    patients_by_identity.pop(old_identity_key, None)
 
                 # ------------------------------------------------
                 # Medical Number
@@ -905,7 +886,8 @@ class PricingRequestImportService:
                     f"⚠️ Skipping Pricing Request - Row {index}: "
                     f"Company is empty | "
                     f"Patient={patient_name!r} | "
-                    f"Procedure={procedure_name!r}"
+                    f"Procedure=غير محدد"
+
                 )
                 continue
 
@@ -1257,14 +1239,10 @@ class PricingRequestImportService:
 
                 request_key = (
                     "patient",
-                    ImportHelpers.normalize_text(
-                        patient.full_name
-                    ),
-                    ImportHelpers.normalize_text(
-                        patient.card_number
-                    ),
+                    ImportHelpers.normalize_text(patient_name),
+                    PricingRequestImportService.normalize_card_number(card_number),
                     request_date,
-                    procedure_name,
+                    ImportHelpers.normalize_text(procedure_name),
                 )
 
             sheet_keys.add(request_key)
@@ -1278,12 +1256,6 @@ class PricingRequestImportService:
             # ====================================================
 
             if existing_request is None:
-                
-                print(
-                    f"⚠️ DEBUG NULL ENTITY BEFORE CREATE | "
-                    f"Row={index} | "
-                    f"EntityName={entity_name!r}"
-                )
 
                 pricing_request = PricingRequest(
                     patient=patient,
@@ -1651,6 +1623,20 @@ class PricingRequestImportService:
                 for key in keys_to_delete
                 if existing_requests[key].id
             ]
+
+            print("\n" + "=" * 100)
+            print("⚠️ DEBUG DELETE")
+            for key in keys_to_delete:
+                request = existing_requests[key]
+                print(
+                    f"DELETE ID={request.id} | "
+                    f"Patient={request.patient.full_name!r} | "
+                    f"Card={request.patient.card_number!r} | "
+                    f"Date={request.request_date!r} | "
+                    f"Procedure={request.procedure_name!r} | "
+                    f"Key={key!r}"
+                )
+            print("=" * 100)
 
             if ids_to_delete:
 

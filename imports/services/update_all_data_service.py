@@ -1,6 +1,7 @@
 from time import perf_counter
 
 from django.core.management import call_command
+from django.db import close_old_connections  # ✅ تم إضافة هذا الـ import
 from django.core.cache import cache
 
 from imports.services.excel_provider import ExcelProvider
@@ -110,6 +111,9 @@ class UpdateAllDataService:
                 start = perf_counter()
 
                 try:
+
+                    # ✅ إغلاق الاتصالات القديمة قبل كل أمر
+                    close_old_connections()
 
                     # ----------------------------------------------------
                     # تشغيل Command
