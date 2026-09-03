@@ -6,7 +6,10 @@ ProgressService.reset()
 ProgressService.get()
 
 
+ya29.c.c0AZ4bNpZf67S6wqCiapnCtpzk8nk-OVnsZjqqH6k1mVIVdg9ui4E0wZRZZs7BiZtBS0f8zGOGmAqVzS_b7RAhIwPrFWLeqj7cCrvoWmNlHoFeeMQL8EMh3JNCsqVn-E12-nDsuAgz8dNqOOpKYA1c72bXS2skN9ujv1oySS51NlLiFutVxZhUaQVpMa9OcVG1Jxt9LuLfokfV-Tmmjd4TQzRxVqRBbfv-5Xgc6qpQcjIajT1qX20odZRg6uY2PbPB3ysHbUaH4BLAMp_rE2CFacmOZubNWIHuqy9HCDxxuHAfqHh7atDCNMEzJSHrG8SUHBGYTHLjJ3qK9ma8dGf-IEXq6pngixz-n432529idaqSQL9NfloDKnCnN385PS10pFXWUIZapeU8usdlZJbIIZXbevjzj7i8w3tRVodvU-Srx5_b5pxBkWbkyk8QSlO_vzyf5Vrp0ZQM6oZh62IfwqbZd-ueorVoMzygRp9tcb7B90nZknRzQ1615muJ-nX1kij12tkdWSZr9UbtV2mIozirdQf-Jn0Bshr3ufQzbbSm_y_gWQzlFOz-veOfsqFWFvbU-dkM-5MiIw-rwnu90V2cjwS1j2QJ5WBvhS8aV4gni94JBWifsO2jZ5Q3J7hRb3Ub_B0rW55jsdu2UbajeaeV12n_3qh-zbF3Q2jx59QfcSxYRyIqSeu2MmRSQdqYi0jFIp3j-SJvi5vbM8tolUv-dqmiX5W71sMd0dbI5766af5XB0hzFkJeZnjh4kOU1s62neezXBfOZVlcx4_o9IrVUX5aoR1kZgucfW9o8-7wjpfR4Fa4tizr74748mBw66Ib9k8BBvBpsSk7h15Uk4pXJMxMz77p86VwfZndvndBUunf4hFnm6mYknaznJ8b7ojbgakwo2hSeMev4mFhYF40qqR6sJrQcMMwucjIuh8ipz3-hw2ryBfZX6nMmbgMtnlZ5-xzk1Z2kYFQjbfFJnS_r1maffm2FsfyjgFB6R3RywOvSr91n-w
 
+
+$TOKEN = ""
 
 
 
@@ -35,7 +38,7 @@ ________________________________________________________________________________
 
 ف  السجلات التفصيلية  عندك المبلغ المفروض يسحب من عمود m سعر الخدمه شيت 11 
 __________________________
-شيت  ,10,11,6 m12,15
+شيت 6 ,10,11,12,15
 دول خليهم يقرا الاهمده اسم فقط عشان لو نقلت العمود من مكان لمكان ميحصلش ايرور 
 _____________________________
 
@@ -1907,3 +1910,396 @@ body.login-mode .content {
 
 </body>
 </html>
+
+
+
+
+
+
+ celery -A project worker --loglevel=info --concurrency=1 --pool=solo --time-limit=7200 --queues=local
+ 
+ -------------- celery@DESKTOP-BE0B8AC v5.6.3 (recovery)
+--- ***** ----- 
+-- ******* ---- Windows-10-10.0.19045-SP0 2026-09-03 13:08:38
+- *** --- * --- 
+- ** ---------- [config]
+- ** ---------- .> app:         project:0x278170bb110
+- ** ---------- .> transport:   redis://default:**@sakura.proxy.rlwy.net:54458//
+- ** ---------- .> results:     redis://default:**@sakura.proxy.rlwy.net:54458/
+- *** --- * --- .> concurrency: 1 (solo)
+-- ******* ---- .> task events: OFF (enable -E to monitor tasks in this worker)
+--- ***** ----- 
+ -------------- [queues]
+                .> local            exchange=local(direct) key=local
+                
+
+[tasks]
+  . imports.tasks.update_all_data_task
+
+[2026-09-03 13:08:39,833: INFO/MainProcess] Connected to redis://default:**@sakura.proxy.rlwy.net:54458//
+[2026-09-03 13:08:41,279: INFO/MainProcess] mingle: searching for neighbors
+[2026-09-03 13:08:48,137: INFO/MainProcess] mingle: sync with 1 nodes
+[2026-09-03 13:08:48,138: INFO/MainProcess] mingle: sync complete
+[2026-09-03 13:08:55,564: INFO/MainProcess] celery@DESKTOP-BE0B8AC ready.
+[2026-09-03 13:10:46,701: INFO/MainProcess] Task imports.tasks.update_all_data_task[3c9dcb33-6f18-461b-9910-5f274ac12276] received
+[2026-09-03 13:10:50,049: INFO/MainProcess] missed heartbeat from celery@4054bd4b69b3
+[2026-09-03 13:10:50,806: WARNING/MainProcess] ▶ ProgressService: Task started: 3c9dcb33-6f18-461b-9910-5f274ac12276
+[2026-09-03 13:10:50,806: WARNING/MainProcess] 🗑️ Cache cleared
+[2026-09-03 13:10:58,877: WARNING/MainProcess] 📥 Fetching fresh data from Google Sheets: 7
+[2026-09-03 13:10:58,877: WARNING/MainProcess] 🔄 Force reloading spreadsheet at 2026-09-03 13:10:58.877063
+[2026-09-03 13:11:00,640: WARNING/MainProcess] 📥 Fetching fresh data from Google Sheets: 7
+[2026-09-03 13:14:14,402: WARNING/MainProcess] 📥 Fetching fresh data from Google Sheets: 12
+[2026-09-03 13:14:14,402: WARNING/MainProcess] 🔄 Force reloading spreadsheet at 2026-09-03 13:14:14.402880
+[2026-09-03 13:14:14,771: WARNING/MainProcess] 📥 Fetching fresh data from Google Sheets: 12
+[2026-09-03 13:17:27,832: WARNING/MainProcess] 📥 Fetching fresh data from Google Sheets: 12
+[2026-09-03 13:17:27,832: WARNING/MainProcess] 🔄 Force reloading spreadsheet at 2026-09-03 13:17:27.832270
+[2026-09-03 13:17:28,698: WARNING/MainProcess] 📥 Fetching fresh data from Google Sheets: 12
+[2026-09-03 13:20:34,207: WARNING/MainProcess] 🗑️ Cache cleared
+[2026-09-03 13:20:43,872: INFO/MainProcess] Task imports.tasks.update_all_data_task[3c9dcb33-6f18-461b-9910-5f274ac12276] succeeded in 597.1720000000205s: {'status': 'error', 'update_type': 'quick', 'logs': '======================================================================      MIH Automated Pricing System        Update All Data======================================================================----------------------------------------------------------------------▶ START : Pricing DetailsRUNNING => import_pricing_details
+========== Pricing Details Import ==========
+❌ Pricing Details Failed   Error: APIError: [503]: The service is currently unavailable.   Continuing with remaining commands...----------------------------------------------------------------------▶ START : Pricing RequestsRUNNING => import_pricing_requests
+============================================================
+   Pricing Requests Import
+============================================================
+
+❌ Pricing Requests Failed   Error: APIError: [503]: The service is currently unavailable.   Continuing with remaining...', 'results': [{'title': 'Pricing Details', 'status': '❌', 'time': 188...., ...}]}
+[2026-09-03 13:20:44,087: WARNING/MainProcess] Substantial drift from celery@4054bd4b69b3 may mean clocks are out of sync.  Current drift is 596 seconds.  [orig: 2026-09-03 13:20:44.087047 recv: 2026-09-03 13:10:48.016537]
+
+worker: Hitting Ctrl+C again will initiate cold shutdown, terminating all running tasks!
+
+worker: Warm shutdown (MainProcess)
+
+worker: Hitting Ctrl+C again will terminate all running tasks!
+
+Waiting gracefully for cold shutdown to complete...
+
+worker: Cold shutdown (MainProcess)
+[2026-09-03 13:26:32,064: WARNING/MainProcess] Exception ignored in atexit callback
+[2026-09-03 13:26:32,064: WARNING/MainProcess] : 
+[2026-09-03 13:26:32,064: WARNING/MainProcess] <bound method finalize._exitfunc of <class 'weakref.finalize'>>
+[2026-09-03 13:26:32,064: WARNING/MainProcess] Traceback (most recent call last):
+[2026-09-03 13:26:32,064: WARNING/MainProcess]   File "C:\Users\hp\AppData\Local\Programs\Python\Python311\Lib\weakref.py", line 666, in _exitfunc
+[2026-09-03 13:26:32,185: WARNING/MainProcess]     
+[2026-09-03 13:26:32,201: WARNING/MainProcess] f()
+[2026-09-03 13:26:32,201: WARNING/MainProcess]   File "C:\Users\hp\AppData\Local\Programs\Python\Python311\Lib\weakref.py", line 590, in __call__
+[2026-09-03 13:26:32,217: WARNING/MainProcess]     
+[2026-09-03 13:26:32,256: WARNING/MainProcess] return info.func(*info.args, **(info.kwargs or {}))
+[2026-09-03 13:26:32,309: WARNING/MainProcess]   File "D:\desktop\rphospital\Lib\site-packages\urllib3\connectionpool.py", line 
+[2026-09-03 13:26:32,328: WARNING/MainProcess]     
+[2026-09-03 13:26:32,329: WARNING/MainProcess] while True:
+[2026-09-03 13:26:32,329: WARNING/MainProcess]   File "D:\desktop\rphospital\Lib\site-packages\celery\apps\worker.py", line 306, in _handle_request
+[2026-09-03 13:26:32,420: WARNING/MainProcess]   File "D:\desktop\rphospital\Lib\site-packages\celery\apps\worker.py", line 335, in on_hard_shutdown
+[2026-09-03 13:26:32,420: WARNING/MainProcess]     
+[2026-09-03 13:26:32,421: WARNING/MainProcess] raise WorkerTerminate(EX_FAILURE)
+[2026-09-03 13:26:32,421: WARNING/MainProcess] celery.exceptions
+[2026-09-03 13:26:32,421: WARNING/MainProcess] .
+[2026-09-03 13:26:32,421: WARNING/MainProcess] WorkerTerminate
+[2026-09-03 13:26:32,421: WARNING/MainProcess] : 
+[2026-09-03 13:26:32,421: WARNING/MainProcess] 1
+(rphospital) PS D:\desktop\rphospital\src> ^C
+(rphospital) PS D:\desktop\rphospital\src> celery -A project worker --loglevel=info --concurrency=1 --pool=solo --time-limit=7200 --queues=local              
+ 
+ -------------- celery@DESKTOP-BE0B8AC v5.6.3 (recovery)
+--- ***** ----- 
+-- ******* ---- Windows-10-10.0.19045-SP0 2026-09-03 13:26:57
+- *** --- * --- 
+- ** ---------- [config]
+- ** ---------- .> app:         project:0x24a5e19b310
+- ** ---------- .> transport:   redis://default:**@sakura.proxy.rlwy.net:54458//
+- ** ---------- .> results:     redis://default:**@sakura.proxy.rlwy.net:54458/
+- *** --- * --- .> concurrency: 1 (solo)
+-- ******* ---- .> task events: OFF (enable -E to monitor tasks in this worker)
+--- ***** ----- 
+ -------------- [queues]
+                .> local            exchange=local(direct) key=local
+                
+
+[tasks]
+  . imports.tasks.update_all_data_task
+
+[2026-09-03 13:26:59,352: INFO/MainProcess] Connected to redis://default:**@sakura.proxy.rlwy.net:54458//
+[2026-09-03 13:27:00,671: INFO/MainProcess] mingle: searching for neighbors
+[2026-09-03 13:27:07,397: INFO/MainProcess] mingle: sync with 1 nodes
+[2026-09-03 13:27:07,398: INFO/MainProcess] mingle: sync complete
+[2026-09-03 13:27:14,821: INFO/MainProcess] celery@DESKTOP-BE0B8AC ready.
+[2026-09-03 13:28:00,737: INFO/MainProcess] Task imports.tasks.update_all_data_task[4ec3f40d-3e0d-4415-992d-92b34ddde428] received
+[2026-09-03 13:28:04,823: WARNING/MainProcess] ▶ ProgressService: Task started: 4ec3f40d-3e0d-4415-992d-92b34ddde428
+[2026-09-03 13:28:04,824: WARNING/MainProcess] 🗑️ Cache cleared
+[2026-09-03 13:28:06,064: INFO/MainProcess] missed heartbeat from celery@4054bd4b69b3
+[2026-09-03 13:28:12,600: WARNING/MainProcess] 📥 Fetching fresh data from Google Sheets: 1
+[2026-09-03 13:28:12,600: WARNING/MainProcess] 🔄 Force reloading spreadsheet at 2026-09-03 13:28:12.600265
+[2026-09-03 13:28:14,095: WARNING/MainProcess] 📥 Fetching fresh data from Google Sheets: 1
+[2026-09-03 13:31:28,518: WARNING/MainProcess] 📥 Fetching fresh data from Google Sheets: 1
+[2026-09-03 13:31:28,518: WARNING/MainProcess] 🔄 Force reloading spreadsheet at 2026-09-03 13:31:28.518668
+[2026-09-03 13:31:28,822: WARNING/MainProcess] 📥 Fetching fresh data from Google Sheets: 1
+[2026-09-03 13:34:42,521: WARNING/MainProcess] 📥 Fetching fresh data from Google Sheets: 2
+[2026-09-03 13:34:42,521: WARNING/MainProcess] 🔄 Force reloading spreadsheet at 2026-09-03 13:34:42.521077
+[2026-09-03 13:34:43,011: WARNING/MainProcess] 📥 Fetching fresh data from Google Sheets: 2
+[2026-09-03 13:37:33,482: WARNING/MainProcess] RAW ROWS: 89
+[2026-09-03 13:37:33,482: WARNING/MainProcess] RAW ROW 0: ['الباكدجات', 'نوع التعاقد', 'التخصص', 'مدة الاقامه', 'الكود', 'السعر', 'ملاحظات', '', '', '', '']
+[2026-09-03 13:37:33,482: WARNING/MainProcess] RAW ROW 1: ['استئصال الكيس الدهنى او الشمعى', 'نقدي', ' الجراحه العامه', 'رعايه نهاريه', 'OPR-SUR01-C', '5٬500', '', '', '', '', '']
+[2026-09-03 13:37:33,482: WARNING/MainProcess] RAW ROW 2: ['استئصال الورم الحميد او الافة الجلدية او الزوائد الجلدية', 'نقدي', ' الجراحه العامه', 'رعايه نهاريه', 'OPR-SUR02-C', '5٬500', '', '', '', '', '']
+[2026-09-03 13:37:33,482: WARNING/MainProcess] DATA ROWS AFTER SKIP: 87
+[2026-09-03 13:37:33,482: WARNING/MainProcess] FIRST DATA ROW: ['استئصال الورم الحميد او الافة الجلدية او الزوائد الجلدية', 'نقدي', ' الجراحه العامه', 'رعايه نهاريه', 'OPR-SUR02-C', '5٬500', '', '', '', '', '']
+[2026-09-03 13:37:33,687: WARNING/MainProcess] ✅ Cached sheet 2 with 87 rows
+[2026-09-03 13:37:33,687: WARNING/MainProcess] Row 0: ['استئصال الورم الحميد او الافة الجلدية او الزوائد الجلدية', 'نقدي', ' الجراحه العامه', 'رعايه نهاريه', 'OPR-SUR02-C']...
+[2026-09-03 13:37:33,687: WARNING/MainProcess] ================================================================================
+[2026-09-03 13:37:33,687: WARNING/MainProcess] Row 1: ['فتح او تنظيف خراج سطحى', 'نقدي', ' الجراحه العامه', 'رعايه نهاريه', 'OPR-SUR03-C']...
+[2026-09-03 13:37:33,687: WARNING/MainProcess] ================================================================================
+[2026-09-03 13:37:33,687: WARNING/MainProcess] Row 2: ['استئصال ظفر غائر', 'نقدي', ' الجراحه العامه', 'رعايه نهاريه', 'OPR-SUR04-C']...
+[2026-09-03 13:37:33,687: WARNING/MainProcess] ================================================================================
+[2026-09-03 13:37:33,695: WARNING/MainProcess] Row 3: ['عينة من الجلد', 'نقدي', ' الجراحه العامه', 'رعايه نهاريه', 'OPR-SUR05-C']...
+[2026-09-03 13:37:33,695: WARNING/MainProcess] ================================================================================
+[2026-09-03 13:37:33,695: WARNING/MainProcess] Row 4: ['استئصال غدة عرقية', 'نقدي', ' الجراحه العامه', 'رعايه نهاريه', 'OPR-SUR06-C']...
+[2026-09-03 13:37:33,695: WARNING/MainProcess] ================================================================================
+[2026-09-03 13:37:33,699: WARNING/MainProcess] ✅ Cached sheet 2 with 87 rows
+[2026-09-03 13:37:35,627: WARNING/MainProcess] ⏳ Starting Cash Packages import from Sheet 2...
+[2026-09-03 13:37:35,627: WARNING/MainProcess] ⏳ Loading specialties...
+[2026-09-03 13:37:36,427: WARNING/MainProcess]    ✅ 262 specialties loaded
+[2026-09-03 13:37:36,429: WARNING/MainProcess] ⏳ Loading packages...
+[2026-09-03 13:37:44,405: WARNING/MainProcess]    ✅ 178 packages loaded
+[2026-09-03 13:37:44,614: WARNING/MainProcess] ⏳ Processing rows...
+[2026-09-03 13:37:44,882: WARNING/MainProcess] ⚠️ صف 46: كود مفقود - تم استخدام كود افتراضي
+[2026-09-03 13:37:45,343: WARNING/MainProcess] ⚠️ صف 47: كود مفقود - تم استخدام كود افتراضي
+[2026-09-03 13:37:45,545: WARNING/MainProcess] ⚠️ صف 48: كود مفقود - تم استخدام كود افتراضي
+[2026-09-03 13:37:45,945: WARNING/MainProcess] ⚠️ صف 49: كود مفقود - تم استخدام كود افتراضي
+[2026-09-03 13:37:46,092: WARNING/MainProcess] ⚠️ صف 50: كود مفقود - تم استخدام كود افتراضي
+[2026-09-03 13:37:46,151: WARNING/MainProcess] ⚠️ صف 51: كود مفقود - تم استخدام كود افتراضي
+[2026-09-03 13:37:46,168: WARNING/MainProcess] ⚠️ صف 52: كود مفقود - تم استخدام كود افتراضي
+[2026-09-03 13:37:46,177: WARNING/MainProcess] ⚠️ صف 53: كود مفقود - تم استخدام كود افتراضي
+[2026-09-03 13:37:46,177: WARNING/MainProcess] ⚠️ صف 55: كود مفقود - تم استخدام كود افتراضي
+[2026-09-03 13:37:46,243: WARNING/MainProcess] ⚠️ صف 56: كود مفقود - تم استخدام كود افتراضي
+[2026-09-03 13:37:46,280: WARNING/MainProcess]    ✅ Processed 87/87 rows
+[2026-09-03 13:37:46,280: WARNING/MainProcess]    ⏭️ Skipped 0 duplicate keys in sheet
+[2026-09-03 13:37:46,524: WARNING/MainProcess] 💾 Creating 0 packages...
+[2026-09-03 13:37:46,524: WARNING/MainProcess] 💾 Updating 0 packages...
+[2026-09-03 13:37:46,529: WARNING/MainProcess] ✅ Completed in 10.89 seconds
+[2026-09-03 13:37:56,234: WARNING/MainProcess] 📥 Fetching fresh data from Google Sheets: 3
+[2026-09-03 13:37:56,234: WARNING/MainProcess] 🔄 Force reloading spreadsheet at 2026-09-03 13:37:56.234309
+[2026-09-03 13:37:57,474: WARNING/MainProcess] 📥 Fetching fresh data from Google Sheets: 3
+[2026-09-03 13:41:11,594: WARNING/MainProcess] 📥 Fetching fresh data from Google Sheets: 4
+[2026-09-03 13:41:11,594: WARNING/MainProcess] 🔄 Force reloading spreadsheet at 2026-09-03 13:41:11.594525
+[2026-09-03 13:41:11,932: WARNING/MainProcess] 📥 Fetching fresh data from Google Sheets: 4
+[2026-09-03 13:44:26,292: WARNING/MainProcess] 📥 Fetching fresh data from Google Sheets: 5
+[2026-09-03 13:44:26,292: WARNING/MainProcess] 🔄 Force reloading spreadsheet at 2026-09-03 13:44:26.292621
+[2026-09-03 13:44:26,724: WARNING/MainProcess] 📥 Fetching fresh data from Google Sheets: 5
+[2026-09-03 13:47:40,029: WARNING/MainProcess] 📥 Fetching fresh data from Google Sheets: 6
+[2026-09-03 13:47:40,031: WARNING/MainProcess] 🔄 Force reloading spreadsheet at 2026-09-03 13:47:40.031843
+[2026-09-03 13:47:40,382: WARNING/MainProcess] 📥 Fetching fresh data from Google Sheets: 6
+[2026-09-03 13:47:57,398: WARNING/MainProcess] RAW ROWS: 28207
+[2026-09-03 13:47:57,398: WARNING/MainProcess] RAW ROW 0: ['Item', 'الشهر', 'الرقم الطبي', 'الرقم الحسابي', 'القطاع', 'نوع الدفع', 'الشركه الفرعيه', 'صافي الفاتورة', 'مدة الاقامة', 'الكود', 'الرقم الحسابى', 'نوع المريض', 'اسم المريض', 'تاريخ الدخول', 'تاريخ الخروج', 'اسم القسم', 'اسم الخدمة', 'اسم الخدمة عربي', 'التاريخ', 'الجهه', 'المبلغ', 'اسم الطبيب']
+[2026-09-03 13:47:57,406: WARNING/MainProcess] RAW ROW 1: ['م', 'يناير', 'نوع المريض', 'اسم المريض', 'تاريخ الدخول ', 'تاريخ الخروج', 'مدة الاقامه', 'اسم القسم', 'اسم الخدمة ', 'الكود', 'التاريخ', 'شركة التامين', 'الشركة الفرعية', 'المبلغ', 'اجمالي الفاتوره', '', '', '', '1/1/2026', '', '', '']
+[2026-09-03 13:47:57,406: WARNING/MainProcess] RAW ROW 2: ['1', 'مايو', '7362', '4424812', '', '', 'الاهلى للمشروعات والخدمات الطبية', '32280', '', 'SET-080', '4424812', 'I', 'حامد مصطفى مبروك الكشاك', '08/05/2026', '10/05/2026', 'اجهزة العمليات من الخارج', 'Laser in Varicose Viens Cases', 'إيجار منظار كامل بمشتملاته', '09/05/2026', 'بنك ناصر الا جتماعى', '3000', 'ا.د / هشام الغمراوى']
+[2026-09-03 13:47:57,406: WARNING/MainProcess] DATA ROWS AFTER SKIP: 28205
+[2026-09-03 13:47:57,406: WARNING/MainProcess] FIRST DATA ROW: ['1', 'مايو', '7362', '4424812', '', '', 'الاهلى للمشروعات والخدمات الطبية', '32280', '', 'SET-080', '4424812', 'I', 'حامد مصطفى مبروك الكشاك', '08/05/2026', '10/05/2026', 'اجهزة العمليات من الخارج', 'Laser in Varicose Viens Cases', 'إيجار منظار كامل بمشتملاته', '09/05/2026', 'بنك ناصر الا جتماعى', '3000', 'ا.د / هشام الغمراوى']
+[2026-09-03 13:47:57,844: WARNING/MainProcess] ✅ Cached sheet 6 with 28205 rows
+[2026-09-03 13:47:57,905: WARNING/MainProcess] Row 0: ['1', 'مايو', '7362', '4424812', '']...
+[2026-09-03 13:47:57,905: WARNING/MainProcess] ================================================================================
+[2026-09-03 13:47:57,905: WARNING/MainProcess] Row 1: ['2', 'يوليو', '28555', '4505940', '']...
+[2026-09-03 13:47:57,905: WARNING/MainProcess] ================================================================================
+[2026-09-03 13:47:57,905: WARNING/MainProcess] Row 2: ['3', 'يوليو', '28555', '4505940', '']...
+[2026-09-03 13:47:57,905: WARNING/MainProcess] ================================================================================
+[2026-09-03 13:47:57,905: WARNING/MainProcess] Row 3: ['4', 'يوليو', '28555', '4505940', '']...
+[2026-09-03 13:47:57,905: WARNING/MainProcess] ================================================================================
+[2026-09-03 13:47:57,905: WARNING/MainProcess] Row 4: ['5', 'يوليو', '28555', '4505940', '']...
+[2026-09-03 13:47:57,913: WARNING/MainProcess] ================================================================================
+[2026-09-03 13:47:57,946: WARNING/MainProcess] ✅ Cached sheet 6 with 28205 rows
+[2026-09-03 13:47:58,022: WARNING/MainProcess] ✅ Sheet 6 headers mapped successfully
+[2026-09-03 13:47:58,022: WARNING/MainProcess]    Headers:
+[2026-09-03 13:47:58,022: WARNING/MainProcess]  
+[2026-09-03 13:47:58,022: WARNING/MainProcess] ['Item', 'الشهر', 'الرقم الطبي', 'الرقم الحسابي', 'القطاع', 'نوع الدفع', 'الشركه الفرعيه', 'صافي الفاتورة', 'مدة الاقامة', 'الكود', 'الرقم الحسابى', 'نوع المريض', 'اسم المريض', 'تاريخ الدخول', 'تاريخ الخروج', 'اسم القسم', 'اسم الخدمة', 'اسم الخدمة عربي', 'التاريخ', 'الجهه', 'المبلغ', 'اسم الطبيب']
+[2026-09-03 13:48:07,120: WARNING/MainProcess]    📊 Processed 1000/28205 rows...
+[2026-09-03 13:48:07,333: WARNING/MainProcess]    📊 Processed 2000/28205 rows...
+[2026-09-03 13:48:07,540: WARNING/MainProcess]    📊 Processed 3000/28205 rows...
+[2026-09-03 13:48:07,720: WARNING/MainProcess]    📊 Processed 4000/28205 rows...
+[2026-09-03 13:48:07,898: WARNING/MainProcess]    📊 Processed 5000/28205 rows...
+[2026-09-03 13:48:08,316: WARNING/MainProcess]    📊 Processed 6000/28205 rows...
+[2026-09-03 13:48:08,520: WARNING/MainProcess]    📊 Processed 7000/28205 rows...
+[2026-09-03 13:48:08,706: WARNING/MainProcess]    📊 Processed 8000/28205 rows...
+[2026-09-03 13:48:08,879: WARNING/MainProcess]    📊 Processed 9000/28205 rows...
+[2026-09-03 13:48:09,048: WARNING/MainProcess]    📊 Processed 10000/28205 rows...
+[2026-09-03 13:48:09,237: WARNING/MainProcess]    📊 Processed 11000/28205 rows...
+[2026-09-03 13:48:09,464: WARNING/MainProcess]    📊 Processed 12000/28205 rows...
+[2026-09-03 13:48:09,663: WARNING/MainProcess]    📊 Processed 13000/28205 rows...
+[2026-09-03 13:48:09,839: WARNING/MainProcess]    📊 Processed 14000/28205 rows...
+[2026-09-03 13:48:10,014: WARNING/MainProcess]    📊 Processed 15000/28205 rows...
+[2026-09-03 13:48:10,196: WARNING/MainProcess]    📊 Processed 16000/28205 rows...
+[2026-09-03 13:48:10,380: WARNING/MainProcess]    📊 Processed 17000/28205 rows...
+[2026-09-03 13:48:10,621: WARNING/MainProcess]    📊 Processed 18000/28205 rows...
+[2026-09-03 13:48:10,821: WARNING/MainProcess]    📊 Processed 19000/28205 rows...
+[2026-09-03 13:48:10,980: WARNING/MainProcess]    📊 Processed 20000/28205 rows...
+[2026-09-03 13:48:11,170: WARNING/MainProcess]    📊 Processed 21000/28205 rows...
+[2026-09-03 13:48:11,346: WARNING/MainProcess]    📊 Processed 22000/28205 rows...
+[2026-09-03 13:48:11,529: WARNING/MainProcess]    📊 Processed 23000/28205 rows...
+[2026-09-03 13:48:11,720: WARNING/MainProcess]    📊 Processed 24000/28205 rows...
+[2026-09-03 13:48:11,961: WARNING/MainProcess]    📊 Processed 25000/28205 rows...
+[2026-09-03 13:48:12,129: WARNING/MainProcess]    📊 Processed 26000/28205 rows...
+[2026-09-03 13:48:12,578: WARNING/MainProcess]    📊 Processed 27000/28205 rows...
+[2026-09-03 13:48:12,769: WARNING/MainProcess]    📊 Processed 28000/28205 rows...
+[2026-09-03 13:48:12,827: WARNING/MainProcess]    ✅ Processed 28205/28205 rows
+[2026-09-03 13:48:12,827: WARNING/MainProcess] 💾 Creating 0 records...
+[2026-09-03 13:48:12,827: WARNING/MainProcess] 💾 Updating 48 records...
+[2026-09-03 13:48:13,860: WARNING/MainProcess]    ✅ Updated batch 1 (48/48)
+[2026-09-03 13:48:20,824: WARNING/MainProcess] ✅ Completed in 22.83 seconds
+[2026-09-03 13:48:44,593: WARNING/MainProcess] 📥 Fetching fresh data from Google Sheets: 7
+[2026-09-03 13:48:44,593: WARNING/MainProcess] 🔄 Force reloading spreadsheet at 2026-09-03 13:48:44.593142
+[2026-09-03 13:48:45,460: WARNING/MainProcess] 📥 Fetching fresh data from Google Sheets: 7
+[2026-09-03 13:51:59,238: WARNING/MainProcess] 📥 Fetching fresh data from Google Sheets: 12
+[2026-09-03 13:51:59,241: WARNING/MainProcess] 🔄 Force reloading spreadsheet at 2026-09-03 13:51:59.241074
+[2026-09-03 13:51:59,543: WARNING/MainProcess] 📥 Fetching fresh data from Google Sheets: 12
+[2026-09-03 13:55:13,242: WARNING/MainProcess] 📥 Fetching fresh data from Google Sheets: 10
+[2026-09-03 13:55:13,243: WARNING/MainProcess] 🔄 Force reloading spreadsheet at 2026-09-03 13:55:13.243429
+[2026-09-03 13:55:13,639: WARNING/MainProcess] 📥 Fetching fresh data from Google Sheets: 10
+[2026-09-03 13:58:27,736: WARNING/MainProcess] 📥 Fetching fresh data from Google Sheets: 9
+[2026-09-03 13:58:27,736: WARNING/MainProcess] 🔄 Force reloading spreadsheet at 2026-09-03 13:58:27.736356
+[2026-09-03 13:58:28,043: WARNING/MainProcess] 📥 Fetching fresh data from Google Sheets: 9
+[2026-09-03 13:58:30,850: WARNING/MainProcess] RAW ROWS: 991
+[2026-09-03 13:58:30,850: WARNING/MainProcess] RAW ROW 0: ['الجهه', 'الفئه الماليه', 'قائمة الاسعار', 'القسم الداخلي', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'القسم الخارجي', '', '', '', '', '', '', '', 'المرفقات', '', '', '', '', '']
+[2026-09-03 13:58:30,850: WARNING/MainProcess] RAW ROW 1: ['', '', '', 'الاشعه التداخليه', '', 'خدمات الكلي', '', '', 'العلاج الاشعاعي', '', '', 'علاج الالم', '', 'خدمات بنك الدم ', '', '', 'المرافق', '', 'الاسعاف', '', '', 'خدمات الكلي', '', '', 'العلاج الاشعاعي', '', '', 'الاسعاف', '', 'صورة العقد', '', '', '', '', '']
+[2026-09-03 13:58:30,850: WARNING/MainProcess] RAW ROW 2: ['', '', '', 'معدل الخصم', 'التفاصيل ', 'معدل الخصم', 'التفاصيل وصافي السعر', '', 'معدل الخصم', 'التفاصيل وصافي السعر', '', 'معدل الخصم', 'التفاصيل وصافي السعر', 'معدل الخصم', 'التفاصيل وصافي السعر', 'التفاصيل وصافي السعر', 'معدل الخصم', 'التفاصيل وصافي السعر', 'معدل الخصم', 'التفاصيل وصافي السعر', '', 'معدل الخصم', 'التفاصيل وصافي السعر', '', 'معدل الخصم', 'التفاصيل وصافي السعر', '', 'معدل الخصم', 'التفاصيل وصافي السعر', '', '', '', '', '', '']
+[2026-09-03 13:58:30,850: WARNING/MainProcess] DATA ROWS AFTER SKIP: 989
+[2026-09-03 13:58:30,850: WARNING/MainProcess] FIRST DATA ROW: ['', '', '', 'معدل الخصم', 'التفاصيل ', 'معدل الخصم', 'التفاصيل وصافي السعر', '', 'معدل الخصم', 'التفاصيل وصافي السعر', '', 'معدل الخصم', 'التفاصيل وصافي السعر', 'معدل الخصم', 'التفاصيل وصافي السعر', 'التفاصيل وصافي السعر', 'معدل الخصم', 'التفاصيل وصافي السعر', 'معدل الخصم', 'التفاصيل وصافي السعر', '', 'معدل الخصم', 'التفاصيل وصافي السعر', '', 'معدل الخصم', 'التفاصيل وصافي السعر', '', 'معدل الخصم', 'التفاصيل وصافي السعر', '', '', '', '', '', ''][2026-09-03 13:58:30,904: WARNING/MainProcess] ✅ Cached sheet 9 with 10 rows
+[2026-09-03 13:58:30,904: WARNING/MainProcess] Row 0: ['', '', '', 'معدل الخصم', 'التفاصيل ']...
+[2026-09-03 13:58:30,904: WARNING/MainProcess] ================================================================================
+[2026-09-03 13:58:30,904: WARNING/MainProcess] Row 1: ['الاهلى للخدمات الطبية ', 'T047', '2025', '10%', '']...
+[2026-09-03 13:58:30,904: WARNING/MainProcess] ================================================================================
+[2026-09-03 13:58:30,904: WARNING/MainProcess] Row 2: ['', '', '', '', '']...
+[2026-09-03 13:58:30,904: WARNING/MainProcess] ================================================================================
+[2026-09-03 13:58:30,916: WARNING/MainProcess] Row 3: ['', '', '', '', '']...
+[2026-09-03 13:58:30,920: WARNING/MainProcess] ================================================================================
+[2026-09-03 13:58:30,920: WARNING/MainProcess] Row 4: ['', '', '', '', '']...
+[2026-09-03 13:58:30,920: WARNING/MainProcess] ================================================================================
+[2026-09-03 13:58:30,923: WARNING/MainProcess] ✅ Cached sheet 9 with 10 rows
+[2026-09-03 13:58:30,924: WARNING/MainProcess] ⏳ Starting Procedures import from Sheet 9...
+[2026-09-03 13:58:30,924: WARNING/MainProcess] ⏳ Loading existing procedures...
+[2026-09-03 13:58:31,337: WARNING/MainProcess]    ✅ 10 procedures loaded
+[2026-09-03 13:58:31,337: WARNING/MainProcess] ⏳ Processing rows...
+[2026-09-03 13:58:31,352: WARNING/MainProcess]    ✅ Processed 2/10 rows
+[2026-09-03 13:58:31,352: WARNING/MainProcess] 💾 Creating 0 procedures...
+[2026-09-03 13:58:31,352: WARNING/MainProcess] 💾 Updating 0 procedures...
+[2026-09-03 13:58:31,576: WARNING/MainProcess] ✅ Completed in 0.65 seconds
+[2026-09-03 13:58:41,003: WARNING/MainProcess] 📥 Fetching fresh data from Google Sheets: 13
+[2026-09-03 13:58:41,003: WARNING/MainProcess] 🔄 Force reloading spreadsheet at 2026-09-03 13:58:41.003123
+[2026-09-03 13:58:41,321: WARNING/MainProcess] 📥 Fetching fresh data from Google Sheets: 13
+[2026-09-03 14:01:56,450: WARNING/MainProcess] 📥 Fetching fresh data from Google Sheets: 14
+[2026-09-03 14:01:56,505: WARNING/MainProcess] 🔄 Force reloading spreadsheet at 2026-09-03 14:01:56.505724
+[2026-09-03 14:01:57,241: WARNING/MainProcess] 📥 Fetching fresh data from Google Sheets: 14
+[2026-09-03 14:05:10,575: WARNING/MainProcess] 📥 Fetching fresh data from Google Sheets: 8
+[2026-09-03 14:05:10,575: WARNING/MainProcess] 🔄 Force reloading spreadsheet at 2026-09-03 14:05:10.575085
+[2026-09-03 14:05:10,954: WARNING/MainProcess] 📥 Fetching fresh data from Google Sheets: 8
+[2026-09-03 14:08:27,506: WARNING/MainProcess] 🔄 Force reload for sheet 9
+[2026-09-03 14:08:27,506: WARNING/MainProcess] 📥 Fetching fresh data from Google Sheets: 9
+[2026-09-03 14:08:27,506: WARNING/MainProcess] 🔄 Force reload for sheet 9 (was cached at 2026-09-03 13:58:30)
+[2026-09-03 14:08:27,507: WARNING/MainProcess] 🔄 Force reloading spreadsheet at 2026-09-03 14:08:27.507767
+[2026-09-03 14:08:27,993: WARNING/MainProcess] 📥 Fetching fresh data from Google Sheets: 9
+[2026-09-03 14:08:41,948: WARNING/MainProcess] RAW ROWS: 991
+[2026-09-03 14:08:41,948: WARNING/MainProcess] RAW ROW 0: ['الجهه', 'الفئه الماليه', 'قائمة الاسعار', 'القسم الداخلي', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'القسم الخارجي', '', '', '', '', '', '', '', 'المرفقات', '', '', '', '', '']
+[2026-09-03 14:08:41,949: WARNING/MainProcess] RAW ROW 1: ['', '', '', 'الاشعه التداخليه', '', 'خدمات الكلي', '', '', 'العلاج الاشعاعي', '', '', 'علاج الالم', '', 'خدمات بنك الدم ', '', '', 'المرافق', '', 'الاسعاف', '', '', 'خدمات الكلي', '', '', 'العلاج الاشعاعي', '', '', 'الاسعاف', '', 'صورة العقد', '', '', '', '', '']
+[2026-09-03 14:08:41,949: WARNING/MainProcess] RAW ROW 2: ['', '', '', 'معدل الخصم', 'التفاصيل ', 'معدل الخصم', 'التفاصيل وصافي السعر', '', 'معدل الخصم', 'التفاصيل وصافي السعر', '', 'معدل الخصم', 'التفاصيل وصافي السعر', 'معدل الخصم', 'التفاصيل وصافي السعر', 'التفاصيل وصافي السعر', 'معدل الخصم', 'التفاصيل وصافي السعر', 'معدل الخصم', 'التفاصيل وصافي السعر', '', 'معدل الخصم', 'التفاصيل وصافي السعر', '', 'معدل الخصم', 'التفاصيل وصافي السعر', '', 'معدل الخصم', 'التفاصيل وصافي السعر', '', '', '', '', '', '']
+[2026-09-03 14:08:41,949: WARNING/MainProcess] DATA ROWS AFTER SKIP: 989
+[2026-09-03 14:08:41,949: WARNING/MainProcess] FIRST DATA ROW: ['', '', '', 'معدل الخصم', 'التفاصيل ', 'معدل الخصم', 'التفاصيل وصافي السعر', '', 'معدل الخصم', 'التفاصيل وصافي السعر', '', 'معدل الخصم', 'التفاصيل وصافي السعر', 'معدل الخصم', 'التفاصيل وصافي السعر', 'التفاصيل وصافي السعر', 'معدل الخصم', 'التفاصيل وصافي السعر', 'معدل الخصم', 'التفاصيل وصافي السعر', '', 'معدل الخصم', 'التفاصيل وصافي السعر', '', 'معدل الخصم', 'التفاصيل وصافي السعر', '', 'معدل الخصم', 'التفاصيل وصافي السعر', '', '', '', '', '', ''][2026-09-03 14:08:41,971: WARNING/MainProcess] ✅ Cached sheet 9 with 10 rows
+[2026-09-03 14:08:41,973: WARNING/MainProcess] Row 0: ['', '', '', 'معدل الخصم', 'التفاصيل ']...
+[2026-09-03 14:08:41,973: WARNING/MainProcess] ================================================================================
+[2026-09-03 14:08:41,976: WARNING/MainProcess] Row 1: ['الاهلى للخدمات الطبية ', 'T047', '2025', '10%', '']...
+[2026-09-03 14:08:41,979: WARNING/MainProcess] ================================================================================
+[2026-09-03 14:08:41,980: WARNING/MainProcess] Row 2: ['', '', '', '', '']...
+[2026-09-03 14:08:41,981: WARNING/MainProcess] ================================================================================
+[2026-09-03 14:08:41,981: WARNING/MainProcess] Row 3: ['', '', '', '', '']...
+[2026-09-03 14:08:41,982: WARNING/MainProcess] ================================================================================
+[2026-09-03 14:08:41,982: WARNING/MainProcess] Row 4: ['', '', '', '', '']...
+[2026-09-03 14:08:41,982: WARNING/MainProcess] ================================================================================
+[2026-09-03 14:08:41,983: WARNING/MainProcess] ✅ Cached sheet 9 with 10 rows
+[2026-09-03 14:08:41,984: WARNING/MainProcess] ⏳ Starting Company Exceptions import from Sheet 9...
+[2026-09-03 14:08:41,987: WARNING/MainProcess] ⏳ Loading existing profiles...
+[2026-09-03 14:08:42,410: WARNING/MainProcess]    ✅ 2 profiles loaded
+[2026-09-03 14:08:42,423: WARNING/MainProcess] ⏳ Loading existing items...
+[2026-09-03 14:08:42,640: WARNING/MainProcess]    ✅ 34 items loaded
+[2026-09-03 14:08:42,640: WARNING/MainProcess] ⏳ Processing rows...
+[2026-09-03 14:08:42,640: WARNING/MainProcess] 
+============================================================
+[2026-09-03 14:08:42,640: WARNING/MainProcess] 🏢 معالجة: الاهلى للخدمات الطبية
+[2026-09-03 14:08:42,640: WARNING/MainProcess]    الفئة المالية: T047
+[2026-09-03 14:08:42,641: WARNING/MainProcess]    قائمة الأسعار: 2025
+[2026-09-03 14:08:42,641: WARNING/MainProcess]    ✅ الملف موجود بدون تغييرات
+[2026-09-03 14:08:42,641: WARNING/MainProcess]    📋 عدد صفوف التفاصيل: 3
+[2026-09-03 14:08:42,641: WARNING/MainProcess]    📝 أول صف تفاصيل: الجلسه المطوله
+[2026-09-03 14:08:42,853: WARNING/MainProcess]    🗑️ تم حذف 17 عنصر قديم
+[2026-09-03 14:08:43,093: WARNING/MainProcess]    ✅ تم إنشاء 17 عنصر جديد
+[2026-09-03 14:08:43,093: WARNING/MainProcess]    ✅ تمت معالجة 17 خدمة
+[2026-09-03 14:08:43,094: WARNING/MainProcess] 
+============================================================
+[2026-09-03 14:08:43,094: WARNING/MainProcess] 🏢 معالجة: بنك مصر
+[2026-09-03 14:08:43,094: WARNING/MainProcess]    الفئة المالية: B001
+[2026-09-03 14:08:43,094: WARNING/MainProcess]    قائمة الأسعار: 2024
+[2026-09-03 14:08:43,094: WARNING/MainProcess]    ✅ الملف موجود بدون تغييرات
+[2026-09-03 14:08:43,095: WARNING/MainProcess]    📋 عدد صفوف التفاصيل: 3
+[2026-09-03 14:08:43,095: WARNING/MainProcess]    📝 أول صف تفاصيل: الجلسه المطوله
+[2026-09-03 14:08:43,306: WARNING/MainProcess]    🗑️ تم حذف 17 عنصر قديم
+[2026-09-03 14:08:43,534: WARNING/MainProcess]    ✅ تم إنشاء 17 عنصر جديد
+[2026-09-03 14:08:43,534: WARNING/MainProcess]    ✅ تمت معالجة 17 خدمة
+[2026-09-03 14:08:43,747: WARNING/MainProcess] 
+================================================================================
+[2026-09-03 14:08:43,754: WARNING/MainProcess] ✅ انتهى الاستيراد بنجاح!
+[2026-09-03 14:08:43,754: WARNING/MainProcess] 📊 الملفات: 0, العناصر: 34
+[2026-09-03 14:08:43,754: WARNING/MainProcess] 📊 Updated: 0, Deleted: 0, Skipped: 0
+[2026-09-03 14:08:43,755: WARNING/MainProcess] ================================================================================
+[2026-09-03 14:08:43,755: WARNING/MainProcess] ⏱️ Completed in 1.77 seconds
+[2026-09-03 14:08:53,282: WARNING/MainProcess] 📥 Fetching fresh data from Google Sheets: 11
+[2026-09-03 14:08:53,283: WARNING/MainProcess] 🔄 Force reloading spreadsheet at 2026-09-03 14:08:53.283867
+[2026-09-03 14:08:53,588: WARNING/MainProcess] 📥 Fetching fresh data from Google Sheets: 11
+[2026-09-03 14:12:07,135: WARNING/MainProcess] 📥 Fetching fresh data from Google Sheets: 12
+[2026-09-03 14:12:07,135: WARNING/MainProcess] 🔄 Force reloading spreadsheet at 2026-09-03 14:12:07.135075
+[2026-09-03 14:12:07,493: WARNING/MainProcess] 📥 Fetching fresh data from Google Sheets: 12
+[2026-09-03 14:15:20,830: WARNING/MainProcess] 📥 Fetching fresh data from Google Sheets: 15
+[2026-09-03 14:15:20,830: WARNING/MainProcess] 🔄 Force reloading spreadsheet at 2026-09-03 14:15:20.830369
+[2026-09-03 14:15:21,281: WARNING/MainProcess] 📥 Fetching fresh data from Google Sheets: 15
+[2026-09-03 14:18:34,737: WARNING/MainProcess] 📥 Fetching fresh data from Google Sheets: 1
+[2026-09-03 14:18:34,737: WARNING/MainProcess] 🔄 Force reloading spreadsheet at 2026-09-03 14:18:34.737506
+[2026-09-03 14:18:35,061: WARNING/MainProcess] 📥 Fetching fresh data from Google Sheets: 1
+[2026-09-03 14:18:47,837: WARNING/MainProcess] RAW ROWS: 18506
+[2026-09-03 14:18:47,837: WARNING/MainProcess] RAW ROW 0: ['الشركه', 'نوع التعاقد', 'اسم الباكدج', 'التخصص', 'السعر', 'مدة الاقامه', 'الكود', 'اعتبارا من', 'ساري حتي', 'ملاحظات الباكدج', 'الاجمالي بدون خصم', 'الاجمالي', 'معدل الخصم الحالي', 'قائمة الاسعار المطبقه / معدل الزياده', 'Special Offer', 'الشركه', 'النقدي', 'معدل الخصم المقترح', 'السعر المقترح', 'مشتملات الباكدج', 'تعليمات التشغيل', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '']
+[2026-09-03 14:18:47,837: WARNING/MainProcess] RAW ROW 1: ['جاسكو\n ( الشركه المصريه للغازات الطبيعيه )', 'اجل', 'استئصال الكيس الدهنى او الشمعى', 'جراحه عامه', '12٬303', 'رعاية نهارية', 'OPR-SUR01', '1/8/2025', '15/10/2025', 'الباكدج لايشمل ( خدمات الطوارئ / تحليل الباثولوجي / نقل الدم  )', '12٬950', '12٬950', '5%', 'PL 25 + 0%', '5٬000', 'جلوب ميد', '5500', 'Special Offer', '5٬000٫00', 'عمليات الرعاية النهارية.pdf', 'جاسكو 2025.pdf', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '']
+[2026-09-03 14:18:47,839: WARNING/MainProcess] RAW ROW 2: ['جاسكو\n ( الشركه المصريه للغازات الطبيعيه )', 'اجل', 'استئصال الورم الحميد او الافة الجلدية او الزوائد الجلدية', 'جراحه عامه', '12٬303', 'رعاية نهارية', 'OPR-SUR02', '1/8/2025', '16/10/2025', 'الباكدج لايشمل ( خدمات الطوارئ / تحليل الباثولوجي / نقل الدم  )', '12٬950', '12٬950', '5%', 'PL 25 + 0%', '2٬500', 'نكست ', '5500', 'Special Offer', '2٬500٫00', 'عمليات الرعاية النهارية.pdf', 'جاسكو 2025.pdf', '', 'لتمييز الشركات', '', '5%', 'ملاحظات ', ' يتم اضافة امكانية البحث بالكود \n', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '']
+[2026-09-03 14:18:47,840: WARNING/MainProcess] DATA ROWS AFTER SKIP: 18504
+[2026-09-03 14:18:47,840: WARNING/MainProcess] FIRST DATA ROW: ['جاسكو\n ( الشركه المصريه للغازات الطبيعيه )', 'اجل', 'استئصال الورم الحميد او الافة الجلدية او الزوائد الجلدية', 'جراحه عامه', '12٬303', 'رعاية نهارية', 'OPR-SUR02', '1/8/2025', '16/10/2025', 'الباكدج لايشمل ( خدمات الطوارئ / تحليل الباثولوجي / نقل الدم  )', '12٬950', '12٬950', '5%', 'PL 25 + 0%', '2٬500', 'نكست ', '5500', 'Special Offer', '2٬500٫00', 'عمليات الرعاية النهارية.pdf', 'جاسكو 2025.pdf', '', 'لتمييز الشركات', '', '5%', 'ملاحظات ', ' يتم اضافة امكانية البحث بالكود \n', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '']
+[2026-09-03 14:18:48,471: WARNING/MainProcess] ✅ Cached sheet 1 with 18504 rows
+[2026-09-03 14:18:48,506: WARNING/MainProcess] Row 0: ['جاسكو\n ( الشركه المصريه للغازات الطبيعيه )', 'اجل', 'استئصال الورم الحميد او الافة الجلدية او الزوائد الجلدية', 'جراحه عامه', '12٬303']...
+[2026-09-03 14:18:48,506: WARNING/MainProcess] ================================================================================
+[2026-09-03 14:18:48,508: WARNING/MainProcess] Row 1: ['جاسكو\n ( الشركه المصريه للغازات الطبيعيه )', 'اجل', 'فتح او تنظيف خراج سطحى', 'جراحه عامه', '12٬303']...
+[2026-09-03 14:18:48,508: WARNING/MainProcess] ================================================================================
+[2026-09-03 14:18:48,509: WARNING/MainProcess] Row 2: ['جاسكو\n ( الشركه المصريه للغازات الطبيعيه )', 'اجل', 'استئصال ظفر غائر', 'جراحه عامه', '12٬303']...
+[2026-09-03 14:18:48,509: WARNING/MainProcess] ================================================================================
+[2026-09-03 14:18:48,509: WARNING/MainProcess] Row 3: ['جاسكو\n ( الشركه المصريه للغازات الطبيعيه )', 'اجل', 'عينة من الجلد', 'جراحه عامه', '12٬303']...
+[2026-09-03 14:18:48,510: WARNING/MainProcess] ================================================================================
+[2026-09-03 14:18:48,510: WARNING/MainProcess] Row 4: ['جاسكو\n ( الشركه المصريه للغازات الطبيعيه )', 'اجل', 'استئصال غدة عرقية', 'جراحه عامه', '12٬303']...
+[2026-09-03 14:18:48,510: WARNING/MainProcess] ================================================================================
+[2026-09-03 14:18:48,530: WARNING/MainProcess] ✅ Cached sheet 1 with 18504 rows
+[2026-09-03 14:18:50,471: WARNING/MainProcess] ⏳ Loading ContractPackages...
+[2026-09-03 14:19:02,121: WARNING/MainProcess]    ✅ 11974 ContractPackages loaded
+[2026-09-03 14:19:02,121: WARNING/MainProcess] ⏳ Processing rows...
+[2026-09-03 14:19:04,551: WARNING/MainProcess]    📊 Processed 718/18504 rows...
+[2026-09-03 14:19:06,370: WARNING/MainProcess]    📊 Processed 1222/18504 rows...
+[2026-09-03 14:19:08,087: WARNING/MainProcess]    📊 Processed 1727/18504 rows...
+[2026-09-03 14:19:09,973: WARNING/MainProcess]    📊 Processed 2232/18504 rows...
+[2026-09-03 14:19:11,788: WARNING/MainProcess]    📊 Processed 2950/18504 rows...
+[2026-09-03 14:19:13,505: WARNING/MainProcess]    📊 Processed 3460/18504 rows...
+[2026-09-03 14:19:15,837: WARNING/MainProcess]    📊 Processed 4934/18504 rows...
+[2026-09-03 14:19:18,117: WARNING/MainProcess]    📊 Processed 5439/18504 rows...
+[2026-09-03 14:19:20,049: WARNING/MainProcess]    📊 Processed 6157/18504 rows...
+[2026-09-03 14:19:22,050: WARNING/MainProcess]    📊 Processed 6876/18504 rows...
+[2026-09-03 14:19:23,953: WARNING/MainProcess]    📊 Processed 7595/18504 rows...
+[2026-09-03 14:19:25,989: WARNING/MainProcess]    📊 Processed 8742/18504 rows...
+[2026-09-03 14:19:27,764: WARNING/MainProcess]    📊 Processed 9353/18504 rows...
+[2026-09-03 14:19:30,822: WARNING/MainProcess]    📊 Processed 10714/18504 rows...
+[2026-09-03 14:19:32,951: WARNING/MainProcess]    📊 Processed 11540/18504 rows...
+[2026-09-03 14:19:35,118: WARNING/MainProcess]    📊 Processed 12258/18504 rows...
+[2026-09-03 14:19:36,933: WARNING/MainProcess]    📊 Processed 12977/18504 rows...
+[2026-09-03 14:19:39,035: WARNING/MainProcess]    📊 Processed 13803/18504 rows...
+[2026-09-03 14:19:41,236: WARNING/MainProcess]    📊 Processed 15056/18504 rows...
+[2026-09-03 14:19:43,641: WARNING/MainProcess]    ✅ Processed 18504 rows
+[2026-09-03 14:19:55,565: WARNING/MainProcess] 🗑️ Cache cleared
+[2026-09-03 14:20:05,524: INFO/MainProcess] Task imports.tasks.update_all_data_task[4ec3f40d-3e0d-4415-992d-92b34ddde428] succeeded in 3124.7970000000205s: {'status': 'error', 'update_type': 'full', 'logs': '======================================================================      MIH Automated Pricing System        Update All Data======================================================================----------------------------------------------------------------------▶ START : Package CatalogRUNNING => import_package_catalog
+========== Package Catalog Import ==========
+❌ Package Catalog Failed   Error: APIError: [503]: The service is currently unavailable.   Continuing with remaining commands...----------------------------------------------------------------------▶ START : Contract MigrationRUNNING => migrate_contract_entities❌ Contract Migration Failed   Error: APIError: [503]: The service is currently unavailable.   Continuing with remaining commands...----------------------------------------------------------------------▶ START : Cash PackagesRUNNING => import_cash_packages
+========== Cash Packages Import...', 'results': [{'title': 'Package Catalog', 'statu...', ...}]}
+[2026-09-03 14:20:05,759: WARNING/MainProcess] Substantial drift from celery@4054bd4b69b3 may mean clocks are out of sync.  Current drift is 3123 seconds.  [orig: 2026-09-03 14:20:05.758238 recv: 2026-09-03 13:28:02.358112]

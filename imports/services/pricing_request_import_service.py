@@ -900,6 +900,14 @@ class PricingRequestImportService:
             )
 
             entity = None
+            if not entity_name:
+                print(
+                    f"⚠️ Skipping Pricing Request - Row {index}: "
+                    f"Company is empty | "
+                    f"Patient={patient_name!r} | "
+                    f"Procedure={procedure_name!r}"
+                )
+                continue
 
             if entity_name:
 
@@ -908,6 +916,10 @@ class PricingRequestImportService:
                 )
 
                 if entity is None:
+                    print(
+                    f"⚠️ Entity not found - Row {index}: "
+                    f"Company={entity_name!r}"
+                )
 
                     entity = ContractEntity.objects.create(
                         name=entity_name,
@@ -1266,6 +1278,12 @@ class PricingRequestImportService:
             # ====================================================
 
             if existing_request is None:
+                
+                print(
+                    f"⚠️ DEBUG NULL ENTITY BEFORE CREATE | "
+                    f"Row={index} | "
+                    f"EntityName={entity_name!r}"
+                )
 
                 pricing_request = PricingRequest(
                     patient=patient,

@@ -11,6 +11,15 @@ from google.oauth2.service_account import Credentials
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseDownload
 
+# ✅ 1️⃣ أضف هذه الـimports أعلى الملف
+import random
+import time
+import requests
+from urllib.parse import quote
+from google.auth.transport.requests import Request
+
+from requests.exceptions import ConnectionError, ReadTimeout, Timeout
+from gspread.exceptions import APIError
 
 SCOPES = [
     "https://www.googleapis.com/auth/spreadsheets.readonly",
@@ -24,6 +33,40 @@ class GoogleSheetsService:
     _spreadsheet = None
     _cache = {}
     _cache_time = {}
+
+    # ============================================================
+    # Google Sheets resilience / data layout
+    # ============================================================
+
+    _api_credentials = None
+
+    GOOGLE_API_TIMEOUT = 60
+    MAX_READ_RETRIES = 4
+
+    RETRYABLE_STATUS_CODES = {
+        429,
+        500,
+        502,
+        503,
+        504,
+    }
+
+    # عدد الصفوف التي تسبق أول Data Row لكل Sheet
+    #
+    # 0 = Header فقط ثم البيانات
+    # 1 = Header في Row 0 + البيانات من Row 1
+    # 2 = Header في Row 0 + صف قديم/إضافي في Row 1
+    #
+    # Sheet 9 نحافظ على سلوكه الحالي مؤقتًا.
+    DATA_START_ROWS = {
+        "6": 2,
+        "9": 2,
+        "10": 2,
+        "11": 2,
+        "12": 2,
+    }
+
+    DEFAULT_DATA_START_ROW = 1
 
     @classmethod
     def get_client(cls):
@@ -354,69 +397,264 @@ class GoogleSheetsService:
 
         return links
 
+    # ✅ 3️⃣ أضف Method جديدة داخل GoogleSheetsService (قبل get_dataframe)
+    @classmethod
+    def _get_api_credentials(cls):
+        """
+        Get cached Google credentials for direct Sheets REST API calls.
+        """
+        if cls._api_credentials is None:
+            cls._api_credentials = Credentials.from_service_account_file(
+                settings.GOOGLE_SERVICE_ACCOUNT_FILE,
+                scopes=[
+                    "https://www.googleapis.com/auth/spreadsheets.readonly",
+                ],
+            )
+
+        if not cls._api_credentials.valid:
+            cls._api_credentials.refresh(Request())
+
+        return cls._api_credentials
+
+    @classmethod
+    def _read_values_direct_api(cls, sheet_name):
+        """
+        Read sheet values directly through Google Sheets Values API.
+
+        This intentionally bypasses:
+            gspread -> worksheet.get_all_values()
+
+        because direct REST Values API was proven to be much faster
+        on the APP spreadsheet.
+        """
+
+        credentials = cls._get_api_credentials()
+
+        spreadsheet_id = settings.GOOGLE_SPREADSHEET_ID
+
+        # Quote the sheet title safely for A1 notation.
+        safe_sheet_name = str(sheet_name).replace("'", "''")
+        range_name = f"'{safe_sheet_name}'"
+
+        encoded_range = quote(
+            range_name,
+            safe="",
+        )
+
+        url = (
+            f"https://sheets.googleapis.com/v4/spreadsheets/"
+            f"{spreadsheet_id}/values/{encoded_range}"
+        )
+
+        last_error = None
+
+        for attempt in range(1, cls.MAX_READ_RETRIES + 1):
+            started = time.perf_counter()
+
+            try:
+                # Refresh token only when necessary.
+                if not credentials.valid:
+                    credentials.refresh(Request())
+
+                response = requests.get(
+                    url,
+                    headers={
+                        "Authorization": f"Bearer {credentials.token}",
+                    },
+                    params={
+                        "majorDimension": "ROWS",
+                        "valueRenderOption": "FORMATTED_VALUE",
+                    },
+                    timeout=cls.GOOGLE_API_TIMEOUT,
+                )
+
+                elapsed = time.perf_counter() - started
+
+                if response.status_code == 200:
+                    payload = response.json()
+
+                    print(
+                        f"✅ Direct Google Values API read completed: "
+                        f"{sheet_name} in {elapsed:.2f}s"
+                    )
+
+                    return payload.get("values", [])
+
+                if response.status_code in cls.RETRYABLE_STATUS_CODES:
+                    last_error = RuntimeError(
+                        f"Google Sheets API HTTP {response.status_code}: "
+                        f"{response.text[:500]}"
+                    )
+
+                    print(
+                        f"⚠️ Google Sheets API temporary error on "
+                        f"sheet {sheet_name}: HTTP "
+                        f"{response.status_code} "
+                        f"(attempt {attempt}/{cls.MAX_READ_RETRIES})"
+                    )
+
+                else:
+                    response.raise_for_status()
+
+            except (
+                requests.exceptions.ReadTimeout,
+                requests.exceptions.ConnectTimeout,
+                requests.exceptions.ConnectionError,
+            ) as exc:
+
+                last_error = exc
+
+                print(
+                    f"⚠️ Google Sheets API timeout/connection error "
+                    f"on sheet {sheet_name} "
+                    f"(attempt {attempt}/{cls.MAX_READ_RETRIES}): "
+                    f"{exc}"
+                )
+
+            if attempt < cls.MAX_READ_RETRIES:
+                delay = min(30, 2 ** attempt) + random.uniform(0, 1)
+
+                print(
+                    f"⏳ Retrying direct API read for "
+                    f"{sheet_name} in {delay:.1f}s..."
+                )
+
+                time.sleep(delay)
+
+        print(
+            f"❌ Direct Google Values API read failed permanently: "
+            f"{sheet_name}"
+        )
+
+        raise last_error
+
+    # ✅ 4️⃣ أهم تعديل: get_dataframe() - استبدالها بالكامل
     @classmethod
     def get_dataframe(cls, sheet_name, force_reload=False):
-        cache_key = str(sheet_name)
+
+        sheet_name = str(sheet_name)
+        cache_key = sheet_name
+
+        # ============================================================
+        # Force Reload
+        # ============================================================
 
         if force_reload:
+
             if cache_key in cls._cache:
+
                 print(
                     f"🔄 Force reload for sheet {sheet_name} "
                     f"(was cached at "
                     f"{cls._cache_time.get(cache_key, 'unknown')})"
                 )
+
                 del cls._cache[cache_key]
 
             if cache_key in cls._cache_time:
                 del cls._cache_time[cache_key]
 
-            cls.get_spreadsheet(force_reload=True)
+        # ============================================================
+        # Cache
+        # ============================================================
 
         if cache_key in cls._cache:
+
             print(
                 f"✅ Using cached data for sheet {sheet_name}"
             )
+
             return cls._cache[cache_key].copy()
 
+        # ============================================================
+        # Fresh Read
+        # ============================================================
+
         print(
-            f"📥 Fetching fresh data from Google Sheets: "
+            f"📥 Fetching fresh data from Google Sheets API: "
             f"{sheet_name}"
         )
 
-        worksheet = cls.get_spreadsheet().worksheet(
-            str(sheet_name)
-        )
+        # ============================================================
+        # DIRECT GOOGLE VALUES API
+        # ============================================================
 
-        data = worksheet.get_all_values()
+        data = cls._read_values_direct_api(sheet_name)
 
         if not data:
+
             print(
                 f"⚠️ Sheet {sheet_name} is empty"
             )
+
             return pd.DataFrame()
 
-        print(f"RAW ROWS: {len(data)}")
-        print(f"RAW ROW 0: {data[0]}")
-        print(f"RAW ROW 1: {data[1]}")
-        print(f"RAW ROW 2: {data[2]}")
+        # ============================================================
+        # Header
+        # ============================================================
 
-        # Row 0 = الـ Headers الصحيحة
         headers = data[0]
 
-        # Row 1 = Header قديم
-        # Row 2 وما بعده = البيانات
-        rows = data[2:]
+        # ============================================================
+        # Determine first actual data row
+        # ============================================================
+
+        data_start_row = cls.DATA_START_ROWS.get(
+            sheet_name,
+            cls.DEFAULT_DATA_START_ROW,
+        )
+
+        rows = data[data_start_row:]
 
         print(
-            f"DATA ROWS AFTER SKIP: {len(rows)}"
+            f"📊 Sheet {sheet_name}: "
+            f"{len(data)} raw rows"
         )
+
         print(
-            f"FIRST DATA ROW: {rows[0]}"
+            "📌 Header row: 0"
         )
+
+        print(
+            f"📌 Data starts at raw row: "
+            f"{data_start_row}"
+        )
+
+        print(
+            f"📌 Data rows before cleanup: "
+            f"{len(rows)}"
+        )
+
+        # ============================================================
+        # Safety
+        # ============================================================
+
+        if not rows:
+
+            print(
+                f"⚠️ Sheet {sheet_name} has no data rows"
+            )
+
+            return pd.DataFrame(
+                columns=headers
+            )
+
+        # ============================================================
+        # DataFrame
+        # ============================================================
+
+        # Normalize row width to match the header width.
+        # Some sheets contain extra side-data beyond the official headers.
+        header_count = len(headers)
+
+        normalized_rows = [
+            row[:header_count] + [""] * max(0, header_count - len(row))
+            for row in rows
+        ]
 
         dataframe = pd.DataFrame(
-            rows,
-            columns=headers,
+            normalized_rows,
+            columns=headers
         )
 
         dataframe = dataframe.replace(
@@ -428,11 +666,17 @@ class GoogleSheetsService:
             how="all"
         )
 
-        dataframe = dataframe.fillna("")
+        dataframe = dataframe.fillna(
+            ""
+        )
 
         dataframe = dataframe.reset_index(
             drop=True
         )
+
+        # ============================================================
+        # Cache
+        # ============================================================
 
         cls._cache[cache_key] = dataframe
 

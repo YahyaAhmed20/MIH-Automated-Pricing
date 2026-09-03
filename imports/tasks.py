@@ -153,9 +153,16 @@ def update_all_data_task(
             commands=commands,
         )
 
+        # ✅ تم إضافة 3 prints هنا
+        print("### TASK DEBUG: UpdateAllDataService.run RETURNED ###")
+
         logs = output.getvalue()
 
+        print("### TASK DEBUG: LOGS EXTRACTED ###")
+
         results = run_result["results"]
+
+        print("### TASK DEBUG: RESULTS EXTRACTED ###")
 
         has_errors = not run_result["success"]
 
