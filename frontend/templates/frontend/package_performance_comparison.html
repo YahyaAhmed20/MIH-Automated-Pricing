@@ -554,7 +554,7 @@
                                        list="sectorList1" placeholder="ابحث عن قطاع..." 
                                        value="{{ sector1 }}" autocomplete="off">
                                 <datalist id="sectorList1">
-                                    {% for sector in sectors %}
+                                    {% for sector in sectors1 %}
                                     <option value="{{ sector }}">{{ sector }}</option>
                                     {% endfor %}
                                 </datalist>
@@ -570,7 +570,7 @@
                                        list="entityList1" placeholder="ابحث عن جهة..." 
                                        value="{{ entity1 }}" autocomplete="off">
                                 <datalist id="entityList1">
-                                    {% for entity in entities %}
+                                    {% for entity in entities1 %}
                                     <option value="{{ entity }}">{{ entity }}</option>
                                     {% endfor %}
                                 </datalist>
@@ -586,7 +586,7 @@
                                        list="subCompanyList1" placeholder="ابحث عن شركة..." 
                                        value="{{ sub_company1 }}" autocomplete="off">
                                 <datalist id="subCompanyList1">
-                                    {% for sub in sub_companies %}
+                                    {% for sub in sub_companies1 %}
                                     <option value="{{ sub }}">{{ sub }}</option>
                                     {% endfor %}
                                 </datalist>
@@ -602,7 +602,7 @@
                                        list="specialtyList1" placeholder="ابحث عن تخصص..." 
                                        value="{{ specialty1 }}" autocomplete="off">
                                 <datalist id="specialtyList1">
-                                    {% for spec in specialties %}
+                                    {% for spec in specialties1 %}
                                     <option value="{{ spec }}">{{ spec }}</option>
                                     {% endfor %}
                                 </datalist>
@@ -618,7 +618,7 @@
                                        list="doctorList1" placeholder="ابحث عن طبيب..." 
                                        value="{{ doctor_name1 }}" autocomplete="off">
                                 <datalist id="doctorList1">
-                                    {% for doctor in doctors %}
+                                    {% for doctor in doctors1 %}
                                     <option value="{{ doctor }}">{{ doctor }}</option>
                                     {% endfor %}
                                 </datalist>
@@ -634,7 +634,7 @@
                                        list="packageTypeList1" placeholder="ابحث عن باكدج..." 
                                        value="{{ package_type1 }}" autocomplete="off">
                                 <datalist id="packageTypeList1">
-                                    {% for pkg in package_types %}
+                                    {% for pkg in package_types1 %}
                                     <option value="{{ pkg }}">{{ pkg }}</option>
                                     {% endfor %}
                                 </datalist>
@@ -711,7 +711,7 @@
                                        list="sectorList2" placeholder="ابحث عن قطاع..." 
                                        value="{{ sector2 }}" autocomplete="off">
                                 <datalist id="sectorList2">
-                                    {% for sector in sectors %}
+                                    {% for sector in sectors2 %}
                                     <option value="{{ sector }}">{{ sector }}</option>
                                     {% endfor %}
                                 </datalist>
@@ -727,7 +727,7 @@
                                        list="entityList2" placeholder="ابحث عن جهة..." 
                                        value="{{ entity2 }}" autocomplete="off">
                                 <datalist id="entityList2">
-                                    {% for entity in entities %}
+                                    {% for entity in entities2 %}
                                     <option value="{{ entity }}">{{ entity }}</option>
                                     {% endfor %}
                                 </datalist>
@@ -743,7 +743,7 @@
                                        list="subCompanyList2" placeholder="ابحث عن شركة..." 
                                        value="{{ sub_company2 }}" autocomplete="off">
                                 <datalist id="subCompanyList2">
-                                    {% for sub in sub_companies %}
+                                    {% for sub in sub_companies2 %}
                                     <option value="{{ sub }}">{{ sub }}</option>
                                     {% endfor %}
                                 </datalist>
@@ -759,7 +759,7 @@
                                        list="specialtyList2" placeholder="ابحث عن تخصص..." 
                                        value="{{ specialty2 }}" autocomplete="off">
                                 <datalist id="specialtyList2">
-                                    {% for spec in specialties %}
+                                    {% for spec in specialties2 %}
                                     <option value="{{ spec }}">{{ spec }}</option>
                                     {% endfor %}
                                 </datalist>
@@ -775,7 +775,7 @@
                                        list="doctorList2" placeholder="ابحث عن طبيب..." 
                                        value="{{ doctor_name2 }}" autocomplete="off">
                                 <datalist id="doctorList2">
-                                    {% for doctor in doctors %}
+                                    {% for doctor in doctors2 %}
                                     <option value="{{ doctor }}">{{ doctor }}</option>
                                     {% endfor %}
                                 </datalist>
@@ -791,7 +791,7 @@
                                        list="packageTypeList2" placeholder="ابحث عن باكدج..." 
                                        value="{{ package_type2 }}" autocomplete="off">
                                 <datalist id="packageTypeList2">
-                                    {% for pkg in package_types %}
+                                    {% for pkg in package_types2 %}
                                     <option value="{{ pkg }}">{{ pkg }}</option>
                                     {% endfor %}
                                 </datalist>
@@ -1337,25 +1337,26 @@ function initPackageFilters(prefix) {
             params.append("year", year.value);
         }
 
-        if (entity.value) {
-            params.append("entity", entity.value);
+        if (entity.value.trim()) {
+            params.append("entity", entity.value.trim());
         }
 
-        if (sector.value) {
-            params.append("sector", sector.value);
+        if (sector.value.trim()) {
+            params.append("sector", sector.value.trim());
         }
 
-        if (subCompany.value) {
-            params.append("sub_company", subCompany.value);
+        if (subCompany.value.trim()) {
+            params.append("sub_company", subCompany.value.trim());
         }
 
-        if (specialty.value) {
-            params.append("specialty", specialty.value);
+        if (specialty.value.trim()) {
+            params.append("specialty", specialty.value.trim());
         }
 
-        if (doctor.value) {
-            params.append("doctor_name", doctor.value);
+        if (doctor.value.trim()) {
+            params.append("doctor_name", doctor.value.trim());
         }
+        
 
         if (month && month.value) {
             params.append("month", month.value);
@@ -1366,9 +1367,19 @@ function initPackageFilters(prefix) {
         }
 
         try {
-            const response = await fetch(`/ajax/package-filters/?${params}`);
+            const response = await fetch(`/ajax/package-filters/?${params.toString()}`, {
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest"
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
+            }
+
             const data = await response.json();
 
+            // ✅ تحديث قوائم نفس الفترة فقط
             updateDatalist(`sectorList${prefix}`, data.sectors || []);
             updateDatalist(`entityList${prefix}`, data.entities || []);
             updateDatalist(`subCompanyList${prefix}`, data.sub_companies || []);
@@ -1377,37 +1388,47 @@ function initPackageFilters(prefix) {
             updateDatalist(`packageTypeList${prefix}`, data.packages || []);
 
         } catch (error) {
-            console.error('Error refreshing filters:', error);
+            console.error(`Error refreshing filters for period ${prefix}:`, error);
         }
     }
 
+    // ✅ الفلاتر النصية - تحديث عند التغيير
     entity.addEventListener("change", refreshFilters);
     entity.addEventListener("input", function() {
-        if (this.value === "") refreshFilters();
+        if (this.value === "") {
+            refreshFilters();
+        }
     });
 
     sector.addEventListener("change", refreshFilters);
     sector.addEventListener("input", function() {
-        if (this.value === "") refreshFilters();
+        if (this.value === "") {
+            refreshFilters();
+        }
     });
 
     subCompany.addEventListener("change", refreshFilters);
     subCompany.addEventListener("input", function() {
-        if (this.value === "") refreshFilters();
+        if (this.value === "") {
+            refreshFilters();
+        }
     });
 
     specialty.addEventListener("change", refreshFilters);
     specialty.addEventListener("input", function() {
-        if (this.value === "") refreshFilters();
+        if (this.value === "") {
+            refreshFilters();
+        }
     });
 
     doctor.addEventListener("change", refreshFilters);
     doctor.addEventListener("input", function() {
-        if (this.value === "") refreshFilters();
+        if (this.value === "") {
+            refreshFilters();
+        }
     });
 
-    year.addEventListener("change", refreshFilters);
-
+    // ✅ الشهر والربع - تحديث الفلاتر
     if (month) {
         month.addEventListener("change", refreshFilters);
     }
@@ -1415,8 +1436,6 @@ function initPackageFilters(prefix) {
     if (quarter) {
         quarter.addEventListener("change", refreshFilters);
     }
-
-    setTimeout(() => refreshFilters(), 300);
 }
 
 // ✅ تهيئة الفلاتر
