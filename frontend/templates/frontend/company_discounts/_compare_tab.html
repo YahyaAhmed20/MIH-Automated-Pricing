@@ -618,6 +618,79 @@
             </table>
         </div>
         
+        <!-- ============================================ -->
+        <!-- ✅ قوائم الأسعار -->
+        <!-- ============================================ -->
+        
+        <div class="row g-3 g-md-4 mt-2 animate-fade-in">
+        
+            <!-- قائمة أسعار الجهة الأولى -->
+            <div class="col-12 col-md-6">
+                <div class="card card-exception h-100">
+                    <div class="card-header"
+                         style="background: linear-gradient(135deg, #d6efd 0%, #0dcaf0 100%); color: #1a2a3a;">
+        
+                        <i class="fas fa-list-alt me-2"></i>
+                        قائمة الأسعار - {{ company_1.company_name }}
+        
+                    </div>
+        
+                    <div class="card-body">
+        
+                        {% if company_1.price_list %}
+                            <div class="alert alert-custom alert-info mb-0">
+                                <i class="fas fa-file-invoice-dollar me-2"
+                                   style="color: #0dcaf0;"></i>
+        
+                                <strong>{{ company_1.price_list }}</strong>
+                            </div>
+                        {% else %}
+                            <div class="text-center text-muted py-3">
+                                <i class="fas fa-info-circle me-2"
+                                   style="color: #0dcaf0;"></i>
+                                لا توجد قائمة أسعار لهذه الجهة
+                            </div>
+                        {% endif %}
+        
+                    </div>
+                </div>
+            </div>
+        
+        
+            <!-- قائمة أسعار الجهة الثانية -->
+            <div class="col-12 col-md-6">
+                <div class="card card-exception h-100">
+                    <div class="card-header"
+                         style="background: linear-gradient(135deg, #d6efd 0%, #0dcaf0 100%); color: #1a2a3a;">
+        
+                        <i class="fas fa-list-alt me-2"></i>
+                        قائمة الأسعار - {{ company_2.company_name }}
+        
+                    </div>
+        
+                    <div class="card-body">
+        
+                        {% if company_2.price_list %}
+                            <div class="alert alert-custom alert-info mb-0">
+                                <i class="fas fa-file-invoice-dollar me-2"
+                                   style="color: #0dcaf0;"></i>
+        
+                                <strong>{{ company_2.price_list }}</strong>
+                            </div>
+                        {% else %}
+                            <div class="text-center text-muted py-3">
+                                <i class="fas fa-info-circle me-2"
+                                   style="color: #0dcaf0;"></i>
+                                لا توجد قائمة أسعار لهذه الجهة
+                            </div>
+                        {% endif %}
+        
+                    </div>
+                </div>
+            </div>
+        
+        </div>
+        
         <!-- الاستثناءات -->
         <div class="row g-3 g-md-4 mt-2">
             

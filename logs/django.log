@@ -27504,3 +27504,882 @@ Conflict: /system/update/
 "GET /api/update-progress/ HTTP/1.1" 200 16496
 D:\desktop\rphospital\src\imports\tasks.py changed, reloading.
 Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 50295
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 16342
+"POST / HTTP/1.1" 302 0
+"GET /reports/ HTTP/1.1" 200 167799
+"GET /company-discounts/ HTTP/1.1" 200 143149
+"GET /company-discounts/?tab=compare HTTP/1.1" 200 83972
+"GET /company-discounts/?tab=compare&company1=%D8%A8%D9%86%D9%83+%D9%85%D8%B5%D8%B1&company2=&compare_section=all HTTP/1.1" 200 83984
+"GET /company-discounts/?tab=compare&company1=%D8%A8%D9%86%D9%83+%D9%85%D8%B5%D8%B1&company2=%D9%88%D8%B2%D8%A7%D8%B1%D8%A9+%D8%A7%D9%84%D8%B9%D8%AF%D9%84&compare_section=all HTTP/1.1" 200 99486
+"GET /doctors/ HTTP/1.1" 200 166637
+"GET /doctors/?doctor_name=%D8%A7.%D8%AF+%2F+%D8%A7%D8%AD%D9%85%D8%AF+%D9%85%D8%AD%D9%85%D9%88%D8%AF%D8%AE%D9%84%D8%A7%D9%81&specialty=&day_from=&month_from=&year_from=&day_to=&month_to=&year_to= HTTP/1.1" 200 79107
+"GET /doctors/%D8%A7.%D8%AF%20/%20%D8%A7%D8%AD%D9%85%D8%AF%20%D9%85%D8%AD%D9%85%D9%88%D8%AF%D8%AE%D9%84%D8%A7%D9%81/ HTTP/1.1" 200 88464
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 50295
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 16342
+"POST / HTTP/1.1" 302 0
+"GET /reports/ HTTP/1.1" 200 167799
+Internal Server Error: /contract-entities/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.OperationalError: server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\accounts\decorators.py", line 56, in wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 291, in contract_entities
+    return render(
+           ^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 172, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 164, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 164, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\defaulttags.py", line 199, in render
+    len_values = len(values)
+                 ^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 368, in __len__
+    self._fetch_all()
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 1954, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 93, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\sql\compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+
+"GET /contract-entities/ HTTP/1.1" 500 227679
+"GET /contract-entities/ HTTP/1.1" 200 75812
+"GET /contract-entities/5/ HTTP/1.1" 200 83864
+"GET /credit-package-pricing/?entity=5 HTTP/1.1" 200 196030
+"GET /company-discounts/ HTTP/1.1" 200 143149
+"GET /company-discounts/?tab=compare HTTP/1.1" 200 83972
+"GET /company-discounts/?tab=compare&company1=%D8%A8%D9%86%D9%83+%D9%85%D8%B5%D8%B1&company2=&compare_section=all HTTP/1.1" 200 83984
+"GET /company-discounts/?tab=compare&company1=%D8%A8%D9%86%D9%83+%D9%85%D8%B5%D8%B1&company2=%D9%88%D8%B2%D8%A7%D8%B1%D8%A9+%D8%A7%D9%84%D8%B9%D8%AF%D9%84&compare_section=all HTTP/1.1" 200 99486
+"GET /company-discounts/?tab=compare&company1=%D8%A8%D9%86%D9%83+%D9%85%D8%B5%D8%B1&company2=%D9%88%D8%B2%D8%A7%D8%B1%D8%A9+%D8%A7%D9%84%D8%B9%D8%AF%D9%84&compare_section=all HTTP/1.1" 200 101790
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /contract-entities/ HTTP/1.1" 200 75812
+"GET /contract-entities/5/ HTTP/1.1" 200 83864
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /contract-entities/5/ HTTP/1.1" 200 83864
+"GET /company-discounts/?entity=5 HTTP/1.1" 200 109027
+"GET /contract-entities/5/ HTTP/1.1" 200 83864
+"GET /contract-entities/5/ HTTP/1.1" 200 83864
+"GET /contract-entities/5/ HTTP/1.1" 200 83864
+"GET /contract-entities/5/ HTTP/1.1" 200 83864
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+"GET /contract-entities/5/ HTTP/1.1" 200 83864
+"GET /contract-entities/5/ HTTP/1.1" 200 64344
+"GET /contract-entities/5/ HTTP/1.1" 200 83864
+- Broken pipe from ('127.0.0.1', 51904)
+"GET /special-offers/?entity=5 HTTP/1.1" 200 95298
+"GET /contract-entities/5/ HTTP/1.1" 200 83864
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /company-discounts/?entity=5 HTTP/1.1" 200 109027
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /company-discounts/?tab=compare&entity=5&search=%D8%A8%D9%86%D9%83%20%D9%85%D8%B5%D8%B1 HTTP/1.1" 200 84167
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /contract-entities/5/ HTTP/1.1" 200 83864
+"GET /contract-entities/5/ HTTP/1.1" 200 83864
+"GET /company-discounts/ HTTP/1.1" 200 143149
+"GET /contract-entities/ HTTP/1.1" 200 75812
+"GET /contract-entities/2/ HTTP/1.1" 200 84677
+"GET /special-offers/?entity=2 HTTP/1.1" 200 95298
+Internal Server Error: /special-offers/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.OperationalError: server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\accounts\decorators.py", line 44, in wrapper
+    if not request.user.is_authenticated:
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\functional.py", line 251, in inner
+    self._setup()
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\functional.py", line 404, in _setup
+    self._wrapped = self._setupfunc()
+                    ^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\auth\middleware.py", line 40, in <lambda>
+    request.user = SimpleLazyObject(lambda: get_user(request))
+                                            ^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\auth\middleware.py", line 20, in get_user
+    request._cached_user = auth.get_user(request)
+                           ^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\auth\__init__.py", line 311, in get_user
+    user = backend.get_user(user_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\auth\backends.py", line 232, in get_user
+    user = UserModel._default_manager.get(pk=user_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 631, in get
+    num = len(clone)
+          ^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 368, in __len__
+    self._fetch_all()
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 1954, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 93, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\sql\compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+
+"GET /special-offers/?entity=2 HTTP/1.1" 500 167970
+Internal Server Error: /special-offers/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\sessions\backends\base.py", line 244, in _get_session
+    return self._session_cache
+           ^^^^^^^^^^^^^^^^^^^
+AttributeError: 'SessionStore' object has no attribute '_session_cache'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 279, in ensure_connection
+    self.connect()
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\postgresql\base.py", line 332, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\psycopg2\__init__.py", line 135, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.OperationalError: connection to server at "shortline.proxy.rlwy.net" (66.33.22.244), port 40857 failed: server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\accounts\decorators.py", line 44, in wrapper
+    if not request.user.is_authenticated:
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\functional.py", line 251, in inner
+    self._setup()
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\functional.py", line 404, in _setup
+    self._wrapped = self._setupfunc()
+                    ^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\auth\middleware.py", line 40, in <lambda>
+    request.user = SimpleLazyObject(lambda: get_user(request))
+                                            ^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\auth\middleware.py", line 20, in get_user
+    request._cached_user = auth.get_user(request)
+                           ^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\auth\__init__.py", line 304, in get_user
+    user_id = _get_user_session_key(request)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\auth\__init__.py", line 95, in _get_user_session_key
+    return get_user_model()._meta.pk.to_python(request.session[SESSION_KEY])
+                                               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\sessions\backends\base.py", line 55, in __getitem__
+    return self._session[key]
+           ^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\sessions\backends\base.py", line 249, in _get_session
+    self._session_cache = self.load()
+                          ^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\sessions\backends\db.py", line 55, in load
+    s = self._get_session_from_db()
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\sessions\backends\db.py", line 34, in _get_session_from_db
+    return self.model.objects.get(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 631, in get
+    num = len(clone)
+          ^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 368, in __len__
+    self._fetch_all()
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 1954, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 93, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\sql\compiler.py", line 1621, in execute_sql
+    cursor = self.connection.cursor()
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 320, in cursor
+    return self._cursor()
+           ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 296, in _cursor
+    self.ensure_connection()
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 278, in ensure_connection
+    with self.wrap_database_errors:
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 279, in ensure_connection
+    self.connect()
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\postgresql\base.py", line 332, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\psycopg2\__init__.py", line 135, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: connection to server at "shortline.proxy.rlwy.net" (66.33.22.244), port 40857 failed: server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+
+"GET /special-offers/?entity=2 HTTP/1.1" 500 228942
+"GET / HTTP/1.1" 302 0
+- Broken pipe from ('127.0.0.1', 61602)
+"GET / HTTP/1.1" 302 0
+Internal Server Error: /reports/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.OperationalError: server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\accounts\decorators.py", line 44, in wrapper
+    if not request.user.is_authenticated:
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\functional.py", line 251, in inner
+    self._setup()
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\functional.py", line 404, in _setup
+    self._wrapped = self._setupfunc()
+                    ^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\auth\middleware.py", line 40, in <lambda>
+    request.user = SimpleLazyObject(lambda: get_user(request))
+                                            ^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\auth\middleware.py", line 20, in get_user
+    request._cached_user = auth.get_user(request)
+                           ^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\auth\__init__.py", line 311, in get_user
+    user = backend.get_user(user_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\auth\backends.py", line 232, in get_user
+    user = UserModel._default_manager.get(pk=user_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 631, in get
+    num = len(clone)
+          ^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 368, in __len__
+    self._fetch_all()
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 1954, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 93, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\sql\compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+
+- Broken pipe from ('127.0.0.1', 61707)
+Internal Server Error: /reports/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.OperationalError: server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\accounts\decorators.py", line 56, in wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 782, in reports_statistics
+    ).count()
+      ^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 606, in count
+    return self.query.get_count(using=self.db)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\sql\query.py", line 646, in get_count
+    return obj.get_aggregation(using, {"__count": Count("*")})["__count"]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\sql\query.py", line 628, in get_aggregation
+    result = compiler.execute_sql(SINGLE)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\sql\compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+
+"GET /reports/ HTTP/1.1" 500 146590
+Internal Server Error: /special-offers/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.OperationalError: server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\accounts\decorators.py", line 56, in wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 4930, in special_offers
+    return render(
+           ^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 172, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 164, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 164, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 1077, in render
+    output = self.filter_expression.resolve(context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 750, in resolve
+    new_obj = func(obj, *arg_vals)
+              ^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\defaultfilters.py", line 632, in length
+    return len(value)
+           ^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 368, in __len__
+    self._fetch_all()
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 1954, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 273, in __iter__
+    for row in compiler.results_iter(
+               ^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\sql\compiler.py", line 1572, in results_iter
+    results = self.execute_sql(
+              ^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\sql\compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+
+- Broken pipe from ('127.0.0.1', 61947)
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 50295
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+"POST / HTTP/1.1" 302 0
+"GET /reports/ HTTP/1.1" 200 167799
+"GET /contract-entities/ HTTP/1.1" 200 75812
+"GET /contract-entities/5/ HTTP/1.1" 200 89083
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /contract-entities/5/ HTTP/1.1" 200 83864
+"GET /contract-entities/5/ HTTP/1.1" 200 83856
+"GET /contract-entities/5/ HTTP/1.1" 200 83852
+"GET /contract-entities/5/ HTTP/1.1" 200 88559
+"GET /contract-entities/5/ HTTP/1.1" 200 88559
+"GET /company-discounts/?entity=5 HTTP/1.1" 200 109027
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /special-offers/?entity=5 HTTP/1.1" 200 99993
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /credit-package-pricing/?entity=5 HTTP/1.1" 200 196030
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /company-discounts/?entity=5 HTTP/1.1" 200 109027
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /special-offers/?entity=5 HTTP/1.1" 200 100857
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /special-offers/?entity=5 HTTP/1.1" 200 100682
+"GET /special-offers/?entity=5 HTTP/1.1" 200 100682
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /special-offers/?entity=5 HTTP/1.1" 200 100682
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /special-offers/?entity=5 HTTP/1.1" 200 100682
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /special-offers/?company=%D9%85%D8%B5%D8%B1%20%D9%84%D9%84%D8%AA%D8%A3%D9%85%D9%8A%D9%86 HTTP/1.1" 200 293112
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /special-offers/ HTTP/1.1" 200 375982
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /doctors/ HTTP/1.1" 200 166637
+"GET /doctors/%D8%A7.%D8%AF%20/%20%D8%A7%D8%AD%D9%85%D8%AF%20%D9%85%D8%AD%D9%85%D9%88%D8%AF%D8%AE%D9%84%D8%A7%D9%81/ HTTP/1.1" 200 88464
+"GET /doctors/ HTTP/1.1" 200 166637
+"GET /doctors/%D8%A7%20%D8%AF/%20%D9%87%D8%B4%D8%A7%D9%85%20%D8%A7%D8%AD%D9%85%D8%AF%20%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D9%87%D8%A7%D8%AF%D9%89%20%D9%85%D8%AD%D9%85%D9%88%D8%AF/ HTTP/1.1" 200 88766
+"GET /doctor/%D8%A7%20%D8%AF/%20%D9%87%D8%B4%D8%A7%D9%85%20%D8%A7%D8%AD%D9%85%D8%AF%20%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D9%87%D8%A7%D8%AF%D9%89%20%D9%85%D8%AD%D9%85%D9%88%D8%AF/status/approved/ HTTP/1.1" 200 79737
+"GET /pricing-details/ HTTP/1.1" 200 344165
+"GET /pricing-details/?search=&group=&company=&doctor=&specialty=%D8%A7%D9%84%D9%85%D8%AE+%D9%88%D8%A7%D9%84%D8%A7%D8%B9%D8%B5%D8%A7%D8%A8&accountant=&date_from=&date_to=&price_range= HTTP/1.1" 200 101659
+"GET /pricing-details/ HTTP/1.1" 200 344165
+"GET /pricing-details/?search=&group=&company=&doctor=&specialty=&accountant=&date_from=&date_to=&price_range=500000-1000000 HTTP/1.1" 200 139882
+"GET /pricing-details/ HTTP/1.1" 200 344165
+"GET /pricing-details/ HTTP/1.1" 200 344165
+"GET /pricing-details/?search=&group=&company=&doctor=%D8%A7.%D8%AF%2F%D8%A7%D8%AD%D9%85%D8%AF+%D8%B3%D9%85%D9%8A%D8%B1+%D8%B9%D8%A8%D8%AF+%D8%A7%D9%84%D9%85%D9%86%D8%B9%D9%85+%D8%A8%D8%B4%D9%86%D8%AF%D9%89&specialty=&accountant=&date_from=&date_to=&price_range= HTTP/1.1" 200 115675
+- Broken pipe from ('127.0.0.1', 63437)
+- Broken pipe from ('127.0.0.1', 63450)
+"GET /pricing-details/?search=&group=&company=&doctor=%D8%A7.%D8%AF%2F%D8%A7%D8%AD%D9%85%D8%AF+%D8%B3%D9%85%D9%8A%D8%B1+%D8%B9%D8%A8%D8%AF+%D8%A7%D9%84%D9%85%D9%86%D8%B9%D9%85+%D8%A8%D8%B4%D9%86%D8%AF%D9%89&specialty=&accountant=&date_from=&date_to=&price_range= HTTP/1.1" 200 119803
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+"GET /pricing-details/?search=&group=&company=&doctor=%D8%A7.%D8%AF%2F%D8%A7%D8%AD%D9%85%D8%AF+%D8%B3%D9%85%D9%8A%D8%B1+%D8%B9%D8%A8%D8%AF+%D8%A7%D9%84%D9%85%D9%86%D8%B9%D9%85+%D8%A8%D8%B4%D9%86%D8%AF%D9%89&specialty=&accountant=&date_from=2026-09-22&date_to=&price_range= HTTP/1.1" 200 100489
+- Broken pipe from ('127.0.0.1', 49355)
+- Broken pipe from ('127.0.0.1', 49366)
+"GET /pricing-details/?search=&group=&company=&doctor=%D8%A7.%D8%AF%2F%D8%A7%D8%AD%D9%85%D8%AF+%D8%B3%D9%85%D9%8A%D8%B1+%D8%B9%D8%A8%D8%AF+%D8%A7%D9%84%D9%85%D9%86%D8%B9%D9%85+%D8%A8%D8%B4%D9%86%D8%AF%D9%89&specialty=&accountant=&date_from=2026-09-22&date_to=&price_range= HTTP/1.1" 200 101833
+"GET /pricing-details/ HTTP/1.1" 200 354447
+"GET /pricing-details/?search=&group=&company=&doctor=&specialty=&accountant=&date_from=2026-09-04&date_to=&price_range= HTTP/1.1" 200 101554
+"GET /pricing-details/?search=&group=&company=&doctor=&specialty=&accountant=&date_from=2026-07-21&date_to=&price_range= HTTP/1.1" 200 355235
+"GET /pricing-details/?search=&group=&company=&doctor=&specialty=&accountant=&date_from=2026-07-21&date_to=2026-09-03&price_range= HTTP/1.1" 200 355425
+"GET /pricing-details/ HTTP/1.1" 200 344165
+"GET /pricing-details/ HTTP/1.1" 200 351603
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+"GET /pricing-details/?search=&group=&company=&doctor=%D8%A7.%D8%AF%2F%D8%A7%D8%AD%D9%85%D8%AF+%D8%B3%D9%85%D9%8A%D8%B1+%D8%B9%D8%A8%D8%AF+%D8%A7%D9%84%D9%85%D9%86%D8%B9%D9%85+%D8%A8%D8%B4%D9%86%D8%AF%D9%89&specialty=&accountant=&date_from=&date_to=&price_range= HTTP/1.1" 200 118695
+"GET /pricing-details/?search=&group=&company=&doctor=%D8%A7.%D8%AF%2F%D8%A7%D8%AD%D9%85%D8%AF+%D8%B3%D9%85%D9%8A%D8%B1+%D8%B9%D8%A8%D8%AF+%D8%A7%D9%84%D9%85%D9%86%D8%B9%D9%85+%D8%A8%D8%B4%D9%86%D8%AF%D9%89&specialty=&accountant=&date_from=2026-08-20&date_to=&price_range= HTTP/1.1" 200 109597
+"GET /pricing-details/?search=&group=&company=&doctor=%D8%A7.%D8%AF%2F%D8%A7%D8%AD%D9%85%D8%AF+%D8%B3%D9%85%D9%8A%D8%B1+%D8%B9%D8%A8%D8%AF+%D8%A7%D9%84%D9%85%D9%86%D8%B9%D9%85+%D8%A8%D8%B4%D9%86%D8%AF%D9%89&specialty=&accountant=&date_from=2026-08-20&date_to=2026-09-12&price_range= HTTP/1.1" 200 109777
+"GET /pricing-details/?search=&group=&company=&doctor=%D8%A7.%D8%AF%2F%D8%A7%D8%AD%D9%85%D8%AF+%D8%B3%D9%85%D9%8A%D8%B1+%D8%B9%D8%A8%D8%AF+%D8%A7%D9%84%D9%85%D9%86%D8%B9%D9%85+%D8%A8%D8%B4%D9%86%D8%AF%D9%89&specialty=&accountant=&date_from=2026-08-20&date_to=2026-09-12&price_range= HTTP/1.1" 200 106973
+"GET /pricing-details/?search=&group=&company=&doctor=%D8%A7.%D8%AF%2F%D8%A7%D8%AD%D9%85%D8%AF+%D8%B3%D9%85%D9%8A%D8%B1+%D8%B9%D8%A8%D8%AF+%D8%A7%D9%84%D9%85%D9%86%D8%B9%D9%85+%D8%A8%D8%B4%D9%86%D8%AF%D9%89&specialty=&accountant=&date_from=2026-08-20&date_to=2026-09-12&price_range= HTTP/1.1" 200 108525
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+"GET /pricing-details/ HTTP/1.1" 200 345717
+"GET /pricing-details/?search=&group=&company=&doctor=&specialty=&accountant=&date_from=2026-09-04&date_to=&price_range= HTTP/1.1" 200 97644
+- Broken pipe from ('127.0.0.1', 63094)
+"GET /pricing-details/?search=&group=&company=&doctor=&specialty=&accountant=&date_from=2026-07-03&date_to=&price_range= HTTP/1.1" 200 356507
+"GET /pricing-details/ HTTP/1.1" 200 345717
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /pricing-details/ HTTP/1.1" 200 345611
+"GET /pricing-details/?search=&group=&company=%D8%A7%D9%83%D8%B3%D8%A7&doctor=&specialty=&accountant=&date_from=&date_to=&price_range= HTTP/1.1" 200 285232
+"GET /credit-package-pricing/?company_name=%D8%A7%D9%83%D8%B3%D8%A7 HTTP/1.1" 200 194670
+"GET /credit-package-pricing/?company=42&package=176014&company_search=&package_search=&specialty= HTTP/1.1" 200 148746
+- Broken pipe from ('127.0.0.1', 56782)
+"GET /pricing-details/?search=&group=&company=&doctor=%D8%A7%D8%AD%D9%85%D8%AF+%D8%B9%D8%B3%D9%82%D8%A7%D9%84%D9%86%D9%89&specialty=&accountant=&date_from=&date_to=&price_range= HTTP/1.1" 200 105128
+"GET /pricing-details/?search=&group=&company=&doctor=&specialty=&accountant=&date_from=&date_to=&price_range= HTTP/1.1" 200 345611
+"GET /pricing-details/?search=&group=&company=&doctor=&specialty=%D8%A7%D9%86%D9%81&accountant=&date_from=&date_to=&price_range= HTTP/1.1" 200 104728
+"GET /pricing-details/?search=&group=&company=&doctor=&specialty=&accountant=&date_from=&date_to=&price_range= HTTP/1.1" 200 345611
+"GET /pricing-details/?search=&group=&company=&doctor=&specialty=%D8%A7%D9%84%D9%82%D9%84%D8%A8&accountant=&date_from=&date_to=&price_range= HTTP/1.1" 200 102684
+"GET /credit-package-pricing/?company_name=%D9%86%D9%83%D8%B3%D8%AA%20%D9%83%D9%8A%D8%B1 HTTP/1.1" 200 194576
+"GET /pricing-details/ HTTP/1.1" 200 345611
+"GET /credit-package-pricing/?company_name=%D8%A8%D8%AF%D9%88%D9%86%20%D8%B4%D8%B1%D9%83%D8%A9 HTTP/1.1" 200 95520
+"GET /credit-package-pricing/?company_name=%D8%AC%D9%84%D9%88%D8%A8%20%D9%85%D9%8A%D8%AF HTTP/1.1" 200 190665
+"GET /similar-invoices/ HTTP/1.1" 200 2525894
+"GET /similar-invoices/ HTTP/1.1" 200 2527369
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+"GET /similar-invoices/?patient_name=&specialty=&entity=&doctor=&status=&price_range=&date_from=2026-09-30&date_to= HTTP/1.1" 200 93587
+"GET /similar-invoices/?patient_name=&specialty=&entity=&doctor=&status=&price_range=&date_from=2026-08-30&date_to= HTTP/1.1" 200 238491
+"GET /similar-invoices/?patient_name=&specialty=&entity=&doctor=&status=&price_range=&date_from=2026-08-30&date_to=2026-08-31 HTTP/1.1" 200 238723
+"GET /similar-invoices/ HTTP/1.1" 200 2527369
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+- Broken pipe from ('127.0.0.1', 56294)
+"GET /similar-invoices/ HTTP/1.1" 200 2527369
+"GET /similar-invoices/?patient_name=&specialty=%D8%A7%D9%84%D8%B1%D8%B9%D8%A7%D9%8A%D8%A9+%D8%A7%D9%84%D9%85%D8%B1%D9%83%D8%B2%D8%A9&entity=&doctor=&status=&price_range=&date_from=&date_to= HTTP/1.1" 200 120515
+"GET /similar-invoices/?patient_name=&specialty=%D8%A7%D9%84%D8%B1%D8%B9%D8%A7%D9%8A%D8%A9+%D8%A7%D9%84%D9%85%D8%B1%D9%83%D8%B2%D8%A9&entity=&doctor=&status=&price_range=&date_from=&date_to= HTTP/1.1" 200 120540
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+"GET /similar-invoices/ HTTP/1.1" 200 2527394
+"GET /similar-invoices/?patient_name=&specialty=&entity=&doctor=&status=&price_range=&date_from=30%2F8%2F2026&date_to= HTTP/1.1" 500 151590
+"GET /similar-invoices/?patient_name=&specialty=&entity=&doctor=&status=&price_range=&date_from=30%2F8%2F2026&date_to= HTTP/1.1" 500 151727
+"GET /similar-invoices/ HTTP/1.1" 200 2527369
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+"GET /similar-invoices/?patient_name=&specialty=&entity=&doctor=&status=&price_range=&date_from=2026-08-30&date_to= HTTP/1.1" 200 237920
+"GET /similar-invoices/?patient_name=&specialty=&entity=&doctor=&status=&price_range=&date_from=2026-08-30&date_to=2026-09-30 HTTP/1.1" 200 238152
+"GET /similar-invoices/ HTTP/1.1" 200 2527369
+- Broken pipe from ('127.0.0.1', 62431)
+- Broken pipe from ('127.0.0.1', 62323)
+"GET /similar-invoices/ HTTP/1.1" 200 2530020
+- Broken pipe from ('127.0.0.1', 62810)
+"GET /similar-invoices/?patient_name=&specialty=%D8%A7%D9%84%D8%AA%D8%AE%D8%AF%D9%8A%D8%B1&entity=&doctor=&status=&price_range=&date_from=&date_to= HTTP/1.1" 200 115362
+"GET /similar-invoices/?specialty=%D8%A7%D9%84%D8%AA%D8%AE%D8%AF%D9%8A%D8%B1&search=%D9%85%D8%B5%D8%B7%D9%81%D9%8A+%D8%A7%D8%A8%D9%88+%D8%A7%D9%84%D9%81%D8%AA%D9%88%D8%AD HTTP/1.1" 200 95384
+"GET /similar-invoices/ HTTP/1.1" 200 2530020
+- Broken pipe from ('127.0.0.1', 63693)
+- Broken pipe from ('127.0.0.1', 63698)
+"GET /similar-invoices/ HTTP/1.1" 200 2530020
+Internal Server Error: /similar-invoices/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.OperationalError: server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\accounts\decorators.py", line 56, in wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5680, in similar_invoices
+    if range_qs.exists() or price_range == price_item["value"]:
+       ^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 1298, in exists
+    return self.query.has_results(using=self.db)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\sql\query.py", line 676, in has_results
+    return compiler.has_results()
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\sql\compiler.py", line 1591, in has_results
+    return bool(self.execute_sql(SINGLE))
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\sql\compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+
+"GET /similar-invoices/?search=%D8%A7%D8%A8%D8%B1%D8%A7%D9%87%D9%8A%D9%85+%D9%81%D8%B1%D8%AD%D8%A7%D8%AA+%D9%85%D8%AD%D9%85%D8%AF+%D8%A7%D8%A8%D8%B1%D8%A7%D9%87%D9%8A%D9%85 HTTP/1.1" 500 143757
+"GET /similar-invoices/?search=%D8%A7%D8%A8%D8%B1%D8%A7%D9%87%D9%8A%D9%85+%D9%81%D8%B1%D8%AD%D8%A7%D8%AA+%D9%85%D8%AD%D9%85%D8%AF+%D8%A7%D8%A8%D8%B1%D8%A7%D9%87%D9%8A%D9%85 HTTP/1.1" 200 102038
+- Broken pipe from ('127.0.0.1', 64363)
+"GET /similar-invoices/?search=%D8%A7%D8%A8%D8%B1%D8%A7%D9%87%D9%8A%D9%85+%D9%81%D8%B1%D8%AD%D8%A7%D8%AA+%D9%85%D8%AD%D9%85%D8%AF+%D8%A7%D8%A8%D8%B1%D8%A7%D9%87%D9%8A%D9%85&patient_name=&specialty=&entity=%D8%A7%D9%84%D8%A7%D9%87%D9%84%D9%89+%D9%84%D9%84%D9%85%D8%B4%D8%B1%D9%88%D8%B9%D8%A7%D8%AA+%D9%88%D8%A7%D9%84%D8%AE%D8%AF%D9%85%D8%A7%D8%AA+%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%D8%A9&doctor=&status=&price_range=&date_from=&date_to= HTTP/1.1" 200 102360
+Watching for file changes with StatReloader
+"GET /credit-package-pricing/ HTTP/1.1" 200 95520
+"GET /credit-package-pricing/?company_search=%D8%A7%D9%84%D8%A3%D9%87%D9%84%D9%8A+%D9%84%D8%AE%D8%AF%D9%85%D8%A7%D8%AA+%D9%88%D8%A7%D9%84%D9%85%D8%B4%D8%B1%D9%88%D8%B9%D8%A7%D8%AA+%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%D8%A9&company=158&specialty=&package_search=&package= HTTP/1.1" 200 160516
+"GET /credit-package-pricing/ HTTP/1.1" 200 95520
+"GET /credit-package-pricing/?company_search=%D8%AC%D9%84%D9%88%D8%A8+%D9%85%D9%8A%D8%AF&company=48&specialty=&package_search=&package= HTTP/1.1" 200 169859

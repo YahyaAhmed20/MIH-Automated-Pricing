@@ -786,7 +786,7 @@
 
             <!-- Filter Body -->
             <div id="filterBodyInner" class="filter-body-inner">
-                <form method="GET" class="row g-3 align-items-end">
+                <form method="GET" class="row g-3 align-items-end" id="filterForm">
                     {% if search %}
                         <input type="hidden" name="search" value="{{ search }}">
                     {% endif %}
@@ -797,7 +797,7 @@
                         <input type="text"
                                name="patient_name"
                                list="patient-suggestions"
-                               class="form-control"
+                               class="form-control filter-auto-submit"
                                placeholder="اسم المريض..."
                                value="{{ patient_name }}">
                         <datalist id="patient-suggestions">
@@ -813,7 +813,7 @@
                         <input type="text" 
                                name="specialty" 
                                list="specialty-suggestions"
-                               class="form-control" 
+                               class="form-control filter-auto-submit"
                                placeholder="التخصص..." 
                                value="{{ specialty }}">
                         <datalist id="specialty-suggestions">
@@ -829,7 +829,7 @@
                         <input type="text" 
                                name="entity" 
                                list="entity-suggestions"
-                               class="form-control" 
+                               class="form-control filter-auto-submit"
                                placeholder="الجهة..." 
                                value="{{ entity }}">
                         <datalist id="entity-suggestions">
@@ -845,7 +845,7 @@
                         <input type="text" 
                                name="doctor" 
                                list="doctor-suggestions"
-                               class="form-control" 
+                               class="form-control filter-auto-submit"
                                placeholder="الطبيب..." 
                                value="{{ doctor }}">
                         <datalist id="doctor-suggestions">
@@ -861,7 +861,7 @@
                         <input type="text" 
                                name="status" 
                                list="status-suggestions"
-                               class="form-control" 
+                               class="form-control filter-auto-submit"
                                placeholder="الحالة..." 
                                value="{{ status }}">
                         <datalist id="status-suggestions">
@@ -874,7 +874,7 @@
                     <!-- ✅ فلتر 6: النطاق السعري -->
                     <div class="col-md-2">
                         <label class="form-label">💰 النطاق السعري</label>
-                        <select name="price_range" class="form-select">
+                        <select name="price_range" class="form-select filter-auto-submit">
                             <option value="">كل المبالغ</option>
                             {% for range in price_ranges %}
                                 <option value="{{ range.value }}" {% if price_range == range.value %}selected{% endif %}>
@@ -885,13 +885,28 @@
                     </div>
                     
                     <!-- ✅ فلتر 7: التاريخ من - إلى -->
+                    <!-- ✅ Flatpickr Date From -->
                     <div class="col-md-2">
                         <label class="form-label">📅 من</label>
-                        <input type="date" name="date_from" class="form-control" value="{{ date_from }}">
+                        <input type="text" 
+                               name="date_from" 
+                               id="dateFrom"
+                               class="form-control" 
+                               placeholder="DD/MM/YYYY"
+                               value="{{ date_from }}"
+                               autocomplete="off">
                     </div>
+                    
+                    <!-- ✅ Flatpickr Date To -->
                     <div class="col-md-2">
                         <label class="form-label">📅 إلى</label>
-                        <input type="date" name="date_to" class="form-control" value="{{ date_to }}">
+                        <input type="text" 
+                               name="date_to" 
+                               id="dateTo"
+                               class="form-control" 
+                               placeholder="DD/MM/YYYY"
+                               value="{{ date_to }}"
+                               autocomplete="off">
                     </div>
                     
                     <!-- ✅ أزرار الفلاتر -->
@@ -1387,19 +1402,104 @@
     </div>
 </div>
 
+<!-- ✅ Flatpickr CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+<!-- ✅ Flatpickr JS -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+<!-- ✅ ============================================ -->
+<!-- ✅ Script المحدث مع Auto-Submit لجميع الفلاتر -->
+<!-- ✅ ============================================ -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // ✅ Auto-submit للفلاتر (نفس الكود الأول)
-    const filterInputs = document.querySelectorAll('.filter-card input, .filter-card select');
-    filterInputs.forEach(input => {
-        if (input.type !== 'text') {
-            input.addEventListener('change', function() {
-                this.closest('form').submit();
-            });
-        }
+    // ✅ Flatpickr Date Pickers (Auto-Submit on change)
+    function initDatePicker(selector) {
+        const input = document.querySelector(selector);
+        if (!input) return;
+        flatpickr(input, {
+            dateFormat: "Y-m-d",
+            altInput: true,
+            altFormat: "d/m/Y",
+            allowInput: true,
+            disableMobile: true,
+            onChange: function (selectedDates, dateStr, instance) {
+                if (selectedDates.length) {
+                    instance.element.form.submit();
+                }
+            }
+        });
+    }
+    initDatePicker("#dateFrom");
+    initDatePicker("#dateTo");
+
+    // ============================================================
+    // ✅ **الحل الأساسي: Auto-Submit لجميع الفلاتر**
+    // ============================================================
+    
+    // 1. على الـ Select (نطاق السعر) - تغيير مباشر
+    document.querySelectorAll('select[name="price_range"]').forEach(select => {
+        select.addEventListener('change', function() {
+            this.closest('form').submit();
+        });
     });
 
-    // ✅ Modal - ملء البيانات مع الإضافات الجديدة
+    // 2. على الـ Datalist والإدخالات النصية (اسم المريض، التخصص، الجهة، الدكتور، الحالة)
+    //    هنضيف حدثين: 'change' (للاختيار من القائمة) و 'input' (للاختيار عن طريق الكتابة)
+    const textInputs = document.querySelectorAll('input[list]');
+    textInputs.forEach(input => {
+        // لما يختار من القائمة (datalist)
+        input.addEventListener('change', function() {
+            this.closest('form').submit();
+        });
+        // لما يكتب ويختار (بعض المتصفحات)
+        input.addEventListener('input', function() {
+            // ننتظر شوية عشان يظهر الاختيار
+            clearTimeout(this._timer);
+            this._timer = setTimeout(() => {
+                // نتحقق لو القيمة موجودة في الـ datalist
+                const list = document.getElementById(this.getAttribute('list'));
+                if (list) {
+                    const options = Array.from(list.options).map(opt => opt.value);
+                    if (options.includes(this.value)) {
+                        this.closest('form').submit();
+                    }
+                }
+            }, 300); // تأخير بسيط عشان المستخدم يخلص كتابة
+        });
+    });
+
+    // 3. التأكد من أن كل الفلاتر اللي مش معمولها حاجة تتشاف
+    //    (زي الـ input العادي بدون list - لو موجود)
+    document.querySelectorAll('.filter-body-inner input:not([list]):not([type="hidden"])').forEach(input => {
+        // لو input مش date (عشان متداخلش مع flatpickr)
+        if (input.type !== 'text' || input.id === 'dateFrom' || input.id === 'dateTo') return;
+        input.addEventListener('change', function() {
+            this.closest('form').submit();
+        });
+    });
+
+    // ✅ **تشغيل البحث عند الضغط على Enter في أي مكان**
+    document.querySelectorAll('.filter-body-inner input, .filter-body-inner select').forEach(el => {
+        el.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                this.closest('form').submit();
+            }
+        });
+    });
+
+    // ✅ البحث الرئيسي (Search Box) عند الضغط على Enter
+    const searchInput = document.querySelector('input[name="search"]');
+    if (searchInput) {
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                this.form.submit();
+            }
+        });
+    }
+
+    // ✅ الـ Modal - ملء البيانات
     document.querySelectorAll(".btn-view-details").forEach(button => {
         button.addEventListener("click", function () {
             document.getElementById("modal-account").textContent = this.dataset.account || "-";
@@ -1421,24 +1521,12 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById("modal-status").textContent = this.dataset.status || "-";
             document.getElementById("modal-closed-date").textContent = this.dataset.closedDate || "-";
             document.getElementById("modal-notes").textContent = this.dataset.notes || "-";
-
-            // ✅ الإضافات الجديدة
             document.getElementById("modal-sub-company").textContent = this.dataset.subCompany || "-";
             document.getElementById("modal-operation-description").textContent = this.dataset.operationDescription || "-";
         });
     });
 
-    // ✅ تشغيل البحث عند الضغط على Enter
-    const searchInput = document.querySelector('input[name="search"]');
-    if (searchInput) {
-        searchInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                this.form.submit();
-            }
-        });
-    }
-
-    // ===== Mobile Filter Toggle =====
+    // ✅ Mobile Filter Toggle
     const toggleBtn = document.getElementById('filterToggleBtn');
     const filterBody = document.getElementById('filterBodyInner');
 
@@ -1453,7 +1541,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        // Auto-close on filter submit (mobile)
         const filterForm = document.querySelector('.filter-body-inner form');
         if (filterForm) {
             filterForm.addEventListener('submit', function() {

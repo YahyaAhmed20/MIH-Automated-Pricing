@@ -920,18 +920,36 @@
                             </datalist>
                         </div>
 
+                        <!-- ✅ Flatpickr Date From -->
                         <div class="col-6 col-md-3">
                             <label class="filter-label">
                                 <i class="fas fa-calendar-alt me-1"></i> من تاريخ
                             </label>
-                            <input type="date" name="date_from" class="filter-control" value="{{ date_from }}" onchange="this.form.submit()">
+                            <input
+                                type="text"
+                                name="date_from"
+                                id="dateFrom"
+                                class="filter-control"
+                                placeholder="DD/MM/YYYY"
+                                value="{{ date_from }}"
+                                autocomplete="off"
+                            >
                         </div>
 
+                        <!-- ✅ Flatpickr Date To -->
                         <div class="col-6 col-md-3">
                             <label class="filter-label">
                                 <i class="fas fa-calendar-alt me-1"></i> إلى تاريخ
                             </label>
-                            <input type="date" name="date_to" class="filter-control" value="{{ date_to }}" onchange="this.form.submit()">
+                            <input
+                                type="text"
+                                name="date_to"
+                                id="dateTo"
+                                class="filter-control"
+                                placeholder="DD/MM/YYYY"
+                                value="{{ date_to }}"
+                                autocomplete="off"
+                            >
                         </div>
 
                         <div class="col-6 col-md-3">
@@ -1253,12 +1271,15 @@
                         button.getAttribute('data-cost-notes') || '-';
 
                     // Credit Package Link
-                    const procedureName = button.getAttribute('data-procedure-name') || '';
-                    const creditLink = document.getElementById('modal-credit-link');
-                    if (creditLink) {
-                        const baseUrl = "{% url 'credit_package_pricing' %}";
-                        creditLink.href = `${baseUrl}?procedure_search=${encodeURIComponent(procedureName)}`;
-                    }
+                   const companyName = button.getAttribute('data-company') || '';
+const creditLink = document.getElementById('modal-credit-link');
+
+if (creditLink) {
+    const baseUrl = "{% url 'credit_package_pricing' %}";
+
+    creditLink.href =
+        `${baseUrl}?company_name=${encodeURIComponent(companyName)}`;
+}
                 });
             }
         });
@@ -1428,5 +1449,34 @@
         background: #0b5ed7 !important;
     }
 </style>
+
+<!-- ✅ Flatpickr CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+<!-- ✅ Flatpickr JS -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    function initDatePicker(selector) {
+        const input = document.querySelector(selector);
+        if (!input) return;
+        flatpickr(input, {
+            dateFormat: "Y-m-d",
+            altInput: true,
+            altFormat: "d/m/Y",
+            allowInput: true,
+            disableMobile: true,
+            onChange: function (selectedDates, dateStr, instance) {
+                if (selectedDates.length) {
+                    instance.element.form.submit();
+                }
+            }
+        });
+    }
+    initDatePicker("#dateFrom");
+    initDatePicker("#dateTo");
+});
+</script>
 
 {% endblock %}

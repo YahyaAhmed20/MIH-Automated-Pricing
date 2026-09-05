@@ -4159,10 +4159,24 @@ def credit_package_pricing(request):
     # ============================================================
     company_id = request.GET.get("company")
     entity_id = request.GET.get("entity")
-    
+    company_name = request.GET.get("company_name", "").strip()
+
     if entity_id:
         company_id = entity_id
-    
+
+    if not company_id and company_name:
+        normalized_company_name = (
+            ImportHelpers.normalize_company_name(company_name)
+        )
+
+        for entity in ContractEntity.objects.only("id", "name"):
+            if (
+                ImportHelpers.normalize_company_name(entity.name)
+                == normalized_company_name
+            ):
+                company_id = entity.id
+                break
+        
     package_id = request.GET.get("package")
     company_search = request.GET.get("company_search", "")
     package_search = request.GET.get("package_search", "")
@@ -5273,19 +5287,27 @@ def similar_invoices(request):
     status = request.GET.get("status", "").strip()
     date_from = request.GET.get("date_from", "").strip()
     date_to = request.GET.get("date_to", "").strip()
-    
-    # ✅ ✅ ✅ فلتر النطاق السعري (جديد)
     price_range = request.GET.get("price_range", "").strip()
 
-    invoices = SimilarInvoice.objects.all().order_by("-admission_date")
+    # =========================================================
+    # 1) Queryset أساسي
+    # =========================================================
 
-    # ✅ تطبيق الفلاتر
+    base_invoices = SimilarInvoice.objects.all()
+
+    # البحث العام يظل مؤثراً في كل الفلاتر
     if search:
-        invoices = invoices.filter(
+        base_invoices = base_invoices.filter(
             Q(operation_name__icontains=search) |
             Q(patient_name__icontains=search) |
             Q(specialty_name__icontains=search)
         )
+
+    # =========================================================
+    # 2) Queryset النتائج الفعلية
+    # =========================================================
+
+    invoices = base_invoices
 
     if patient_name:
         invoices = invoices.filter(
@@ -5293,99 +5315,351 @@ def similar_invoices(request):
         )
 
     if specialty:
-        invoices = invoices.filter(specialty_name=specialty)
+        invoices = invoices.filter(
+            specialty_name=specialty
+        )
 
     if entity:
-        invoices = invoices.filter(entity_name=entity)
+        invoices = invoices.filter(
+            entity_name=entity
+        )
 
     if doctor:
-        invoices = invoices.filter(doctor_name=doctor)
+        invoices = invoices.filter(
+            doctor_name=doctor
+        )
 
     if status:
-        invoices = invoices.filter(invoice_status=status)
+        invoices = invoices.filter(
+            invoice_status=status
+        )
 
     if date_from:
-        invoices = invoices.filter(admission_date__gte=date_from)
+        invoices = invoices.filter(
+            admission_date__gte=date_from
+        )
 
     if date_to:
-        invoices = invoices.filter(admission_date__lte=date_to)
+        invoices = invoices.filter(
+            admission_date__lte=date_to
+        )
 
-    # ✅ ✅ ✅ تطبيق فلتر النطاق السعري
-    if price_range:
+    # =========================================================
+    # 3) فلتر السعر
+    # =========================================================
+
+    def apply_price_filter(queryset, selected_price_range):
+        if not selected_price_range:
+            return queryset
+
         try:
-            parts = price_range.split('-')
+            if selected_price_range == "500000+":
+                return queryset.filter(
+                    net_invoice__gte=500000
+                )
+
+            if selected_price_range == "1000000+":
+                return queryset.filter(
+                    net_invoice__gte=1000000
+                )
+
+            parts = selected_price_range.split("-")
+
             if len(parts) == 2:
-                # ✅ نطاق بين قيمتين
                 min_price = float(parts[0].strip())
                 max_price = float(parts[1].strip())
-                invoices = invoices.filter(
+
+                return queryset.filter(
                     net_invoice__gte=min_price,
                     net_invoice__lte=max_price
                 )
-            elif price_range == "500000+":
-                # ✅ أكثر من 500,000
-                invoices = invoices.filter(net_invoice__gte=500000)
-            elif price_range == "1000000+":
-                # ✅ أكثر من 1,000,000
-                invoices = invoices.filter(net_invoice__gte=1000000)
+
         except (ValueError, TypeError):
             pass
 
-    # ✅ الإحصائيات
-    total_net_invoice = invoices.aggregate(total=Sum("net_invoice"))["total"] or 0
-    total_company_share = invoices.aggregate(total=Sum("company_share"))["total"] or 0
+        return queryset
 
-    # ✅ Pagination
-    paginator = Paginator(invoices, 50)
-    page_obj = paginator.get_page(request.GET.get("page"))
+    invoices = apply_price_filter(invoices, price_range)
 
-    # ✅ تنسيق الأرقام
-    for invoice in page_obj:
-        invoice.formatted_net_invoice = f"{invoice.net_invoice:,.0f}" if invoice.net_invoice else "-"
-        invoice.formatted_company_share = f"{invoice.company_share:,.0f}" if invoice.company_share else "-"
+    # =========================================================
+    # 4) Querysets خاصة بكل فلتر
+    #
+    #    مهم جداً:
+    #    كل فلتر نحسب خياراته مع استثناء الفلتر نفسه.
+    # =========================================================
 
-    # ✅ ✅ ✅ الفلاتر من النتائج
-    specialties = (
-        invoices
-        .exclude(specialty_name="")
-        .values_list("specialty_name", flat=True)
-        .distinct()
-        .order_by("specialty_name")
+    # ---------- المرضى ----------
+    patient_filter_qs = base_invoices
+
+    if specialty:
+        patient_filter_qs = patient_filter_qs.filter(
+            specialty_name=specialty
+        )
+
+    if entity:
+        patient_filter_qs = patient_filter_qs.filter(
+            entity_name=entity
+        )
+
+    if doctor:
+        patient_filter_qs = patient_filter_qs.filter(
+            doctor_name=doctor
+        )
+
+    if status:
+        patient_filter_qs = patient_filter_qs.filter(
+            invoice_status=status
+        )
+
+    if date_from:
+        patient_filter_qs = patient_filter_qs.filter(
+            admission_date__gte=date_from
+        )
+
+    if date_to:
+        patient_filter_qs = patient_filter_qs.filter(
+            admission_date__lte=date_to
+        )
+
+    patient_filter_qs = apply_price_filter(
+        patient_filter_qs,
+        price_range
     )
 
-    entities = (
-        invoices
-        .exclude(entity_name="")
-        .values_list("entity_name", flat=True)
-        .distinct()
-        .order_by("entity_name")
-    )
-
-    doctors = (
-        invoices
-        .exclude(doctor_name="")
-        .values_list("doctor_name", flat=True)
-        .distinct()
-        .order_by("doctor_name")
-    )
-
-    statuses = (
-        invoices
-        .exclude(invoice_status="")
-        .values_list("invoice_status", flat=True)
-        .distinct()
-        .order_by("invoice_status")
-    )
-    
     patient_names = (
-        invoices
+        patient_filter_qs
         .exclude(patient_name="")
         .values_list("patient_name", flat=True)
         .distinct()
         .order_by("patient_name")
     )
 
-    # ✅ ✅ ✅ نطاقات الأسعار المحددة مسبقاً
+    # ---------- التخصص ----------
+    specialty_filter_qs = base_invoices
+
+    if patient_name:
+        specialty_filter_qs = specialty_filter_qs.filter(
+            patient_name__icontains=patient_name
+        )
+
+    if entity:
+        specialty_filter_qs = specialty_filter_qs.filter(
+            entity_name=entity
+        )
+
+    if doctor:
+        specialty_filter_qs = specialty_filter_qs.filter(
+            doctor_name=doctor
+        )
+
+    if status:
+        specialty_filter_qs = specialty_filter_qs.filter(
+            invoice_status=status
+        )
+
+    if date_from:
+        specialty_filter_qs = specialty_filter_qs.filter(
+            admission_date__gte=date_from
+        )
+
+    if date_to:
+        specialty_filter_qs = specialty_filter_qs.filter(
+            admission_date__lte=date_to
+        )
+
+    specialty_filter_qs = apply_price_filter(
+        specialty_filter_qs,
+        price_range
+    )
+
+    specialties = (
+        specialty_filter_qs
+        .exclude(specialty_name="")
+        .values_list("specialty_name", flat=True)
+        .distinct()
+        .order_by("specialty_name")
+    )
+
+    # ---------- الجهة ----------
+    entity_filter_qs = base_invoices
+
+    if patient_name:
+        entity_filter_qs = entity_filter_qs.filter(
+            patient_name__icontains=patient_name
+        )
+
+    if specialty:
+        entity_filter_qs = entity_filter_qs.filter(
+            specialty_name=specialty
+        )
+
+    if doctor:
+        entity_filter_qs = entity_filter_qs.filter(
+            doctor_name=doctor
+        )
+
+    if status:
+        entity_filter_qs = entity_filter_qs.filter(
+            invoice_status=status
+        )
+
+    if date_from:
+        entity_filter_qs = entity_filter_qs.filter(
+            admission_date__gte=date_from
+        )
+
+    if date_to:
+        entity_filter_qs = entity_filter_qs.filter(
+            admission_date__lte=date_to
+        )
+
+    entity_filter_qs = apply_price_filter(
+        entity_filter_qs,
+        price_range
+    )
+
+    entities = (
+        entity_filter_qs
+        .exclude(entity_name="")
+        .values_list("entity_name", flat=True)
+        .distinct()
+        .order_by("entity_name")
+    )
+
+    # ---------- الطبيب ----------
+    doctor_filter_qs = base_invoices
+
+    if patient_name:
+        doctor_filter_qs = doctor_filter_qs.filter(
+            patient_name__icontains=patient_name
+        )
+
+    if specialty:
+        doctor_filter_qs = doctor_filter_qs.filter(
+            specialty_name=specialty
+        )
+
+    if entity:
+        doctor_filter_qs = doctor_filter_qs.filter(
+            entity_name=entity
+        )
+
+    if status:
+        doctor_filter_qs = doctor_filter_qs.filter(
+            invoice_status=status
+        )
+
+    if date_from:
+        doctor_filter_qs = doctor_filter_qs.filter(
+            admission_date__gte=date_from
+        )
+
+    if date_to:
+        doctor_filter_qs = doctor_filter_qs.filter(
+            admission_date__lte=date_to
+        )
+
+    doctor_filter_qs = apply_price_filter(
+        doctor_filter_qs,
+        price_range
+    )
+
+    doctors = (
+        doctor_filter_qs
+        .exclude(doctor_name="")
+        .values_list("doctor_name", flat=True)
+        .distinct()
+        .order_by("doctor_name")
+    )
+
+    # ---------- الحالة ----------
+    status_filter_qs = base_invoices
+
+    if patient_name:
+        status_filter_qs = status_filter_qs.filter(
+            patient_name__icontains=patient_name
+        )
+
+    if specialty:
+        status_filter_qs = status_filter_qs.filter(
+            specialty_name=specialty
+        )
+
+    if entity:
+        status_filter_qs = status_filter_qs.filter(
+            entity_name=entity
+        )
+
+    if doctor:
+        status_filter_qs = status_filter_qs.filter(
+            doctor_name=doctor
+        )
+
+    if date_from:
+        status_filter_qs = status_filter_qs.filter(
+            admission_date__gte=date_from
+        )
+
+    if date_to:
+        status_filter_qs = status_filter_qs.filter(
+            admission_date__lte=date_to
+        )
+
+    status_filter_qs = apply_price_filter(
+        status_filter_qs,
+        price_range
+    )
+
+    statuses = (
+        status_filter_qs
+        .exclude(invoice_status="")
+        .values_list("invoice_status", flat=True)
+        .distinct()
+        .order_by("invoice_status")
+    )
+
+    # =========================================================
+    # 5) نطاقات الأسعار
+    #    نحسبها بدون price_range الحالي
+    # =========================================================
+
+    price_filter_qs = base_invoices
+
+    if patient_name:
+        price_filter_qs = price_filter_qs.filter(
+            patient_name__icontains=patient_name
+        )
+
+    if specialty:
+        price_filter_qs = price_filter_qs.filter(
+            specialty_name=specialty
+        )
+
+    if entity:
+        price_filter_qs = price_filter_qs.filter(
+            entity_name=entity
+        )
+
+    if doctor:
+        price_filter_qs = price_filter_qs.filter(
+            doctor_name=doctor
+        )
+
+    if status:
+        price_filter_qs = price_filter_qs.filter(
+            invoice_status=status
+        )
+
+    if date_from:
+        price_filter_qs = price_filter_qs.filter(
+            admission_date__gte=date_from
+        )
+
+    if date_to:
+        price_filter_qs = price_filter_qs.filter(
+            admission_date__lte=date_to
+        )
+
     PRICE_RANGES = [
         {"label": "أقل من 50,000", "value": "0-49999"},
         {"label": "50,000 - 100,000", "value": "50000-100000"},
@@ -5395,14 +5669,123 @@ def similar_invoices(request):
         {"label": "أكثر من 1,000,000", "value": "1000000+"},
     ]
 
+    available_price_ranges = []
+
+    for price_item in PRICE_RANGES:
+        range_qs = apply_price_filter(
+            price_filter_qs,
+            price_item["value"]
+        )
+
+        if range_qs.exists() or price_range == price_item["value"]:
+            available_price_ranges.append(price_item)
+
+    # =========================================================
+    # 6) نطاق التواريخ المتاح
+    # =========================================================
+
+    date_filter_qs = base_invoices
+
+    if patient_name:
+        date_filter_qs = date_filter_qs.filter(
+            patient_name__icontains=patient_name
+        )
+
+    if specialty:
+        date_filter_qs = date_filter_qs.filter(
+            specialty_name=specialty
+        )
+
+    if entity:
+        date_filter_qs = date_filter_qs.filter(
+            entity_name=entity
+        )
+
+    if doctor:
+        date_filter_qs = date_filter_qs.filter(
+            doctor_name=doctor
+        )
+
+    if status:
+        date_filter_qs = date_filter_qs.filter(
+            invoice_status=status
+        )
+
+    date_filter_qs = apply_price_filter(
+        date_filter_qs,
+        price_range
+    )
+
+    min_admission_date = (
+        date_filter_qs
+        .exclude(admission_date__isnull=True)
+        .order_by("admission_date")
+        .values_list("admission_date", flat=True)
+        .first()
+    )
+
+    max_admission_date = (
+        date_filter_qs
+        .exclude(admission_date__isnull=True)
+        .order_by("-admission_date")
+        .values_list("admission_date", flat=True)
+        .first()
+    )
+
+    # =========================================================
+    # 7) الإحصائيات
+    # =========================================================
+
+    total_net_invoice = (
+        invoices.aggregate(total=Sum("net_invoice"))["total"] or 0
+    )
+
+    total_company_share = (
+        invoices.aggregate(total=Sum("company_share"))["total"] or 0
+    )
+
+    # =========================================================
+    # 8) Pagination
+    # =========================================================
+
+    invoices = invoices.order_by("-admission_date")
+
+    paginator = Paginator(invoices, 50)
+    page_obj = paginator.get_page(
+        request.GET.get("page")
+    )
+
+    # =========================================================
+    # 9) تنسيق الأرقام
+    # =========================================================
+
+    for invoice in page_obj:
+        invoice.formatted_net_invoice = (
+            f"{invoice.net_invoice:,.0f}"
+            if invoice.net_invoice
+            else "-"
+        )
+
+        invoice.formatted_company_share = (
+            f"{invoice.company_share:,.0f}"
+            if invoice.company_share
+            else "-"
+        )
+
+    # =========================================================
+    # 10) Render
+    # =========================================================
+
     return render(
         request,
         "frontend/similar_invoices.html",
         {
             "page_obj": page_obj,
             "results_count": invoices.count(),
+
             "total_net_invoice": f"{total_net_invoice:,.0f}",
             "total_company_share": f"{total_company_share:,.0f}",
+
             "search": search,
             "patient_name": patient_name,
             "specialty": specialty,
@@ -5411,13 +5794,20 @@ def similar_invoices(request):
             "status": status,
             "date_from": date_from,
             "date_to": date_to,
-            "price_range": price_range,  # ✅ جديد
-            "price_ranges": PRICE_RANGES,  # ✅ جديد
+            "price_range": price_range,
+
+            # الفلاتر الديناميكية
             "patient_names": patient_names,
             "specialties": specialties,
             "entities": entities,
             "doctors": doctors,
             "statuses": statuses,
+
+            "price_ranges": available_price_ranges,
+
+            # نطاق التاريخ المتاح
+            "min_admission_date": min_admission_date,
+            "max_admission_date": max_admission_date,
         }
     )
 # frontend/views.py

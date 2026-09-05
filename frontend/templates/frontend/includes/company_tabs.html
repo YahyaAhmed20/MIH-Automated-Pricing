@@ -1,8 +1,10 @@
 <!-- ============================================ -->
-<!-- ✅ CSS المخصص للـ Tabs (الحل الأمثل) -->
+<!-- ✅ CSS المخصص للـ Tabs (خلفية بيضاء) -->
 <!-- ============================================ -->
 <style>
+    /* ========================================== */
     /* ✅ Color Variables */
+    /* ========================================== */
     :root {
         --primary-blue: #0d6efd;
         --primary-blue-dark: #0b5ed7;
@@ -11,19 +13,29 @@
         --gradient-primary: linear-gradient(135deg, #0d6efd, #0dcaf0);
         --gradient-hover: linear-gradient(135deg, #0b5ed7, #0dcaf0);
         --shadow-primary: rgba(13, 110, 253, 0.25);
+        --text-dark: #1a2a3a;
+        --text-muted: #6c7a8a;
+        --bg-light: #f8faff;
+        --border-radius-lg: 20px;
+        --border-radius-md: 14px;
+        --border-radius-sm: 10px;
+        --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
     
+    /* ========================================== */
     /* ✅ Tabs Container */
+    /* ========================================== */
     .tabs-container {
         background: #ffffff;
-        border-radius: 16px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-        margin-bottom: 1.5rem;
-        padding: 0.25rem;
-        transition: all 0.3s ease;
+        border-radius: var(--border-radius-lg);
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.04), 
+                    0 1px 8px rgba(13, 110, 253, 0.04);
+        margin-bottom: 1.75rem;
+        padding: 0.35rem;
+        transition: var(--transition-smooth);
         position: relative;
         overflow: hidden;
-        border: 1px solid rgba(13, 110, 253, 0.05);
+        border: 1px solid rgba(13, 110, 253, 0.06);
     }
     
     .tabs-container::before {
@@ -32,11 +44,12 @@
         top: 0;
         left: 0;
         right: 0;
-        height: 3px;
-        background: linear-gradient(90deg, #0d6efd, #0dcaf0, #0d6efd);
-        background-size: 200% 100%;
-        animation: gradientMove 3s ease infinite;
-        opacity: 0.6;
+        height: 4px;
+        background: linear-gradient(90deg, #0d6efd, #0dcaf0, #d6efd, #0dcaf0, #0d6efd);
+        background-size: 300% 100%;
+        animation: gradientMove 4s ease-in-out infinite;
+        opacity: 0.7;
+        z-index: 2;
     }
     
     @keyframes gradientMove {
@@ -46,19 +59,29 @@
     }
     
     .tabs-container:hover {
-        box-shadow: 0 8px 35px rgba(13, 110, 253, 0.1);
+        box-shadow: 0 8px 45px rgba(13, 110, 253, 0.08), 
+                    0 2px 12px rgba(13, 110, 253, 0.04);
         transform: translateY(-2px);
     }
     
-    /* ✅ Nav Tabs */
+    .tabs-container .card-body {
+        padding: 0.75rem 1rem !important;
+        position: relative;
+        z-index: 1;
+    }
+    
+    /* ========================================== */
+    /* ✅ Nav Tabs - خلفية بيضاء */
+    /* ========================================== */
     .nav-tabs-custom {
         border-bottom: none;
-        padding: 0.5rem 0.5rem 0;
-        gap: 0.25rem;
+        padding: 0.35rem 0.35rem 0;
+        gap: 0.4rem;
         flex-wrap: wrap;
         margin: 0;
         list-style: none;
         display: flex;
+        align-items: center;
     }
     
     .nav-tabs-custom .nav-item {
@@ -69,37 +92,44 @@
     
     .nav-tabs-custom .nav-link {
         border: none;
-        border-radius: 12px;
-        padding: 0.7rem 1.5rem;
-        font-weight: 600;
-        font-size: 0.9rem;
-        color: #6c757d;
-        background: transparent;
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        border-radius: var(--border-radius-md);
+        padding: 0.85rem 1.8rem;
+        font-weight: 700;
+        font-size: 0.95rem;
+        color: var(--text-dark);
+        background: #ffffff;  /* ✅ خلفية بيضاء */
+        transition: var(--transition-smooth);
         position: relative;
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 12px;
         cursor: pointer;
         overflow: hidden;
         text-decoration: none;
         white-space: nowrap;
+        min-height: 54px;
+        letter-spacing: 0.5px;
+        border: 2px solid rgba(13, 110, 253, 0.08);
     }
     
     .nav-tabs-custom .nav-link i {
-        font-size: 1.1rem;
-        transition: all 0.4s ease;
+        font-size: 1.25rem;
+        transition: var(--transition-smooth);
         flex-shrink: 0;
+        color: var(--text-dark);
     }
     
-    /* ✅ النص يظهر دائماً */
     .nav-tabs-custom .nav-link .nav-label {
         display: inline-block;
-        transition: all 0.3s ease;
-        font-size: 0.9rem;
+        transition: var(--transition-smooth);
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: var(--text-dark);
     }
     
+    /* ========================================== */
     /* ✅ Shine Effect on Hover */
+    /* ========================================== */
     .nav-tabs-custom .nav-link::before {
         content: '';
         position: absolute;
@@ -109,7 +139,7 @@
         height: 100%;
         background: linear-gradient(90deg, 
             transparent, 
-            rgba(255, 255, 255, 0.2), 
+            rgba(13, 110, 253, 0.05), 
             transparent
         );
         transition: left 0.6s ease;
@@ -120,113 +150,127 @@
         left: 100%;
     }
     
-    /* ✅ Hover State */
+    /* ========================================== */
+    /* ✅ Hover State - تأثيرات أنيقة */
+    /* ========================================== */
     .nav-tabs-custom .nav-link:hover {
-        background: rgba(13, 110, 253, 0.06);
-        color: #0d6efd;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 15px rgba(13, 110, 253, 0.1);
+        background: rgba(13, 110, 253, 0.05);
+        color: var(--primary-blue);
+        transform: translateY(-3px);
+        box-shadow: 0 4px 25px rgba(13, 110, 253, 0.08);
+        border-color: rgba(13, 110, 253, 0.15);
     }
     
     .nav-tabs-custom .nav-link:hover i {
-        transform: scale(1.15) rotate(-5deg);
-        color: #0d6efd;
+        transform: scale(1.15) rotate(-3deg);
+        color: var(--primary-blue);
     }
     
-    /* ✅ Active State */
+    .nav-tabs-custom .nav-link:hover .nav-label {
+        color: var(--primary-blue);
+    }
+    
+    /* ========================================== */
+    /* ✅ Active State - التاب النشط */
+    /* ========================================== */
     .nav-tabs-custom .nav-link.active {
-        background: linear-gradient(135deg, #0d6efd, #0dcaf0);
-        color: #fff !important;
-        box-shadow: 0 4px 20px rgba(13, 110, 253, 0.35);
-        transform: translateY(-3px);
-        animation: activePulse 2s ease-in-out infinite;
+        background: var(--gradient-primary);
+        color: #ffffff !important;
+        box-shadow: 0 4px 30px rgba(13, 110, 253, 0.35), 
+                    0 2px 15px rgba(13, 110, 253, 0.15);
+        transform: translateY(-4px);
+        animation: activePulse 2.5s ease-in-out infinite;
+        border-color: transparent;
     }
     
     @keyframes activePulse {
         0%, 100% {
-            box-shadow: 0 4px 20px rgba(13, 110, 253, 0.35);
+            box-shadow: 0 4px 30px rgba(13, 110, 253, 0.35);
         }
         50% {
-            box-shadow: 0 6px 35px rgba(13, 110, 253, 0.5);
+            box-shadow: 0 6px 45px rgba(13, 110, 253, 0.5);
         }
     }
     
     .nav-tabs-custom .nav-link.active i {
-        color: #fff !important;
-        transform: scale(1.1);
+        color: #ffffff !important;
+        transform: scale(1.15);
         animation: iconBounce 0.6s ease;
     }
     
     @keyframes iconBounce {
         0% { transform: scale(0.8) rotate(-10deg); }
-        50% { transform: scale(1.3) rotate(5deg); }
-        100% { transform: scale(1.1) rotate(0); }
+        40% { transform: scale(1.35) rotate(5deg); }
+        70% { transform: scale(0.95) rotate(-2deg); }
+        100% { transform: scale(1.15) rotate(0); }
     }
     
-    /* ✅ Active Indicator (Glowing Dot) */
+    .nav-tabs-custom .nav-link.active .nav-label {
+        color: #ffffff !important;
+    }
+    
+    /* ========================================== */
+    /* ✅ Active Indicator - المؤشر السفلي */
+    /* ========================================== */
     .nav-tabs-custom .nav-link.active::after {
         content: '';
         position: absolute;
-        bottom: -2px;
+        bottom: -3px;
         left: 50%;
         transform: translateX(-50%);
-        width: 20px;
-        height: 3px;
-        background: #fff;
+        width: 28px;
+        height: 4px;
+        background: #ffffff;
         border-radius: 10px;
         animation: dotSlide 0.5s ease;
-        box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+        box-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
     }
     
     @keyframes dotSlide {
         0% {
             width: 0;
             opacity: 0;
+            transform: translateX(-50%) scale(0.5);
         }
         100% {
-            width: 20px;
+            width: 28px;
             opacity: 1;
+            transform: translateX(-50%) scale(1);
         }
     }
     
-    /* ✅ Icon Animation on Active */
-    .nav-tabs-custom .nav-link.active .bi {
-        animation: iconFloat 3s ease-in-out infinite;
-    }
-    
-    @keyframes iconFloat {
-        0%, 100% {
-            transform: translateY(0) scale(1.1);
-        }
-        50% {
-            transform: translateY(-3px) scale(1.15);
-        }
-    }
-    
+    /* ========================================== */
     /* ✅ Badge Counter */
+    /* ========================================== */
     .nav-tabs-custom .nav-link .tab-badge {
         background: rgba(13, 110, 253, 0.1);
-        color: #0d6efd;
-        font-size: 0.65rem;
-        padding: 0.15rem 0.6rem;
-        border-radius: 20px;
-        font-weight: 700;
-        transition: all 0.3s ease;
+        color: var(--primary-blue);
+        font-size: 0.7rem;
+        padding: 0.2rem 0.7rem;
+        border-radius: 50px;
+        font-weight: 800;
+        transition: var(--transition-smooth);
         margin-left: 4px;
         flex-shrink: 0;
+        min-width: 24px;
+        text-align: center;
+        border: 1.5px solid rgba(13, 110, 253, 0.08);
     }
     
     .nav-tabs-custom .nav-link.active .tab-badge {
-        background: rgba(255, 255, 255, 0.25);
-        color: #fff;
+        background: rgba(255, 255, 255, 0.2);
+        color: #ffffff;
+        border-color: rgba(255, 255, 255, 0.2);
     }
     
     .nav-tabs-custom .nav-link:hover .tab-badge {
-        background: rgba(13, 110, 253, 0.2);
-        transform: scale(1.05);
+        background: rgba(13, 110, 253, 0.15);
+        transform: scale(1.08);
     }
     
+    /* ========================================== */
     /* ✅ Ripple Effect */
+    /* ========================================== */
     .ripple {
         position: relative;
         overflow: hidden;
@@ -235,10 +279,11 @@
     .ripple-effect {
         position: absolute;
         border-radius: 50%;
-        background: rgba(255, 255, 255, 0.3);
+        background: rgba(13, 110, 253, 0.15);
         transform: scale(0);
         animation: rippleAnimation 0.6s linear;
         pointer-events: none;
+        will-change: transform, opacity;
     }
     
     @keyframes rippleAnimation {
@@ -249,157 +294,199 @@
     }
     
     /* ========================================== */
-    /* ✅ RESPONSIVE - الحل الأمثل للموبايل */
+    /* ✅ RESPONSIVE - محسّن للجوال */
     /* ========================================== */
     
-    /* ✅ للتابلت والأجهزة المتوسطة */
+    /* ✅ للتابلت */
     @media (max-width: 768px) {
         .tabs-container {
-            border-radius: 12px;
-            padding: 0.15rem;
+            border-radius: var(--border-radius-md);
+            padding: 0.2rem;
+        }
+        
+        .tabs-container .card-body {
+            padding: 0.5rem 0.75rem !important;
         }
         
         .nav-tabs-custom {
-            padding: 0.25rem;
-            gap: 0.15rem;
+            padding: 0.2rem;
+            gap: 0.25rem;
         }
         
         .nav-tabs-custom .nav-link {
-            padding: 0.5rem 1rem;
-            font-size: 0.8rem;
-            border-radius: 10px;
-            gap: 6px;
+            padding: 0.7rem 1.2rem;
+            font-size: 0.85rem;
+            border-radius: var(--border-radius-sm);
+            gap: 8px;
+            min-height: 46px;
+            background: #ffffff;
         }
         
         .nav-tabs-custom .nav-link i {
-            font-size: 1rem;
+            font-size: 1.1rem;
         }
         
         .nav-tabs-custom .nav-link .nav-label {
-            font-size: 0.8rem;
+            font-size: 0.85rem;
         }
         
         .nav-tabs-custom .nav-link .tab-badge {
             font-size: 0.6rem;
-            padding: 0.1rem 0.5rem;
+            padding: 0.1rem 0.6rem;
+            min-width: 20px;
         }
         
         .nav-tabs-custom .nav-link.active::after {
-            width: 15px;
-            height: 2px;
+            width: 20px;
+            height: 3px;
         }
     }
     
-    /* ✅ للجوال - النص يظهر بوضوح مع الأيقونة */
+    /* ✅ للجوال - Bold وكبير */
     @media (max-width: 576px) {
         .tabs-container {
-            border-radius: 10px;
-            padding: 0.1rem;
-            overflow-x: auto; /* سكرول أفقي لو التابات كتير */
+            border-radius: var(--border-radius-sm);
+            padding: 0.15rem;
+            margin-bottom: 1.25rem;
+            overflow-x: auto;
             -webkit-overflow-scrolling: touch;
         }
         
-        /* إخفاء السكرول بار */
         .tabs-container::-webkit-scrollbar {
             height: 0;
             display: none;
         }
         
         .tabs-container {
-            scrollbar-width: none; /* فايرفوكس */
+            scrollbar-width: none;
+        }
+        
+        .tabs-container .card-body {
+            padding: 0.4rem 0.5rem !important;
         }
         
         .nav-tabs-custom {
-            padding: 0.2rem;
-            gap: 0.1rem;
-            flex-wrap: nowrap; /* منع النزول لسطر جديد */
+            padding: 0.15rem;
+            gap: 0.2rem;
+            flex-wrap: nowrap;
             width: max-content;
             min-width: 100%;
         }
         
         .nav-tabs-custom .nav-item {
-            flex: 0 0 auto; /* منع التمدد */
+            flex: 0 0 auto;
         }
         
         .nav-tabs-custom .nav-link {
-            padding: 0.4rem 0.7rem;
-            font-size: 0.65rem;
-            border-radius: 8px;
-            gap: 4px;
+            padding: 0.65rem 1.2rem;
+            font-size: 0.9rem !important;
+            font-weight: 800 !important;
+            border-radius: 10px;
+            gap: 8px;
             white-space: nowrap;
-            min-height: 36px; /* مساحة كافية للضغط */
+            min-height: 48px;
+            min-width: 80px;
+            border: 2px solid rgba(13, 110, 253, 0.08);
+            background: #ffffff;
         }
         
         .nav-tabs-custom .nav-link i {
-            font-size: 0.85rem;
+            font-size: 1.1rem;
+            color: var(--text-dark);
         }
         
-        /* ✅ النص يظهر دائماً مع تصغير حجمه */
         .nav-tabs-custom .nav-link .nav-label {
-            display: inline-block !important; /* منع الإخفاء */
-            font-size: 0.6rem;
-            font-weight: 600;
+            display: inline-block !important;
+            font-size: 0.85rem !important;
+            font-weight: 800 !important;
+            color: var(--text-dark);
         }
         
         .nav-tabs-custom .nav-link .tab-badge {
-            font-size: 0.5rem;
-            padding: 0.05rem 0.35rem;
-            margin-left: 2px;
+            font-size: 0.6rem;
+            padding: 0.1rem 0.6rem;
+            margin-left: 4px;
+            min-width: 20px;
+            font-weight: 800;
         }
         
         .nav-tabs-custom .nav-link.active::after {
-            width: 12px;
-            height: 2px;
-            bottom: -1px;
+            width: 18px;
+            height: 3px;
+            bottom: -2px;
         }
         
-        /* تأثير اللمس للجوال */
+        /* ✅ تأثير اللمس للجوال */
         .nav-tabs-custom .nav-link:active {
             transform: scale(0.95);
+            transition: transform 0.1s ease;
+        }
+        
+        .nav-tabs-custom .nav-link.active {
+            transform: translateY(-3px) !important;
+        }
+        
+        .nav-tabs-custom .nav-link.active i {
+            color: #ffffff !important;
+        }
+        
+        .nav-tabs-custom .nav-link.active .nav-label {
+            color: #ffffff !important;
+        }
+        
+        .nav-tabs-custom .nav-link.active .tab-badge {
+            color: #ffffff !important;
         }
     }
     
     /* ✅ للجوالات الصغيرة جداً */
     @media (max-width: 400px) {
         .nav-tabs-custom .nav-link {
-            padding: 0.3rem 0.5rem;
-            font-size: 0.55rem;
-            gap: 3px;
-            min-height: 32px;
+            padding: 0.5rem 0.9rem;
+            font-size: 0.8rem !important;
+            gap: 5px;
+            min-height: 42px;
+            min-width: 65px;
+            background: #ffffff;
         }
         
         .nav-tabs-custom .nav-link i {
-            font-size: 0.7rem;
+            font-size: 0.95rem;
         }
         
         .nav-tabs-custom .nav-link .nav-label {
-            font-size: 0.5rem;
+            font-size: 0.75rem !important;
         }
         
         .nav-tabs-custom .nav-link .tab-badge {
-            font-size: 0.4rem;
-            padding: 0.05rem 0.25rem;
+            font-size: 0.5rem;
+            padding: 0.05rem 0.5rem;
+            min-width: 16px;
         }
     }
     
     /* ✅ للجوالات في وضع الأفقي */
     @media (max-width: 576px) and (orientation: landscape) {
         .nav-tabs-custom .nav-link {
-            padding: 0.3rem 0.6rem;
-            font-size: 0.6rem;
-            min-height: 30px;
+            padding: 0.4rem 0.9rem;
+            font-size: 0.75rem !important;
+            min-height: 36px;
+            gap: 6px;
+            background: #ffffff;
         }
         
         .nav-tabs-custom .nav-link i {
-            font-size: 0.75rem;
+            font-size: 0.85rem;
         }
         
         .nav-tabs-custom .nav-link .nav-label {
-            font-size: 0.55rem;
+            font-size: 0.7rem !important;
         }
     }
     
+    /* ========================================== */
     /* ✅ Entrance Animations */
+    /* ========================================== */
     .tabs-container {
         animation: slideDownFade 0.6s ease;
     }
@@ -407,7 +494,7 @@
     @keyframes slideDownFade {
         0% {
             opacity: 0;
-            transform: translateY(-20px) scale(0.95);
+            transform: translateY(-20px) scale(0.96);
         }
         100% {
             opacity: 1;
@@ -428,7 +515,7 @@
     @keyframes fadeInUp {
         0% {
             opacity: 0;
-            transform: translateY(10px) scale(0.9);
+            transform: translateY(12px) scale(0.92);
         }
         100% {
             opacity: 1;
@@ -436,35 +523,64 @@
         }
     }
     
-    /* ✅ Tooltip Style */
-    .nav-tabs-custom .nav-link[title] {
-        position: relative;
-    }
-    
+    /* ========================================== */
     /* ✅ Dark Mode Support */
+    /* ========================================== */
     @media (prefers-color-scheme: dark) {
+        :root {
+            --text-dark: #e8f0f8;
+            --text-muted: #9aabb8;
+            --bg-light: #0f1a24;
+        }
+        
         .tabs-container {
-            background: #1a1a2e;
+            background: #1a2a3a;
             border-color: rgba(255, 255, 255, 0.05);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .tabs-container:hover {
+            box-shadow: 0 8px 45px rgba(0, 0, 0, 0.4);
         }
         
         .nav-tabs-custom .nav-link {
-            color: #a0a0b8;
+            background: #1a2a3a;
+            border-color: rgba(255, 255, 255, 0.06);
+            color: #e8f0f8;
+        }
+        
+        .nav-tabs-custom .nav-link i {
+            color: #e8f0f8;
+        }
+        
+        .nav-tabs-custom .nav-link .nav-label {
+            color: #e8f0f8;
         }
         
         .nav-tabs-custom .nav-link:hover {
             background: rgba(13, 110, 253, 0.12);
             color: #0dcaf0;
+            border-color: rgba(13, 110, 253, 0.2);
         }
         
-        .nav-tabs-custom .nav-link .tab-badge {
-            background: rgba(13, 110, 253, 0.2);
+        .nav-tabs-custom .nav-link:hover i {
             color: #0dcaf0;
         }
         
+        .nav-tabs-custom .nav-link .tab-badge {
+            background: rgba(13, 110, 253, 0.15);
+            color: #0dcaf0;
+            border-color: rgba(13, 110, 253, 0.1);
+        }
+        
         .nav-tabs-custom .nav-link.active .tab-badge {
-            background: rgba(255, 255, 255, 0.25);
-            color: #fff;
+            background: rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .nav-tabs-custom .nav-link.active {
+            box-shadow: 0 4px 35px rgba(13, 110, 253, 0.25);
         }
     }
 </style>
@@ -496,7 +612,7 @@
                    href="{% url 'company_discounts' %}?entity={{ selected_company.id }}"
                    title="خصومات الشركات">
                     <i class="bi bi-percent"></i>
-                    <span class="nav-label">خصومات الشركات</span>
+                    <span class="nav-label">الخصومات</span>
                     {% if discounts_count %}
                     <span class="tab-badge">{{ discounts_count }}</span>
                     {% endif %}
@@ -535,13 +651,13 @@
 </div>
 
 <!-- ============================================ -->
-<!-- ✅ JavaScript للـ Ripple Effect والتحسينات -->
+<!-- ✅ JavaScript -->
 <!-- ============================================ -->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         
         // ==========================================
-        // ✅ Ripple Effect on Click
+        // ✅ Ripple Effect
         // ==========================================
         document.querySelectorAll('.ripple').forEach(function(btn) {
             btn.addEventListener('click', function(e) {
@@ -551,27 +667,29 @@
                 
                 const ripple = document.createElement('span');
                 ripple.className = 'ripple-effect';
-                ripple.style.left = x + 'px';
-                ripple.style.top = y + 'px';
-                ripple.style.width = '20px';
-                ripple.style.height = '20px';
+                const size = Math.min(rect.width, rect.height) * 0.5;
+                ripple.style.left = (x - size/2) + 'px';
+                ripple.style.top = (y - size/2) + 'px';
+                ripple.style.width = size + 'px';
+                ripple.style.height = size + 'px';
                 
                 this.appendChild(ripple);
                 
                 setTimeout(function() {
-                    ripple.remove();
+                    if (ripple.parentNode) {
+                        ripple.remove();
+                    }
                 }, 600);
             });
         });
         
         // ==========================================
-        // ✅ Smooth Tab Switching with Animation
+        // ✅ Smooth Tab Switching
         // ==========================================
         document.querySelectorAll('.nav-tabs-custom .nav-link').forEach(function(link) {
             link.addEventListener('click', function(e) {
                 const currentActive = document.querySelector('.nav-tabs-custom .nav-link.active');
                 if (currentActive && currentActive !== this) {
-                    // ✅ Add exit animation to current
                     currentActive.style.transition = 'all 0.3s ease';
                     currentActive.style.transform = 'scale(0.95)';
                     currentActive.style.opacity = '0.5';
@@ -582,52 +700,58 @@
                     }, 300);
                 }
                 
-                // ✅ Add entry animation to new
                 this.style.transition = 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
             });
         });
         
         // ==========================================
-        // ✅ Keyboard Navigation (Arrow Keys)
+        // ✅ Keyboard Navigation
         // ==========================================
-        document.addEventListener('keydown', function(e) {
-            const tabs = document.querySelectorAll('.nav-tabs-custom .nav-link:not(.active)');
-            const activeTab = document.querySelector('.nav-tabs-custom .nav-link.active');
-            
-            if (!activeTab) return;
-            
-            const tabArray = Array.from(document.querySelectorAll('.nav-tabs-custom .nav-link'));
-            const currentIndex = tabArray.indexOf(activeTab);
-            
-            if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-                e.preventDefault();
-                const nextIndex = (currentIndex + 1) % tabArray.length;
-                tabArray[nextIndex].click();
-                tabArray[nextIndex].focus();
-            } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-                e.preventDefault();
-                const prevIndex = (currentIndex - 1 + tabArray.length) % tabArray.length;
-                tabArray[prevIndex].click();
-                tabArray[prevIndex].focus();
-            }
-        });
+        const tabsContainer = document.querySelector('.tabs-container');
+        if (tabsContainer) {
+            tabsContainer.addEventListener('keydown', function(e) {
+                const tabs = this.querySelectorAll('.nav-tabs-custom .nav-link');
+                const activeTab = this.querySelector('.nav-tabs-custom .nav-link.active');
+                
+                if (!activeTab) return;
+                
+                const tabArray = Array.from(tabs);
+                const currentIndex = tabArray.indexOf(activeTab);
+                
+                if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    const nextIndex = (currentIndex + 1) % tabArray.length;
+                    tabArray[nextIndex].click();
+                    tabArray[nextIndex].focus();
+                } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    const prevIndex = (currentIndex - 1 + tabArray.length) % tabArray.length;
+                    tabArray[prevIndex].click();
+                    tabArray[prevIndex].focus();
+                }
+            });
+        }
         
         // ==========================================
-        // ✅ Scroll to active tab on load
+        // ✅ Scroll to active tab
         // ==========================================
         const activeTab = document.querySelector('.nav-tabs-custom .nav-link.active');
         if (activeTab) {
             setTimeout(function() {
-                activeTab.scrollIntoView({ 
-                    behavior: 'smooth', 
-                    block: 'nearest',
-                    inline: 'center'
-                });
+                try {
+                    activeTab.scrollIntoView({ 
+                        behavior: 'smooth', 
+                        block: 'nearest',
+                        inline: 'center'
+                    });
+                } catch (e) {
+                    // تجاهل الخطأ
+                }
             }, 500);
         }
         
         // ==========================================
-        // ✅ Touch feedback for mobile
+        // ✅ Touch feedback
         // ==========================================
         if ('ontouchstart' in window) {
             document.querySelectorAll('.nav-tabs-custom .nav-link').forEach(function(link) {
@@ -639,8 +763,28 @@
                 link.addEventListener('touchend', function() {
                     this.style.transform = '';
                 }, { passive: true });
+                
+                link.addEventListener('touchcancel', function() {
+                    this.style.transform = '';
+                }, { passive: true });
             });
         }
+        
+        // ==========================================
+        // ✅ Accessibility
+        // ==========================================
+        document.querySelectorAll('.nav-tabs-custom .nav-link').forEach(function(link) {
+            if (link.classList.contains('active')) {
+                link.setAttribute('aria-current', 'page');
+            }
+            
+            link.addEventListener('click', function() {
+                document.querySelectorAll('.nav-tabs-custom .nav-link').forEach(function(l) {
+                    l.removeAttribute('aria-current');
+                });
+                this.setAttribute('aria-current', 'page');
+            });
+        });
         
         console.log('✅ Tabs component initialized successfully!');
         
