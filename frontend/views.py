@@ -666,7 +666,7 @@ def approval_detail(request, pk):
             "approval": approval
         }
     )
-from django.db.models import Count, Q
+from django.db.models import Count, Q, Sum
 from django.shortcuts import render
 from pricing_requests.models import ReportStatistic
 import json
@@ -700,6 +700,17 @@ SPECIALTY_ICONS = {
     # ✅ أيقونات احتياطية
     "default": "fas fa-stethoscope",
 }
+SPECIALTY_IMAGES = {
+    "الانف والاذن": "images/img5.jpeg",
+    "الجراحه": "images/img3.jpeg",
+    "العظام": "images/img8.jpeg",
+    "القسطره وجراحات القلب": "images/img6.jpeg",
+    "القلب المفتوح": "images/img6.jpeg",
+    "الكلي و المسالك البوليه": "images/img2.jpeg",
+    "النساء والتوليد": "images/img4.jpeg",
+    "جراحة المخ والاعصاب": "images/img1.jpeg",
+    "default": "images/img5.jpeg",
+}
 
 # ============================================
 # ✅ ألوان طبية متناسقة
@@ -729,7 +740,7 @@ MONTH_ORDER = [
     "مايو",
     "يونيو",
     "يوليو",
-    "اغسطس",
+    "أغسطس",
     "سبتمبر",
     "اكتوبر",
     "نوفمبر",
@@ -869,7 +880,10 @@ def reports_statistics(request):
         statistics
         .filter(payment_type="اجل")
         .values("entity_name")
-        .annotate(total=Count("id"))
+        .annotate(
+            total=Count("id"),
+            total_amount=Sum("amount"),  # ✅ إضافة total_amount
+        )
     )
     
     # أعلى 5 جهات
@@ -892,6 +906,8 @@ def reports_statistics(request):
             "total": row["total"],
             
             "percentage": percentage,
+            
+            "total_amount": row["total_amount"] or 0,  # ✅ إضافة total_amount
             
         })
     
@@ -917,6 +933,8 @@ def reports_statistics(request):
             
             "percentage": percentage,
             
+            "total_amount": row["total_amount"] or 0,  # ✅ إضافة total_amount
+            
         })
 
     # ============================================
@@ -929,7 +947,10 @@ def reports_statistics(request):
         .exclude(sub_company="")
         .exclude(sub_company__isnull=True)
         .values("sub_company")
-        .annotate(total=Count("id"))
+        .annotate(
+            total=Count("id"),
+            total_amount=Sum("amount"),  # ✅ إضافة total_amount
+        )
     )
     
     # أعلى 5 شركات فرعية
@@ -952,6 +973,8 @@ def reports_statistics(request):
             "total": row["total"],
             
             "percentage": percentage,
+            
+            "total_amount": row["total_amount"] or 0,  # ✅ إضافة total_amount
             
         })
     
@@ -976,6 +999,8 @@ def reports_statistics(request):
             
             "percentage": percentage,
             
+            "total_amount": row["total_amount"] or 0,  # ✅ إضافة total_amount
+            
         })
 
     # ============================================
@@ -987,7 +1012,10 @@ def reports_statistics(request):
         .exclude(specialty="")
         .exclude(specialty__isnull=True)
         .values("specialty")
-        .annotate(total=Count("id"))
+        .annotate(
+            total=Count("id"),
+            total_amount=Sum("amount"),  # ✅ إضافة total_amount
+        )
     )
     
     # أعلى 5 تخصصات
@@ -1011,6 +1039,8 @@ def reports_statistics(request):
             "total": row["total"],
             
             "percentage": percentage,
+            
+            "total_amount": row["total_amount"] or 0,  # ✅ إضافة total_amount
             
         })
     
@@ -1036,6 +1066,8 @@ def reports_statistics(request):
             
             "percentage": percentage,
             
+            "total_amount": row["total_amount"] or 0,  # ✅ إضافة total_amount
+            
         })
 
     # ============================================
@@ -1047,7 +1079,10 @@ def reports_statistics(request):
         .exclude(package_name="")
         .exclude(package_name__isnull=True)
         .values("package_name")
-        .annotate(total=Count("id"))
+        .annotate(
+            total=Count("id"),
+            total_amount=Sum("amount"),  # ✅ إضافة total_amount
+        )
     )
     
     # أعلى 5 باكدجات
@@ -1071,6 +1106,8 @@ def reports_statistics(request):
             
             "percentage": percentage,
             
+            "total_amount": row["total_amount"] or 0,  # ✅ إضافة total_amount
+            
         })
     
     # أقل 5 باكدجات
@@ -1093,6 +1130,8 @@ def reports_statistics(request):
             "total": row["total"],
             
             "percentage": percentage,
+            
+            "total_amount": row["total_amount"] or 0,  # ✅ إضافة total_amount
             
         })
 
@@ -1121,7 +1160,7 @@ def reports_statistics(request):
 
         monthly = (
             statistics
-            .filter(specialty__icontains=specialty)
+            .filter(specialty=specialty)  # ✅ تم التعديل من __icontains إلى =
             .values("month")
             .annotate(total=Count("id"))
             .order_by()
@@ -1144,8 +1183,8 @@ def reports_statistics(request):
             if month in chart_data.get(specialty, {}):
                 chart_sorted[month] = chart_data[specialty][month]
 
-        # ✅ جلب السجلات التفصيلية لكل تخصص
-        specialty_records = statistics.filter(specialty__icontains=specialty)
+        # ✅ جلب السجلات التفصيلية لكل تخصص - تم التعديل من __icontains إلى =
+        specialty_records = statistics.filter(specialty=specialty)
         
         records_list = specialty_records.values(
             'account_number',
@@ -1166,6 +1205,10 @@ def reports_statistics(request):
             "icon": SPECIALTY_ICONS.get(
                 specialty,
                 SPECIALTY_ICONS["default"]
+            ),
+            "image": SPECIALTY_IMAGES.get(
+                specialty,
+                SPECIALTY_IMAGES["default"]
             ),
 
             "color": SPECIALTY_COLORS.get(
@@ -1239,7 +1282,7 @@ def specialty_detail(request, specialty_name):
     entity_search = request.GET.get("entity_search", "")
     
     # ✅ جلب السجلات الخاصة بالتخصص
-    records = ReportStatistic.objects.filter(specialty__icontains=specialty_name)
+    records = ReportStatistic.objects.filter(specialty=specialty_name)
     
     if selected_month:
         records = records.filter(month=selected_month)
@@ -1295,9 +1338,9 @@ def specialty_detail(request, specialty_name):
     )
     
     MONTH_ORDER = [
-        "يناير", "فبراير", "مارس", "ابريل", "مايو", "يونيو",
-        "يوليو", "اغسطس", "سبتمبر", "اكتوبر", "نوفمبر", "ديسمبر"
-    ]
+    "يناير", "فبراير", "مارس", "ابريل", "مايو", "يونيو",
+    "يوليو", "أغسطس", "سبتمبر", "اكتوبر", "نوفمبر", "ديسمبر"
+]
     
     months = [m for m in MONTH_ORDER if m in months_raw]
     
@@ -1539,7 +1582,7 @@ def sector_details(request):
     
     MONTH_ORDER = [
         "يناير", "فبراير", "مارس", "ابريل", "مايو", "يونيو",
-        "يوليو", "اغسطس", "سبتمبر", "اكتوبر", "نوفمبر", "ديسمبر"
+        "يوليو", "أغسطس", "سبتمبر", "اكتوبر", "نوفمبر", "ديسمبر"
     ]
     
     months = [
@@ -7042,4 +7085,56 @@ def progress_stream(request):
     return StreamingHttpResponse(
         event_stream(),
         content_type="text/event-stream",
+    )
+    
+@permission_required(Permissions.APPROVALS_STATISTICS)
+def report_packages(request):
+    selected_month = request.GET.get("month", "")
+    search = request.GET.get("search", "")
+    
+    records = ReportStatistic.objects.all()
+
+    if selected_month:
+        records = records.filter(month=selected_month)
+
+    if search:
+        records = records.filter(
+            Q(package_name__icontains=search) |
+            Q(code__icontains=search)
+        )
+
+    total_count = records.count()
+    total_amount = records.aggregate(
+        total=Sum("amount")
+    )["total"] or 0
+
+    package_distribution = (
+        records
+        .values("package_name")
+        .annotate(
+            total=Count("id"),
+            total_amount=Sum("amount"),
+        )
+        .filter(package_name__isnull=False)
+        .exclude(package_name="")
+        .order_by("-total")
+    )
+
+    paginator = Paginator(package_distribution, 20)
+
+    page_number = request.GET.get("page", 1)
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        "page_obj": page_obj,
+        "selected_month": selected_month,
+        "search": search,
+        "total_count": total_count,
+        "total_amount": total_amount,
+    }
+
+    return render(
+        request,
+        "frontend/report_packages.html",
+        context
     )

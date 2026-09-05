@@ -28,6 +28,12 @@
         font-size: 2.5rem;
         font-weight: 700;
         line-height: 1.2;
+        transition: all 0.3s ease;
+    }
+    
+    .stats-card .stats-number.animated {
+        transform: scale(1.1);
+        color: #fff;
     }
     
     .stats-card .stats-label {
@@ -116,6 +122,18 @@
         box-shadow: 0 4px 16px rgba(0,0,0,0.12);
         position: relative;
     }
+
+    .specialty-card .specialty-image {
+        width: 219%;
+        height: 236%;
+        max-width: 153%;
+        max-height: 135%;
+        object-fit: contain;
+        display: block;
+        border-radius: 50%;
+        padding: 0px;
+        flex-shrink: 0;
+    }
     
     .specialty-card:hover .specialty-icon-wrapper {
         transform: scale(1.08) rotate(-6deg);
@@ -179,6 +197,24 @@
         line-height: 1.2;
         display: block;
         text-align: center;
+        transition: all 0.3s ease;
+    }
+    
+    .specialty-card .stat-total .counter.animated {
+        transform: scale(1.15);
+        color: #0a58ca;
+    }
+
+    /* ✅ تحسين للأرقام داخل الكروت (نقدي/آجل) */
+    .specialty-card .cash-credit-number {
+        font-size: 1.8rem;
+        font-weight: 700;
+        transition: all 0.3s ease;
+        display: inline-block;
+    }
+    
+    .specialty-card .cash-credit-number.animated {
+        transform: scale(1.1);
     }
     
     /* ============================================ */
@@ -387,6 +423,18 @@
         padding: 4px 14px;
         border-radius: 20px;
         font-weight: 700;
+        transition: all 0.3s ease;
+    }
+    
+    .rank-item .badge-percent.animated {
+        transform: scale(1.1);
+    }
+    
+    /* ✅ Center number in doughnut chart */
+    .chart-center-number {
+        font-size: 2.5rem;
+        font-weight: 700;
+        transition: all 0.3s ease;
     }
     
     /* ============================================ */
@@ -619,8 +667,12 @@
             <div class="card specialty-card h-100">
                 
                 <div class="specialty-header">
-                    <div class="specialty-icon-wrapper" style="background: {{ specialty.color }};">
-                        <i class="{{ specialty.icon }}"></i>
+                   <div class="specialty-icon-wrapper" style="background: {{ specialty.color }};">
+                        <img
+                            src="{% static specialty.image %}"
+                            alt="{{ specialty.name }}"
+                            class="specialty-image"
+                        >
                     </div>
                     <div class="specialty-info">
                         <h5 class="specialty-name" style="color: {{ specialty.color }};">
@@ -643,7 +695,7 @@
                             <div class="card bg-success bg-opacity-10 border-0 h-100">
                                 <div class="card-body py-3 text-center">
                                     <div class="fw-bold text-success">💰 نقدي</div>
-                                    <div class="fs-3 fw-bold">{{ specialty.cash }}</div>
+                                    <div class="cash-credit-number fw-bold text-success counter" data-target="{{ specialty.cash }}">0</div>
                                 </div>
                             </div>
                         </div>
@@ -652,19 +704,16 @@
                             <div class="card bg-warning bg-opacity-10 border-0 h-100">
                                 <div class="card-body py-3 text-center">
                                     <div class="fw-bold text-warning">📄 آجل</div>
-                                    <div class="fs-3 fw-bold">{{ specialty.credit }}</div>
+                                    <div class="cash-credit-number fw-bold text-warning counter" data-target="{{ specialty.credit }}">0</div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="mt-3">
-                        <a href="{% url 'specialty_detail' specialty.name %}?month={{ selected_month }}" 
-                           class="btn btn-outline-primary btn-sm w-100">
-                            <i class="fas fa-eye me-1"></i> عرض المزيد
-                            <span class="badge bg-secondary ms-1">{{ specialty.records|length }}</span>
-                        </a>
-                    </div>
+                    <a href="{% url 'specialty_detail' specialty.name %}?month={{ selected_month }}" 
+                       class="btn btn-outline-primary btn-sm w-100">
+                        <i class="fas fa-eye me-1"></i> عرض المزيد
+                    </a>
                     
                 </div>
             </div>
@@ -697,7 +746,7 @@
                     <small class="text-muted">إجمالي الباكجات حسب طريقة الدفع</small>
                 </div>
                 <a href="{% url 'payment_details' %}?month={{ selected_month }}"
-   class="btn btn-outline-primary btn-sm">
+                    class="btn btn-outline-primary btn-sm">
                     <i class="fas fa-eye me-1"></i>
                     عرض المزيد
                     <span class="badge bg-secondary ms-1">{{ total_packages }}</span>
@@ -716,7 +765,7 @@
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
-                                    <h5 class="fw-bold text-success mb-1">{{ cash_packages }}</h5>
+                                    <h5 class="fw-bold text-success mb-1 counter" data-target="{{ cash_packages }}">0</h5>
                                     <small class="text-muted">باكدج نقدي</small>
                                 </div>
                                 <div class="text-end">
@@ -729,7 +778,7 @@
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
-                                    <h5 class="fw-bold text-warning mb-1">{{ credit_packages }}</h5>
+                                    <h5 class="fw-bold text-warning mb-1 counter" data-target="{{ credit_packages }}">0</h5>
                                     <small class="text-muted">باكدج آجل</small>
                                 </div>
                                 <div class="text-end">
@@ -757,7 +806,7 @@
                     <small class="text-muted">توزيع الباكجات الآجلة حسب القطاع</small>
                 </div>
                 <a href="{% url 'sector_details' %}?month={{ selected_month }}"
-   class="btn btn-outline-primary btn-sm">
+                    class="btn btn-outline-primary btn-sm">
                     <i class="fas fa-eye me-1"></i>
                     عرض المزيد
                     <span class="badge bg-secondary ms-1">{{ credit_packages }}</span>
@@ -783,7 +832,7 @@
                                     </div>
                                 </div>
                                 <div class="text-end">
-                                    <div class="fw-bold" style="color: {{ sector.color }};">{{ sector.total }}</div>
+                                    <div class="fw-bold counter" style="color: {{ sector.color }};" data-target="{{ sector.total }}">0</div>
                                     <small class="text-muted">{{ sector.percentage }}%</small>
                                 </div>
                             </div>
@@ -802,7 +851,7 @@
     </div>
 
     <!-- ============================================ -->
-    <!-- ✅ أعلى وأقل 5 جهات (آجل فقط) - UI محسّن -->
+    <!-- ✅ أعلى 5 جهات (آجل فقط) - UI محسّن -->
     <!-- ============================================ -->
     <div class="row g-4 mb-4">
 
@@ -820,20 +869,18 @@
                 <div class="card-body">
                     {% for entity in top_entities %}
                     <div class="rank-item top">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="d-flex align-items-center">
-                                <span class="rank-number {% if forloop.counter == 1 %}gold{% elif forloop.counter == 2 %}silver{% elif forloop.counter == 3 %}bronze{% else %}default{% endif %}">
-                                    {{ forloop.counter }}
-                                </span>
-                                <div>
-                                    <div class="rank-name">{{ entity.name }}</div>
+                        <div class="d-flex align-items-center">
+                            <span class="rank-number {% if forloop.counter == 1 %}gold{% elif forloop.counter == 2 %}silver{% elif forloop.counter == 3 %}bronze{% else %}default{% endif %}">
+                                {{ forloop.counter }}
+                            </span>
+                            <div class="flex-grow-1">
+                                <div class="rank-name">{{ entity.name }}</div>
+                                <div class="d-flex flex-wrap gap-2 mt-1">
                                     <span class="rank-badge">📦 {{ entity.total }} باكج</span>
+                                    <span class="rank-badge">📊 {{ entity.percentage }}%</span>
+                                    <span class="rank-badge">💰 {{ entity.total_amount|floatformat:0 }} جنيه</span>
                                 </div>
                             </div>
-                            <span class="badge-percent bg-success text-white counter" data-target="{{ entity.percentage }}">0%</span>
-                        </div>
-                        <div class="rank-progress">
-                            <div class="progress-bar bg-success-gradient" style="width: {{ entity.percentage }}%;"></div>
                         </div>
                     </div>
                     {% empty %}
@@ -861,18 +908,16 @@
                 <div class="card-body">
                     {% for entity in bottom_entities %}
                     <div class="rank-item bottom">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="d-flex align-items-center">
-                                <span class="rank-number default">{{ forloop.counter }}</span>
-                                <div>
-                                    <div class="rank-name">{{ entity.name }}</div>
+                        <div class="d-flex align-items-center">
+                            <span class="rank-number default">{{ forloop.counter }}</span>
+                            <div class="flex-grow-1">
+                                <div class="rank-name">{{ entity.name }}</div>
+                                <div class="d-flex flex-wrap gap-2 mt-1">
                                     <span class="rank-badge">📦 {{ entity.total }} باكج</span>
+                                    <span class="rank-badge">📊 {{ entity.percentage }}%</span>
+                                    <span class="rank-badge">💰 {{ entity.total_amount|floatformat:0 }} جنيه</span>
                                 </div>
                             </div>
-                            <span class="badge-percent bg-danger text-white counter" data-target="{{ entity.percentage }}">0%</span>
-                        </div>
-                        <div class="rank-progress">
-                            <div class="progress-bar bg-danger-gradient" style="width: {{ entity.percentage }}%;"></div>
                         </div>
                     </div>
                     {% empty %}
@@ -907,20 +952,18 @@
                 <div class="card-body">
                     {% for company in top_sub_companies %}
                     <div class="rank-item top">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="d-flex align-items-center">
-                                <span class="rank-number {% if forloop.counter == 1 %}gold{% elif forloop.counter == 2 %}silver{% elif forloop.counter == 3 %}bronze{% else %}default{% endif %}">
-                                    {{ forloop.counter }}
-                                </span>
-                                <div>
-                                    <div class="rank-name">{{ company.name }}</div>
+                        <div class="d-flex align-items-center">
+                            <span class="rank-number {% if forloop.counter == 1 %}gold{% elif forloop.counter == 2 %}silver{% elif forloop.counter == 3 %}bronze{% else %}default{% endif %}">
+                                {{ forloop.counter }}
+                            </span>
+                            <div class="flex-grow-1">
+                                <div class="rank-name">{{ company.name }}</div>
+                                <div class="d-flex flex-wrap gap-2 mt-1">
                                     <span class="rank-badge">📦 {{ company.total }} باكج</span>
+                                    <span class="rank-badge">📊 {{ company.percentage }}%</span>
+                                    <span class="rank-badge">💰 {{ company.total_amount|floatformat:0 }} جنيه</span>
                                 </div>
                             </div>
-                            <span class="badge-percent bg-success text-white counter" data-target="{{ company.percentage }}">0%</span>
-                        </div>
-                        <div class="rank-progress">
-                            <div class="progress-bar bg-success-gradient" style="width: {{ company.percentage }}%;"></div>
                         </div>
                     </div>
                     {% empty %}
@@ -948,18 +991,16 @@
                 <div class="card-body">
                     {% for company in bottom_sub_companies %}
                     <div class="rank-item bottom">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="d-flex align-items-center">
-                                <span class="rank-number default">{{ forloop.counter }}</span>
-                                <div>
-                                    <div class="rank-name">{{ company.name }}</div>
+                        <div class="d-flex align-items-center">
+                            <span class="rank-number default">{{ forloop.counter }}</span>
+                            <div class="flex-grow-1">
+                                <div class="rank-name">{{ company.name }}</div>
+                                <div class="d-flex flex-wrap gap-2 mt-1">
                                     <span class="rank-badge">📦 {{ company.total }} باكج</span>
+                                    <span class="rank-badge">📊 {{ company.percentage }}%</span>
+                                    <span class="rank-badge">💰 {{ company.total_amount|floatformat:0 }} جنيه</span>
                                 </div>
                             </div>
-                            <span class="badge-percent bg-danger text-white counter" data-target="{{ company.percentage }}">0%</span>
-                        </div>
-                        <div class="rank-progress">
-                            <div class="progress-bar bg-danger-gradient" style="width: {{ company.percentage }}%;"></div>
                         </div>
                     </div>
                     {% empty %}
@@ -994,20 +1035,18 @@
                 <div class="card-body">
                     {% for specialty in top_specialties %}
                     <div class="rank-item top">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="d-flex align-items-center">
-                                <span class="rank-number {% if forloop.counter == 1 %}gold{% elif forloop.counter == 2 %}silver{% elif forloop.counter == 3 %}bronze{% else %}default{% endif %}">
-                                    {{ forloop.counter }}
-                                </span>
-                                <div>
-                                    <div class="rank-name">{{ specialty.name }}</div>
+                        <div class="d-flex align-items-center">
+                            <span class="rank-number {% if forloop.counter == 1 %}gold{% elif forloop.counter == 2 %}silver{% elif forloop.counter == 3 %}bronze{% else %}default{% endif %}">
+                                {{ forloop.counter }}
+                            </span>
+                            <div class="flex-grow-1">
+                                <div class="rank-name">{{ specialty.name }}</div>
+                                <div class="d-flex flex-wrap gap-2 mt-1">
                                     <span class="rank-badge">📦 {{ specialty.total }} باكج</span>
+                                    <span class="rank-badge">📊 {{ specialty.percentage }}%</span>
+                                    <span class="rank-badge">💰 {{ specialty.total_amount|floatformat:0 }} جنيه</span>
                                 </div>
                             </div>
-                            <span class="badge-percent bg-success text-white counter" data-target="{{ specialty.percentage }}">0%</span>
-                        </div>
-                        <div class="rank-progress">
-                            <div class="progress-bar bg-success-gradient" style="width: {{ specialty.percentage }}%;"></div>
                         </div>
                     </div>
                     {% empty %}
@@ -1035,18 +1074,16 @@
                 <div class="card-body">
                     {% for specialty in bottom_specialties %}
                     <div class="rank-item bottom">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="d-flex align-items-center">
-                                <span class="rank-number default">{{ forloop.counter }}</span>
-                                <div>
-                                    <div class="rank-name">{{ specialty.name }}</div>
+                        <div class="d-flex align-items-center">
+                            <span class="rank-number default">{{ forloop.counter }}</span>
+                            <div class="flex-grow-1">
+                                <div class="rank-name">{{ specialty.name }}</div>
+                                <div class="d-flex flex-wrap gap-2 mt-1">
                                     <span class="rank-badge">📦 {{ specialty.total }} باكج</span>
+                                    <span class="rank-badge">📊 {{ specialty.percentage }}%</span>
+                                    <span class="rank-badge">💰 {{ specialty.total_amount|floatformat:0 }} جنيه</span>
                                 </div>
                             </div>
-                            <span class="badge-percent bg-danger text-white counter" data-target="{{ specialty.percentage }}">0%</span>
-                        </div>
-                        <div class="rank-progress">
-                            <div class="progress-bar bg-danger-gradient" style="width: {{ specialty.percentage }}%;"></div>
                         </div>
                     </div>
                     {% empty %}
@@ -1074,27 +1111,26 @@
                     <h5 class="fw-bold mb-0 text-success">
                         <span class="header-icon">📦</span> أعلى 5 باكدجات
                     </h5>
-                    <a href="{% url 'packages' %}" class="btn btn-outline-success btn-sm">
+                    <a href="{% url 'report_packages' %}?month={{ selected_month }}"
+   class="btn btn-outline-success btn-sm">
                         <i class="fas fa-eye me-1"></i> عرض المزيد
                     </a>
                 </div>
                 <div class="card-body">
                     {% for package in top_packages %}
                     <div class="rank-item top">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="d-flex align-items-center">
-                                <span class="rank-number {% if forloop.counter == 1 %}gold{% elif forloop.counter == 2 %}silver{% elif forloop.counter == 3 %}bronze{% else %}default{% endif %}">
-                                    {{ forloop.counter }}
-                                </span>
-                                <div>
-                                    <div class="rank-name">{{ package.name }}</div>
+                        <div class="d-flex align-items-center">
+                            <span class="rank-number {% if forloop.counter == 1 %}gold{% elif forloop.counter == 2 %}silver{% elif forloop.counter == 3 %}bronze{% else %}default{% endif %}">
+                                {{ forloop.counter }}
+                            </span>
+                            <div class="flex-grow-1">
+                                <div class="rank-name">{{ package.name }}</div>
+                                <div class="d-flex flex-wrap gap-2 mt-1">
                                     <span class="rank-badge">📦 {{ package.total }} باكج</span>
+                                    <span class="rank-badge">📊 {{ package.percentage }}%</span>
+                                    <span class="rank-badge">💰 {{ package.total_amount|floatformat:0 }} جنيه</span>
                                 </div>
                             </div>
-                            <span class="badge-percent bg-success text-white counter" data-target="{{ package.percentage }}">0%</span>
-                        </div>
-                        <div class="rank-progress">
-                            <div class="progress-bar bg-success-gradient" style="width: {{ package.percentage }}%;"></div>
                         </div>
                     </div>
                     {% empty %}
@@ -1115,25 +1151,24 @@
                     <h5 class="fw-bold mb-0 text-danger">
                         <span class="header-icon">📉</span> أقل 5 باكدجات
                     </h5>
-                    <a href="{% url 'packages' %}" class="btn btn-outline-danger btn-sm">
+                    <a href="{% url 'report_packages' %}?month={{ selected_month }}"
+   class="btn btn-outline-danger btn-sm">
                         <i class="fas fa-eye me-1"></i> عرض المزيد
                     </a>
                 </div>
                 <div class="card-body">
                     {% for package in bottom_packages %}
                     <div class="rank-item bottom">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="d-flex align-items-center">
-                                <span class="rank-number default">{{ forloop.counter }}</span>
-                                <div>
-                                    <div class="rank-name">{{ package.name }}</div>
+                        <div class="d-flex align-items-center">
+                            <span class="rank-number default">{{ forloop.counter }}</span>
+                            <div class="flex-grow-1">
+                                <div class="rank-name">{{ package.name }}</div>
+                                <div class="d-flex flex-wrap gap-2 mt-1">
                                     <span class="rank-badge">📦 {{ package.total }} باكج</span>
+                                    <span class="rank-badge">📊 {{ package.percentage }}%</span>
+                                    <span class="rank-badge">💰 {{ package.total_amount|floatformat:0 }} جنيه</span>
                                 </div>
                             </div>
-                            <span class="badge-percent bg-danger text-white counter" data-target="{{ package.percentage }}">0%</span>
-                        </div>
-                        <div class="rank-progress">
-                            <div class="progress-bar bg-danger-gradient" style="width: {{ package.percentage }}%;"></div>
                         </div>
                     </div>
                     {% empty %}
@@ -1165,79 +1200,98 @@ document.addEventListener('DOMContentLoaded', function() {
     const counters = document.querySelectorAll('.counter');
 
     counters.forEach(counter => {
-        const target = parseFloat(
-    counter.getAttribute('data-target').replace(',', '.')
-);
-        console.log(
-    "COUNTER:",
-    counter,
-    "TARGET:",
-    counter.getAttribute('data-target'),
-    "PARSED:",
-    target
-);
-
+        const target = parseFloat(counter.getAttribute('data-target').replace(',', '.'));
+        
+        // إذا كان الـ target غير رقم أو 0، نتجاوز
+        if (isNaN(target) || target === 0) {
+            // إذا كان 0، نضعه 0 مباشرة
+            if (counter.classList.contains('badge-percent')) {
+                counter.textContent = '0%';
+            } else {
+                counter.textContent = '0';
+            }
+            return;
+        }
+        
         let current = 0;
-
-        const duration = 1200;
+        const duration = 1500; // زيادة المدة قليلاً لحركة أكثر سلاسة
         const startTime = performance.now();
 
-        const isPercentage =
-            counter.classList.contains('badge-percent');
+        const isPercentage = counter.classList.contains('badge-percent');
 
         const updateCounter = (currentTime) => {
             const elapsed = currentTime - startTime;
             const progress = Math.min(elapsed / duration, 1);
 
-            // Ease Out
-            const easedProgress =
-                1 - Math.pow(1 - progress, 3);
+            // Ease Out Cubic - حركة أكثر سلاسة
+            const easedProgress = 1 - Math.pow(1 - progress, 3);
 
             current = target * easedProgress;
 
             if (isPercentage) {
-                counter.textContent =
-                    current.toFixed(1) + '%';
+                counter.textContent = current.toFixed(1) + '%';
             } else {
-                counter.textContent =
-                    Math.floor(current).toLocaleString('en-US');
+                counter.textContent = Math.floor(current).toLocaleString('en-US');
+            }
+
+            // إضافة تأثير بصري أثناء الحركة
+            if (progress < 0.5) {
+                counter.style.opacity = '0.7';
+                counter.style.transform = 'scale(0.95)';
+            } else {
+                counter.style.opacity = '1';
+                counter.style.transform = 'scale(1)';
             }
 
             if (progress < 1) {
                 requestAnimationFrame(updateCounter);
             } else {
+                // الرقم النهائي
                 if (isPercentage) {
-                    counter.textContent =
-                        target.toFixed(1) + '%';
+                    counter.textContent = target.toFixed(1) + '%';
                 } else {
-                    counter.textContent =
-                        target.toLocaleString('en-US');
+                    counter.textContent = target.toLocaleString('en-US');
                 }
+                counter.style.opacity = '1';
+                counter.style.transform = 'scale(1)';
+                // إضافة كلاس للتحريك النهائي
+                counter.classList.add('animated');
             }
         };
 
+        // ============================================
+        // ✅ مراقب Intersection Observer - يبدأ الحركة عندما يظهر العنصر في الشاشة
+        // ============================================
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-
-                    requestAnimationFrame(updateCounter);
-
+                    // تأخير بسيط للحركة لجعلها أكثر ترتيباً
+                    setTimeout(() => {
+                        requestAnimationFrame(updateCounter);
+                    }, 200);
                     observer.unobserve(entry.target);
                 }
             });
         }, {
-            threshold: 0.2
+            threshold: 0.15,
+            rootMargin: '0px 0px -50px 0px' // يبدأ الحركة قبل ظهور العنصر بالكامل
         });
 
         observer.observe(counter);
     });
     
     // ============================================
-    // ✅ 2. Function to create Doughnut Chart
+    // ✅ 2. Function to create Doughnut Chart مع كاونتر متحرك في المنتصف
     // ============================================
     function createDoughnutChart(canvasId, labels, values, colors, centerTitle, centerValue) {
         const ctx = document.getElementById(canvasId);
         if (!ctx) return;
+        
+        // إنشاء عنصر مؤقت للكاونتر في المنتصف
+        let centerValueDisplay = centerValue;
+        let currentCenterValue = 0;
+        const targetCenterValue = parseFloat(centerValue);
+        const isCenterValueValid = !isNaN(targetCenterValue) && targetCenterValue > 0;
         
         const centerTextPlugin = {
             id: "centerText",
@@ -1254,7 +1308,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 ctx.fillText(centerTitle, x, y - 50);
                 ctx.fillStyle = "#212529";
                 ctx.font = "bold 42px Cairo";
-                ctx.fillText(centerValue, x, y + 12);
+                // عرض الرقم المتحرك في المنتصف
+                const displayValue = isCenterValueValid ? Math.floor(currentCenterValue).toLocaleString('en-US') : centerValue;
+                ctx.fillText(displayValue, x, y + 12);
                 ctx.fillStyle = "#6c757d";
                 ctx.font = "16px Cairo";
                 ctx.fillText("باكدج", x, y + 38);
@@ -1262,7 +1318,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         };
         
-        new Chart(ctx, {
+        const chart = new Chart(ctx, {
             type: "doughnut",
             data: {
                 labels: labels,
@@ -1282,7 +1338,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 animation: {
                     animateRotate: true,
                     animateScale: true,
-                    duration: 1800,
+                    duration: 2000,
                     easing: "easeOutQuart"
                 },
                 plugins: {
@@ -1301,18 +1357,54 @@ document.addEventListener('DOMContentLoaded', function() {
             },
             plugins: [centerTextPlugin]
         });
+        
+        // ============================================
+        // ✅ تشغيل الكاونتر المتحرك في منتصف الـ Doughnut
+        // ============================================
+        if (isCenterValueValid) {
+            const duration = 1500;
+            const startTime = performance.now();
+            
+            const updateCenterValue = (currentTime) => {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const easedProgress = 1 - Math.pow(1 - progress, 3);
+                currentCenterValue = targetCenterValue * easedProgress;
+                
+                // إعادة رسم الشارت لتحديث الرقم
+                chart.draw();
+                
+                if (progress < 1) {
+                    requestAnimationFrame(updateCenterValue);
+                } else {
+                    currentCenterValue = targetCenterValue;
+                    chart.draw();
+                }
+            };
+            
+            // بدء الحركة بعد تأخير بسيط
+            setTimeout(() => {
+                requestAnimationFrame(updateCenterValue);
+            }, 300);
+        }
+        
+        return chart;
     }
     
     // ============================================
     // ✅ 3. Payment Type Doughnut Chart
     // ============================================
-    createDoughnutChart(
+    const cashPackages = {{ cash_packages }};
+    const creditPackages = {{ credit_packages }};
+    const totalPackages = {{ total_packages }};
+    
+    const paymentChart = createDoughnutChart(
         "paymentChart",
         ["نقدي", "آجل"],
-        [{{ cash_packages }}, {{ credit_packages }}],
+        [cashPackages, creditPackages],
         ["#2e7d32", "#1976d2"],
         "الإجمالي",
-        "{{ total_packages }}"
+        totalPackages
     );
     
     // ============================================
@@ -1321,15 +1413,16 @@ document.addEventListener('DOMContentLoaded', function() {
     const sectorLabels = {{ sector_labels|safe }};
     const sectorValues = {{ sector_values|safe }};
     const sectorColors = {{ sector_colors|safe }};
+    const creditPackagesValue = {{ credit_packages }};
     
     if (sectorLabels.length > 0) {
-        createDoughnutChart(
+        const sectorChart = createDoughnutChart(
             "sectorChart",
             sectorLabels,
             sectorValues,
             sectorColors.slice(0, sectorLabels.length),
             "إجمالي الآجل",
-            "{{ credit_packages }}"
+            creditPackagesValue
         );
     }
     
@@ -1361,6 +1454,10 @@ document.addEventListener('DOMContentLoaded', function() {
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
+                animation: {
+                    duration: 1500,
+                    easing: "easeOutQuart"
+                },
                 plugins: {
                     legend: { display: false },
                     tooltip: {
@@ -1401,13 +1498,15 @@ document.addEventListener('DOMContentLoaded', function() {
     // ✅ 6. Sticky Filter Shadow
     // ============================================
     const stickyFilter = document.querySelector(".filter-sticky");
-    window.addEventListener("scroll", function () {
-        if (window.scrollY > 40) {
-            stickyFilter.classList.add("stuck");
-        } else {
-            stickyFilter.classList.remove("stuck");
-        }
-    });
+    if (stickyFilter) {
+        window.addEventListener("scroll", function () {
+            if (window.scrollY > 40) {
+                stickyFilter.classList.add("stuck");
+            } else {
+                stickyFilter.classList.remove("stuck");
+            }
+        });
+    }
     
 });
 </script>

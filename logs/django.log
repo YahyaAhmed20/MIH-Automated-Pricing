@@ -28383,3 +28383,428 @@ Watching for file changes with StatReloader
 "GET /credit-package-pricing/?company_search=%D8%A7%D9%84%D8%A3%D9%87%D9%84%D9%8A+%D9%84%D8%AE%D8%AF%D9%85%D8%A7%D8%AA+%D9%88%D8%A7%D9%84%D9%85%D8%B4%D8%B1%D9%88%D8%B9%D8%A7%D8%AA+%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%D8%A9&company=158&specialty=&package_search=&package= HTTP/1.1" 200 160516
 "GET /credit-package-pricing/ HTTP/1.1" 200 95520
 "GET /credit-package-pricing/?company_search=%D8%AC%D9%84%D9%88%D8%A8+%D9%85%D9%8A%D8%AF&company=48&specialty=&package_search=&package= HTTP/1.1" 200 169859
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 50295
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 16342
+"POST / HTTP/1.1" 302 0
+"GET /reports/ HTTP/1.1" 200 167799
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /reports/ HTTP/1.1" 200 168434
+"GET /static/images/img5.jpeg HTTP/1.1" 200 88819
+"GET /static/images/img1.jpeg HTTP/1.1" 200 89363
+"GET /static/images/img4.jpeg HTTP/1.1" 200 91767
+"GET /static/images/img2.jpeg HTTP/1.1" 200 93254
+"GET /static/images/img6.jpeg HTTP/1.1" 200 125348
+"GET /static/images/img3.jpeg HTTP/1.1" 200 78769
+"GET /static/images/img8.jpeg HTTP/1.1" 200 78642
+"GET /reports/ HTTP/1.1" 200 168434
+"GET /static/images/img8.jpeg HTTP/1.1" 200 78642
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+"GET /static/images/img3.jpeg HTTP/1.1" 200 78769
+"GET /static/images/img5.jpeg HTTP/1.1" 200 88819
+"GET /static/images/img6.jpeg HTTP/1.1" 200 125348
+"GET /static/images/img2.jpeg HTTP/1.1" 200 93254
+"GET /static/images/img4.jpeg HTTP/1.1" 200 91767
+"GET /static/images/img1.jpeg HTTP/1.1" 200 89363
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /reports/ HTTP/1.1" 200 168434
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+"GET /static/images/img3.jpeg HTTP/1.1" 200 78769
+"GET /static/images/img5.jpeg HTTP/1.1" 200 88819
+"GET /static/images/img4.jpeg HTTP/1.1" 200 91767
+"GET /static/images/img6.jpeg HTTP/1.1" 200 125348
+"GET /static/images/img2.jpeg HTTP/1.1" 200 93254
+"GET /static/images/img8.jpeg HTTP/1.1" 200 78642
+"GET /static/images/img1.jpeg HTTP/1.1" 200 89363
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /reports/ HTTP/1.1" 200 168434
+"GET /static/images/img5.jpeg HTTP/1.1" 304 0
+"GET /static/images/img8.jpeg HTTP/1.1" 304 0
+"GET /static/images/img6.jpeg HTTP/1.1" 304 0
+"GET /static/images/img3.jpeg HTTP/1.1" 304 0
+"GET /static/images/img2.jpeg HTTP/1.1" 304 0
+"GET /static/images/img4.jpeg HTTP/1.1" 304 0
+"GET /static/images/img1.jpeg HTTP/1.1" 304 0
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+- Broken pipe from ('127.0.0.1', 49535)
+"GET /reports/ HTTP/1.1" 200 168434
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+"GET /static/images/img3.jpeg HTTP/1.1" 200 78769
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /static/images/img5.jpeg HTTP/1.1" 200 88819
+"GET /static/images/img8.jpeg HTTP/1.1" 200 78642
+"GET /static/images/img4.jpeg HTTP/1.1" 200 91767
+"GET /static/images/img6.jpeg HTTP/1.1" 200 125348
+"GET /static/images/img2.jpeg HTTP/1.1" 200 93254
+"GET /static/images/img1.jpeg HTTP/1.1" 200 89363
+"GET /reports/ HTTP/1.1" 200 168434
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+"GET /static/images/img5.jpeg HTTP/1.1" 200 88819
+"GET /static/images/img8.jpeg HTTP/1.1" 200 78642
+"GET /static/images/img3.jpeg HTTP/1.1" 200 78769
+"GET /static/images/img6.jpeg HTTP/1.1" 200 125348
+"GET /static/images/img2.jpeg HTTP/1.1" 200 93254
+"GET /static/images/img4.jpeg HTTP/1.1" 200 91767
+"GET /static/images/img1.jpeg HTTP/1.1" 200 89363
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /reports/ HTTP/1.1" 200 168713
+"GET /static/images/img5.jpeg HTTP/1.1" 304 0
+"GET /static/images/img3.jpeg HTTP/1.1" 304 0
+"GET /static/images/img8.jpeg HTTP/1.1" 304 0
+"GET /static/images/img6.jpeg HTTP/1.1" 304 0
+"GET /static/images/img2.jpeg HTTP/1.1" 304 0
+"GET /static/images/img4.jpeg HTTP/1.1" 304 0
+"GET /static/images/img1.jpeg HTTP/1.1" 304 0
+"GET /reports/?month=%D8%A3%D8%BA%D8%B3%D8%B7%D8%B3 HTTP/1.1" 200 166687
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /reports/?month=%D8%A3%D8%BA%D8%B3%D8%B7%D8%B3 HTTP/1.1" 200 166687
+"GET /reports/?month=%D8%A3%D8%BA%D8%B3%D8%B7%D8%B3 HTTP/1.1" 200 165112
+"GET /static/images/img5.jpeg HTTP/1.1" 304 0
+"GET /static/images/img8.jpeg HTTP/1.1" 304 0
+"GET /static/images/img3.jpeg HTTP/1.1" 304 0
+"GET /static/images/img6.jpeg HTTP/1.1" 304 0
+"GET /static/images/img2.jpeg HTTP/1.1" 304 0
+"GET /static/images/img4.jpeg HTTP/1.1" 304 0
+"GET /static/images/img1.jpeg HTTP/1.1" 304 0
+"GET /reports/specialty/%D8%A7%D9%84%D9%82%D8%B3%D8%B7%D8%B1%D9%87%20%D9%88%D8%AC%D8%B1%D8%A7%D8%AD%D8%A7%D8%AA%20%D8%A7%D9%84%D9%82%D9%84%D8%A8/?month=%D8%A3%D8%BA%D8%B3%D8%B7%D8%B3 HTTP/1.1" 200 178684
+"GET /reports/specialty/%D8%A7%D9%84%D9%82%D9%84%D8%A8%20%D8%A7%D9%84%D9%85%D9%81%D8%AA%D9%88%D8%AD/?month=%D8%A3%D8%BA%D8%B3%D8%B7%D8%B3 HTTP/1.1" 200 73678
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+Internal Server Error: /reports/specialty/\u0627\u0644\u062c\u0631\u0627\u062d\u0647/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\sessions\backends\base.py", line 244, in _get_session
+    return self._session_cache
+           ^^^^^^^^^^^^^^^^^^^
+AttributeError: 'SessionStore' object has no attribute '_session_cache'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 279, in ensure_connection
+    self.connect()
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\postgresql\base.py", line 332, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\psycopg2\__init__.py", line 135, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.OperationalError: could not translate host name "shortline.proxy.rlwy.net" to address: Unknown server error
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\accounts\decorators.py", line 44, in wrapper
+    if not request.user.is_authenticated:
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\functional.py", line 251, in inner
+    self._setup()
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\functional.py", line 404, in _setup
+    self._wrapped = self._setupfunc()
+                    ^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\auth\middleware.py", line 40, in <lambda>
+    request.user = SimpleLazyObject(lambda: get_user(request))
+                                            ^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\auth\middleware.py", line 20, in get_user
+    request._cached_user = auth.get_user(request)
+                           ^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\auth\__init__.py", line 304, in get_user
+    user_id = _get_user_session_key(request)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\auth\__init__.py", line 95, in _get_user_session_key
+    return get_user_model()._meta.pk.to_python(request.session[SESSION_KEY])
+                                               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\sessions\backends\base.py", line 55, in __getitem__
+    return self._session[key]
+           ^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\sessions\backends\base.py", line 249, in _get_session
+    self._session_cache = self.load()
+                          ^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\sessions\backends\db.py", line 55, in load
+    s = self._get_session_from_db()
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\sessions\backends\db.py", line 34, in _get_session_from_db
+    return self.model.objects.get(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 631, in get
+    num = len(clone)
+          ^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 368, in __len__
+    self._fetch_all()
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 1954, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 93, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\sql\compiler.py", line 1621, in execute_sql
+    cursor = self.connection.cursor()
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 320, in cursor
+    return self._cursor()
+           ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 296, in _cursor
+    self.ensure_connection()
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 278, in ensure_connection
+    with self.wrap_database_errors:
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 279, in ensure_connection
+    self.connect()
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\postgresql\base.py", line 332, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\psycopg2\__init__.py", line 135, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: could not translate host name "shortline.proxy.rlwy.net" to address: Unknown server error
+
+"GET /reports/specialty/%D8%A7%D9%84%D8%AC%D8%B1%D8%A7%D8%AD%D9%87/?month=%D8%A3%D8%BA%D8%B3%D8%B7%D8%B3 HTTP/1.1" 500 227862
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /reports/specialty/%D8%A7%D9%84%D8%AC%D8%B1%D8%A7%D8%AD%D9%87/?month=%D8%A3%D8%BA%D8%B3%D8%B7%D8%B3 HTTP/1.1" 200 188853
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /reports/payment-details/?month=%D8%A3%D8%BA%D8%B3%D8%B7%D8%B3 HTTP/1.1" 200 120058
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /reports/payment-details/?month=%D8%A3%D8%BA%D8%B3%D8%B7%D8%B3 HTTP/1.1" 200 126297
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+- Broken pipe from ('127.0.0.1', 51350)
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /reports/sector-details/?month=%D8%A3%D8%BA%D8%B3%D8%B7%D8%B3 HTTP/1.1" 200 608675
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /reports/sector-details/?month=%D9%85%D8%A7%D9%8A%D9%88 HTTP/1.1" 200 570694
+"GET /reports/sector-details/?month=%D9%85%D8%A7%D9%8A%D9%88 HTTP/1.1" 200 629265
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16453
+"GET /reports/ HTTP/1.1" 200 167137
+"GET /static/images/img5.jpeg HTTP/1.1" 304 0
+"GET /static/images/img2.jpeg HTTP/1.1" 304 0
+"GET /static/images/img6.jpeg HTTP/1.1" 304 0
+"GET /static/images/img8.jpeg HTTP/1.1" 304 0
+"GET /static/images/img3.jpeg HTTP/1.1" 304 0
+"GET /static/images/img1.jpeg HTTP/1.1" 304 0
+"GET /static/images/img4.jpeg HTTP/1.1" 304 0
+"GET /reports/ HTTP/1.1" 200 167137
+"GET /reports/ HTTP/1.1" 200 167137
+"GET /reports/ HTTP/1.1" 200 167522
+"GET /reports/ HTTP/1.1" 200 167522
+"GET /reports/ HTTP/1.1" 200 167522
+"GET /reports/ HTTP/1.1" 200 167902
+"GET /reports/ HTTP/1.1" 200 167721
+"GET /reports/ HTTP/1.1" 200 167721
+"GET /reports/ HTTP/1.1" 200 167721
+"GET /static/images/img5.jpeg HTTP/1.1" 304 0
+"GET /static/images/img8.jpeg HTTP/1.1" 304 0
+"GET /static/images/img3.jpeg HTTP/1.1" 304 0
+"GET /static/images/img4.jpeg HTTP/1.1" 304 0
+"GET /static/images/img1.jpeg HTTP/1.1" 304 0
+"GET /static/images/img2.jpeg HTTP/1.1" 304 0
+"GET /static/images/img6.jpeg HTTP/1.1" 304 0
+"GET /reports/ HTTP/1.1" 200 167137
+"GET /reports/ HTTP/1.1" 200 171829
+"GET /reports/ HTTP/1.1" 200 171829
+"GET /reports/ HTTP/1.1" 200 171829
+"GET /reports/ HTTP/1.1" 200 171829
+"GET /static/images/img5.jpeg HTTP/1.1" 304 0
+"GET /static/images/img8.jpeg HTTP/1.1" 304 0
+"GET /static/images/img6.jpeg HTTP/1.1" 304 0
+"GET /static/images/img4.jpeg HTTP/1.1" 304 0
+"GET /static/images/img1.jpeg HTTP/1.1" 304 0
+"GET /reports/ HTTP/1.1" 200 171829
+"GET /static/images/img3.jpeg HTTP/1.1" 304 0
+"GET /static/images/img2.jpeg HTTP/1.1" 304 0
+"GET /reports/ HTTP/1.1" 200 175241
+"GET /reports/ HTTP/1.1" 200 175241
+Watching for file changes with StatReloader
+"GET /reports/ HTTP/1.1" 200 169143
+"GET /static/images/img5.jpeg HTTP/1.1" 304 0
+"GET /static/images/img8.jpeg HTTP/1.1" 304 0
+"GET /static/images/img6.jpeg HTTP/1.1" 304 0
+"GET /static/images/img3.jpeg HTTP/1.1" 304 0
+"GET /static/images/img2.jpeg HTTP/1.1" 304 0
+"GET /static/images/img4.jpeg HTTP/1.1" 304 0
+"GET /static/images/img1.jpeg HTTP/1.1" 304 0
+"GET /reports/sub-companies-details/ HTTP/1.1" 200 189526
+"GET /reports/sub-companies-details/?sub_company_search=%D9%81%D9%86%D9%80%D9%80%D8%AF%D9%82+%D9%81%D9%88%D8%B1%D8%B3%D9%80%D9%80%D9%80%D9%8A%D8%B2%D9%88%D9%86+%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9 HTTP/1.1" 200 66539
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /reports/ HTTP/1.1" 200 169143
+"GET /static/images/img5.jpeg HTTP/1.1" 304 0
+"GET /static/images/img8.jpeg HTTP/1.1" 304 0
+"GET /static/images/img3.jpeg HTTP/1.1" 304 0
+"GET /static/images/img6.jpeg HTTP/1.1" 304 0
+"GET /static/images/img2.jpeg HTTP/1.1" 304 0
+"GET /static/images/img4.jpeg HTTP/1.1" 304 0
+"GET /static/images/img1.jpeg HTTP/1.1" 304 0
+"GET /reports/entities-details/ HTTP/1.1" 200 155530
+"GET /reports/entities-details/ HTTP/1.1" 200 155530
+"GET /reports/sub-companies-details/ HTTP/1.1" 200 189671
+"GET /packages/ HTTP/1.1" 200 81235
+"GET /reports/ HTTP/1.1" 200 169179
+Internal Server Error: /reports/packages/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\accounts\decorators.py", line 56, in wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 7136, in report_packages
+    return render(
+           ^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 172, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 164, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 164, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\defaulttags.py", line 480, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\urls\base.py", line 98, in reverse
+    resolved_url = resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\urls\resolvers.py", line 831, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'reports_statistics' not found. 'reports_statistics' is not a valid view function or pattern name.
+"GET /reports/packages/?month= HTTP/1.1" 500 189054
+"GET /reports/packages/?month= HTTP/1.1" 200 71522
+- Broken pipe from ('127.0.0.1', 53272)
+- Broken pipe from ('127.0.0.1', 53273)
+"GET /reports/ HTTP/1.1" 200 169179
+"GET /reports/packages/?month= HTTP/1.1" 200 71342
+"GET /reports/packages/?month= HTTP/1.1" 200 71342
+"GET /reports/packages/?month= HTTP/1.1" 200 71342
+"GET /reports/packages/?month= HTTP/1.1" 200 71342
+"GET /reports/packages/?search=TEVAR HTTP/1.1" 200 53666
+"GET /reports/sub-companies-details/ HTTP/1.1" 200 189671
+"GET /reports/sub-companies-details/?sub_company_search=0 HTTP/1.1" 200 81759
+"GET /reports/entities-details/ HTTP/1.1" 200 155530
+Watching for file changes with StatReloader
+"GET /reports/packages/?month= HTTP/1.1" 200 78522
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16727

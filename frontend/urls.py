@@ -11,6 +11,11 @@ urlpatterns = [
         name="packages"
     ),
     path(
+    "reports/packages/",
+    views.report_packages,
+    name="report_packages",
+    ),
+    path(
     "cash-packages/",
     views.cash_packages,
     name="cash_packages"

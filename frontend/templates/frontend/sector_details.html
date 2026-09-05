@@ -242,19 +242,288 @@
         background: #f8f9fa;
         transform: translateX(3px);
     }
+
+    /* ============================================ */
+    /* ✅ RESPONSIVE STYLES */
+    /* ============================================ */
     
-    @media (max-width: 768px) {
+    /* ✅ تحسين عرض البطاقات الإحصائية */
+    .stats-row {
+        display: flex;
+        flex-wrap: wrap;
+        margin: 0 -8px;
+    }
+    
+    .stats-col {
+        padding: 0 8px;
+        flex: 0 0 100%;
+        max-width: 100%;
+        margin-bottom: 12px;
+    }
+    
+    @media (min-width: 577px) {
+        .stats-col {
+            flex: 0 0 50%;
+            max-width: 50%;
+        }
+    }
+    
+    @media (min-width: 992px) {
+        .stats-col {
+            flex: 0 0 25%;
+            max-width: 25%;
+        }
+    }
+    
+    /* ✅ تحسين عرض الفلاتر */
+    .filters-grid {
+        display: flex;
+        flex-wrap: wrap;
+        margin: 0 -6px;
+    }
+    
+    .filter-item {
+        padding: 0 6px;
+        flex: 0 0 100%;
+        max-width: 100%;
+        margin-bottom: 12px;
+    }
+    
+    @media (min-width: 577px) {
+        .filter-item {
+            flex: 0 0 50%;
+            max-width: 50%;
+        }
+    }
+    
+    @media (min-width: 992px) {
+        .filter-item {
+            flex: 0 0 20%;
+            max-width: 20%;
+        }
+    }
+    
+    /* ✅ تحسين عرض الجدول */
+    .table-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    /* ✅ تحسين الفلاتر النشطة */
+    .active-filters {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-top: 10px;
+    }
+    
+    .active-filters .badge {
+        font-size: 0.7rem;
+        padding: 4px 10px;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+    }
+    
+    /* ============================================ */
+    /* ✅ RESPONSIVE BREAKPOINTS */
+    /* ============================================ */
+    
+    /* الهواتف الصغيرة */
+    @media (max-width: 576px) {
+        .stats-card {
+            padding: 0.75rem 0.5rem;
+        }
+        
+        .stats-card .stats-number {
+            font-size: 1.4rem;
+        }
+        
+        .stats-card .stats-label {
+            font-size: 0.65rem;
+        }
+        
+        .filter-pill {
+            font-size: 0.65rem;
+            padding: 3px 10px;
+        }
+        
+        .filter-label-icon {
+            font-size: 0.65rem;
+        }
+        
+        .search-box .form-control {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.7rem 0.25rem 2rem;
+        }
+        
+        .search-box .search-icon {
+            font-size: 0.7rem;
+            left: 0.6rem;
+        }
+        
+        .search-box .clear-btn {
+            font-size: 0.6rem;
+            padding: 0.05rem 0.5rem;
+            right: 0.5rem;
+        }
+        
+        .table-records {
+            font-size: 0.65rem;
+        }
+        
+        .table-records th,
+        .table-records td {
+            padding: 0.3rem 0.2rem;
+            white-space: nowrap;
+        }
+        
+        /* إخفاء بعض الأعمدة في الهواتف */
+        .table-records th:nth-child(2),
+        .table-records td:nth-child(2),
+        .table-records th:nth-child(6),
+        .table-records td:nth-child(6) {
+            display: none;
+        }
+        
+        .amount-number {
+            font-size: 0.7rem;
+        }
+        
+        .card-body {
+            padding: 0.5rem;
+        }
+        
+        .card-header {
+            padding: 0.5rem;
+        }
+        
+        .page-link {
+            padding: 0.2rem 0.4rem;
+            font-size: 0.7rem;
+        }
+        
+        .badge {
+            font-size: 0.55rem;
+        }
+        
+        h4 {
+            font-size: 1rem;
+        }
+        
+        h5 {
+            font-size: 0.85rem;
+        }
+        
+        h6 {
+            font-size: 0.75rem;
+        }
+        
+        .btn {
+            font-size: 0.7rem;
+            padding: 0.15rem 0.5rem;
+        }
+        
+        .container-fluid {
+            padding: 0.4rem !important;
+        }
+        
+        .accordion-button {
+            font-size: 0.75rem;
+            padding: 0.5rem 0.75rem;
+        }
+        
+        .accordion-button .badge {
+            font-size: 0.55rem;
+        }
+        
+        .accordion-body {
+            padding: 0.5rem;
+        }
+        
+        .sector-item {
+            font-size: 0.75rem;
+        }
+        
+        .progress-bar-custom {
+            height: 4px;
+        }
+        
+        .filter-scroll {
+            gap: 4px;
+        }
+        
+        .stats-row {
+            margin: 0 -4px;
+        }
+        
+        .stats-col {
+            padding: 0 4px;
+            margin-bottom: 8px;
+        }
+        
+        .filters-grid {
+            margin: 0 -4px;
+        }
+        
+        .filter-item {
+            padding: 0 4px;
+            margin-bottom: 8px;
+        }
+        
+        .active-filters .badge {
+            font-size: 0.55rem;
+            padding: 3px 6px;
+        }
+        
+        .list-group-item {
+            padding: 0.4rem 0.2rem;
+            font-size: 0.7rem;
+        }
+    }
+    
+    /* الأجهزة المتوسطة (تابلت) */
+    @media (min-width: 577px) and (max-width: 991px) {
         .stats-card .stats-number {
             font-size: 1.8rem;
         }
         
+        .stats-card {
+            padding: 1rem 0.75rem;
+        }
+        
+        .filter-pill {
+            font-size: 0.7rem;
+            padding: 4px 12px;
+        }
+        
+        .table-records {
+            font-size: 0.75rem;
+        }
+        
+        /* إخفاء عمود الجهة فقط في التابلت */
+        .table-records th:nth-child(6),
+        .table-records td:nth-child(6) {
+            display: none;
+        }
+        
+        .amount-number {
+            font-size: 0.8rem;
+        }
+        
         .accordion-button {
-            font-size: 0.85rem;
-            padding: 0.75rem 1rem;
+            font-size: 0.8rem;
         }
         
         .accordion-button .badge {
             font-size: 0.65rem;
+        }
+    }
+    
+    /* الشاشات الكبيرة */
+    @media (min-width: 992px) {
+        .table-records {
+            font-size: 0.9rem;
         }
     }
 </style>
@@ -262,9 +531,9 @@
 <!-- ============================================ -->
 <!-- ✅ رجوع -->
 <!-- ============================================ -->
-<div class="container-fluid py-4">
-    <div class="mb-3">
-        <a href="{% url 'reports' %}" class="btn btn-outline-secondary">
+<div class="container-fluid py-3 py-md-4">
+    <div class="mb-2 mb-md-3">
+        <a href="{% url 'reports' %}" class="btn btn-outline-secondary btn-sm btn-md-auto">
             <i class="fas fa-arrow-right me-1"></i>
             رجوع إلى التقارير
         </a>
@@ -273,7 +542,7 @@
     <!-- ============================================ -->
     <!-- ✅ العنوان -->
     <!-- ============================================ -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-3 mb-md-4">
         <div>
             <h4 class="mb-0 fw-bold">
                 <i class="fas fa-chart-pie text-warning me-2"></i>
@@ -288,14 +557,14 @@
     <!-- ============================================ -->
     <!-- ✅ الفلاتر -->
     <!-- ============================================ -->
-    <div class="card shadow-sm mb-4 border-0">
-        <div class="card-body">
+    <div class="card shadow-sm mb-3 mb-md-4 border-0">
+        <div class="card-body p-2 p-md-3">
             
             <!-- ✅ فلتر الشهر -->
-            <div class="mb-3">
-                <div class="d-flex align-items-center mb-2">
+            <div class="mb-2 mb-md-3">
+                <div class="d-flex align-items-center mb-1 mb-md-2">
                     <i class="fas fa-calendar-alt text-primary me-2"></i>
-                    <h6 class="mb-0 fw-bold">فلتر الشهر</h6>
+                    <h6 class="mb-0 fw-bold" style="font-size: 0.8rem;">فلتر الشهر</h6>
                 </div>
                 <div class="filter-scroll">
                     <!-- الكل -->
@@ -314,11 +583,11 @@
                 </div>
             </div>
             
-          
-            <div class="row g-3">
+            <!-- ✅ فلترات البحث (5 فلترات) -->
+            <div class="filters-grid">
                 
                 <!-- ✅ فلتر القطاع -->
-                <div class="col-lg-3 col-md-6">
+                <div class="filter-item">
                     <div class="filter-label-icon">
                         <i class="fas fa-building text-warning"></i> القطاع
                     </div>
@@ -367,7 +636,7 @@
                 </div>
                 
                 <!-- ✅ فلتر الجهة (النقابة) -->
-                <div class="col-lg-3 col-md-6">
+                <div class="filter-item">
                     <div class="filter-label-icon">
                         <i class="fas fa-users text-primary"></i> الجهه
                     </div>
@@ -416,7 +685,7 @@
                 </div>
                 
                 <!-- ✅ فلتر الشركة الفرعية -->
-                <div class="col-lg-2 col-md-6">
+                <div class="filter-item">
                     <div class="filter-label-icon">
                         <i class="fas fa-building text-info"></i> الشركة الفرعية
                     </div>
@@ -465,7 +734,7 @@
                 </div>
                 
                 <!-- ✅ فلتر الباكدج -->
-                <div class="col-lg-2 col-md-6">
+                <div class="filter-item">
                     <div class="filter-label-icon">
                         <i class="fas fa-box text-success"></i> الباكدج
                     </div>
@@ -514,7 +783,7 @@
                 </div>
                 
                 <!-- ✅ فلتر التخصص -->
-                <div class="col-lg-2 col-md-6">
+                <div class="filter-item">
                     <div class="filter-label-icon">
                         <i class="fas fa-stethoscope text-danger"></i> التخصص
                     </div>
@@ -566,11 +835,11 @@
             
             <!-- ✅ عرض الفلاتر النشطة -->
             {% if sector_search or specialty_search or entity_search or sub_company_search or package_search or date_from or date_to or selected_month %}
-            <div class="row mt-3">
+            <div class="row mt-2 mt-md-3">
                 <div class="col-12">
-                    <div class="d-flex flex-wrap gap-2">
+                    <div class="active-filters">
                         {% if selected_month %}
-                        <span class="badge bg-secondary p-2">
+                        <span class="badge bg-secondary">
                             <i class="fas fa-calendar-alt me-1"></i>
                             الشهر: {{ selected_month }}
                             <a href="?{% if sector_search %}&sector_search={{ sector_search }}{% endif %}{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}{% if entity_search %}&entity_search={{ entity_search }}{% endif %}{% if sub_company_search %}&sub_company_search={{ sub_company_search }}{% endif %}{% if package_search %}&package_search={{ package_search }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}" 
@@ -580,7 +849,7 @@
                         </span>
                         {% endif %}
                         {% if sector_search %}
-                        <span class="badge bg-warning text-dark p-2">
+                        <span class="badge bg-warning text-dark">
                             <i class="fas fa-building me-1"></i> القطاع: {{ sector_search }}
                             <a href="?{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}{% if entity_search %}&entity_search={{ entity_search }}{% endif %}{% if sub_company_search %}&sub_company_search={{ sub_company_search }}{% endif %}{% if package_search %}&package_search={{ package_search }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}{% if selected_month %}&month={{ selected_month }}{% endif %}" class="text-dark ms-1 text-decoration-none">
                                 <i class="fas fa-times-circle"></i>
@@ -588,7 +857,7 @@
                         </span>
                         {% endif %}
                         {% if specialty_search %}
-                        <span class="badge bg-info p-2">
+                        <span class="badge bg-info">
                             <i class="fas fa-stethoscope me-1"></i> التخصص: {{ specialty_search }}
                             <a href="?{% if sector_search %}&sector_search={{ sector_search }}{% endif %}{% if entity_search %}&entity_search={{ entity_search }}{% endif %}{% if sub_company_search %}&sub_company_search={{ sub_company_search }}{% endif %}{% if package_search %}&package_search={{ package_search }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}{% if selected_month %}&month={{ selected_month }}{% endif %}" class="text-white ms-1 text-decoration-none">
                                 <i class="fas fa-times-circle"></i>
@@ -596,7 +865,7 @@
                         </span>
                         {% endif %}
                         {% if entity_search %}
-                        <span class="badge bg-primary p-2">
+                        <span class="badge bg-primary">
                             <i class="fas fa-users me-1"></i> النقابة: {{ entity_search }}
                             <a href="?{% if sector_search %}&sector_search={{ sector_search }}{% endif %}{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}{% if sub_company_search %}&sub_company_search={{ sub_company_search }}{% endif %}{% if package_search %}&package_search={{ package_search }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}{% if selected_month %}&month={{ selected_month }}{% endif %}" class="text-white ms-1 text-decoration-none">
                                 <i class="fas fa-times-circle"></i>
@@ -604,7 +873,7 @@
                         </span>
                         {% endif %}
                         {% if sub_company_search %}
-                        <span class="badge bg-secondary p-2">
+                        <span class="badge bg-secondary">
                             <i class="fas fa-building me-1"></i> الشركة: {{ sub_company_search }}
                             <a href="?{% if sector_search %}&sector_search={{ sector_search }}{% endif %}{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}{% if entity_search %}&entity_search={{ entity_search }}{% endif %}{% if package_search %}&package_search={{ package_search }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}{% if selected_month %}&month={{ selected_month }}{% endif %}" class="text-white ms-1 text-decoration-none">
                                 <i class="fas fa-times-circle"></i>
@@ -612,7 +881,7 @@
                         </span>
                         {% endif %}
                         {% if package_search %}
-                        <span class="badge bg-success p-2">
+                        <span class="badge bg-success">
                             <i class="fas fa-box me-1"></i> الباكدج: {{ package_search }}
                             <a href="?{% if sector_search %}&sector_search={{ sector_search }}{% endif %}{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}{% if entity_search %}&entity_search={{ entity_search }}{% endif %}{% if sub_company_search %}&sub_company_search={{ sub_company_search }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}{% if selected_month %}&month={{ selected_month }}{% endif %}" class="text-white ms-1 text-decoration-none">
                                 <i class="fas fa-times-circle"></i>
@@ -620,7 +889,7 @@
                         </span>
                         {% endif %}
                         {% if date_from %}
-                        <span class="badge bg-success p-2">
+                        <span class="badge bg-success">
                             <i class="fas fa-calendar-alt me-1"></i> من: {{ date_from }}
                             <a href="?{% if sector_search %}&sector_search={{ sector_search }}{% endif %}{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}{% if entity_search %}&entity_search={{ entity_search }}{% endif %}{% if sub_company_search %}&sub_company_search={{ sub_company_search }}{% endif %}{% if package_search %}&package_search={{ package_search }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}{% if selected_month %}&month={{ selected_month }}{% endif %}" class="text-white ms-1 text-decoration-none">
                                 <i class="fas fa-times-circle"></i>
@@ -628,7 +897,7 @@
                         </span>
                         {% endif %}
                         {% if date_to %}
-                        <span class="badge bg-danger p-2">
+                        <span class="badge bg-danger">
                             <i class="fas fa-calendar-alt me-1"></i> إلى: {{ date_to }}
                             <a href="?{% if sector_search %}&sector_search={{ sector_search }}{% endif %}{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}{% if entity_search %}&entity_search={{ entity_search }}{% endif %}{% if sub_company_search %}&sub_company_search={{ sub_company_search }}{% endif %}{% if package_search %}&package_search={{ package_search }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if selected_month %}&month={{ selected_month }}{% endif %}" class="text-white ms-1 text-decoration-none">
                                 <i class="fas fa-times-circle"></i>
@@ -646,30 +915,30 @@
     <!-- ============================================ -->
     <!-- ✅ 4 بوكسات -->
     <!-- ============================================ -->
-    <div class="row g-4 mb-4">
+    <div class="stats-row g-2 g-md-4 mb-3 mb-md-4">
         
-        <div class="col-md-3">
+        <div class="stats-col">
             <div class="stats-card stats-card-total">
                 <div class="stats-number counter" data-target="{{ total_count }}">0</div>
                 <div class="stats-label"><i class="fas fa-boxes me-1"></i>إجمالي السجلات</div>
             </div>
         </div>
         
-        <div class="col-md-3">
+        <div class="stats-col">
             <div class="stats-card stats-card-sectors">
                 <div class="stats-number counter" data-target="{{ total_sectors }}">0</div>
                 <div class="stats-label"><i class="fas fa-building me-1"></i>عدد القطاعات</div>
             </div>
         </div>
         
-        <div class="col-md-3">
+        <div class="stats-col">
             <div class="stats-card stats-card-entities">
                 <div class="stats-number counter" data-target="{{ total_entities }}">0</div>
                 <div class="stats-label"><i class="fas fa-users me-1"></i>عدد النقابات</div>
             </div>
         </div>
         
-        <div class="col-md-3">
+        <div class="stats-col">
             <div class="stats-card stats-card-amount">
                 <div class="stats-number counter" data-target="{{ total_amount|floatformat:0|intcomma }}">0</div>
                 <div class="stats-label"><i class="fas fa-dollar-sign me-1"></i>إجمالي المبالغ</div>
@@ -681,30 +950,30 @@
     <!-- ============================================ -->
     <!-- ✅ توزيع القطاعات -->
     <!-- ============================================ -->
-    <div class="card shadow-sm border-0 mb-4">
-        <div class="card-header bg-white">
-            <h5 class="fw-bold mb-0">
+    <div class="card shadow-sm border-0 mb-3 mb-md-4">
+        <div class="card-header bg-white p-2 p-md-3">
+            <h5 class="fw-bold mb-0" style="font-size: 0.9rem;">
                 <i class="fas fa-chart-bar text-warning me-2"></i>
                 توزيع الجهات داخل القطاع
             </h5>
-            <small class="text-muted">
+            <small class="text-muted" style="font-size: 0.7rem;">
                 إجمالي <span class="fw-bold text-warning">{{ total_sectors }}</span> قطاع مختلف
             </small>
         </div>
-        <div class="card-body">
-            <div class="row g-2">
+        <div class="card-body p-2 p-md-3">
+            <div class="row g-1 g-md-2">
                 {% for sector in sector_distribution %}
                 <div class="col-md-6">
-                    <div class="sector-item d-flex justify-content-between align-items-center p-2 border-bottom">
+                    <div class="sector-item d-flex justify-content-between align-items-center p-1 p-md-2 border-bottom">
                         <div style="flex: 1;">
                             <div class="d-flex justify-content-between align-items-center">
-                                <span style="font-size: 0.9rem; font-weight: 500;">{{ sector.sector|default:"غير محدد" }}</span>
-                                <span class="badge bg-warning rounded-pill">{{ sector.total }}</span>
+                                <span style="font-size: 0.75rem; font-weight: 500;">{{ sector.sector|default:"غير محدد" }}</span>
+                                <span class="badge bg-warning rounded-pill" style="font-size: 0.6rem;">{{ sector.total }}</span>
                             </div>
                             <div class="progress-bar-custom mt-1">
                                 <div class="bar" style="width: {% widthratio sector.total total_count 100 %}%; background: #e65100;"></div>
                             </div>
-                            <small class="text-muted">
+                            <small class="text-muted" style="font-size: 0.6rem;">
                                 {% widthratio sector.total total_count 100 %}%
                                 <span class="ms-2">{{ sector.total_amount|floatformat:0|intcomma }} ج.م</span>
                             </small>
@@ -713,9 +982,9 @@
                 </div>
                 {% empty %}
                 <div class="col-12">
-                    <div class="text-center py-4">
+                    <div class="text-center py-3 py-md-4">
                         <i class="fas fa-inbox fa-2x text-muted mb-2 d-block"></i>
-                        <p class="text-muted mb-0">لا توجد قطاعات</p>
+                        <p class="text-muted mb-0" style="font-size: 0.85rem;">لا توجد قطاعات</p>
                     </div>
                 </div>
                 {% endfor %}
@@ -723,20 +992,20 @@
         </div>
     </div>
 
-      <!-- ============================================ -->
+    <!-- ============================================ -->
     <!-- ✅ توزيع النقابات مع الباكدجات والتخصصات -->
     <!-- ============================================ -->
-    <div class="card shadow-sm border-0 mb-4">
-        <div class="card-header bg-white">
-            <h5 class="fw-bold mb-0">
+    <div class="card shadow-sm border-0 mb-3 mb-md-4">
+        <div class="card-header bg-white p-2 p-md-3">
+            <h5 class="fw-bold mb-0" style="font-size: 0.9rem;">
                 <i class="fas fa-users text-primary me-2"></i>
                 توزيع الجهات داخل القطاع
             </h5>
-            <small class="text-muted">
+            <small class="text-muted" style="font-size: 0.7rem;">
                 إجمالي <span class="fw-bold text-primary">{{ total_entities }}</span> جهه مختلفة
             </small>
         </div>
-        <div class="card-body">
+        <div class="card-body p-2 p-md-3">
             {% if entity_details %}
             <div class="accordion" id="entityAccordion">
                 {% for entity in entity_details %}
@@ -748,13 +1017,13 @@
                                 data-bs-target="#collapse{{ forloop.counter }}" 
                                 aria-expanded="{% if forloop.counter == 1 %}true{% else %}false{% endif %}" 
                                 aria-controls="collapse{{ forloop.counter }}">
-                            <div class="d-flex justify-content-between align-items-center w-100 me-3">
-                                <span class="fw-bold">{{ entity.entity_name|default:"غير محدد" }}</span>
-                                <div class="d-flex gap-2 flex-wrap">
-                                    <span class="badge bg-primary rounded-pill">
+                            <div class="d-flex flex-wrap justify-content-between align-items-center w-100 me-2 me-md-3">
+                                <span class="fw-bold" style="font-size: 0.8rem;">{{ entity.entity_name|default:"غير محدد" }}</span>
+                                <div class="d-flex gap-1 gap-md-2 flex-wrap">
+                                    <span class="badge bg-primary rounded-pill" style="font-size: 0.6rem;">
                                         <i class="fas fa-box me-1"></i> {{ entity.total }} باكدج
                                     </span>
-                                    <span class="badge bg-success rounded-pill">
+                                    <span class="badge bg-success rounded-pill" style="font-size: 0.6rem;">
                                         <i class="fas fa-dollar-sign me-1"></i> {{ entity.total_amount|floatformat:0|intcomma }} ج.م
                                     </span>
                                 </div>
@@ -764,51 +1033,51 @@
                     <div id="collapse{{ forloop.counter }}" 
                          class="accordion-collapse collapse {% if forloop.counter == 1 %}show{% endif %}" 
                          data-bs-parent="#entityAccordion">
-                        <div class="accordion-body">
+                        <div class="accordion-body p-2 p-md-3">
                             <div class="row">
                                 <!-- ✅ توزيع التخصصات داخل النقابة -->
                                 <div class="col-md-6">
-                                    <h6 class="fw-bold text-secondary mb-3">
+                                    <h6 class="fw-bold text-secondary mb-2 mb-md-3" style="font-size: 0.75rem;">
                                         <i class="fas fa-stethoscope text-danger me-1"></i>
                                         توزيع التخصصات
                                     </h6>
                                     {% if entity.specialties %}
                                     <div class="list-group list-group-flush">
                                         {% for spec in entity.specialties %}
-                                        <div class="list-group-item d-flex justify-content-between align-items-center px-0 py-2 border-bottom entity-package-item">
+                                        <div class="list-group-item d-flex justify-content-between align-items-center px-0 py-1 py-md-2 border-bottom entity-package-item" style="font-size: 0.7rem;">
                                             <span>{{ spec.specialty|default:"غير محدد" }}</span>
                                             <div>
-                                                <span class="badge bg-info rounded-pill me-2">{{ spec.total }}</span>
-                                                <span class="small text-muted">{{ spec.total_amount|floatformat:0|intcomma }} ج.م</span>
+                                                <span class="badge bg-info rounded-pill me-1 me-md-2" style="font-size: 0.55rem;">{{ spec.total }}</span>
+                                                <span class="small text-muted" style="font-size: 0.6rem;">{{ spec.total_amount|floatformat:0|intcomma }} ج.م</span>
                                             </div>
                                         </div>
                                         {% endfor %}
                                     </div>
                                     {% else %}
-                                    <p class="text-muted small">لا توجد تخصصات</p>
+                                    <p class="text-muted small" style="font-size: 0.7rem;">لا توجد تخصصات</p>
                                     {% endif %}
                                 </div>
                                 
                                 <!-- ✅ توزيع الباكدجات داخل النقابة -->
                                 <div class="col-md-6">
-                                    <h6 class="fw-bold text-secondary mb-3">
+                                    <h6 class="fw-bold text-secondary mb-2 mb-md-3" style="font-size: 0.75rem;">
                                         <i class="fas fa-box text-success me-1"></i>
                                         توزيع الباكدجات
                                     </h6>
                                     {% if entity.packages %}
                                     <div class="list-group list-group-flush">
                                         {% for pkg in entity.packages %}
-                                        <div class="list-group-item d-flex justify-content-between align-items-center px-0 py-2 border-bottom entity-package-item">
+                                        <div class="list-group-item d-flex justify-content-between align-items-center px-0 py-1 py-md-2 border-bottom entity-package-item" style="font-size: 0.7rem;">
                                             <span>{{ pkg.package_name|default:"غير محدد"|truncatechars:30 }}</span>
                                             <div>
-                                                <span class="badge bg-success rounded-pill me-2">{{ pkg.total }}</span>
-                                                <span class="small text-muted">{{ pkg.total_amount|floatformat:0|intcomma }} ج.م</span>
+                                                <span class="badge bg-success rounded-pill me-1 me-md-2" style="font-size: 0.55rem;">{{ pkg.total }}</span>
+                                                <span class="small text-muted" style="font-size: 0.6rem;">{{ pkg.total_amount|floatformat:0|intcomma }} ج.م</span>
                                             </div>
                                         </div>
                                         {% endfor %}
                                     </div>
                                     {% else %}
-                                    <p class="text-muted small">لا توجد باكدجات</p>
+                                    <p class="text-muted small" style="font-size: 0.7rem;">لا توجد باكدجات</p>
                                     {% endif %}
                                 </div>
                             </div>
@@ -818,9 +1087,9 @@
                 {% endfor %}
             </div>
             {% else %}
-            <div class="text-center py-4">
+            <div class="text-center py-3 py-md-4">
                 <i class="fas fa-inbox fa-2x text-muted mb-2 d-block"></i>
-                <p class="text-muted mb-0">لا توجد نقابات</p>
+                <p class="text-muted mb-0" style="font-size: 0.85rem;">لا توجد نقابات</p>
             </div>
             {% endif %}
         </div>
@@ -831,9 +1100,9 @@
     <!-- ✅ الجدول التفصيلي -->
     <!-- ============================================ -->
     <div class="card shadow-sm border-0">
-        <div class="card-header bg-light">
+        <div class="card-header bg-light p-2 p-md-3">
             <div class="d-flex justify-content-between align-items-center">
-                <h6 class="mb-0">
+                <h6 class="mb-0" style="font-size: 0.85rem;">
                     <i class="fas fa-list me-2"></i>
                     السجلات التفصيلية
                     <span class="badge bg-secondary ms-2 rounded-pill">{{ total_count }}</span>
@@ -841,7 +1110,7 @@
             </div>
         </div>
         <div class="card-body p-0">
-            <div class="table-responsive">
+            <div class="table-container">
                 <table class="table table-hover table-records mb-0">
                     <thead>
                         <tr>
@@ -864,7 +1133,7 @@
                             <td class="fw-bold">{{ record.patient_name|truncatechars:25 }}</td>
                             <td>{{ record.specialty|default:"-"|truncatechars:20 }}</td>
                             <td>
-                                <span class="badge bg-warning text-dark">{{ record.sector|default:"-" }}</span>
+                                <span class="badge bg-warning text-dark" style="font-size: 0.6rem;">{{ record.sector|default:"-" }}</span>
                             </td>
                             <td>{{ record.entity_name|default:"-" }}</td>
                             <td>{{ record.package_name|default:"-" }}</td>
@@ -877,9 +1146,9 @@
                         </tr>
                         {% empty %}
                         <tr>
-                            <td colspan="9" class="text-center text-muted py-4">
+                            <td colspan="9" class="text-center text-muted py-3 py-md-4">
                                 <i class="fas fa-inbox fa-2x d-block mb-2 opacity-50"></i>
-                                لا توجد سجلات تطابق الفلترة
+                                <span style="font-size: 0.85rem;">لا توجد سجلات تطابق الفلترة</span>
                             </td>
                         </tr>
                         {% endfor %}
@@ -893,9 +1162,9 @@
     <!-- ✅ Pagination -->
     <!-- ============================================ -->
     {% if records.has_other_pages %}
-    <div class="d-flex justify-content-center mt-4">
+    <div class="d-flex justify-content-center mt-3 mt-md-4">
         <nav>
-            <ul class="pagination">
+            <ul class="pagination pagination-sm pagination-md-auto">
                 {% if records.has_previous %}
                 <li class="page-item">
                     <a class="page-link" href="?page={{ records.previous_page_number }}{% if selected_month %}&month={{ selected_month }}{% endif %}{% if sector_search %}&sector_search={{ sector_search }}{% endif %}{% if specialty_search %}&specialty_search={{ specialty_search }}{% endif %}{% if entity_search %}&entity_search={{ entity_search }}{% endif %}{% if sub_company_search %}&sub_company_search={{ sub_company_search }}{% endif %}{% if package_search %}&package_search={{ package_search }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}">
