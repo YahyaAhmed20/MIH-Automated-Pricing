@@ -471,6 +471,331 @@
             word-break: break-word;
         }
     }
+@media (max-width: 768px) {
+
+    .search-wrapper {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .search-wrapper .input-group {
+        width: 100%;
+        flex-wrap: nowrap;
+    }
+
+    .search-wrapper .input-group .form-control {
+        min-width: 0;
+        flex: 1 1 auto;
+        width: 100%;
+        padding: 0.7rem 0.7rem;
+        font-size: 0.78rem;
+    }
+
+    .search-wrapper .input-group .form-control::placeholder {
+        font-size: 0.72rem;
+        white-space: nowrap;
+        opacity: 1;
+    }
+
+    .search-wrapper .input-group .btn-search {
+        flex: 0 0 auto;
+        padding: 0.7rem 0.7rem;
+        font-size: 0.78rem;
+    }
+
+    .search-wrapper .input-group .btn-search .me-2 {
+        margin-right: 0.2rem !important;
+    }
+}
+/* =========================================================
+   MOBILE - PATIENT DETAILS
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    /* صف التفاصيل نفسه لا يأخذ عرض الأعمدة الكبيرة */
+    .patients-table .details-expand-row > td {
+        padding: 0 !important;
+        width: 100% !important;
+        min-width: 100% !important;
+        max-width: 100% !important;
+        border: 0 !important;
+    }
+
+    /* منطقة التفاصيل */
+    .patients-table .details-expand-row .details-container {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+
+        padding: 10px !important;
+        margin: 0 !important;
+
+        overflow: hidden !important;
+        box-sizing: border-box !important;
+    }
+
+    /* إلغاء أي عرض ناتج عن أعمدة الجدول */
+    .patients-table .details-expand-row .details-container .row {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+
+        margin: 0 !important;
+
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 10px !important;
+    }
+
+    /* كل Card بعرض الشاشة */
+    .patients-table .details-expand-row .details-container
+    .row > [class*="col-"] {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+
+        flex: 0 0 100% !important;
+
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    .patients-table .details-expand-row .info-card {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+
+        box-sizing: border-box !important;
+
+        padding: 12px !important;
+        margin: 0 !important;
+
+        border-radius: 12px !important;
+        overflow: hidden !important;
+    }
+
+    /* ---------------------------------------------------------
+       كل معلومة = Label + Value بجانب بعض
+       --------------------------------------------------------- */
+
+    .patients-table .details-expand-row .info-item {
+        display: grid !important;
+
+        /*
+         * العمود الأول للـ label
+         * والثاني للقيمة
+         */
+        grid-template-columns: max-content minmax(0, 1fr) !important;
+
+        align-items: center !important;
+
+        width: 100% !important;
+        min-width: 0 !important;
+
+        gap: 8px !important;
+
+        padding: 7px 4px !important;
+
+        box-sizing: border-box !important;
+    }
+
+    .patients-table .details-expand-row .info-item .label {
+        width: auto !important;
+        min-width: 0 !important;
+
+        white-space: nowrap !important;
+
+        font-size: 0.74rem !important;
+    }
+
+    .patients-table .details-expand-row .info-item .value {
+        width: auto !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+
+        margin: 0 !important;
+
+        text-align: right !important;
+
+        white-space: normal !important;
+        overflow-wrap: anywhere !important;
+        word-break: break-word !important;
+
+        font-size: 0.78rem !important;
+    }
+
+    /* عنوان الكارت */
+    .patients-table .details-expand-row .card-title {
+        font-size: 0.82rem !important;
+        margin-bottom: 8px !important;
+    }
+
+    .patients-table .details-expand-row .card-title i {
+        font-size: 1rem !important;
+    }
+}
+/* =========================================================
+   MOBILE - FIX DETAILS WHITE SPACE
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    /*
+     * نجعل صف التفاصيل لا يترك مساحة أفقية فارغة
+     * بسبب عرض جدول المرضى الكبير.
+     */
+    .patients-table .details-expand-row {
+        position: relative !important;
+    }
+
+    .patients-table .details-expand-row > td {
+        position: relative !important;
+        left: 0 !important;
+        right: 0 !important;
+
+        transform: none !important;
+
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    /*
+     * مهم:
+     * لا نسمح لمنطقة التفاصيل أن ترث عرض الجدول
+     */
+    .patients-table .details-expand-row .details-container {
+        position: relative !important;
+
+        width: 100vw !important;
+        max-width: 100vw !important;
+        min-width: 0 !important;
+
+        box-sizing: border-box !important;
+
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+
+        overflow-x: hidden !important;
+    }
+}
+
+/* =========================================================
+   MOBILE DETAILS - OUTSIDE TABLE (NEW)
+   ========================================================= */
+
+.mobile-details-container {
+    display: none;
+}
+
+@media (max-width: 768px) {
+
+    .mobile-details-container {
+        display: none;
+        width: 100%;
+        max-width: 100%;
+        margin: 12px 0 0;
+        padding: 0;
+        overflow: hidden;
+        box-sizing: border-box;
+    }
+
+    .mobile-details-container.active {
+        display: block;
+    }
+
+    .mobile-details-container .details-container {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+
+        box-sizing: border-box !important;
+
+        padding: 10px !important;
+        margin: 0 !important;
+
+        background: #f8f9fa;
+        border-top: 3px solid #0d6efd;
+        border-bottom: 3px solid #0d6efd;
+
+        overflow: hidden !important;
+    }
+
+    .mobile-details-container .details-container .row {
+        width: 100% !important;
+        margin: 0 !important;
+
+        display: flex !important;
+        flex-direction: column !important;
+
+        gap: 10px !important;
+    }
+
+    .mobile-details-container .details-container
+    .row > [class*="col-"] {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+
+        flex: 0 0 100% !important;
+
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    .mobile-details-container .info-card {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+
+        box-sizing: border-box !important;
+
+        padding: 12px !important;
+        margin: 0 !important;
+
+        border-radius: 12px !important;
+        overflow: hidden !important;
+    }
+
+    .mobile-details-container .info-item {
+        display: grid !important;
+
+        grid-template-columns: max-content minmax(0, 1fr) !important;
+
+        align-items: center !important;
+
+        width: 100% !important;
+        min-width: 0 !important;
+
+        gap: 8px !important;
+
+        padding: 7px 4px !important;
+
+        box-sizing: border-box !important;
+    }
+
+    .mobile-details-container .info-item .label {
+        white-space: nowrap !important;
+        font-size: 0.74rem !important;
+    }
+
+    .mobile-details-container .info-item .value {
+        min-width: 0 !important;
+        max-width: 100% !important;
+
+        text-align: right !important;
+
+        word-break: break-word !important;
+        overflow-wrap: anywhere !important;
+
+        font-size: 0.78rem !important;
+    }
+
+    .mobile-details-container .card-title {
+        font-size: 0.82rem !important;
+        margin-bottom: 8px !important;
+    }
+}
 </style>
 
 <!-- ============================================ -->
@@ -494,7 +819,7 @@
 
     <!-- ✅ Search Box (في الأعلى) -->
     <div class="search-wrapper">
-        <form method="GET" class="input-group">
+        <form method="GET" class="input-group" id="searchForm">
             <!-- ✅ الحفاظ على الفلاتر في البحث -->
             {% if attachment_type %}
             <input type="hidden" name="attachment_type" value="{{ attachment_type }}">
@@ -623,14 +948,26 @@
                     </select>
                 </div>
                 
-                <!-- ✅ فلتر 5: التاريخ من - إلى -->
+                <!-- ✅ فلتر 5: التاريخ من - إلى (Flatpickr) -->
                 <div class="col-md-2">
                     <label class="form-label">📅 من</label>
-                    <input type="date" name="date_from" class="form-control" value="{{ date_from }}">
+                    <input type="text" 
+                           name="date_from" 
+                           id="dateFrom"
+                           class="form-control" 
+                           placeholder="DD/MM/YYYY"
+                           value="{{ date_from }}"
+                           autocomplete="off">
                 </div>
                 <div class="col-md-2">
                     <label class="form-label">📅 إلى</label>
-                    <input type="date" name="date_to" class="form-control" value="{{ date_to }}">
+                    <input type="text" 
+                           name="date_to" 
+                           id="dateTo"
+                           class="form-control" 
+                           placeholder="DD/MM/YYYY"
+                           value="{{ date_to }}"
+                           autocomplete="off">
                 </div>
                 
                 <!-- ✅ أزرار الفلاتر -->
@@ -1049,39 +1386,66 @@
 
 </div>
 
+<!-- ============================================ -->
+<!-- ✅ MOBILE DETAILS CONTAINER (OUTSIDE TABLE) -->
+<!-- ============================================ -->
+<div id="mobileDetailsContainer" class="mobile-details-container"></div>
+
+<!-- ✅ Flatpickr CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+<!-- ✅ Flatpickr JS -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
 <script>
 // ============================================
-// ✅ تشغيل البحث عند الضغط على Enter
+// ✅ Flatpickr Date Pickers
 // ============================================
-// ============================================
-// ✅ تشغيل البحث عند الضغط على Enter أو Paste
-// ============================================
-
 document.addEventListener('DOMContentLoaded', function() {
+    function initDatePicker(selector) {
+        const input = document.querySelector(selector);
+        if (!input) return;
+        flatpickr(input, {
+            dateFormat: "Y-m-d",
+            altInput: true,
+            altFormat: "d/m/Y",
+            allowInput: true,
+            disableMobile: true,
+            onChange: function (selectedDates, dateStr, instance) {
+                if (selectedDates.length) {
+                    instance.element.form.submit();
+                }
+            }
+        });
+    }
+    initDatePicker("#dateFrom");
+    initDatePicker("#dateTo");
+
+    // ============================================
+    // ✅ تشغيل البحث عند الضغط على Enter أو Paste
+    // ============================================
     const searchInput = document.querySelector('input[name="search"]');
 
-    if (!searchInput) return;
+    if (searchInput) {
+        // البحث عند الضغط على Enter
+        searchInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                this.form.requestSubmit();
+            }
+        });
 
-    // البحث عند الضغط على Enter
-    searchInput.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            this.form.requestSubmit();
-        }
-    });
+        // البحث مباشرة بعد Paste
+        searchInput.addEventListener('paste', function() {
+            setTimeout(() => {
+                this.form.requestSubmit();
+            }, 0);
+        });
+    }
 
-    // البحث مباشرة بعد Paste
-    searchInput.addEventListener('paste', function() {
-        setTimeout(() => {
-            this.form.requestSubmit();
-        }, 0);
-    });
-});
-
-// ============================================
-// ✅ تحسين تجربة المستخدم - Auto Submit للفلاتر
-// ============================================
-document.addEventListener('DOMContentLoaded', function() {
+    // ============================================
+    // ✅ تحسين تجربة المستخدم - Auto Submit للفلاتر
+    // ============================================
     const filterSelects = document.querySelectorAll('.filter-card select');
     filterSelects.forEach(select => {
         select.addEventListener('change', function() {
@@ -1091,43 +1455,137 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // ============================================
-// ✅ Toggle Details - فتح/غلق التاب
+// ✅ Toggle Details - فتح/غلق التاب (NEW VERSION)
 // ============================================
 function toggleDetails(patientId) {
+
     const detailsRow = document.getElementById('details-' + patientId);
-    const btn = document.querySelector(`.btn-view-details[onclick="toggleDetails(${patientId})"]`);
-    
-    if (detailsRow) {
-        if (detailsRow.style.display === 'none' || detailsRow.style.display === '') {
-            // ✅ إغلاق أي تفاصيل مفتوحة أخرى
-            document.querySelectorAll('.details-expand-row').forEach(function(row) {
-                if (row.id !== 'details-' + patientId) {
-                    row.style.display = 'none';
-                    // تغيير نص الزر في الصف المغلق
-                    const otherBtn = document.querySelector(`.btn-view-details[onclick="toggleDetails(${row.id.replace('details-', '')})"]`);
-                    if (otherBtn) {
-                        otherBtn.innerHTML = '<i class="fas fa-chevron-down me-1"></i> عرض المزيد';
-                    }
-                }
-            });
-            
-            // ✅ فتح التفاصيل المطلوبة
-            detailsRow.style.display = 'table-row';
-            if (btn) {
-                btn.innerHTML = '<i class="fas fa-chevron-up me-1"></i> إخفاء التفاصيل';
-            }
-            
-            // ✅ تمرير الصفحة إلى التفاصيل مع تأثير سلس
-            setTimeout(function() {
-                detailsRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }, 100);
-            
-        } else {
-            // ✅ إغلاق التفاصيل
+    const btn = document.querySelector(
+        `.btn-view-details[onclick="toggleDetails(${patientId})"]`
+    );
+
+    if (!detailsRow) return;
+
+    const isMobile = window.innerWidth <= 768;
+    const mobileContainer = document.getElementById('mobileDetailsContainer');
+
+    /* =====================================================
+       MOBILE
+       ===================================================== */
+    if (isMobile && mobileContainer) {
+
+        const isOpen = mobileContainer.dataset.patientId == patientId;
+
+        /* إغلاق */
+        if (isOpen) {
+
+            mobileContainer.innerHTML = '';
+            mobileContainer.classList.remove('active');
+            mobileContainer.removeAttribute('data-patient-id');
+
             detailsRow.style.display = 'none';
+
             if (btn) {
-                btn.innerHTML = '<i class="fas fa-chevron-down me-1"></i> عرض المزيد';
+                btn.innerHTML =
+                    '<i class="fas fa-chevron-down me-1"></i> عرض المزيد';
             }
+
+            return;
+        }
+
+        /* إغلاق أي تفاصيل أخرى */
+        document.querySelectorAll('.details-expand-row').forEach(function(row) {
+            row.style.display = 'none';
+        });
+
+        document.querySelectorAll('.btn-view-details').forEach(function(button) {
+            button.innerHTML =
+                '<i class="fas fa-chevron-down me-1"></i> عرض المزيد';
+        });
+
+        /* نسخ محتوى التفاصيل فقط */
+        const detailsContent =
+            detailsRow.querySelector('.details-container');
+
+        if (!detailsContent) return;
+
+        mobileContainer.innerHTML =
+            detailsContent.outerHTML;
+
+        mobileContainer.dataset.patientId = patientId;
+        mobileContainer.classList.add('active');
+
+        /* إخفاء صف التفاصيل الأصلي داخل الجدول */
+        detailsRow.style.display = 'none';
+
+        /* تغيير الزر */
+        if (btn) {
+            btn.innerHTML =
+                '<i class="fas fa-chevron-up me-1"></i> إخفاء التفاصيل';
+        }
+
+        /* النزول للتفاصيل */
+        setTimeout(function() {
+
+            mobileContainer.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+
+        }, 50);
+
+        return;
+    }
+
+    /* =====================================================
+       DESKTOP
+       ===================================================== */
+
+    if (
+        detailsRow.style.display === 'none' ||
+        detailsRow.style.display === ''
+    ) {
+
+        document.querySelectorAll('.details-expand-row').forEach(function(row) {
+
+            if (row.id !== 'details-' + patientId) {
+
+                row.style.display = 'none';
+
+                const otherBtn = document.querySelector(
+                    `.btn-view-details[onclick="toggleDetails(${row.id.replace('details-', '')})"]`
+                );
+
+                if (otherBtn) {
+                    otherBtn.innerHTML =
+                        '<i class="fas fa-chevron-down me-1"></i> عرض المزيد';
+                }
+            }
+        });
+
+        detailsRow.style.display = 'table-row';
+
+        if (btn) {
+            btn.innerHTML =
+                '<i class="fas fa-chevron-up me-1"></i> إخفاء التفاصيل';
+        }
+
+        setTimeout(function() {
+
+            detailsRow.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center'
+            });
+
+        }, 100);
+
+    } else {
+
+        detailsRow.style.display = 'none';
+
+        if (btn) {
+            btn.innerHTML =
+                '<i class="fas fa-chevron-down me-1"></i> عرض المزيد';
         }
     }
 }

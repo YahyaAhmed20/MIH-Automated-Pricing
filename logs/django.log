@@ -28935,3 +28935,77 @@ Watching for file changes with StatReloader
 "GET /package-comparison/ HTTP/1.1" 200 10998747
 Not Found: /.well-known/appspecific/com.chrome.devtools.json
 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16727
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 50295
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 16616
+"POST / HTTP/1.1" 302 0
+"GET /reports/ HTTP/1.1" 200 169179
+"GET /static/images/img5.jpeg HTTP/1.1" 200 88819
+"GET /static/images/img8.jpeg HTTP/1.1" 200 78642
+"GET /static/images/img3.jpeg HTTP/1.1" 200 78769
+"GET /static/images/img6.jpeg HTTP/1.1" 200 125348
+"GET /static/images/img2.jpeg HTTP/1.1" 200 93254
+"GET /static/images/img4.jpeg HTTP/1.1" 200 91767
+"GET /static/images/img1.jpeg HTTP/1.1" 200 89363
+"GET /patient-search/ HTTP/1.1" 200 803244
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16727
+"GET /patient-search/ HTTP/1.1" 200 803244
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16727
+"GET /patient-search/ HTTP/1.1" 200 803408
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16727
+"GET /patient-search/ HTTP/1.1" 200 803447
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16727
+"GET /patient-search/ HTTP/1.1" 200 804148
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16727
+"GET /patient-search/ HTTP/1.1" 200 804148
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16727
+"GET /patient-search/ HTTP/1.1" 200 804148
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16727
+"GET /patient-search/ HTTP/1.1" 200 804148
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16727
+"GET /patient-search/ HTTP/1.1" 200 804148
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16727
+"GET /patient-search/ HTTP/1.1" 200 804007
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16727
+"GET /patient-search/?attachment_type=&company=%D8%A7%D9%84%D8%A7%D9%87%D9%84%D9%89+%D9%84%D9%84%D9%85%D8%B4%D8%B1%D9%88%D8%B9%D8%A7%D8%AA+%D9%88%D8%A7%D9%84%D8%AE%D8%AF%D9%85%D8%A7%D8%AA+%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%D8%A9&sub_account=&doctor=&specialty=&date_from=&date_to= HTTP/1.1" 200 249384
+"GET /patient-search/?attachment_type=&company=%D8%A7%D9%84%D8%A7%D9%87%D9%84%D9%89+%D9%84%D9%84%D9%85%D8%B4%D8%B1%D9%88%D8%B9%D8%A7%D8%AA+%D9%88%D8%A7%D9%84%D8%AE%D8%AF%D9%85%D8%A7%D8%AA+%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%D8%A9&sub_account=&doctor=&specialty=&date_from=&date_to= HTTP/1.1" 200 251258
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16727
+"GET /patient-search/?attachment_type=&company=%D8%A7%D9%84%D8%A7%D9%87%D9%84%D9%89+%D9%84%D9%84%D9%85%D8%B4%D8%B1%D9%88%D8%B9%D8%A7%D8%AA+%D9%88%D8%A7%D9%84%D8%AE%D8%AF%D9%85%D8%A7%D8%AA+%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%D8%A9&sub_account=&doctor=&specialty=&date_from=&date_to= HTTP/1.1" 200 252878
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16727
+"GET /patient-search/?attachment_type=&company=%D8%A7%D9%84%D8%A7%D9%87%D9%84%D9%89+%D9%84%D9%84%D9%85%D8%B4%D8%B1%D9%88%D8%B9%D8%A7%D8%AA+%D9%88%D8%A7%D9%84%D8%AE%D8%AF%D9%85%D8%A7%D8%AA+%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%D8%A9&sub_account=&doctor=&specialty=&date_from=&date_to= HTTP/1.1" 200 254046
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16727
+"GET /patient-search/?attachment_type=&company=%D8%A7%D9%84%D8%A7%D9%87%D9%84%D9%89+%D9%84%D9%84%D9%85%D8%B4%D8%B1%D9%88%D8%B9%D8%A7%D8%AA+%D9%88%D8%A7%D9%84%D8%AE%D8%AF%D9%85%D8%A7%D8%AA+%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%D8%A9&sub_account=&doctor=&specialty=&date_from=&date_to= HTTP/1.1" 200 259016
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16727
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16727
+"GET /patient-search/?attachment_type=&company=%D8%A7%D9%84%D8%A7%D9%87%D9%84%D9%89+%D9%84%D9%84%D9%85%D8%B4%D8%B1%D9%88%D8%B9%D8%A7%D8%AA+%D9%88%D8%A7%D9%84%D8%AE%D8%AF%D9%85%D8%A7%D8%AA+%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%D8%A9&sub_account=&doctor=&specialty=&date_from=&date_to= HTTP/1.1" 200 260265
+"GET /patient-search/?attachment_type=&company=%D8%A7%D9%84%D8%A7%D9%87%D9%84%D9%89+%D9%84%D9%84%D9%85%D8%B4%D8%B1%D9%88%D8%B9%D8%A7%D8%AA+%D9%88%D8%A7%D9%84%D8%AE%D8%AF%D9%85%D8%A7%D8%AA+%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%D8%A9&sub_account=&doctor=&specialty=&date_from=2026-06-05&date_to= HTTP/1.1" 200 260443
+"GET /patient-search/? HTTP/1.1" 200 814888
+Watching for file changes with StatReloader
+"GET /external-approvals/ HTTP/1.1" 200 89260
+"GET /external-approvals/without_approval/ HTTP/1.1" 200 818944
+"GET /external-approvals/total/ HTTP/1.1" 200 833820
+"GET /pending-analysis/ HTTP/1.1" 200 206209
+"GET /external-approvals/total/ HTTP/1.1" 200 833820
+"GET /external-approvals/ HTTP/1.1" 200 89260
+"GET /external-approvals/early/ HTTP/1.1" 200 123697
+"GET /external-approvals/accounts/ HTTP/1.1" 200 822421
+"GET /pending-analysis/ HTTP/1.1" 200 206209
+"GET /external-approvals/ HTTP/1.1" 200 89260
