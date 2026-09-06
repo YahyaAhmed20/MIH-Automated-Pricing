@@ -561,7 +561,7 @@ body.login-mode .content {
     padding: 10px;
     object-fit: cover;
     box-shadow: 0 0 60px rgba(59, 130, 246, 0.3), 0 0 120px rgba(59, 130, 246, 0.1);
-    animation: transitionLogoAnim 1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    animation: transitionLogoAnim 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
     transform: scale(0) rotate(-30deg);
     opacity: 0;
 }
@@ -621,7 +621,7 @@ body.login-mode .content {
 
 /* ===== تأثير اختفاء الشعار ===== */
 .page-transition.fade-out .transition-logo {
-    animation: transitionLogoOut 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    animation: transitionLogoOut 0.2s ease forwards;
 }
 
 @keyframes transitionLogoOut {
@@ -1798,8 +1798,8 @@ body.login-mode .content {
                             transitionOverlay.classList.remove('active', 'fade-out');
                             isTransitioning = false;
                         }, 500);
-                    }, 600);
-                }, 1200);
+                    }, 150);
+                }, 300);
             });
         });
 
