@@ -172,7 +172,18 @@ class User(AbstractUser):
                 "roles_manage",
                 "إدارة الأدوار والصلاحيات",
             ),
+                        # DATA UPDATE
+            (
+                "data_update",
+                "الوصول إلى تحديث البيانات",
+            ),
+            (
+                "data_update_all",
+                "تحديث جميع البيانات",
+            ),
         ]
+        
+        
 
     @property
     def authorization(self):

@@ -67,6 +67,14 @@ def authorization(request):
             Permissions.ROLES_MANAGE
         ),
 
+        # Data Update
+        "can_data_update": authz.can(
+            Permissions.DATA_UPDATE
+        ),
+        "can_data_update_all": authz.can(
+            Permissions.DATA_UPDATE_ALL
+        ),
+
         # Credit package pricing
         "has_credit_full": authz.can(
             Permissions.PACKAGES_CREDIT_FULL

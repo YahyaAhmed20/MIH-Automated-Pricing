@@ -769,6 +769,11 @@
             <!-- ✅ Filter Body -->
             <div class="filter-body" id="filterBody">
                 <form method="GET" class="row g-3 align-items-end">
+                     {% if search_query %}
+                             <input type="hidden" name="search" value="{{ search_query }}">
+
+                                 {% endif %}
+
                     
                     <!-- ✅ فلتر 1: ملحق او رئيسى -->
                     <div class="col-md-2">

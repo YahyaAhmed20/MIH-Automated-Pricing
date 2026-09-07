@@ -52,3 +52,11 @@ class Permissions:
     SYSTEM_MANAGE = "system_manage"
     USERS_MANAGE = "users_manage"
     ROLES_MANAGE = "roles_manage"
+    
+    
+      # ==========================
+    # DATA UPDATE
+    # ==========================
+
+    DATA_UPDATE = "data_update"
+    DATA_UPDATE_ALL = "data_update_all"

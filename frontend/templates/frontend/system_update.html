@@ -437,10 +437,11 @@
                         {% csrf_token %}
 
                         <!-- ⚡ Quick Update -->
-                        <button
-                            id="quickUpdateButton"
-                            type="button"
-                            class="btn btn-primary btn-lg px-4">
+                       {% if can_data_update %}
+<button
+    id="quickUpdateButton"
+    type="button"
+    class="btn btn-primary btn-lg px-4">
 
                             <i class="bi bi-lightning-charge-fill"></i>
 
@@ -454,18 +455,21 @@
                             </small>
 
                         </button>
+                        {% endif %}
 
                         <!-- 🔄 Full Update -->
-                        <button
-                            id="updateButton"
-                            type="button"
-                            class="btn btn-success btn-lg px-4 ms-2">
+                       {% if can_data_update_all %}
+<button
+    id="updateButton"
+    type="button"
+    class="btn btn-success btn-lg px-4 ms-2">
 
                             <i class="bi bi-arrow-repeat"></i>
 
                             تحديث جميع البيانات
 
                         </button>
+                        {% endif %}
 
                         <!-- 🛑 Cancel -->
                         <button
@@ -645,10 +649,14 @@ document.addEventListener('DOMContentLoaded', function() {
             progressDetail.innerHTML = '🎉 اكتمل التحديث';
             statusBadge.innerHTML = '✅ مكتمل';
             statusBadge.className = 'text-success';
-            button.disabled = false;
-            button.innerHTML = '<i class="bi bi-arrow-repeat"></i> تحديث جميع البيانات';
-            quickUpdateButton.disabled = false;
-            quickUpdateButton.innerHTML = '<i class="bi bi-lightning-charge-fill"></i> تحديث سريع <small class="d-block" style="font-size: 11px;">Sheet 7 + Sheet 12</small>';
+            if (button) {
+                button.disabled = false;
+                button.innerHTML = '<i class="bi bi-arrow-repeat"></i> تحديث جميع البيانات';
+            }
+            if (quickUpdateButton) {
+                quickUpdateButton.disabled = false;
+                quickUpdateButton.innerHTML = '<i class="bi bi-lightning-charge-fill"></i> تحديث سريع <small class="d-block" style="font-size: 11px;">Sheet 7 + Sheet 12</small>';
+            }
             cancelButton.classList.add('d-none');
             clearInterval(checkInterval);
             clearInterval(timerInterval);
@@ -678,10 +686,14 @@ document.addEventListener('DOMContentLoaded', function() {
             progressDetail.innerHTML = 'تم إلغاء التحديث بواسطة المستخدم';
             statusBadge.innerHTML = '🛑 ملغي';
             statusBadge.className = 'text-warning';
-            button.disabled = false;
-            button.innerHTML = '<i class="bi bi-arrow-repeat"></i> إعادة المحاولة';
-            quickUpdateButton.disabled = false;
-            quickUpdateButton.innerHTML = '<i class="bi bi-lightning-charge-fill"></i> تحديث سريع <small class="d-block" style="font-size: 11px;">Sheet 7 + Sheet 12</small>';
+            if (button) {
+                button.disabled = false;
+                button.innerHTML = '<i class="bi bi-arrow-repeat"></i> إعادة المحاولة';
+            }
+            if (quickUpdateButton) {
+                quickUpdateButton.disabled = false;
+                quickUpdateButton.innerHTML = '<i class="bi bi-lightning-charge-fill"></i> تحديث سريع <small class="d-block" style="font-size: 11px;">Sheet 7 + Sheet 12</small>';
+            }
             cancelButton.classList.add('d-none');
             clearInterval(checkInterval);
             clearInterval(timerInterval);
@@ -711,10 +723,14 @@ document.addEventListener('DOMContentLoaded', function() {
             progressDetail.innerHTML = 'راجع سجل الأخطاء';
             statusBadge.innerHTML = '❌ فشل';
             statusBadge.className = 'text-danger';
-            button.disabled = false;
-            button.innerHTML = '<i class="bi bi-arrow-repeat"></i> إعادة المحاولة';
-            quickUpdateButton.disabled = false;
-            quickUpdateButton.innerHTML = '<i class="bi bi-lightning-charge-fill"></i> تحديث سريع <small class="d-block" style="font-size: 11px;">Sheet 7 + Sheet 12</small>';
+            if (button) {
+                button.disabled = false;
+                button.innerHTML = '<i class="bi bi-arrow-repeat"></i> إعادة المحاولة';
+            }
+            if (quickUpdateButton) {
+                quickUpdateButton.disabled = false;
+                quickUpdateButton.innerHTML = '<i class="bi bi-lightning-charge-fill"></i> تحديث سريع <small class="d-block" style="font-size: 11px;">Sheet 7 + Sheet 12</small>';
+            }
             cancelButton.classList.add('d-none');
             clearInterval(checkInterval);
             clearInterval(timerInterval);
@@ -828,18 +844,39 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // ✅ دالة بدء التحديث
     function startUpdate(updateType) {
-        if (button.disabled && quickUpdateButton.disabled) {
+        if (
+            (!button || button.disabled) &&
+            (!quickUpdateButton || quickUpdateButton.disabled)
+        ) {
             return;
         }
 
         selectedUpdateType = updateType;
 
         // ✅ تعطيل الأزرار
-        button.disabled = true;
-        quickUpdateButton.disabled = true;
+        if (button) {
+            button.disabled = true;
+        }
 
-        button.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> ' + (updateType === 'quick' ? 'جاري التحديث السريع...' : 'جاري التحديث الكامل...');
-        quickUpdateButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> ' + (updateType === 'quick' ? 'جاري التحديث السريع...' : 'جاري التحديث الكامل...');
+        if (quickUpdateButton) {
+            quickUpdateButton.disabled = true;
+        }
+
+        if (button) {
+            button.innerHTML =
+                '<span class="spinner-border spinner-border-sm me-2"></span> ' +
+                (updateType === 'quick'
+                    ? 'جاري التحديث السريع...'
+                    : 'جاري التحديث الكامل...');
+        }
+
+        if (quickUpdateButton) {
+            quickUpdateButton.innerHTML =
+                '<span class="spinner-border spinner-border-sm me-2"></span> ' +
+                (updateType === 'quick'
+                    ? 'جاري التحديث السريع...'
+                    : 'جاري التحديث الكامل...');
+        }
 
         cancelButton.classList.remove('d-none');
         cancelButton.disabled = false;
@@ -905,10 +942,14 @@ document.addEventListener('DOMContentLoaded', function() {
         progressDetail.innerHTML = 'يرجى المحاولة مرة أخرى';
         statusBadge.innerHTML = '❌ خطأ';
         statusBadge.className = 'text-danger';
-        button.disabled = false;
-        button.innerHTML = '<i class="bi bi-arrow-repeat"></i> إعادة المحاولة';
-        quickUpdateButton.disabled = false;
-        quickUpdateButton.innerHTML = '<i class="bi bi-lightning-charge-fill"></i> تحديث سريع <small class="d-block" style="font-size: 11px;">Sheet 7 + Sheet 12</small>';
+        if (button) {
+            button.disabled = false;
+            button.innerHTML = '<i class="bi bi-arrow-repeat"></i> إعادة المحاولة';
+        }
+        if (quickUpdateButton) {
+            quickUpdateButton.disabled = false;
+            quickUpdateButton.innerHTML = '<i class="bi bi-lightning-charge-fill"></i> تحديث سريع <small class="d-block" style="font-size: 11px;">Sheet 7 + Sheet 12</small>';
+        }
         cancelButton.classList.add('d-none');
         progressBar.classList.remove('progress-bar-animated');
         progressBar.classList.add('bg-danger');
@@ -919,13 +960,17 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ✅ مستمعي الأحداث
-    quickUpdateButton.addEventListener('click', function() {
-        startUpdate('quick');
-    });
+    if (quickUpdateButton) {
+        quickUpdateButton.addEventListener('click', function() {
+            startUpdate('quick');
+        });
+    }
 
-    button.addEventListener('click', function() {
-        startUpdate('full');
-    });
+    if (button) {
+        button.addEventListener('click', function() {
+            startUpdate('full');
+        });
+    }
 
     // ✅ مسح السجل
     window.clearLogs = function() {
@@ -993,10 +1038,14 @@ document.addEventListener('DOMContentLoaded', function() {
             progressDetail.innerHTML = 'تم إلغاء التحديث بواسطة المستخدم';
             statusBadge.innerHTML = '🛑 ملغي';
             statusBadge.className = 'text-warning';
-            button.disabled = false;
-            button.innerHTML = '<i class="bi bi-arrow-repeat"></i> إعادة المحاولة';
-            quickUpdateButton.disabled = false;
-            quickUpdateButton.innerHTML = '<i class="bi bi-lightning-charge-fill"></i> تحديث سريع <small class="d-block" style="font-size: 11px;">Sheet 7 + Sheet 12</small>';
+            if (button) {
+                button.disabled = false;
+                button.innerHTML = '<i class="bi bi-arrow-repeat"></i> إعادة المحاولة';
+            }
+            if (quickUpdateButton) {
+                quickUpdateButton.disabled = false;
+                quickUpdateButton.innerHTML = '<i class="bi bi-lightning-charge-fill"></i> تحديث سريع <small class="d-block" style="font-size: 11px;">Sheet 7 + Sheet 12</small>';
+            }
             cancelButton.classList.add('d-none');
             logsCard.style.display = 'block';
         } else if (status === "error") {
@@ -1008,10 +1057,14 @@ document.addEventListener('DOMContentLoaded', function() {
             progressDetail.innerHTML = 'راجع سجل الأخطاء أعلاه';
             statusBadge.innerHTML = '❌ فشل';
             statusBadge.className = 'text-danger';
-            button.disabled = false;
-            button.innerHTML = '<i class="bi bi-arrow-repeat"></i> إعادة المحاولة';
-            quickUpdateButton.disabled = false;
-            quickUpdateButton.innerHTML = '<i class="bi bi-lightning-charge-fill"></i> تحديث سريع <small class="d-block" style="font-size: 11px;">Sheet 7 + Sheet 12</small>';
+            if (button) {
+                button.disabled = false;
+                button.innerHTML = '<i class="bi bi-arrow-repeat"></i> إعادة المحاولة';
+            }
+            if (quickUpdateButton) {
+                quickUpdateButton.disabled = false;
+                quickUpdateButton.innerHTML = '<i class="bi bi-lightning-charge-fill"></i> تحديث سريع <small class="d-block" style="font-size: 11px;">Sheet 7 + Sheet 12</small>';
+            }
             cancelButton.classList.add('d-none');
             logsCard.style.display = 'block';
         } else if (status === "completed") {
@@ -1023,10 +1076,14 @@ document.addEventListener('DOMContentLoaded', function() {
             progressDetail.innerHTML = '🎉 اكتمل التحديث';
             statusBadge.innerHTML = '✅ مكتمل';
             statusBadge.className = 'text-success';
-            button.disabled = false;
-            button.innerHTML = '<i class="bi bi-arrow-repeat"></i> تحديث جميع البيانات';
-            quickUpdateButton.disabled = false;
-            quickUpdateButton.innerHTML = '<i class="bi bi-lightning-charge-fill"></i> تحديث سريع <small class="d-block" style="font-size: 11px;">Sheet 7 + Sheet 12</small>';
+            if (button) {
+                button.disabled = false;
+                button.innerHTML = '<i class="bi bi-arrow-repeat"></i> تحديث جميع البيانات';
+            }
+            if (quickUpdateButton) {
+                quickUpdateButton.disabled = false;
+                quickUpdateButton.innerHTML = '<i class="bi bi-lightning-charge-fill"></i> تحديث سريع <small class="d-block" style="font-size: 11px;">Sheet 7 + Sheet 12</small>';
+            }
             cancelButton.classList.add('d-none');
             logsCard.style.display = 'block';
         }
@@ -1036,10 +1093,14 @@ document.addEventListener('DOMContentLoaded', function() {
     // ✅ إذا كان التحديث قيد التشغيل عند تحميل الصفحة
     {% if is_running %}
     progressContainer.classList.remove('d-none');
-    button.disabled = true;
-    button.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> جاري التحديث...';
-    quickUpdateButton.disabled = true;
-    quickUpdateButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> جاري التحديث...';
+    if (button) {
+        button.disabled = true;
+        button.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> جاري التحديث...';
+    }
+    if (quickUpdateButton) {
+        quickUpdateButton.disabled = true;
+        quickUpdateButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> جاري التحديث...';
+    }
     cancelButton.classList.remove('d-none');
     cancelButton.disabled = false;
     cancelButton.innerHTML = '<i class="bi bi-x-circle"></i> إلغاء التحديث';

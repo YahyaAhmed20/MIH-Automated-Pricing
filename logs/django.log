@@ -29115,3 +29115,496 @@ Not Found: /.well-known/appspecific/com.chrome.devtools.json
 "GET /external-approvals/ HTTP/1.1" 200 92966
 - Broken pipe from ('127.0.0.1', 60337)
 "GET /special-offers/ HTTP/1.1" 200 375879
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 50247
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+"GET /static/images/logo.jpeg HTTP/1.1" 200 68755
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 16616
+"POST / HTTP/1.1" 302 0
+"GET /reports/ HTTP/1.1" 200 169152
+"GET /static/images/img5.jpeg HTTP/1.1" 200 88819
+"GET /static/images/img3.jpeg HTTP/1.1" 200 78769
+"GET /static/images/img1.jpeg HTTP/1.1" 200 89363
+"GET /static/images/img6.jpeg HTTP/1.1" 200 125348
+"GET /static/images/img4.jpeg HTTP/1.1" 200 91767
+"GET /static/images/img2.jpeg HTTP/1.1" 200 93254
+"GET /static/images/img8.jpeg HTTP/1.1" 200 78642
+"GET /system/update/ HTTP/1.1" 200 110289
+"GET / HTTP/1.1" 302 0
+"GET /reports/ HTTP/1.1" 200 170352
+"GET /contract-entities/ HTTP/1.1" 200 76985
+"GET /contract-entities/ HTTP/1.1" 200 75785
+"GET /contract-entities/ HTTP/1.1" 200 76861
+"GET /reports/ HTTP/1.1" 200 170228
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16727
+"GET /system/update/ HTTP/1.1" 200 111365
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16727
+D:\desktop\rphospital\src\accounts\permissions.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\accounts\models.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"POST /logout/ HTTP/1.1" 302 0
+"GET / HTTP/1.1" 200 51152
+"POST / HTTP/1.1" 302 0
+"GET /reports/ HTTP/1.1" 200 169293
+D:\desktop\rphospital\src\accounts\context_processors.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /reports/ HTTP/1.1" 200 170238
+"GET /system/update/ HTTP/1.1" 200 112480
+"GET / HTTP/1.1" 302 0
+"GET /reports/ HTTP/1.1" 200 170238
+"GET /system/update/ HTTP/1.1" 200 112480
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16727
+"GET /system/update/ HTTP/1.1" 200 80470
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16727
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /system/update/ HTTP/1.1" 200 80470
+"GET /system/update/ HTTP/1.1" 200 80186
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+"GET / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 88632
+"POST /logout/ HTTP/1.1" 302 0
+"GET / HTTP/1.1" 200 51152
+"POST / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 88632
+"GET /system/update/ HTTP/1.1" 200 80186
+"GET /external-approvals/ HTTP/1.1" 200 94054
+Forbidden (Permission denied): /reports/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\accounts\decorators.py", line 54, in wrapper
+    raise PermissionDenied
+django.core.exceptions.PermissionDenied
+"GET /reports/ HTTP/1.1" 403 135
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 88632
+"GET /dashboard/ HTTP/1.1" 200 88632
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+"POST /logout/ HTTP/1.1" 302 0
+"GET / HTTP/1.1" 200 51152
+"POST / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 88632
+"GET /reports/ HTTP/1.1" 200 170238
+"GET /credit-package-pricing/ HTTP/1.1" 200 96579
+"GET /cash-packages/ HTTP/1.1" 200 579911
+"GET /contract-entities/ HTTP/1.1" 200 76871
+"GET /reports/ HTTP/1.1" 200 170238
+D:\desktop\rphospital\src\accounts\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\accounts\views.py changed, reloading.
+Watching for file changes with StatReloader
+"POST /logout/ HTTP/1.1" 302 0
+"GET / HTTP/1.1" 200 51152
+"POST / HTTP/1.1" 302 0
+"GET /reports/ HTTP/1.1" 200 170238
+"GET /system/update/ HTTP/1.1" 200 80186
+"GET /special-offers/ HTTP/1.1" 200 376725
+"GET /service-search/ HTTP/1.1" 200 706635
+"GET /doctors/ HTTP/1.1" 200 213359
+"GET /procedures/ HTTP/1.1" 200 138961
+"GET /procedure-fees/ HTTP/1.1" 200 93561
+"GET /pricing-details/ HTTP/1.1" 200 347364
+Internal Server Error: /similar-invoices/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.OperationalError: server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\accounts\decorators.py", line 56, in wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5870, in similar_invoices
+    return render(
+           ^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 170, in render
+    with context.bind_template(self):
+  File "C:\Users\hp\AppData\Local\Programs\Python\Python311\Lib\contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\context.py", line 259, in bind_template
+    context = processor(self.request)
+              ^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\accounts\context_processors.py", line 57, in authorization
+    "can_financial_full": authz.can(
+                          ^^^^^^^^^^
+  File "D:\desktop\rphospital\src\accounts\authorization.py", line 67, in can
+    ).exists()
+      ^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 1298, in exists
+    return self.query.has_results(using=self.db)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\sql\query.py", line 676, in has_results
+    return compiler.has_results()
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\sql\compiler.py", line 1591, in has_results
+    return bool(self.execute_sql(SINGLE))
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\sql\compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+
+"GET /similar-invoices/ HTTP/1.1" 500 176219
+Internal Server Error: /similar-invoices/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.OperationalError: server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\accounts\decorators.py", line 56, in wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 5870, in similar_invoices
+    return render(
+           ^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 172, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 164, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 164, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\template\defaulttags.py", line 199, in render
+    len_values = len(values)
+                 ^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 368, in __len__
+    self._fetch_all()
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 1954, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 273, in __iter__
+    for row in compiler.results_iter(
+               ^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\sql\compiler.py", line 1572, in results_iter
+    results = self.execute_sql(
+              ^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\sql\compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+
+"GET /similar-invoices/ HTTP/1.1" 500 241796
+"GET /similar-invoices/ HTTP/1.1" 200 2531079
+"GET /reports/ HTTP/1.1" 200 170238
+"GET /package-comparison/ HTTP/1.1" 200 10999806
+"GET /patient-search/ HTTP/1.1" 200 825796
+"GET /external-approvals/ HTTP/1.1" 200 94054
+"GET /pending-analysis/ HTTP/1.1" 200 209372
+"GET /static/pdf/price_2023.pdf HTTP/1.1" 200 5925191
+"GET /system/update/ HTTP/1.1" 200 80186
+"GET /admin HTTP/1.1" 301 0
+"GET /admin/ HTTP/1.1" 200 8573
+"GET /static/admin/css/base.css HTTP/1.1" 200 22120
+"GET /static/admin/css/rtl.css HTTP/1.1" 200 4772
+"GET /static/admin/css/dashboard.css HTTP/1.1" 200 441
+"GET /static/admin/css/responsive_rtl.css HTTP/1.1" 200 1991
+"GET /static/admin/css/responsive.css HTTP/1.1" 200 16565
+"GET /static/admin/js/theme.js HTTP/1.1" 200 1653
+"GET /static/admin/css/dark_mode.css HTTP/1.1" 200 2808
+"GET /static/admin/css/nav_sidebar.css HTTP/1.1" 200 2810
+"GET /static/admin/js/nav_sidebar.js HTTP/1.1" 200 3063
+"GET /static/admin/img/icon-changelink.svg HTTP/1.1" 200 380
+"GET /static/admin/img/icon-addlink.svg HTTP/1.1" 200 331
+Watching for file changes with StatReloader
+Method Not Allowed (GET): /admin/logout/
+"GET /admin/logout/ HTTP/1.1" 405 0
+Method Not Allowed (GET): /admin/logout/
+"GET /admin/logout/ HTTP/1.1" 405 0
+Not Found: /adin
+"GET /adin HTTP/1.1" 404 16595
+"GET /admin/ HTTP/1.1" 200 8573
+"POST /logout/ HTTP/1.1" 302 0
+"GET / HTTP/1.1" 200 51152
+"GET /admin/ HTTP/1.1" 302 0
+"GET /admin/login/?next=/admin/ HTTP/1.1" 200 4455
+"GET /static/admin/css/login.css HTTP/1.1" 200 951
+"POST /admin/login/?next=/admin/ HTTP/1.1" 302 0
+"GET /admin/ HTTP/1.1" 200 22557
+"GET /admin/accounts/user/ HTTP/1.1" 200 45554
+"GET /static/admin/css/changelists.css HTTP/1.1" 200 6878
+"GET /static/admin/js/jquery.init.js HTTP/1.1" 200 347
+"GET /static/admin/js/core.js HTTP/1.1" 200 6208
+"GET /static/admin/js/actions.js HTTP/1.1" 200 8076
+"GET /static/admin/js/prepopulate.js HTTP/1.1" 200 1531
+"GET /static/admin/img/search.svg HTTP/1.1" 200 458
+"GET /static/admin/js/urlify.js HTTP/1.1" 200 7887
+"GET /static/admin/img/icon-yes.svg HTTP/1.1" 200 436
+"GET /static/admin/js/admin/RelatedObjectLookups.js HTTP/1.1" 200 9777
+"GET /static/admin/js/vendor/jquery/jquery.js HTTP/1.1" 200 285314
+"GET /static/admin/js/vendor/xregexp/xregexp.js HTTP/1.1" 200 325171
+"GET /static/admin/js/filters.js HTTP/1.1" 200 978
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"GET /static/admin/img/tooltag-add.svg HTTP/1.1" 200 331
+"GET /static/admin/img/sorting-icons.svg HTTP/1.1" 200 1097
+"GET /static/admin/img/icon-viewlink.svg HTTP/1.1" 200 581
+"GET /admin/accounts/user/?q=sara HTTP/1.1" 200 25336
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+Forbidden (CSRF token from POST incorrect.): /
+"POST / HTTP/1.1" 403 2529
+"GET / HTTP/1.1" 302 0
+"GET /reports/ HTTP/1.1" 200 170238
+"GET /system/update/ HTTP/1.1" 200 80470
+"GET /admin/accounts/user/38/change/?_changelist_filters=q%3Dsara HTTP/1.1" 200 87210
+"GET /static/admin/js/user_role_doctor.js HTTP/1.1" 200 4253
+"GET /static/admin/js/SelectBox.js HTTP/1.1" 200 4530
+"GET /static/admin/css/forms.css HTTP/1.1" 200 8525
+"GET /static/admin/js/calendar.js HTTP/1.1" 200 9141
+"GET /static/admin/js/admin/DateTimeShortcuts.js HTTP/1.1" 200 19319
+"GET /static/admin/js/SelectFilter2.js HTTP/1.1" 200 15845
+"GET /static/admin/css/widgets.css HTTP/1.1" 200 11973
+"GET /static/admin/js/prepopulate_init.js HTTP/1.1" 200 586
+"GET /static/admin/img/icon-deletelink.svg HTTP/1.1" 200 392
+"GET /static/admin/js/change_form.js HTTP/1.1" 200 606
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"GET /static/admin/img/selector-icons.svg HTTP/1.1" 200 3291
+"GET /static/admin/img/icon-clock.svg HTTP/1.1" 200 677
+"GET /static/admin/img/icon-calendar.svg HTTP/1.1" 200 1086
+"POST /admin/accounts/user/38/change/?_changelist_filters=q%3Dsara HTTP/1.1" 200 87464
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"POST /admin/accounts/user/38/change/?_changelist_filters=q%3Dsara HTTP/1.1" 302 0
+"GET /admin/accounts/user/?q=sara HTTP/1.1" 200 25555
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"POST /logout/ HTTP/1.1" 302 0
+"GET / HTTP/1.1" 200 51152
+"POST / HTTP/1.1" 302 0
+"GET /reports/ HTTP/1.1" 200 170238
+"GET /system/update/ HTTP/1.1" 200 80470
+"GET /contract-entities/ HTTP/1.1" 200 76871
+"GET /company-discounts/ HTTP/1.1" 200 144208
+"GET /special-offers/ HTTP/1.1" 200 376965
+"GET /procedures/ HTTP/1.1" 200 138961
+"GET /procedure-fees/ HTTP/1.1" 200 93561
+"GET /procedures/ HTTP/1.1" 200 138961
+"GET /admin/accounts/user/38/change/?_changelist_filters=q%3Dsara HTTP/1.1" 200 87242
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"POST /admin/accounts/user/38/change/?_changelist_filters=q%3Dsara HTTP/1.1" 302 0
+"GET /admin/accounts/user/add/?_changelist_filters=q%3Dsara HTTP/1.1" 200 59097
+"GET /static/admin/css/unusable_password_field.css HTTP/1.1" 200 663
+"GET /static/admin/js/unusable_password_field.js HTTP/1.1" 200 1480
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"POST /logout/ HTTP/1.1" 302 0
+"GET / HTTP/1.1" 200 51152
+"POST / HTTP/1.1" 302 0
+"GET /reports/ HTTP/1.1" 200 170238
+"GET /system/update/ HTTP/1.1" 200 80470
+"GET /admin/accounts/user/ HTTP/1.1" 200 45570
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+- Broken pipe from ('127.0.0.1', 58575)
+"GET /admin/accounts/user/?q=sara HTTP/1.1" 200 25352
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"GET /admin/accounts/user/38/change/?_changelist_filters=q%3Dsara HTTP/1.1" 200 87242
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"POST /admin/accounts/user/38/change/?_changelist_filters=q%3Dsara HTTP/1.1" 302 0
+"GET /admin/accounts/user/?q=sara HTTP/1.1" 200 25555
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"GET /admin/accounts/user/add/ HTTP/1.1" 200 58793
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"POST /admin/accounts/user/add/ HTTP/1.1" 302 0
+"GET /admin/accounts/user/add/ HTTP/1.1" 200 59062
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"POST /logout/ HTTP/1.1" 302 0
+"GET / HTTP/1.1" 200 51152
+"POST / HTTP/1.1" 302 0
+"GET /reports/ HTTP/1.1" 200 170238
+"GET /system/update/ HTTP/1.1" 200 80186
+"GET /admin/accounts/user/39/change/ HTTP/1.1" 302 0
+"GET /admin/login/?next=/admin/accounts/user/39/change/ HTTP/1.1" 200 4000
+"POST /admin/login/?next=/admin/accounts/user/39/change/ HTTP/1.1" 302 0
+"GET /admin/accounts/user/39/change/ HTTP/1.1" 200 87122
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"POST /admin/accounts/user/39/change/ HTTP/1.1" 302 0
+"GET /admin/accounts/user/add/ HTTP/1.1" 200 59060
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+Forbidden (CSRF token from POST incorrect.): /logout/
+"POST /logout/ HTTP/1.1" 403 2529
+"GET / HTTP/1.1" 302 0
+"GET /reports/ HTTP/1.1" 200 170238
+"POST /logout/ HTTP/1.1" 302 0
+"GET / HTTP/1.1" 200 51152
+"POST / HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 77382
+"GET /company-discounts/ HTTP/1.1" 200 140089
+"GET /admin/accounts/user/add/ HTTP/1.1" 302 0
+"GET /admin/login/?next=/admin/accounts/user/add/ HTTP/1.1" 200 3988
+"POST /admin/login/?next=/admin/accounts/user/add/ HTTP/1.1" 302 0
+"GET /admin/accounts/user/add/ HTTP/1.1" 200 58793
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"GET /admin/accounts/user/ HTTP/1.1" 200 46122
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"POST /admin/accounts/user/ HTTP/1.1" 200 27840
+"GET /static/admin/js/cancel.js HTTP/1.1" 200 884
+"POST /admin/accounts/user/ HTTP/1.1" 302 0
+"GET /admin/accounts/user/ HTTP/1.1" 200 25066
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"GET /admin/accounts/user/add/ HTTP/1.1" 200 58793
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"POST /admin/accounts/user/add/ HTTP/1.1" 302 0
+"GET /admin/accounts/user/add/ HTTP/1.1" 200 59063
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"GET /admin/accounts/user/40/change/ HTTP/1.1" 200 87092
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+"POST /admin/accounts/user/40/change/ HTTP/1.1" 302 0
+"GET /admin/accounts/user/add/ HTTP/1.1" 200 59061
+"GET /admin/jsi18n/ HTTP/1.1" 200 14010
+Forbidden (CSRF token from POST incorrect.): /logout/
+"POST /logout/ HTTP/1.1" 403 2529
+"GET / HTTP/1.1" 302 0
+"GET /reports/ HTTP/1.1" 200 170238
+"GET /system/update/ HTTP/1.1" 200 80470
+"GET /system/update/ HTTP/1.1" 200 80470
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /pricing-details/ HTTP/1.1" 200 347364
+"GET /patient-search/ HTTP/1.1" 200 825796
+"GET /patient-search/?search=%D8%B3 HTTP/1.1" 200 817347
+"GET /external-approvals/ HTTP/1.1" 200 94054
+"GET /external-approvals/accounts/ HTTP/1.1" 200 831144
+"GET /external-approvals/total/ HTTP/1.1" 200 846056
+"GET /external-approvals/accounts/ HTTP/1.1" 200 831144
+"GET /external-approvals/early/ HTTP/1.1" 200 124941
+"GET /external-approvals/total/ HTTP/1.1" 200 846056
+"GET /external-approvals/total/?search=%D9%85%D8%AD%D9%85%D8%AF HTTP/1.1" 200 821775
+"GET /external-approvals/total/?attachment_type=&company=%D8%B4%D8%B1%D9%83%D8%A9+%D9%86%D9%83%D8%B3%D8%AA+%D9%83%D9%8A%D8%B1&sub_account=&doctor=&specialty=&main_status=&date_from=&date_to= HTTP/1.1" 200 639460
+- Broken pipe from ('127.0.0.1', 61375)
+"GET /external-approvals/total/? HTTP/1.1" 200 846079
+"GET /external-approvals/total/?search=%D9%85%D8%AD%D9%85%D8%AF HTTP/1.1" 200 821915
+"GET /external-approvals/total/?search=%D9%85%D8%AD%D9%85%D8%AF&attachment_type=&company=%D8%B4%D8%B1%D9%83%D8%A9+%D9%86%D9%83%D8%B3%D8%AA+%D9%83%D9%8A%D8%B1&sub_account=&doctor=&specialty=&main_status=&date_from=&date_to= HTTP/1.1" 200 333120

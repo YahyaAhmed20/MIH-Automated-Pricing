@@ -8,8 +8,10 @@ from django.utils.http import url_has_allowed_host_and_scheme
 def login_view(request):
     # إذا كان المستخدم مسجل دخول بالفعل، لا نعيده إلى صفحة Login
     if request.user.is_authenticated:
-        if request.user.is_superuser:
+        if request.user.authorization.is_admin:
             return redirect("reports")
+
+        return redirect("home")
 
         return redirect("home")
 
@@ -40,7 +42,8 @@ def login_view(request):
             next_url = request.POST.get("next") or request.GET.get("next")
 
             # إذا كان Admin ولم يطلب صفحة محددة
-            if user.is_superuser and not next_url:
+            # إذا كان Admin ولم يطلب صفحة محددة
+            if user.authorization.is_admin and not next_url:
                 return redirect("reports")
 
             # إذا كان هناك next، نرجع للصفحة المطلوبة

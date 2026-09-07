@@ -6605,6 +6605,7 @@ def update_progress(request):
 # ================================================================
 # System Update
 # ================================================================
+@permission_required(Permissions.DATA_UPDATE)
 @csrf_protect
 @require_http_methods(["GET", "POST"])
 def system_update(request):
@@ -6628,6 +6629,16 @@ def system_update(request):
             "update_type",
             "full",
         )
+        if update_type == "full" and not request.user.authorization.can(
+            Permissions.DATA_UPDATE_ALL
+        ):
+            return JsonResponse(
+                {
+                    "success": False,
+                    "message": "ليس لديك صلاحية لتحديث جميع البيانات.",
+                },
+                status=403,
+            )
 
         # --------------------------------------------------------
         # Validate update type
@@ -6867,10 +6878,7 @@ def system_update(request):
         ProgressService.get_last_successful_update()
     )
 
-    # ------------------------------------------------------------
-    # Render
-    # ------------------------------------------------------------
-
+    
     return render(
         request,
         "frontend/system_update.html",

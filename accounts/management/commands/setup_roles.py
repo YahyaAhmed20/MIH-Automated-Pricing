@@ -73,7 +73,7 @@ class Command(BaseCommand):
         "reports_view",
     ],
 
-        # ==========================================
+                # ==========================================
         # Admin
         # ==========================================
         "Admin": [
@@ -85,9 +85,8 @@ class Command(BaseCommand):
             "packages_credit_basic",
             "packages_credit_full",
             "packages_credit_attachments",
-            
-            "service_search",
 
+            "service_search",
 
             "patients_search",
             "patients_view",
@@ -101,6 +100,43 @@ class Command(BaseCommand):
             "doctors_edit",
 
             "financial_full",
+            "reports_view",
+
+            # Data Update
+            "data_update",
+        ],
+
+        # ==========================================
+        # Owner
+        # ==========================================
+        "Owner": [
+            "system_manage",
+            "users_manage",
+            "roles_manage",
+
+            "packages_cash_full",
+            "packages_credit_basic",
+            "packages_credit_full",
+            "packages_credit_attachments",
+
+            "service_search",
+
+            "patients_search",
+            "patients_view",
+
+            "approvals_view",
+            "approvals_statistics",
+            "approvals_edit",
+
+            "doctors_view_all",
+            "doctors_view_own",
+            "doctors_edit",
+
+            "financial_full",
+
+            # Data Update
+            "data_update",
+            "data_update_all",
         ],
     }
 
