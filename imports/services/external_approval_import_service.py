@@ -1,4 +1,3 @@
-
 import time
 from decimal import Decimal
 
@@ -326,6 +325,9 @@ class ExternalApprovalImportService:
                         )
                     )
                 )
+
+                if len(card_number) > 100:
+                    card_number = ""
 
                 company = (
                     ExternalApprovalImportService.normalize_optional_text(
@@ -872,11 +874,11 @@ class ExternalApprovalImportService:
         # Bulk Create
         # ========================================================
 
-        print(
-            f"💾 Creating {len(to_create)} approvals..."
-        )
-
         if to_create:
+
+            print(
+                f"💾 Creating {len(to_create)} approvals..."
+            )
 
             ExternalApproval.objects.bulk_create(
                 to_create,
@@ -1021,4 +1023,3 @@ class ExternalApprovalImportService:
         )
 
         return result
-

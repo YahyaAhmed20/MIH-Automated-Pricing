@@ -213,7 +213,7 @@ class PricingRequestImportService:
         }:
             return ""
 
-        if set(value) <= {"-"}:
+        if set(value) <= {"-", "ـ"}:
             return ""
 
         return value
@@ -1634,19 +1634,7 @@ class PricingRequestImportService:
                 if existing_requests[key].id
             ]
 
-            print("\n" + "=" * 100)
-            print("⚠️ DEBUG DELETE")
-            for key in keys_to_delete:
-                request = existing_requests[key]
-                print(
-                    f"DELETE ID={request.id} | "
-                    f"Patient={request.patient.full_name!r} | "
-                    f"Card={request.patient.card_number!r} | "
-                    f"Date={request.request_date!r} | "
-                    f"Procedure={request.procedure_name!r} | "
-                    f"Key={key!r}"
-                )
-            print("=" * 100)
+           
 
             if ids_to_delete:
 
