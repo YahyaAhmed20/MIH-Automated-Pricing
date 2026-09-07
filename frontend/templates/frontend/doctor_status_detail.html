@@ -663,8 +663,35 @@
                                     <i class="fas {{ status_icon }}"></i> {{ status_name }}
                                 </span>
                             </p>
-                            <p><strong><i class="fas fa-file-alt me-1"></i> التقرير:</strong> {{ case.report|default:"-" }}</p>
-                            <p><strong><i class="fas fa-check-double me-1"></i> الموافقة:</strong> {{ case.approval|default:"-" }}</p>
+                            <p>
+                                <strong><i class="fas fa-file-alt me-1"></i> التقرير:</strong>
+                                {% if case.report and case.report != "-" %}
+                                    <a href="{{ case.report }}"
+                                       target="_blank"
+                                       rel="noopener noreferrer"
+                                       class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-file-pdf me-1"></i>
+                                        فتح التقرير
+                                    </a>
+                                {% else %}
+                                    <span class="text-muted">-</span>
+                                {% endif %}
+                            </p>
+
+                            <p>
+                                <strong><i class="fas fa-check-double me-1"></i> الموافقة:</strong>
+                                {% if case.approval and case.approval != "-" %}
+                                    <a href="{{ case.approval }}"
+                                       target="_blank"
+                                       rel="noopener noreferrer"
+                                       class="btn btn-sm btn-outline-success">
+                                        <i class="fas fa-file-signature me-1"></i>
+                                        فتح الموافقة
+                                    </a>
+                                {% else %}
+                                    <span class="text-muted">-</span>
+                                {% endif %}
+                            </p>
                         </div>
                     </div>
                 </div>

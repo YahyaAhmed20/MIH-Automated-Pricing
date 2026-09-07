@@ -3655,6 +3655,8 @@ def doctor_status_detail(request, doctor_name, status_type):
             'notes': case.notes or '-',
             'date': format_date(case.date),
             'phone': case.phone or '-',
+            'report': case.report or '-',
+            'approval': case.approval or '-',
         })
     
     # ✅ الحصول على الـ color class
@@ -4260,13 +4262,17 @@ def credit_package_pricing(request):
             ImportHelpers.normalize_company_name(company_name)
         )
 
-        for entity in ContractEntity.objects.only("id", "name"):
-            if (
-                ImportHelpers.normalize_company_name(entity.name)
-                == normalized_company_name
-            ):
-                company_id = entity.id
-                break
+        if normalized_company_name:
+            entities = ContractEntity.objects.only("id", "name")
+
+            for entity in entities:
+                entity_name_key = (
+                    ImportHelpers.normalize_company_name(entity.name)
+                )
+
+                if entity_name_key == normalized_company_name:
+                    company_id = entity.id
+                    break
         
     package_id = request.GET.get("package")
     company_search = request.GET.get("company_search", "")
@@ -4274,12 +4280,39 @@ def credit_package_pricing(request):
     specialty_id = request.GET.get("specialty", "")
     
     selected_company = None
-    
+
     if company_id:
         selected_company = get_object_or_404(
             ContractEntity,
             pk=company_id
         )
+
+    # ============================================================
+    # الجهات المرتبطة ببيانات الباكدجات الآجلة
+    # ============================================================
+    package_entity_ids = []
+
+    if selected_company:
+        normalized_company_name = (
+            ImportHelpers.normalize_company_name(
+                selected_company.name
+            )
+        )
+
+        if normalized_company_name:
+            for entity in ContractEntity.objects.only("id", "name"):
+                entity_name_key = (
+                    ImportHelpers.normalize_company_name(
+                        entity.name
+                    )
+                )
+
+                if entity_name_key == normalized_company_name:
+                    package_entity_ids.append(entity.id)
+
+        # ضمان وجود الـ Entity المختارة دائمًا
+        if selected_company.id not in package_entity_ids:
+            package_entity_ids.append(selected_company.id)
     
     # ============================================================
     # الجهات المرتبطة ببيانات الباكدجات الآجلة
@@ -4296,14 +4329,16 @@ def credit_package_pricing(request):
             )
         )
 
-        for entity in ContractEntity.objects.only("id", "name"):
-            if (
-                ImportHelpers.normalize_company_name(entity.name)
-                == normalized_company_name
-            ):
-                package_entity_ids.append(entity.id)
+        if normalized_company_name:
+            for entity in ContractEntity.objects.only("id", "name"):
+                entity_name_key = (
+                    ImportHelpers.normalize_company_name(entity.name)
+                )
 
-        # ضمان وجود الـEntity المختارة دائمًا
+                if entity_name_key == normalized_company_name:
+                    package_entity_ids.append(entity.id)
+
+        # ضمان وجود الـ Entity المختارة دائمًا
         if selected_company.id not in package_entity_ids:
             package_entity_ids.append(selected_company.id)
     
@@ -4580,10 +4615,7 @@ def credit_package_pricing(request):
         # ============================================================
         # 🔍 DEBUG - نقاط التصحيح
         # ============================================================
-        print("DEBUG final packages count =", len(packages))
-        if packages:
-            print("DEBUG first package name =", packages[0].name)
-            print("DEBUG first package price =", packages[0].price)
+        
         # ============================================================
 
         # ============================================================

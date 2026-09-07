@@ -29608,3 +29608,169 @@ Watching for file changes with StatReloader
 "GET /external-approvals/total/? HTTP/1.1" 200 846079
 "GET /external-approvals/total/?search=%D9%85%D8%AD%D9%85%D8%AF HTTP/1.1" 200 821915
 "GET /external-approvals/total/?search=%D9%85%D8%AD%D9%85%D8%AF&attachment_type=&company=%D8%B4%D8%B1%D9%83%D8%A9+%D9%86%D9%83%D8%B3%D8%AA+%D9%83%D9%8A%D8%B1&sub_account=&doctor=&specialty=&main_status=&date_from=&date_to= HTTP/1.1" 200 333120
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 51152
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+"GET /static/images/logo.jpeg HTTP/1.1" 200 68755
+"POST / HTTP/1.1" 302 0
+"GET /reports/ HTTP/1.1" 200 170238
+"GET /static/images/img5.jpeg HTTP/1.1" 200 88819
+"GET /static/images/img3.jpeg HTTP/1.1" 200 78769
+"GET /static/images/img6.jpeg HTTP/1.1" 200 125348
+"GET /static/images/img2.jpeg HTTP/1.1" 200 93254
+"GET /static/images/img8.jpeg HTTP/1.1" 200 78642
+"GET /static/images/img1.jpeg HTTP/1.1" 200 89363
+"GET /static/images/img4.jpeg HTTP/1.1" 200 91767
+"GET /pricing-details/ HTTP/1.1" 200 348069
+"GET /pricing-details/?search=&group=&company=&doctor=&specialty=&accountant=&date_from=&date_to=&price_range= HTTP/1.1" 200 348069
+"GET /pricing-details/?search=%D9%85%D8%AD%D9%85%D8%AF HTTP/1.1" 200 378821
+"GET /credit-package-pricing/?company_name=%D8%A7%D9%8A%D8%AC%D9%89%20%D9%83%D9%8A%D8%B1 HTTP/1.1" 200 195743
+- Broken pipe from ('127.0.0.1', 50733)
+"GET /credit-package-pricing/?company_name=%D8%AC%D9%84%D9%88%D8%A8%20%D9%85%D9%8A%D8%AF HTTP/1.1" 200 191724
+"GET /pricing-details/?search=%D8%B3 HTTP/1.1" 200 401574
+"GET /credit-package-pricing/?company_name=%D8%B5%D8%AD%D9%87%20%D9%88%D8%A7%D9%86 HTTP/1.1" 200 96579
+"GET /credit-package-pricing/?company_name=%D9%85%D8%B5%D8%B1%20%D9%84%D9%84%D8%AA%D8%A3%D9%85%D9%8A%D9%86 HTTP/1.1" 200 96840
+"GET /credit-package-pricing/?company_search=%D9%85%D8%B5%D8%B1+%D9%84%D9%84%D8%AA%D8%A7%D9%85%D9%8A%D9%86&company=36&specialty=&package_search=&package= HTTP/1.1" 200 175809
+"GET /credit-package-pricing/?company_name=%D8%AC%D9%84%D9%88%D8%A8%20%D9%85%D9%8A%D8%AF HTTP/1.1" 200 191724
+"GET /credit-package-pricing/?company_name=%D8%A7%D9%8A%D8%AC%D9%89%20%D9%83%D9%8A%D8%B1 HTTP/1.1" 200 195743
+"GET /credit-package-pricing/?company_name=%D8%B4%D8%B1%D9%83%D8%A7%D8%AA%20%D9%85%D8%B5%D8%B1%20%D9%84%D9%84%D8%AA%D8%A3%D9%85%D9%8A%D9%86 HTTP/1.1" 200 96853
+"GET /credit-package-pricing/?company_name=%D9%85%D8%B5%D8%B1%20%D9%84%D9%84%D8%AA%D8%A3%D9%85%D9%8A%D9%86 HTTP/1.1" 200 96840
+"GET /credit-package-pricing/?company_search=%D9%85%D8%B5%D8%B1+%D9%84%D9%84%D8%AA%D8%A7%D9%85%D9%8A%D9%86&company=36&specialty=&package_search=&package= HTTP/1.1" 200 175809
+"GET /credit-package-pricing/?company_name=%D8%A7%D9%84%D8%B4%D8%B1%D9%83%D8%A9%20%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%8A%D8%A9%20%D9%84%D9%84%D8%A7%D8%AA%D8%B5%D8%A7%D9%84%D8%A7%D8%AA HTTP/1.1" 200 96867
+"GET /credit-package-pricing/?company_search=%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%8A%D8%A9+%D9%84%D9%84%D8%A7%D8%AA%D8%B5%D8%A7%D9%84%D8%A7%D8%AA&company=49&specialty=&package_search=&package= HTTP/1.1" 200 178508
+"GET /pricing-details/ HTTP/1.1" 200 348069
+"GET /company-discounts/ HTTP/1.1" 200 144208
+"GET /company-discounts/?tab=compare HTTP/1.1" 200 85031
+- Broken pipe from ('127.0.0.1', 59167)
+"GET /company-discounts/?tab=compare&company1=%D8%A8%D9%86%D9%83+%D9%85%D8%B5%D8%B1&company2=%D9%88%D8%B2%D8%A7%D8%B1%D8%A9+%D8%A7%D9%84%D8%B9%D8%AF%D9%84&compare_section=all HTTP/1.1" 200 102849
+"GET /doctors/ HTTP/1.1" 200 218438
+"GET /doctors/%D8%A7.%D8%AF%20/%20%D9%85%D8%A7%D8%AC%D8%AF%20%D8%A8%D9%87%D8%AC%D8%AA/ HTTP/1.1" 200 114361
+"GET /doctor/%D8%A7.%D8%AF%20/%20%D9%85%D8%A7%D8%AC%D8%AF%20%D8%A8%D9%87%D8%AC%D8%AA/status/approved/ HTTP/1.1" 200 80204
+"GET /package-comparison/ HTTP/1.1" 200 10999806
+"GET /company-discounts/ HTTP/1.1" 200 144208
+"GET /company-discounts/?tab=compare HTTP/1.1" 200 85031
+"GET /company-discounts/?tab=ranking HTTP/1.1" 200 76095
+"GET /company-discounts/?tab=compare HTTP/1.1" 200 85031
+"GET /company-discounts/?tab=compare&company1=%D8%A8%D9%86%D9%83+%D9%85%D8%B5%D8%B1&company2=&compare_section=all HTTP/1.1" 200 85043
+"GET /company-discounts/?tab=compare&company1=%D8%A8%D9%86%D9%83+%D9%85%D8%B5%D8%B1&company2=%D9%88%D8%B2%D8%A7%D8%B1%D8%A9+%D8%A7%D9%84%D8%B9%D8%AF%D9%84&compare_section=all HTTP/1.1" 200 102849
+"GET /pricing-details/ HTTP/1.1" 200 348069
+"GET /company-discounts/ HTTP/1.1" 200 144208
+"GET /company-discounts/?tab=compare HTTP/1.1" 200 85031
+- Broken pipe from ('127.0.0.1', 61353)
+"GET /company-discounts/?tab=compare&company1=%D9%88%D8%B2%D8%A7%D8%B1%D8%A9+%D8%A7%D9%84%D8%B9%D8%AF%D9%84&company2=%D8%A8%D9%86%D9%83+%D9%85%D8%B5%D8%B1&compare_section=all HTTP/1.1" 200 102849
+"GET /pricing-details/ HTTP/1.1" 200 348069
+"GET /pricing-details/?search=&group=&company=&doctor=&specialty=&accountant=&date_from=2026-09-10&date_to=&price_range= HTTP/1.1" 200 98597
+"GET /doctors/ HTTP/1.1" 200 218438
+"GET /pricing-details/ HTTP/1.1" 200 348069
+"GET /pricing-details/?search=UNKNOWN_PATIENT_1319 HTTP/1.1" 200 102061
+"GET /credit-package-pricing/?company_name=%D8%AC%D9%84%D9%88%D8%A8%20%D9%85%D9%8A%D8%AF HTTP/1.1" 200 191724
+D:\desktop\rphospital\src\imports\utils\import_helpers.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /pricing-details/ HTTP/1.1" 200 348069
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+- Broken pipe from ('127.0.0.1', 60448)
+"GET /pricing-details/?search=UNKNOWN_PATIENT_2376 HTTP/1.1" 200 102638
+"GET /pricing-details/ HTTP/1.1" 200 348069
+"GET /pricing-details/?search=UNKNOWN_PATIENT_1319 HTTP/1.1" 200 102061
+"GET /pricing-details/ HTTP/1.1" 200 348069
+"GET /pricing-details/?search=%D9%85%D8%AD%D9%85%D8%AF HTTP/1.1" 200 378821
+Internal Server Error: /credit-package-pricing/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\accounts\decorators.py", line 92, in wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\frontend\views.py", line 4313, in credit_package_pricing
+    if selected_company.id not in package_entity_ids:
+    ^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'id'
+"GET /credit-package-pricing/?company_name=%D8%B5%D8%AD%D9%87%20%D9%88%D8%A7%D9%86 HTTP/1.1" 500 83795
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /credit-package-pricing/?company_name=%D8%B5%D8%AD%D9%87%20%D9%88%D8%A7%D9%86 HTTP/1.1" 200 96579
+"GET /pricing-details/ HTTP/1.1" 200 348069
+"GET /pricing-details/?search=%D9%85%D8%AD%D9%85%D8%AF HTTP/1.1" 200 378821
+"GET /credit-package-pricing/?company_name=%D8%B5%D8%AD%D9%87%20%D9%88%D8%A7%D9%86 HTTP/1.1" 200 96579
+"GET /credit-package-pricing/?company_search=%D8%B5%D8%AD%D8%A9+%D9%88%D8%A7%D9%86&company=46&specialty=&package_search=&package= HTTP/1.1" 200 174763
+D:\desktop\rphospital\src\imports\utils\import_helpers.py changed, reloading.
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 302 0
+"GET /reports/ HTTP/1.1" 200 170238
+"GET /static/images/img5.jpeg HTTP/1.1" 200 88819
+"GET /static/images/img3.jpeg HTTP/1.1" 200 78769
+"GET /static/images/img2.jpeg HTTP/1.1" 200 93254
+"GET /static/images/img8.jpeg HTTP/1.1" 200 78642
+"GET /static/images/img6.jpeg HTTP/1.1" 200 125348
+"GET /pricing-details/ HTTP/1.1" 200 348069
+"GET /pricing-details/?search=%D9%85%D8%AD%D9%85%D8%AF HTTP/1.1" 200 378821
+"GET /credit-package-pricing/?company_name=%D8%B5%D8%AD%D9%87%20%D9%88%D8%A7%D9%86 HTTP/1.1" 200 195727
+"GET /credit-package-pricing/?company_name=%D8%B4%D8%B1%D9%83%D8%A9%20%D8%AC%D9%84%D9%88%D8%A8%20%D9%85%D9%8A%D8%AF HTTP/1.1" 200 96845
+"GET /credit-package-pricing/?company_search=%D8%AC%D9%84%D9%88%D8%A8+%D9%85%D9%8A%D8%AF&company=48&specialty=&package_search=&package= HTTP/1.1" 200 170918
+D:\desktop\rphospital\src\imports\utils\import_helpers.py changed, reloading.
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 302 0
+"GET / HTTP/1.1" 302 0
+- Broken pipe from ('127.0.0.1', 51639)
+"GET /reports/ HTTP/1.1" 200 170238
+"GET /pricing-details/ HTTP/1.1" 200 348069
+"GET /pricing-details/?search=%D9%85%D8%AD%D9%85%D8%AF HTTP/1.1" 200 378834
+"GET /credit-package-pricing/?company_name=%D8%B4%D8%B1%D9%83%D8%A9%20%D8%AC%D9%84%D9%88%D8%A8%20%D9%85%D9%8A%D8%AF HTTP/1.1" 200 96845
+"GET /credit-package-pricing/?company_name=%D8%B4%D8%B1%D9%83%D8%A9%20%D8%AC%D9%84%D9%88%D8%A8%20%D9%85%D9%8A%D8%AF HTTP/1.1" 200 96845
+"GET /credit-package-pricing/?company_search=%D8%AC%D9%84%D9%88%D8%A8+%D9%85%D9%8A%D8%AF&company=48&specialty=&package_search=&package= HTTP/1.1" 200 170918
+"GET /credit-package-pricing/?company_search=%D8%AC%D9%84%D9%88%D8%A8+%D9%85%D9%8A%D8%AF&company=48&specialty=&package_search=&package= HTTP/1.1" 200 170918
+D:\desktop\rphospital\src\imports\utils\import_helpers.py changed, reloading.
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 302 0
+"GET /reports/ HTTP/1.1" 200 170238
+"GET /pricing-details/ HTTP/1.1" 200 348069
+- Broken pipe from ('127.0.0.1', 53753)
+"GET /pricing-details/?search=%D9%85%D8%AD%D9%85%D8%AF HTTP/1.1" 200 378834
+"GET /credit-package-pricing/?company_name=%D8%B4%D8%B1%D9%83%D8%A9%20%D8%A8%D8%AA%D8%B1%D9%88%20%D8%AA%D8%B1%D9%8A%D8%AF HTTP/1.1" 200 96847
+D:\desktop\rphospital\src\imports\utils\import_helpers.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /credit-package-pricing/?company_name=%D8%B4%D8%B1%D9%83%D8%A9%20%D8%A8%D8%AA%D8%B1%D9%88%20%D8%AA%D8%B1%D9%8A%D8%AF HTTP/1.1" 200 195563
+"GET /similar-invoices/ HTTP/1.1" 200 2531079
+"GET /pricing-details/ HTTP/1.1" 200 348069
+"GET /pricing-details/?search=%D9%85%D8%AD%D9%85%D8%AF HTTP/1.1" 200 378834
+"GET /credit-package-pricing/?company_name=%D8%B4%D8%B1%D9%83%D8%A9%20%D8%AC%D9%84%D9%88%D8%A8%20%D9%85%D9%8A%D8%AF HTTP/1.1" 200 191724
+"GET /credit-package-pricing/?company_name=%D8%A7%D9%84%D9%8A%D9%80%D9%80%D9%80%D9%80%D9%80%D9%80%D9%80%D9%80%D9%80%D9%80%D9%80%D9%80%D9%83%D9%88 HTTP/1.1" 200 96579
+"GET /credit-package-pricing/?company_name=%D8%A7%D9%84%D9%8A%D9%80%D9%80%D9%80%D9%80%D9%80%D9%80%D9%80%D9%80%D9%80%D9%80%D9%80%D9%80%D9%83%D9%88 HTTP/1.1" 200 96579
+"GET /credit-package-pricing/?company_name=%D8%A7%D9%84%D8%A7%D9%87%D9%84%D9%89%20%D9%84%D9%84%D9%85%D8%B4%D8%B1%D9%88%D8%B9%D8%A7%D8%AA%20%D9%88%D8%A7%D9%84%D8%AE%D8%AF%D9%85%D8%A7%D8%AA%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%D8%A9 HTTP/1.1" 200 96882
+"GET /credit-package-pricing/?company_name=%D9%86%D9%82%D8%A7%D8%A8%D8%A9%20%D8%A7%D9%84%D8%B5%D8%AD%D8%A7%D9%81%D9%8A%D9%8A%D9%86 HTTP/1.1" 200 190856
+"GET /credit-package-pricing/ HTTP/1.1" 200 96579
+"GET /credit-package-pricing/?company_search=%D8%A7%D9%83%D8%B3%D8%A7&company=42&specialty=&package_search=&package= HTTP/1.1" 200 174220
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 302 0
+"GET /reports/ HTTP/1.1" 200 170238
+"GET /static/images/img5.jpeg HTTP/1.1" 200 88819
+"GET /static/images/img8.jpeg HTTP/1.1" 200 78642
+"GET /static/images/img3.jpeg HTTP/1.1" 200 78769
+"GET /static/images/img6.jpeg HTTP/1.1" 200 125348
+"GET /static/images/img2.jpeg HTTP/1.1" 200 93254
+"GET /static/images/img4.jpeg HTTP/1.1" 200 91767
+"GET /static/images/img1.jpeg HTTP/1.1" 200 89363
+"GET /doctors/ HTTP/1.1" 200 218443
+"GET /doctors/%D8%A7.%D8%AF%20/%20%D9%86%D8%A8%D9%8A%D9%84%20%D9%86%D8%B5%D8%B1%D8%B3%D9%84%D9%8A%D9%85%D8%A7%D9%86/ HTTP/1.1" 200 128855
+"GET /doctors/%D8%A7.%D8%AF%20/%20%D9%86%D8%A8%D9%8A%D9%84%20%D9%86%D8%B5%D8%B1%D8%B3%D9%84%D9%8A%D9%85%D8%A7%D9%86/ HTTP/1.1" 200 128855
+"GET /doctors/%D8%A7.%D8%AF%20/%20%D9%85%D8%A7%D8%AC%D8%AF%20%D8%A8%D9%87%D8%AC%D8%AA/ HTTP/1.1" 200 114361
+"GET /doctor/%D8%A7.%D8%AF%20/%20%D9%85%D8%A7%D8%AC%D8%AF%20%D8%A8%D9%87%D8%AC%D8%AA/status/approved/ HTTP/1.1" 200 80204
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /doctor/%D8%A7.%D8%AF%20/%20%D9%85%D8%A7%D8%AC%D8%AF%20%D8%A8%D9%87%D8%AC%D8%AA/status/approved/ HTTP/1.1" 200 80655
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+"GET /doctors/%D8%A7.%D8%AF%20/%20%D9%85%D8%A7%D8%AC%D8%AF%20%D8%A8%D9%87%D8%AC%D8%AA/ HTTP/1.1" 200 123946
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+"GET /doctors/%D8%A7.%D8%AF%20/%20%D9%85%D8%A7%D8%AC%D8%AF%20%D8%A8%D9%87%D8%AC%D8%AA/ HTTP/1.1" 200 123946
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+"GET /doctor/%D8%A7.%D8%AF%20/%20%D9%85%D8%A7%D8%AC%D8%AF%20%D8%A8%D9%87%D8%AC%D8%AA/status/approved/ HTTP/1.1" 200 84000
+"GET /doctor/%D8%A7.%D8%AF%20/%20%D9%85%D8%A7%D8%AC%D8%AF%20%D8%A8%D9%87%D8%AC%D8%AA/status/patient_refused/ HTTP/1.1" 200 78644
