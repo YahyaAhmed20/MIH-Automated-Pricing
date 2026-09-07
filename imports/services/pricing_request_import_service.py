@@ -148,6 +148,10 @@ class PricingRequestImportService:
             return ""
 
         return value
+    @staticmethod
+    def clean_300_text(value):
+        value = PricingRequestImportService.normalize_optional_text(value)
+        return value[:300]
 
     @staticmethod
     def clean_medical_number(value):
@@ -1109,7 +1113,7 @@ class PricingRequestImportService:
             )
 
             procedure_name = (
-                PricingRequestImportService.normalize_optional_text(
+                PricingRequestImportService.clean_300_text(
                     procedure_name
                 )
             )
@@ -1454,6 +1458,12 @@ class PricingRequestImportService:
                         note_text
                     )
                 )
+
+                if field_name in {
+                    "notes",
+                    "or_coordinator_notes",
+                }:
+                    note_text = note_text[:300]
 
                 if not note_text:
                     continue

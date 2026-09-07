@@ -1553,6 +1553,8 @@ class ExternalApproval(models.Model):
     )
     
     procedure = models.TextField(
+        max_length=350,
+
         blank=True,
         null=True,
         verbose_name="الاجراء"
@@ -1650,7 +1652,7 @@ class ExternalApproval(models.Model):
     )
     
     approval = models.CharField(
-        max_length=255,
+        max_length=350,
         blank=True,
         null=True,
         verbose_name="Approval"
@@ -1676,6 +1678,7 @@ class ExternalApproval(models.Model):
     )
     
     notes = models.TextField(
+         max_length=350,
         blank=True,
         null=True,
         verbose_name="الملاحظات"
@@ -1708,6 +1711,7 @@ class ExternalApproval(models.Model):
     )
     
     or_coordinator_notes = models.TextField(
+        max_length=350,
         blank=True,
         null=True,
         verbose_name="ملاحظات الـ OR Coordinator"

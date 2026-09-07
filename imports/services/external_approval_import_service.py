@@ -118,6 +118,11 @@ class ExternalApprovalImportService:
             return ""
 
         return value
+    
+    @staticmethod
+    def clean_300_text(value):
+        value = ExternalApprovalImportService.normalize_optional_text(value)
+        return value[:300]
 
     @staticmethod
     def clean_decimal(value):
@@ -394,7 +399,7 @@ class ExternalApprovalImportService:
                 )
 
                 procedure = (
-                    ExternalApprovalImportService.normalize_optional_text(
+                    ExternalApprovalImportService.clean_300_text(
                         ExternalApprovalImportService.get_value(
                             row,
                             header_map,
@@ -402,7 +407,6 @@ class ExternalApprovalImportService:
                         )
                     )
                 )
-
                 phone = (
                     ExternalApprovalImportService.normalize_optional_text(
                         ExternalApprovalImportService.get_value(
@@ -539,7 +543,7 @@ class ExternalApprovalImportService:
                 )
 
                 approval_value = (
-                    ExternalApprovalImportService.normalize_optional_text(
+                    ExternalApprovalImportService.clean_300_text(
                         ExternalApprovalImportService.get_value(
                             row,
                             header_map,
@@ -581,7 +585,7 @@ class ExternalApprovalImportService:
                 )
 
                 notes = (
-                    ExternalApprovalImportService.normalize_optional_text(
+                    ExternalApprovalImportService.clean_300_text(
                         ExternalApprovalImportService.get_value(
                             row,
                             header_map,
@@ -633,7 +637,7 @@ class ExternalApprovalImportService:
                 )
 
                 or_coordinator_notes = (
-                    ExternalApprovalImportService.normalize_optional_text(
+                    ExternalApprovalImportService.clean_300_text(
                         ExternalApprovalImportService.get_value(
                             row,
                             header_map,
