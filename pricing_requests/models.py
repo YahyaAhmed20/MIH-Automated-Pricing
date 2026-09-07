@@ -108,7 +108,7 @@ class PricingRequest(models.Model):
     )
     
     main_status = models.CharField(
-    max_length=100,
+    max_length=350,
     blank=True,
     null=True
     )
@@ -1583,7 +1583,7 @@ class ExternalApproval(models.Model):
     )
     
     main_status = models.CharField(
-        max_length=100,
+        max_length=350,
         blank=True,
         null=True,
         db_index=True,
@@ -1659,7 +1659,7 @@ class ExternalApproval(models.Model):
     )
     
     request_approval_no = models.CharField(
-        max_length=100,
+        max_length=350,
         blank=True,
         null=True,
         verbose_name="Request and Approval NO."
