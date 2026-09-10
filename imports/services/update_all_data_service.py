@@ -60,7 +60,7 @@ PACKAGE_COUNT_COMMANDS = {
 class UpdateAllDataService:
 
     @classmethod
-    def run(cls, stdout, progress_callback=None, commands=None):
+    def run(cls, stdout, progress_callback=None, commands=None, task_id=None):
 
         stdout.write("")
         stdout.write("=" * 70)
@@ -92,7 +92,7 @@ class UpdateAllDataService:
                 # فحص الإلغاء قبل بدء الأمر
                 # --------------------------------------------------------
 
-                if ProgressService.is_cancel_requested():
+                if task_id and ProgressService.is_cancel_requested(task_id):
                     raise TaskCancelled()
 
                 if progress_callback:
@@ -145,6 +145,8 @@ class UpdateAllDataService:
 
                     if command_name in PACKAGE_COUNT_COMMANDS:
 
+                        close_old_connections()
+
                         from medical_catalog.models import Package
 
                         stdout.write(
@@ -156,7 +158,7 @@ class UpdateAllDataService:
                     # فحص الإلغاء بعد انتهاء الأمر
                     # ----------------------------------------------------
 
-                    if ProgressService.is_cancel_requested():
+                    if task_id and ProgressService.is_cancel_requested(task_id):
                         raise TaskCancelled()
 
                     elapsed = perf_counter() - start

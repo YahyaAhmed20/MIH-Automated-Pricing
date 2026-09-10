@@ -29774,3 +29774,24 @@ Watching for file changes with StatReloader
 "GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
 "GET /doctor/%D8%A7.%D8%AF%20/%20%D9%85%D8%A7%D8%AC%D8%AF%20%D8%A8%D9%87%D8%AC%D8%AA/status/approved/ HTTP/1.1" 200 84000
 "GET /doctor/%D8%A7.%D8%AF%20/%20%D9%85%D8%A7%D8%AC%D8%AF%20%D8%A8%D9%87%D8%AC%D8%AA/status/patient_refused/ HTTP/1.1" 200 78644
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 51152
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+"GET /static/images/logo.jpeg HTTP/1.1" 200 68755
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\imports\services\progress_service.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\imports\services\progress_service.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\imports\services\progress_service.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\imports\services\progress_service.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\imports\services\progress_service.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\imports\services\progress_service.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\imports\services\progress_service.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\imports\tasks.py changed, reloading.
+Watching for file changes with StatReloader

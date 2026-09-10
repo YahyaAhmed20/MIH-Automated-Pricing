@@ -2,6 +2,8 @@ import json
 import time
 import redis
 
+from celery import current_app
+
 from django.conf import settings
 from django.utils import timezone
 from redis.exceptions import TimeoutError as RedisTimeoutError, ConnectionError
@@ -14,6 +16,10 @@ class ProgressService:
 
     # لو مفيش heartbeat لمدة 60 ثانية نعتبر الـ worker فقدناه
     HEARTBEAT_TIMEOUT = 60
+
+    # Distributed lock لمنع تشغيل أكثر من Update في نفس الوقت
+    LOCK_KEY = "system_update_lock"
+    LOCK_TTL = 7200  # ساعتان كحد أقصى، والـ heartbeat يجدده
 
     DEFAULT = {
         "completed": 0,
@@ -63,6 +69,173 @@ class ProgressService:
         )
 
     # ================================================================
+    # Distributed Lock
+    # ================================================================
+
+    @classmethod
+    def acquire_lock(cls, task_id, ttl=None):
+        """
+        محاولة امتلاك Lock للتحديث.
+        Task واحد فقط يستطيع امتلاك الـ Lock.
+        """
+        client = cls.redis()
+
+        if client is None:
+            raise RuntimeError("Redis is unavailable")
+
+        ttl = ttl or cls.LOCK_TTL
+
+        return bool(
+            client.set(
+                cls.LOCK_KEY,
+                task_id,
+                nx=True,
+                ex=ttl,
+            )
+        )
+
+    @classmethod
+    def owns_lock(cls, task_id):
+        """
+        التحقق أن الـ Lock الحالي مملوك لهذا الـ Task.
+        """
+        client = cls.redis()
+
+        if client is None:
+            return False
+
+        try:
+            return client.get(cls.LOCK_KEY) == task_id
+        except Exception:
+            return False
+
+    @classmethod
+    def refresh_lock(cls, task_id):
+        """
+        تجديد مدة الـ Lock بشرط أن يكون مملوكًا لنفس الـ Task.
+        """
+        client = cls.redis()
+
+        if client is None:
+            return False
+
+        script = """
+        if redis.call("GET", KEYS[1]) == ARGV[1] then
+            return redis.call("EXPIRE", KEYS[1], ARGV[2])
+        else
+            return 0
+        end
+        """
+
+        try:
+            return bool(
+                client.eval(
+                    script,
+                    1,
+                    cls.LOCK_KEY,
+                    task_id,
+                    cls.LOCK_TTL,
+                )
+            )
+        except Exception as exc:
+            print(
+                f"⚠️ ProgressService.refresh_lock: {exc}"
+            )
+            return False
+
+    @classmethod
+    def release_lock(cls, task_id):
+        """
+        تحرير الـ Lock فقط إذا كان مملوكًا لهذا الـ Task.
+        """
+        client = cls.redis()
+
+        if client is None:
+            return False
+
+        script = """
+        if redis.call("GET", KEYS[1]) == ARGV[1] then
+            return redis.call("DEL", KEYS[1])
+        else
+            return 0
+        end
+        """
+
+        try:
+            return bool(
+                client.eval(
+                    script,
+                    1,
+                    cls.LOCK_KEY,
+                    task_id,
+                )
+            )
+        except Exception as exc:
+            print(
+                f"❌ ProgressService.release_lock: {exc}"
+            )
+            return False
+
+    @classmethod
+    def is_task_alive(cls, task_id):
+        """
+        التحقق مما إذا كانت الـ Task موجودة فعليًا داخل Celery worker.
+
+        نبحث في:
+        - active
+        - reserved
+        - scheduled
+
+        مهم:
+        عدم العثور على الـ Task لا يعني وحده أنها ماتت،
+        لذلك الدالة تُستخدم فقط كجزء من stale detection.
+        """
+
+        if not task_id:
+            return False
+
+        try:
+            inspect = current_app.control.inspect(
+                timeout=3.0
+            )
+
+            active = inspect.active()
+            reserved = inspect.reserved()
+            scheduled = inspect.scheduled()
+
+            # عدم القدرة على الوصول إلى Worker ≠ عدم وجود Task
+            if active is None or reserved is None or scheduled is None:
+                return None
+
+            active = active or {}
+            reserved = reserved or {}
+            scheduled = scheduled or {}
+
+            for tasks in active.values():
+                for task in tasks or []:
+                    if task.get("id") == task_id:
+                        return True
+
+            for tasks in reserved.values():
+                for task in tasks or []:
+                    if task.get("id") == task_id:
+                        return True
+
+            for tasks in scheduled.values():
+                for item in tasks or []:
+                    request = item.get("request", {})
+                    if request.get("id") == task_id:
+                        return True
+
+            return False
+
+        except Exception as exc:
+            print(
+                f"⚠️ ProgressService.is_task_alive: {exc}"
+            )
+            return None
+
+    # ================================================================
     # Basic Get / Save
     # ================================================================
 
@@ -105,6 +278,45 @@ class ProgressService:
             )
 
             return cls.DEFAULT.copy()
+
+    @classmethod
+    def get_or_raise(cls):
+        """
+        الحصول على حالة التحديث من Redis.
+
+        بخلاف get():
+        لا نحول فشل Redis إلى حالة idle،
+        لأن ذلك قد يؤدي إلى تشغيل Update جديد
+        بينما يوجد Task فعلي شغال.
+        """
+
+        client = cls.redis()
+
+        if client is None:
+            raise RuntimeError("Redis is unavailable")
+
+        try:
+            data = client.get(cls.KEY)
+
+            if not data:
+                return cls.DEFAULT.copy()
+
+            parsed = json.loads(data)
+
+            if not isinstance(parsed, dict):
+                raise RuntimeError("Invalid progress data in Redis")
+
+            return parsed
+
+        except (json.JSONDecodeError, TypeError, AttributeError) as exc:
+            raise RuntimeError(
+                f"Invalid progress data in Redis: {exc}"
+            ) from exc
+
+        except (RedisTimeoutError, ConnectionError) as exc:
+            raise RuntimeError(
+                f"Redis connection error: {exc}"
+            ) from exc
 
     @classmethod
     def save(cls, data):
@@ -205,24 +417,63 @@ class ProgressService:
     # ================================================================
 
     @classmethod
-    def update(cls, **kwargs):
-        """تحديث جزء من حالة التحديث."""
+    def update(cls, task_id=None, **kwargs):
+        """
+        تحديث جزء من حالة التحديث.
+
+        إذا تم تمرير task_id:
+        - يجب أن يكون هو صاحب الـTask الحالي.
+        - يجب أن يمتلك Distributed Lock.
+        - فشل Redis لا يتحول إلى DEFAULT/idle.
+        """
 
         try:
+            data = (
+                cls.get_or_raise()
+                if task_id is not None
+                else cls.get()
+            )
 
-            data = cls.get()
+            if task_id is not None:
+
+                current_task_id = data.get("task_id")
+
+                if current_task_id != task_id:
+                    print(
+                        "⚠️ ProgressService.update: "
+                        f"Task ownership mismatch. "
+                        f"current={current_task_id}, "
+                        f"requested={task_id}"
+                    )
+                    return None
+
+                if not cls.owns_lock(task_id):
+                    print(
+                        "⚠️ ProgressService.update: "
+                        f"Task {task_id} does not own the lock"
+                    )
+                    return None
 
             data.update(kwargs)
 
-            cls.save(data)
+            if not cls.save(data):
+                print(
+                    "❌ ProgressService.update: "
+                    "Failed to save progress"
+                )
+                return None
 
             return data
 
         except Exception as e:
-
             print(
                 f"❌ ProgressService.update: {e}"
             )
+
+            # مهم:
+            # لا نرجع DEFAULT هنا عندما يكون هناك Task محدد.
+            if task_id is not None:
+                raise
 
             return cls.DEFAULT.copy()
 
@@ -240,49 +491,68 @@ class ProgressService:
         """
         تسجيل أن الـTask تم وضعه في Celery Queue.
 
-        مهم:
-        هذه ليست running.
+        الـTask يجب أن يكون قد امتلك Distributed Lock
+        قبل استدعاء هذه الدالة.
         """
 
-        now = timezone.localtime().isoformat()
+        try:
+            if not cls.owns_lock(task_id):
+                print(
+                    "⚠️ ProgressService.mark_queued: "
+                    f"Task {task_id} does not own the lock"
+                )
+                return None
 
-        data = cls.DEFAULT.copy()
+            now = timezone.localtime().isoformat()
 
-        data.update(
-            {
-                "status": "queued",
-                "is_running": False,
+            data = cls.DEFAULT.copy()
 
-                "task_id": task_id,
-                "update_type": update_type,
+            data.update(
+                {
+                    "status": "queued",
+                    "is_running": False,
 
-                "total": total,
-                "completed": 0,
+                    "task_id": task_id,
+                    "update_type": update_type,
 
-                "current_command": (
-                    "⏳ في انتظار بدء Worker..."
-                ),
+                    "total": total,
+                    "completed": 0,
 
-                "logs": None,
-                "results": [],
+                    "current_command": (
+                        "⏳ في انتظار بدء Worker..."
+                    ),
 
-                "cancel_requested": False,
+                    "logs": None,
+                    "results": [],
 
-                "queued_at": now,
-                "started_at": None,
-                "heartbeat_at": None,
-                "finished_at": None,
-            }
-        )
+                    "cancel_requested": False,
 
-        cls.save(data)
+                    "queued_at": now,
+                    "started_at": None,
+                    "heartbeat_at": None,
+                    "finished_at": None,
+                }
+            )
 
-        print(
-            f"📥 ProgressService: "
-            f"Task queued: {task_id}"
-        )
+            if not cls.save(data):
+                print(
+                    "❌ ProgressService.mark_queued: "
+                    "Failed to save queued state"
+                )
+                return None
 
-        return data
+            print(
+                f"📥 ProgressService: "
+                f"Task queued: {task_id}"
+            )
+
+            return data
+
+        except Exception as e:
+            print(
+                f"❌ ProgressService.mark_queued: {e}"
+            )
+            return None
 
     # ================================================================
     # RUNNING
@@ -291,87 +561,156 @@ class ProgressService:
     @classmethod
     def mark_running(
         cls,
-        task_id=None,
+        task_id,
         update_type=None,
         total=None,
     ):
         """
-        يتم استدعاؤها من داخل Celery Task فقط.
+        تحويل الـTask من queued إلى running.
 
-        هنا فقط نعتبر أن التحديث بدأ فعليًا.
+        لا يسمح بالبدء إلا للـTask الذي:
+        1. يطابق task_id المسجل في Progress.
+        2. يمتلك Distributed Lock.
         """
 
-        now = timezone.localtime().isoformat()
+        try:
+            data = cls.get_or_raise()
 
-        data = cls.get()
+            current_task_id = data.get("task_id")
 
-        if task_id is not None:
-            data["task_id"] = task_id
+            if current_task_id != task_id:
+                print(
+                    "⚠️ ProgressService.mark_running: "
+                    f"Task ownership mismatch. "
+                    f"current={current_task_id}, "
+                    f"requested={task_id}"
+                )
+                return None
 
-        if update_type is not None:
-            data["update_type"] = update_type
+            if not cls.owns_lock(task_id):
+                print(
+                    "⚠️ ProgressService.mark_running: "
+                    f"Task {task_id} does not own the lock"
+                )
+                return None
 
-        if total is not None:
-            data["total"] = total
+            now = timezone.localtime().isoformat()
 
-        data.update(
-            {
-                "status": "running",
-                "is_running": True,
+            if update_type is not None:
+                data["update_type"] = update_type
 
-                "completed": 0,
+            if total is not None:
+                data["total"] = total
 
-                "current_command": (
-                    "⏳ جاري تهيئة التحديث..."
-                ),
+            data.update(
+                {
+                    "status": "running",
+                    "is_running": True,
 
-                "cancel_requested": False,
+                    "completed": 0,
 
-                "started_at": now,
-                "heartbeat_at": now,
-                "finished_at": None,
-            }
-        )
+                    "current_command": (
+                        "⏳ جاري تهيئة التحديث..."
+                    ),
 
-        cls.save(data)
+                    "cancel_requested": False,
 
-        print(
-            f"▶ ProgressService: "
-            f"Task started: {data.get('task_id')}"
-        )
+                    "started_at": now,
+                    "heartbeat_at": now,
+                    "finished_at": None,
+                }
+            )
 
-        return data
+            if not cls.save(data):
+                print(
+                    "❌ ProgressService.mark_running: "
+                    "Failed to save running state"
+                )
+                return None
+
+            # نبدأ دورة الـLock من جديد بعد بدء الـWorker
+            if not cls.refresh_lock(task_id):
+                print(
+                    "❌ ProgressService.mark_running: "
+                    f"Failed to refresh lock for {task_id}"
+                )
+                return None
+
+            print(
+                f"▶ ProgressService: "
+                f"Task started: {task_id}"
+            )
+
+            return data
+
+        except Exception as e:
+            print(
+                f"❌ ProgressService.mark_running: {e}"
+            )
+            return None
 
     # ================================================================
     # HEARTBEAT
     # ================================================================
 
     @classmethod
-    def heartbeat(cls):
+    def heartbeat(cls, task_id):
         """
-        تحديث آخر وقت تم فيه التواصل مع الـWorker.
+        تحديث heartbeat وتجديد Distributed Lock.
 
-        يتم استدعاؤها أثناء تشغيل الـTask.
+        لا يسمح إلا للـTask صاحب الـLock بتحديث الحالة.
         """
 
         try:
+            data = cls.get_or_raise()
+
+            # التأكد أن الـTask الحالي هو صاحب العملية
+            if data.get("task_id") != task_id:
+                print(
+                    "⚠️ ProgressService.heartbeat: "
+                    f"Task ownership mismatch. "
+                    f"current={data.get('task_id')}, "
+                    f"requested={task_id}"
+                )
+                return False
+
+            # التأكد أن الـTask ما زال يملك الـLock
+            if not cls.owns_lock(task_id):
+                print(
+                    "⚠️ ProgressService.heartbeat: "
+                    f"Task {task_id} no longer owns the lock"
+                )
+                return False
+
+            # لا نعمل heartbeat إلا أثناء running
+            if data.get("status") != "running":
+                return False
 
             now = timezone.localtime().isoformat()
 
-            data = cls.get()
-
             data["heartbeat_at"] = now
 
-            cls.save(data)
+            if not cls.save(data):
+                print(
+                    "⚠️ ProgressService.heartbeat: "
+                    "Failed to save heartbeat"
+                )
+                return False
+
+            # تجديد الـLock
+            if not cls.refresh_lock(task_id):
+                print(
+                    "⚠️ ProgressService.heartbeat: "
+                    f"Failed to refresh lock for {task_id}"
+                )
+                return False
 
             return True
 
         except Exception as e:
-
             print(
                 f"⚠️ ProgressService.heartbeat: {e}"
             )
-
             return False
 
     # ================================================================
@@ -381,47 +720,182 @@ class ProgressService:
     @classmethod
     def is_stale(cls):
         """
-        معرفة إذا كان الـWorker توقف عن إرسال heartbeat.
+        تحديد ما إذا كانت مهمة التحديث RUNNING عالقة فعلًا.
 
-        لا نعتبر queued stale بنفس الطريقة.
+        لا يكفي أن يكون heartbeat قديمًا؛
+        نتحقق أيضًا من حالة Celery Task.
         """
 
         try:
-
-            data = cls.get()
+            data = cls.get_or_raise()
 
             if data.get("status") != "running":
                 return False
 
-            heartbeat_at = data.get("heartbeat_at")
+            task_id = data.get("task_id")
 
-            if not heartbeat_at:
+            if not task_id:
                 return True
 
-            heartbeat_time = timezone.datetime.fromisoformat(
-                heartbeat_at
-            )
+            heartbeat_at = data.get("heartbeat_at")
 
-            if timezone.is_naive(heartbeat_time):
-                heartbeat_time = timezone.make_aware(
-                    heartbeat_time,
-                    timezone.get_current_timezone(),
+            # لا يوجد heartbeat أصلًا
+            if not heartbeat_at:
+                heartbeat_stale = True
+            else:
+                heartbeat_time = timezone.datetime.fromisoformat(
+                    heartbeat_at
                 )
 
-            now = timezone.now()
+                if timezone.is_naive(heartbeat_time):
+                    heartbeat_time = timezone.make_aware(
+                        heartbeat_time,
+                        timezone.get_current_timezone(),
+                    )
 
-            age = (
-                now - heartbeat_time
-            ).total_seconds()
+                age = (
+                    timezone.now() - heartbeat_time
+                ).total_seconds()
 
-            return age > cls.HEARTBEAT_TIMEOUT
+                heartbeat_stale = age > cls.HEARTBEAT_TIMEOUT
 
-        except Exception as e:
+            # إذا كان الـheartbeat ما زال حديثًا، فلا توجد مشكلة.
+            if not heartbeat_stale:
+                return False
 
+            # ------------------------------------------------------------
+            # heartbeat قديم → نتحقق من Celery
+            # ------------------------------------------------------------
+
+            task_alive = cls.is_task_alive(task_id)
+
+            # Inspector لم يستطع الوصول إلى الـ Worker.
+            # لا نغامر بعمل reset.
+            if task_alive is None:
+                return False
+
+            # الـ Task موجودة فعليًا داخل أحد الـ Workers.
+            if task_alive:
+                return False
+
+            # الـ Task غير موجودة في active/reserved/scheduled
+            # والـ heartbeat قديم → العملية عالقة فعلًا.
+            return True
+
+        except Exception as exc:
             print(
-                f"⚠️ ProgressService.is_stale: {e}"
+                f"⚠️ ProgressService.is_stale: {exc}"
+            )
+            return False
+
+    # ================================================================
+    # RECOVERY
+    # ================================================================
+
+    @classmethod
+    def recover_stale_update(cls):
+        """
+        استعادة حالة Update عالقة بعد التأكد أنها stale فعلًا.
+
+        لا تقوم بعمل reset أعمى.
+        لا تلمس العملية إذا كان الـTask ما زال حيًا.
+        وتحرر الـLock فقط إذا كان مملوكًا للـTask القديمة.
+        """
+
+        try:
+            data = cls.get_or_raise()
+
+            status = data.get("status")
+            task_id = data.get("task_id")
+
+            # لا توجد عملية تحتاج Recovery
+            if status != "running" or not task_id:
+                return False
+
+            # أهم حماية:
+            # لا نستعيد العملية إلا إذا ثبت أنها stale فعلًا.
+            if not cls.is_stale():
+                return False
+
+            client = cls.redis()
+
+            if client is None:
+                raise RuntimeError("Redis is unavailable")
+
+            now = timezone.localtime().isoformat()
+
+            # ------------------------------------------------------------
+            # Atomic recovery
+            #
+            # نتحقق أن الـLock ما زال مملوكًا للـTask القديمة،
+            # ثم نكتب الحالة الجديدة ونحذف الـLock في نفس العملية.
+            # ------------------------------------------------------------
+
+            recovered_data = dict(data)
+
+            recovered_data.update(
+                {
+                    "status": "error",
+                    "is_running": False,
+                    "current_command": (
+                        "⚠️ تم إنهاء التحديث السابق تلقائيًا "
+                        "لأن Worker فقد الاتصال."
+                    ),
+                    "finished_at": now,
+                    "heartbeat_at": None,
+                    "cancel_requested": False,
+                    "error": (
+                        "تم اكتشاف Update عالق بعد فقدان "
+                        "Celery Worker."
+                    ),
+                }
             )
 
+            script = """
+            if redis.call("GET", KEYS[1]) ~= ARGV[1] then
+                return 0
+            end
+
+            redis.call("SET", KEYS[2], ARGV[2], "EX", ARGV[3])
+            redis.call("DEL", KEYS[1])
+
+            return 1
+            """
+
+            result = client.eval(
+                script,
+                2,
+                cls.LOCK_KEY,
+                cls.KEY,
+                task_id,
+                json.dumps(
+                    recovered_data,
+                    ensure_ascii=False,
+                ),
+                3600,
+            )
+
+            if not result:
+                # الـLock تغير أثناء Recovery.
+                # غالبًا Task جديدة امتلكته، فلا نلمسها.
+                print(
+                    "⚠️ ProgressService.recover_stale_update: "
+                    "Lock ownership changed; recovery aborted"
+                )
+                return False
+
+            print(
+                "♻️ ProgressService: "
+                f"Recovered stale update {task_id}"
+            )
+
+            return True
+
+        except Exception as exc:
+            print(
+                "❌ ProgressService.recover_stale_update: "
+                f"{exc}"
+            )
             return False
 
     # ================================================================
@@ -429,41 +903,66 @@ class ProgressService:
     # ================================================================
 
     @classmethod
-    def mark_completed(
-        cls,
-        results=None,
-        logs=None,
-    ):
-        """إنهاء التحديث بنجاح."""
+    def mark_completed(cls, task_id, results=None, logs=None):
+        """إنهاء التحديث بنجاح ثم تحرير الـLock."""
 
-        now = timezone.localtime().isoformat()
+        try:
+            data = cls.get_or_raise()
 
-        data = cls.get()
+            if data.get("task_id") != task_id:
+                print(
+                    "⚠️ ProgressService.mark_completed: "
+                    f"Task ownership mismatch. "
+                    f"current={data.get('task_id')}, "
+                    f"requested={task_id}"
+                )
+                return None
 
-        data.update(
-            {
-                "status": "completed",
-                "is_running": False,
+            if not cls.owns_lock(task_id):
+                print(
+                    "⚠️ ProgressService.mark_completed: "
+                    f"Task {task_id} does not own the lock"
+                )
+                return None
 
-                "current_command": (
-                    "✅ تم الانتهاء من التحديث بنجاح!"
-                ),
+            now = timezone.localtime().isoformat()
 
-                "finished_at": now,
-                "heartbeat_at": now,
-                "cancel_requested": False,
-            }
-        )
+            data.update(
+                {
+                    "status": "completed",
+                    "is_running": False,
+                    "current_command": (
+                        "✅ تم الانتهاء من التحديث بنجاح!"
+                    ),
+                    "finished_at": now,
+                    "heartbeat_at": now,
+                    "cancel_requested": False,
+                }
+            )
 
-        if results is not None:
-            data["results"] = results
+            if results is not None:
+                data["results"] = results
 
-        if logs is not None:
-            data["logs"] = logs
+            if logs is not None:
+                data["logs"] = logs
 
-        cls.save(data)
+            if not cls.save(data):
+                print(
+                    "❌ ProgressService.mark_completed: "
+                    "Failed to save completed state"
+                )
+                return None
 
-        return data
+            # تحرير الـLock بعد حفظ الحالة النهائية بنجاح
+            cls.release_lock(task_id)
+
+            return data
+
+        except Exception as e:
+            print(
+                f"❌ ProgressService.mark_completed: {e}"
+            )
+            return None
 
     # ================================================================
     # ERROR
@@ -472,160 +971,267 @@ class ProgressService:
     @classmethod
     def mark_error(
         cls,
+        task_id,
         message=None,
         logs=None,
         results=None,
     ):
-        """إنهاء التحديث مع وجود خطأ."""
+        """إنهاء التحديث بخطأ ثم تحرير الـLock."""
 
-        now = timezone.localtime().isoformat()
+        try:
+            data = cls.get_or_raise()
 
-        data = cls.get()
+            if data.get("task_id") != task_id:
+                print(
+                    "⚠️ ProgressService.mark_error: "
+                    f"Task ownership mismatch. "
+                    f"current={data.get('task_id')}, "
+                    f"requested={task_id}"
+                )
+                return None
 
-        data.update(
-            {
-                "status": "error",
-                "is_running": False,
+            if not cls.owns_lock(task_id):
+                print(
+                    "⚠️ ProgressService.mark_error: "
+                    f"Task {task_id} does not own the lock"
+                )
+                return None
 
-                "current_command": (
-                    "❌ حدث خطأ أثناء التحديث"
-                ),
+            now = timezone.localtime().isoformat()
 
-                "finished_at": now,
-                "heartbeat_at": now,
-                "cancel_requested": False,
-            }
-        )
+            data.update(
+                {
+                    "status": "error",
+                    "is_running": False,
+                    "current_command": (
+                        "❌ حدث خطأ أثناء التحديث"
+                    ),
+                    "finished_at": now,
+                    "heartbeat_at": now,
+                    "cancel_requested": False,
+                }
+            )
 
-        if message:
-            data["error"] = str(message)
+            if message:
+                data["error"] = str(message)
 
-        if logs is not None:
-            data["logs"] = logs
+            if logs is not None:
+                data["logs"] = logs
 
-        if results is not None:
-            data["results"] = results
+            if results is not None:
+                data["results"] = results
 
-        cls.save(data)
+            if not cls.save(data):
+                print(
+                    "❌ ProgressService.mark_error: "
+                    "Failed to save error state"
+                )
+                return None
 
-        return data
+            # تحرير الـLock بعد حفظ الحالة النهائية بنجاح
+            cls.release_lock(task_id)
+
+            return data
+
+        except Exception as e:
+            print(
+                f"❌ ProgressService.mark_error: {e}"
+            )
+            return None
 
     # ================================================================
     # CANCEL
     # ================================================================
 
     @classmethod
-    def request_cancel(cls):
-        """طلب إلغاء العملية الحالية."""
+    def request_cancel(cls, task_id):
+        """
+        طلب إلغاء العملية الحالية مع التحقق من ملكية الـTask.
+
+        Redis failure لا يُفسَّر على أنه عدم وجود Task.
+        """
 
         try:
+            data = cls.get_or_raise()
 
-            data = cls.get()
+            if data.get("task_id") != task_id:
+                print(
+                    "⚠️ ProgressService.request_cancel: "
+                    f"Task ownership mismatch. "
+                    f"current={data.get('task_id')}, "
+                    f"requested={task_id}"
+                )
+                return False
 
-            if data.get("status") not in (
-                "queued",
-                "running",
-            ):
+            if not cls.owns_lock(task_id):
+                print(
+                    "⚠️ ProgressService.request_cancel: "
+                    f"Task {task_id} does not own the lock"
+                )
+                return False
+
+            if data.get("status") not in ("queued", "running"):
                 return False
 
             data["cancel_requested"] = True
 
-            cls.save(data)
+            if not cls.save(data):
+                print(
+                    "❌ ProgressService.request_cancel: "
+                    "Failed to save cancel request"
+                )
+                return False
 
             print(
                 "🛑 ProgressService: "
-                "Cancel requested"
+                f"Cancel requested for task {task_id}"
             )
 
             return True
 
         except Exception as e:
-
             print(
                 f"❌ ProgressService.request_cancel: {e}"
             )
-
             return False
 
     @classmethod
-    def is_cancel_requested(cls):
-        """التحقق من طلب الإلغاء."""
+    def is_cancel_requested(cls, task_id):
+        """
+        التحقق من طلب الإلغاء للـTask الحالي.
+
+        إذا تعذر الوصول إلى Redis، نرجع False فقط لأن
+        هذه الدالة تُستدعى داخل Worker؛ والخطأ الحقيقي
+        يجب أن يظهر في heartbeat/update التالي.
+        """
 
         try:
+            data = cls.get_or_raise()
+
+            if data.get("task_id") != task_id:
+                return False
+
+            if not cls.owns_lock(task_id):
+                return False
 
             return bool(
-                cls.get().get(
+                data.get(
                     "cancel_requested",
                     False,
                 )
             )
 
         except Exception as e:
-
             print(
-                f"⚠️ ProgressService.is_cancel_requested: "
+                "⚠️ ProgressService.is_cancel_requested: "
                 f"{e}"
             )
-
             return False
 
     @classmethod
-    def clear_cancel(cls):
-        """مسح طلب الإلغاء."""
+    def clear_cancel(cls, task_id):
+        """
+        مسح طلب الإلغاء للـTask الحالي.
+        """
 
         try:
+            data = cls.get_or_raise()
 
-            cls.update(
-                cancel_requested=False
-            )
+            if data.get("task_id") != task_id:
+                print(
+                    "⚠️ ProgressService.clear_cancel: "
+                    f"Task ownership mismatch. "
+                    f"current={data.get('task_id')}, "
+                    f"requested={task_id}"
+                )
+                return False
 
-            print(
-                "✅ ProgressService: "
-                "Cancel flag cleared"
-            )
+            if not cls.owns_lock(task_id):
+                print(
+                    "⚠️ ProgressService.clear_cancel: "
+                    f"Task {task_id} does not own the lock"
+                )
+                return False
+
+            data["cancel_requested"] = False
+
+            if not cls.save(data):
+                print(
+                    "❌ ProgressService.clear_cancel: "
+                    "Failed to clear cancel flag"
+                )
+                return False
+
+            return True
 
         except Exception as e:
-
             print(
                 f"❌ ProgressService.clear_cancel: {e}"
             )
+            return False
 
     # ================================================================
     # CANCELLED
     # ================================================================
 
     @classmethod
-    def mark_cancelled(
-        cls,
-        logs=None,
-    ):
-        """إنهاء العملية بسبب Cancel."""
+    def mark_cancelled(cls, task_id, logs=None):
+        """إنهاء العملية بسبب Cancel ثم تحرير الـLock."""
 
-        now = timezone.localtime().isoformat()
+        try:
+            data = cls.get_or_raise()
 
-        data = cls.get()
+            if data.get("task_id") != task_id:
+                print(
+                    "⚠️ ProgressService.mark_cancelled: "
+                    f"Task ownership mismatch. "
+                    f"current={data.get('task_id')}, "
+                    f"requested={task_id}"
+                )
+                return None
 
-        data.update(
-            {
-                "status": "cancelled",
-                "is_running": False,
+            if not cls.owns_lock(task_id):
+                print(
+                    "⚠️ ProgressService.mark_cancelled: "
+                    f"Task {task_id} does not own the lock"
+                )
+                return None
 
-                "current_command": (
-                    "🛑 تم إلغاء التحديث"
-                ),
+            now = timezone.localtime().isoformat()
 
-                "finished_at": now,
-                "heartbeat_at": now,
-                "cancel_requested": False,
-            }
-        )
+            data.update(
+                {
+                    "status": "cancelled",
+                    "is_running": False,
+                    "current_command": (
+                        "🛑 تم إلغاء التحديث"
+                    ),
+                    "finished_at": now,
+                    "heartbeat_at": now,
+                    "cancel_requested": False,
+                }
+            )
 
-        if logs is not None:
-            data["logs"] = logs
+            if logs is not None:
+                data["logs"] = logs
 
-        cls.save(data)
+            if not cls.save(data):
+                print(
+                    "❌ ProgressService.mark_cancelled: "
+                    "Failed to save cancelled state"
+                )
+                return None
 
-        return data
+            # تحرير الـLock بعد حفظ الحالة النهائية بنجاح
+            cls.release_lock(task_id)
+
+            return data
+
+        except Exception as e:
+            print(
+                f"❌ ProgressService.mark_cancelled: {e}"
+            )
+            return None
 
     # ================================================================
     # Status

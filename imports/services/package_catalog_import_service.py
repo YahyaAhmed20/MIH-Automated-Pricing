@@ -1,7 +1,7 @@
 import pandas as pd
 import time
 
-from django.db import transaction
+from django.db import transaction, close_old_connections
 
 from medical_catalog.models import (
     Package,
@@ -18,7 +18,7 @@ from imports.utils.import_helpers import ImportHelpers
 class PackageCatalogImportService:
 
     @staticmethod
-    def truncate_text(value, max_length=255):
+    def truncate_text(value, max_length=255, counters=None):
         """تقليص النص إذا تجاوز الحد الأقصى"""
 
         if not value:
@@ -27,10 +27,9 @@ class PackageCatalogImportService:
         cleaned = ImportHelpers.normalize_text(value)
 
         if len(cleaned) > max_length:
-            print(
-                f"⚠️ تم تقليص نص طويل من "
-                f"{len(cleaned)} إلى {max_length} حرف"
-            )
+            if counters is not None:
+                counters["truncated_texts"] += 1
+
             return cleaned[:max_length]
 
         return cleaned
@@ -140,7 +139,6 @@ class PackageCatalogImportService:
         return data
 
     @staticmethod
-    @transaction.atomic
     def import_data(dataframe):
 
         start_time = time.perf_counter()
@@ -157,6 +155,7 @@ class PackageCatalogImportService:
             "deleted": 0,
             "skipped_duplicates": 0,
             "missing_specialty": 0,
+            "truncated_texts": 0,
 
             # Drive statistics
             "created_attachments": 0,
@@ -181,6 +180,10 @@ class PackageCatalogImportService:
         print(
             f"   ✅ Loaded {len(drive_links)} Drive links"
         )
+
+        # The Google API call above is external I/O. Ensure Django starts
+        # the database phase with a healthy connection.
+        close_old_connections()
 
         # ============================================================
         # ✅ Cache للـ Specialties
@@ -324,6 +327,7 @@ class PackageCatalogImportService:
                 PackageCatalogImportService.truncate_text(
                     package_name,
                     255,
+                    result,
                 )
             )
 
@@ -335,6 +339,7 @@ class PackageCatalogImportService:
                 PackageCatalogImportService.truncate_text(
                     specialty_name,
                     255,
+                    result,
                 )
             )
 
@@ -387,21 +392,10 @@ class PackageCatalogImportService:
                     f"UNKNOWN_CODE_{index}"
                 )
 
-                print(
-                    f"⚠️ صف {index}: "
-                    f"الكود مفقود - تم استخدام كود افتراضي"
-                )
-
             if not package_name:
 
                 package_name = (
                     f"UNKNOWN_PACKAGE_{index}"
-                )
-
-                print(
-                    f"⚠️ صف {index}: "
-                    f"اسم الباكدج مفقود - "
-                    f"تم استخدام اسم افتراضي"
                 )
 
             # ========================================================
@@ -425,12 +419,6 @@ class PackageCatalogImportService:
             )
 
             if not entity:
-
-                print(
-                    f"⚠️ صف {index}: "
-                    f"الشركة '{company_name}' "
-                    f"غير موجودة - سيتم تخطي الصف"
-                )
 
                 continue
 
@@ -626,51 +614,39 @@ class PackageCatalogImportService:
             f"{len(packages_to_update)} packages..."
         )
 
-        if packages_to_create:
+        if packages_to_create or packages_to_update:
+            close_old_connections()
 
-            Package.objects.bulk_create(
-                packages_to_create,
-                batch_size=1000,
-            )
+            with transaction.atomic():
+                if packages_to_create:
+                    Package.objects.bulk_create(
+                        packages_to_create,
+                        batch_size=1000,
+                    )
 
-        # ============================================================
-        # ✅ Update Packages
-        # ============================================================
+                # ========================================================
+                # ✅ Update Packages
+                # ========================================================
 
-        if packages_to_update:
+                if packages_to_update:
+                    Package.objects.bulk_update(
+                        packages_to_update,
+                        fields=[
+                            "name",
+                            "specialty",
+                            "stay_duration",
+                            "base_price",
+                            "package_note",
+                            "is_active",
+                        ],
+                        batch_size=1000,
+                    )
 
-            Package.objects.bulk_update(
-                packages_to_update,
-                fields=[
-                    "name",
-                    "specialty",
-                    "stay_duration",
-                    "base_price",
-                    "package_note",
-                    "is_active",
-                ],
-                batch_size=1000,
-            )
+            close_old_connections()
 
-        # ============================================================
-        # ✅ Reload Packages after bulk_create
-        # ============================================================
-
-        packages_cache = {}
-
-        for package in Package.objects.all():
-
-            key = (
-                package.entity_id,
-                ImportHelpers.normalize_text(
-                    package.code
-                ),
-                ImportHelpers.normalize_text(
-                    package.name
-                ),
-            )
-
-            packages_cache[key] = package
+        # bulk_create() on PostgreSQL populates primary keys, and the
+        # newly-created objects are already present in packages_cache.
+        # No second full-table SELECT is needed here.
 
         # ============================================================
         # ✅ Prepare Package Attachments
@@ -680,14 +656,8 @@ class PackageCatalogImportService:
             "⏳ Processing Package Drive attachments..."
         )
 
-        # إعادة تحميل الـattachments
-        attachments_cache = {}
-
-        for attachment in PackageAttachment.objects.all():
-
-            attachments_cache[
-                attachment.package_id
-            ] = attachment
+        # attachments_cache was loaded once at the beginning.
+        # No second full-table SELECT is needed here.
 
         # ============================================================
         # إنشاء / تحديث Attachments
@@ -875,43 +845,49 @@ class PackageCatalogImportService:
         # ✅ Bulk Create Attachments
         # ============================================================
 
-        if attachments_to_create:
+        if attachments_to_create or attachments_to_update:
+            close_old_connections()
 
-            print(
-                f"💾 Creating "
-                f"{len(attachments_to_create)} "
-                f"package attachments..."
-            )
+            with transaction.atomic():
+                if attachments_to_create:
 
-            PackageAttachment.objects.bulk_create(
-                attachments_to_create,
-                batch_size=1000,
-            )
+                    print(
+                        f"💾 Creating "
+                        f"{len(attachments_to_create)} "
+                        f"package attachments..."
+                    )
 
-        # ============================================================
-        # ✅ Bulk Update Attachments
-        # ============================================================
+                    PackageAttachment.objects.bulk_create(
+                        attachments_to_create,
+                        batch_size=1000,
+                    )
 
-        if attachments_to_update:
+                # ========================================================
+                # ✅ Bulk Update Attachments
+                # ========================================================
 
-            print(
-                f"💾 Updating "
-                f"{len(attachments_to_update)} "
-                f"package attachments..."
-            )
+                if attachments_to_update:
 
-            PackageAttachment.objects.bulk_update(
-                attachments_to_update,
-                fields=[
-                    "package_pdf_name",
-                    "package_pdf_url",
-                    "package_pdf_drive_id",
-                    "operation_instruction_name",
-                    "operation_instruction_url",
-                    "operation_instruction_drive_id",
-                ],
-                batch_size=1000,
-            )
+                    print(
+                        f"💾 Updating "
+                        f"{len(attachments_to_update)} "
+                        f"package attachments..."
+                    )
+
+                    PackageAttachment.objects.bulk_update(
+                        attachments_to_update,
+                        fields=[
+                            "package_pdf_name",
+                            "package_pdf_url",
+                            "package_pdf_drive_id",
+                            "operation_instruction_name",
+                            "operation_instruction_url",
+                            "operation_instruction_drive_id",
+                        ],
+                        batch_size=1000,
+                    )
+
+            close_old_connections()
 
         # ============================================================
         # ✅ Delete Packages not found in Sheet
@@ -942,12 +918,14 @@ class PackageCatalogImportService:
                     )
 
             if packages_to_delete:
+                close_old_connections()
 
-                deleted_count, _ = (
-                    Package.objects.filter(
-                        id__in=packages_to_delete
-                    ).delete()
-                )
+                with transaction.atomic():
+                    deleted_count, _ = (
+                        Package.objects.filter(
+                            id__in=packages_to_delete
+                        ).delete()
+                    )
 
                 print(
                     f"🗑️ Deleted "
@@ -964,6 +942,16 @@ class PackageCatalogImportService:
             print(
                 "⚠️ No package keys in sheet "
                 "- skipping deletion"
+            )
+
+        # ============================================================
+        # ✅ Truncated Summary
+        # ============================================================
+
+        if result["truncated_texts"]:
+            print(
+                f"⚠️ Truncated texts: "
+                f"{result['truncated_texts']}"
             )
 
         # ============================================================

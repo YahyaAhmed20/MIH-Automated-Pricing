@@ -18,14 +18,19 @@ from imports.services.google_sheets_service import GoogleSheetsService
 class CompanyContractImportService:
 
     @staticmethod
-    def truncate_text(value, max_length=255):
-        """تقليص النص إذا تجاوز الحد الأقصى"""
+    def truncate_text(value, max_length=255, counters=None):
+        """تقليص النص إذا تجاوز الحد الأقصى بدون إغراق الـ logs."""
         if not value:
             return value
+
         cleaned = ImportHelpers.normalize_text(value)
+
         if len(cleaned) > max_length:
-            print(f"⚠️ تم تقليص نص طويل من {len(cleaned)} إلى {max_length} حرف")
+            if counters is not None:
+                counters["truncated_texts"] += 1
+
             return cleaned[:max_length]
+
         return cleaned
 
     @staticmethod
@@ -149,6 +154,7 @@ class CompanyContractImportService:
             "updated_contracts": 0,
             "skipped_incomplete_contracts": 0,
             "deleted_contracts": 0,
+            "truncated_texts": 0,
         }
 
         # ============================================================
@@ -216,22 +222,38 @@ class CompanyContractImportService:
 
             # ✅ العمود 0: الجهة (الشركة)
             company_name = ImportHelpers.normalize_text(row.get(0, ""))
-            company_name = CompanyContractImportService.truncate_text(company_name, 255)
+            company_name = CompanyContractImportService.truncate_text(
+                company_name,
+                255,
+                result,
+            )
 
             if not company_name:
                 continue
 
             # ✅ العمود 1: نوع التعاقد
             contract_type = ImportHelpers.normalize_text(row.get(1, ""))
-            contract_type = CompanyContractImportService.truncate_text(contract_type, 255)
+            contract_type = CompanyContractImportService.truncate_text(
+                contract_type,
+                255,
+                result,
+            )
 
             # ✅ العمود 2: الفئة المالية
             financial_code = ImportHelpers.normalize_text(row.get(2, ""))
-            financial_code = CompanyContractImportService.truncate_text(financial_code, 50)
+            financial_code = CompanyContractImportService.truncate_text(
+                financial_code,
+                50,
+                result,
+            )
 
             # ✅ العمود 3: قائمة الاسعار الحاليه
             price_list_name = ImportHelpers.normalize_text(row.get(3, ""))
-            price_list_name = CompanyContractImportService.truncate_text(price_list_name, 255)
+            price_list_name = CompanyContractImportService.truncate_text(
+                price_list_name,
+                255,
+                result,
+            )
 
             # ✅ العمود 4: الخدمة الطبية (نسبة الخصم)
             medical_service = CompanyContractImportService.parse_medical_service(row.get(4, None))
@@ -280,7 +302,11 @@ class CompanyContractImportService:
 
             # ✅ العمود 12: ملاحظات
             notes = ImportHelpers.normalize_text(row.get(12, ""))
-            notes = CompanyContractImportService.truncate_text(notes, 255)
+            notes = CompanyContractImportService.truncate_text(
+                notes,
+                255,
+                result,
+            )
 
             # ✅ منع التكرار في نفس الملف
             contract_key = (
@@ -390,6 +416,12 @@ class CompanyContractImportService:
                 print(f"   📊 Processed {processed}/{total_rows} rows...")
 
         print(f"   ✅ Processed {processed}/{total_rows} rows")
+
+        if result["truncated_texts"] > 0:
+            print(
+                f"   ⚠️ Truncated text values: "
+                f"{result['truncated_texts']}"
+            )
 
         # ============================================================
         # 🔄 Sync contracts with Sheet 3

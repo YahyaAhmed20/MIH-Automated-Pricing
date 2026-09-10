@@ -9,14 +9,19 @@ from imports.utils.import_helpers import ImportHelpers
 class MedicalProceduresImportService:
 
     @staticmethod
-    def truncate_text(value, max_length=255):
+    def truncate_text(value, max_length=255, counters=None):
         """تقليص النص إذا تجاوز الحد الأقصى"""
         if not value:
             return value
+
         cleaned = ImportHelpers.normalize_text(value)
+
         if len(cleaned) > max_length:
-            print(f"⚠️ تم تقليص نص طويل من {len(cleaned)} إلى {max_length} حرف")
+            if counters is not None:
+                counters["truncated_texts"] += 1
+
             return cleaned[:max_length]
+
         return cleaned
 
     @staticmethod
@@ -33,6 +38,7 @@ class MedicalProceduresImportService:
             "updated_procedures": 0,
             "deleted_procedures": 0,
             "skipped": 0,
+            "truncated_texts": 0,
         }
 
         print(f"📊 Valid rows: {len(dataframe)}")
@@ -84,7 +90,11 @@ class MedicalProceduresImportService:
             # ✅ أرقام الأعمدة حسب ترتيب شيت 13
             # العمود 0: الكود (procedure_code)
             procedure_code = ImportHelpers.normalize_text(row[0])
-            procedure_code = MedicalProceduresImportService.truncate_text(procedure_code, 50)
+            procedure_code = MedicalProceduresImportService.truncate_text(
+                procedure_code,
+                50,
+                result,
+            )
 
             if not procedure_code:
                 result["skipped"] += 1
@@ -92,23 +102,38 @@ class MedicalProceduresImportService:
 
             # العمود 1: أسم العملية (procedure_name_ar)
             name_ar = ImportHelpers.normalize_text(row[1])
-            name_ar = MedicalProceduresImportService.truncate_text(name_ar, 255)
+            name_ar = MedicalProceduresImportService.truncate_text(
+                name_ar,
+                255,
+                result,
+            )
 
             # العمود 2: التخصص (specialty)
             specialty_name = ImportHelpers.normalize_text(row[2])
-            specialty_name = MedicalProceduresImportService.truncate_text(specialty_name, 255)
+            specialty_name = MedicalProceduresImportService.truncate_text(
+                specialty_name,
+                255,
+                result,
+            )
 
             if not specialty_name:
                 specialty_name = "بدون تخصص"
-                print(f"⚠️ صف {index}: التخصص مفقود - تم استخدام 'بدون تخصص'")
 
             # العمود 3: التصنيف (procedure_category)
             classification = ImportHelpers.normalize_text(row[3])
-            classification = MedicalProceduresImportService.truncate_text(classification, 100)
+            classification = MedicalProceduresImportService.truncate_text(
+                classification,
+                100,
+                result,
+            )
 
             # العمود 4: المسمي باللغه الانجليزيه (procedure_name_en)
             name_en = ImportHelpers.normalize_text(row[4])
-            name_en = MedicalProceduresImportService.truncate_text(name_en, 255)
+            name_en = MedicalProceduresImportService.truncate_text(
+                name_en,
+                255,
+                result,
+            )
 
             result["processed"] += 1
             processed = result["processed"]
@@ -139,79 +164,26 @@ class MedicalProceduresImportService:
                 changed = False
 
                 if existing_procedure.name_ar != name_ar:
-                    print("name_ar")
-                    print(repr(existing_procedure.name_ar))
-                    print(repr(name_ar))
                     existing_procedure.name_ar = name_ar
                     changed = True
 
                 if existing_procedure.name_en != name_en:
-                    print("name_en")
-                    print(repr(existing_procedure.name_en))
-                    print(repr(name_en))
                     existing_procedure.name_en = name_en
                     changed = True
 
                 if existing_procedure.specialty_id != specialty.id:
-                    print("specialty")
-                    print(repr(existing_procedure.specialty_id))
-                    print(repr(specialty.id))
                     existing_procedure.specialty = specialty
                     changed = True
 
                 if existing_procedure.classification != classification:
-                    print("classification")
-                    print(repr(existing_procedure.classification))
-                    print(repr(classification))
                     existing_procedure.classification = classification
                     changed = True
 
                 if existing_procedure.is_active is not True:
-                    print("is_active")
-                    print(repr(existing_procedure.is_active))
-                    print(repr(True))
                     existing_procedure.is_active = True
                     changed = True
 
-                # ✅ Debug: عرض التغييرات
                 if changed:
-                    print(f"\n🔍 {procedure_code}")
-
-                    if existing_procedure.name_ar != name_ar:
-                        print(
-                            f"name_ar:\n"
-                            f"DB   = {existing_procedure.name_ar!r}\n"
-                            f"Sheet= {name_ar!r}"
-                        )
-
-                    if existing_procedure.name_en != name_en:
-                        print(
-                            f"name_en:\n"
-                            f"DB   = {existing_procedure.name_en!r}\n"
-                            f"Sheet= {name_en!r}"
-                        )
-
-                    if existing_procedure.specialty_id != specialty.id:
-                        print(
-                            f"specialty:\n"
-                            f"DB   = {existing_procedure.specialty_id}\n"
-                            f"Sheet= {specialty.id}"
-                        )
-
-                    if existing_procedure.classification != classification:
-                        print(
-                            f"classification:\n"
-                            f"DB   = {existing_procedure.classification!r}\n"
-                            f"Sheet= {classification!r}"
-                        )
-
-                    if existing_procedure.is_active != True:
-                        print(
-                            f"is_active:\n"
-                            f"DB   = {existing_procedure.is_active}\n"
-                            f"Sheet= True"
-                        )
-
                     procedures_to_update.append(existing_procedure)
                     result["updated_procedures"] += 1
 
@@ -276,6 +248,12 @@ class MedicalProceduresImportService:
 
             result["deleted_procedures"] = deleted_count
             print(f"🗑️ Deleted {deleted_count} procedures")
+
+        if result["truncated_texts"]:
+            print(
+                f"⚠️ Truncated texts: "
+                f"{result['truncated_texts']}"
+            )
 
         elapsed = time.perf_counter() - start_time
 

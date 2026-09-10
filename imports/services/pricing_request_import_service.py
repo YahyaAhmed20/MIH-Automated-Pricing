@@ -902,10 +902,6 @@ class PricingRequestImportService:
                 )
 
                 if entity is None:
-                    print(
-                    f"⚠️ Entity not found - Row {index}: "
-                    f"Company={entity_name!r}"
-                )
 
                     entity = ContractEntity.objects.create(
                         name=entity_name,

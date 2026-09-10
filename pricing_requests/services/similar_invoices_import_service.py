@@ -39,7 +39,7 @@ class SimilarInvoicesImportService:
     }
 
     @staticmethod
-    def truncate_text(value, max_length=255):
+    def truncate_text(value, max_length=255, counters=None):
         """تقليص النص إذا تجاوز الحد الأقصى."""
 
         if not value:
@@ -48,10 +48,9 @@ class SimilarInvoicesImportService:
         cleaned = ImportHelpers.normalize_text(value)
 
         if len(cleaned) > max_length:
-            print(
-                f"⚠️ تم تقليص نص طويل من "
-                f"{len(cleaned)} إلى {max_length} حرف"
-            )
+            if counters is not None:
+                counters["truncated_texts"] += 1
+
             return cleaned[:max_length]
 
         return cleaned
@@ -84,6 +83,9 @@ class SimilarInvoicesImportService:
             "updated": 0,
             "deleted": 0,
             "skipped": 0,
+            "truncated_texts": 0,
+            "missing_patient_name": 0,
+            "missing_operation_name": 0,
         }
 
         # ============================================================
@@ -262,6 +264,7 @@ class SimilarInvoicesImportService:
                 SimilarInvoicesImportService.truncate_text(
                     specialty_name,
                     255,
+                    result,
                 )
             )
 
@@ -277,6 +280,7 @@ class SimilarInvoicesImportService:
                 SimilarInvoicesImportService.truncate_text(
                     doctor_name,
                     255,
+                    result,
                 )
             )
 
@@ -292,6 +296,7 @@ class SimilarInvoicesImportService:
                 SimilarInvoicesImportService.truncate_text(
                     operation_name,
                     255,
+                    result,
                 )
             )
 
@@ -307,6 +312,7 @@ class SimilarInvoicesImportService:
                 SimilarInvoicesImportService.truncate_text(
                     entity_name,
                     255,
+                    result,
                 )
             )
 
@@ -322,6 +328,7 @@ class SimilarInvoicesImportService:
                 SimilarInvoicesImportService.truncate_text(
                     building,
                     255,
+                    result,
                 )
             )
 
@@ -337,6 +344,7 @@ class SimilarInvoicesImportService:
                 SimilarInvoicesImportService.truncate_text(
                     room,
                     255,
+                    result,
                 )
             )
 
@@ -352,6 +360,7 @@ class SimilarInvoicesImportService:
                 SimilarInvoicesImportService.truncate_text(
                     sub_company,
                     255,
+                    result,
                 )
             )
 
@@ -371,6 +380,7 @@ class SimilarInvoicesImportService:
                 SimilarInvoicesImportService.truncate_text(
                     admission_status,
                     255,
+                    result,
                 )
             )
 
@@ -386,6 +396,7 @@ class SimilarInvoicesImportService:
                 SimilarInvoicesImportService.truncate_text(
                     admission_type,
                     255,
+                    result,
                 )
             )
 
@@ -493,6 +504,7 @@ class SimilarInvoicesImportService:
                 SimilarInvoicesImportService.truncate_text(
                     invoice_status,
                     100,
+                    result,
                 )
             )
 
@@ -517,6 +529,7 @@ class SimilarInvoicesImportService:
                 SimilarInvoicesImportService.truncate_text(
                     operating_room_opened,
                     255,
+                    result,
                 )
             )
 
@@ -532,6 +545,7 @@ class SimilarInvoicesImportService:
                 SimilarInvoicesImportService.truncate_text(
                     notes,
                     255,
+                    result,
                 )
             )
 
@@ -552,20 +566,14 @@ class SimilarInvoicesImportService:
                     f"UNKNOWN_PATIENT_{index}"
                 )
 
-                print(
-                    f"⚠️ صف {index}: اسم المريض مفقود "
-                    f"- تم استخدام اسم افتراضي"
-                )
+                result["missing_patient_name"] += 1
 
             if not operation_name:
                 operation_name = (
                     f"UNKNOWN_OPERATION_{index}"
                 )
 
-                print(
-                    f"⚠️ صف {index}: اسم العملية مفقود "
-                    f"- تم استخدام اسم افتراضي"
-                )
+                result["missing_operation_name"] += 1
 
             # ========================================================
             # Processed
@@ -858,6 +866,31 @@ class SimilarInvoicesImportService:
 
             print(
                 f"🗑️ Deleted {deleted} records"
+            )
+
+        # ============================================================
+        # Truncated Summary
+        # ============================================================
+
+        if result["truncated_texts"]:
+            print(
+                f"⚠️ Truncated texts: "
+                f"{result['truncated_texts']}"
+            )
+
+        # ============================================================
+        # Missing Data Summary
+        # ============================================================
+
+        if (
+            result["missing_patient_name"]
+            or result["missing_operation_name"]
+        ):
+            print(
+                f"⚠️ Missing patient names: "
+                f"{result['missing_patient_name']}, "
+                f"missing operation names: "
+                f"{result['missing_operation_name']}"
             )
 
         # ============================================================

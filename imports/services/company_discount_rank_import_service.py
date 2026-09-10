@@ -139,10 +139,6 @@ class CompanyDiscountRankImportService:
             result["processed"] += 1
             processed = result["processed"]
 
-            # ✅ طباعة أول 5 صفوف للتحقق
-            if processed <= 5:
-                print(f"   🔍 Row {index}: {company_name} - Internal: {internal_discount}%, External: {external_discount}%")
-
             # ✅ البحث في Cache
             key = company_name
             sheet_records.add(key)

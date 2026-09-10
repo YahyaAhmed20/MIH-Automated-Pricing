@@ -114,9 +114,6 @@ class CompanyExceptionImportService:
             entity_name = ImportHelpers.normalize_text(row.get(0, ""))
 
             if entity_name:
-                print(f"\n{'='*60}")
-                print(f"🏢 معالجة: {entity_name}")
-
                 financial_category = ImportHelpers.normalize_text(row.get(1, ""))
                 price_list = ImportHelpers.normalize_text(row.get(2, ""))
 
@@ -126,9 +123,6 @@ class CompanyExceptionImportService:
                     attachment = str(raw_attachment).strip()
                 else:
                     attachment = ImportHelpers.normalize_text(raw_attachment)
-
-                print(f"   الفئة المالية: {financial_category}")
-                print(f"   قائمة الأسعار: {price_list}")
 
                 result["processed"] += 1
                 processed += 1
@@ -153,10 +147,7 @@ class CompanyExceptionImportService:
                     if changed:
                         existing_profile.save()
                         result["updated"] += 1
-                        print(f"   ✅ تم تحديث الملف")
-                    else:
-                        print(f"   ✅ الملف موجود بدون تغييرات")
-                    
+
                     current_profile = existing_profile
 
                 else:
@@ -168,7 +159,6 @@ class CompanyExceptionImportService:
                     )
                     profiles_cache[key] = current_profile
                     result["profiles"] += 1
-                    print(f"   ✅ تم إنشاء ملف جديد")
 
                 # ✅ ✅ ✅ جمع التفاصيل
                 detail_rows = []
@@ -186,20 +176,12 @@ class CompanyExceptionImportService:
                     
                     next_idx += 1
 
-                print(f"   📋 عدد صفوف التفاصيل: {len(detail_rows)}")
-
-                # ✅ عرض أول صف تفاصيل للتحقق
-                if detail_rows:
-                    print(f"   📝 أول صف تفاصيل: {detail_rows[0].get(6, 'N/A')}")
-
                 # ✅ حذف العناصر القديمة
-                deleted_count = current_profile.items.all().delete()
-                print(f"   🗑️ تم حذف {deleted_count[0]} عنصر قديم")
+                current_profile.items.all().delete()
 
                 # ✅ بناء العناصر
                 all_rows_for_company = [row] + detail_rows
                 display_order = 1
-                items_count = 0
                 items_to_create = []
 
                 # ✅ المعالجة
@@ -246,15 +228,12 @@ class CompanyExceptionImportService:
                         )
 
                         display_order += 1
-                        items_count += 1
 
                 # ✅ Bulk Create
                 if items_to_create:
                     CompanyExceptionItem.objects.bulk_create(items_to_create, batch_size=1000)
                     result["items"] += len(items_to_create)
-                    print(f"   ✅ تم إنشاء {len(items_to_create)} عنصر جديد")
 
-                print(f"   ✅ تمت معالجة {items_count} خدمة")
                 i = next_idx
 
             else:

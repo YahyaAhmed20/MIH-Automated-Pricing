@@ -23,6 +23,9 @@ class PricingDetailsImportService:
             "updated": 0,
             "deleted": 0,
             "skipped": 0,
+            "missing_patient": 0,
+            "missing_company": 0,
+            "missing_procedure": 0,
         }
 
         # ============================================================
@@ -132,15 +135,15 @@ class PricingDetailsImportService:
             # ✅ قيم افتراضية
             if not patient_name:
                 patient_name = f"UNKNOWN_PATIENT_{index}"
-                print(f"⚠️ صف {index}: اسم المريض مفقود - تم استخدام اسم افتراضي")
+                result["missing_patient"] += 1
 
             if not company_name:
                 company_name = "بدون شركة"
-                print(f"⚠️ صف {index}: اسم الشركة مفقود - تم استخدام اسم افتراضي")
+                result["missing_company"] += 1
 
             if not procedure_name:
                 procedure_name = "بدون اجراء"
-                print(f"⚠️ صف {index}: اسم الاجراء مفقود - تم استخدام اسم افتراضي")
+                result["missing_procedure"] += 1
 
             result["processed"] += 1
             processed = result["processed"]
@@ -310,6 +313,18 @@ class PricingDetailsImportService:
 
             result["deleted"] = deleted
             print(f"🗑️ Deleted {deleted} records")
+
+        if (
+            result["missing_patient"]
+            or result["missing_company"]
+            or result["missing_procedure"]
+        ):
+            print(
+                f"⚠️ Missing data — "
+                f"Patient: {result['missing_patient']}, "
+                f"Company: {result['missing_company']}, "
+                f"Procedure: {result['missing_procedure']}"
+            )
 
         elapsed = time.perf_counter() - start_time
         print(f"✅ Completed in {elapsed:.2f} seconds")

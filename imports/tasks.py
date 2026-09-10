@@ -1,3 +1,4 @@
+
 from io import StringIO
 import threading
 
@@ -58,11 +59,16 @@ def update_all_data_task(
     # Worker بدأ فعليًا
     # ============================================================
 
-    ProgressService.mark_running(
+    started = ProgressService.mark_running(
         task_id=task_id,
         update_type=update_type,
         total=total,
     )
+
+    if started is None:
+        raise RuntimeError(
+            f"Task {task_id} could not acquire/confirm update ownership"
+        )
 
     # ============================================================
     # Heartbeat Thread
@@ -70,6 +76,7 @@ def update_all_data_task(
 
     heartbeat_stop = threading.Event()
 
+    
     def heartbeat_loop():
         """
         تحديث heartbeat بشكل مستقل أثناء تنفيذ الـimports.
@@ -79,23 +86,17 @@ def update_all_data_task(
 
             try:
 
-                progress = ProgressService.get()
-
-                # Task مختلفة → توقف
-                if progress.get("task_id") != task_id:
+                if not ProgressService.heartbeat(task_id):
                     break
-
-                # لم تعد Running → توقف
-                if progress.get("status") != "running":
-                    break
-
-                ProgressService.heartbeat()
 
             except Exception as exc:
 
                 print(
                     f"⚠️ Heartbeat thread error: {exc}"
                 )
+                break
+
+
 
     heartbeat_thread = threading.Thread(
         target=heartbeat_loop,
@@ -124,24 +125,33 @@ def update_all_data_task(
             # Check Cancel
             # ----------------------------------------------------
 
-            if ProgressService.is_cancel_requested():
+            if ProgressService.is_cancel_requested(task_id):
                 raise TaskCancelled()
 
             # ----------------------------------------------------
             # Heartbeat
             # ----------------------------------------------------
 
-            ProgressService.heartbeat()
+            if not ProgressService.heartbeat(task_id):
+                raise RuntimeError(
+                    f"Task {task_id} lost update ownership"
+                )
 
             # ----------------------------------------------------
             # Progress
             # ----------------------------------------------------
 
-            ProgressService.update(
+            updated = ProgressService.update(
+                task_id=task_id,
                 current_command=command_name,
                 completed=completed,
                 total=total,
             )
+
+            if updated is None:
+                raise RuntimeError(
+                    f"Task {task_id} failed to update progress"
+                )
 
         # ========================================================
         # تشغيل الـImports
@@ -151,18 +161,11 @@ def update_all_data_task(
             stdout=output,
             progress_callback=progress_callback,
             commands=commands,
+            task_id=task_id,
         )
 
-        # ✅ تم إضافة 3 prints هنا
-        print("### TASK DEBUG: UpdateAllDataService.run RETURNED ###")
-
         logs = output.getvalue()
-
-        print("### TASK DEBUG: LOGS EXTRACTED ###")
-
         results = run_result["results"]
-
-        print("### TASK DEBUG: RESULTS EXTRACTED ###")
 
         has_errors = not run_result["success"]
 
@@ -196,47 +199,32 @@ def update_all_data_task(
         # Final State
         # ========================================================
 
-        final_status = (
-            "error"
-            if has_errors
-            else "completed"
-        )
+        if has_errors:
 
-        final_command = (
-            "⚠️ اكتمل التحديث مع وجود أخطاء"
-            if has_errors
-            else "✅ تم الانتهاء من التحديث بنجاح!"
-        )
+            final_state = ProgressService.mark_error(
+                task_id=task_id,
+                message="اكتمل التحديث مع وجود أخطاء.",
+                logs=logs,
+                results=results,
+            )
 
-        final_error = (
-            "اكتمل التحديث مع وجود أخطاء."
-            if has_errors
-            else None
-        )
+            if final_state is None:
+                raise RuntimeError(
+                    f"Task {task_id} failed to save error state"
+                )
 
-        # --------------------------------------------------------
-        # حفظ الحالة النهائية مرة واحدة
-        # --------------------------------------------------------
+        else:
 
-        ProgressService.update(
-            status=final_status,
-            is_running=False,
-            completed=total,
-            total=total,
-            logs=logs,
-            results=results,
-            current_command=final_command,
-            update_type=update_type,
-            finished_at=timezone.now().isoformat(),
-            error=final_error,
-            heartbeat_at=timezone.now().isoformat(),
-        )
+            final_state = ProgressService.mark_completed(
+                task_id=task_id,
+                results=results,
+                logs=logs,
+            )
 
-        # ========================================================
-        # آخر تحديث ناجح
-        # ========================================================
-
-        if not has_errors:
+            if final_state is None:
+                raise RuntimeError(
+                    f"Task {task_id} failed to save completed state"
+                )
 
             ProgressService.set_last_successful_update(
                 update_type=update_type
@@ -272,19 +260,15 @@ def update_all_data_task(
             "🛑 تم إلغاء العملية بواسطة المستخدم."
         )
 
-        # --------------------------------------------------------
-        # حالة الإلغاء النهائية
-        # --------------------------------------------------------
-
-        ProgressService.update(
-            status="cancelled",
-            is_running=False,
+        cancelled_state = ProgressService.mark_cancelled(
+            task_id=task_id,
             logs=logs,
-            current_command="🛑 تم الإلغاء",
-            update_type=update_type,
-            finished_at=timezone.now().isoformat(),
-            error=None,
         )
+
+        if cancelled_state is None:
+            raise RuntimeError(
+                f"Task {task_id} failed to save cancelled state"
+            )
 
         return {
             "status": "cancelled",
@@ -306,23 +290,19 @@ def update_all_data_task(
             f"❌ خطأ: {exc}"
         )
 
-        # --------------------------------------------------------
-        # حفظ Error State
-        # --------------------------------------------------------
-
         try:
 
-            ProgressService.update(
-                status="error",
-                is_running=False,
+            error_state = ProgressService.mark_error(
+                task_id=task_id,
+                message=str(exc),
                 logs=logs,
-                current_command=(
-                    f"❌ خطأ: {str(exc)[:100]}"
-                ),
-                update_type=update_type,
-                finished_at=timezone.now().isoformat(),
-                error=str(exc),
             )
+
+            if error_state is None:
+                print(
+                    "❌ Failed to save error state: "
+                    f"Task {task_id}"
+                )
 
         except Exception as progress_exc:
 
@@ -342,3 +322,16 @@ def update_all_data_task(
         # ========================================================
 
         heartbeat_stop.set()
+
+        # ========================================================
+        # Safety Lock Release
+        # ========================================================
+
+        try:
+            ProgressService.release_lock(task_id)
+        except Exception as exc:
+            print(
+                f"⚠️ Failed to release update lock "
+                f"for task {task_id}: {exc}"
+            )
+

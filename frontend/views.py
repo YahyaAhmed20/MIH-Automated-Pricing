@@ -6633,7 +6633,6 @@ def update_progress(request):
         ProgressService.get()
     )
 
-
 # ================================================================
 # System Update
 # ================================================================
@@ -6645,7 +6644,7 @@ def system_update(request):
     صفحة إدارة تحديث بيانات النظام.
 
     POST:
-        يبدأ Task في Celery بحالة QUEUED.
+        يبدأ Task في Celery بعد امتلاك Distributed Lock.
 
     GET:
         يعرض الحالة الحالية من Redis.
@@ -6661,13 +6660,23 @@ def system_update(request):
             "update_type",
             "full",
         )
-        if update_type == "full" and not request.user.authorization.can(
-            Permissions.DATA_UPDATE_ALL
+
+        # --------------------------------------------------------
+        # Permission
+        # --------------------------------------------------------
+
+        if (
+            update_type == "full"
+            and not request.user.authorization.can(
+                Permissions.DATA_UPDATE_ALL
+            )
         ):
             return JsonResponse(
                 {
                     "success": False,
-                    "message": "ليس لديك صلاحية لتحديث جميع البيانات.",
+                    "message": (
+                        "ليس لديك صلاحية لتحديث جميع البيانات."
+                    ),
                 },
                 status=403,
             )
@@ -6677,7 +6686,6 @@ def system_update(request):
         # --------------------------------------------------------
 
         if update_type not in ["quick", "full"]:
-
             return JsonResponse(
                 {
                     "success": False,
@@ -6686,101 +6694,270 @@ def system_update(request):
                 status=400,
             )
 
-        # --------------------------------------------------------
-        # Get current progress
-        # --------------------------------------------------------
-
-        current_progress = ProgressService.get()
-
-        current_status = current_progress.get(
-            "status",
-            "idle",
-        )
-
-        # ============================================================
-        # Recover stale RUNNING task
-        # ============================================================
-
-        if current_status == "running" and ProgressService.is_stale():
-
-            print(
-                "⚠️ Detected stale update. "
-                "Resetting abandoned task."
-            )
-
-            ProgressService.reset()
-
-            current_progress = ProgressService.get()
-            current_status = current_progress.get(
-                "status",
-                "idle",
-            )
-
-        # --------------------------------------------------------
-        # Prevent duplicate updates
-        #
-        # queued = Task registered but worker has not started it yet
-        # running = Worker is executing it
-        # --------------------------------------------------------
-
-        if current_status in [
-            "queued",
-            "running",
-        ]:
-
-            return JsonResponse(
-                {
-                    "success": False,
-                    "message": (
-                        "يوجد تحديث قيد الانتظار أو التنفيذ. "
-                        "انتظر حتى ينتهي التحديث الحالي."
-                    ),
-                    "status": current_status,
-                },
-                status=409,
-            )
-
-        # --------------------------------------------------------
-        # Determine REAL commands
-        # --------------------------------------------------------
-
-        if update_type == "quick":
-            commands = QUICK_UPDATE_COMMANDS
-        else:
-            commands = IMPORT_COMMANDS + POST_IMPORT_COMMANDS
-
-        commands = list(commands)
-        total_commands = len(commands)
-
-        # ============================================================
-        # IMPORTANT:
-        # Create the Celery task ID BEFORE dispatching the task.
-        #
-        # This prevents a race condition where the worker starts
-        # before the View has registered the QUEUED state.
-        # ============================================================
+        # ========================================================
+        # Create Task ID BEFORE acquiring lock
+        # ========================================================
 
         from uuid import uuid4
 
         task_id = str(uuid4())
 
+        # ========================================================
+        # Acquire Distributed Lock + Stale Recovery
+        # ========================================================
+
+        try:
+            lock_acquired = ProgressService.acquire_lock(
+                task_id=task_id
+            )
+
+        except Exception as exc:
+            print(
+                f"❌ Failed to acquire update lock: {exc}"
+            )
+
+            return JsonResponse(
+                {
+                    "success": False,
+                    "message": (
+                        "تعذر الاتصال بخدمة التحديث. "
+                        "حاول مرة أخرى بعد قليل."
+                    ),
+                },
+                status=503,
+            )
+
         # --------------------------------------------------------
-        # Register QUEUED state BEFORE sending to Celery
+        # Lock is currently owned by another Task
         # --------------------------------------------------------
+
+        if not lock_acquired:
+
+            try:
+                # محاولة اكتشاف Update عالق واستعادته
+                recovered = ProgressService.recover_stale_update()
+
+            except Exception as recovery_exc:
+                print(
+                    "❌ Stale update recovery failed: "
+                    f"{recovery_exc}"
+                )
+                recovered = False
+
+            # ----------------------------------------------------
+            # Recovery succeeded
+            # ----------------------------------------------------
+
+            if recovered:
+
+                print(
+                    "♻️ Stale update recovered. "
+                    "Retrying update lock acquisition."
+                )
+
+                try:
+                    lock_acquired = ProgressService.acquire_lock(
+                        task_id=task_id
+                    )
+
+                except Exception as exc:
+                    print(
+                        "❌ Failed to reacquire update lock "
+                        f"after recovery: {exc}"
+                    )
+
+                    return JsonResponse(
+                        {
+                            "success": False,
+                            "message": (
+                                "تعذر بدء عملية التحديث. "
+                                "حاول مرة أخرى بعد قليل."
+                            ),
+                        },
+                        status=503,
+                    )
+
+            # ----------------------------------------------------
+            # Recovery did not happen / lock still unavailable
+            # ----------------------------------------------------
+
+            if not lock_acquired:
+
+                current_progress = ProgressService.get_or_raise()
+
+                return JsonResponse(
+                    {
+                        "success": False,
+                        "message": (
+                            "يوجد تحديث قيد الانتظار أو التنفيذ. "
+                            "انتظر حتى ينتهي التحديث الحالي."
+                        ),
+                        "status": current_progress.get(
+                            "status",
+                            "queued",
+                        ),
+                        "task_id": current_progress.get(
+                            "task_id"
+                        ),
+                    },
+                    status=409,
+                )
+
+        # ========================================================
+        # From this point:
+        #
+        # THIS request owns the Lock.
+        #
+        # Any failure must release it.
+        # ========================================================
 
         try:
 
-            ProgressService.mark_queued(
+            # ----------------------------------------------------
+            # Determine REAL commands
+            # ----------------------------------------------------
+
+            if update_type == "quick":
+                commands = QUICK_UPDATE_COMMANDS
+            else:
+                commands = (
+                    IMPORT_COMMANDS
+                    + POST_IMPORT_COMMANDS
+                )
+
+            commands = list(commands)
+            total_commands = len(commands)
+
+            # ----------------------------------------------------
+            # Register QUEUED state
+            # ----------------------------------------------------
+
+            queued = ProgressService.mark_queued(
                 task_id=task_id,
                 update_type=update_type,
                 total=total_commands,
             )
 
-        except Exception as exc:
+            if queued is None:
+
+                ProgressService.release_lock(
+                    task_id
+                )
+
+                return JsonResponse(
+                    {
+                        "success": False,
+                        "message": (
+                            "تعذر تجهيز عملية التحديث."
+                        ),
+                    },
+                    status=503,
+                )
+
+            # ====================================================
+            # Send Task to Celery
+            # ====================================================
+
+            try:
+
+                task = update_all_data_task.apply_async(
+                    kwargs={
+                        "update_type": update_type,
+                    },
+                    task_id=task_id,
+                    queue=settings.CELERY_QUEUE,
+                )
+
+            except Exception as exc:
+
+                # ------------------------------------------------
+                # Celery rejected the task.
+                #
+                # We own the lock, so mark_error can safely
+                # transition the state and release it.
+                # ------------------------------------------------
+
+                try:
+
+                    ProgressService.mark_error(
+                        task_id=task_id,
+                        message=(
+                            f"Celery dispatch error: {exc}"
+                        ),
+                        logs=(
+                            "❌ تعذر إرسال مهمة التحديث "
+                            "إلى Celery.\n\n"
+                            f"Error: {exc}"
+                        ),
+                    )
+
+                except Exception as progress_exc:
+
+                    print(
+                        "❌ Failed to save Celery "
+                        "dispatch error: "
+                        f"{progress_exc}"
+                    )
+
+                    # Safety net
+                    ProgressService.release_lock(
+                        task_id
+                    )
+
+                return JsonResponse(
+                    {
+                        "success": False,
+                        "message": (
+                            "تعذر إرسال مهمة التحديث "
+                            "إلى Celery."
+                        ),
+                        "error": str(exc),
+                    },
+                    status=500,
+                )
+
+            # ====================================================
+            # Celery accepted the task
+            # ====================================================
 
             print(
-                f"❌ Failed to register queued task: {exc}"
+                f"📥 Update task queued: {task_id}"
             )
+
+            return JsonResponse(
+                {
+                    "success": True,
+                    "task_id": task_id,
+                    "update_type": update_type,
+                    "status": "queued",
+                    "total": total_commands,
+                    "message": (
+                        "تم إرسال التحديث إلى Celery "
+                        "وهو في انتظار Worker."
+                    ),
+                }
+            )
+
+        except Exception as exc:
+
+            # ====================================================
+            # Unexpected View-side failure
+            # ====================================================
+
+            print(
+                f"❌ Failed to start update {task_id}: "
+                f"{exc}"
+            )
+
+            try:
+                ProgressService.release_lock(
+                    task_id
+                )
+            except Exception as release_exc:
+                print(
+                    "❌ Failed to release update lock "
+                    f"for {task_id}: {release_exc}"
+                )
 
             return JsonResponse(
                 {
@@ -6793,169 +6970,115 @@ def system_update(request):
                 status=500,
             )
 
-        # ============================================================
-        # Send Task to Celery
-        # ============================================================
-
-        try:
-
-            task = update_all_data_task.apply_async(
-                kwargs={
-                    "update_type": update_type,
-                },
-                task_id=task_id,
-                queue=settings.CELERY_QUEUE,
-
-            )
-
-        except Exception as exc:
-
-            # --------------------------------------------------------
-            # Celery failed to accept the task.
-            # Do NOT leave the system stuck in QUEUED.
-            # --------------------------------------------------------
-
-            ProgressService.mark_error(
-                message=f"Celery dispatch error: {exc}",
-                logs=(
-                    "❌ تعذر إرسال مهمة التحديث إلى Celery.\n\n"
-                    f"Error: {exc}"
-                ),
-            )
-
-            return JsonResponse(
-                {
-                    "success": False,
-                    "message": (
-                        "تعذر إرسال مهمة التحديث إلى Celery."
-                    ),
-                    "error": str(exc),
-                },
-                status=500,
-            )
-
-        # ============================================================
-        # Celery accepted the task
-        #
-        # task.id should equal our generated task_id.
-        # We intentionally keep the original task_id because it is
-        # the ID already registered in ProgressService.
-        # ============================================================
-
-        print(
-            f"📥 ProgressService: Task queued: {task_id}"
-        )
-
-        # --------------------------------------------------------
-        # Response
-        # --------------------------------------------------------
-
-        return JsonResponse(
-            {
-                "success": True,
-                "task_id": task_id,
-                "update_type": update_type,
-                "status": "queued",
-                "total": total_commands,
-                "message": (
-                    "تم إرسال التحديث إلى Celery "
-                    "وهو في انتظار Worker."
-                ),
-            }
-        )
-
     # ============================================================
     # GET → Display Page
     # ============================================================
 
-    progress = ProgressService.get()
+    try:
 
-    results = progress.get(
-        "results",
-        [],
-    )
+        progress = ProgressService.get()
 
-    logs = progress.get(
-        "logs",
-        None,
-    )
+        results = progress.get(
+            "results",
+            [],
+        )
 
-    # ------------------------------------------------------------
-    # Success / Error counts
-    # ------------------------------------------------------------
+        logs = progress.get(
+            "logs",
+            None,
+        )
 
-    success_count = sum(
-        1
-        for r in results
-        if r.get("status") in [
-            "success",
-            "✅",
-        ]
-    )
+        # --------------------------------------------------------
+        # Success / Error counts
+        # --------------------------------------------------------
 
-    error_count = sum(
-        1
-        for r in results
-        if r.get("status") in [
-            "error",
-            "❌",
-        ]
-    )
+        success_count = sum(
+            1
+            for r in results
+            if r.get("status") in [
+                "success",
+                "✅",
+            ]
+        )
 
-    # ------------------------------------------------------------
-    # Last successful update
-    # ------------------------------------------------------------
+        error_count = sum(
+            1
+            for r in results
+            if r.get("status") in [
+                "error",
+                "❌",
+            ]
+        )
 
-    last_successful_update = (
-        ProgressService.get_last_successful_update()
-    )
+        # --------------------------------------------------------
+        # Last successful update
+        # --------------------------------------------------------
 
-    
-    return render(
-        request,
-        "frontend/system_update.html",
-        {
-            "results": results,
-            "logs": logs,
+        last_successful_update = (
+            ProgressService.get_last_successful_update()
+        )
 
-            "total_commands": progress.get(
-                "total",
-                0,
-            ),
+        return render(
+            request,
+            "frontend/system_update.html",
+            {
+                "results": results,
+                "logs": logs,
 
-            "success_count": success_count,
-            "error_count": error_count,
+                "total_commands": progress.get(
+                    "total",
+                    0,
+                ),
 
-            "is_running": progress.get(
-                "is_running",
-                False,
-            ),
+                "success_count": success_count,
+                "error_count": error_count,
 
-            "completed": progress.get(
-                "completed",
-                0,
-            ),
+                "is_running": progress.get(
+                    "is_running",
+                    False,
+                ),
 
-            "status": progress.get(
-                "status",
-                "idle",
-            ),
+                "completed": progress.get(
+                    "completed",
+                    0,
+                ),
 
-            "update_type": progress.get(
-                "update_type",
-                "full",
-            ),
+                "status": progress.get(
+                    "status",
+                    "idle",
+                ),
 
-            "task_id": progress.get(
-                "task_id",
-                None,
-            ),
+                "update_type": progress.get(
+                    "update_type",
+                    "full",
+                ),
 
-            "last_successful_update": (
-                last_successful_update
-            ),
-        },
-    )
+                "task_id": progress.get(
+                    "task_id",
+                    None,
+                ),
+
+                "last_successful_update": (
+                    last_successful_update
+                ),
+            },
+        )
+
+    except Exception as exc:
+
+        print(
+            f"❌ system_update GET failed: {exc}"
+        )
+
+        return JsonResponse(
+            {
+                "success": False,
+                "message": (
+                    "تعذر قراءة حالة التحديث."
+                ),
+            },
+            status=503,
+        )
 
 # ================================================================
 # Clear Logs
@@ -6995,7 +7118,6 @@ def clear_logs(request):
 # ================================================================
 # Cancel Update
 # ================================================================
-
 @require_POST
 def cancel_update(request):
     """
@@ -7006,46 +7128,84 @@ def cancel_update(request):
         running
     """
 
-    progress = ProgressService.get()
+    try:
 
-    status = progress.get(
-        "status",
-        "idle",
-    )
+        progress = ProgressService.get_or_raise()
 
-    # ------------------------------------------------------------
-    # No active update
-    # ------------------------------------------------------------
+        status = progress.get(
+            "status",
+            "idle",
+        )
 
-    if status not in [
-        "queued",
-        "running",
-    ]:
+        task_id = progress.get("task_id")
+
+        # --------------------------------------------------------
+        # No active update
+        # --------------------------------------------------------
+
+        if status not in [
+            "queued",
+            "running",
+        ] or not task_id:
+
+            return JsonResponse(
+                {
+                    "success": False,
+                    "message": (
+                        "لا توجد عملية تحديث "
+                        "قيد الانتظار أو التنفيذ."
+                    ),
+                },
+                status=400,
+            )
+
+        # --------------------------------------------------------
+        # Request cancellation
+        # --------------------------------------------------------
+
+        cancelled = ProgressService.request_cancel(
+            task_id=task_id
+        )
+
+        if not cancelled:
+
+            return JsonResponse(
+                {
+                    "success": False,
+                    "message": (
+                        "تعذر إرسال طلب الإلغاء. "
+                        "قد تكون العملية انتهت بالفعل."
+                    ),
+                },
+                status=409,
+            )
+
+        return JsonResponse(
+            {
+                "success": True,
+                "task_id": task_id,
+                "status": status,
+                "message": (
+                    "تم إرسال طلب الإلغاء."
+                ),
+            }
+        )
+
+    except Exception as exc:
+
+        print(
+            f"❌ cancel_update failed: {exc}"
+        )
 
         return JsonResponse(
             {
                 "success": False,
                 "message": (
-                    "لا توجد عملية تحديث "
-                    "قيد الانتظار أو التنفيذ."
+                    "تعذر الاتصال بخدمة التحديث."
                 ),
             },
-            status=400,
+            status=503,
         )
-
-    # ------------------------------------------------------------
-    # Request cancellation
-    # ------------------------------------------------------------
-
-    ProgressService.request_cancel()
-
-    return JsonResponse(
-        {
-            "success": True,
-            "message": "تم إرسال طلب الإلغاء.",
-        }
-    )
-
 
 # ================================================================
 # SSE Progress Stream
@@ -7060,11 +7220,8 @@ def progress_stream(request):
     """
     Server-Sent Events stream.
 
-    يرسل التحديثات للواجهة عند تغير:
-        - logs
-        - completed
-        - status
-        - heartbeat
+    يرسل حالة التحديث عند حدوث تغيير فعلي.
+    لا يعتبر فشل Redis = idle.
     """
 
     def event_stream():
@@ -7073,21 +7230,53 @@ def progress_stream(request):
         last_completed = -1
         last_status = None
         last_heartbeat = None
+        last_task_id = None
 
         while True:
 
-            progress = ProgressService.get()
+            # ----------------------------------------------------
+            # Read current progress
+            # ----------------------------------------------------
+
+            try:
+                progress = ProgressService.get_or_raise()
+
+            except Exception as exc:
+
+                error_payload = {
+                    "status": "error",
+                    "is_running": False,
+                    "completed": 0,
+                    "total": 0,
+                    "task_id": None,
+                    "message": (
+                        "تعذر قراءة حالة التحديث من Redis."
+                    ),
+                    "error": str(exc),
+                    "timestamp": time.time(),
+                }
+
+                yield (
+                    "data: "
+                    + json.dumps(
+                        error_payload,
+                        ensure_ascii=False,
+                    )
+                    + "\n\n"
+                )
+
+                break
 
             # ----------------------------------------------------
             # Last successful update
             # ----------------------------------------------------
 
-            progress[
-                "last_successful_update"
-            ] = (
-                ProgressService
-                .get_last_successful_update()
-            )
+            try:
+                progress["last_successful_update"] = (
+                    ProgressService.get_last_successful_update()
+                )
+            except Exception:
+                progress["last_successful_update"] = None
 
             # ----------------------------------------------------
             # Current values
@@ -7110,7 +7299,11 @@ def progress_stream(request):
 
             heartbeat = progress.get(
                 "heartbeat_at",
+                None,
+            )
 
+            task_id = progress.get(
+                "task_id",
                 None,
             )
 
@@ -7123,7 +7316,12 @@ def progress_stream(request):
                 or current_completed != last_completed
                 or status != last_status
                 or heartbeat != last_heartbeat
+                or task_id != last_task_id
             )
+
+            # ----------------------------------------------------
+            # Send changed state
+            # ----------------------------------------------------
 
             if changed:
 
@@ -7131,6 +7329,7 @@ def progress_stream(request):
                 last_completed = current_completed
                 last_status = status
                 last_heartbeat = heartbeat
+                last_task_id = task_id
 
                 progress["timestamp"] = time.time()
 
@@ -7144,7 +7343,7 @@ def progress_stream(request):
                 )
 
             # ----------------------------------------------------
-            # Stop stream on terminal states
+            # Terminal state
             # ----------------------------------------------------
 
             if status in [
@@ -7152,21 +7351,7 @@ def progress_stream(request):
                 "cancelled",
                 "error",
             ]:
-
-                yield (
-                    "data: "
-                    + json.dumps(
-                        progress,
-                        ensure_ascii=False,
-                    )
-                    + "\n\n"
-                )
-
                 break
-
-            # ----------------------------------------------------
-            # Poll interval
-            # ----------------------------------------------------
 
             time.sleep(1.5)
 
@@ -7174,7 +7359,6 @@ def progress_stream(request):
         event_stream(),
         content_type="text/event-stream",
     )
-    
 @permission_required(Permissions.APPROVALS_STATISTICS)
 def report_packages(request):
     selected_month = request.GET.get("month", "")

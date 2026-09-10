@@ -11,14 +11,19 @@ from imports.services.google_sheets_service import GoogleSheetsService
 class CompanyDiscountImportService:
 
     @staticmethod
-    def truncate_text(value, max_length=255):
-        """تقليص النص إذا تجاوز الحد الأقصى"""
+    def truncate_text(value, max_length=255, counters=None):
+        """تقليص النص إذا تجاوز الحد الأقصى بدون إغراق الـ logs."""
         if not value:
             return value
+
         cleaned = ImportHelpers.normalize_text(value)
+
         if len(cleaned) > max_length:
-            print(f"⚠️ تم تقليص نص طويل من {len(cleaned)} إلى {max_length} حرف")
+            if counters is not None:
+                counters["truncated_texts"] += 1
+
             return cleaned[:max_length]
+
         return cleaned
 
     @staticmethod
@@ -172,6 +177,8 @@ class CompanyDiscountImportService:
             "existing_profiles": 0,
             "deleted_profiles": 0,
             "deleted_discounts": 0,
+            "truncated_texts": 0,
+            "drive_links_found": 0,
         }
 
         # ============================================================
@@ -317,22 +324,38 @@ class CompanyDiscountImportService:
 
             # ✅ العمود 0: اسم الجهة
             company_name = ImportHelpers.normalize_text(row.get(0, ""))
-            company_name = CompanyDiscountImportService.truncate_text(company_name, 255)
+            company_name = CompanyDiscountImportService.truncate_text(
+                company_name,
+                255,
+                result,
+            )
 
             if not company_name:
                 continue
 
             # ✅ العمود 2: الفئة المالية
             financial_code = ImportHelpers.normalize_text(row.get(2, ""))
-            financial_code = CompanyDiscountImportService.truncate_text(financial_code, 50)
+            financial_code = CompanyDiscountImportService.truncate_text(
+                financial_code,
+                50,
+                result,
+            )
 
             # ✅ العمود 1: نوع التعاقد
             contract_type = ImportHelpers.normalize_text(row.get(1, ""))
-            contract_type = CompanyDiscountImportService.truncate_text(contract_type, 255)
+            contract_type = CompanyDiscountImportService.truncate_text(
+                contract_type,
+                255,
+                result,
+            )
 
             # ✅ العمود 3: قائمة الاسعار
             price_list = ImportHelpers.normalize_text(row.get(3, ""))
-            price_list = CompanyDiscountImportService.truncate_text(price_list, 255)
+            price_list = CompanyDiscountImportService.truncate_text(
+                price_list,
+                255,
+                result,
+            )
 
             # ============================================================
             # ✅ المرفقات - Drive Smart Chip من Sheet 4
@@ -349,20 +372,15 @@ class CompanyDiscountImportService:
                 operating_pdf = ImportHelpers.normalize_text(
                     drive_data.get("url", "")
                 )
-
-                print(
-                    f"📎 {company_name}: "
-                    f"{drive_data.get('name', '')}"
-                )
-                print(f"🔗 {operating_pdf}")
-
+                result["drive_links_found"] += 1
             else:
                 # لو مفيش Smart Chip للشركة
                 operating_pdf = ""
 
             operating_pdf = CompanyDiscountImportService.truncate_text(
                 operating_pdf,
-                500
+                500,
+                result,
             )
 
             processed += 1
@@ -495,7 +513,11 @@ class CompanyDiscountImportService:
 
             # ✅ الاستثناءات الداخلية
             internal_exception = ImportHelpers.normalize_text(row.get(28, ""))
-            internal_exception = CompanyDiscountImportService.truncate_text(internal_exception, 1000)
+            internal_exception = CompanyDiscountImportService.truncate_text(
+                internal_exception,
+                1000,
+                result,
+            )
 
             discount_key = (profile_cache_id, "داخلي", "الاستثناءات")
             
@@ -600,7 +622,11 @@ class CompanyDiscountImportService:
 
             # ✅ الاستثناءات الخارجية
             external_exception = ImportHelpers.normalize_text(row.get(44, ""))
-            external_exception = CompanyDiscountImportService.truncate_text(external_exception, 1000)
+            external_exception = CompanyDiscountImportService.truncate_text(
+                external_exception,
+                1000,
+                result,
+            )
 
             discount_key = (profile_cache_id, "خارجي", "الاستثناءات")
             
@@ -632,10 +658,22 @@ class CompanyDiscountImportService:
                 result["created_discounts"] += 1
                 discounts_cache[discount_key] = discount_obj
 
-            if processed % 10 == 0:
+            if processed % 100 == 0:
                 print(f"   📊 Processed {processed}/{total_rows} companies...")
 
         print(f"   ✅ Processed {processed}/{total_rows} companies")
+
+        if result["drive_links_found"] > 0:
+            print(
+                f"   📎 Drive links found: "
+                f"{result['drive_links_found']}"
+            )
+
+        if result["truncated_texts"] > 0:
+            print(
+                f"   ⚠️ Truncated text values: "
+                f"{result['truncated_texts']}"
+            )
 
         # ============================================================
         # ✅ تنفيذ الـ Bulk Operations

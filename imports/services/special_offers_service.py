@@ -11,14 +11,19 @@ from imports.utils.import_helpers import ImportHelpers
 class SpecialOfferImportService:
 
     @staticmethod
-    def truncate_text(value, max_length=255):
+    def truncate_text(value, max_length=255, counters=None):
         """تقليص النص إذا تجاوز الحد الأقصى"""
         if not value:
             return value
+
         cleaned = ImportHelpers.normalize_text(value)
+
         if len(cleaned) > max_length:
-            print(f"⚠️ تم تقليص نص طويل من {len(cleaned)} إلى {max_length} حرف")
+            if counters is not None:
+                counters["truncated_texts"] += 1
+
             return cleaned[:max_length]
+
         return cleaned
 
     @staticmethod
@@ -36,6 +41,7 @@ class SpecialOfferImportService:
             "updated_offers": 0,
             "deleted_offers": 0,
             "skipped": 0,  # ✅ إضافة counter للتخطي
+            "truncated_texts": 0,
         }
 
         # ============================================================
@@ -91,18 +97,30 @@ class SpecialOfferImportService:
 
             # ✅ العمود 0: الشركه
             company_name = ImportHelpers.normalize_text(row.get(0, ""))
-            company_name = SpecialOfferImportService.truncate_text(company_name, 255)
+            company_name = SpecialOfferImportService.truncate_text(
+                company_name,
+                255,
+                result,
+            )
 
             if not company_name:
                 continue
 
             # ✅ العمود 1: العرض خاص ب
             offer_for = ImportHelpers.normalize_text(row.get(1, ""))
-            offer_for = SpecialOfferImportService.truncate_text(offer_for, 255)
+            offer_for = SpecialOfferImportService.truncate_text(
+                offer_for,
+                255,
+                result,
+            )
 
             # ✅ العمود 2: التخصص
             specialty_name = ImportHelpers.normalize_text(row.get(2, ""))
-            specialty_name = SpecialOfferImportService.truncate_text(specialty_name, 255)
+            specialty_name = SpecialOfferImportService.truncate_text(
+                specialty_name,
+                255,
+                result,
+            )
 
             # ✅ إذا كان التخصص فارغاً، استخدم "غير محدد"
             if not specialty_name:
@@ -110,7 +128,11 @@ class SpecialOfferImportService:
 
             # ✅ العمود 3: الاجراء
             procedure_name = ImportHelpers.normalize_text(row.get(3, ""))
-            procedure_name = SpecialOfferImportService.truncate_text(procedure_name, 255)
+            procedure_name = SpecialOfferImportService.truncate_text(
+                procedure_name,
+                255,
+                result,
+            )
 
             if not procedure_name:
                 continue
@@ -132,15 +154,16 @@ class SpecialOfferImportService:
             # ✅ التاريخين إجباريين في SpecialOffer
             # أي صف ناقص فيه أحد التاريخين يتم تخطيه
             if not valid_from or not valid_to:
-                print(
-                    f"⚠️ صف {index}: تاريخ 'اعتبار من' أو 'ساريه حتي' مفقود - تم تخطي الصف"
-                )
                 result["skipped"] = result.get("skipped", 0) + 1
                 continue
 
             # ✅ العمود 7: ملاحظات
             notes = ImportHelpers.normalize_text(row.get(7, ""))
-            notes = SpecialOfferImportService.truncate_text(notes, 500)
+            notes = SpecialOfferImportService.truncate_text(
+                notes,
+                500,
+                result,
+            )
 
             result["processed"] += 1
             processed = result["processed"]
@@ -287,6 +310,12 @@ class SpecialOfferImportService:
 
             result["deleted_offers"] = deleted
             print(f"🗑️ Deleted {deleted} offers")
+
+        if result["truncated_texts"]:
+            print(
+                f"⚠️ Truncated texts: "
+                f"{result['truncated_texts']}"
+            )
 
         elapsed = time.perf_counter() - start_time
         print(f"✅ Completed in {elapsed:.2f} seconds")
