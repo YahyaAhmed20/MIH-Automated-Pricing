@@ -795,11 +795,19 @@ class ProgressService:
     @classmethod
     def recover_stale_update(cls):
         """
-        استعادة حالة Update عالقة بعد التأكد أنها stale فعلًا.
+        استعادة Update عالقة سواء كانت QUEUED أو RUNNING.
 
-        لا تقوم بعمل reset أعمى.
-        لا تلمس العملية إذا كان الـTask ما زال حيًا.
-        وتحرر الـLock فقط إذا كان مملوكًا للـTask القديمة.
+        QUEUED:
+            إذا لم تبدأ الـTask أصلًا ولم تعد موجودة في Celery،
+            يتم اعتبارها orphaned ويتم تحرير الـLock.
+
+        RUNNING:
+            لا يتم Recovery إلا إذا كان heartbeat قديمًا
+            والـTask غير موجودة في Celery.
+
+        مهم:
+            الـRecovery يتم بشكل Atomic، ولا يتم حذف Lock
+            إذا تغيّر مالكه أثناء العملية.
         """
 
         try:
@@ -808,94 +816,192 @@ class ProgressService:
             status = data.get("status")
             task_id = data.get("task_id")
 
-            # لا توجد عملية تحتاج Recovery
-            if status != "running" or not task_id:
+            # لا توجد عملية مرتبطة يمكن استعادتها
+            if not task_id:
                 return False
 
-            # أهم حماية:
-            # لا نستعيد العملية إلا إذا ثبت أنها stale فعلًا.
-            if not cls.is_stale():
-                return False
+            # ============================================================
+            # QUEUED RECOVERY
+            # ============================================================
 
-            client = cls.redis()
+            if status == "queued":
 
-            if client is None:
-                raise RuntimeError("Redis is unavailable")
+                task_alive = cls.is_task_alive(task_id)
 
-            now = timezone.localtime().isoformat()
+                # لا نستطيع التأكد من حالة Worker
+                if task_alive is None:
+                    return False
 
-            # ------------------------------------------------------------
-            # Atomic recovery
-            #
-            # نتحقق أن الـLock ما زال مملوكًا للـTask القديمة،
-            # ثم نكتب الحالة الجديدة ونحذف الـLock في نفس العملية.
-            # ------------------------------------------------------------
+                # الـTask موجودة فعلًا → لا نلمسها
+                if task_alive:
+                    return False
 
-            recovered_data = dict(data)
+                # --------------------------------------------------------
+                # الـTask كانت QUEUED لكنها غير موجودة في Celery.
+                # بما أنها لم تدخل RUNNING أصلًا، فهي orphaned.
+                # --------------------------------------------------------
 
-            recovered_data.update(
-                {
-                    "status": "error",
-                    "is_running": False,
-                    "current_command": (
-                        "⚠️ تم إنهاء التحديث السابق تلقائيًا "
-                        "لأن Worker فقد الاتصال."
-                    ),
-                    "finished_at": now,
-                    "heartbeat_at": None,
-                    "cancel_requested": False,
-                    "error": (
-                        "تم اكتشاف Update عالق بعد فقدان "
-                        "Celery Worker."
-                    ),
-                }
-            )
+                now = timezone.localtime().isoformat()
 
-            script = """
-            if redis.call("GET", KEYS[1]) ~= ARGV[1] then
-                return 0
-            end
+                recovered_data = dict(data)
 
-            redis.call("SET", KEYS[2], ARGV[2], "EX", ARGV[3])
-            redis.call("DEL", KEYS[1])
-
-            return 1
-            """
-
-            result = client.eval(
-                script,
-                2,
-                cls.LOCK_KEY,
-                cls.KEY,
-                task_id,
-                json.dumps(
-                    recovered_data,
-                    ensure_ascii=False,
-                ),
-                3600,
-            )
-
-            if not result:
-                # الـLock تغير أثناء Recovery.
-                # غالبًا Task جديدة امتلكته، فلا نلمسها.
-                print(
-                    "⚠️ ProgressService.recover_stale_update: "
-                    "Lock ownership changed; recovery aborted"
+                recovered_data.update(
+                    {
+                        "status": "error",
+                        "is_running": False,
+                        "current_command": (
+                            "⚠️ تم إنهاء التحديث السابق تلقائيًا "
+                            "لأن Worker لم يبدأ المهمة."
+                        ),
+                        "finished_at": now,
+                        "heartbeat_at": None,
+                        "cancel_requested": False,
+                        "error": (
+                            "تم اكتشاف Update في حالة QUEUED "
+                            "ولكن الـCelery Task لم تعد موجودة."
+                        ),
+                    }
                 )
-                return False
 
-            print(
-                "♻️ ProgressService: "
-                f"Recovered stale update {task_id}"
-            )
+                client = cls.redis()
 
-            return True
+                if client is None:
+                    raise RuntimeError("Redis is unavailable")
+
+                # --------------------------------------------------------
+                # Atomic Recovery
+                # --------------------------------------------------------
+
+                script = """
+                if redis.call("GET", KEYS[1]) ~= ARGV[1] then
+                    return 0
+                end
+
+                redis.call("SET", KEYS[2], ARGV[2], "EX", ARGV[3])
+                redis.call("DEL", KEYS[1])
+
+                return 1
+                """
+
+                result = client.eval(
+                    script,
+                    2,
+                    cls.LOCK_KEY,
+                    cls.KEY,
+                    task_id,
+                    json.dumps(
+                        recovered_data,
+                        ensure_ascii=False,
+                    ),
+                    3600,
+                )
+
+                if not result:
+                    print(
+                        "⚠️ ProgressService.recover_stale_update: "
+                        "Lock ownership changed; recovery aborted"
+                    )
+                    return False
+
+                print(
+                    "♻️ ProgressService: "
+                    f"Recovered orphaned queued update {task_id}"
+                )
+
+                return True
+
+            # ============================================================
+            # RUNNING RECOVERY
+            # ============================================================
+
+            if status == "running":
+
+                # لا نستعيد RUNNING إلا إذا ثبت أنها stale
+                if not cls.is_stale():
+                    return False
+
+                client = cls.redis()
+
+                if client is None:
+                    raise RuntimeError("Redis is unavailable")
+
+                now = timezone.localtime().isoformat()
+
+                recovered_data = dict(data)
+
+                recovered_data.update(
+                    {
+                        "status": "error",
+                        "is_running": False,
+                        "current_command": (
+                            "⚠️ تم إنهاء التحديث السابق تلقائيًا "
+                            "لأن Worker فقد الاتصال."
+                        ),
+                        "finished_at": now,
+                        "heartbeat_at": None,
+                        "cancel_requested": False,
+                        "error": (
+                            "تم اكتشاف Update عالق بعد فقدان "
+                            "Celery Worker."
+                        ),
+                    }
+                )
+
+                # --------------------------------------------------------
+                # Atomic Recovery
+                # --------------------------------------------------------
+
+                script = """
+                if redis.call("GET", KEYS[1]) ~= ARGV[1] then
+                    return 0
+                end
+
+                redis.call("SET", KEYS[2], ARGV[2], "EX", ARGV[3])
+                redis.call("DEL", KEYS[1])
+
+                return 1
+                """
+
+                result = client.eval(
+                    script,
+                    2,
+                    cls.LOCK_KEY,
+                    cls.KEY,
+                    task_id,
+                    json.dumps(
+                        recovered_data,
+                        ensure_ascii=False,
+                    ),
+                    3600,
+                )
+
+                if not result:
+                    print(
+                        "⚠️ ProgressService.recover_stale_update: "
+                        "Lock ownership changed; recovery aborted"
+                    )
+                    return False
+
+                print(
+                    "♻️ ProgressService: "
+                    f"Recovered stale running update {task_id}"
+                )
+
+                return True
+
+            # ============================================================
+            # أي حالة أخرى لا تحتاج Recovery
+            # ============================================================
+
+            return False
 
         except Exception as exc:
+
             print(
                 "❌ ProgressService.recover_stale_update: "
                 f"{exc}"
             )
+
             return False
 
     # ================================================================
