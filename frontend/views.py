@@ -6555,7 +6555,6 @@ from imports.services.update_all_data_service import (
     QUICK_UPDATE_COMMANDS,
 )
 
-
 # ================================================================
 # Helpers
 # ================================================================
@@ -6627,11 +6626,38 @@ def extract_results_from_logs(logs):
 
 def update_progress(request):
     """
-    API للحصول على حالة التحديث الحالية.
+    API للحصول على حالة التحديث الحالية
+    مع محاولة Recovery تلقائية للحالات العالقة.
     """
-    return JsonResponse(
-        ProgressService.get()
-    )
+
+    try:
+        progress = ProgressService.get_or_raise()
+
+        if progress.get("status") in ("queued", "running"):
+
+            try:
+                ProgressService.recover_stale_update()
+
+            except Exception as recovery_exc:
+                print(
+                    "⚠️ update_progress recovery failed: "
+                    f"{recovery_exc}"
+                )
+
+            progress = ProgressService.get_or_raise()
+
+        return JsonResponse(progress)
+
+    except Exception as exc:
+
+        return JsonResponse(
+            {
+                "success": False,
+                "message": "تعذر قراءة حالة التحديث.",
+                "error": str(exc),
+            },
+            status=503,
+        )
 
 # ================================================================
 # System Update
@@ -7240,6 +7266,18 @@ def progress_stream(request):
 
             try:
                 progress = ProgressService.get_or_raise()
+
+                if progress.get("status") in ("queued", "running"):
+
+                    try:
+                        ProgressService.recover_stale_update()
+                    except Exception as recovery_exc:
+                        print(
+                            "⚠️ progress_stream recovery failed: "
+                            f"{recovery_exc}"
+                        )
+
+                    progress = ProgressService.get_or_raise()
 
             except Exception as exc:
 

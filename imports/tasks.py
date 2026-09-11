@@ -1,4 +1,3 @@
-
 from io import StringIO
 import threading
 
@@ -66,9 +65,11 @@ def update_all_data_task(
     )
 
     if started is None:
-        raise RuntimeError(
-            f"Task {task_id} could not acquire/confirm update ownership"
-        )
+        return {
+            "status": "ignored",
+            "update_type": update_type,
+            "reason": "stale_task",
+        }
 
     # ============================================================
     # Heartbeat Thread
@@ -334,4 +335,3 @@ def update_all_data_task(
                 f"⚠️ Failed to release update lock "
                 f"for task {task_id}: {exc}"
             )
-

@@ -17,6 +17,8 @@ class ProgressService:
     # لو مفيش heartbeat لمدة 60 ثانية نعتبر الـ worker فقدناه
     HEARTBEAT_TIMEOUT = 60
 
+    QUEUED_TIMEOUT = 180  # 3 دقائق
+
     # Distributed lock لمنع تشغيل أكثر من Update في نفس الوقت
     LOCK_KEY = "system_update_lock"
     LOCK_TTL = 7200  # ساعتان كحد أقصى، والـ heartbeat يجدده
@@ -825,6 +827,33 @@ class ProgressService:
             # ============================================================
 
             if status == "queued":
+
+                queued_at = data.get("queued_at")
+
+                if not queued_at:
+                    return False
+
+                try:
+                    queued_time = timezone.datetime.fromisoformat(
+                        queued_at
+                    )
+
+                    if timezone.is_naive(queued_time):
+                        queued_time = timezone.make_aware(
+                            queued_time,
+                            timezone.get_current_timezone(),
+                        )
+
+                    queued_age = (
+                        timezone.now() - queued_time
+                    ).total_seconds()
+
+                except (TypeError, ValueError):
+                    return False
+
+                # لا نعتبر الـTask orphaned قبل مرور المهلة
+                if queued_age < cls.QUEUED_TIMEOUT:
+                    return False
 
                 task_alive = cls.is_task_alive(task_id)
 
