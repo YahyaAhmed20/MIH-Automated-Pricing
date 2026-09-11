@@ -286,11 +286,36 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 # ==========================================================
-# Google Sheets
+# Google Service Account
 # ==========================================================
+import json
+
+
 GOOGLE_SERVICE_ACCOUNT_FILE = (
     BASE_DIR / "credentials" / "google-drive.json"
 )
+
+# Railway: create the credentials file from the environment variable.
+# Local development: keep using credentials/google-drive.json.
+GOOGLE_SERVICE_ACCOUNT_JSON = os.getenv("GOOGLE_SERVICE_ACCOUNT_JSON")
+
+if GOOGLE_SERVICE_ACCOUNT_JSON:
+    GOOGLE_SERVICE_ACCOUNT_FILE.parent.mkdir(
+        parents=True,
+        exist_ok=True,
+    )
+
+    try:
+        # Validate that the environment variable contains valid JSON.
+        credentials_data = json.loads(GOOGLE_SERVICE_ACCOUNT_JSON)
+
+        with open(GOOGLE_SERVICE_ACCOUNT_FILE, "w", encoding="utf-8") as f:
+            json.dump(credentials_data, f)
+
+    except (json.JSONDecodeError, OSError) as exc:
+        raise RuntimeError(
+            "Invalid GOOGLE_SERVICE_ACCOUNT_JSON configuration"
+        ) from exc
 GOOGLE_SPREADSHEET_ID = (
     "1Qab6Psd4yqPJ9SUlz4F4y_6pD510p3A9sM-mXIr90wM"
 )
