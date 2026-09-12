@@ -1046,6 +1046,7 @@
             <tr>
                 <th style="width: 50px; min-width: 50px; position: sticky; left: 0; background: linear-gradient(135deg, #1a237e, #0d47a1); z-index: 3;">#</th>
                 <th style="min-width: 120px;">📅 تاريخ الدخول</th>
+                <th style="min-width: 110px;">🛏️ مدة الإقامة</th>
                 <th style="min-width: 140px;">👤 اسم المريض</th>
                 <th style="min-width: 180px;">📋 اسم العملية</th>
                 <th style="min-width: 120px;">📚 التخصص</th>
@@ -1055,65 +1056,68 @@
                 <th style="min-width: 110px; position: sticky; right: 0; background: linear-gradient(135deg, #1a237e, #0d47a1); z-index: 5;">⚡ الإجراء</th>
             </tr>
         </thead>
-       <tbody>
-    <tbody>
-    {% for invoice in page_obj %}
-    <tr>
-        <td style="position: sticky; left: 0; background: inherit; z-index: 1;">{{ forloop.counter0|add:page_obj.start_index }}</td>
-        <td>{{ invoice.admission_date|date:"Y-m-d"|default:"-" }}</td>
-        <td>
-            <span class="fw-bold">{{ invoice.patient_name }}</span>
-        </td>
-        <td title="{{ invoice.operation_name }}">
-            {{ invoice.operation_name|truncatechars:40 }}
-        </td>
-        <td>
-            <span class="text-wrap-2" style="white-space: normal; word-break: break-word; max-width: 95px; color: #212529; font-weight: 500;">
-                {{ invoice.specialty_name|default:"-" }}
-            </span>
-        </td>
-        <td>
-            <span class="text-wrap-2" style="white-space: normal; word-break: break-word; max-width: 95px; color: #212529; font-weight: 500;">
-                {{ invoice.entity_name|default:"-" }}
-            </span>
-        </td>
-        <td>{{ invoice.doctor_name|default:"-" }}</td>
-        <td class="text-end fw-bold text-success">
-            {{ invoice.formatted_net_invoice }} ج.م
-        </td>
-        <td style="position: sticky; right: 0; background: inherit; z-index: 2; box-shadow: -4px 0 12px rgba(0,0,0,0.08);">
-            <button class="btn-view-details" 
-                    data-bs-toggle="modal" 
-                    data-bs-target="#detailsModal"
-                    data-account="{{ invoice.account_number|default:'-' }}"
-                    data-medical="{{ invoice.medical_number|default:'-' }}"
-                    data-patient="{{ invoice.patient_name }}"
-                    data-entity="{{ invoice.entity_name|default:'-' }}"
-                    data-sub-company="{{ invoice.sub_company|default:'-' }}"
-                    data-doctor="{{ invoice.doctor_name|default:'-' }}"
-                    data-specialty="{{ invoice.specialty_name|default:'-' }}"
-                    data-operation="{{ invoice.operation_name }}"
-                    data-operation-description="{{ invoice.operation_description|default:'-' }}"
-                    data-admission="{{ invoice.admission_date|date:'Y-m-d' }}"
-                    data-discharge="{{ invoice.discharge_date|date:'Y-m-d' }}"
-                    data-stay="{{ invoice.stay_duration|default:'-' }}"
-                    data-total="{{ invoice.total_invoice|floatformat:0 }}"
-                    data-discount="{{ invoice.discount|floatformat:0 }}"
-                    data-net="{{ invoice.net_invoice|floatformat:0 }}"
-                    data-company-share="{{ invoice.company_share|floatformat:0 }}"
-                    data-patient-share="{{ invoice.patient_share|floatformat:0 }}"
-                    data-payments="{{ invoice.payments|floatformat:0 }}"
-                    data-status="{{ invoice.invoice_status|default:'-' }}"
-                    data-closed-date="{{ invoice.invoice_closed_date|date:'Y-m-d'|default:'-' }}"
-                    data-notes="{{ invoice.notes|default:'-' }}">
-                <i class="fas fa-eye me-1"></i> عرض
-            </button>
-        </td>
-    </tr>
-    {% endfor %}
-</tbody>
-
+        <tbody>
+        {% for invoice in page_obj %}
+        <tr>
+            <td style="position: sticky; left: 0; background: inherit; z-index: 1;">{{ forloop.counter0|add:page_obj.start_index }}</td>
+            <td>{{ invoice.admission_date|date:"Y-m-d"|default:"-" }}</td>
+            <td>
+                {{ invoice.stay_duration|default:"-" }}
+            </td>
+            <td>
+                <span class="fw-bold">{{ invoice.patient_name }}</span>
+            </td>
+            <td title="{{ invoice.operation_name }}">
+                {{ invoice.operation_name|truncatechars:40 }}
+            </td>
+            <td>
+                <span class="text-wrap-2" style="white-space: normal; word-break: break-word; max-width: 95px; color: #212529; font-weight: 500;">
+                    {{ invoice.specialty_name|default:"-" }}
+                </span>
+            </td>
+            <td>
+                <span class="text-wrap-2" style="white-space: normal; word-break: break-word; max-width: 95px; color: #212529; font-weight: 500;">
+                    {{ invoice.entity_name|default:"-" }}
+                </span>
+            </td>
+            <td>{{ invoice.doctor_name|default:"-" }}</td>
+            <td class="text-end fw-bold text-success">
+                {{ invoice.formatted_net_invoice }} ج.م
+            </td>
+            <td style="position: sticky; right: 0; background: inherit; z-index: 2; box-shadow: -4px 0 12px rgba(0,0,0,0.08);">
+                <button class="btn-view-details" 
+                        data-bs-toggle="modal" 
+                        data-bs-target="#detailsModal"
+                        data-account="{{ invoice.account_number|default:'-' }}"
+                        data-medical="{{ invoice.medical_number|default:'-' }}"
+                        data-patient="{{ invoice.patient_name }}"
+                        data-entity="{{ invoice.entity_name|default:'-' }}"
+                        data-sub-company="{{ invoice.sub_company|default:'-' }}"
+                        data-doctor="{{ invoice.doctor_name|default:'-' }}"
+                        data-specialty="{{ invoice.specialty_name|default:'-' }}"
+                        data-operation="{{ invoice.operation_name }}"
+                        data-operation-description="{{ invoice.operation_description|default:'-' }}"
+                        data-admission="{{ invoice.admission_date|date:'Y-m-d' }}"
+                        data-discharge="{{ invoice.discharge_date|date:'Y-m-d' }}"
+                        data-stay="{{ invoice.stay_duration|default:'-' }}"
+                        data-total="{{ invoice.total_invoice|floatformat:0 }}"
+                        data-discount="{{ invoice.discount|floatformat:0 }}"
+                        data-net="{{ invoice.net_invoice|floatformat:0 }}"
+                        data-company-share="{{ invoice.company_share|floatformat:0 }}"
+                        data-patient-share="{{ invoice.patient_share|floatformat:0 }}"
+                        data-payments="{{ invoice.payments|floatformat:0 }}"
+                        data-status="{{ invoice.invoice_status|default:'-' }}"
+                        data-closed-date="{{ invoice.invoice_closed_date|date:'Y-m-d'|default:'-' }}"
+                        data-notes="{{ invoice.notes|default:'-' }}">
+                    <i class="fas fa-eye me-1"></i> عرض
+                </button>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 </div>
+
     <!-- ✅ مؤشر التمرير -->
     <div class="d-flex justify-content-between align-items-center mt-2 text-muted small bg-light p-2 rounded">
         <div>

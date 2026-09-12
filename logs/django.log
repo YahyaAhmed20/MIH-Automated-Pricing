@@ -30015,3 +30015,37 @@ Not Found: /favicon.ico
 "GET /api/update-progress/ HTTP/1.1" 200 419
 "GET /system/update/ HTTP/1.1" 200 80471
 - Broken pipe from ('127.0.0.1', 62755)
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 51152
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+"GET /static/images/logo.jpeg HTTP/1.1" 200 68755
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 16616
+"GET / HTTP/1.1" 200 51152
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+"GET /static/images/logo.jpeg HTTP/1.1" 200 68755
+"POST / HTTP/1.1" 302 0
+"GET /reports/ HTTP/1.1" 200 170264
+"GET /static/images/img5.jpeg HTTP/1.1" 200 88819
+"GET /static/images/img3.jpeg HTTP/1.1" 200 78769
+"GET /static/images/img8.jpeg HTTP/1.1" 200 78642
+"GET /static/images/img6.jpeg HTTP/1.1" 200 125348
+"GET /static/images/img2.jpeg HTTP/1.1" 200 93254
+"GET /static/images/img4.jpeg HTTP/1.1" 200 91767
+"GET /static/images/img1.jpeg HTTP/1.1" 200 89363
+"GET /pricing-details/ HTTP/1.1" 200 349189
+"GET /pricing-details/?search=%D8%A8%D8%AF%D9%88%D9%86+%D8%B4%D8%B1%D9%83%D8%A9 HTTP/1.1" 200 246493
+"GET /pricing-details/?search=%D8%A8%D8%AF%D9%88%D9%86+%D8%B4%D8%B1%D9%83%D8%A9&group=&company=&doctor=%D8%A7.%D8%AF+%2F+%D8%AC%D9%85%D8%A7%D9%84+%D8%B9%D9%85%D9%8A%D8%B1%D8%A9&specialty=&accountant=&date_from=&date_to=&price_range= HTTP/1.1" 200 103279
+"GET /pricing-details/?search=%D8%B9%D8%B7%D8%A7+%D9%85%D8%B5%D8%B7%D9%81%D9%89+ HTTP/1.1" 200 98628
+"GET /pricing-details/?search=%D8%B9%D8%B7%D8%A7+%D9%85%D8%B5%D8%B7%D9%81 HTTP/1.1" 200 98622
+"GET /pricing-details/?search=%D8%B9%D8%B7%D8%A7 HTTP/1.1" 200 109684
+"GET /similar-invoices/ HTTP/1.1" 200 2530913
+"GET /similar-invoices/?search=%D9%85%D9%84%D9%83+%D8%AE%D8%A7%D9%84%D8%AF+%D8%B9%D8%A7%D8%AF%D9%84+%D8%B5%D9%84%D8%A7%D8%AD HTTP/1.1" 200 102863
+"GET /similar-invoices/?search=%D8%B9%D8%B7%D8%A7+%D9%85%D8%B5%D8%B7%D9%81%D9%89+%D8%B9%D8%B7%D8%A7+%D8%B9%D8%A8%D8%AF+%D8%A7%D9%84%D8%B1%D8%AD%D9%85%D9%86 HTTP/1.1" 200 105058
+"GET /similar-invoices/?search=%D8%B9%D8%B7%D8%A7+ HTTP/1.1" 200 243984
+"GET /similar-invoices/?search=%D8%B9%D8%B7%D8%A7+ HTTP/1.1" 200 257329
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+"GET /similar-invoices/?search=%D9%85%D9%86%D9%8A%D8%B1%D9%87+%D8%A7%D8%AD%D9%85%D8%AF+%D8%B1%D8%A7%D8%A8%D8%AD+%D9%83%D9%84%D9%88%D9%83%D8%A7 HTTP/1.1" 200 96307
+"GET /similar-invoices/?search=%D9%85%D9%86%D9%8A%D8%B1%D9%87+%D8%A7%D8%AD%D9%85%D8%AF+%D8%B1%D8%A7%D8%A8%D8%AD HTTP/1.1" 200 96252
+"GET /similar-invoices/?search=%D9%85%D9%86%D9%8A%D8%B1 HTTP/1.1" 200 226891
+"GET /similar-invoices/?search=%D9%86%D8%A7%D9%86%D8%B3%D9%89+%D8%B5%D8%A7%D9%84%D8%AD+%D9%85%D8%AD%D9%85%D8%AF+%D8%AD%D8%B3%D9%86 HTTP/1.1" 200 103010

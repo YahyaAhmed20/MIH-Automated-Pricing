@@ -36,6 +36,7 @@ class SimilarInvoicesImportService:
         "sub_company": "الشركة الفرعية",
         "notes": "ملاحظات",
         "operation_description": "توصيف العمليه",
+        "stay_duration": "مدة الاقامه",
     }
 
     @staticmethod
@@ -137,6 +138,7 @@ class SimilarInvoicesImportService:
             "تاريخ انهاء الفاتوره",
             "ملاحظات",
             "توصيف العمليه",
+            "مدة الاقامه",
             "حالة الدخول",
             "نوع الدخول",
             "فتح غرفة العمليات",
@@ -557,6 +559,22 @@ class SimilarInvoicesImportService:
                 )
             )
 
+            stay_duration = ImportHelpers.normalize_text(
+                SimilarInvoicesImportService.get_value(
+                    row,
+                    header_map,
+                    "stay_duration",
+                )
+            )
+
+            stay_duration = (
+                SimilarInvoicesImportService.truncate_text(
+                    stay_duration,
+                    100,
+                    result,
+                )
+            )
+
             # ========================================================
             # قيم افتراضية
             # ========================================================
@@ -693,6 +711,10 @@ class SimilarInvoicesImportService:
                     existing_record.operation_description = operation_description
                     changed = True
 
+                if existing_record.stay_duration != stay_duration:
+                    existing_record.stay_duration = stay_duration
+                    changed = True
+
                 if changed:
                     to_update.append(existing_record)
                     result["updated"] += 1
@@ -730,6 +752,7 @@ class SimilarInvoicesImportService:
                     operating_room_opened=operating_room_opened,
                     notes=notes,
                     operation_description=operation_description,
+                    stay_duration=stay_duration,
                 )
 
                 to_create.append(record)
@@ -794,6 +817,7 @@ class SimilarInvoicesImportService:
                 "operating_room_opened",
                 "notes",
                 "operation_description",
+                "stay_duration",
             ]
 
             for i in range(
