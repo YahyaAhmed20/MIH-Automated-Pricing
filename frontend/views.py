@@ -7478,3 +7478,78 @@ def report_packages(request):
         "frontend/report_packages.html",
         context
     )
+    
+    
+
+# ============================================
+# ✅ view جديد: قائمة التخصصات (أعلى / أقل)
+# ============================================
+@permission_required(Permissions.APPROVALS_STATISTICS)
+def specialties_list(request):
+    """صفحة قائمة التخصصات - أعلى أو أقل"""
+    
+    order = request.GET.get('order', 'top')  # top أو bottom
+    selected_month = request.GET.get('month', '')
+    
+    statistics = ReportStatistic.objects.all()
+    
+    if selected_month:
+        statistics = statistics.filter(month=selected_month)
+    
+    # إحصائيات كل تخصص
+    specialty_stats = (
+        statistics
+        .exclude(specialty__isnull=True)
+        .exclude(specialty='')
+        .values('specialty')
+        .annotate(
+            total=Count('id'),
+            total_amount=Sum('amount'),
+            cash=Count('id', filter=Q(payment_type='نقدي')),
+            credit=Count('id', filter=Q(payment_type='اجل')),
+        )
+    )
+    
+    total_packages = statistics.count()
+    
+    # ترتيب حسب الطلب
+    if order == 'bottom':
+        specialty_stats = specialty_stats.order_by('total', 'specialty')
+        page_title = 'أقل التخصصات'
+    else:
+        specialty_stats = specialty_stats.order_by('-total')
+        page_title = 'أعلى التخصصات'
+    
+    # النسب
+    data = []
+    for row in specialty_stats:
+        percentage = 0
+        if total_packages > 0:
+            percentage = round((row['total'] / total_packages) * 100, 1)
+        
+        data.append({
+            'name': row['specialty'],
+            'total': row['total'],
+            'total_amount': row['total_amount'] or 0,
+            'percentage': percentage,
+            'cash': row['cash'],
+            'credit': row['credit'],
+            'color': SPECIALTY_COLORS.get(row['specialty'], SPECIALTY_COLORS['default']),
+            'image': SPECIALTY_IMAGES.get(row['specialty'], SPECIALTY_IMAGES['default']),
+        })
+    
+    # الشهور
+    months_raw = list(ReportStatistic.objects.values_list('month', flat=True).distinct())
+    months = [m for m in MONTH_ORDER if m in months_raw]
+    
+    context = {
+        'specialties': data,
+        'order': order,
+        'page_title': page_title,
+        'selected_month': selected_month,
+        'months': months,
+        'total_count': sum(d['total'] for d in data),
+        'total_amount': sum(d['total_amount'] for d in data),
+    }
+    
+    return render(request, 'frontend/specialties_list.html', context)

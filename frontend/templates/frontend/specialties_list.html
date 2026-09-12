@@ -1,0 +1,243 @@
+{% extends 'frontend/base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+
+<style>
+    .specialty-list-card {
+        border-radius: 20px;
+        border: 1px solid #e9ecef;
+        background: #fff;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        height: 100%;
+        overflow: hidden;
+    }
+    
+    .specialty-list-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 16px 48px rgba(0,0,0,0.1);
+    }
+    
+    .specialty-list-icon {
+        width: 56px;
+        height: 56px;
+        min-width: 56px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        flex-shrink: 0;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+        transition: all 0.3s ease;
+    }
+    
+    .specialty-list-card:hover .specialty-list-icon {
+        transform: scale(1.08) rotate(-6deg);
+    }
+    
+    .specialty-list-icon img {
+    width: 151%;
+    height: 142%;
+    object-fit: contain;
+    padding: 6px;
+}
+    
+    .specialty-list-name {
+        font-size: 1rem;
+        font-weight: 700;
+        margin: 0;
+        line-height: 1.3;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        word-break: break-word;
+    }
+    
+    .specialty-list-total {
+        font-size: 1.5rem;
+        font-weight: 900;
+        line-height: 1.2;
+    }
+    
+    .specialty-list-percent {
+        font-size: 0.75rem;
+        color: #6c757d;
+    }
+    
+    .specialty-list-cash,
+    .specialty-list-credit {
+        border-radius: 10px;
+        padding: 6px 10px;
+        text-align: center;
+    }
+    
+    .specialty-list-cash {
+        background: rgba(25, 135, 84, 0.1);
+    }
+    
+    .specialty-list-credit {
+        background: rgba(255, 193, 7, 0.12);
+    }
+    
+    .specialty-list-cash .label,
+    .specialty-list-credit .label {
+        font-size: 0.7rem;
+        font-weight: 700;
+    }
+    
+    .specialty-list-cash .value,
+    .specialty-list-credit .value {
+        font-size: 1rem;
+        font-weight: 800;
+    }
+    
+    @media (max-width: 576px) {
+        .specialty-list-total {
+            font-size: 2.3rem;
+        }
+        .specialty-list-name {
+            font-size: 0.9rem;
+        }
+        .specialty-list-icon {
+            width: 48px;
+            height: 56px;
+            min-width: 48px;
+        }
+    }
+</style>
+
+<div class="container-fluid py-4">
+    
+    <!-- ✅ رجوع -->
+    <div class="mb-3">
+        <a href="{% url 'reports' %}{% if selected_month %}?month={{ selected_month }}{% endif %}" 
+           class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-right me-1"></i>
+            رجوع إلى التقارير
+        </a>
+    </div>
+
+    <!-- ✅ العنوان + أزرار التبديل -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
+        <div>
+            <h4 class="mb-0 fw-bold">
+                <i class="fas fa-stethoscope text-primary me-2"></i>
+                {{ page_title }}
+            </h4>
+            <p class="text-muted small mb-0">
+                إجمالي السجلات: <span class="fw-bold">{{ total_count }}</span>
+                {% if selected_month %}
+                • الشهر: <span class="fw-bold">{{ selected_month }}</span>
+                {% endif %}
+            </p>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="?order=top{% if selected_month %}&month={{ selected_month }}{% endif %}" 
+               class="btn btn-sm {% if order == 'top' %}btn-success{% else %}btn-outline-success{% endif %}">
+                <i class="fas fa-arrow-up me-1"></i> أعلى
+            </a>
+            <a href="?order=bottom{% if selected_month %}&month={{ selected_month }}{% endif %}" 
+               class="btn btn-sm {% if order == 'bottom' %}btn-danger{% else %}btn-outline-danger{% endif %}">
+                <i class="fas fa-arrow-down me-1"></i> أقل
+            </a>
+        </div>
+    </div>
+
+    <!-- ✅ فلتر الشهور -->
+    {% if months %}
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body p-3">
+            <div class="d-flex align-items-center mb-2">
+                <i class="fas fa-calendar-alt text-primary me-2"></i>
+                <h6 class="mb-0 fw-bold">فلتر الشهر</h6>
+            </div>
+            <div class="d-flex flex-wrap gap-2">
+                <a href="?order={{ order }}" 
+                   class="btn btn-sm {% if not selected_month %}btn-primary{% else %}btn-outline-secondary{% endif %} rounded-pill">
+                    <i class="fas fa-undo me-1"></i> الكل
+                </a>
+                {% for month in months %}
+                <a href="?order={{ order }}&month={{ month }}" 
+                   class="btn btn-sm {% if selected_month == month %}btn-primary{% else %}btn-outline-secondary{% endif %} rounded-pill">
+                    {{ month }}
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- ✅ كروت التخصصات -->
+    <div class="row g-4">
+        {% for specialty in specialties %}
+        <div class="col-xl-4 col-lg-6">
+            <div class="specialty-list-card">
+                <div class="card-body p-3">
+                    
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                        <div class="specialty-list-icon" style="background: {{ specialty.color }};">
+                            <img src="{% static specialty.image %}" alt="{{ specialty.name }}">
+                        </div>
+                        <div class="flex-grow-1" style="min-width: 0;">
+                            <h5 class="specialty-list-name" style="color: {{ specialty.color }};">
+                                {{ specialty.name }}
+                            </h5>
+                            <small class="specialty-list-percent">
+                                {{ specialty.percentage }}% من الإجمالي
+                            </small>
+                        </div>
+                        <div class="text-end">
+                            <div class="specialty-list-total" style="color: {{ specialty.color }};">
+                                {{ specialty.total }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row g-2 mb-3">
+                        <div class="col-6">
+                            <div class="specialty-list-cash">
+                                <div class="label text-success">💰 نقدي</div>
+                                <div class="value text-success">{{ specialty.cash }}</div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="specialty-list-credit">
+                                <div class="label text-warning">📄 آجل</div>
+                                <div class="value text-warning">{{ specialty.credit }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3 text-center">
+                        <small class="text-muted">
+                            <i class="fas fa-coins me-1"></i>
+                            {{ specialty.total_amount|floatformat:0|intcomma }} جنيه
+                        </small>
+                    </div>
+                    
+                    <a href="{% url 'specialty_detail' specialty.name %}{% if selected_month %}?month={{ selected_month }}{% endif %}" 
+                       class="btn btn-outline-primary btn-sm w-100">
+                        <i class="fas fa-eye me-1"></i> عرض التفاصيل
+                    </a>
+                    
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info text-center py-5">
+                <i class="fas fa-inbox fa-3x d-block mb-3 text-muted"></i>
+                <h5>لا توجد بيانات</h5>
+                <p class="text-muted small">لا توجد سجلات تطابق الفلترة</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+</div>
+
+{% endblock %}

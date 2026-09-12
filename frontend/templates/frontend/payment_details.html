@@ -5,6 +5,21 @@
 {% block content %}
 
 <style>
+    /* ✅ منع التزح الأفقي للصفحة كلها */
+    html, body {
+        overflow-x: hidden;
+        max-width: 100%;
+    }
+
+    .container-fluid {
+        overflow-x: hidden;
+        max-width: 100%;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
     .stats-card {
         border-radius: 16px;
         padding: 1.5rem 1.25rem;
@@ -186,6 +201,19 @@
         color: #fff;
     }
     
+    /* ✅ الجدول: التزح جوه الكونتينر بس */
+    .table-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .table-records {
+        min-width: 900px;
+        width: 100%;
+    }
+    
     /* ============================================ */
     /* ✅ RESPONSIVE STYLES */
     /* ============================================ */
@@ -216,6 +244,7 @@
         
         .table-records {
             font-size: 0.7rem;
+            min-width: 480px;
         }
         
         .table-records th,
@@ -224,11 +253,15 @@
             white-space: nowrap;
         }
         
-        /* إخفاء بعض الأعمدة في الهواتف */
+        /* إخفاء الأعمدة الزيادة في الهواتف */
         .table-records th:nth-child(2),
         .table-records td:nth-child(2),
+        .table-records th:nth-child(5),
+        .table-records td:nth-child(5),
         .table-records th:nth-child(6),
-        .table-records td:nth-child(6) {
+        .table-records td:nth-child(6),
+        .table-records th:nth-child(9),
+        .table-records td:nth-child(9) {
             display: none;
         }
         
@@ -300,6 +333,7 @@
         
         .table-records {
             font-size: 0.8rem;
+            min-width: 800px;
         }
         
         /* إخفاء عمود الجهة فقط في التابلت */
@@ -317,6 +351,7 @@
     @media (min-width: 992px) {
         .table-records {
             font-size: 0.9rem;
+            min-width: 900px;
         }
     }
     
@@ -364,12 +399,6 @@
             flex: 0 0 50%;
             max-width: 50%;
         }
-    }
-    
-    /* تحسين عرض الجدول */
-    .table-container {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
     }
     
     /* تحسين أزرار التصفية النشطة */

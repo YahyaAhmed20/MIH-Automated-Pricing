@@ -4,7 +4,22 @@
 
 {% block content %}
 
-<style>  
+<style>
+    /* ✅ منع التزح الأفقي للصفحة كلها */
+    html, body {
+        overflow-x: hidden;
+        max-width: 100%;
+    }
+
+    .container-fluid {
+        overflow-x: hidden;
+        max-width: 100%;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
     .stats-card {
         border-radius: 16px;
         padding: 1.5rem 1.25rem;
@@ -303,10 +318,17 @@
         }
     }
     
-    /* ✅ تحسين عرض الجدول */
+    /* ✅ الجدول: التزح جوه الكونتينر بس */
     .table-container {
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .table-records {
+        min-width: 900px;
+        width: 100%;
     }
     
     /* ✅ تحسين الفلاتر النشطة */
@@ -370,6 +392,7 @@
         
         .table-records {
             font-size: 0.65rem;
+            min-width: 480px;
         }
         
         .table-records th,
@@ -499,6 +522,7 @@
         
         .table-records {
             font-size: 0.75rem;
+            min-width: 800px;
         }
         
         /* إخفاء عمود الجهة فقط في التابلت */
@@ -524,6 +548,7 @@
     @media (min-width: 992px) {
         .table-records {
             font-size: 0.9rem;
+            min-width: 900px;
         }
     }
 </style>

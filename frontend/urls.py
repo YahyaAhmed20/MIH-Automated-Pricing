@@ -75,6 +75,8 @@ urlpatterns = [
 
 
     path('patient-search/', views.patient_search, name='patient_search'),
+    path('specialties/', views.specialties_list, name='specialties_list'),
+
 
     path(
         "operations/",
