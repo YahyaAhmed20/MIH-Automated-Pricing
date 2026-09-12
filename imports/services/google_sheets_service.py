@@ -237,6 +237,36 @@ class GoogleSheetsService:
                     spreadsheetId=settings.GOOGLE_SPREADSHEET_ID,
                     ranges=[range_name],
                     includeGridData=True,
+                    fields=(
+                        "sheets("
+                        "data("
+                        "startRow,"
+                        "startColumn,"
+                        "rowData("
+                        "values("
+                        "formattedValue,"
+                        "hyperlink,"
+                        "effectiveFormat("
+                        "textFormat("
+                        "link("
+                        "uri"
+                        ")"
+                        ")"
+                        "),"
+                        "chipRuns("
+                        "startIndex,"
+                        "chip("
+                        "richLinkProperties("
+                        "uri,"
+                        "mimeType"
+                        ")"
+                        ")"
+                        ")"
+                        ")"
+                        ")"
+                        ")"
+                        ")"
+                    ),
                 )
                 .execute()
             )
@@ -687,7 +717,7 @@ class GoogleSheetsService:
                     sheet_name="12",
                     start_row=data_start_row + 1,
                     end_row=last_data_row + 1,
-                    end_column="U",
+                    end_column="AO",
                 )
 
                 for dataframe_index in range(

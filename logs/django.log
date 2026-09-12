@@ -30068,3 +30068,6 @@ Watching for file changes with StatReloader
 "GET /external-approvals/coordinator/ HTTP/1.1" 200 124373
 D:\desktop\rphospital\src\imports\services\google_sheets_service.py changed, reloading.
 Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET /external-approvals/coordinator/ HTTP/1.1" 200 140252
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
