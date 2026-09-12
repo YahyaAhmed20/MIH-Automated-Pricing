@@ -23,6 +23,7 @@ class ReportStatisticSheet15ImportService:
         "sector": "القطاع",
         "payment_type": "نوع الدفع",
         "sub_company": "الشركه الفرعيه",
+        "package_price": "سعر الباكدج",
         "invoice_amount": "قيمة الفاتوره",
         "code": "الكود",
         "doctor_name": "اسم الطبيب",
@@ -222,10 +223,16 @@ class ReportStatisticSheet15ImportService:
                     )
                 )
 
-                # لا يوجد Mapping لـ service_price حاليًا
-                # لأن Sheet 15 يحتوي على "سعر الباكدج"
-                # وليس "سعر الخدمه".
-                service_price = Decimal("0.00")
+                # ✅ سعر الباكدج من الشيت
+                package_price = ImportHelpers.clean_decimal(
+                    ImportHelpers.get_mapped_value(
+                        row,
+                        header_map,
+                        "package_price",
+                        ReportStatisticSheet15ImportService.COLUMN_MAPPING,
+                        default=0,
+                    )
+                )
 
                 invoice_amount = ImportHelpers.clean_decimal(
                     ImportHelpers.get_mapped_value(
@@ -309,8 +316,8 @@ class ReportStatisticSheet15ImportService:
                         existing_stat.sub_company = sub_company
                         changed = True
                         
-                    if existing_stat.service_price != service_price:
-                        existing_stat.service_price = service_price
+                    if existing_stat.package_price != package_price:
+                        existing_stat.package_price = package_price
                         changed = True
                         
                     if existing_stat.invoice_amount != invoice_amount:
@@ -345,7 +352,7 @@ class ReportStatisticSheet15ImportService:
                         sector=sector,
                         payment_type=payment_type,
                         sub_company=sub_company,
-                        service_price=service_price,
+                        package_price=package_price,
                         invoice_amount=invoice_amount,
                         code=code,
                         doctor_name=doctor_name,
@@ -388,7 +395,7 @@ class ReportStatisticSheet15ImportService:
                     "sector",
                     "payment_type",
                     "sub_company",
-                    "service_price",
+                    "package_price",
                     "invoice_amount",
                     "code",
                     "doctor_name",

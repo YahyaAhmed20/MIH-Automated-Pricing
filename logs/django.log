@@ -30742,3 +30742,34 @@ Not Found: /.well-known/appspecific/com.chrome.devtools.json
 "GET /static/images/img6.jpeg HTTP/1.1" 200 125348
 "GET /static/images/img8.jpeg HTTP/1.1" 200 78642
 "GET /reports/specialty/%D8%A7%D8%AA%D9%81%D8%A7%D9%82%D9%8A%D8%A9%20%D8%B4%D8%A7%D9%85%D9%84%D8%A9/ HTTP/1.1" 200 85103
+Watching for file changes with StatReloader
+"GET /package-comparison/ HTTP/1.1" 200 11044812
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\models.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET /package-comparison/ HTTP/1.1" 200 11423505
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+"GET /package-comparison/?year1=2026&quarter1=&month1=&sector1=&entity1=&sub_company1=&specialty1=&doctor_name1=&package_type1=&year2=2025&quarter2=&month2=&sector2=&entity2=&sub_company2=&specialty2=&doctor_name2=&package_type2= HTTP/1.1" 200 10498691
+"GET /ajax/package-filters/?year=2025&quarter=%D8%A7%D9%84%D8%A7%D9%88%D9%84 HTTP/1.1" 200 67155
+"GET /package-comparison/?year1=2026&quarter1=&month1=&sector1=&entity1=&sub_company1=&specialty1=&doctor_name1=&package_type1=&year2=2025&quarter2=%D8%A7%D9%84%D8%A7%D9%88%D9%84&month2=&sector2=&entity2=&sub_company2=&specialty2=&doctor_name2=&package_type2= HTTP/1.1" 200 6426398
+"GET /package-comparison/?year1=2026&quarter1=&month1=&sector1=&entity1=&sub_company1=&specialty1=&doctor_name1=&package_type1=&year2=2026&quarter2=%D8%A7%D9%84%D8%A7%D9%88%D9%84&month2=&sector2=&entity2=&sub_company2=&specialty2=&doctor_name2=&package_type2= HTTP/1.1" 200 6548319
+"GET /package-comparison/ HTTP/1.1" 200 11423505
+"GET /ajax/package-filters/?year=2025&sector=%D8%A7%D9%84%D8%A8%D8%AA%D8%B1%D9%88%D9%84 HTTP/1.1" 200 23575
+"GET /package-comparison/?year1=2025&quarter1=&month1=&sector1=%D8%A7%D9%84%D8%A8%D8%AA%D8%B1%D9%88%D9%84&entity1=&sub_company1=&specialty1=&doctor_name1=&package_type1=&year2=2025&quarter2=&month2=&sector2=&entity2=&sub_company2=&specialty2=&doctor_name2=&package_type2= HTTP/1.1" 200 6562614
+"GET /ajax/package-filters/?year=2025&sector=%D8%A7%D9%84%D8%A8%D8%AA%D8%B1%D9%88%D9%84&month=%D8%AF%D9%8A%D8%B3%D9%85%D8%A8%D8%B1 HTTP/1.1" 200 6231
+"GET /package-comparison/?year1=2025&quarter1=&month1=%D8%AF%D9%8A%D8%B3%D9%85%D8%A8%D8%B1&sector1=%D8%A7%D9%84%D8%A8%D8%AA%D8%B1%D9%88%D9%84&entity1=&sub_company1=&specialty1=&doctor_name1=&package_type1=&year2=2025&quarter2=&month2=&sector2=&entity2=&sub_company2=&specialty2=&doctor_name2=&package_type2= HTTP/1.1" 200 6357284
+"GET /ajax/package-filters/?year=2025&sector=%D8%A7%D9%84%D8%A8%D8%AA%D8%B1%D9%88%D9%84&month=%D8%AF%D9%8A%D8%B3%D9%85%D8%A8%D8%B1&quarter=%D8%A7%D9%84%D8%A7%D9%88%D9%84 HTTP/1.1" 200 102
+"GET /package-comparison/?year1=2025&quarter1=%D8%A7%D9%84%D8%A7%D9%88%D9%84&month1=%D8%AF%D9%8A%D8%B3%D9%85%D8%A8%D8%B1&sector1=%D8%A7%D9%84%D8%A8%D8%AA%D8%B1%D9%88%D9%84&entity1=&sub_company1=&specialty1=&doctor_name1=&package_type1=&year2=2025&quarter2=&month2=&sector2=&entity2=&sub_company2=&specialty2=&doctor_name2=&package_type2= HTTP/1.1" 200 6336699
+"GET /package-comparison/?year1=2026&quarter1=%D8%A7%D9%84%D8%A7%D9%88%D9%84&month1=%D8%AF%D9%8A%D8%B3%D9%85%D8%A8%D8%B1&sector1=%D8%A7%D9%84%D8%A8%D8%AA%D8%B1%D9%88%D9%84&entity1=&sub_company1=&specialty1=&doctor_name1=&package_type1=&year2=2025&quarter2=&month2=&sector2=&entity2=&sub_company2=&specialty2=&doctor_name2=&package_type2= HTTP/1.1" 200 6273581
+"GET /package-comparison/ HTTP/1.1" 200 11423505
+"GET /package-comparison/?year1=2025&quarter1=&month1=&sector1=&entity1=&sub_company1=&specialty1=&doctor_name1=&package_type1=&year2=2026&quarter2=&month2=&sector2=&entity2=&sub_company2=&specialty2=&doctor_name2=&package_type2= HTTP/1.1" 200 10501378
+"GET /package-comparison/?year1=2026&quarter1=&month1=&sector1=&entity1=&sub_company1=&specialty1=&doctor_name1=&package_type1=&year2=2026&quarter2=&month2=&sector2=&entity2=&sub_company2=&specialty2=&doctor_name2=&package_type2= HTTP/1.1" 200 9338622
+"GET /package-comparison/?year1=2025&quarter1=&month1=&sector1=&entity1=&sub_company1=&specialty1=&doctor_name1=&package_type1=&year2=2026&quarter2=&month2=&sector2=&entity2=&sub_company2=&specialty2=&doctor_name2=&package_type2= HTTP/1.1" 200 10501378
+Watching for file changes with StatReloader
+- Broken pipe from ('127.0.0.1', 57847)
+- Broken pipe from ('127.0.0.1', 57871)
+"GET /package-comparison/ HTTP/1.1" 200 11474393
+"GET /package-comparison/?year1=2025&quarter1=&month1=&sector1=&entity1=&sub_company1=&specialty1=&doctor_name1=&package_type1=&year2=2026&quarter2=&month2=&sector2=&entity2=&sub_company2=&specialty2=&doctor_name2=&package_type2= HTTP/1.1" 200 10526822

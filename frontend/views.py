@@ -3698,12 +3698,12 @@ def package_performance_comparison(request):
     
     # ========== التوابع المساعدة ==========
     def get_model_and_price_field(year):
-        """تحديد النموذج وحقل السعر حسب السنة"""
+        """تحديد النموذج وحقل إجمالي المبلغ وحقل سعر الباكدج حسب السنة"""
         if str(year) == '2025':
-            return ReportStatisticSheet15, 'invoice_amount'
+            return ReportStatisticSheet15, 'invoice_amount', 'package_price'
         elif str(year) == '2026':
-            return ReportStatistic, 'amount'
-        return None, None
+            return ReportStatistic, 'amount', 'amount'
+        return None, None, None
     
     def build_filters(year, month, quarter, sector, entity, sub_company, specialty, package_type, doctor_name, model):
         """بناء فلتر Q ديناميكي حسب النموذج"""
@@ -3760,7 +3760,11 @@ def package_performance_comparison(request):
         
         return filters
     
-    def aggregate_packages_with_details(queryset, price_field):
+    def aggregate_packages_with_details(
+        queryset,
+        price_field,
+        package_price_field
+    ):
         """تجميع الباكدجات باستخدام اسم الباكدج + الكود كهوية فريدة"""
         packages = {}
         
@@ -3775,6 +3779,7 @@ def package_performance_comparison(request):
                     'package_name': pkg_name,
                     'count': 0,
                     'total_amount': Decimal('0.00'),
+                    'package_price': Decimal('0.00'),
                     'code': code,
                     'specialty': getattr(stat, 'specialty', ''),
                     'sector': getattr(stat, 'sector', ''),
@@ -3794,11 +3799,26 @@ def package_performance_comparison(request):
             
             packages[package_key]['total_amount'] += amount
             
+            package_price = getattr(
+                stat,
+                package_price_field,
+                Decimal('0.00')
+            )
+            
+            if package_price is None:
+                package_price = Decimal('0.00')
+            
+            # سعر الباكدج يُفترض أنه ثابت للباكدج،
+            # لذلك نأخذ أول قيمة غير صفرية.
+            if packages[package_key]['package_price'] == Decimal('0.00'):
+                packages[package_key]['package_price'] = package_price
+            
             packages[package_key]['details'].append({
                 'patient_name': getattr(stat, 'patient_name', ''),
                 'account_number': getattr(stat, 'account_number', ''),
                 'admission_date': getattr(stat, 'admission_date', ''),
                 'amount': amount,
+                'package_price': package_price,
                 'entity': getattr(stat, 'entity_name', ''),
                 'sub_company': getattr(stat, 'sub_company', ''),
                 'sector': getattr(stat, 'sector', ''),
@@ -3865,8 +3885,8 @@ def package_performance_comparison(request):
     doctor_name2 = request.GET.get('doctor_name2', '')
     
     # ========== تحديد النماذج حسب السنة ==========
-    Model1, price_field1 = get_model_and_price_field(year1)
-    Model2, price_field2 = get_model_and_price_field(year2)
+    Model1, price_field1, package_price_field1 = get_model_and_price_field(year1)
+    Model2, price_field2, package_price_field2 = get_model_and_price_field(year2)
     
     # ========== بناء الفلاتر ==========
     filters1 = build_filters(
@@ -3886,8 +3906,16 @@ def package_performance_comparison(request):
     queryset2 = Model2.objects.filter(filters2) if Model2 else Model2.objects.none()
     
     # ========== التجميع ==========
-    packages1 = aggregate_packages_with_details(queryset1, price_field1)
-    packages2 = aggregate_packages_with_details(queryset2, price_field2)
+    packages1 = aggregate_packages_with_details(
+        queryset1,
+        price_field1,
+        package_price_field1
+    )
+    packages2 = aggregate_packages_with_details(
+        queryset2,
+        price_field2,
+        package_price_field2
+    )
     
     # ========== دمج البيانات للمقارنة ==========
     all_packages = set(packages1.keys()) | set(packages2.keys())
@@ -3903,6 +3931,7 @@ def package_performance_comparison(request):
                 'package_name': pkg_key[0],
                 'count': 0,
                 'total_amount': Decimal('0.00'),
+                'package_price': Decimal('0.00'),
                 'code': pkg_key[1],
                 'specialty': '',
                 'sector': '',
@@ -3918,6 +3947,7 @@ def package_performance_comparison(request):
                 'package_name': pkg_key[0],
                 'count': 0,
                 'total_amount': Decimal('0.00'),
+                'package_price': Decimal('0.00'),
                 'code': pkg_key[1],
                 'specialty': '',
                 'sector': '',
@@ -3946,11 +3976,18 @@ def package_performance_comparison(request):
             'entity': data1['entity'] or data2['entity'] or '',
             'sub_company': data1['sub_company'] or data2['sub_company'] or '',
             'doctor_name': data1['doctor_name'] or data2['doctor_name'] or '',
+            
             'count1': data1['count'],
+            'package_price1': float(data1['package_price']),
             'amount1': float(data1['total_amount']),
+            
             'count2': data2['count'],
+            'package_price2': float(data2['package_price']),
             'amount2': float(data2['total_amount']),
-            'diff': float(data2['total_amount'] - data1['total_amount']),
+            
+            'diff': float(
+                data2['total_amount'] - data1['total_amount']
+            ),
             'change_percent': round(change_percent, 1),
             'change_direction': (
                 'up'
@@ -4062,6 +4099,8 @@ def package_performance_comparison(request):
     }
     
     return render(request, 'frontend/package_performance_comparison.html', context)
+
+
 def get_package_filters(request):
     """API لإرجاع الفلاتر المترابطة حسب السنة"""
 

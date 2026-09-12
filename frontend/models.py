@@ -105,6 +105,12 @@ class ReportStatisticSheet15(models.Model):
         default=0,
         verbose_name="سعر الخدمه"
     )
+    package_price = models.DecimalField(
+        max_digits=14,
+        decimal_places=2,
+        default=0,
+        verbose_name="سعر الباكدج"
+    )
     
     # ✅ حقول جديدة في شيت 15
     invoice_amount = models.DecimalField(
