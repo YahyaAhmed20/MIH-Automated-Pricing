@@ -68,8 +68,8 @@ class PricingRequestImportService:
         "expected_admission_actual": "تاريخ الدخول الفعلى",
         "received_cost": "التكلفة المستلمه",
 
-        "report": "Report",
-        "approval": "Approval",
+        "report": "New Reprt",
+        "approval": "New Approval",
 
         # الاسم الحقيقي الموجود في Sheet 12
         "approval_number": "Request and Approval NO.",
@@ -389,7 +389,8 @@ class PricingRequestImportService:
             "Billing Status",
             "الرقم الحسابى",
             "التكلفة المستلمه",
-            "Approval",
+            "New Reprt",
+            "New Approval",
             "Approval Date",
             "Expiry Date",
             "الملاحظات",
