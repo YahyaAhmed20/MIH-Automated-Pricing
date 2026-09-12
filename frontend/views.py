@@ -5418,13 +5418,36 @@ def similar_invoices(request):
 
     base_invoices = SimilarInvoice.objects.all()
 
+    def apply_patient_name_filter(queryset, value):
+        if not value:
+            return queryset
+
+        variants = ImportHelpers.arabic_search_variants(value)
+
+        patient_q = Q()
+
+        for variant in variants:
+            patient_q |= Q(
+                patient_name__icontains=variant
+            )
+
+        return queryset.filter(patient_q)
+
     # البحث العام يظل مؤثراً في كل الفلاتر
     if search:
-        base_invoices = base_invoices.filter(
+        search_q = (
             Q(operation_name__icontains=search) |
-            Q(patient_name__icontains=search) |
+            Q(account_number__icontains=search) |
+            Q(medical_number__icontains=search) |
             Q(specialty_name__icontains=search)
         )
+
+        for variant in ImportHelpers.arabic_search_variants(search):
+            search_q |= Q(
+                patient_name__icontains=variant
+            )
+
+        base_invoices = base_invoices.filter(search_q)
 
     # =========================================================
     # 2) Queryset النتائج الفعلية
@@ -5433,8 +5456,9 @@ def similar_invoices(request):
     invoices = base_invoices
 
     if patient_name:
-        invoices = invoices.filter(
-            patient_name__icontains=patient_name
+        invoices = apply_patient_name_filter(
+            invoices,
+            patient_name
         )
 
     if specialty:
@@ -5561,8 +5585,9 @@ def similar_invoices(request):
     specialty_filter_qs = base_invoices
 
     if patient_name:
-        specialty_filter_qs = specialty_filter_qs.filter(
-            patient_name__icontains=patient_name
+        specialty_filter_qs = apply_patient_name_filter(
+            specialty_filter_qs,
+            patient_name
         )
 
     if entity:
@@ -5607,8 +5632,9 @@ def similar_invoices(request):
     entity_filter_qs = base_invoices
 
     if patient_name:
-        entity_filter_qs = entity_filter_qs.filter(
-            patient_name__icontains=patient_name
+        entity_filter_qs = apply_patient_name_filter(
+            entity_filter_qs,
+            patient_name
         )
 
     if specialty:
@@ -5653,8 +5679,9 @@ def similar_invoices(request):
     doctor_filter_qs = base_invoices
 
     if patient_name:
-        doctor_filter_qs = doctor_filter_qs.filter(
-            patient_name__icontains=patient_name
+        doctor_filter_qs = apply_patient_name_filter(
+            doctor_filter_qs,
+            patient_name
         )
 
     if specialty:
@@ -5699,8 +5726,9 @@ def similar_invoices(request):
     status_filter_qs = base_invoices
 
     if patient_name:
-        status_filter_qs = status_filter_qs.filter(
-            patient_name__icontains=patient_name
+        status_filter_qs = apply_patient_name_filter(
+            status_filter_qs,
+            patient_name
         )
 
     if specialty:
@@ -5749,8 +5777,9 @@ def similar_invoices(request):
     price_filter_qs = base_invoices
 
     if patient_name:
-        price_filter_qs = price_filter_qs.filter(
-            patient_name__icontains=patient_name
+        price_filter_qs = apply_patient_name_filter(
+            price_filter_qs,
+            patient_name
         )
 
     if specialty:
@@ -5810,8 +5839,9 @@ def similar_invoices(request):
     date_filter_qs = base_invoices
 
     if patient_name:
-        date_filter_qs = date_filter_qs.filter(
-            patient_name__icontains=patient_name
+        date_filter_qs = apply_patient_name_filter(
+            date_filter_qs,
+            patient_name
         )
 
     if specialty:

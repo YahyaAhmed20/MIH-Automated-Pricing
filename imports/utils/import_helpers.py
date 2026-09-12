@@ -22,6 +22,29 @@ class ImportHelpers:
             .replace("\n", " ")
             .split()
         )
+        
+    @staticmethod
+    def arabic_search_variants(value):
+        """
+        إنشاء صيغ بديلة للنص العربي أثناء البحث،
+        بدون تغيير الاسم الأصلي المخزن في قاعدة البيانات.
+
+        أمثلة:
+            مصطفى → مصطفى / مصطفي
+            مصطفي → مصطفي / مصطفى
+        """
+        value = ImportHelpers.normalize_text(value)
+
+        if not value:
+            return [value]
+
+        variants = {value}
+
+        # الياء ↔ الألف المقصورة
+        variants.add(value.replace("ى", "ي"))
+        variants.add(value.replace("ي", "ى"))
+
+        return list(variants)
 
     @staticmethod
     def clean_date(value):
