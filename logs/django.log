@@ -30061,3 +30061,10 @@ Watching for file changes with StatReloader
 "GET /similar-invoices/ HTTP/1.1" 200 2544052
 "GET /similar-invoices/?search=467395 HTTP/1.1" 200 105545
 "GET /similar-invoices/?search=3809850 HTTP/1.1" 200 102978
+Watching for file changes with StatReloader
+"GET /external-approvals/ HTTP/1.1" 200 101538
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+"GET /external-approvals/total/ HTTP/1.1" 200 872225
+"GET /external-approvals/coordinator/ HTTP/1.1" 200 124373
+D:\desktop\rphospital\src\imports\services\google_sheets_service.py changed, reloading.
+Watching for file changes with StatReloader

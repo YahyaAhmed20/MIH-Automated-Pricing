@@ -657,6 +657,63 @@ class GoogleSheetsService:
             columns=headers
         )
 
+        # ============================================================
+        # Restore Google Drive Smart Chip URLs
+        # Sheet 12 only
+        # ============================================================
+
+        if sheet_name == "12":
+
+            link_columns = {
+                "New Reprt",
+                "New Approval",
+            }
+
+            column_indexes = {
+                column: headers.index(column)
+                for column in link_columns
+                if column in headers
+            }
+
+            if column_indexes:
+
+                last_data_row = (
+                    data_start_row
+                    + len(dataframe)
+                    - 1
+                )
+
+                drive_links = cls.get_drive_links(
+                    sheet_name="12",
+                    start_row=data_start_row + 1,
+                    end_row=last_data_row + 1,
+                    end_column="U",
+                )
+
+                for dataframe_index in range(
+                    len(dataframe)
+                ):
+
+                    sheet_row_index = (
+                        data_start_row
+                        + dataframe_index
+                    )
+
+                    for column_name, column_index in column_indexes.items():
+
+                        link = drive_links.get(
+                            (
+                                sheet_row_index,
+                                column_index,
+                            )
+                        )
+
+                        if link and link.get("url"):
+                            dataframe.at[
+                                dataframe_index,
+                                column_name
+                            ] = link["url"]
+
         dataframe = dataframe.replace(
             "",
             pd.NA,
