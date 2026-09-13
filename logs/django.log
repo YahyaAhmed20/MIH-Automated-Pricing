@@ -31006,3 +31006,32 @@ Watching for file changes with StatReloader
 "GET /external-approvals/total/ HTTP/1.1" 200 890673
 "GET /external-approvals/status_cancelled/ HTTP/1.1" 200 157783
 "GET /pending-analysis/ HTTP/1.1" 200 209940
+Watching for file changes with StatReloader
+"GET /external-approvals/status_patient_refused/ HTTP/1.1" 200 737232
+"GET /external-approvals/status_approved/ HTTP/1.1" 200 854087
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET /pending-analysis/ HTTP/1.1" 200 242631
+"GET /external-approvals/status_cancelled/ HTTP/1.1" 200 157783
+"GET /external-approvals/total/ HTTP/1.1" 200 897610
+"GET /external-approvals/status_undefined/ HTTP/1.1" 200 95827
+"GET /external-approvals/status_cancelled/ HTTP/1.1" 200 157783
+"GET /external-approvals/total/ HTTP/1.1" 200 897610
+"GET /external-approvals/status_patient_refused/ HTTP/1.1" 200 737232
+"GET /external-approvals/status_undefined/ HTTP/1.1" 200 95827
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /pending-analysis/ HTTP/1.1" 200 242671
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+"GET /external-approvals/status_pending_by_patient/ HTTP/1.1" 200 422713

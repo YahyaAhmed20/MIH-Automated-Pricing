@@ -2103,8 +2103,19 @@ def pending_analysis(request):
         )
     
     # ✅ الحالات المطلوبة
-    statuses = ["Serv. Done", "Rejected", "Pending", "Approved", "Patient refused"]
+    # ✅ الحالات المطلوبة
+    statuses = [
+        "Serv. Done",
+        "Rejected",
+        "Pending",
+        "Approved",
+        "Patient refused",
+        "Cancelled",
+        "Pending by pat.",
+        "غير محددة",
+    ]
     
+    # ✅ ألوان الحالات
     # ✅ ألوان الحالات
     color_map = {
         "Serv. Done": "#28a745",
@@ -2112,8 +2123,12 @@ def pending_analysis(request):
         "Pending": "#ffc107",
         "Approved": "#17a2b8",
         "Patient refused": "#6c757d",
+        "Cancelled": "#6f42c1",
+        "Pending by Patient": "#fd7e14",
+        "غير محددة": "#6c757d",
     }
-    
+        
+    # ✅ Map للحالات مع filter_type
     # ✅ Map للحالات مع filter_type
     status_filter_map = {
         "Serv. Done": "status_serv_done",
@@ -2121,6 +2136,9 @@ def pending_analysis(request):
         "Pending": "status_pending",
         "Approved": "status_approved",
         "Patient refused": "status_patient_refused",
+        "Cancelled": "status_cancelled",
+        "Pending by pat.": "status_pending_by_patient",
+        "غير محددة": "status_undefined",
     }
     
     status_stats = {}
@@ -2130,7 +2148,14 @@ def pending_analysis(request):
     
     for status in statuses:
         # ✅ جلب السجلات لهذه الحالة
-        records = all_records.filter(main_status=status)
+        if status == "غير محددة":
+            records = all_records.filter(
+                Q(main_status__isnull=True) |
+                Q(main_status="")
+            )
+        else:
+            records = all_records.filter(main_status=status)
+
         count = records.count()
         color = color_map.get(status, "#6c757d")
         
