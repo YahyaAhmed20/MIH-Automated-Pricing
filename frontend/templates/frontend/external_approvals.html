@@ -81,7 +81,42 @@
         background: rgba(255,255,255,0.35);
         transform: scale(1.05);
     }
-    
+
+    /* ✅ شبكة الكروت الإحصائية */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+        gap: 1.5rem;
+    }
+
+    /* ✅ ضبط ارتفاع الكروت داخل الشبكة */
+    .stats-grid > div {
+        display: flex;
+    }
+
+    .stats-grid .stats-box {
+        width: 100%;
+    }
+
+    /* ✅ Responsive */
+    @media (max-width: 1200px) {
+        .stats-grid {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+    }
+
+    @media (max-width: 768px) {
+        .stats-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+
+    @media (max-width: 576px) {
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
     /* ✅ جعل جميع الكروت في الصف بنفس الارتفاع */
     .row.g-4 {
         display: flex;
@@ -271,9 +306,9 @@
     <!-- Dashboard العادية لباقي الأدوار -->
     <!-- ============================================ -->
 
-    <div class="row g-4 mb-4">
+    <div class="stats-grid mb-4">
 
-        <div class="col-md-2-4 col-lg-2 col-md-4 col-sm-6">
+        <div>
             <div class="stats-box"
                  style="background: {{ box_colors.total }};">
 
@@ -301,7 +336,7 @@
         </div>
 
 
-        <div class="col-md-2-4 col-lg-2 col-md-4 col-sm-6">
+        <div>
             <div class="stats-box"
                  style="background: {{ box_colors.accounts }};">
 
@@ -329,7 +364,7 @@
         </div>
 
 
-        <div class="col-md-2-4 col-lg-2 col-md-4 col-sm-6">
+        <div>
             <div class="stats-box"
                  style="background: {{ box_colors.coordinator }};">
 
@@ -357,7 +392,7 @@
         </div>
 
 
-        <div class="col-md-2-4 col-lg-2 col-md-4 col-sm-6">
+        <div>
             <div class="stats-box"
                  style="background: {{ box_colors.without_approval }};">
 
@@ -385,7 +420,36 @@
         </div>
 
 
-        <div class="col-md-2-4 col-lg-2 col-md-4 col-sm-6">
+        <!-- ✅ كارت حالات دخول اليوم (جديد) -->
+        <div>
+            <div class="stats-box"
+                 style="background: {{ box_colors.today }};">
+
+                <div class="stats-icon">
+                    <i class="fas fa-calendar-day"></i>
+                </div>
+
+                <div class="stats-number counter"
+                     data-target="{{ today_admissions }}">
+                    0
+                </div>
+
+                <div class="stats-label">
+                    حالات دخول اليوم
+                </div>
+
+                <a href="{% url 'external_approvals_detail' 'today' %}"
+                   class="btn-show-details">
+
+                    <i class="fas fa-eye me-1"></i>
+                    عرض المزيد
+
+                </a>
+            </div>
+        </div>
+
+
+        <div>
             <div class="stats-box"
                  style="background: {{ box_colors.early }};">
 
@@ -413,7 +477,7 @@
         </div>
 
 
-        <div class="col-md-2-4 col-lg-2 col-md-4 col-sm-6">
+        <div>
             <div class="stats-box"
                  style="background: {{ box_colors.overview }};">
 

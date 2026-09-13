@@ -30773,3 +30773,236 @@ Watching for file changes with StatReloader
 - Broken pipe from ('127.0.0.1', 57871)
 "GET /package-comparison/ HTTP/1.1" 200 11474393
 "GET /package-comparison/?year1=2025&quarter1=&month1=&sector1=&entity1=&sub_company1=&specialty1=&doctor_name1=&package_type1=&year2=2026&quarter2=&month2=&sector2=&entity2=&sub_company2=&specialty2=&doctor_name2=&package_type2= HTTP/1.1" 200 10526822
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 51152
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+"GET /static/images/logo.jpeg HTTP/1.1" 200 68755
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 16886
+"POST / HTTP/1.1" 302 0
+"GET /reports/ HTTP/1.1" 200 170432
+"GET /static/images/img5.jpeg HTTP/1.1" 200 88819
+"GET /static/images/img3.jpeg HTTP/1.1" 200 78769
+"GET /static/images/img8.jpeg HTTP/1.1" 200 78642
+"GET /static/images/img2.jpeg HTTP/1.1" 200 93254
+"GET /static/images/img6.jpeg HTTP/1.1" 200 125348
+"GET /static/images/img4.jpeg HTTP/1.1" 200 91767
+"GET /static/images/img1.jpeg HTTP/1.1" 200 89363
+"GET /external-approvals/ HTTP/1.1" 200 101540
+"GET /external-approvals/total/ HTTP/1.1" 200 880744
+Watching for file changes with StatReloader
+"GET /external-approvals/status_approved/ HTTP/1.1" 200 846891
+"GET /external-approvals/early/ HTTP/1.1" 200 247707
+"GET /external-approvals/early/ HTTP/1.1" 200 251301
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+"GET /external-approvals/total/ HTTP/1.1" 200 890673
+Internal Server Error: /external-approvals/total/
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\sessions\backends\base.py", line 244, in _get_session
+    return self._session_cache
+           ^^^^^^^^^^^^^^^^^^^
+AttributeError: 'SessionStore' object has no attribute '_session_cache'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 279, in ensure_connection
+    self.connect()
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\postgresql\base.py", line 332, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\psycopg2\__init__.py", line 135, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.OperationalError: connection to server at "shortline.proxy.rlwy.net" (66.33.22.244), port 40857 failed: server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\src\accounts\decorators.py", line 44, in wrapper
+    if not request.user.is_authenticated:
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\functional.py", line 251, in inner
+    self._setup()
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\functional.py", line 404, in _setup
+    self._wrapped = self._setupfunc()
+                    ^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\auth\middleware.py", line 40, in <lambda>
+    request.user = SimpleLazyObject(lambda: get_user(request))
+                                            ^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\auth\middleware.py", line 20, in get_user
+    request._cached_user = auth.get_user(request)
+                           ^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\auth\__init__.py", line 304, in get_user
+    user_id = _get_user_session_key(request)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\auth\__init__.py", line 95, in _get_user_session_key
+    return get_user_model()._meta.pk.to_python(request.session[SESSION_KEY])
+                                               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\sessions\backends\base.py", line 55, in __getitem__
+    return self._session[key]
+           ^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\sessions\backends\base.py", line 249, in _get_session
+    self._session_cache = self.load()
+                          ^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\sessions\backends\db.py", line 55, in load
+    s = self._get_session_from_db()
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\contrib\sessions\backends\db.py", line 34, in _get_session_from_db
+    return self.model.objects.get(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 631, in get
+    num = len(clone)
+          ^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 368, in __len__
+    self._fetch_all()
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 1954, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\query.py", line 93, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\models\sql\compiler.py", line 1621, in execute_sql
+    cursor = self.connection.cursor()
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 320, in cursor
+    return self._cursor()
+           ^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 296, in _cursor
+    self.ensure_connection()
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 278, in ensure_connection
+    with self.wrap_database_errors:
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 279, in ensure_connection
+    self.connect()
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\base\base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\django\db\backends\postgresql\base.py", line 332, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\desktop\rphospital\Lib\site-packages\psycopg2\__init__.py", line 135, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: connection to server at "shortline.proxy.rlwy.net" (66.33.22.244), port 40857 failed: server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+
+"GET /external-approvals/total/ HTTP/1.1" 500 229814
+"GET /external-approvals/total/ HTTP/1.1" 200 890673
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /external-approvals/ HTTP/1.1" 200 101540
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+"GET /external-approvals/accounts/ HTTP/1.1" 200 864477
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /external-approvals/ HTTP/1.1" 500 162690
+Watching for file changes with StatReloader
+"GET /external-approvals/ HTTP/1.1" 500 162266
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /external-approvals/ HTTP/1.1" 200 101541
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+"GET /external-approvals/coordinator/ HTTP/1.1" 200 142628
+"GET /external-approvals/coordinator/? HTTP/1.1" 200 142628
+"GET /external-approvals/ HTTP/1.1" 200 101541
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+"GET /external-approvals/coordinator/ HTTP/1.1" 200 142628
+"GET /external-approvals/total/ HTTP/1.1" 200 890673
+"GET /external-approvals/accounts/ HTTP/1.1" 200 864477
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /external-approvals/ HTTP/1.1" 200 101541
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /external-approvals/ HTTP/1.1" 200 102371
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+"GET /external-approvals/today/ HTTP/1.1" 200 339004
+"GET /external-approvals/ HTTP/1.1" 200 101541
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+"GET /external-approvals/ HTTP/1.1" 200 102371
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /external-approvals/ HTTP/1.1" 200 102371
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /external-approvals/ HTTP/1.1" 200 102371
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /external-approvals/ HTTP/1.1" 200 102371
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+"GET /external-approvals/ HTTP/1.1" 200 102813
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+D:\desktop\rphospital\src\frontend\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /external-approvals/ HTTP/1.1" 200 102854
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+"GET /external-approvals/accounts/ HTTP/1.1" 200 854905
+"GET /external-approvals/coordinator/ HTTP/1.1" 200 845283
+"GET /external-approvals/without_approval/ HTTP/1.1" 200 841379
+"GET /external-approvals/today/ HTTP/1.1" 200 339004
+"GET /external-approvals/early/ HTTP/1.1" 200 251301
+"GET /external-approvals/total/ HTTP/1.1" 200 890673
+"GET /external-approvals/total/ HTTP/1.1" 200 890673
+"GET /external-approvals/status_cancelled/ HTTP/1.1" 200 157783
+"GET /pending-analysis/ HTTP/1.1" 200 209940

@@ -1088,22 +1088,36 @@
                                             <span class="value">{{ patient.initial_cost|floatformat:2|intcomma }}</span>
                                         </div>
                                         <!-- ✅ التكلفة المستلمة - الإصدار الجديد -->
-                                        <div class="info-item">
+                                        <div class="info-item"
+                                             data-initial-cost="{{ patient.initial_cost|default:'' }}"
+                                             data-received-cost="{{ patient.received_cost|default:'' }}">
+
                                             <span class="label">التكلفة المستلمة</span>
-                                            <span class="value">
+
+                                            <span class="value received-cost-value">
+
                                                 {% if patient.received_cost %}
+
                                                     {% if "http" in patient.received_cost %}
-                                                        <a href="{{ patient.received_cost }}" target="_blank" rel="noopener noreferrer">
+                                                        <a href="{{ patient.received_cost }}"
+                                                           target="_blank"
+                                                           rel="noopener noreferrer"
+                                                           class="received-cost-link">
+
                                                             <i class="fas fa-file-invoice-dollar text-success"></i>
                                                             عرض التكلفة المستلمة
+
                                                         </a>
                                                     {% else %}
                                                         {{ patient.received_cost }}
                                                     {% endif %}
+
                                                 {% else %}
                                                     -
                                                 {% endif %}
+
                                             </span>
+
                                         </div>
                                         <div class="info-item">
                                             <span class="label">رقم الطلب</span>
@@ -1391,6 +1405,60 @@ function toggleDetails(patientId) {
         }
     }
 }
+
+// ============================================
+// ✅ مقارنة التكلفة المستلمة بالتكلفة المبدئية
+// ============================================
+document.addEventListener("DOMContentLoaded", function () {
+
+    document.querySelectorAll(".info-item[data-initial-cost]").forEach(function (item) {
+
+        const initialCostRaw = item.dataset.initialCost;
+        const receivedCostRaw = item.dataset.receivedCost;
+
+        if (!initialCostRaw || !receivedCostRaw) {
+            return;
+        }
+
+        // لو التكلفة المستلمة عبارة عن رابط، لا نحاول مقارنتها كرقم
+        if (/^https?:\/\//i.test(receivedCostRaw.trim())) {
+            return;
+        }
+
+        // تنظيف القيم الرقمية
+        const initialCost = parseFloat(
+            initialCostRaw.toString().replace(/,/g, "").trim()
+        );
+
+        const receivedCost = parseFloat(
+            receivedCostRaw.toString().replace(/,/g, "").trim()
+        );
+
+        // لازم القيمتين يكونوا أرقام فعلية
+        if (isNaN(initialCost) || isNaN(receivedCost)) {
+            return;
+        }
+
+        const valueElement = item.querySelector(".received-cost-value");
+
+        if (!valueElement) {
+            return;
+        }
+
+        if (receivedCost < initialCost) {
+
+            // التكلفة المستلمة أقل من المبدئية
+            valueElement.classList.add("text-danger-cost");
+
+        } else {
+
+            // التكلفة المستلمة مساوية أو أكبر
+            valueElement.classList.add("text-success-cost");
+
+        }
+    });
+
+});
 </script>
 
 {% endblock %}

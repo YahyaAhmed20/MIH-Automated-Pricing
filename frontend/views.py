@@ -334,16 +334,68 @@ def external_approvals(request):
     total_cases = all_records.count()
     
     # ✅ الإحصائيات
-    approval_count = all_records.exclude(approval__isnull=True).exclude(approval="").count()
-    billing_count = all_records.exclude(billing_status__isnull=True).exclude(billing_status="").count()
-    
-    pending_accounts = max(approval_count - billing_count, 0)
-    pending_coordinator = all_records.exclude(billing_status__isnull=True).exclude(billing_status="").filter(admission_date__isnull=True).count()
-    cases_without_approval = max(total_cases - approval_count, 0)
+    approval_count = all_records.exclude(
+        approval__isnull=True
+    ).exclude(
+        approval=""
+    ).count()
+
+    billing_count = all_records.exclude(
+        billing_status__isnull=True
+    ).exclude(
+        billing_status=""
+    ).count()
+
+    pending_accounts = (
+        all_records
+        .exclude(approval__isnull=True)
+        .exclude(approval="")
+        .exclude(main_status="Serv. Done")
+        .filter(
+            Q(billing_status__isnull=True) |
+            Q(billing_status="")
+        )
+        .count()
+    )
+
+    pending_coordinator = (
+        all_records
+        .exclude(approval__isnull=True)
+        .exclude(approval="")
+        .exclude(main_status="Serv. Done")
+        .filter(admission_date__isnull=True)
+        .count()
+    )
+
+    eligible_cases = (
+        all_records
+        .exclude(attachment_type__isnull=True)
+        .exclude(attachment_type="")
+        .exclude(main_status__in=["Rejected", "Cancelled"])
+    )
+
+    eligible_approval_count = (
+        eligible_cases
+        .exclude(approval__isnull=True)
+        .exclude(approval="")
+        .count()
+    )
+
+    cases_without_approval = max(
+        eligible_cases.count() - eligible_approval_count,
+        0
+    )
     
     today = timezone.localtime().date()
     tomorrow = today + timedelta(days=1)
-    early_admissions = all_records.filter(admission_date=tomorrow).count()
+
+    today_admissions = all_records.filter(
+        admission_date=today
+    ).count()
+
+    early_admissions = all_records.filter(
+        admission_date=tomorrow
+    ).count()
     
     # ✅ توزيع الحالات حسب Main Status
     status_distribution = (
@@ -419,6 +471,7 @@ def external_approvals(request):
         "without_approval": "linear-gradient(135deg, #6a1b9a, #8e24aa)",
         "accounts": "linear-gradient(135deg, #b71c1c, #d32f2f)",
         "coordinator": "linear-gradient(135deg, #e65100, #f57c00)",
+        "today": "linear-gradient(135deg, #006064, #00838f)",
         "early": "linear-gradient(135deg, #1b5e20, #2e7d32)",
         "overview": "linear-gradient(135deg, #4a148c, #6a1b9a)",
     }
@@ -429,6 +482,7 @@ def external_approvals(request):
         'pending_accounts': pending_accounts,
         'pending_coordinator': pending_coordinator,
         'early_admissions': early_admissions,
+        'today_admissions': today_admissions,
         'status_data': status_data,
         'box_colors': box_colors,
         'status_labels': json.dumps(status_labels, ensure_ascii=False),  # ✅ جديد
@@ -458,17 +512,44 @@ def external_approvals_detail(request, filter_type):
         patients = all_records
         title = "إجمالي الحالات المرسلة للتسعير"
     elif filter_type == "accounts":
-        patients = all_records.filter(
-            ~Q(approval__isnull=True) & ~Q(approval=''),
-            Q(billing_status__isnull=True) | Q(billing_status='')
+        patients = (
+            all_records
+            .exclude(approval__isnull=True)
+            .exclude(approval="")
+            .exclude(main_status="Serv. Done")
+            .filter(
+                Q(billing_status__isnull=True) |
+                Q(billing_status="")
+            )
         )
         title = "الحالات المعطلة طرف الحسابات"
     elif filter_type == "coordinator":
-        patients = all_records.exclude(billing_status__isnull=True).exclude(billing_status="").filter(admission_date__isnull=True)
+        patients = (
+            all_records
+            .exclude(approval__isnull=True)
+            .exclude(approval="")
+            .exclude(main_status="Serv. Done")
+            .filter(admission_date__isnull=True)
+        )
         title = "الحالات المعطلة طرف منسق العيادات"
     elif filter_type == "without_approval":
-        patients = all_records.filter(Q(approval__isnull=True) | Q(approval=''))
+        patients = (
+            all_records
+            .exclude(attachment_type__isnull=True)
+            .exclude(attachment_type="")
+            .exclude(main_status__in=["Rejected", "Cancelled"])
+            .filter(
+                Q(approval__isnull=True) |
+                Q(approval="")
+            )
+        )
         title = "حالات بدون موافقة"
+        
+    elif filter_type == "today":
+        today = timezone.localtime().date()
+        patients = all_records.filter(admission_date=today)
+        title = "حالات دخول اليوم"
+        
     elif filter_type == "early":
         today = timezone.localtime().date()
         tomorrow = today + timedelta(days=1)
