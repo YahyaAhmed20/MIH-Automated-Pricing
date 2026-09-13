@@ -371,11 +371,32 @@ class ServiceRecord(models.Model):
         db_index=True,
         verbose_name="اسم القسم"
     )
+    department_name_search = models.CharField(
+        max_length=255,
+        blank=True,
+        default="",
+        db_index=True,
+        verbose_name="اسم القسم للبحث"
+    )
+    doctor_name = models.CharField(
+        max_length=255,
+        blank=True,
+        default="",
+        db_index=True,
+        verbose_name="اسم الطبيب"
+    )
 
     service_name = models.CharField(
         max_length=255,
         db_index=True,
         verbose_name="اسم الخدمة"
+    )
+    service_name_search = models.CharField(
+        max_length=255,
+        blank=True,
+        default="",
+        db_index=True,
+        verbose_name="اسم الخدمة للبحث"
     )
 
     service_code = models.CharField(

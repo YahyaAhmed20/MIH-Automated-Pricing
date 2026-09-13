@@ -18,10 +18,11 @@ class ServiceRecordsImportService:
         "discharge_date": "تاريخ الخروج",
         "stay_duration": "مدة الاقامة",
         "department_name": "اسم القسم",
+        "doctor_name": "اسم الطبيب",
         "service_name": "اسم الخدمة",
         "service_code": "الكود",
         "service_date": "التاريخ",
-        "insurance_company": None,
+        "insurance_company": "الجهه",
         "sub_company": "الشركه الفرعيه",
         "amount": "المبلغ",
         "total_invoice": "صافي الفاتورة",
@@ -141,8 +142,10 @@ class ServiceRecordsImportService:
                     ServiceRecordsImportService.COLUMN_MAPPING,
                 )
             )
+            
+            
 
-            admission_date = ImportHelpers.clean_date_mdy(
+            admission_date = ImportHelpers.clean_date_dmy(
                 ImportHelpers.get_mapped_value(
                     row,
                     header_map,
@@ -152,7 +155,7 @@ class ServiceRecordsImportService:
                 )
             )
 
-            discharge_date = ImportHelpers.clean_date_mdy(
+            discharge_date = ImportHelpers.clean_date_dmy(
                 ImportHelpers.get_mapped_value(
                     row,
                     header_map,
@@ -179,6 +182,18 @@ class ServiceRecordsImportService:
                     ServiceRecordsImportService.COLUMN_MAPPING,
                 )
             )
+            doctor_name = ImportHelpers.normalize_text(
+                ImportHelpers.get_mapped_value(
+                    row,
+                    header_map,
+                    "doctor_name",
+                    ServiceRecordsImportService.COLUMN_MAPPING,
+                )
+            )
+
+            department_name_search = (
+                ImportHelpers.arabic_search_variants(department_name)[0]
+            )
 
             service_name = ImportHelpers.normalize_text(
                 ImportHelpers.get_mapped_value(
@@ -189,7 +204,11 @@ class ServiceRecordsImportService:
                 )
             )
 
-            service_date = ImportHelpers.clean_date_mdy(
+            service_name_search = (
+                ImportHelpers.arabic_search_variants(service_name)[0]
+            )
+
+            service_date = ImportHelpers.clean_date_dmy(
                 ImportHelpers.get_mapped_value(
                     row,
                     header_map,
@@ -263,6 +282,10 @@ class ServiceRecordsImportService:
                     record.patient_name = patient_name
                     changed = True
                     
+                if record.doctor_name != doctor_name:
+                    record.doctor_name = doctor_name
+                    changed = True
+                    
                 if record.admission_date != admission_date:
                     record.admission_date = admission_date
                     changed = True
@@ -278,9 +301,17 @@ class ServiceRecordsImportService:
                 if record.department_name != department_name:
                     record.department_name = department_name
                     changed = True
-                    
+
+                if record.department_name_search != department_name_search:
+                    record.department_name_search = department_name_search
+                    changed = True
+
                 if record.service_name != service_name:
                     record.service_name = service_name
+                    changed = True
+
+                if record.service_name_search != service_name_search:
+                    record.service_name_search = service_name_search
                     changed = True
                     
                 if record.service_date != service_date:
@@ -318,12 +349,15 @@ class ServiceRecordsImportService:
                     discharge_date=discharge_date,
                     stay_duration=stay_duration,
                     department_name=department_name,
+                    department_name_search=department_name_search,
                     service_name=service_name,
+                    service_name_search=service_name_search,
                     service_date=service_date,
                     insurance_company=insurance_company,
                     sub_company=sub_company,
                     amount=amount,
                     total_invoice=total_invoice,
+                    doctor_name=doctor_name,
                 )
                 records_to_create.append(record)
                 records_cache[key] = record
@@ -355,11 +389,14 @@ class ServiceRecordsImportService:
                     fields=[
                         "patient_type",
                         "patient_name",
+                        "doctor_name",
                         "admission_date",
                         "discharge_date",
                         "stay_duration",
                         "department_name",
+                        "department_name_search",
                         "service_name",
+                        "service_name_search",
                         "service_date",
                         "insurance_company",
                         "sub_company",

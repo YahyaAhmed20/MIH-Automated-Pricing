@@ -26,25 +26,72 @@ class ImportHelpers:
     @staticmethod
     def arabic_search_variants(value):
         """
-        إنشاء صيغ بديلة للنص العربي أثناء البحث،
-        بدون تغيير الاسم الأصلي المخزن في قاعدة البيانات.
+        توحيد النص العربي لأغراض البحث.
+
+        لا يتم تغيير القيمة الأصلية المخزنة في قاعدة البيانات.
 
         أمثلة:
-            مصطفى → مصطفى / مصطفي
-            مصطفي → مصطفي / مصطفى
+            أحمد   -> احمد
+            إيمان  -> ايمان
+            آمال   -> امال
+            مدرسة  -> مدرسه
+            مصطفى  -> مصطفي
         """
-        value = ImportHelpers.normalize_text(value)
 
-        if not value:
-            return [value]
+        if value is None or pd.isna(value):
+            return [""]
 
-        variants = {value}
+        import unicodedata
 
-        # الياء ↔ الألف المقصورة
-        variants.add(value.replace("ى", "ي"))
-        variants.add(value.replace("ي", "ى"))
+        value = str(value)
 
-        return list(variants)
+        # Unicode normalization
+        value = unicodedata.normalize("NFKC", value)
+
+        # إزالة التشكيل
+        value = "".join(
+            char
+            for char in value
+            if not unicodedata.combining(char)
+        )
+
+        # توحيد المسافات
+        value = (
+            value
+            .replace("\r", " ")
+            .replace("\n", " ")
+            .replace("\t", " ")
+        )
+
+        value = " ".join(value.split())
+
+        # إزالة التطويل
+        value = value.replace("ـ", "")
+
+        # توحيد الألف والهمزات
+        value = (
+            value
+            .replace("أ", "ا")
+            .replace("إ", "ا")
+            .replace("آ", "ا")
+            .replace("ٱ", "ا")
+        )
+
+        # توحيد التاء المربوطة والهاء
+        value = value.replace("ة", "ه")
+
+        # توحيد الألف المقصورة والياء
+        value = value.replace("ى", "ي")
+
+        # الهمزة على الياء
+        value = value.replace("ئ", "ي")
+
+        # الهمزة على الواو
+        value = value.replace("ؤ", "و")
+
+        value = value.strip()
+
+        return [value]
 
     @staticmethod
     def clean_date(value):

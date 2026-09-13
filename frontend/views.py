@@ -5238,6 +5238,8 @@ def service_search(request):
     date_to = request.GET.get("date_to", "").strip()
     department = request.GET.get("department", "").strip()
     insurance_company = request.GET.get("insurance_company", "").strip()
+    sub_company = request.GET.get("sub_company", "").strip()
+    doctor_name = request.GET.get("doctor_name", "").strip()
 
     services = (
         ServiceRecord.objects
@@ -5250,13 +5252,27 @@ def service_search(request):
     # ==========================================
     if search:
         search = search.strip()
-        code_match = ServiceRecord.objects.filter(service_code__iexact=search)
+
+        normalized_search = (
+            ImportHelpers.arabic_search_variants(search)[0]
+        )
+
+        # البحث بالكود يظل كما هو
+        code_match = ServiceRecord.objects.filter(
+            service_code__iexact=search
+        )
+
         if code_match.exists():
-            services = services.filter(service_code__iexact=search)
+            services = services.filter(
+                service_code__iexact=search
+            )
         else:
             services = services.filter(
-                Q(service_name__icontains=search) |
-                Q(department_name__icontains=search)
+                Q(service_name_search__icontains=normalized_search) |
+                Q(department_name_search__icontains=normalized_search) |
+                Q(doctor_name__icontains=search) |
+                Q(doctor_name__icontains=normalized_search) |
+                Q(sub_company__icontains=search)
             )
 
     # ==========================================
@@ -5276,6 +5292,12 @@ def service_search(request):
 
     if insurance_company:
         services = services.filter(insurance_company=insurance_company)
+        
+    if sub_company:
+        services = services.filter(sub_company=sub_company)
+
+    if doctor_name:
+        services = services.filter(doctor_name=doctor_name)
 
     # ✅ إجمالي المبلغ (amount)
     total_amount = services.aggregate(total=Sum("amount"))["total"] or 0
@@ -5296,6 +5318,23 @@ def service_search(request):
         .values_list("insurance_company", flat=True)
         .distinct()
         .order_by("insurance_company")
+    )
+    
+    sub_companies = (
+        services
+        .exclude(sub_company__isnull=True)
+        .exclude(sub_company="")
+        .values_list("sub_company", flat=True)
+        .distinct()
+        .order_by("sub_company")
+    )
+
+    doctor_names = (
+        services
+        .exclude(doctor_name="")
+        .values_list("doctor_name", flat=True)
+        .distinct()
+        .order_by("doctor_name")
     )
 
     # ✅ جلب اقتراحات البحث من النتائج المفلترة فقط
@@ -5369,8 +5408,12 @@ def service_search(request):
             "date_to": date_to,
             "department": department,
             "insurance_company": insurance_company,
+            "sub_company": sub_company,
+            "doctor_name": doctor_name,
             "departments": departments,
             "insurance_companies": insurance_companies,
+            "sub_companies": sub_companies,
+            "doctor_names": doctor_names,
             "service_names": service_names,
             "service_codes": service_codes,
             "department_names": department_names,

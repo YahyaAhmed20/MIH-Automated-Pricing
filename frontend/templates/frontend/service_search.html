@@ -42,6 +42,12 @@
             {% if insurance_company %}
             <input type="hidden" name="insurance_company" value="{{ insurance_company }}">
             {% endif %}
+            {% if sub_company %}
+            <input type="hidden" name="sub_company" value="{{ sub_company }}">
+            {% endif %}
+            {% if doctor_name %}
+            <input type="hidden" name="doctor_name" value="{{ doctor_name }}">
+            {% endif %}
             {% if date_from %}
             <input type="hidden" name="date_from" value="{{ date_from }}">
             {% endif %}
@@ -52,7 +58,7 @@
             <input type="text" 
                    name="search" 
                    class="form-control" 
-                   placeholder="🔍 ابحث باسم الخدمة أو الكود أو القسم..." 
+                   placeholder="🔍 ابحث باسم الخدمة أو الكود أو القسم أو اسم الطبيب أو الشركة الفرعية..."
                    value="{{ search }}"
                    list="search-suggestions"
                    autocomplete="off"
@@ -73,6 +79,16 @@
                 <optgroup label="🏢 الأقسام">
                     {% for dept in department_names %}
                     <option value="{{ dept }}">{{ dept }}</option>
+                    {% endfor %}
+                </optgroup>
+                <optgroup label="👨‍⚕️ أسماء الأطباء">
+                    {% for doctor in doctor_names %}
+                    <option value="{{ doctor }}">{{ doctor }}</option>
+                    {% endfor %}
+                </optgroup>
+                <optgroup label="🏢 الشركات الفرعية">
+                    {% for company in sub_companies %}
+                    <option value="{{ company }}">{{ company }}</option>
                     {% endfor %}
                 </optgroup>
             </datalist>
@@ -111,19 +127,28 @@
                     </select>
                 </div>
                 
-                <!-- ✅ فلتر 2: القسم -->
-                <div class="col-md-3">
-                    <label class="form-label">🏢 القسم</label>
-                    <select name="department" class="form-select" onchange="this.form.submit()">
-                        <option value="">الكل</option>
-                        {% for dept in departments %}
-                        <option value="{{ dept }}" {% if department == dept %}selected{% endif %}>
-                            {{ dept }}
-                        </option>
-                        {% endfor %}
-                    </select>
-                </div>
-                
+               <!-- ✅ فلتر 2: القسم -->
+<div class="col-md-3">
+    <label class="form-label">🏢 القسم</label>
+
+    <input
+        type="text"
+        name="department"
+        list="department-list"
+        class="form-control"
+        placeholder="ابحث أو اختر"
+        value="{{ department }}"
+        onchange="this.form.submit()"
+    >
+
+    <datalist id="department-list">
+        <option value="">الكل</option>
+
+        {% for dept in departments %}
+            <option value="{{ dept }}">{{ dept }}</option>
+        {% endfor %}
+    </datalist>
+</div>
                 <!-- ✅ فلتر 3: شركة التأمين -->
                 <div class="col-md-3">
                     <label class="form-label">🛡️ شركة التأمين</label>
@@ -141,8 +166,54 @@
                         {% endfor %}
                     </datalist>
                 </div>
+
+                <!-- ✅ فلتر 4: الشركة الفرعية -->
+                <div class="col-md-3">
+                    <label class="form-label">🏢 الشركة الفرعية</label>
+
+                    <input
+                        type="text"
+                        name="sub_company"
+                        list="sub-company-list"
+                        class="form-control"
+                        placeholder="ابحث أو اختر"
+                        value="{{ sub_company }}"
+                        onchange="this.form.submit()"
+                    >
+
+                    <datalist id="sub-company-list">
+                        <option value="">الكل</option>
+
+                        {% for company in sub_companies %}
+                            <option value="{{ company }}">{{ company }}</option>
+                        {% endfor %}
+                    </datalist>
+                </div>
+
+                <!-- ✅ فلتر 5: اسم الطبيب -->
+                <div class="col-md-3">
+                    <label class="form-label">👨‍⚕️ اسم الطبيب</label>
+
+                    <input
+                        type="text"
+                        name="doctor_name"
+                        list="doctor-name-list"
+                        class="form-control"
+                        placeholder="ابحث أو اختر"
+                        value="{{ doctor_name }}"
+                        onchange="this.form.submit()"
+                    >
+
+                    <datalist id="doctor-name-list">
+                        <option value="">الكل</option>
+
+                        {% for doctor in doctor_names %}
+                            <option value="{{ doctor }}">{{ doctor }}</option>
+                        {% endfor %}
+                    </datalist>
+                </div>
                 
-                <!-- ✅ فلتر 4: التاريخ من - إلى -->
+                <!-- ✅ فلتر 6: التاريخ من - إلى -->
                 <div class="col-md-2">
                     <label class="form-label">📅 من</label>
                     <input type="date" name="date_from" class="form-control" value="{{ date_from }}" onchange="this.form.submit()">
@@ -166,7 +237,7 @@
     <!-- ============================================ -->
     <!-- ✅ الفلاتر النشطة -->
     <!-- ============================================ -->
-    {% if search or patient_type or department or insurance_company or date_from or date_to %}
+    {% if search or patient_type or department or insurance_company or sub_company or doctor_name or date_from or date_to %}
     <div class="alert alert-info mb-3 d-flex justify-content-between align-items-center flex-wrap">
         <div class="d-flex flex-wrap gap-1 align-items-center">
             <i class="fas fa-filter me-2"></i>
@@ -182,6 +253,12 @@
             {% endif %}
             {% if insurance_company %}
             <span class="badge bg-warning text-dark ms-1">🛡️ {{ insurance_company }}</span>
+            {% endif %}
+            {% if sub_company %}
+            <span class="badge bg-primary ms-1">🏢 {{ sub_company }}</span>
+            {% endif %}
+            {% if doctor_name %}
+            <span class="badge bg-success ms-1">👨‍⚕️ {{ doctor_name }}</span>
             {% endif %}
             {% if date_from %}
             <span class="badge bg-secondary ms-1">📅 من: {{ date_from }}</span>
@@ -345,6 +422,10 @@
                                             <span class="value" style="font-size: 0.65rem;">{{ service.department_name|default:"-" }}</span>
                                         </div>
                                         <div class="info-item" style="padding: 2px 4px; font-size: 0.65rem;">
+                                            <span class="label" style="font-size: 0.6rem;">اسم الطبيب</span>
+                                            <span class="value" style="font-size: 0.65rem;">{{ service.doctor_name|default:"-" }}</span>
+                                        </div>
+                                        <div class="info-item" style="padding: 2px 4px; font-size: 0.65rem;">
                                             <span class="label" style="font-size: 0.6rem;">نوع المريض</span>
                                             <span class="value" style="font-size: 0.65rem;">{{ service.patient_type|default:"-" }}</span>
                                         </div>
@@ -458,7 +539,7 @@
             <ul class="pagination pagination-sm">
                 {% if page_obj.has_previous %}
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if search %}&search={{ search }}{% endif %}{% if patient_type %}&patient_type={{ patient_type }}{% endif %}{% if department %}&department={{ department }}{% endif %}{% if insurance_company %}&insurance_company={{ insurance_company }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if search %}&search={{ search }}{% endif %}{% if patient_type %}&patient_type={{ patient_type }}{% endif %}{% if department %}&department={{ department }}{% endif %}{% if insurance_company %}&insurance_company={{ insurance_company }}{% endif %}{% if sub_company %}&sub_company={{ sub_company }}{% endif %}{% if doctor_name %}&doctor_name={{ doctor_name }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}">
                         <i class="fas fa-chevron-right"></i>
                     </a>
                 </li>
@@ -467,7 +548,7 @@
                 {% for num in page_obj.paginator.page_range %}
                     {% if num >= page_obj.number|add:'-2' and num <= page_obj.number|add:'2' %}
                     <li class="page-item {% if num == page_obj.number %}active{% endif %}">
-                        <a class="page-link" href="?page={{ num }}{% if search %}&search={{ search }}{% endif %}{% if patient_type %}&patient_type={{ patient_type }}{% endif %}{% if department %}&department={{ department }}{% endif %}{% if insurance_company %}&insurance_company={{ insurance_company }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}">
+                        <a class="page-link" href="?page={{ num }}{% if search %}&search={{ search }}{% endif %}{% if patient_type %}&patient_type={{ patient_type }}{% endif %}{% if department %}&department={{ department }}{% endif %}{% if insurance_company %}&insurance_company={{ insurance_company }}{% endif %}{% if sub_company %}&sub_company={{ sub_company }}{% endif %}{% if doctor_name %}&doctor_name={{ doctor_name }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}">
                             {{ num }}
                         </a>
                     </li>
@@ -476,7 +557,7 @@
                 
                 {% if page_obj.has_next %}
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if search %}&search={{ search }}{% endif %}{% if patient_type %}&patient_type={{ patient_type }}{% endif %}{% if department %}&department={{ department }}{% endif %}{% if insurance_company %}&insurance_company={{ insurance_company }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if search %}&search={{ search }}{% endif %}{% if patient_type %}&patient_type={{ patient_type }}{% endif %}{% if department %}&department={{ department }}{% endif %}{% if insurance_company %}&insurance_company={{ insurance_company }}{% endif %}{% if sub_company %}&sub_company={{ sub_company }}{% endif %}{% if doctor_name %}&doctor_name={{ doctor_name }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}">
                         <i class="fas fa-chevron-left"></i>
                     </a>
                 </li>
@@ -511,7 +592,7 @@
         <i class="fas fa-search-plus fa-4x text-muted opacity-25 mb-3"></i>
         <h5 class="text-muted">ابحث عن خدمة</h5>
         <p class="text-muted small">
-            ابحث باسم الخدمة أو الكود أو القسم
+            ابحث باسم الخدمة أو الكود أو القسم أو اسم الطبيب أو الشركة الفرعية
         </p>
         <div class="d-flex justify-content-center gap-3 flex-wrap mt-3">
             <span class="badge bg-light text-dark px-3 py-2">
@@ -522,6 +603,12 @@
             </span>
             <span class="badge bg-light text-dark px-3 py-2">
                 <i class="fas fa-building me-1"></i> القسم
+            </span>
+            <span class="badge bg-light text-dark px-3 py-2">
+                <i class="fas fa-user-md me-1"></i> اسم الطبيب
+            </span>
+            <span class="badge bg-light text-dark px-3 py-2">
+                <i class="fas fa-building me-1"></i> الشركة الفرعية
             </span>
         </div>
     </div>
