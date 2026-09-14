@@ -31343,3 +31343,13 @@ Not Found: /.well-known/appspecific/com.chrome.devtools.json
 "GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
 Not Found: /.well-known/appspecific/com.chrome.devtools.json
 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 16997
+Watching for file changes with StatReloader
+"GET /patient-search/ HTTP/1.1" 200 862349
+"GET /patient-search/?search=%D8%B3 HTTP/1.1" 200 848230
+"GET /patient-search/?attachment_type=&company=%D8%B4%D8%B1%D9%83%D8%A7%D8%AA+%D9%85%D8%B5%D8%B1+%D9%84%D9%84%D8%AA%D8%A3%D9%85%D9%8A%D9%86&sub_account=&doctor=&specialty=&date_from=&date_to= HTTP/1.1" 200 815745
+"GET /patient-search/?attachment_type=&company=%D8%B4%D8%B1%D9%83%D8%A7%D8%AA+%D9%85%D8%B5%D8%B1+%D9%84%D9%84%D8%AA%D8%A3%D9%85%D9%8A%D9%86&sub_account=&doctor=&specialty=&date_from=&date_to= HTTP/1.1" 200 815763
+"GET /static/images/logo.jpeg?v=1.0 HTTP/1.1" 200 68755
+- Broken pipe from ('127.0.0.1', 62756)
+"GET /patient-search/?company=%D8%B4%D8%B1%D9%83%D8%A7%D8%AA+%D9%85%D8%B5%D8%B1+%D9%84%D9%84%D8%AA%D8%A3%D9%85%D9%8A%D9%86&search=88172626 HTTP/1.1" 200 99650
+"GET /patient-search/?search=88172626&attachment_type=&company=%D8%B4%D8%B1%D9%83%D8%A7%D8%AA+%D9%85%D8%B5%D8%B1+%D9%84%D9%84%D8%AA%D8%A3%D9%85%D9%8A%D9%86+%D8%AC%D8%A7%D9%85%D8%B9%D8%A7%D8%AA&sub_account=&doctor=&specialty=&date_from=&date_to= HTTP/1.1" 200 99684
+"GET /patient-search/?search=88172626&attachment_type=&company=%D8%B4%D8%B1%D9%83%D8%A7%D8%AA+%D9%85%D8%B5%D8%B1+%D9%84%D9%84%D8%AA%D8%A3%D9%85%D9%8A%D9%86+%D8%AC%D8%A7%D9%85%D8%B9%D8%A7%D8%AA&sub_account=%D8%A7%D9%84%D8%B9%D8%A7%D9%85%D9%84%D9%8A%D9%86+%D8%A8%D8%AC%D8%A7%D9%85%D8%B9%D8%A9+%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9&doctor=&specialty=&date_from=&date_to= HTTP/1.1" 200 99926
