@@ -882,6 +882,9 @@
 
         <div class="card-body advanced-filters-body">
             <form method="GET" class="row g-3 align-items-end" id="filterForm">
+                {% if search %}
+    <input type="hidden" name="search" value="{{ search }}">
+{% endif %}
                 
                 <!-- ✅ فلتر 1: ملحق او رئيسى -->
                 <div class="col-md-2">

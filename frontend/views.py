@@ -5240,6 +5240,7 @@ def service_search(request):
     insurance_company = request.GET.get("insurance_company", "").strip()
     sub_company = request.GET.get("sub_company", "").strip()
     doctor_name = request.GET.get("doctor_name", "").strip()
+    price_range = request.GET.get("price_range", "").strip()
 
     services = (
         ServiceRecord.objects
@@ -5298,6 +5299,23 @@ def service_search(request):
 
     if doctor_name:
         services = services.filter(doctor_name=doctor_name)
+        
+    # ==========================================
+# فلتر النطاق السعري
+# ==========================================
+    if price_range:
+        try:
+            if price_range.endswith("+"):
+                min_price = Decimal(price_range[:-1])
+                services = services.filter(amount__gte=min_price)
+            else:
+                min_price, max_price = price_range.split("-")
+                services = services.filter(
+                    amount__gte=Decimal(min_price),
+                    amount__lte=Decimal(max_price),
+                )
+        except (ValueError, TypeError, ArithmeticError):
+            pass
 
     # ✅ إجمالي المبلغ (amount)
     total_amount = services.aggregate(total=Sum("amount"))["total"] or 0
@@ -5393,6 +5411,15 @@ def service_search(request):
 
     formatted_total_amount = f"{total_amount:,.0f}"
     formatted_total_invoice = f"{total_invoice:,.0f}"  # ✅ ✅ الجديد
+    
+    PRICE_RANGES = [
+        {"label": "أقل من 10,000", "value": "0-9999"},
+        {"label": "10,000 - 50,000", "value": "10000-50000"},
+        {"label": "50,000 - 100,000", "value": "50000-100000"},
+        {"label": "100,000 - 200,000", "value": "100000-200000"},
+        {"label": "200,000 - 500,000", "value": "200000-500000"},
+        {"label": "أكثر من 500,000", "value": "500000+"},
+    ]
 
     return render(
         request,
@@ -5410,6 +5437,8 @@ def service_search(request):
             "insurance_company": insurance_company,
             "sub_company": sub_company,
             "doctor_name": doctor_name,
+            "price_range": price_range,
+            "price_ranges": PRICE_RANGES,
             "departments": departments,
             "insurance_companies": insurance_companies,
             "sub_companies": sub_companies,
