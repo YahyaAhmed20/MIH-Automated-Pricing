@@ -6870,7 +6870,7 @@ def extract_results_from_logs(logs):
 # ================================================================
 # Progress API
 # ================================================================
-
+@permission_required(Permissions.DATA_UPDATE)
 def update_progress(request):
     """
     API للحصول على حالة التحديث الحالية
@@ -6892,6 +6892,13 @@ def update_progress(request):
                 )
 
             progress = ProgressService.get_or_raise()
+
+        if not request.user.authorization.can(Permissions.UPDATE_LOGS_VIEW):
+            progress = {
+                key: value
+                for key, value in progress.items()
+                if key != "logs"
+            }
 
         return JsonResponse(progress)
 
@@ -7256,9 +7263,10 @@ def system_update(request):
             [],
         )
 
-        logs = progress.get(
-            "logs",
-            None,
+        logs = (
+            progress.get("logs", None)
+            if request.user.authorization.can(Permissions.UPDATE_LOGS_VIEW)
+            else None
         )
 
         # --------------------------------------------------------
@@ -7357,6 +7365,7 @@ def system_update(request):
 # Clear Logs
 # ================================================================
 
+@permission_required(Permissions.UPDATE_LOGS_VIEW)
 @csrf_protect
 @require_http_methods(["POST"])
 def clear_logs(request):
@@ -7391,6 +7400,7 @@ def clear_logs(request):
 # ================================================================
 # Cancel Update
 # ================================================================
+@permission_required(Permissions.DATA_UPDATE)
 @require_POST
 def cancel_update(request):
     """
@@ -7483,7 +7493,7 @@ def cancel_update(request):
 # ================================================================
 # SSE Progress Stream
 # ================================================================
-
+@permission_required(Permissions.DATA_UPDATE)
 @cache_control(
     no_cache=True,
     no_store=True,
@@ -7567,10 +7577,10 @@ def progress_stream(request):
             # Current values
             # ----------------------------------------------------
 
-            current_logs = progress.get(
-                "logs",
-                "",
-            )
+            if request.user.authorization.can(Permissions.UPDATE_LOGS_VIEW):
+                current_logs = progress.get("logs", "")
+            else:
+                current_logs = ""
 
             current_completed = progress.get(
                 "completed",
@@ -7617,6 +7627,13 @@ def progress_stream(request):
                 last_task_id = task_id
 
                 progress["timestamp"] = time.time()
+                
+                if not request.user.authorization.can(Permissions.UPDATE_LOGS_VIEW):
+                    progress = {
+                        key: value
+                        for key, value in progress.items()
+                        if key != "logs"
+                    }
 
                 yield (
                     "data: "

@@ -181,6 +181,10 @@ class User(AbstractUser):
                 "data_update_all",
                 "تحديث جميع البيانات",
             ),
+            (
+                "update_logs_view",
+                "عرض سجل تحديثات النظام",
+            ),
         ]
         
         

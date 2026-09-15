@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>
-        MIH Automated Pricing
+        MIH Case Flow System
     </title>
 
     <!-- Cache Control for Images -->
@@ -1290,9 +1290,9 @@ body.login-mode .content {
                  alt="MIH Logo">
 
             <h4>
-                MIH
+                MIH  Case 
                 <br>
-                Automated Pricing
+                Flow System
             </h4>
 
         </div>
@@ -1306,7 +1306,7 @@ body.login-mode .content {
         <div class="alert text-center py-1 mb-0">
             <strong>MIH</strong>
             <br>
-            <small>Automated Pricing</small>
+            <small>Case Flow System</small>
         </div>
     </div>
 
@@ -1494,14 +1494,14 @@ body.login-mode .content {
         {% endif %}
 
         <!-- 10. جودة البيانات -->
-        {% if authz.is_admin %}
+        {% comment %} {% if authz.is_admin %}
     <li class="menu-item">
         <a class="menu-link {% if request.resolver_match.url_name == 'quality_dashboard' %}active{% endif %}" href="{% url 'quality_dashboard' %}">
             <i class="bi bi-shield-check"></i>
             <span class="menu-label">جودة البيانات</span>
         </a>
     </li>
-{% endif %}
+{% endif %} {% endcomment %}
 
       {% if can_patients_search or can_approvals_view or can_approvals_statistics %}
     <li class="menu-item">
@@ -1664,7 +1664,7 @@ body.login-mode .content {
                 </h4>
 
                 <small class="text-muted">
-                    MIH Automated Pricing System
+                    MIH Case Flow System
                 </small>
 
             </div>
@@ -1707,7 +1707,7 @@ body.login-mode .content {
 
         <hr>
 
-        MIH Automated Pricing System © 2026
+         Powerd by Mohamed Eid © 2026
 
     </footer>
 

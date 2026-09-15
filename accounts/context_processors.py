@@ -74,6 +74,8 @@ def authorization(request):
         "can_data_update_all": authz.can(
             Permissions.DATA_UPDATE_ALL
         ),
+        "can_update_logs_view": authz.can(
+            Permissions.UPDATE_LOGS_VIEW),
 
         # Credit package pricing
         "has_credit_full": authz.can(

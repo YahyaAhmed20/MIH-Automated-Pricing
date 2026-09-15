@@ -569,12 +569,19 @@
 </div>
 
 <!-- ✅ عرض الـ Logs مع زر مسح -->
-<div class="card shadow-sm mt-4 border-0 result-card" id="logsCard" {% if not logs or logs == 'None' %}style="display:none;"{% endif %}>
+{% if can_update_logs_view %}
+<!-- ✅ عرض الـ Logs للـ Owner فقط -->
+<div
+    class="card shadow-sm mt-4 border-0 result-card"
+    id="logsCard"
+    {% if not logs or logs == 'None' %}style="display:none;"{% endif %}
+>
     <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
         <strong>
             📋 سجل عملية التحديث
         </strong>
-        <button 
+
+        <button
             id="clearLogsBtn"
             class="btn btn-sm btn-outline-light btn-clear-logs"
             onclick="clearLogs()"
@@ -586,9 +593,13 @@
     </div>
 
     <div class="card-body p-0">
-        <pre class="logs-content mb-0" id="logsContent">{% if logs and logs != 'None' %}{{ logs }}{% else %}⚠️ لا توجد سجلات لعرضها{% endif %}</pre>
+        <pre
+            class="logs-content mb-0"
+            id="logsContent"
+        >{% if logs and logs != 'None' %}{{ logs }}{% else %}⚠️ لا توجد سجلات لعرضها{% endif %}</pre>
     </div>
 </div>
+{% endif %}
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -605,6 +616,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const timeDisplay = document.getElementById('timeDisplay');
     const logsCard = document.getElementById('logsCard');
     const logsContent = document.getElementById('logsContent');
+    const canViewLogs = {% if can_update_logs_view %}true{% else %}false{% endif %};
 
     // ✅ المتغيرات
     let totalCommands = {{ total_commands|default:0 }};
@@ -662,17 +674,19 @@ document.addEventListener('DOMContentLoaded', function() {
             clearInterval(timerInterval);
             
             // ✅ إظهار الـ Logs بعد الانتهاء
-            setTimeout(function() {
-                fetch('/api/update-progress/')
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.logs && data.logs != 'None') {
-                            logsCard.style.display = 'block';
-                            logsContent.textContent = data.logs;
-                        }
-                    })
-                    .catch(() => {});
-            }, 1000);
+            if (canViewLogs && logsCard && logsContent) {
+                setTimeout(function() {
+                    fetch('/api/update-progress/')
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.logs && data.logs != 'None') {
+                                logsCard.style.display = 'block';
+                                logsContent.textContent = data.logs;
+                            }
+                        })
+                        .catch(() => {});
+                }, 1000);
+            }
             return;
         }
 
@@ -699,17 +713,19 @@ document.addEventListener('DOMContentLoaded', function() {
             clearInterval(timerInterval);
             
             // ✅ إظهار الـ Logs
-            setTimeout(function() {
-                fetch('/api/update-progress/')
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.logs && data.logs != 'None') {
-                            logsCard.style.display = 'block';
-                            logsContent.textContent = data.logs;
-                        }
-                    })
-                    .catch(() => {});
-            }, 500);
+            if (canViewLogs && logsCard && logsContent) {
+                setTimeout(function() {
+                    fetch('/api/update-progress/')
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.logs && data.logs != 'None') {
+                                logsCard.style.display = 'block';
+                                logsContent.textContent = data.logs;
+                            }
+                        })
+                        .catch(() => {});
+                }, 500);
+            }
             return;
         }
 
@@ -736,28 +752,36 @@ document.addEventListener('DOMContentLoaded', function() {
             clearInterval(timerInterval);
             
             // ✅ إظهار الـ Logs
-            setTimeout(function() {
-                fetch('/api/update-progress/')
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.logs && data.logs != 'None') {
-                            logsCard.style.display = 'block';
-                            logsContent.textContent = data.logs;
-                        }
-                    })
-                    .catch(() => {});
-            }, 500);
+            if (canViewLogs && logsCard && logsContent) {
+                setTimeout(function() {
+                    fetch('/api/update-progress/')
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.logs && data.logs != 'None') {
+                                logsCard.style.display = 'block';
+                                logsContent.textContent = data.logs;
+                            }
+                        })
+                        .catch(() => {});
+                }, 500);
+            }
             return;
         }
 
         // ✅ إذا كان التحديث جاري
         if (isRunning) {
             const currentName = currentCommand || '...';
-            progressText.innerHTML = `⏳ جاري التنفيذ: ${currentName} (${completed}/${totalCommands})`;
-            progressDetail.innerHTML = `تم تنفيذ ${completed} من ${totalCommands} أمر`;
-            
-            // ✅ إخفاء الـ Logs أثناء التحديث
-            logsCard.style.display = 'none';
+
+            progressText.innerHTML =
+                `⏳ جاري التنفيذ: ${currentName} (${completed}/${totalCommands})`;
+
+            progressDetail.innerHTML =
+                `تم تنفيذ ${completed} من ${totalCommands} أمر`;
+
+            // ✅ Owner فقط لديه Logs
+            if (canViewLogs && logsCard) {
+                logsCard.style.display = 'none';
+            }
         }
     }
 
@@ -895,7 +919,9 @@ document.addEventListener('DOMContentLoaded', function() {
         progressText.innerHTML = updateType === 'quick' ? '⚡ بدء التحديث السريع...' : '⏳ بدء التحديث الكامل...';
         progressDetail.innerHTML = 'جاري تجهيز العملية...';
 
-        logsCard.style.display = 'none';
+        if (canViewLogs && logsCard) {
+            logsCard.style.display = 'none';
+        }
 
         startTime = Date.now();
         if (timerInterval) {
@@ -974,6 +1000,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // ✅ مسح السجل
     window.clearLogs = function() {
+        if (!canViewLogs || !logsCard) {
+            return;
+        }
+
         if (!confirm('⚠️ هل أنت متأكد من مسح سجل التحديث؟')) {
             return;
         }
@@ -990,7 +1020,9 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                logsCard.style.display = 'none';
+                if (logsCard) {
+                    logsCard.style.display = 'none';
+                }
                 const alertDiv = document.createElement('div');
                 alertDiv.className = 'alert alert-success alert-dismissible fade show mt-3';
                 alertDiv.innerHTML = `
@@ -1012,7 +1044,7 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     // ✅ لو في Logs بعد التحديث (عند تحميل الصفحة)
-    {% if logs and logs != 'None' %}
+    {% if can_update_logs_view and logs and logs != 'None' %}
     setTimeout(function() {
         if (checkInterval) {
             clearInterval(checkInterval);
@@ -1111,7 +1143,11 @@ document.addEventListener('DOMContentLoaded', function() {
     timerInterval = setInterval(updateTimer, 1000);
     checkInterval = setInterval(checkProgress, 2000);
     setTimeout(checkProgress, 500);
-    logsCard.style.display = 'none';
+    {% if can_update_logs_view %}
+        if (logsCard) {
+            logsCard.style.display = 'none';
+        }
+    {% endif %}
     {% endif %}
 
 });

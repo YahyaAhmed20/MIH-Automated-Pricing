@@ -60,3 +60,12 @@ class Permissions:
 
     DATA_UPDATE = "data_update"
     DATA_UPDATE_ALL = "data_update_all"
+    
+    
+    # ==========================
+    # DATA UPDATE
+    # ==========================
+
+    DATA_UPDATE = "data_update"
+    DATA_UPDATE_ALL = "data_update_all"
+    UPDATE_LOGS_VIEW = "update_logs_view"

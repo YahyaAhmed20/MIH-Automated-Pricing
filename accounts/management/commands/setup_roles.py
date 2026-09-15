@@ -15,6 +15,8 @@ class Command(BaseCommand):
             "packages_cash_full",
             "packages_credit_basic",
             "patients_search",
+             # Data Update
+            "data_update",
         ],
 
         # ==========================================
@@ -26,6 +28,8 @@ class Command(BaseCommand):
             "patients_search",
             "approvals_view",
             "approvals_statistics",
+             # Data Update
+            "data_update",
         ],
 
         # ==========================================
@@ -38,6 +42,8 @@ class Command(BaseCommand):
             "approvals_view",
             "approvals_statistics",
             "doctors_view_all",
+             # Data Update
+            "data_update",
         ],
 
         # ==========================================
@@ -45,6 +51,8 @@ class Command(BaseCommand):
         # ==========================================
         "Doctor": [
             "doctors_view_own",
+             # Data Update
+            "data_update",
         ],
 
         # ==========================================
@@ -52,6 +60,8 @@ class Command(BaseCommand):
         # ==========================================
         "Admission": [
             "approvals_view",
+             # Data Update
+            "data_update",
         ],
 
         # ==========================================
@@ -71,6 +81,8 @@ class Command(BaseCommand):
         
          # Reports
         "reports_view",
+         # Data Update
+        "data_update",
     ],
 
                 # ==========================================
@@ -137,6 +149,7 @@ class Command(BaseCommand):
             # Data Update
             "data_update",
             "data_update_all",
+            "update_logs_view",
         ],
     }
 

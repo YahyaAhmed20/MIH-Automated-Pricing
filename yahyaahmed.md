@@ -1,3 +1,12 @@
+لبيانات ]
+والأهم
+
+ده يفسّر بالضبط ليه yahya كان عنده نفس المشكلة في البداية. إحنا أصلحنا yahya بالفعل، لكن Sara أنشأتها كـ Superuser.
+
+إذن قاعدة النظام عندنا أصبحت واضحة:
+
+Owner و Admin يتم تحديدهما بالـ Role + Permissions، وليس is_superuser.
+
 
 celery -A project worker --loglevel=info --concurrency=1 --pool=prefork --time-limit=7200 --soft-time-limit=6000 --queues=local
 from imports.services.progress_service import ProgressService
